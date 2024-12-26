@@ -1,5 +1,5 @@
 /* 2024.12.XX YYYY ZZZZ */
-
+//テスト
 #include "SceneGame.h"
 
 /* シーン「ゲーム」の定義 */
