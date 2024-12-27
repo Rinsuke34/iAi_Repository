@@ -27,4 +27,4 @@ extern int giNowFps;							// 現在のフレームレート
 
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawSceneListFlg;					// シーンリストの描写
-
+extern bool	gbDrawDatalistFlg;					// プレイヤーステータスの描写

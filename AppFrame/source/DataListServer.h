@@ -13,11 +13,11 @@ class DataListServer
 		DataListServer();				// コンストラクタ
 		virtual ~DataListServer();		// デストラクタ
 
-		void	AddDataList(DataListBase* NewDataList);				// データリスト追加
+		void	DrawDataList();			// データリスト描画(デバッグ用)
 
+		void			AddDataList(DataListBase* NewDataList);		// データリスト追加
+		void			DeleteDataList(const std::string& cName);	// 指定データリスト削除
 		DataListBase*	GetDataList(const std::string& cName);		// データリスト取得
-
-		void	DeleteDataList(const std::string& cName);			// 指定データリスト削除
 
 	private:
 		// データリスト一覧

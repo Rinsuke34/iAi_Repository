@@ -84,7 +84,8 @@ void Main::DxLibInit()
 	// マウスカーソルを非表示にする
 	SetMouseDispFlag(FALSE);
 
-	//SetJoypadDeadZone(int InputType, double Zone);
+	/* ジョイパッドのデッドゾーンを設定 */
+	//SetJoypadDeadZone(PAD_INPUT_1, double Zone);
 }
 
 // メインプログラム初期化
@@ -140,5 +141,11 @@ void Main::DebugDraw()
 	if (gbDrawSceneListFlg == true)
 	{
 		gpSceneServer->DrawSceneList();
+	}
+
+	/* データリスト描写 */
+	if (gbDrawDatalistFlg == true)
+	{
+		gpDataListServer->DrawDataList();
 	}
 }

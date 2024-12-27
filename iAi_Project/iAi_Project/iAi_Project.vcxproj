@@ -161,6 +161,7 @@
     <ClCompile Include="source\CharacterPlayer.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
+    <ClCompile Include="source\DataList_PlayerStatus.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
     <ClCompile Include="source\SceneInputConfig.cpp" />
@@ -171,7 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\CharacterPlayer.h" />
+    <ClInclude Include="source\DataList_PlayerStatus.h" />
     <ClInclude Include="source\InputDefine.h" />
+    <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\VariableDefine.h" />
     <ClInclude Include="source\DataList_Input.h" />

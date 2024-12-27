@@ -411,3 +411,6 @@ FodyWeavers.xsd
 /AppFrame/x64/
 /iAi_Project/x64/
 /iAi_Project/iAi_Project/x64/
+
+# デバッグのログファイルも対象外とする
+/iAi_Project/iAi_Project/Log.txt

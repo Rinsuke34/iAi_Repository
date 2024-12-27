@@ -21,5 +21,5 @@ DataListServer* gpDataListServer	= nullptr;	// データリストサーバークラス
 int giNowFps	= 0;							// 現在のフレームレート
 
 /* デバッグ用描写管理フラグ */
-bool gbDrawSceneListFlg		= true;				// シーンリストの描写
-
+bool gbDrawSceneListFlg	= false;				// シーンリストの描写
+bool gbDrawDatalistFlg	= true;					// プレイヤーステータスの描写
