@@ -23,6 +23,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* "オブジェクト管理"に要素追加 */
 	ObjectList->SetCharacterPlayer(new CharacterPlayer());
 
+	/* データリストサーバーに"プレイヤー状態"を追加 */
+	gpDataListServer->AddDataList(new DataList_PlayerStatus());
+
 	/* テスト用処理 終了 */
 
 	/* 非同期読み込みを無効化する */
@@ -32,8 +35,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 // デストラクタ
 SceneGame::~SceneGame()
 {
-	/* オブジェクトサーバーの"オブジェクト管理"削除 */
-	gpDataListServer->DeleteDataList("DataList_Object");
+	/* データリスト削除 */
+	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
+	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 }
 
 // 計算

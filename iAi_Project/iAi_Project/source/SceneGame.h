@@ -6,6 +6,7 @@
 
 /* データリスト */
 #include "DataList_Object.h"
+#include "DataList_PlayerStatus.h"
 
 /* オブジェクト */
 #include "CharacterPlayer.h"

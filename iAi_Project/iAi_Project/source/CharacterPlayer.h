@@ -5,6 +5,7 @@
 
 /* データリスト */
 #include "DataList_Input.h"
+#include "DataList_PlayerStatus.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -22,5 +23,6 @@ class CharacterPlayer : public CharacterBase
 	protected:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Input*	InputList;	// 入力管理
+		DataList_Input*			InputList;			// 入力管理
+		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 };

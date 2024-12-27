@@ -28,7 +28,7 @@ void DataListServer::DrawDataList()
 	int iFrameColor		= GetColor(0, 0, 0);			// 枠の色
 	int iStringColor	= GetColor(255, 255, 255);		// 文字の色
 
-	DrawBox(0, iIndex * 20, 600, iIndex * 20 + 20, iFrameColor, TRUE);
+	DrawBox(0, iIndex * 20, 200, iIndex * 20 + 20, iFrameColor, TRUE);
 	DrawString(0, 0, "データリスト名", iStringColor);
 	iIndex++;
 

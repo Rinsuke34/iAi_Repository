@@ -8,7 +8,9 @@
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
-	this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+	/* データリスト取得 */
+	this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* 仮初期化処理開始 */
 	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");

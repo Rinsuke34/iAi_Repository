@@ -17,3 +17,60 @@ PlatformBase::~PlatformBase()
 	/* モデルハンドル削除 */
 	MV1DeleteModel(this->iModelHandle);
 }
+
+/* 接触判定 */
+// モデル - カプセル
+bool PlatformBase::HitCheck(COLLISION_CAPSULE	stCapsule)
+{
+	// 引数
+	// stCapsule	: 判定するカプセルコリジョン
+	// 戻り値
+	// bool : 接触している(true) / 接触していない(false)
+
+	// ポリゴンとの接触情報
+	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
+
+	/* プラットフォームのモデルと対象のカプセルコリジョンが接触しているかの情報取得 */
+	stHitPolyDim = MV1CollCheck_Capsule(
+		/* このモデルのコリジョン */
+		this->iModelHandle, this->iCollisionFrameNo,
+		/* 判定するオブジェクトのコリジョン */
+		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius);
+
+	/* 接触数を取得 */
+	if (stHitPolyDim.HitNum > 0)
+	{
+		// 接触している場合
+		return true;
+	}
+	// 接触していない場合
+	return false;
+}
+
+// モデル - 球体
+bool PlatformBase::HitCheck(COLLISION_SQHERE	stSqhere)
+{
+	// 引数
+	// stCapsule	: 判定する球体コリジョン
+	// 戻り値
+	// bool			: 接触している(true) / 接触していない(false)
+
+	// ポリゴンとの接触情報
+	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
+
+	/* プラットフォームのモデルと対象の球体コリジョンが接触しているかの情報取得 */
+	stHitPolyDim = MV1CollCheck_Capsule(
+		/* このモデルのコリジョン */
+		this->iModelHandle, this->iCollisionFrameNo,
+		/* 判定するオブジェクトのコリジョン */
+		stSqhere.vecSqhere, stSqhere.vecSqhere, stSqhere.fSqhereRadius);
+
+	/* 接触数を取得 */
+	if (stHitPolyDim.HitNum > 0)
+	{
+		// 接触している場合
+		return true;
+	}
+	// 接触していない場合
+	return false;
+}
