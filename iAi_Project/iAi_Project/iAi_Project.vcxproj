@@ -163,6 +163,7 @@
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
+    <ClCompile Include="source\SceneGame_Camera.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
     <ClCompile Include="source\SceneInputConfig.cpp" />
     <ClCompile Include="source\SceneLoad.cpp" />
@@ -176,6 +177,8 @@
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
+    <ClInclude Include="source\SceneGame_Camera.h" />
+    <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />
     <ClInclude Include="source\DataList_Input.h" />
     <ClInclude Include="source\DataList_Object.h" />

@@ -4,3 +4,4 @@
 
 /* ‹¤’Ê‚Åg—p‚·‚éincludeˆ—‚ğ‚±‚±‚Å‚Ü‚Æ‚ß‚Äs‚¤ */
 #include "VariableDefine.h"
+#include "StructDefine.h"

@@ -33,8 +33,15 @@ void CharacterPlayer::Update()
 	}
 
 	/* 移動 */
+	/* 移動速度(仮) */
 	float fSpeed = 2.0f;
-	VECTOR vecMove = VScale(this->InputList->vecGetGameInputMove(), fSpeed);
+
+	/* 移動方向 */
+	VECTOR vecMove = this->InputList->vecGetGameInputMove();
+
+	/* 合成 */
+	vecMove = VScale(vecMove, fSpeed);
+
 	this->vecPosition = VAdd(this->vecPosition, vecMove);
 }
 
@@ -46,7 +53,6 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
 
 	/* テスト用描写 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
@@ -96,4 +102,12 @@ void CharacterPlayer::Draw()
 
 	VECTOR vecMove = this->InputList->vecGetGameInputMove();
 	DrawFormatString(500, 16 * 9, GetColor(255, 255, 255), "X:%f, Z:%f", vecMove.x, vecMove.z);
+
+
+	/* テスト用 */
+	XINPUT_STATE stXInputState;
+	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
+
+	DrawFormatString(500, 16 * 10, GetColor(255, 255, 255), "左トリガ : %u", stXInputState.LeftTrigger);
+	DrawFormatString(500, 16 * 11, GetColor(255, 255, 255), "右トリガ : %u", stXInputState.RightTrigger);
 }

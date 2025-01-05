@@ -26,14 +26,14 @@ bool Fps::FpsUpdate()
 		/* 時刻を取得 */
 		this->iStartTime = GetNowCount();
 	}
-	if (this->iCount == FRAME_RATE::FPS_RATE)
+	if (this->iCount == FPS_RATE)
 	{
 		// フレームレート設定値であるなら
 		/* 現在時刻を取得 */
 		int t = GetNowCount();
 
 		/* 現在のフレームレートを取得 */
-		giNowFps	= (int)(1000.f / ((t - iStartTime) / (float)FRAME_RATE::FPS_RATE));
+		giNowFps	= (int)(1000.f / ((t - iStartTime) / (float)FPS_RATE));
 
 		/* カウンタ、開始時刻を更新 */
 		this->iCount		= 0;
@@ -53,7 +53,7 @@ void Fps::FpsWait()
 	int iTookTime = GetNowCount() - this->iStartTime;
 
 	/* 待機する時間を算出 */
-	int iWaitTime = this->iCount * 1000 / FRAME_RATE::FPS_RATE - iTookTime;
+	int iWaitTime = this->iCount * 1000 / FPS_RATE - iTookTime;
 	if (iWaitTime > 0)
 	{
 		/* 必要であるならば待機を行う */

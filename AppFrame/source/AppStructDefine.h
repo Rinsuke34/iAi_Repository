@@ -2,6 +2,7 @@
 
 #pragma once
 #include <DxLib.h>
+#include "AppConstantDefine.h"
 
 /* AppFrameで使用する構造体の宣言 */
 
@@ -11,21 +12,22 @@ namespace Struct_Input
 	struct PLAYER_INPUT_JOYPAD	// プレイヤー入力(ジョイパッド)
 	{
 		/* ジョイパッド */
-		int	    igInput[3];			// ジョイパッド入力(0:ホールド、1:トリガ、2:リリース)
-
-		/* ジョイパッド(左アナログスティック) */
-		int		iXAnalog;		// X軸アナログ入力
-		int		iYAnalog;		// Y軸アナログ入力
+		char	cgInput[INPUT_MAX][16];						// ジョイパッド入力[0:ホールド、1:トリガ、2:リリース][入力内容]
+		bool	bgTrigger[INPUT_MAX][INPUT_DIRECTION];		// ジョイパッドのトリガーの入力[0:ホールド、1:トリガ、2:リリース][0:左、1:右]
+		short	sAnalogStickX[INPUT_DIRECTION];				// X軸アナログ入力[0:左、1:右]
+		short	sAnalogStickY[INPUT_DIRECTION];				// Y軸アナログ入力[0:左、1:右]
 	};
 	
 	struct PLAYER_INPUT_KEYBOARD_MOUSE	// プレイヤー入力(キーボード、マウス)
 	{
 		/* キーボード */
-		char	cgInput[3][256];	// キー入力(0:ホールド、1:トリガ、2:リリース)
+		char	cgInput[INPUT_MAX][256];	// キー入力[0:ホールド、1:トリガ、2:リリース][入力内容]
 
 		/* マウス */
-		int	    igInput[3];		// 入力(0:ホールド、1:トリガ、2:リリース)
+		int	    igInput[INPUT_MAX];		// 入力[0:ホールド、1:トリガ、2:リリース]
 
+		int		iMouseX;		// マウスX座標
+		int		iMouseY;		// マウスY座標
 		int		iMouseMoveX;	// X移動量
 		int		iMouseMoveY;	// Y移動量
 	};

@@ -1,5 +1,5 @@
 /* 2024.12.XX YYYY ZZZZ */
-//テスト
+
 #include "SceneGame.h"
 
 /* シーン「ゲーム」の定義 */
@@ -28,6 +28,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* テスト用処理 終了 */
 
+	/* シーン"カメラ"を作成 */
+	gpSceneServer->AddSceneReservation(new SceneGame_Camera(), false);
+
 	/* 非同期読み込みを無効化する */
 	SetUseASyncLoadFlag(false);
 }
@@ -50,18 +53,6 @@ void SceneGame::Process()
 // 描画
 void SceneGame::Draw()
 {
-	/* 3D基本設定 */
-	SetUseZBuffer3D(TRUE);
-	SetWriteZBuffer3D(TRUE);
-	SetUseBackCulling(TRUE);
-
 	/* すべてのオブジェクトの描写 */
 	ObjectList->DrawAll();
-
-	/* カメラ設定(仮) */
-	VECTOR stVecCameraPosition	= VGet(0, 100, -300);
-	VECTOR stVecCameraTarget	= VGet(0, 100, 0);
-	VECTOR stVecCameraUp		= VGet(0, 1, 0);
-
-	SetCameraPositionAndTargetAndUpVec(stVecCameraPosition, stVecCameraTarget, stVecCameraUp);
 }

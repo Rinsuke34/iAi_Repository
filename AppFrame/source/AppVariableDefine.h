@@ -15,6 +15,8 @@ extern bool gbEndFlg;	// プログラム終了フラグ
 /* プレイヤーの入力情報 */
 extern Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;			// ジョイパッド
 extern Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;		// キーボード＆マウス
+extern bool											gbUseMouseFlg;				// マウス使用フラグ(有効であるならばカーソルを描写＆中心固定解除)
+extern unsigned char								gucTriggerThreshold;			// トリガー入力の閾値
 
 /* 実行中クラス */
 extern Fps* gpFps;								// fps固定用クラス

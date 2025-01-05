@@ -22,6 +22,7 @@ class DataList_Input : public DataListBase
 		/* ゲームプレイ用入力取得 */
 		bool	bGetGameInputAction(int iInputType, int iGetInputGame);		// ゲームプレイ用入力取得(アクション)
 		VECTOR	vecGetGameInputMove();										// ゲームプレイ用入力取得(移動量)
+		VECTOR	vecGetGameInputAim();										// ゲームプレイ用入力取得(照準)
 
 	private:
 		/* キーコンフィグ情報 */

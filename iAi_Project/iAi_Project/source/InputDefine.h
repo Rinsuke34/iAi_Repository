@@ -7,9 +7,10 @@
 
 /* 入力管理用の定数 */
 /* 入力機器 */
-static const int INPUT_EQUIPMENT_JOYPAD		= 0;	// ジョイパッド
-static const int INPUT_EQUIPMENT_KEYBOARD	= 1;	// キーボード
-static const int INPUT_EQUIPMENT_MOUSE		= 2;	// マウス
+static const int INPUT_EQUIPMENT_JOYPAD			= 0;	// ジョイパッド
+static const int INPUT_EQUIPMENT_JOYPAD_TRIGGER	= 1;	// ジョイパッド(トリガー)
+static const int INPUT_EQUIPMENT_KEYBOARD		= 2;	// キーボード
+static const int INPUT_EQUIPMENT_MOUSE			= 3;	// マウス
 
 /* 入力内容 */
 // UI操作
@@ -30,6 +31,12 @@ static const int GAME_FORWARD	= 5;	// 前進(キーボード＆マウス専用)
 static const int GAME_BACK		= 6;	// 後退(キーボード＆マウス専用)
 static const int GAME_LEFT		= 7;	// 左移動(キーボード＆マウス専用)
 static const int GAME_RIGHT		= 8;	// 右移動(キーボード＆マウス専用)
+
+/* 入力コード(オリジナル処理用) */
+// ジョイパッド(XInput用)
+static const int XINPUT_TRIGGER_LEFT	= 0;	// 左トリガー
+static const int XINPUT_TRIGGER_RIGHT	= 1;	// 右トリガー
+
 
 /* 入力管理用の構造体 */
 

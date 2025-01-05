@@ -70,22 +70,13 @@ void Main::DxLibInit()
 	SetDoubleStartValidFlag(TRUE);
 
 	/* 画面の解像度を横1920×縦1080、1ドットあたり32ビットに指定する */
-	SetGraphMode(SCREEN_SIZE::WIDE, SCREEN_SIZE::HEIGHT, 32);
+	SetGraphMode(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, 32);
 
 	// ウィンドウモードに指定する
 	ChangeWindowMode(true);
 
 	// ウィンドウが非アクティブでもプログラムを実行させる
 	SetAlwaysRunFlag(true);
-
-	/* マウス座標を画面中央に設定 */
-	SetMousePoint(SCREEN_SIZE::WIDE / 2, SCREEN_SIZE::HEIGHT / 2);
-
-	// マウスカーソルを非表示にする
-	SetMouseDispFlag(FALSE);
-
-	/* ジョイパッドのデッドゾーンを設定 */
-	//SetJoypadDeadZone(PAD_INPUT_1, double Zone);
 }
 
 // メインプログラム初期化

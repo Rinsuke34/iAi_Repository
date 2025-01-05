@@ -3,6 +3,7 @@
 #include "PlayerInput.h"
 #include "AppConstantDefine.h"
 #include "AppVariableDefine.h"
+#include "AppFunctionDefine.h"
 
 /* プレイヤーの入力取得クラスの定義 */
 
@@ -10,8 +11,9 @@
 PlayerInput::PlayerInput()
 {
 	/* 初期化 */
-	gstJoypadInputData			= {};	// ジョイパッド
-	gstKeyboardInputData		= {};	// キーボード＆マウス
+	gstJoypadInputData		= {};						// ジョイパッド
+	gstKeyboardInputData	= {};						// キーボード＆マウス
+	gucTriggerThreshold		= INIT_TRIGGER_THRESHOLD;	// トリガー入力の閾値
 }
 
 // プレイヤーの入力取得
@@ -28,21 +30,67 @@ void PlayerInput::Input()
 void PlayerInput::InputJoypad()
 {
 	/* ジョイパッド用の入力取得 */
+	// ※XInputを前提としているため、DirectInputは非対応
 
 	/* 前回の入力を保存 */
 	Struct_Input::PLAYER_INPUT_JOYPAD pOldJoypadInput = gstJoypadInputData;
 
-	/* ジョイパッド(1番)からのホールド入力情報を得る */
-	gstJoypadInputData.igInput[INPUT_HOLD] = GetJoypadInputState(DX_INPUT_PAD1);
+	/* ジョイパッド(1番)からの入力内容を取得(XInput) */
+	XINPUT_STATE stXInputState;
+	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
 
-	/* トリガ入力情報の生成 */
-	gstJoypadInputData.igInput[INPUT_TRG] = (gstJoypadInputData.igInput[INPUT_HOLD] ^ pOldJoypadInput.igInput[INPUT_HOLD]) & gstJoypadInputData.igInput[INPUT_HOLD];
+	/* ボタンの入力処理 */
+	{
+		/* ホールド入力情報を取得 */
+		for (int i = 0; i < 16; i++)
+		{
+			gstJoypadInputData.cgInput[INPUT_HOLD][i] = stXInputState.Buttons[i];
+		}
 
-	/* リリース入力情報の生成 */
-	gstJoypadInputData.igInput[INPUT_REL] = (gstJoypadInputData.igInput[INPUT_HOLD] ^ pOldJoypadInput.igInput[INPUT_HOLD]) & pOldJoypadInput.igInput[INPUT_HOLD];
+		/* トリガ入力情報を取得 */
+		for (int i = 0; i < 16; i++)
+		{
+			gstJoypadInputData.cgInput[INPUT_TRG][i] = (gstJoypadInputData.cgInput[INPUT_HOLD][i] ^ pOldJoypadInput.cgInput[INPUT_HOLD][i]) & gstJoypadInputData.cgInput[INPUT_HOLD][i];
+		}
 
-	/* 左アナログスティックの入力量を取得 */
-	GetJoypadAnalogInput(&gstJoypadInputData.iXAnalog, &gstJoypadInputData.iYAnalog, DX_INPUT_PAD1);
+		/* リリース入力情報を取得 */
+		for (int i = 0; i < 16; i++)
+		{
+			gstJoypadInputData.cgInput[INPUT_REL][i] = (gstJoypadInputData.cgInput[INPUT_HOLD][i] ^ pOldJoypadInput.cgInput[INPUT_HOLD][i]) & pOldJoypadInput.cgInput[INPUT_HOLD][i];
+		}
+	}
+	
+	/* トリガーの入力処理 */
+	{
+		/* ホールド入力情報を取得 */
+		{
+			/* 入力値が閾値以上であるか判定 */
+			gstJoypadInputData.bgTrigger[INPUT_HOLD][INPUT_LEFT]	= PUBLIC_PROCESS::bCheckAboveThreshold(stXInputState.LeftTrigger, gucTriggerThreshold);
+			gstJoypadInputData.bgTrigger[INPUT_HOLD][INPUT_RIGHT]	= PUBLIC_PROCESS::bCheckAboveThreshold(stXInputState.RightTrigger, gucTriggerThreshold);
+		}
+
+		/* トリガ入力情報を取得 */
+		{
+			/* トリガーの入力が変化したか判定 */
+			gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_LEFT]		= gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_LEFT]	^ pOldJoypadInput.bgTrigger[INPUT_HOLD][INPUT_LEFT];
+			gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_RIGHT]	= gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_RIGHT]	^ pOldJoypadInput.bgTrigger[INPUT_HOLD][INPUT_RIGHT];
+		}
+		
+		/* リリース入力情報を取得 */
+		{
+			/* トリガーの入力が変化したか判定 */
+			gstJoypadInputData.bgTrigger[INPUT_REL][INPUT_LEFT]		= gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_LEFT]	^ pOldJoypadInput.bgTrigger[INPUT_HOLD][INPUT_LEFT];
+			gstJoypadInputData.bgTrigger[INPUT_REL][INPUT_RIGHT]	= gstJoypadInputData.bgTrigger[INPUT_TRG][INPUT_RIGHT]	^ pOldJoypadInput.bgTrigger[INPUT_HOLD][INPUT_RIGHT];
+		}
+	}
+
+	/* アナログスティックの入力量を取得 */
+	{
+		gstJoypadInputData.sAnalogStickX[INPUT_LEFT]	= stXInputState.ThumbLX;	// 左スティックX軸
+		gstJoypadInputData.sAnalogStickY[INPUT_LEFT]	= stXInputState.ThumbLY;	// 左スティックY軸
+		gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]	= stXInputState.ThumbRX;	// 右スティックX軸
+		gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]	= stXInputState.ThumbRY;	// 右スティックY軸
+	}
 }
 
 // 入力取得_キーボード＆マウス
@@ -53,43 +101,68 @@ void PlayerInput::InputKeyboard()
 	/* 前回の入力を保存 */
 	Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE pOldKeyboardInput = gstKeyboardInputData;
 
-	/* キーボードからのホールド入力情報を得る */
-	GetHitKeyStateAll(gstKeyboardInputData.cgInput[INPUT_HOLD]);
-	
-	for (int i = 0; i < 256; i++)
+	/* キーボードの入力処理 */
 	{
-		/* トリガ入力情報の生成 */
-		gstKeyboardInputData.cgInput[INPUT_TRG][i] = (gstKeyboardInputData.cgInput[INPUT_HOLD][i] ^ pOldKeyboardInput.cgInput[INPUT_HOLD][i]) & gstKeyboardInputData.cgInput[INPUT_HOLD][i];
+		/* キーボードからのホールド入力情報を得る */
+		GetHitKeyStateAll(gstKeyboardInputData.cgInput[INPUT_HOLD]);
 
-		/* リリース入力情報の生成 */
-		gstKeyboardInputData.cgInput[INPUT_REL][i] = (gstKeyboardInputData.cgInput[INPUT_HOLD][i] ^ pOldKeyboardInput.cgInput[INPUT_HOLD][i]) & pOldKeyboardInput.cgInput[INPUT_HOLD][i];
+		for (int i = 0; i < 256; i++)
+		{
+			/* トリガ入力情報の生成 */
+			gstKeyboardInputData.cgInput[INPUT_TRG][i] = (gstKeyboardInputData.cgInput[INPUT_HOLD][i] ^ pOldKeyboardInput.cgInput[INPUT_HOLD][i]) & gstKeyboardInputData.cgInput[INPUT_HOLD][i];
+
+			/* リリース入力情報の生成 */
+			gstKeyboardInputData.cgInput[INPUT_REL][i] = (gstKeyboardInputData.cgInput[INPUT_HOLD][i] ^ pOldKeyboardInput.cgInput[INPUT_HOLD][i]) & pOldKeyboardInput.cgInput[INPUT_HOLD][i];
+		}
 	}
 
-	/* マウスのホールド入力情報を得る */
-	gstKeyboardInputData.igInput[INPUT_HOLD] = GetMouseInput();
+	/* マウスの入力処理 */
+	{
+		/* マウスのホールド入力情報を得る */
+		gstKeyboardInputData.igInput[INPUT_HOLD] = GetMouseInput();
 
-	/* マウスのトリガ入力情報の生成 */
-	gstKeyboardInputData.igInput[INPUT_TRG] = (gstKeyboardInputData.igInput[INPUT_HOLD] ^ pOldKeyboardInput.igInput[INPUT_HOLD]) & gstKeyboardInputData.igInput[INPUT_HOLD];
+		/* マウスのトリガ入力情報の生成 */
+		gstKeyboardInputData.igInput[INPUT_TRG] = (gstKeyboardInputData.igInput[INPUT_HOLD] ^ pOldKeyboardInput.igInput[INPUT_HOLD]) & gstKeyboardInputData.igInput[INPUT_HOLD];
 
-	/* マウスのリリース入力情報の生成 */
-	gstKeyboardInputData.igInput[INPUT_REL] = (gstKeyboardInputData.igInput[INPUT_HOLD] ^ pOldKeyboardInput.igInput[INPUT_HOLD]) & pOldKeyboardInput.igInput[INPUT_HOLD];
+		/* マウスのリリース入力情報の生成 */
+		gstKeyboardInputData.igInput[INPUT_REL] = (gstKeyboardInputData.igInput[INPUT_HOLD] ^ pOldKeyboardInput.igInput[INPUT_HOLD]) & pOldKeyboardInput.igInput[INPUT_HOLD];
 
-	/* マウス座標取得 */
-	int iMouseX, iMouseY;	// マウス座標
-	GetMousePoint(&iMouseX, &iMouseY);
+		/* マウス座標取得 */
+		int iMouseX, iMouseY;	// マウス座標
+		GetMousePoint(&iMouseX, &iMouseY);
 
-	/* マウス原点設定 */
-	// ※マウス座標の中心を原点として移動量を取得する
-	int iMouseOriginX = SCREEN_SIZE::WIDE	/ 2;
-	int iMouseOriginY = SCREEN_SIZE::HEIGHT	/ 2;
+		/* マウス座標設定 */
+		gstKeyboardInputData.iMouseX = iMouseX;
+		gstKeyboardInputData.iMouseY = iMouseY;
 
-	/* マウス移動量測定 */
-	gstKeyboardInputData.iMouseMoveX = iMouseX - iMouseOriginX;
-	gstKeyboardInputData.iMouseMoveY = iMouseY - iMouseOriginY;
+		/* マウス状態取得 */
+		if (gbUseMouseFlg == false)
+		{
+			// マウス使用フラグが無効であるならば
+			/* マウス原点設定 */
+			// ※マウス座標の中心を原点として移動量を取得する
+			int iMouseOriginX =	SCREEN_SIZE_WIDE	/ 2;
+			int iMouseOriginY =	SCREEN_SIZE_HEIGHT	/ 2;
 
-	/* マウス座標リセット */
-	SetMousePoint(iMouseOriginX, iMouseOriginY);
+			/* マウス移動量測定 */
+			gstKeyboardInputData.iMouseMoveX = iMouseX - iMouseOriginX;
+			gstKeyboardInputData.iMouseMoveY = iMouseY - iMouseOriginY;
 
-	// マウスカーソルを非表示にする
-	SetMouseDispFlag(FALSE);
+			/* マウス座標リセット */
+			SetMousePoint(iMouseOriginX, iMouseOriginY);
+
+			/* マウスカーソル表示を無効化 */
+			SetMouseDispFlag(FALSE);
+		}
+		else
+		{
+			// マウス使用フラグが有効であるならば
+			/* マウス移動量測定 */
+			gstKeyboardInputData.iMouseMoveX = iMouseX - pOldKeyboardInput.iMouseX;
+			gstKeyboardInputData.iMouseMoveY = iMouseY - pOldKeyboardInput.iMouseY;
+
+			/* マウスカーソル表示を有効化 */
+			SetMouseDispFlag(TRUE);
+		}
+	}
 }

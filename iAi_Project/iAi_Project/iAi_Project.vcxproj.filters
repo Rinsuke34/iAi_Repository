@@ -121,6 +121,12 @@
     <Filter Include="ソース ファイル\データリスト\プレイヤー状態">
       <UniqueIdentifier>{a903c500-3e8c-4abc-ae19-104434afe45e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス">
+      <UniqueIdentifier>{128fe4f9-cb29-485c-b450-9fe95af19a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス">
+      <UniqueIdentifier>{d630c187-3c32-4dde-842e-c0257c1a2fe8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -158,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="source\DataList_PlayerStatus.cpp">
       <Filter>ソース ファイル\データリスト\プレイヤー状態</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneGame_Camera.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +214,12 @@
     </ClInclude>
     <ClInclude Include="source\PlayerStatusDefine.h">
       <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneGame_Camera.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\StructDefine.h">
+      <Filter>ヘッダー ファイル\定義</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

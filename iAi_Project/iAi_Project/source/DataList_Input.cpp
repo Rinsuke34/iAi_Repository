@@ -125,16 +125,26 @@ bool DataList_Input::bGetInterfaceInput(int iInputType, int iGetInputUI)
 	// bool			: 確認対象の入力が行われているか(true:行われている、false:行われていない)
 
 	/* ジョイパッド入力定義テーブル */
-	int iPadInput[]			= { PAD_INPUT_UP, PAD_INPUT_DOWN, PAD_INPUT_LEFT, PAD_INPUT_RIGHT, PAD_INPUT_A, PAD_INPUT_B };
+	int iPadInput[]			= { XINPUT_BUTTON_DPAD_UP, XINPUT_BUTTON_DPAD_DOWN, XINPUT_BUTTON_DPAD_LEFT, XINPUT_BUTTON_DPAD_RIGHT, XINPUT_BUTTON_A, XINPUT_BUTTON_B };
 
 	/* キーボード入力定義テーブル */
 	int iKeyboardInput[]	= { KEY_INPUT_UP, KEY_INPUT_DOWN, KEY_INPUT_LEFT, KEY_INPUT_RIGHT, KEY_INPUT_Z, KEY_INPUT_X };
 
 	/* 対象の入力が行われているか確認 */
-	if ((gstJoypadInputData.igInput[iInputType] & iPadInput[iGetInputUI]) || (gstKeyboardInputData.cgInput[iInputType][iKeyboardInput[iGetInputUI]] == TRUE))
 	{
-		// 入力されている場合
-		return true;
+		/* ジョイパッド */
+		if (gstJoypadInputData.cgInput[iInputType][iPadInput[iGetInputUI]] == TRUE)
+		{
+			// 入力されている場合
+			return true;
+		}
+		
+		/* キーボード＆マウス */
+		if (gstKeyboardInputData.cgInput[iInputType][iKeyboardInput[iGetInputUI]] == TRUE)
+		{
+			// 入力されている場合
+			return true;
+		}
 	}
 
 	/* 入力されていないと判定 */
@@ -190,10 +200,40 @@ bool DataList_Input::bGetGameInputAction(int iInputType, int iGetInputGame)
 	/* ジョイパッド */
 	if (stInputCheck[JOYPAD].bSkipFlg != true)
 	{
-		if (gstJoypadInputData.igInput[iInputType] & stInputCheck[JOYPAD].iInput)
+		switch (stInputCheck[JOYPAD].iEquipmentType)
 		{
-			// 入力されている場合
-			return true;
+			/* ジョイパッド(ボタン) */
+			case INPUT_EQUIPMENT_JOYPAD:
+				if (gstJoypadInputData.cgInput[iInputType][stInputCheck[JOYPAD].iInput] == TRUE)
+				{
+					// 入力されている場合
+					return true;
+				}
+				break;
+
+			/* ジョイパッド(トリガー) */
+			case INPUT_EQUIPMENT_JOYPAD_TRIGGER:
+				switch (stInputCheck[JOYPAD].iInput)
+				{
+					/* 左トリガーの場合 */
+					case XINPUT_TRIGGER_LEFT:
+						if(gstJoypadInputData.bgTrigger[iInputType][INPUT_LEFT] == true)
+						{
+							// 入力されている場合
+							return true;
+						}
+						break;
+
+					/* 右トリガーの場合 */
+					case XINPUT_TRIGGER_RIGHT:
+						if (gstJoypadInputData.bgTrigger[iInputType][INPUT_RIGHT] == true)
+						{
+							// 入力されている場合
+							return true;
+						}
+						break;
+				}
+			break;
 		}
 	}
 
@@ -242,14 +282,15 @@ VECTOR DataList_Input::vecGetGameInputMove()
 	// ■コントローラー使用時はアナログ値から算出するため、1.fに届かない場合がある。
 	// ■キーボードの場合は上下左右キーで算出するため出力は8方向のみ。
 	// ■コントローラーとキーボードの同時入力があった場合は双方を足し合わせた値を返す。
+	// ■コントローラーは左スティックの入力を使用する。
 
 	VECTOR vecReturn = VGet(0.0f, 0.0f, 0.0f);
 
 	/* コントローラーから移動方向を取得 */
-	// ※±1000の範囲で出力されるので±1.0fに変換する
+	// ※±32767の範囲で出力されるので±1.0fに変換する
 	// ※Y軸をZ軸に変換するためY軸はマイナスにして代入する
-	vecReturn.x += (float)gstJoypadInputData.iXAnalog / 1000.f;
-	vecReturn.z -= (float)gstJoypadInputData.iYAnalog / 1000.f;
+	vecReturn.x -= PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_LEFT]);
+	vecReturn.z -= PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
 
 	/* キーボードから移動方向を取得 */
 	/* 前進 */
@@ -349,15 +390,14 @@ void DataList_Input::ConfigReset()
 	using namespace Struct_Json_Input;	// 入力管理用の定数、構造体
 
 	/* キーコンフィグデフォルト(ジョイパッド) */
-	// ※修正予定
 	Struct_Json_Input::CONFIG_INFO stConfig_Default_Joypad[] =
 	{
-		{	GAME_JUMP,		PAD_INPUT_A,	INPUT_EQUIPMENT_JOYPAD	},	// ジャンプ
-		{	GAME_ATTACK,	PAD_INPUT_B,	INPUT_EQUIPMENT_JOYPAD	},	// 攻撃
-		{	GAME_AIM,		PAD_INPUT_X,	INPUT_EQUIPMENT_JOYPAD	},	// エイム(構え)
-		{	GAME_RESET,		PAD_INPUT_Y,	INPUT_EQUIPMENT_JOYPAD	},	// カメラリセット
-		{	GAME_DODGE,		PAD_INPUT_L,	INPUT_EQUIPMENT_JOYPAD	},	// 回避
-		{	-1,														}
+		{	GAME_JUMP,		XINPUT_BUTTON_A,				INPUT_EQUIPMENT_JOYPAD			},	// ジャンプ
+		{	GAME_ATTACK,	XINPUT_BUTTON_RIGHT_SHOULDER,	INPUT_EQUIPMENT_JOYPAD			},	// 攻撃
+		{	GAME_AIM,		XINPUT_TRIGGER_LEFT,			INPUT_EQUIPMENT_JOYPAD_TRIGGER	},	// エイム(構え)
+		{	GAME_RESET,		XINPUT_BUTTON_LEFT_SHOULDER,	INPUT_EQUIPMENT_JOYPAD			},	// カメラリセット
+		{	GAME_DODGE,		XINPUT_BUTTON_B,				INPUT_EQUIPMENT_JOYPAD			},	// 回避
+		{	-1,																				}
 	};
 
 	/* キーコンフィグデフォルト(キーボード＆マウス) */
