@@ -44,23 +44,22 @@ void SceneGame_Camera::Process()
 	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
 
 	/* 視点変更に必要なデータ取得 */
-	float fCameraAngleX				= this->PlayerStatusList->fGetCameraAngleX();			// X軸回転量
-	float fCameraAngleY				= this->PlayerStatusList->fGetCameraAngleY();			// Y軸回転量
-	float fCameraRotationalSpeed	= this->PlayerStatusList->fGetCameraRotationalSpeed();	// 回転速度
+	float fCameraAngleX							= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY							= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller		= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse			= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
 
 	/* 入力からカメラ回転量を取得 */
 	/* マウス */
 	{
-		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed;
-		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed;
+		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse;
+		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse;
 	}
 	
 	/* コントローラー */
 	{
-		float fCameraSensitivity = 0.1f;	// カメラ感度
-
-		fCameraAngleX += fCameraSensitivity * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
-		fCameraAngleY += fCameraSensitivity * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
+		fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
+		fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
 	}
 
 	/* Y軸の回転角度制限 */
@@ -122,7 +121,7 @@ void SceneGame_Camera::Draw()
 	DrawFormatString(800, 16 * 5, GetColor(255, 255, 255), "カメラのY軸回転量:%f", this->PlayerStatusList->fGetCameraAngleY());
 
 	// カメラの回転速度取得
-	DrawFormatString(800, 16 * 6, GetColor(255, 255, 255), "カメラの回転速度:%f", this->PlayerStatusList->fGetCameraRotationalSpeed());
+	DrawFormatString(800, 16 * 6, GetColor(255, 255, 255), "カメラの回転速度:%f", this->PlayerStatusList->fGetCameraRotationalSpeed_Controller());
 
 	// マウス移動量
 	DrawFormatString(800, 16 * 7, GetColor(255, 255, 255), "マウス移動量X:%d", gstKeyboardInputData.iMouseMoveX);

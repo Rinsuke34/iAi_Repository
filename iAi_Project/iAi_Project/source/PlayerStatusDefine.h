@@ -8,8 +8,13 @@
 
 /* 初期化用の定数(仮) */
 // 今後Jsonから読み込めるようにする予定
+/* 能力値関連 */
+static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// プレイヤーの移動加速度
+static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// プレイヤーの最大移動速度
+
 /* カメラ関連 */
-static const float	INIT_CAMERA_RADIUS				= 300;				// カメラの中心点からの距離
-static const float	INIT_CAMERA_ROTATIONAL_SPEED	= 0.01f;			// カメラの回転速度
-static const float	INIT_CAMERA_ANGLE_LIMIT_UP		= DX_PI_F / +2.f;	// カメラの回転角度制限(上)(ラジアン)
-static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN	= DX_PI_F / -2.f;	// カメラの回転角度制限(下)(ラジアン)
+static const float	INIT_CAMERA_RADIUS						= 300;				// カメラの中心点からの距離
+static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// カメラの回転速度(コントローラー)
+static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// カメラの回転速度(マウス)
+static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// カメラの回転角度制限(上)(ラジアン)
+static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// カメラの回転角度制限(下)(ラジアン)

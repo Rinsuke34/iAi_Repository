@@ -19,39 +19,11 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 // 更新
 void CharacterPlayer::Update()
 {
-	/* 使用例 */
-	// InputListに入っている関数を使用すればこんな感じで入力を取得できます。
-	// 引数に関しては、InputList.hを参照してください。
-	/* ジャンプ */
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
-	{
-		this->vecPosition.y = 50.f;
-	}
-	else
-	{
-		this->vecPosition.y = 0.f;
-	}
-
 	/* 移動 */
-	/* 移動速度(仮) */
-	float fSpeed = 2.0f;
+	Player_Move();
 
-	/* 移動方向 */
-	VECTOR vecInput = this->InputList->vecGetGameInputMove();
-
-	/* カメラの向きを取得(水平方向のみ) */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-	/* プレイヤーの正面方向取得 */
-	VECTOR vecMove;
-	vecMove.x = sinf(fCameraAngleX) * vecInput.z - cosf(fCameraAngleX) * vecInput.x;
-	vecMove.y = 0.0f;
-	vecMove.z = -cosf(fCameraAngleX) * vecInput.z - sinf(fCameraAngleX) * vecInput.x;
-
-	/* 合成 */
-	vecMove = VScale(vecMove, fSpeed);
-
-	this->vecPosition = VAdd(this->vecPosition, vecMove);
+	/* ジャンプ */
+	Player_Jump();
 }
 
 // 描写
@@ -60,12 +32,13 @@ void CharacterPlayer::Draw()
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
-	/* モデル回転(テスト) */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -this->PlayerStatusList->fGetCameraAngleX(), 0.0f));
-	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "モデル回転量 : %f", this->PlayerStatusList->fGetCameraAngleX());
+	/* モデル回転 */
+	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
+
+
 
 	/* テスト用描写 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
@@ -116,11 +89,87 @@ void CharacterPlayer::Draw()
 	VECTOR vecMove = this->InputList->vecGetGameInputMove();
 	DrawFormatString(500, 16 * 9, GetColor(255, 255, 255), "X:%f, Z:%f", vecMove.x, vecMove.z);
 
-
-	/* テスト用 */
 	XINPUT_STATE stXInputState;
 	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
 
 	DrawFormatString(500, 16 * 10, GetColor(255, 255, 255), "左トリガ : %u", stXInputState.LeftTrigger);
 	DrawFormatString(500, 16 * 11, GetColor(255, 255, 255), "右トリガ : %u", stXInputState.RightTrigger);
+
+	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
+	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "移動速度 : %f", fSpeed);
+}
+
+// 移動
+void CharacterPlayer::Player_Move()
+{
+	/* プレイヤーの移動処理 */
+
+	/* 入力による移動量を取得 */
+	VECTOR vecInput = this->InputList->vecGetGameInputMove();
+
+	/* 移動入力がされているか確認 */
+	if (vecInput.x != 0 || vecInput.z != 0)
+	{
+		// 移動入力がされている場合
+		/* 現在の移動速度取得 */
+		float fSpeed	= this->PlayerStatusList->fGetPlayerNowMoveSpeed();
+
+		/* 加速度を適用 */
+		fSpeed += this->PlayerStatusList->fGetPlayerMoveAcceleration();
+
+		/* 最大速度を超えていないか確認 */
+		float fMaxSpeed = this->PlayerStatusList->fGetPlayerMaxMoveSpeed();
+		if (fSpeed > fMaxSpeed)
+		{
+			// 最大速度を超えている場合
+			/* 最大速度に設定 */
+			fSpeed = fMaxSpeed;
+		}
+
+		/* 現在速度を更新 */
+		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
+
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+		/* 移動量を算出 */
+		VECTOR vecMove;
+		vecMove.x	= +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecMove.y	= 0.0f;
+		vecMove.z	= -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecMove		= VScale(vecMove, fSpeed);
+
+		/* 移動後の座標を算出 */
+		VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
+
+		/* 道中でオブジェクトに接触しているか判定 */
+		// 制作予定
+
+		/* プレイヤーの座標を移動させる */
+		this->vecPosition = vecNextPosition;
+
+		/* プレイヤーの向きを移動方向に合わせる */
+		float fAngle = atan2f(vecInput.x, vecInput.z);		// 移動方向の角度を取得
+		fAngle = fAngleX - fAngle;							// カメラの向きと合成
+		this->PlayerStatusList->SetPlayerAngleX(fAngle);	// プレイヤーの向きを設定
+	}
+	else
+	{
+		// 移動入力がされていない場合
+		/* 移動速度を0にする */
+		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
+	}
+}
+
+// ジャンプ
+void CharacterPlayer::Player_Jump()
+{
+	/* プレイヤーのジャンプ処理 */
+
+	/* ジャンプ入力がされているか確認 */
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+	{
+		// ジャンプ入力がされている場合
+		/* ジャンプ処理 */
+	}
 }

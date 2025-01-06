@@ -25,4 +25,8 @@ class CharacterPlayer : public CharacterBase
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
 		DataList_Input*			InputList;			// 入力管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
+
+		/* 関数 */
+		void	Player_Move();			// 移動
+		void	Player_Jump();			// ジャンプ
 };
