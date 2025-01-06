@@ -27,6 +27,7 @@ class CharacterPlayer : public CharacterBase
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 
 		/* 関数 */
+		void	Player_Gravity();		// 重力
 		void	Player_Move();			// 移動
 		void	Player_Jump();			// ジャンプ
 };

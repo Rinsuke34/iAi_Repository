@@ -12,7 +12,7 @@
 #include "CharacterPlayer.h"
 
 /* シーン */
-#include "SceneGame_Camera.h"
+
 
 /* シーン「ゲーム」の宣言 */
 
@@ -29,7 +29,14 @@ class SceneGame : public SceneBase
 	private:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Object* ObjectList;	// オブジェクト管理
+		DataList_Object* ObjectList;				// オブジェクト管理
+		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
+
+		/* 関数 */
+		void	SetCamera();						// カメラ設定
+
+		/* カメラ関連 */
+		void	SetCamera_Free();					// カメラ設定(フリーモード)
 
 	protected:
 };

@@ -17,6 +17,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
 
 	/* カメラ関連 */
+	this->iCameraMode						= CAMERA_MODE_FREE;							// カメラモード
 	this->vecCameraUp						= VGet(0, 1, 0);							// カメラの上方向(Y+方向で固定)
 	this->vecCameraPosition					= VGet(0, 0, 0);							// カメラの座標
 	this->vecCameraTarget					= VGet(0, 0, 0);							// カメラの注視点

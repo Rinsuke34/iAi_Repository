@@ -165,9 +165,6 @@
     <ClCompile Include="source\DataList_PlayerStatus.cpp">
       <Filter>ソース ファイル\データリスト\プレイヤー状態</Filter>
     </ClCompile>
-    <ClCompile Include="source\SceneGame_Camera.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -215,10 +212,10 @@
     <ClInclude Include="source\PlayerStatusDefine.h">
       <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
     </ClInclude>
-    <ClInclude Include="source\SceneGame_Camera.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
     <ClInclude Include="source\StructDefine.h">
+      <Filter>ヘッダー ファイル\定義</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ConstantDefine.h">
       <Filter>ヘッダー ファイル\定義</Filter>
     </ClInclude>
   </ItemGroup>

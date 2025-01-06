@@ -19,12 +19,11 @@ class DataList_PlayerStatus : public DataListBase
 		// プレイヤー状態関連
 		float	fGetPlayerNowMoveSpeed()		{ return this->fPlayerNowMoveSpeed; }		// プレイヤーの現在の移動速度取得
 		float	fGetPlayerAngleX()				{ return this->fPlayerAngleX; }				// プレイヤーのX軸回転量(ラジアン)取得
-
 		// 能力値関連
 		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
 		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// プレイヤーの最大移動速度取得
-		
 		// カメラ関連
+		int		iGetCameraMode()							{ return this->iCameraMode; }							// カメラモード取得
 		VECTOR	vecGetCameraUp()							{ return this->vecCameraUp; };							// カメラの上方向取得
 		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; };					// カメラの座標取得
 		VECTOR	vecGetCameraTarget()						{ return this->vecCameraTarget; };						// カメラの注視点取得
@@ -38,14 +37,13 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* データ設定 */
 		// プレイヤー状態関連
-		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)			{ this->fPlayerNowMoveSpeed		= fPlayerNowMoveSpeed; }			// プレイヤーの現在の移動速度設定
-		void	SetPlayerAngleX(float fPlayerAngleX)						{ this->fPlayerAngleX			= fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
-
+		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)			{ this->fPlayerNowMoveSpeed		= fPlayerNowMoveSpeed; }		// プレイヤーの現在の移動速度設定
+		void	SetPlayerAngleX(float fPlayerAngleX)						{ this->fPlayerAngleX			= fPlayerAngleX; }				// プレイヤーのX軸回転量(ラジアン)取得
 		// 能力値関連
 		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)	{ this->fPlayerMoveAcceleration	= fPlayerMoveAcceleration; }	// プレイヤーの移動加速度設定
-		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)			{ this->fPlayerMaxMoveSpeed		= fPlayerMaxMoveSpeed;}				// プレイヤーの最大移動速度取得
-
+		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)			{ this->fPlayerMaxMoveSpeed		= fPlayerMaxMoveSpeed;}			// プレイヤーの最大移動速度取得
 		// カメラ関連
+		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; };				// カメラモード設定
 		void	SetCameraUp(VECTOR vecCameraUp)										{ this->vecCameraUp							= vecCameraUp; };				// カメラの上方向設定
 		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; };			// カメラの座標設定
 		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; };			// カメラの注視点設定
@@ -67,6 +65,7 @@ class DataList_PlayerStatus : public DataListBase
 		float	fPlayerMaxMoveSpeed;		// プレイヤーの最大移動速度
 
 		/* カメラ関連 */
+		int		iCameraMode;						// カメラモード
 		VECTOR	vecCameraUp;						// カメラの上方向
 		VECTOR	vecCameraPosition;					// カメラの座標
 		VECTOR	vecCameraTarget;					// カメラの注視点

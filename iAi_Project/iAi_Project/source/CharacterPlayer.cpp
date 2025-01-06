@@ -19,11 +19,14 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 // 更新
 void CharacterPlayer::Update()
 {
-	/* 移動 */
-	Player_Move();
+	/* 重力処理 */
+	Player_Gravity();
 
-	/* ジャンプ */
+	/* ジャンプ処理 */
 	Player_Jump();
+
+	/* 移動処理 */
+	Player_Move();
 }
 
 // 描写
@@ -149,9 +152,9 @@ void CharacterPlayer::Player_Move()
 		this->vecPosition = vecNextPosition;
 
 		/* プレイヤーの向きを移動方向に合わせる */
-		float fAngle = atan2f(vecInput.x, vecInput.z);		// 移動方向の角度を取得
-		fAngle = fAngleX - fAngle;							// カメラの向きと合成
-		this->PlayerStatusList->SetPlayerAngleX(fAngle);	// プレイヤーの向きを設定
+		float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+		fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
+		this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
 	}
 	else
 	{
@@ -172,4 +175,11 @@ void CharacterPlayer::Player_Jump()
 		// ジャンプ入力がされている場合
 		/* ジャンプ処理 */
 	}
+}
+
+// 重力
+void CharacterPlayer::Player_Gravity()
+{
+	/* プレイヤーの重力処理 */
+
 }
