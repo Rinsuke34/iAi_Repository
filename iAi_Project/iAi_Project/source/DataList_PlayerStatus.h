@@ -23,8 +23,8 @@ class DataList_PlayerStatus : public DataListBase
 		VECTOR	vecGetCameraPosition()			{ return this->vecCameraPosition; };		// カメラの座標取得
 		VECTOR	vecGetCameraTarget()			{ return this->vecCameraTarget; };			// カメラの注視点取得
 		float	fGetCameraRadius()				{ return this->fCameraRadius; };			// カメラの中心点からの距離取得
-		float	fGetCameraAngleX()				{ return this->fCameraAngleX; };			// カメラのX軸回転量取得
-		float	fGetCameraAngleY()				{ return this->fCameraAngleY; };			// カメラのY軸回転量取得
+		float	fGetCameraAngleX()				{ return this->fCameraAngleX; };			// カメラのX軸回転量(ラジアン)取得
+		float	fGetCameraAngleY()				{ return this->fCameraAngleY; };			// カメラのY軸回転量(ラジアン)取得
 		float	fGetCameraRotationalSpeed()		{ return this->fCameraRotationalSpeed; };	// カメラの回転速度取得
 		float	fGetCameraAngleLimitUp()		{ return this->fCameraAngleLimitUp; };		// カメラの回転角度制限取得(上)
 		float	fGetCameraAngleLimitDown()		{ return this->fCameraAngleLimitDown; };	// カメラの回転角度制限取得(下)
@@ -37,8 +37,8 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetCameraPosition(VECTOR vecCameraPosition)					{ this->vecCameraPosition		= vecCameraPosition; };			// カメラの座標設定
 		void	SetCameraTarget(VECTOR vecCameraTarget)						{ this->vecCameraTarget			= vecCameraTarget; };			// カメラの注視点設定
 		void	SetCameraRadius(float fCameraRadius)						{ this->fCameraRadius			= fCameraRadius; };				// カメラの中心点からの距離設定
-		void	SetCameraAngleX(float fCameraAngleX)						{ this->fCameraAngleX			= fCameraAngleX; };				// カメラのX軸回転量設定
-		void	SetCameraAngleY(float fCameraAngleY)						{ this->fCameraAngleY			= fCameraAngleY; };				// カメラのY軸回転量設定
+		void	SetCameraAngleX(float fCameraAngleX)						{ this->fCameraAngleX			= fCameraAngleX; };				// カメラのX軸回転量(ラジアン)設定
+		void	SetCameraAngleY(float fCameraAngleY)						{ this->fCameraAngleY			= fCameraAngleY; };				// カメラのY軸回転量(ラジアン)設定
 		void	SetCameraRotationalSpeed(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed	= fCameraRotationalSpeed; };	// カメラの回転速度設定
 		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)		{ this->fCameraAngleLimitUp		= fCameraAngleLimitUp; };		// カメラの回転角度制限設定(上)
 		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)	{ this->fCameraAngleLimitDown	= fCameraAngleLimitDown; };		// カメラの回転角度制限設定(下)
@@ -51,8 +51,8 @@ class DataList_PlayerStatus : public DataListBase
 		VECTOR	vecCameraPosition;			// カメラの座標
 		VECTOR	vecCameraTarget;			// カメラの注視点
 		float	fCameraRadius;				// カメラの中心点からの距離(ズーム量)
-		float	fCameraAngleX;				// カメラのX軸回転量
-		float	fCameraAngleY;				// カメラのY軸回転量
+		float	fCameraAngleX;				// カメラのX軸回転量(ラジアン)
+		float	fCameraAngleY;				// カメラのY軸回転量(ラジアン)
 		float	fCameraRotationalSpeed;		// カメラの回転速度
 		float	fCameraAngleLimitUp;		// カメラの回転角度制限(上)
 		float	fCameraAngleLimitDown;		// カメラの回転角度制限(下)

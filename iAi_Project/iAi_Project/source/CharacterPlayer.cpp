@@ -37,7 +37,16 @@ void CharacterPlayer::Update()
 	float fSpeed = 2.0f;
 
 	/* 移動方向 */
-	VECTOR vecMove = this->InputList->vecGetGameInputMove();
+	VECTOR vecInput = this->InputList->vecGetGameInputMove();
+
+	/* カメラの向きを取得(水平方向のみ) */
+	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+	/* プレイヤーの正面方向取得 */
+	VECTOR vecMove;
+	vecMove.x = sinf(fCameraAngleX) * vecInput.z - cosf(fCameraAngleX) * vecInput.x;
+	vecMove.y = 0.0f;
+	vecMove.z = -cosf(fCameraAngleX) * vecInput.z - sinf(fCameraAngleX) * vecInput.x;
 
 	/* 合成 */
 	vecMove = VScale(vecMove, fSpeed);
@@ -50,6 +59,10 @@ void CharacterPlayer::Draw()
 {
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+	/* モデル回転(テスト) */
+	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -this->PlayerStatusList->fGetCameraAngleX(), 0.0f));
+	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "モデル回転量 : %f", this->PlayerStatusList->fGetCameraAngleX());
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);

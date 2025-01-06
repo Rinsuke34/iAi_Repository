@@ -51,8 +51,8 @@ void SceneGame_Camera::Process()
 	/* 入力からカメラ回転量を取得 */
 	/* マウス */
 	{
-		fCameraAngleX += gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed;
-		fCameraAngleY += gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed;
+		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed;
+		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed;
 	}
 	
 	/* コントローラー */
@@ -80,10 +80,10 @@ void SceneGame_Camera::Process()
 
 	/* カメラ座標設定 */
 	{
-		float fRadius	= this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
-		float fCameraX	= fRadius * +cosf(fCameraAngleX)	+ vecCameraTarget.x;	// X座標
-		float fCameraY	= fRadius * -sinf(fCameraAngleY)	+ vecCameraTarget.y;	// Y座標
-		float fCameraZ	= fRadius * +sinf(fCameraAngleX)	+ vecCameraTarget.z;	// Z座標
+		float fRadius	= this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
+		float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+		float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+		float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
 		this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
 	}

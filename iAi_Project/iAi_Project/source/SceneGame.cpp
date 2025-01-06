@@ -12,19 +12,26 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* テスト用処理 開始 */
 
-	/* "オブジェクト管理"を作成 */
+	/* データリスト作成 */
+	{
+		/* データリストサーバーに"オブジェクト管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Object());
 
-	/* データリストサーバーに"オブジェクト管理"を追加 */
-	gpDataListServer->AddDataList(new DataList_Object()); 
-
-	/* 今追加した"オブジェクト管理"を取得 */
-	ObjectList	=	dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-
-	/* "オブジェクト管理"に要素追加 */
-	ObjectList->SetCharacterPlayer(new CharacterPlayer());
-
-	/* データリストサーバーに"プレイヤー状態"を追加 */
-	gpDataListServer->AddDataList(new DataList_PlayerStatus());
+		/* データリストサーバーに"プレイヤー状態"を追加 */
+		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+	}
+	
+	/* データリスト取得 */
+	{
+		/* "オブジェクト管理"を取得 */
+		ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	}
+	
+	/* 要素追加 */
+	{
+		/* "オブジェクト管理"にプレイヤーを追加 */
+		ObjectList->SetCharacterPlayer(new CharacterPlayer());
+	}
 
 	/* テスト用処理 終了 */
 

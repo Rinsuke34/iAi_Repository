@@ -11,5 +11,5 @@
 /* カメラ関連 */
 static const float	INIT_CAMERA_RADIUS				= 300;				// カメラの中心点からの距離
 static const float	INIT_CAMERA_ROTATIONAL_SPEED	= 0.01f;			// カメラの回転速度
-static const float	INIT_CAMERA_ANGLE_LIMIT_UP		= DX_PI_F / +2.f;	// カメラの回転角度制限(上)
-static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN	= DX_PI_F / -2.f;	// カメラの回転角度制限(下)
+static const float	INIT_CAMERA_ANGLE_LIMIT_UP		= DX_PI_F / +2.f;	// カメラの回転角度制限(上)(ラジアン)
+static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN	= DX_PI_F / -2.f;	// カメラの回転角度制限(下)(ラジアン)

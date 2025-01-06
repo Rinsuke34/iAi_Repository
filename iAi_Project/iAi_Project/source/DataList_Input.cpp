@@ -288,9 +288,8 @@ VECTOR DataList_Input::vecGetGameInputMove()
 
 	/* コントローラーから移動方向を取得 */
 	// ※±32767の範囲で出力されるので±1.0fに変換する
-	// ※Y軸をZ軸に変換するためY軸はマイナスにして代入する
-	vecReturn.x -= PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_LEFT]);
-	vecReturn.z -= PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
+	vecReturn.x += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_LEFT]);
+	vecReturn.z += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
 
 	/* キーボードから移動方向を取得 */
 	/* 前進 */
