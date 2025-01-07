@@ -127,6 +127,12 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス">
       <UniqueIdentifier>{d630c187-3c32-4dde-842e-c0257c1a2fe8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\3Dモデル管理">
+      <UniqueIdentifier>{08353976-66fd-4099-bab1-ba450c99a977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\3Dモデル管理">
+      <UniqueIdentifier>{5069a771-77c7-48e3-b043-7f6192ef61d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -164,6 +170,9 @@
     </ClCompile>
     <ClCompile Include="source\DataList_PlayerStatus.cpp">
       <Filter>ソース ファイル\データリスト\プレイヤー状態</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Model.cpp">
+      <Filter>ソース ファイル\データリスト\3Dモデル管理</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="source\ConstantDefine.h">
       <Filter>ヘッダー ファイル\定義</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Model.h">
+      <Filter>ヘッダー ファイル\データリスト\3Dモデル管理</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

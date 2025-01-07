@@ -32,6 +32,6 @@ class PlatformBase : public ObjectBase
 		/* 変数 */
 		int		iModelHandle;		// モデルハンドル
 		int		iCollisionFrameNo;	// コリジョンの設定されたモデルのフレーム番号	
-		VECTOR	vecRotate;		// 回転
-		VECTOR	vecScale;		// 拡大
+		VECTOR	vecRotate;			// 回転
+		VECTOR	vecScale;			// 拡大
 };

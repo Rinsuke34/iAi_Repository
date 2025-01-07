@@ -3,6 +3,8 @@
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* データリスト */
 #include "DataList_Object.h"
@@ -33,6 +35,7 @@ class SceneGame : public SceneBase
 		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
 
 		/* 関数 */
+		void	LoadMapData();						// マップデータのロード
 		void	SetCamera();						// カメラ設定
 
 		/* カメラ関連 */

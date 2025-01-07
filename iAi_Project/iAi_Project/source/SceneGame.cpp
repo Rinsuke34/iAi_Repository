@@ -139,3 +139,27 @@ void SceneGame::SetCamera_Free()
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
 	}
 }
+
+// マップデータのロード
+void SceneGame::LoadMapData()
+{
+	/* 読み込むマップデータの番号を取得 */
+	{
+		/* マップデータのロード処理 */
+	}
+
+	/* マップデータの読み込み */
+	{
+		/* 読み込みたいマップデータのパス設定 */
+		std::string path		= "resource/MapData/";
+		std::string jsonFile	= "Island.json";
+		std::ifstream file(path + jsonFile);
+
+		/* データの入っている場所の名称設定 */
+		std::string jsonObjName	= "Island";
+
+		/* Jsonファイル読み込み */
+		nlohmann::json json;
+		file >> json;
+	}
+}
