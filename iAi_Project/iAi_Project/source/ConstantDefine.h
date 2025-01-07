@@ -4,6 +4,9 @@
 
 /* プロジェクトで使用する定数の宣言 */
 
+/* 計算関連 */
+static const float PI = 3.14159265358979323846f;	// 円周率
+
 /* ステージ関連 */
 static const int STAGE_0_1	= 0;	// ステージ0-1
 static const int STAGE_0_2	= 1;	// ステージ0-2

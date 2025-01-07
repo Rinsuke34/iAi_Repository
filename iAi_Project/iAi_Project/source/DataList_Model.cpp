@@ -13,7 +13,15 @@ DataList_Model::DataList_Model() : DataListBase("DataList_Model")
 // デストラクタ
 DataList_Model::~DataList_Model()
 {
+	/* リスト内の3Dモデルを削除 */
+	for (const auto& pair : pModelHandleList)
+	{
+		/* モデルを削除 */
+		MV1DeleteModel(pair.second);
+	}
 
+	/* mapをクリアする */
+	pModelHandleList.clear();
 }
 
 // Jsonからデータをロード"※仮作成"
@@ -23,11 +31,10 @@ void DataList_Model::JsonDataLoad()
 }
 
 // 3Dモデル取得
-int	DataList_Model::iGetModel(std::string modelName, ObjectBase* pSetObject)
+int	DataList_Model::iGetModel(std::string modelName)
 {
 	// 引数
 	// modelName	: 3Dモデル名
-	// pSetObject	: 3Dモデルを設定するオブジェクト(this)
 	// 戻り値
 	// int			: 3Dモデルハンドル(複製したものを渡す)
 
@@ -48,36 +55,17 @@ int	DataList_Model::iGetModel(std::string modelName, ObjectBase* pSetObject)
 		/* 3Dモデルを読み込み */
 		iReturn = MV1LoadModel(FileName.c_str());
 
-		/* 読み込んだモデルを設定するオブジェクトのパスを取得 */
-		this->pModelHandleList[modelName] = pSetObject;
+		/* 3Dモデルをリストに追加 */
+		this->pModelHandleList[modelName] = iReturn;
+
+		/* 読み込んだ3Dモデルを複製 */
+		iReturn = MV1DuplicateModel(iReturn);
 	}
 	else
 	{
 		// 存在している場合
-		/* 対象のモデルを所持するオブジェクトを取得 */
-		ObjectBase* pModel = this->pModelHandleList[modelName];
-
-		/* そのモデルがアクタであるか確認 */
-		ActorBase* pActor = dynamic_cast<ActorBase*>(pModel);
-
-		/* キャストが成功したか確認 */
-		if (pActor != nullptr)
-		{
-			// 成功した(アクタであった)場合
-			/* モデルハンドルを複製して取得 */
-			iReturn = MV1DuplicateModel(pActor->iGetModelHandle());
-		}
-		
-		/* そのモデルがプラットフォームであるか確認 */
-		PlatformBase* pPlatform = dynamic_cast<PlatformBase*>(pModel);
-
-		/* キャストが成功したか確認 */
-		if (pPlatform != nullptr)
-		{
-			// 成功した(プラットフォームであった)場合
-			/* モデルハンドルを取得 */
-			iReturn = MV1DuplicateModel(pPlatform->iGetModelHandle());
-		}
+		/* 対処のモデルを複製 */
+		iReturn = MV1DuplicateModel(this->pModelHandleList[modelName]);
 	}
 
 	return iReturn;
@@ -100,11 +88,6 @@ bool DataList_Model::bCheckModel(std::string modelName)
 	{
 		// 登録されている場合
 		bReturn = true;
-	}
-	else
-	{
-		// 登録されていない場合
-		bReturn = false;
 	}
 
 	return bReturn;

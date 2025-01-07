@@ -133,6 +133,12 @@
     <Filter Include="ソース ファイル\データリスト\3Dモデル管理">
       <UniqueIdentifier>{5069a771-77c7-48e3-b043-7f6192ef61d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム">
+      <UniqueIdentifier>{2b0041bd-44b6-4a97-a12f-ae97bc7383eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム">
+      <UniqueIdentifier>{15fcfb79-088b-40c4-b3fc-a30e862459a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -173,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="source\DataList_Model.cpp">
       <Filter>ソース ファイル\データリスト\3Dモデル管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PlatformBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneGame_MapLoad.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="source\DataList_Model.h">
       <Filter>ヘッダー ファイル\データリスト\3Dモデル管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlatformBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

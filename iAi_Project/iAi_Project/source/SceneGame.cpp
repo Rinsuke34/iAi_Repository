@@ -19,22 +19,25 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"プレイヤー状態"を追加 */
 		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+
+		/* データリストサーバーに"3Dモデル管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Model());
 	}
 	
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+		/* "3Dモデル管理"を取得 */
+		this->ModelList = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 	}
-	
-	/* 要素追加 */
-	{
-		/* "オブジェクト管理"にプレイヤーを追加 */
-		ObjectList->SetCharacterPlayer(new CharacterPlayer());
-	}
+
+	/* マップデータ読み込み */
+	LoadMapData();
 
 	/* テスト用処理 終了 */
 
@@ -48,6 +51,7 @@ SceneGame::~SceneGame()
 	/* データリスト削除 */
 	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
 	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
+	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
 }
 
 // 計算
@@ -137,29 +141,5 @@ void SceneGame::SetCamera_Free()
 	/* カメラ設定 */
 	{
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
-	}
-}
-
-// マップデータのロード
-void SceneGame::LoadMapData()
-{
-	/* 読み込むマップデータの番号を取得 */
-	{
-		/* マップデータのロード処理 */
-	}
-
-	/* マップデータの読み込み */
-	{
-		/* 読み込みたいマップデータのパス設定 */
-		std::string path		= "resource/MapData/";
-		std::string jsonFile	= "Island.json";
-		std::ifstream file(path + jsonFile);
-
-		/* データの入っている場所の名称設定 */
-		std::string jsonObjName	= "Island";
-
-		/* Jsonファイル読み込み */
-		nlohmann::json json;
-		file >> json;
 	}
 }

@@ -9,9 +9,7 @@
 /* データリスト */
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
-
-/* オブジェクト */
-#include "CharacterPlayer.h"
+#include "DataList_Model.h"
 
 /* シーン */
 
@@ -31,8 +29,9 @@ class SceneGame : public SceneBase
 	private:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Object* ObjectList;				// オブジェクト管理
-		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
+		DataList_Object*		ObjectList;				// オブジェクト管理
+		DataList_PlayerStatus*	PlayerStatusList;		// プレイヤー状態管理
+		DataList_Model*			ModelList;				// 3Dモデル管理
 
 		/* 関数 */
 		void	LoadMapData();						// マップデータのロード

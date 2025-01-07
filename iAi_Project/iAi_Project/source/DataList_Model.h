@@ -20,12 +20,12 @@ class DataList_Model : public DataListBase
 		void	JsonDataLoad();			// Jsonからデータをロード"※仮作成"
 
 		/* 3Dモデル取得 */
-		int		iGetModel(std::string modelName, ObjectBase* pSetObject);	// 3Dモデル取得
+		int		iGetModel(std::string modelName);			// 3Dモデル取得
 
 	private:
 		/* 管理するデータ */
 		// リスト
-		std::map<std::string, ObjectBase*>		pModelHandleList;	// 3Dモデルリスト(アクタとプラットフォームを対象)
+		std::map<std::string, int>	pModelHandleList;		// 3Dモデルリスト
 
 		/* 関数 */
 		bool	bCheckModel(std::string modelName);			// 3Dモデル存在確認

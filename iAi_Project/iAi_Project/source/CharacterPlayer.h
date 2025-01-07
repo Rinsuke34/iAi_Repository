@@ -1,11 +1,12 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 
 #pragma once
-#include "CharacterBase.h"
+#include "Appframe.h"
 
 /* データリスト */
 #include "DataList_Input.h"
 #include "DataList_PlayerStatus.h"
+#include "DataList_Model.h"
 
 /* プレイヤークラスの宣言 */
 
