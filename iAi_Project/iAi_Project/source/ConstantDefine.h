@@ -4,8 +4,12 @@
 
 /* プロジェクトで使用する定数の宣言 */
 
-/* 計算関連 */
-static const float PI = 3.14159265358979323846f;	// 円周率
+/* 計算用マクロ */
+#define	PI					(3.1415926535897932386f)
+#define	DEG2RAD(x)			( ((x) / 180.0f ) * PI )
+#define	RAD2DEG(x)			( ((x) * 180.0f ) / PI )
+#define	ACCELERATION(x)		( (x) / 60.0f * 60.0f )
+#define GRAVITY				( -9.8f )
 
 /* ステージ関連 */
 static const int STAGE_0_1	= 0;	// ステージ0-1

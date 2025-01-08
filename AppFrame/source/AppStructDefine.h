@@ -48,4 +48,10 @@ namespace Struct_Collision
 		VECTOR	vecSqhere;			// 球体の中心
 		float	fSqhereRadius;		// 球体の半径
 	};
+
+	struct COLLISION_LINE		// 線分コリジョン
+	{
+		VECTOR	vecLineStart;		// 線分の始点
+		VECTOR	vecLineEnd;			// 線分の終点
+	};
 };

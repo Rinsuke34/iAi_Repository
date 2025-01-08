@@ -63,9 +63,9 @@ void SceneGame::LoadMapData()
 				data.at("rotate").at("z").get_to(vecRot.y);
 				data.at("rotate").at("y").get_to(vecRot.z);
 				// degree -> radian変換
-				vecRot.x = vecRot.x / 180.f * PI;
-				vecRot.y = vecRot.y / 180.f * PI;
-				vecRot.z = vecRot.z / 180.f * PI;
+				vecRot.x = DEG2RAD(vecRot.x);
+				vecRot.y = DEG2RAD(vecRot.y);
+				vecRot.z = DEG2RAD(vecRot.z);
 				// 設定
 				pPlatform->SetRotate(vecRot);
 
@@ -78,6 +78,21 @@ void SceneGame::LoadMapData()
 				// 設定
 				pPlatform->SetScale(vecScale);
 			}
+		}
+	}
+
+	/* 当たり判定を設定(仮) */
+	{
+		/* 足場を取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
+
+		/* すべての足場のコリジョンを設定 */
+		for (auto* platform : PlatformList)
+		{
+			/* 当たり判定構築(仮) */
+			// とりあえずすべてのフレームをコリジョンに設定
+			MV1SetupCollInfo(platform->iGetModelHandle(), -1, 8, 8, 8);
+			platform->SetCollisionFrameNo(-1);
 		}
 	}
 

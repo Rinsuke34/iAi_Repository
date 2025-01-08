@@ -11,6 +11,8 @@
 /* 能力値関連 */
 static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// プレイヤーの移動加速度
 static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// プレイヤーの最大移動速度
+static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// プレイヤーの落下加速度
+static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// プレイヤーの最大落下速度
 
 /* カメラ関連 */
 static const float	INIT_CAMERA_RADIUS						= 300;				// カメラの中心点からの距離

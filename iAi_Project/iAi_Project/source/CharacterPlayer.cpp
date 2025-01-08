@@ -11,9 +11,13 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* データリスト取得 */
 	this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
 	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
 	/* 仮初期化処理開始 */
 	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
+
+	/* コリジョンを更新 */
+	CollisionUpdate();
 }
 
 // 更新
@@ -162,6 +166,9 @@ void CharacterPlayer::Player_Move()
 		/* 移動速度を0にする */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
 	}
+
+	/* コリジョンを更新 */
+	CollisionUpdate();
 }
 
 // ジャンプ
@@ -174,7 +181,12 @@ void CharacterPlayer::Player_Jump()
 	{
 		// ジャンプ入力がされている場合
 		/* ジャンプ処理 */
+		// 仮で落下速度を-にする処理を行う
+		this->PlayerStatusList->SetPlayerNowFallSpeed(-10.0f);
 	}
+
+	/* コリジョンを更新 */
+	CollisionUpdate();
 }
 
 // 重力
@@ -182,4 +194,75 @@ void CharacterPlayer::Player_Gravity()
 {
 	/* プレイヤーの重力処理 */
 
+	/* 落下量取得 */
+	float fFallSpeed	=	this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
+	fFallSpeed			+=	this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
+
+	/* 重力による移動後の座標を取得 */
+	VECTOR vecNextPosition	=	this->vecPosition;
+	vecNextPosition.y		-=	this->PlayerStatusList->fGetPlayerNowFallSpeed();
+
+	/* 主人公の上部分の当たり判定から下方向へ向けた線分を作成 */
+	COLLISION_LINE stCollision;
+	stCollision.vecLineStart	=	this->vecPosition;
+	stCollision.vecLineStart.y	+=	100;		// 歩きで登れる高さの上限
+
+	stCollision.vecLineEnd		=	stCollision.vecLineStart;
+	stCollision.vecLineEnd.y	-=	9999;
+
+	/* 以下、仮処理(近いオブジェクトのみ対象にするようにする) */
+	/* 足場を取得 */
+	auto& PlatformList = ObjectList->GetPlatformList();
+
+	/* 着地する座標 */
+	float	fStandPosY		= vecNextPosition.y;	// 初期値を移動後の座標に設定
+
+	/* 足場と接触するか確認 */
+	for (auto* platform : PlatformList)
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollision);
+
+		/* 接触しているか確認 */
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+			/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
+			if (stHitPolyDim.HitPosition.y > fStandPosY)
+			{
+				// 現在の着地座標より高い位置である場合
+				/* 着地座標を更新 */
+				fStandPosY = stHitPolyDim.HitPosition.y;
+
+				/* 落下の加速度を初期化する */
+				fFallSpeed = 0.f;
+			}
+		}
+	}
+
+	/* 着地座標を更新 */
+	vecNextPosition.y = fStandPosY;
+
+	/* プレイヤー座標を更新 */
+	this->vecPosition = vecNextPosition;
+
+	/* 落下速度を更新 */
+	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
+
+	/* コリジョンを更新 */
+	CollisionUpdate();
+}
+
+// コリジョン更新
+void CharacterPlayer::CollisionUpdate()
+{
+	/* プレイヤーのコリジョン更新処理 */
+
+	/* プレイヤーのコリジョンを更新 */
+	COLLISION_CAPSULE stCapsule;
+	stCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, 100, 0));
+	stCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, 0, 0));
+	stCapsule.fCapsuleRadius	= 50.0f;
+
+	/* コリジョンを設定 */
+	this->SetCollision_Capsule(stCapsule);
 }
