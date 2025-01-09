@@ -32,7 +32,7 @@ bool PlatformBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 
 	/* プラットフォームのモデルと対象のカプセルコリジョンが接触しているかの情報取得 */
 	stHitPolyDim = MV1CollCheck_Capsule(
-		/* このモデルのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->iModelHandle, this->iCollisionFrameNo,
 		/* 判定するオブジェクトのコリジョン */
 		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius);
@@ -60,7 +60,7 @@ bool PlatformBase::HitCheck(COLLISION_SQHERE	stSqhere)
 
 	/* プラットフォームのモデルと対象の球体コリジョンが接触しているかの情報取得 */
 	stHitPolyDim = MV1CollCheck_Capsule(
-		/* このモデルのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->iModelHandle, this->iCollisionFrameNo,
 		/* 判定するオブジェクトのコリジョン */
 		stSqhere.vecSqhere, stSqhere.vecSqhere, stSqhere.fSqhereRadius);
@@ -88,7 +88,7 @@ bool PlatformBase::HitCheck(COLLISION_LINE		stLine)
 
 	/* プラットフォームのモデルと対象の線分コリジョンが接触しているかの情報取得 */
 	stHitPolyDim = MV1CollCheck_Line(
-		/* このモデルのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->iModelHandle, this->iCollisionFrameNo,
 		/* 判定するオブジェクトのコリジョン */
 		stLine.vecLineStart, stLine.vecLineEnd);
@@ -118,7 +118,7 @@ MV1_COLL_RESULT_POLY PlatformBase::HitCheck_Line(COLLISION_LINE	stLine)
 
 	/* プラットフォームのモデルと対象の線分コリジョンが接触しているかの情報取得 */
 	stHitPolyDim = MV1CollCheck_Line(
-		/* このモデルのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->iModelHandle, this->iCollisionFrameNo,
 		/* 判定するオブジェクトのコリジョン */
 		stLine.vecLineStart, stLine.vecLineEnd);

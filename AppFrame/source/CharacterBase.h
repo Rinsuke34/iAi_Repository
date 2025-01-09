@@ -19,6 +19,7 @@ class CharacterBase : public ActorBase
 		virtual void	Draw() {};			// 描写
 
 		/* 接触判定 */
+		// 簡易的な結果(接触しているかどうか)
 		bool	HitCheck(COLLISION_CAPSULE	stCapsule);			// カプセル - カプセル
 		bool	HitCheck(COLLISION_SQHERE	stSqhere);			// カプセル - 球体
 		bool	HitCheck(int iModelHandle, int iFrameIndex);	// カプセル - モデル
