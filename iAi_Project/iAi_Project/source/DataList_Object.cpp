@@ -17,6 +17,9 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 	// 弾
 	this->pBulletList.clear();
 
+	// エフェクト
+	this->pEffectList.clear();
+
 	// プラットフォーム
 	this->pPlatformList.clear();
 }
@@ -25,6 +28,7 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 DataList_Object::~DataList_Object()
 {
 	/* 解放 */
+	// リストはvectorのため、自動解放される
 	this->pCharacterPlayer	=	nullptr;
 }
 
@@ -43,6 +47,7 @@ void DataList_Object::UpdateAll()
 	/* 登録されているすべてのオブジェクトの更新 */
 	UpdatePlayer();
 	UpdateEnemy();
+	UpdateEffect();
 	UpdateBullet();
 	UpdatePlatform();
 }
@@ -61,6 +66,16 @@ void DataList_Object::UpdateEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->Update();
+	}
+}
+
+// エフェクト更新
+void DataList_Object::UpdateEffect()
+{
+	/* すべてのエフェクトの更新を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->Update();
 	}
 }
 
@@ -87,6 +102,7 @@ void DataList_Object::DrawAll()
 	/* 登録されているすべてのオブジェクトの描写 */
 	DrawPlayer();
 	DrawEnemy();
+	DrawEffect();
 	DrawBullet();
 	DrawPlatform();
 }
@@ -105,6 +121,16 @@ void DataList_Object::DrawEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->Draw();
+	}
+}
+
+// エフェクト描写
+void DataList_Object::DrawEffect()
+{
+	/* すべてのエフェクトの描写を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->Draw();
 	}
 }
 

@@ -24,6 +24,7 @@
     <ClCompile Include="source\CharacterBase.cpp" />
     <ClCompile Include="source\DataListBase.cpp" />
     <ClCompile Include="source\DataListServer.cpp" />
+    <ClCompile Include="source\EffectBase.cpp" />
     <ClCompile Include="source\EnemyBase.cpp" />
     <ClCompile Include="source\Fps.cpp" />
     <ClCompile Include="source\Main.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="source\CharacterBase.h" />
     <ClInclude Include="source\DataListBase.h" />
     <ClInclude Include="source\DataListServer.h" />
+    <ClInclude Include="source\EffectBase.h" />
     <ClInclude Include="source\EnemyBase.h" />
     <ClInclude Include="source\Fps.h" />
     <ClInclude Include="source\AppFunctionDefine.h" />

@@ -19,6 +19,7 @@ class DataList_Object : public DataListBase
 		void	UpdateAll();			// 全オブジェクト更新
 		void	UpdatePlayer();			// プレイヤー更新
 		void	UpdateEnemy();			// エネミー更新
+		void	UpdateEffect();			// エフェクト更新
 		void	UpdateBullet();			// 弾更新
 		void	UpdatePlatform();		// プラットフォーム更新
 
@@ -26,6 +27,7 @@ class DataList_Object : public DataListBase
 		void	DrawAll();				// 全オブジェクト描写
 		void	DrawPlayer();			// プレイヤー描写
 		void	DrawEnemy();			// エネミー描写
+		void	DrawEffect();			// エフェクト描写
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
 
@@ -35,6 +37,7 @@ class DataList_Object : public DataListBase
 
 		// リスト
 		std::vector<EnemyBase*>&	GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
+		std::vector<EffectBase*>&	GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
 		std::vector<BulletBase*>&	GetBulletList()		{ return this->pBulletList; }		// 弾取得
 		std::vector<PlatformBase*>&	GetPlatformList()	{ return this->pPlatformList; }		// プラットフォーム取得
 		
@@ -44,6 +47,7 @@ class DataList_Object : public DataListBase
 
 		// リスト
 		void	SetEnemy(EnemyBase* pEnemy)				{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
+		void	SetEffect(EffectBase* pEffect)			{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
 		void	SetBullet(BulletBase* pBullet)			{ pBulletList.emplace_back(pBullet); };			// 弾追加
 		void	SetPlatform(PlatformBase* pPlatform)	{ pPlatformList.emplace_back(pPlatform); };		// プラットフォーム追加
 
@@ -54,6 +58,7 @@ class DataList_Object : public DataListBase
 
 		// リスト
 		std::vector<EnemyBase*>			pEnemyList;			// エネミー
+		std::vector<EffectBase*>		pEffectList;		// エフェクト
 		std::vector<BulletBase*>		pBulletList;		// 弾
 		std::vector<PlatformBase*>		pPlatformList;		// プラットフォーム
 
