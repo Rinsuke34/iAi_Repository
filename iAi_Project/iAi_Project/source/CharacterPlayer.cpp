@@ -1,6 +1,14 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
+/* 2025.01.09 菊池雅道　移動処理追加 */
 
 #include "CharacterPlayer.h"
+
+/* 2025.01.09 菊池雅道 使用ネームスペース追加 開始 */
+
+using namespace PLAYER_STATUS;
+using namespace GAME_SETTING;
+
+/* 2025.01.09 菊池雅道 使用ネームスペース追加 終了 */
 
 /* プレイヤークラスの定義 */
 
@@ -12,6 +20,22 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 	/* 仮初期化処理開始 */
 	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
+
+	/* 2025.01.09 菊池雅道 初期化処理追加 開始 */
+	
+	this ->fPlayerMoveSpeed = PLAYER_WALK_MOVE_SPEED;
+	this ->vecPlayerOldVector = { 0,0,0 };
+	this ->fPlayerOldRadian = 0;
+	this ->iPlayerNormalDashFlameCount = 0;
+	this ->bPlayerJumpingFlag = false;
+	this ->iPlayerJumpCount = 0;
+	this ->bPlayerDodgingFlag = false;
+	this ->fPlayerDodgeProgress = 0.0f;
+	this ->vecPlayerDodgeDirection = VGet(0, 0, 0);
+	this ->iPlayerDodgeWhileJumpingCount = 0;
+	this ->bPlayerAfterDodgeFlag = false;
+
+	/* 2025.01.09 菊池雅道 初期化処理追加 終了 */
 }
 
 // 更新
@@ -20,20 +44,219 @@ void CharacterPlayer::Update()
 	/* 使用例 */
 	// InputListに入っている関数を使用すればこんな感じで入力を取得できます。
 	// 引数に関しては、InputList.hを参照してください。
-	/* ジャンプ */
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
-	{
-		this->vecPosition.y = 50.f;
-	}
-	else
-	{
-		this->vecPosition.y = 0.f;
-	}
-
 	/* 移動 */
 	float fSpeed = 2.0f;
 	VECTOR vecMove = VScale(this->InputList->vecGetGameInputMove(), fSpeed);
 	this->vecPosition = VAdd(this->vecPosition, vecMove);
+
+	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
+	// キャラ移動(カメラ設定に合わせて)
+
+		// カメラの向いている角度を取得(仮)
+	VECTOR stVecCameraPosition = VGet(0, 100, -300);
+	VECTOR stVecCameraTarget = VGet(0, 100, 0);
+	VECTOR stVecCameraUp = VGet(0, 1, 0);
+
+	float sx = stVecCameraPosition.x - stVecCameraTarget.x;
+	float sz = stVecCameraPosition.z - stVecCameraTarget.z;
+	float camrad = atan2(sz, -sx);
+
+
+	VECTOR vecPlayerMove = { 0,0,0 }; //プレイヤーの移動ベクトル
+
+	//地上にいる場合の処理
+	//if (this ->bPlayerJumpingFlag == false) {
+
+	//	// アナログスティックの入力を正規化して移動方向を計算
+	//	//float fStickTiltMagnitude = sqrt(InputX * InputX + InputY * InputY);
+	//	// デッドゾーンを設定
+	//	if (fStickTiltMagnitude > STICK_DEAD_ZONE)
+	//	{
+	//		//正規化した入力方向を取得
+	//		float fNormalizedInputX = InputX / fStickTiltMagnitude;
+	//		float fNormalizedInputY = InputY / fStickTiltMagnitude;
+
+	//		// カメラ方向を考慮して移動ベクトルを回転
+	//		float fInputAngle = atan2(fNormalizedInputY, fNormalizedInputX);
+	//		float fPlayerMoveAngle = fInputAngle + camrad;
+
+	//		// 回避後フラグがtrueなら最大ダッシュ状態になる
+	//		if (this ->bPlayerAfterDodgeFlag == true)
+	//		{
+	//			this ->fPlayerMoveSpeed = PLAER_DASH_MAX_SPEED;
+
+	//		}
+	//		// スティックの倒し具合で速度を変化
+	//		else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH) {
+	//			//走り（通常）
+	//			this ->fPlayerMoveSpeed = PLAER_DASH_NOMAL_SPEED;
+	//			this ->iPlayerNormalDashFlameCount += 1;
+
+	//			//一定フレームがたったら走り（最大）へ
+	//			if (this ->iPlayerNormalDashFlameCount >= FLAME_COUNT_TO_MAX_SPEED)
+	//			{
+	//				this ->fPlayerMoveSpeed = PLAER_DASH_MAX_SPEED;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			//歩き
+	//			this ->fPlayerMoveSpeed = PLAYER_WALK_MOVE_SPEED;
+	//			this ->iPlayerNormalDashFlameCount = 0;
+	//		}
+
+	//		//移動の方向と速度をベクトルに設定
+	//		vecPlayerMove = VScale(this->InputList->vecGetGameInputMove() , this->fPlayerMoveSpeed);
+	//		//移動の角度を保存する（後の処理に使用）
+	//		this ->fPlayerOldRadian = fPlayerMoveAngle;
+	//	}
+	//	//スティックの傾きがデッドゾーン以下
+	//	else
+	//	{
+	//		//回避後フラグをリセット
+	//		this ->bPlayerAfterDodgeFlag = false;
+
+	//	}
+
+	//	//移動のベクトルを保存する（後の処理に使用）
+	//	this ->vecPlayerOldVector = VScale(vecPlayerMove, 1 / this ->fPlayerMoveSpeed);
+	//}
+	////空中にいる場合の処理
+	//else
+	//{
+	//	// アナログスティックの入力を正規化して移動方向を計算
+	//	float fStickTiltMagnitude = sqrt(InputX * InputX + InputY * InputY);
+	//	// デッドゾーンを設定
+	//	if (fStickTiltMagnitude > STICK_DEAD_ZONE)
+	//	{
+	//		//正規化した入力方向を取得
+	//		float fNormalizedX = InputX / fStickTiltMagnitude;
+	//		float fNormalizedY = InputY / fStickTiltMagnitude;
+
+	//		// カメラ方向を考慮して移動ベクトルを回転
+	//		float fInputAngle = atan2(fNormalizedY, fNormalizedX);
+	//		float fPlayerMoveAngle = fInputAngle + camrad;
+
+	//		//空中での移動速度を設定
+	//		this ->fPlayerMoveSpeed = PLAER_DASH_MAX_SPEED;
+
+	//		//移動の方向と速度をベクトルに設定
+	//		vecPlayerMove.z = -cos(fPlayerMoveAngle) * this ->fPlayerMoveSpeed;
+	//		vecPlayerMove.x = -sin(fPlayerMoveAngle) * this ->fPlayerMoveSpeed;
+
+	//		//移動の角度を保存する（後の処理に使用）
+	//		this ->fPlayerOldRadian = fPlayerMoveAngle;
+	//	}
+	//}
+
+	///* ジャンプ */
+	//if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+	//{
+	//	//ジャンプ
+	//	//連続ジャンプ回数の制限以内
+	//	if (this->iPlayerJumpCount <= PLAYER_JUMPING_IN_AIR_LIMIT)
+	//	{
+	//		//ジャンプ速度リセット
+	//		this->fPlayerJumpSpeed = 0;
+	//		//ジャンプの加速度を与える
+	//		this->fPlayerJumpSpeed += ACCELERATION(PLAYER_JUMP_SPEED);
+	//		//ジャンプ中のフラグtrue
+	//		this->bPlayerJumpingFlag = true;
+	//		//連続ジャンプ回数を加算
+	//		this->iPlayerJumpCount += 1;
+	//	}
+
+	//	//ジャンプ中かつ回避中ではない
+	//	if (this->bPlayerJumpingFlag == true && this->bPlayerDodgingFlag == false)
+	//	{
+	//		//ジャンプ速度に地上の影響を与える
+	//		this->fPlayerJumpSpeed += ACCELERATION(GRAVITY_SREED * GRAVITY_BUFFER);
+	//		//移動していた方向へ向く
+	//		vecMove = VAdd(vecMove, this->vecPlayerOldVector);
+	//	}
+
+	//	//ジャンプ速度をプレイヤー移動ベクトルにセット
+	//	vecMove.y = this->fPlayerJumpSpeed;
+
+	//	//ジャンプの移動ベクトルを位置ベクトルに反映
+	//	this->vecPosition = VAdd(this->vecPosition, vecMove);
+
+	//}
+	//else
+	//{
+	//	this->vecPosition.y = 0.f;
+	//}
+
+
+	//if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
+	//{
+	//	//回避
+	//	
+	//		// 回避フラグをセット
+	//		this->bPlayerDodgingFlag = true;
+	//		// 回避開始時の時間をリセット
+	//		this->fPlayerDodgeTime = 0.0f;
+	//		//現在の移動方向へ回避
+	//		this->vecPlayerDodgeDirection = VNorm(vecPlayerMove);
+	//		//回避速度設定
+	//		this->fPlayerDodgeSpeed = PLAYER_DODGE_SPEED;
+	//		//回避状態の進行率をリセット
+	//		this->fPlayerDodgeProgress = 0.0f;
+
+	//		//ジャンプ中であれば回避回数をカウント
+	//		if (this->bPlayerJumpingFlag == true)
+	//		{
+	//			this->iPlayerDodgeWhileJumpingCount += 1;
+	//		}
+	//	
+	//	//回避フラグが有効であれば回避処理を行う
+	//	if (this->bPlayerDodgingFlag == true) {
+
+	//		// 時間経過を加算
+	//		this->fPlayerDodgeTime += deltaTime;
+
+	//		// 回避中（設定時間の間）
+	//		if (this->fPlayerDodgeTime < 0.3)
+	//		{
+	//			//設定時間かけて回避移動を行う
+	//			VECTOR vecPlayerDodgeMove = VScale(this->vecPlayerDodgeDirection, PLAYER_DODGE_SPEED * deltaTime);
+	//			vecPlayerMove = vecPlayerDodgeMove;
+	//		}
+	//		// 回避終了
+	//		else
+	//		{
+	//			this->bPlayerDodgingFlag = false;
+	//			this->bPlayerAfterDodgeFlag = true;
+	//		}
+	//	}
+	//}
+
+	//
+	////地上に降りたときの処理
+	//if (this ->vecPosition.y <= 0)
+	//{
+	//	//プレイヤーY座標固定
+	//	this ->vecPosition.y = 0;
+	//	//プレイヤーのY方向の動きをリセット
+	//	vecPlayerMove.y = 0;
+	//	//ジャンプ中のフラグをリセット
+	//	this ->bPlayerJumpingFlag = false;
+	//	//連続ジャンプ回数をリセット
+	//	this ->iPlayerJumpCount = 0;
+	//	//ジャンプ中の回避回数をリセット
+	//	this ->iPlayerDodgeWhileJumpingCount = 0;
+	//}
+
+	//vecPlayerMove = VScale(this->InputList->vecGetGameInputMove(), fSpeed);
+	//this->vecPosition = VAdd(this->vecPosition, vecMove);
+
+	//// 移動量をそのままキャラの向きにする
+	//if (VSize(VGet(vecPlayerMove.x, 0, vecPlayerMove.z)) > 0.f) {		// 移動していない時は無視するため
+	//	this ->vecPlayerDirection = vecPlayerMove;
+	//}
+
+	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+
 }
 
 // 描写
