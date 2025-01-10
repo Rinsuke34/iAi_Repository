@@ -1,5 +1,6 @@
 #pragma once
 /* 2024.12.26 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
+/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -10,9 +11,28 @@
 // ¡ŒãJson‚©‚ç“Ç‚Ýž‚ß‚é‚æ‚¤‚É‚·‚é—\’è
 /* ”\—Í’lŠÖ˜A */
 static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// ƒvƒŒƒCƒ„[‚ÌˆÚ“®‰Á‘¬“x
-static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘åˆÚ“®‘¬“x
+
+/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁŠJŽn */
+//ˆÚ“®ŠÖŒW
+static const float PLAYER_WALK_MOVE_SPEED = 1.0f; //ƒvƒŒƒCƒ„[‚Ì•à‚«‚ÌˆÚ“®‘¬“x
+static const float PLAER_DASH_NOMAL_SPEED = 5.0f; //ƒvƒŒƒCƒ„[‚Ì‘–‚èi’Êíj‚ÌˆÚ“®‘¬“x
+static const float PLAER_DASH_MAX_SPEED = 10.0f; //ƒvƒŒƒCƒ„[‚Ì‘–‚èiÅ‘åj‚ÌˆÚ“®‘¬“x
+static const int FLAME_COUNT_TO_MAX_SPEED = 180; //ƒvƒŒƒCƒ„[‚Ì‘–‚è‚Ì’Êí¨Å‘å‚É‚È‚éƒtƒŒ[ƒ€”
+static const int STICK_TILT_PLAER_DASH = 700; //ƒvƒŒƒCƒ„[‚ª‘–‚èó‘Ô‚É‚È‚éƒXƒeƒBƒbƒN‚ÌŒX‚«@i”ÍˆÍF‚O`‚P‚O‚O‚Oj
+
+//ƒWƒƒƒ“ƒvŠÖŒW
+static const float PLAYER_JUMP_SPEED = 50.0f; //ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‚Ì‘¬“x
+static const float GRAVITY_SREED = -9.8f; //d—Í‚Ì‘¬“x@YŽ²‚Ì‰º•ûŒü‚È‚Ì‚Åƒ}ƒCƒiƒX‚Æ‚·‚é
+static const float GRAVITY_BUFFER = 0.1f; //ƒLƒƒƒ‰ƒNƒ^[‚É‚©‚©‚éd—Í’²®@‚P‚æ‚è‘å‚«‚¢‚Æd‚­‚È‚é@‚P‚æ‚è¬‚³‚¢‚ÆŒy‚­‚È‚é
+static const int PLAYER_JUMPING_IN_AIR_LIMIT = 1;//ƒvƒŒƒCƒ„[‚ª‹ó’†ƒWƒƒƒ“ƒv‚Å‚«‚é‰ñ”
+//‰ñ”ðŠÖŒW
+static const float PLAYER_DODGE_SPEED = 3000.0f;//ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x
+
+/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁI—¹ */
+
+static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.0f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘åˆÚ“®‘¬“x
 static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// ƒvƒŒƒCƒ„[‚Ì—Ž‰º‰Á‘¬“x
-static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘å—Ž‰º‘¬“x
+static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.0f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘å—Ž‰º‘¬“x
 
 /* ƒJƒƒ‰ŠÖ˜A */
 static const float	INIT_CAMERA_RADIUS						= 300;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
@@ -20,3 +40,4 @@ static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
 static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
 static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
+
