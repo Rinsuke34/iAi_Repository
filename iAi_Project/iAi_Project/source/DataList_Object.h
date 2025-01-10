@@ -31,6 +31,9 @@ class DataList_Object : public DataListBase
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
 
+		/* オブジェクト削除 */
+		void	DeleteEnemy();			// 削除フラグが有効なエネミーを削除
+
 		/* データ取得 */
 		// 単独
 		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得

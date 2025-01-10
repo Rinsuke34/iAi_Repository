@@ -5,6 +5,7 @@
 /* オブジェクト */
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
+#include "Enemy_Test.h"
 
 /* シーン「ゲーム」の定義(マップ読み込み) */
 
@@ -100,5 +101,13 @@ void SceneGame::LoadMapData()
 	{
 		/* "オブジェクト管理"にプレイヤーを追加 */
 		ObjectList->SetCharacterPlayer(new CharacterPlayer());
+	}
+
+	/* エネミー追加(仮) */
+	{
+		TestEnemy* AddEnemy = new TestEnemy();
+		ObjectList->SetEnemy(AddEnemy);
+
+		AddEnemy->SetPosition(VGet(100, 100, 100));
 	}
 }

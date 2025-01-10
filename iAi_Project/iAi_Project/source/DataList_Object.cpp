@@ -105,6 +105,9 @@ void DataList_Object::DrawAll()
 	DrawEffect();
 	DrawBullet();
 	DrawPlatform();
+
+	/* 仮設置 */
+	DeleteEnemy();
 }
 
 // プレイヤー描写
@@ -152,4 +155,22 @@ void DataList_Object::DrawPlatform()
 	{
 		pPlatform->Draw();
 	}
+}
+
+// 削除フラグが有効なエネミーを削除
+void DataList_Object::DeleteEnemy()
+{
+	pEnemyList.erase(std::remove_if(pEnemyList.begin(), pEnemyList.end(), [](EnemyBase* pEnemy)
+		{
+			// 削除フラグが有効であるか確認
+			if (pEnemy->bGetDeleteFlg() == true)
+			{
+				delete pEnemy;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}), pEnemyList.end());
 }

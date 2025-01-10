@@ -163,6 +163,7 @@
     <ClCompile Include="source\DataList_Model.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
+    <ClCompile Include="source\Enemy_Test.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneGame_MapLoad.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="source\ConstantDefine.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
+    <ClInclude Include="source\Enemy_Test.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
