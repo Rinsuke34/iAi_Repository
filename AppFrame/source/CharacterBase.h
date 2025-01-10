@@ -2,7 +2,6 @@
 
 #pragma once
 #include "ActorBase.h"
-#include "AppStructDefine.h"
 
 /* –¼‘O‹óŠÔÈ—ª */
 using namespace Struct_Collision;

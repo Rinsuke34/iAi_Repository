@@ -30,7 +30,13 @@ class DataList_Object : public DataListBase
 		void	DrawPlatform();			// プラットフォーム描写
 
 		/* データ取得 */
+		// 単独
 		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
+
+		// リスト
+		std::vector<EnemyBase*>&	GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
+		std::vector<BulletBase*>&	GetBulletList()		{ return this->pBulletList; }		// 弾取得
+		std::vector<PlatformBase*>&	GetPlatformList()	{ return this->pPlatformList; }		// プラットフォーム取得
 		
 		/* データ設定 */
 		// 単独

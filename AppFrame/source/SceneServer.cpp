@@ -59,6 +59,11 @@ void SceneServer::SceneProcess()
 // シーン描画処理
 void SceneServer::SceneDraw()
 {
+	/* 3D用の基本設定を有効化 */
+	SetUseZBuffer3D(TRUE);
+	SetWriteZBuffer3D(TRUE);
+	SetUseBackCulling(TRUE);
+
 	/* レイヤー順序が低いシーンから描写を行う */
 	for (auto Scene = pstSceneList.rbegin(); Scene != pstSceneList.rend(); ++Scene)
 	{

@@ -3,10 +3,12 @@
 
 
 #pragma once
-#include "CharacterBase.h"
+#include "Appframe.h"
 
 /* データリスト */
 #include "DataList_Input.h"
+#include "DataList_PlayerStatus.h"
+#include "DataList_Object.h"
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
 
@@ -96,4 +98,14 @@ class CharacterPlayer : public CharacterBase
 
 		/* 2025.01.09 菊池雅道 移動関連の変数追加終了 */
 
+		DataList_Input*			InputList;			// 入力管理
+		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
+		DataList_Object*		ObjectList;			// オブジェクト管理
+
+		/* 関数 */
+		void	Player_Gravity();		// 重力
+		void	Player_Move();			// 移動
+		void	Player_Jump();			// ジャンプ
+
+		void	CollisionUpdate();		// コリジョン更新
 };

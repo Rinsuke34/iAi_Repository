@@ -19,6 +19,31 @@ DataListServer::~DataListServer()
 	DeleteAllDataList();			// すべてのデータリスト削除
 }
 
+// データリスト描画(デバッグ用)
+void DataListServer::DrawDataList()
+{
+	/* データリストサーバーに登録されているデータリスト名称の描写 */
+	// ※主にデバッグ用途
+	int iIndex			= 0;
+	int iFrameColor		= GetColor(0, 0, 0);			// 枠の色
+	int iStringColor	= GetColor(255, 255, 255);		// 文字の色
+
+	DrawBox(0, iIndex * 20, 200, iIndex * 20 + 20, iFrameColor, TRUE);
+	DrawString(0, 0, "データリスト名", iStringColor);
+	iIndex++;
+
+	/* データリストサーバーに登録されているすべてのデータリストを描写 */
+	for (auto& Data : pstDataList)
+	{
+		DrawBox(0, iIndex * 20, 200, iIndex * 20 + 20, iFrameColor, TRUE);
+
+		/* データリスト名称の描写 */
+		DrawString(0, iIndex * 20, Data->stGetDataListName().c_str(), iStringColor);
+
+		iIndex++;
+	}
+}
+
 // データリスト追加予約
 void DataListServer::AddDataList(DataListBase* NewDataList)
 {
@@ -39,7 +64,7 @@ DataListBase* DataListServer::GetDataList(const std::string& cName)
 	for (auto& DataList : pstDataList)
 	{
 		/* データリストの名称が一致するか確認する */
-		if (DataList->stGetSceneName() == cName)
+		if (DataList->stGetDataListName() == cName)
 		{
 			// データリストの名称が一致するならば
 			/* データリストのインスタンスを返す */
@@ -62,7 +87,7 @@ void DataListServer::DeleteDataList(const std::string& cName)
 	pstDataList.erase(std::remove_if(pstDataList.begin(),pstDataList.end(),[&](auto* DataList)
 	{
 		/* データリストの名称が一致するか確認 */
-		if (DataList->stGetSceneName() == cName)
+		if (DataList->stGetDataListName() == cName)
 		{
 			// 一致している場合
 			/* データリストを削除し、メモリを開放する */

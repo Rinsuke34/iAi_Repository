@@ -8,8 +8,10 @@
 bool gbEndFlg	= false;	// プログラム終了フラグ
 
 /* プレイヤーの入力情報 */
-Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;			// ジョイパッド
-Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;		// キーボード＆マウス
+Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド
+Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;				// キーボード＆マウス
+bool										gbUseMouseFlg			= false;	// マウス使用フラグ(有効であるならばカーソルを描写＆中心固定解除)
+unsigned char								gucTriggerThreshold		= 0;		// トリガー入力の閾値
 
 /* 実行中クラス */
 Fps*			gpFps				= nullptr;	// fps固定用クラス
@@ -21,5 +23,5 @@ DataListServer* gpDataListServer	= nullptr;	// データリストサーバークラス
 int giNowFps	= 0;							// 現在のフレームレート
 
 /* デバッグ用描写管理フラグ */
-bool gbDrawSceneListFlg		= true;				// シーンリストの描写
-
+bool gbDrawSceneListFlg	= false;				// シーンリストの描写
+bool gbDrawDatalistFlg	= true;					// プレイヤーステータスの描写

@@ -2,5 +2,7 @@
 
 #pragma once
 
-/* 共通で使用するinclude処理をここでまとめて行う */
+/* プロジェクト内で共通で使用するinclude処理をここでまとめて行う */
 #include "VariableDefine.h"
+#include "StructDefine.h"
+#include "ConstantDefine.h"

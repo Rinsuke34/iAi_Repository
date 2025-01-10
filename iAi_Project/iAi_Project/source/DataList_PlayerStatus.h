@@ -1,0 +1,90 @@
+/* 2024.12.26 駒沢風助 ファイル作成 */
+
+#pragma once
+#include <vector>
+#include "AppFrame.h"
+#include "PublicInclude.h"
+#include "PlayerStatusDefine.h"
+
+/* プレイヤー状態管理クラスの宣言 */
+
+// プレイヤー状態管理クラス
+class DataList_PlayerStatus : public DataListBase
+{
+	public:
+		DataList_PlayerStatus();			// コンストラクタ
+		virtual ~DataList_PlayerStatus();	// デストラクタ
+
+		/* データ取得 */
+		// プレイヤー状態関連
+		float	fGetPlayerNowMoveSpeed()		{ return this->fPlayerNowMoveSpeed; }		// プレイヤーの現在の移動速度取得
+		float	fGetPlayerAngleX()				{ return this->fPlayerAngleX; }				// プレイヤーのX軸回転量(ラジアン)取得
+		float	fGetPlayerNowFallSpeed()		{ return this->fPlayerNowFallSpeed; }		// プレイヤーの現在の落下速度取得
+		// 能力値関連
+		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
+		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// プレイヤーの最大移動速度取得
+		float	fGetPlayerFallAcceleration()	{ return this->fPlayerFallAcceleration; }	// プレイヤーの落下加速度取得
+		float	fGetPlayerMaxFallSpeed()		{ return this->fPlayerMaxFallSpeed; }		// プレイヤーの最大落下速度取得
+		// カメラ関連
+		int		iGetCameraMode()							{ return this->iCameraMode; }							// カメラモード取得
+		VECTOR	vecGetCameraUp()							{ return this->vecCameraUp; };							// カメラの上方向取得
+		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; };					// カメラの座標取得
+		VECTOR	vecGetCameraTarget()						{ return this->vecCameraTarget; };						// カメラの注視点取得
+		float	fGetCameraRadius()							{ return this->fCameraRadius; };						// カメラの中心点からの距離取得
+		float	fGetCameraAngleX()							{ return this->fCameraAngleX; };						// カメラのX軸回転量(ラジアン)取得
+		float	fGetCameraAngleY()							{ return this->fCameraAngleY; };						// カメラのY軸回転量(ラジアン)取得
+		float	fGetCameraRotationalSpeed_Controller()		{ return this->fCameraRotationalSpeed_Controller; };	// カメラの回転速度(コントローラー)取得
+		float	fGetCameraRotationalSpeed_Mouse()			{ return this->fCameraRotationalSpeed_Mouse; };			// カメラの回転速度(マウス)取得
+		float	fGetCameraAngleLimitUp()					{ return this->fCameraAngleLimitUp; };					// カメラの回転角度制限取得(上)
+		float	fGetCameraAngleLimitDown()					{ return this->fCameraAngleLimitDown; };				// カメラの回転角度制限取得(下)
+
+		/* データ設定 */
+		// プレイヤー状態関連
+		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)			{ this->fPlayerNowMoveSpeed		= fPlayerNowMoveSpeed; }		// プレイヤーの現在の移動速度設定
+		void	SetPlayerAngleX(float fPlayerAngleX)						{ this->fPlayerAngleX			= fPlayerAngleX; }				// プレイヤーのX軸回転量(ラジアン)取得
+		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)			{ this->fPlayerNowFallSpeed		= fPlayerNowFallSpeed; }		// プレイヤーの現在の落下速度設定
+		// 能力値関連
+		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)	{ this->fPlayerMoveAcceleration	= fPlayerMoveAcceleration; }	// プレイヤーの移動加速度設定
+		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)			{ this->fPlayerMaxMoveSpeed		= fPlayerMaxMoveSpeed;}			// プレイヤーの最大移動速度取得
+		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)	{ this->fPlayerFallAcceleration	= fPlayerFallAcceleration; }	// プレイヤーの落下加速度設定
+		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)			{ this->fPlayerMaxFallSpeed		= fPlayerMaxFallSpeed; }		// プレイヤーの最大落下速度設定
+		// カメラ関連
+		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; };				// カメラモード設定
+		void	SetCameraUp(VECTOR vecCameraUp)										{ this->vecCameraUp							= vecCameraUp; };				// カメラの上方向設定
+		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; };			// カメラの座標設定
+		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; };			// カメラの注視点設定
+		void	SetCameraRadius(float fCameraRadius)								{ this->fCameraRadius						= fCameraRadius; };				// カメラの中心点からの距離設定
+		void	SetCameraAngleX(float fCameraAngleX)								{ this->fCameraAngleX						= fCameraAngleX; };				// カメラのX軸回転量(ラジアン)設定
+		void	SetCameraAngleY(float fCameraAngleY)								{ this->fCameraAngleY						= fCameraAngleY; };				// カメラのY軸回転量(ラジアン)設定
+		void	SetCameraRotationalSpeed_Controller(float fCameraRotationalSpeed)	{ this->fCameraRotationalSpeed_Controller	= fCameraRotationalSpeed; };	// カメラの回転速度(コントローラー)設定
+		void	SetCameraRotationalSpeed_Mouse(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed_Mouse		= fCameraRotationalSpeed; };	// カメラの回転速度(マウス)設定
+		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; };		// カメラの回転角度制限設定(上)
+		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; };		// カメラの回転角度制限設定(下)
+
+	private:
+		/* プレイヤー状態関連 */
+		float	fPlayerNowMoveSpeed;		// プレイヤーの現在の移動速度
+		float	fPlayerAngleX;				// プレイヤーのX軸回転量(ラジアン)
+		float	fPlayerNowFallSpeed;		// プレイヤーの現在の落下速度
+
+		/* 能力値関連 */
+		float	fPlayerMoveAcceleration;	// プレイヤーの移動加速度
+		float	fPlayerMaxMoveSpeed;		// プレイヤーの最大移動速度
+		float	fPlayerFallAcceleration;	// プレイヤーの落下加速度
+		float	fPlayerMaxFallSpeed;		// プレイヤーの最大落下速度
+
+		/* カメラ関連 */
+		int		iCameraMode;						// カメラモード
+		VECTOR	vecCameraUp;						// カメラの上方向
+		VECTOR	vecCameraPosition;					// カメラの座標
+		VECTOR	vecCameraTarget;					// カメラの注視点
+		float	fCameraRadius;						// カメラの中心点からの距離(ズーム量)
+		float	fCameraAngleX;						// カメラのX軸回転量(ラジアン)
+		float	fCameraAngleY;						// カメラのY軸回転量(ラジアン)
+		float	fCameraRotationalSpeed_Controller;	// カメラの回転速度(コントローラー)
+		float	fCameraRotationalSpeed_Mouse;		// カメラの回転速度(マウス)
+		float	fCameraAngleLimitUp;				// カメラの回転角度制限(上)
+		float	fCameraAngleLimitDown;				// カメラの回転角度制限(下)
+
+	protected:
+};

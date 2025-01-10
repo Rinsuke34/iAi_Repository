@@ -1,6 +1,5 @@
 /* 2024.12.XX YYYY ZZZZ */
-
-
+//テスト
 #include "SceneGame.h"
 
 /* シーン「ゲーム」の定義 */
@@ -13,16 +12,32 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* テスト用処理 開始 */
 
-	/* "オブジェクト管理"を作成 */
+	/* データリスト作成 */
+	{
+		/* データリストサーバーに"オブジェクト管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Object());
 
-	/* データリストサーバーに"オブジェクト管理"を追加 */
-	gpDataListServer->AddDataList(new DataList_Object()); 
+		/* データリストサーバーに"プレイヤー状態"を追加 */
+		gpDataListServer->AddDataList(new DataList_PlayerStatus());
 
-	/* 今追加した"オブジェクト管理"を取得 */
-	ObjectList	=	dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		/* データリストサーバーに"3Dモデル管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Model());
+	}
+	
+	/* データリスト取得 */
+	{
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
-	/* "オブジェクト管理"に要素追加 */
-	ObjectList->SetCharacterPlayer(new CharacterPlayer());
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+		/* "3Dモデル管理"を取得 */
+		this->ModelList = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+	}
+
+	/* マップデータ読み込み */
+	LoadMapData();
 
 	/* テスト用処理 終了 */
 
@@ -33,8 +48,10 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 // デストラクタ
 SceneGame::~SceneGame()
 {
-	/* オブジェクトサーバーの"オブジェクト管理"削除 */
-	gpDataListServer->DeleteDataList("DataList_Object");
+	/* データリスト削除 */
+	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
+	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
+	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
 }
 
 // 計算
@@ -47,18 +64,82 @@ void SceneGame::Process()
 // 描画
 void SceneGame::Draw()
 {
-	/* 3D基本設定 */
-	SetUseZBuffer3D(TRUE);
-	SetWriteZBuffer3D(TRUE);
-	SetUseBackCulling(TRUE);
-
 	/* すべてのオブジェクトの描写 */
 	ObjectList->DrawAll();
 
-	/* カメラ設定(仮) */
-	VECTOR stVecCameraPosition	= VGet(0, 100, -300);
-	VECTOR stVecCameraTarget	= VGet(0, 100, 0);
-	VECTOR stVecCameraUp		= VGet(0, 1, 0);
+	/* カメラの設定 */
+	SetCamera();
+}
 
-	SetCameraPositionAndTargetAndUpVec(stVecCameraPosition, stVecCameraTarget, stVecCameraUp);
+// カメラ設定
+void SceneGame::SetCamera()
+{
+	/* カメラモードに応じて処理を変更 */
+	switch (this->PlayerStatusList->iGetCameraMode())
+	{
+		/* フリーモード */
+		case CAMERA_MODE_FREE:
+			SetCamera_Free();
+			break;
+	}
+}
+
+// カメラ設定(フリーモード)
+void SceneGame::SetCamera_Free()
+{
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* カメラ注視点設定 */
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, 100, 0));
+	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+
+	/* 視点変更に必要なデータ取得 */
+	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
+
+	/* 入力からカメラ回転量を取得 */
+	/* マウス */
+	{
+		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse;
+		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse;
+	}
+
+	/* コントローラー */
+	{
+		fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
+		fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
+	}
+
+	/* Y軸の回転角度制限 */
+	{
+		float fAngleLimitUp		= this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
+		float fAngleLimitDown	= this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
+
+		if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
+		if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
+	}
+
+	/* 回転量を更新 */
+	{
+		this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
+		this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
+	}
+
+	/* カメラ座標設定 */
+	{
+		float fRadius	= this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
+		float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+		float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+		float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+
+		this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
+	}
+
+	/* カメラ設定 */
+	{
+		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+	}
 }

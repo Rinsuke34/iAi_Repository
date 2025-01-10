@@ -100,12 +100,6 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\プレイヤー">
       <UniqueIdentifier>{9d57a6a5-56c9-4aa1-864f-6d7534cf0dd8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\データリスト\プレイヤーステータス">
-      <UniqueIdentifier>{42e6553f-5551-4785-895c-40eea843a2cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\データリスト\プレイヤーステータス">
-      <UniqueIdentifier>{a903c500-3e8c-4abc-ae19-104434afe45e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\データリスト\オブジェクト管理">
       <UniqueIdentifier>{1524b864-9565-4fb4-8626-6289407583fa}</UniqueIdentifier>
     </Filter>
@@ -120,6 +114,30 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\定義">
       <UniqueIdentifier>{fee04d11-66e3-4a33-bc5d-8b4d78c2ca63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\プレイヤー状態">
+      <UniqueIdentifier>{42e6553f-5551-4785-895c-40eea843a2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\プレイヤー状態">
+      <UniqueIdentifier>{a903c500-3e8c-4abc-ae19-104434afe45e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス">
+      <UniqueIdentifier>{128fe4f9-cb29-485c-b450-9fe95af19a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス">
+      <UniqueIdentifier>{d630c187-3c32-4dde-842e-c0257c1a2fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\3Dモデル管理">
+      <UniqueIdentifier>{08353976-66fd-4099-bab1-ba450c99a977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\3Dモデル管理">
+      <UniqueIdentifier>{5069a771-77c7-48e3-b043-7f6192ef61d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム">
+      <UniqueIdentifier>{2b0041bd-44b6-4a97-a12f-ae97bc7383eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム">
+      <UniqueIdentifier>{15fcfb79-088b-40c4-b3fc-a30e862459a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +173,18 @@
     </ClCompile>
     <ClCompile Include="source\DataList_Input.cpp">
       <Filter>ソース ファイル\データリスト\入力</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_PlayerStatus.cpp">
+      <Filter>ソース ファイル\データリスト\プレイヤー状態</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Model.cpp">
+      <Filter>ソース ファイル\データリスト\3Dモデル管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PlatformBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneGame_MapLoad.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +226,24 @@
     </ClInclude>
     <ClInclude Include="source\InputDefine.h">
       <Filter>ヘッダー ファイル\データリスト\入力</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_PlayerStatus.h">
+      <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerStatusDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
+    </ClInclude>
+    <ClInclude Include="source\StructDefine.h">
+      <Filter>ヘッダー ファイル\定義</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ConstantDefine.h">
+      <Filter>ヘッダー ファイル\定義</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Model.h">
+      <Filter>ヘッダー ファイル\データリスト\3Dモデル管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlatformBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

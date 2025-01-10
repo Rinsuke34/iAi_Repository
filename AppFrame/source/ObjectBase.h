@@ -2,6 +2,7 @@
 
 #pragma once
 #include <DxLib.h>
+#include "AppStructDefine.h"
 
 /* すべてのオブジェクトのベースとなるクラスの宣言 */
 
