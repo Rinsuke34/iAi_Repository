@@ -12,7 +12,7 @@ BulletBase::BulletBase() : ActorBase()
 	this->vecMoveDirection	= {};	// 移動方向
 }
 
-/* 接触判定 */
+/* 接触判定(簡易) */
 // 球体 - カプセル
 bool BulletBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 {
@@ -22,11 +22,11 @@ bool BulletBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 	// bool : 接触している(true) / 接触していない(false)
 
 	/* カプセルと接触しているか確認 */
-	if (HitCheck_Capsule_Capsule
+	if(HitCheck_Sphere_Capsule(
+		/* このオブジェクトのコリジョン */
+		this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius,
 		/* 判定するオブジェクトのコリジョン */
-		(stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius,
-		/* 弾のコリジョン */
-		this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius))
+		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius))
 	{
 		// 接触している場合
 		return true;
@@ -43,12 +43,12 @@ bool BulletBase::HitCheck(COLLISION_SQHERE	stSqhere)
 	// 戻り値
 	// bool			: 接触している(true) / 接触していない(false)
 
-	/* カプセルと球体が接触しているか確認 */
-	if (HitCheck_Capsule_Capsule
+	/* 球体と接触しているか確認 */
+	if (HitCheck_Sphere_Sphere(
 		/* 判定するオブジェクトのコリジョン */
-		(stSqhere.vecSqhere, stSqhere.vecSqhere, stSqhere.fSqhereRadius,
-		/* 弾のコリジョン */
-		this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius))
+		stSqhere.vecSqhere, stSqhere.fSqhereRadius,
+		/* このオブジェクトのコリジョン */
+		this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius))
 	{
 		// 接触している場合
 		return true;
@@ -69,7 +69,7 @@ bool BulletBase::HitCheck(int iModelHandle, int iFrameIndex)
 	// ポリゴンとの接触情報
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
 
-	/* プレイヤーと対象のモデルが接触しているかの情報取得 */
+	/* 対象のモデルと接触しているか確認 */
 	stHitPolyDim = MV1CollCheck_Capsule(
 		/* 判定するオブジェクトのコリジョン */
 		iModelHandle, iFrameIndex,

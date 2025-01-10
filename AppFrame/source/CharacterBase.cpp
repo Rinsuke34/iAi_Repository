@@ -13,7 +13,7 @@ CharacterBase::CharacterBase() : ActorBase()
 	this->vecDirection			= {};	// 向き
 }
 
-/* 接触判定 */
+/* 接触判定(簡易) */
 // カプセル - カプセル
 bool CharacterBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 {
@@ -26,7 +26,7 @@ bool CharacterBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 	if (HitCheck_Capsule_Capsule
 		/* 判定するオブジェクトのコリジョン */
 		(stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius,
-		/* プレイヤーのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius))
 	{
 		// 接触している場合
@@ -45,10 +45,10 @@ bool CharacterBase::HitCheck(COLLISION_SQHERE	stSqhere)
 	// bool			: 接触している(true) / 接触していない(false)
 
 	/* カプセルと球体が接触しているか確認 */
-	if (HitCheck_Capsule_Capsule
+	if(HitCheck_Sphere_Capsule(
 		/* 判定するオブジェクトのコリジョン */
-		(stSqhere.vecSqhere, stSqhere.vecSqhere, stSqhere.fSqhereRadius,
-		/* プレイヤーのコリジョン */
+		stSqhere.vecSqhere, stSqhere.fSqhereRadius,
+		/* このオブジェクトのコリジョン */
 		this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius))
 	{
 		// 接触している場合
@@ -74,7 +74,7 @@ bool CharacterBase::HitCheck(int iModelHandle, int iFrameIndex)
 	stHitPolyDim = MV1CollCheck_Capsule(
 		/* 判定するオブジェクトのコリジョン */
 		iModelHandle, iFrameIndex,
-		/* プレイヤーのコリジョン */
+		/* このオブジェクトのコリジョン */
 		this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius);
 
 	/* 接触数を取得 */

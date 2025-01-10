@@ -177,6 +177,9 @@
     <ClCompile Include="source\PublicProcess.cpp">
       <Filter>ソース ファイル\汎用計算</Filter>
     </ClCompile>
+    <ClCompile Include="source\EffectBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\エフェクト</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Main.h">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="source\EnemyBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

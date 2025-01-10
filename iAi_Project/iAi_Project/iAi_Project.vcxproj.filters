@@ -139,6 +139,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム">
       <UniqueIdentifier>{15fcfb79-088b-40c4-b3fc-a30e862459a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー">
+      <UniqueIdentifier>{5b58202e-702b-4426-87ab-1a36657dae43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー">
+      <UniqueIdentifier>{51e3ff2f-de72-4967-8648-9250810d1932}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -185,6 +191,9 @@
     </ClCompile>
     <ClCompile Include="source\SceneGame_MapLoad.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Test.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="source\PlatformBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Test.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

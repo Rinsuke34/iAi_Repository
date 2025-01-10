@@ -20,6 +20,7 @@ class BulletBase : public ActorBase
 		virtual void	Draw() {};			// 描写
 
 		/* 接触判定 */
+		// 簡易的な結果(接触しているかどうか)
 		bool	HitCheck(COLLISION_CAPSULE	stCapsule);			// 球体 - カプセル
 		bool	HitCheck(COLLISION_SQHERE	stSqhere);			// 球体 - 球体
 		bool	HitCheck(int iModelHandle, int iFrameIndex);	// 球体 - モデル
