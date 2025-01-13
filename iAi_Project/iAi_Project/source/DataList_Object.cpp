@@ -39,6 +39,64 @@ void DataList_Object::JsonDataLoad()
 	// ※現状は未実装
 }
 
+/* リスト内オブジェクト初期化 */
+// 全オブジェクト初期化
+void DataList_Object::InitializationAll()
+{
+	/* 登録されているすべてのオブジェクトの初期化 */
+	InitializationPlayer();
+	InitializationEnemy();
+	InitializationEffect();
+	InitializationBullet();
+	InitializationPlatform();
+}
+
+// プレイヤー初期化
+void DataList_Object::InitializationPlayer()
+{
+	/* プレイヤーの初期化を呼ぶ */
+	this->pCharacterPlayer->Initialization();
+}
+
+// エネミー初期化
+void DataList_Object::InitializationEnemy()
+{
+	/* すべてのエネミーの初期化を呼ぶ */
+	for (auto& pEnemy : this->pEnemyList)
+	{
+		pEnemy->Initialization();
+	}
+}
+
+// エフェクト初期化
+void DataList_Object::InitializationEffect()
+{
+	/* すべてのエフェクトの初期化を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->Initialization();
+	}
+}
+
+// 弾初期化
+void DataList_Object::InitializationBullet()
+{
+	/* すべての弾の初期化を呼ぶ */
+	for (auto& pBullet : this->pBulletList)
+	{
+		pBullet->Initialization();
+	}
+}
+
+// プラットフォーム初期化
+void DataList_Object::InitializationPlatform()
+{
+	/* 稼働プラットフォームの初期化を呼ぶ */
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		pPlatform->Initialization();
+	}
+}
 
 /* リスト内オブジェクト更新 */
 // 全オブジェクト更新

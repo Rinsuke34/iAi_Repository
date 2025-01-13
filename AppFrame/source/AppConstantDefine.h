@@ -5,8 +5,15 @@
 /* AppFrameで使用する定数の宣言 */
 
 /* 画面関連 */
-static const int SCREEN_SIZE_WIDE	= 1920;		// 画面サイズ(横)
-static const int SCREEN_SIZE_HEIGHT	= 1080;		// 画面サイズ(縦)
+static const int SCREEN_SIZE_WIDE			= 1920;		// 画面サイズ(横)
+static const int SCREEN_SIZE_HEIGHT			= 1080;		// 画面サイズ(縦)
+static const int SCREEN_Z_BUFFER_BIT_DEPTH	= 32;		// Zバッファのビット深度
+
+static const int SCREEN_TYPE_NORMAL		= 0;	// 通常画面
+static const int SCREEN_TYPE_SHADOWMAP	= 1;	// シャドウマップ
+static const int SCREEN_TYPE_LIGHTMAP	= 2;	// ライトマップ
+
+static const int SCREEN_TYPE_MAX		= 3;	// 画面タイプの最大数
 
 /* フレームレート関連 */
 static const int FPS_RATE			= 60;	// フレームレート設定値

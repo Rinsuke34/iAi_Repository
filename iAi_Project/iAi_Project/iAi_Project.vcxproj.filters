@@ -195,6 +195,9 @@
     <ClCompile Include="source\Enemy_Test.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
+    <ClCompile Include="source\PlatformLight_Test.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -256,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="source\Enemy_Test.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlatformLight_Test.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

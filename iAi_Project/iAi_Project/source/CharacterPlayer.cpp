@@ -20,6 +20,12 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	CollisionUpdate();
 }
 
+// ‰Šú‰»
+void CharacterPlayer::Initialization()
+{
+
+}
+
 // XV
 void CharacterPlayer::Update()
 {

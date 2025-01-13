@@ -6,6 +6,7 @@
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
 #include "Enemy_Test.h"
+#include "PlatformLight_Test.h"
 
 /* シーン「ゲーム」の定義(マップ読み込み) */
 
@@ -82,32 +83,45 @@ void SceneGame::LoadMapData()
 		}
 	}
 
-	/* 当たり判定を設定(仮) */
+	/* テスト用仮オブジェクト追加処理 */
 	{
-		/* 足場を取得 */
-		auto& PlatformList = ObjectList->GetPlatformList();
-
-		/* すべての足場のコリジョンを設定 */
-		for (auto* platform : PlatformList)
+		/* プレイヤー追加(仮) */
 		{
-			/* 当たり判定構築(仮) */
-			// とりあえずすべてのフレームをコリジョンに設定
-			MV1SetupCollInfo(platform->iGetModelHandle(), -1, 8, 8, 8);
-			platform->SetCollisionFrameNo(-1);
+			/* "オブジェクト管理"にプレイヤーを追加 */
+			ObjectList->SetCharacterPlayer(new CharacterPlayer());
+		}
+
+		/* エネミー追加(仮) */
+		{
+			TestEnemy* AddEnemy = new TestEnemy();
+			ObjectList->SetEnemy(AddEnemy);
+
+			AddEnemy->SetPosition(VGet(100, 100, 100));
+		}
+
+		/* 光る足場追加(仮) */
+		{
+			PlatformLight_Test* pPlatform = new PlatformLight_Test();
+			this->ObjectList->SetPlatform(pPlatform);
+
+			/* モデル */
+			std::string	name = "Test/LightBlock/Test_Cube";
+			pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
+
+			/* 座標 */
+			VECTOR vecPos = VGet(500.f, 100.f, 0.f);
+			pPlatform->SetPosition(vecPos);
+
+			/* 回転量 */
+			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
+			pPlatform->SetRotate(vecRot);
+
+			/* 拡大率 */
+			VECTOR vecScale = VGet(10.f, 1.f, 10.f);
+			pPlatform->SetScale(vecScale);
 		}
 	}
 
-	/* プレイヤー追加(仮) */
-	{
-		/* "オブジェクト管理"にプレイヤーを追加 */
-		ObjectList->SetCharacterPlayer(new CharacterPlayer());
-	}
-
-	/* エネミー追加(仮) */
-	{
-		TestEnemy* AddEnemy = new TestEnemy();
-		ObjectList->SetEnemy(AddEnemy);
-
-		AddEnemy->SetPosition(VGet(100, 100, 100));
-	}
+	/* すべてのオブジェクトの初期化を行う */
+	ObjectList->InitializationAll();
 }

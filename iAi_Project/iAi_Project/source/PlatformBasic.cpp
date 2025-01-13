@@ -7,7 +7,6 @@
 // コンストラクタ
 PlatformBasic::PlatformBasic() : PlatformBase()
 {
-	/* 初期化 */
 
 }
 
@@ -17,8 +16,8 @@ PlatformBasic::~PlatformBasic()
 
 }
 
-// 描写
-void PlatformBasic::Draw()
+// 初期化
+void PlatformBasic::Initialization()
 {
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
@@ -29,6 +28,17 @@ void PlatformBasic::Draw()
 	/* モデル拡大 */
 	MV1SetScale(this->iModelHandle, this->vecScale);
 
+	/* コリジョンフレーム番号取得 */
+	//this->SetCollisionFrameNo(MV1SearchFrame(this->iModelHandle, "Collision"));
+	this->SetCollisionFrameNo(-1);
+
+	/* コリジョン情報構築 */
+	MV1SetupCollInfo(this->iModelHandle, this->iGetCollisionFrameNo(), 4, 4, 4);
+}
+
+// 描写
+void PlatformBasic::Draw()
+{
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
 }

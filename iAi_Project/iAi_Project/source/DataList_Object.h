@@ -15,6 +15,14 @@ class DataList_Object : public DataListBase
 
 		void	JsonDataLoad();			// Jsonからデータをロード"※仮作成"
 
+		/* リスト内オブジェクト初期化 */
+		void	InitializationAll();		// 全オブジェクト初期化
+		void	InitializationPlayer();		// プレイヤー初期化
+		void	InitializationEnemy();		// エネミー初期化
+		void	InitializationEffect();		// エフェクト初期化
+		void	InitializationBullet();		// 弾初期化
+		void	InitializationPlatform();	// プラットフォーム初期化
+
 		/* リスト内オブジェクト更新 */
 		void	UpdateAll();			// 全オブジェクト更新
 		void	UpdatePlayer();			// プレイヤー更新

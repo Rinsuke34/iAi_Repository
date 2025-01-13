@@ -15,8 +15,9 @@ class CharacterBase : public ActorBase
 		CharacterBase();	// コンストラクタ
 		virtual ~CharacterBase() {};		// デストラクタ
 
-		virtual void	Update() {};		// 更新
-		virtual void	Draw() {};			// 描写
+		virtual void	Initialization()	{};		// 初期化
+		virtual void	Update()			{};		// 更新
+		virtual void	Draw()				{};		// 描写
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)

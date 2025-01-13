@@ -164,6 +164,7 @@
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
+    <ClCompile Include="source\PlatformLight_Test.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneGame_MapLoad.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="source\Enemy_Test.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
+    <ClInclude Include="source\PlatformLight_Test.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\StructDefine.h" />

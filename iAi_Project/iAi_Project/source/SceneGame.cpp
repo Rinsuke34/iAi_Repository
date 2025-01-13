@@ -43,6 +43,10 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* 非同期読み込みを無効化する */
 	SetUseASyncLoadFlag(false);
+
+	/* マップハンドル作成 */
+	this->iShadowMapScreenHandle	= MakeShadowMap(SCREEN_SIZE_WIDE * 2, SCREEN_SIZE_HEIGHT * 2);	// シャドウマップ(画面の2倍のサイズで作成)
+	this->iLightMapScreenHandle		= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 }
 
 // デストラクタ
@@ -52,6 +56,10 @@ SceneGame::~SceneGame()
 	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
 	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
+
+	/* マップハンドル削除 */
+	DeleteShadowMap(iShadowMapScreenHandle);	// シャドウマップ
+	DeleteGraph(iLightMapScreenHandle);			// ライトマップ
 }
 
 // 計算
@@ -141,5 +149,21 @@ void SceneGame::SetCamera_Free()
 	/* カメラ設定 */
 	{
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+	}
+}
+
+// デバッグ描写
+void SceneGame::DrawDebug()
+{
+	/* シャドウマップ描写 */
+	if (gbDrawShadowMapFlg == true)
+	{
+		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - 516, 0, SCREEN_SIZE_WIDE, 516);
+	}
+
+	/* ライトマップ描写 */
+	if (gbDrawLightMapFlg == true)
+	{
+		DrawExtendGraph(SCREEN_SIZE_WIDE - 516, 0, SCREEN_SIZE_WIDE, 516, this->iLightMapScreenHandle, FALSE);
 	}
 }

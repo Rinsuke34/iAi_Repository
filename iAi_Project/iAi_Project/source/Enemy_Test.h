@@ -12,8 +12,9 @@ class TestEnemy : public EnemyBase
 		TestEnemy();				// コンストラクタ
 		virtual ~TestEnemy();		// デストラクタ
 
-		virtual void	Update();		// 更新
-		virtual void	Draw();			// 描写
+		virtual void	Initialization();	// 初期化
+		virtual void	Update();			// 更新
+		virtual void	Draw();				// 描写
 
 	private:
 	protected:

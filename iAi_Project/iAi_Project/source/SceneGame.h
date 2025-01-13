@@ -11,9 +11,6 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 
-/* シーン */
-
-
 /* シーン「ゲーム」の宣言 */
 
 // シーン "ゲーム画面"
@@ -35,10 +32,18 @@ class SceneGame : public SceneBase
 
 		/* 関数 */
 		void	LoadMapData();						// マップデータのロード
+		void	SetupShadowMap();					// シャドウマップの設定
 		void	SetCamera();						// カメラ設定
 
 		/* カメラ関連 */
 		void	SetCamera_Free();					// カメラ設定(フリーモード)
+
+		/* デバッグ関連 */
+		void	DrawDebug();						// デバッグ描写
+
+		/* 描写画面関連 */
+		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
+		int	iLightMapScreenHandle;					// ライトマップのハンドル
 
 	protected:
 };

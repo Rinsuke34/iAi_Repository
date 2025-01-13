@@ -15,6 +15,12 @@ TestEnemy::~TestEnemy()
 
 }
 
+// ‰Šú‰»
+void TestEnemy::Initialization()
+{
+
+}
+
 // XV
 void TestEnemy::Update()
 {
@@ -28,5 +34,5 @@ void TestEnemy::Update()
 // •`Ê
 void TestEnemy::Draw()
 {
-	DrawSphere3D(vecGetPosition(), 50.f, 32.f, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+	DrawSphere3D(vecGetPosition(), 50.f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 }
