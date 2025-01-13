@@ -12,9 +12,10 @@ class ActorBase : public ObjectBase
 		ActorBase();			// コンストラクタ
 		virtual ~ActorBase();	// デストラクタ
 
-		virtual void	Initialization() {};	// 初期化
-		virtual void	Update() {};			// 更新
-		virtual void	Draw() {};				// 描写
+		virtual void	Initialization()	override	{};	// 初期化
+		virtual void	Update()			override	{};	// 更新
+		virtual void	Draw()							{};	// 描写
+		virtual void	BloomDraw()						{};	// 発光描写
 
 		VECTOR	vecGetMovement()	{ return this->vecMovement; };		// 移動量を取得
 		int		iGetModelHandle()	{ return this->iModelHandle; };		// モデルハンドルを取得

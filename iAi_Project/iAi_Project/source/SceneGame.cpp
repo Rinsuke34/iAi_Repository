@@ -72,11 +72,86 @@ void SceneGame::Process()
 // 描画
 void SceneGame::Draw()
 {
-	/* すべてのオブジェクトの描写 */
-	ObjectList->DrawAll();
+	/* 透明度に関係なく描写するよう設定　*/
+	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
+
+	/* シャドウマップ作成 */
+	SetupShadowMap();
+
+	/* ライトマップ作成 */
+	SetupLightMap();
 
 	/* カメラの設定 */
 	SetCamera();
+
+	/* 描写に使用するシャドウマップの設定 */
+	SetUseShadowMap(0, this->iShadowMapScreenHandle);
+
+	/* 半透明部分を描写しないよう設定 */
+	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
+
+	/* 半透明部分のないすべてのオブジェクトを描写 */
+	ObjectList->DrawAll();
+
+	/* 描写に使用するシャドウマップの設定を解除 */
+	SetUseShadowMap(this->iShadowMapScreenHandle, -1);
+
+	/* 半透明部分のみ描写するように設定 */
+	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);
+
+	/* 半透明部分のすべてのオブジェクトを描写 */
+	ObjectList->DrawAll();
+
+	/* ライトマップ描写 */
+	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iLightMapScreenHandle, FALSE);
+
+	/* デバッグ描写 */
+	DrawDebug();
+}
+
+// シャドウマップの設定
+void SceneGame::SetupShadowMap()
+{
+	/* ライト方向設定 */
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0, -1.f, -1.f));
+
+	/* シャドウマップの描写範囲設定 */
+	{
+		/* カメラのターゲット座標を取得 */
+		VECTOR vecTargetPos = this->PlayerStatusList->vecGetCameraTarget();
+
+		/* シャドウマップ範囲設定 */
+		// ※カメラのターゲット座標を中心に描写
+		SetShadowMapDrawArea(this->iShadowMapScreenHandle, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE, -SHADOWMAP_RANGE, -SHADOWMAP_RANGE)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE, SHADOWMAP_RANGE, SHADOWMAP_RANGE)));
+	}
+
+	/* シャドウマップへの描写を開始 */
+	ShadowMap_DrawSetup(this->iShadowMapScreenHandle);
+
+	/* すべてのオブジェクトの描写 */
+	ObjectList->DrawAll();
+
+	/* シャドウマップへの描写を終了 */
+	ShadowMap_DrawEnd();
+}
+
+// ライトマップの設定
+void SceneGame::SetupLightMap()
+{
+	/* ライトマップへの描写を開始 */
+	SetDrawScreen(this->iLightMapScreenHandle);
+
+	/* 画面クリア */
+	ClearDrawScreen();
+
+	/* カメラの設定 */
+	SetCamera();
+
+	/* すべてのオブジェクトの発光部分の描写 */
+	ObjectList->BloomDrawAll();
+
+	/* ライトマップへの描写を終了 */
+	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 // カメラ設定
@@ -158,12 +233,12 @@ void SceneGame::DrawDebug()
 	/* シャドウマップ描写 */
 	if (gbDrawShadowMapFlg == true)
 	{
-		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - 516, 0, SCREEN_SIZE_WIDE, 516);
+		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, 0, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT);
 	}
 
 	/* ライトマップ描写 */
 	if (gbDrawLightMapFlg == true)
 	{
-		DrawExtendGraph(SCREEN_SIZE_WIDE - 516, 0, SCREEN_SIZE_WIDE, 516, this->iLightMapScreenHandle, FALSE);
+		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * 2, this->iLightMapScreenHandle, FALSE);
 	}
 }

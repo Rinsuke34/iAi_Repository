@@ -163,9 +163,6 @@ void DataList_Object::DrawAll()
 	DrawEffect();
 	DrawBullet();
 	DrawPlatform();
-
-	/* 仮設置 */
-	DeleteEnemy();
 }
 
 // プレイヤー描写
@@ -215,6 +212,75 @@ void DataList_Object::DrawPlatform()
 	}
 }
 
+/* リスト内オブジェクト発光描写 */
+// 全オブジェクト発光描写
+void DataList_Object::BloomDrawAll()
+{
+	/* 登録されているすべてのオブジェクトの発光描写 */
+	BloomDrawPlayer();
+	BloomDrawEnemy();
+	BloomDrawEffect();
+	BloomDrawBullet();
+	BloomDrawPlatform();
+}
+
+// プレイヤー発光描写
+void DataList_Object::BloomDrawPlayer()
+{
+	/* プレイヤーの発光描写を呼ぶ */
+	this->pCharacterPlayer->BloomDraw();
+}
+
+// エネミー発光描写
+void DataList_Object::BloomDrawEnemy()
+{
+	/* すべてのエネミーの発光描写を呼ぶ */
+	for (auto& pEnemy : this->pEnemyList)
+	{
+		pEnemy->BloomDraw();
+	}
+}
+
+// エフェクト発光描写
+void DataList_Object::BloomDrawEffect()
+{
+	/* すべてのエフェクトの発光描写を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->BloomDraw();
+	}
+}
+
+// 弾発光描写
+void DataList_Object::BloomDrawBullet()
+{
+	/* すべての弾の発光描写を呼ぶ */
+	for (auto& pBullet : this->pBulletList)
+	{
+		pBullet->BloomDraw();
+	}
+}
+
+// プラットフォーム発光描写
+void DataList_Object::BloomDrawPlatform()
+{
+	/* すべてのプラットフォームの発光描写を呼ぶ */
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		pPlatform->BloomDraw();
+	}
+}
+
+/* リスト内オブジェクト削除 */
+// 削除フラグが有効な全オブジェクト削除
+void DataList_Object::DeleteAll()
+{
+	DeleteEnemy();
+	DeleteEffect();
+	DeleteBullet();
+	DeletePlatform();
+}
+
 // 削除フラグが有効なエネミーを削除
 void DataList_Object::DeleteEnemy()
 {
@@ -231,4 +297,58 @@ void DataList_Object::DeleteEnemy()
 				return false;
 			}
 		}), pEnemyList.end());
+}
+
+// 削除フラグが有効なエフェクトを削除
+void DataList_Object::DeleteEffect()
+{
+	pEffectList.erase(std::remove_if(pEffectList.begin(), pEffectList.end(), [](EffectBase* pEffect)
+		{
+			// 削除フラグが有効であるか確認
+			if (pEffect->bGetDeleteFlg() == true)
+			{
+				delete pEffect;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}), pEffectList.end());
+}
+
+// 削除フラグが有効な弾を削除
+void DataList_Object::DeleteBullet()
+{
+	pBulletList.erase(std::remove_if(pBulletList.begin(), pBulletList.end(), [](BulletBase* pBullet)
+		{
+			// 削除フラグが有効であるか確認
+			if (pBullet->bGetDeleteFlg() == true)
+			{
+				delete pBullet;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}), pBulletList.end());
+}
+
+// 削除フラグが有効なプラットフォームを削除
+void DataList_Object::DeletePlatform()
+{
+	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](PlatformBase* pPlatform)
+		{
+			// 削除フラグが有効であるか確認
+			if (pPlatform->bGetDeleteFlg() == true)
+			{
+				delete pPlatform;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}), pPlatformList.end());
 }

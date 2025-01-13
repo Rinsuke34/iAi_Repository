@@ -13,9 +13,10 @@ class EffectBase : public ActorBase
 		EffectBase();			// コンストラクタ
 		virtual ~EffectBase();	// デストラクタ
 
-		virtual void	Initialization()	{};		// 初期化
-		virtual void	Update()			{};		// 更新
-		virtual void	Draw()				{};		// 描写
+		virtual void	Initialization()	override {};	// 初期化
+		virtual void	Update()			override {};	// 更新
+		virtual void	Draw()				override {};	// 描写
+		virtual void	BloomDraw()			override {};	// 発光描写
 
 		int	iGetEffectHandle()	{ return this->iEffectHandle; };	// エフェクトハンドルを取得
 		int	iGetCount()			{ return this->iCount; };			// エフェクトのカウントを取得

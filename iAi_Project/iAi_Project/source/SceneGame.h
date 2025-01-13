@@ -33,6 +33,7 @@ class SceneGame : public SceneBase
 		/* 関数 */
 		void	LoadMapData();						// マップデータのロード
 		void	SetupShadowMap();					// シャドウマップの設定
+		void	SetupLightMap();					// ライトマップの設定
 		void	SetCamera();						// カメラ設定
 
 		/* カメラ関連 */

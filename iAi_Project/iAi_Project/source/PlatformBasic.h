@@ -12,9 +12,10 @@ class PlatformBasic : public PlatformBase
 		PlatformBasic();				// コンストラクタ
 		virtual ~PlatformBasic();		// デストラクタ
 
-		virtual void	Initialization();	// 初期化
-		virtual void	Update() {};		// 更新
-		virtual void	Draw();				// 描写
+		virtual void	Initialization()	override;		// 初期化
+		virtual void	Update()			override {};	// 更新
+		virtual void	Draw()				override;		// 描写
+		virtual void	BloomDraw()			override;		// 発光描写
 
 	private:
 	protected:

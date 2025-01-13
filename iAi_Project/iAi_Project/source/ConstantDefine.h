@@ -27,3 +27,11 @@ static const int STAGE_3_3	= 11;	// ステージ0-3
 
 /* カメラ関連 */
 static const int CAMERA_MODE_FREE	= 0;	// フリーモード(通常の三人称視点)
+
+/* 描写関連 */
+static const float SHADOWMAP_RANGE	= 1000;	// シャドウマップの描写範囲
+
+/* デバッグ関連 */
+static const int DEBUG_MAP_HEIGHT	= 256;	// デバッグ描写の高さ
+static const int DEBUG_MAP_WIDTH	= 256;	// デバッグ描写の横幅
+

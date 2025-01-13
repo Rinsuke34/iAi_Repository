@@ -39,8 +39,20 @@ class DataList_Object : public DataListBase
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
 
+		/* リスト内オブジェクト発光描写 */
+		void	BloomDrawAll();			// 全オブジェクト発光描写
+		void	BloomDrawPlayer();		// プレイヤー発光描写
+		void	BloomDrawEnemy();		// エネミー発光描写
+		void	BloomDrawEffect();		// エフェクト発光描写
+		void	BloomDrawBullet();		// 弾発光描写
+		void	BloomDrawPlatform();	// プラットフォーム発光描写
+
 		/* オブジェクト削除 */
+		void	DeleteAll();			// 削除フラグが有効な全オブジェクト削除
 		void	DeleteEnemy();			// 削除フラグが有効なエネミーを削除
+		void	DeleteEffect();			// 削除フラグが有効なエフェクトを削除
+		void	DeleteBullet();			// 削除フラグが有効な弾を削除
+		void	DeletePlatform();		// 削除フラグが有効なプラットフォームを削除
 
 		/* データ取得 */
 		// 単独
