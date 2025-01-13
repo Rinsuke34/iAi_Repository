@@ -27,6 +27,7 @@ static const float GRAVITY_BUFFER = 0.1f; //キャラクターにかかる重力調整　１より
 static const int PLAYER_JUMPING_IN_AIR_LIMIT = 1;//プレイヤーが空中ジャンプできる回数
 //回避関係
 static const float PLAYER_DODGE_SPEED = 3000.0f;//プレイヤーの回避速度
+static const float PLAYER_DODGE_TIME = 0.5f; //プレイヤーの回避時間
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
 

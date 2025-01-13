@@ -1,4 +1,5 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
+/* 2025.01.10 菊池雅道 関数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -53,6 +54,9 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Gravity();		// 重力
 		void	Player_Move();			// 移動
 		void	Player_Jump();			// ジャンプ
+		/* 2025.01.10 菊池雅道 関数追加 開始 */
+		void	Player_Dodg();			// 回避
+		/* 2025.01.10 菊池雅道 関数追加 終了 */
 
 		void	CollisionUpdate();		// コリジョン更新
 };

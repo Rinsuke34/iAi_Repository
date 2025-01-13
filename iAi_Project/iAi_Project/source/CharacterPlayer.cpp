@@ -3,13 +3,6 @@
 
 #include "CharacterPlayer.h"
 
-/* 2025.01.09 菊池雅道 使用ネームスペース追加 開始 */
-
-using namespace PLAYER_STATUS;
-using namespace GAME_SETTING;
-
-/* 2025.01.09 菊池雅道 使用ネームスペース追加 終了 */
-
 /* プレイヤークラスの定義 */
 
 // コンストラクタ
@@ -24,21 +17,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* 仮初期化処理開始 */
 	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
 
-	/* 2025.01.09 菊池雅道 初期化処理追加 開始 */
-	
-	PlayerStatusList->fPlayerMoveSpeed = PLAYER_WALK_MOVE_SPEED;
-	this ->vecPlayerOldVector = { 0,0,0 };
-	this ->fPlayerOldRadian = 0;
-	this ->iPlayerNormalDashFlameCount = 0;
-	this ->bPlayerJumpingFlag = false;
-	this ->iPlayerJumpCount = 0;
-	this ->bPlayerDodgingFlag = false;
-	this ->fPlayerDodgeProgress = 0.0f;
-	this ->vecPlayerDodgeDirection = VGet(0, 0, 0);
-	this ->iPlayerDodgeWhileJumpingCount = 0;
-	this ->bPlayerAfterDodgeFlag = false;
-
-	/* 2025.01.09 菊池雅道 初期化処理追加 終了 */
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
@@ -48,65 +26,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 void CharacterPlayer::Update()
 {
 
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
-	{
-		//回避
-		
-			// 回避フラグをセット
-			this->bPlayerDodgingFlag = true;
-			// 回避開始時の時間をリセット
-			this->fPlayerDodgeTime = 0.0f;
-			//現在の移動方向へ回避
-			this->vecPlayerDodgeDirection = VNorm(vecPlayerMove);
-			//回避速度設定
-			this->fPlayerDodgeSpeed = PLAYER_DODGE_SPEED;
-			//回避状態の進行率をリセット
-			this->fPlayerDodgeProgress = 0.0f;
-
-			//ジャンプ中であれば回避回数をカウント
-			if (this->bPlayerJumpingFlag == true)
-			{
-				this->iPlayerDodgeWhileJumpingCount += 1;
-			}
-		
-		//回避フラグが有効であれば回避処理を行う
-		if (this->bPlayerDodgingFlag == true) {
-
-			// 時間経過を加算
-			this->fPlayerDodgeTime += deltaTime;
-
-			// 回避中（設定時間の間）
-			if (this->fPlayerDodgeTime < 0.3)
-			{
-				//設定時間かけて回避移動を行う
-				VECTOR vecPlayerDodgeMove = VScale(this->vecPlayerDodgeDirection, PLAYER_DODGE_SPEED * deltaTime);
-				vecPlayerMove = vecPlayerDodgeMove;
-			}
-			// 回避終了
-			else
-			{
-				this->bPlayerDodgingFlag = false;
-				this->bPlayerAfterDodgeFlag = true;
-			}
-		}
-	}
-
-	
-	//地上に降りたときの処理
-	if (this ->vecPosition.y <= 0)
-	{
-		//プレイヤーY座標固定
-		this ->vecPosition.y = 0;
-		//プレイヤーのY方向の動きをリセット
-		vecPlayerMove.y = 0;
-		//ジャンプ中のフラグをリセット
-		this ->bPlayerJumpingFlag = false;
-		//連続ジャンプ回数をリセット
-		this ->iPlayerJumpCount = 0;
-		//ジャンプ中の回避回数をリセット
-		this ->iPlayerDodgeWhileJumpingCount = 0;
-	}
-
+	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
 	vecPlayerMove = VScale(this->InputList->vecGetGameInputMove(), fSpeed);
 	this->vecPosition = VAdd(this->vecPosition, vecMove);
 
@@ -114,6 +34,8 @@ void CharacterPlayer::Update()
 	if (VSize(VGet(vecPlayerMove.x, 0, vecPlayerMove.z)) > 0.f) {		// 移動していない時は無視するため
 		this ->vecPlayerDirection = vecPlayerMove;
 	}
+	/* 回避処理 */
+	Player_Dodg()
 
 	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 
@@ -125,6 +47,8 @@ void CharacterPlayer::Update()
 
 	/* 移動処理 */
 	Player_Move();
+
+	
 }
 
 // 描写
@@ -220,7 +144,7 @@ void CharacterPlayer::Player_Move()
 	VECTOR vecPlayerMove = { 0,0,0 }; //プレイヤーの移動ベクトル
 
 	//地上にいる場合の処理
-	if (this->PlayerStatusList->bPlayerJumpingFlag == false) {
+	if (this->PlayerStatusList->bGetPlayerJumpingFlag() == false) {
 
 		// アナログスティックの入力を正規化して移動方向を計算
 		//float fStickTiltMagnitude = sqrt(InputX * InputX + InputY * InputY);
@@ -236,27 +160,27 @@ void CharacterPlayer::Player_Move()
 			float fPlayerMoveAngle = fInputAngle + camrad;
 
 			// 回避後フラグがtrueなら最大ダッシュ状態になる
-			if (this->PlayerStatusList->bPlayerAfterDodgeFlag == true)
+			if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
 			{
-				this->fPlayerMoveSpeed = PLAER_DASH_MAX_SPEED;
-
+				this->PlayerStatusList-> SetPlayerNowMoveSpeed(PLAER_DASH_MAX_SPEED);
+				
 			}
 			// スティックの倒し具合で速度を変化
 			else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH) {
 				//走り（通常）
-				this->fPlayerMoveSpeed = PLAER_DASH_NOMAL_SPEED;
-				this->iPlayerNormalDashFlameCount += 1;
+				this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAER_DASH_NOMAL_SPEED);
+				this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGePlayerNormalDashFlameCount) + 1;
 
 				//一定フレームがたったら走り（最大）へ
-				if (this->iPlayerNormalDashFlameCount >= FLAME_COUNT_TO_MAX_SPEED)
+				if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
 				{
-					this->fPlayerMoveSpeed = PLAER_DASH_MAX_SPEED;
+					this->PlayerStatusList->SetPlayerMoveSpeed() = PLAER_DASH_MAX_SPEED;
 				}
 			}
 			else
 			{
 				//歩き
-				this->fPlayerMoveSpeed = PLAYER_WALK_MOVE_SPEED;
+				this->PlayerStatusList->SetPlayerSpeed = PLAYER_WALK_MOVE_SPEED;
 				this->iPlayerNormalDashFlameCount = 0;
 			}
 
@@ -303,11 +227,6 @@ void CharacterPlayer::Player_Move()
 			this->fPlayerOldRadian = fPlayerMoveAngle;
 		}
 	}
-
-
-
-
-
 
 	/* 入力による移動量を取得 */
 	VECTOR vecInput = this->InputList->vecGetGameInputMove();
@@ -380,23 +299,23 @@ void CharacterPlayer::Player_Jump()
 		// ジャンプ入力がされている場合
 		//ジャンプ
 		//連続ジャンプ回数の制限以内
-		if (this->iPlayerJumpCount <= PLAYER_JUMPING_IN_AIR_LIMIT)
+		if (this->PlayerStatusList->iGetPlayerJumpCount() <= PLAYER_JUMPING_IN_AIR_LIMIT)
 		{
 			//ジャンプ速度リセット
-			this->fPlayerJumpSpeed = 0;
+			this->PlayerStatusList->SetPlayerJumpSpeed(0);
 			//ジャンプの加速度を与える
-			this->fPlayerJumpSpeed += ACCELERATION(PLAYER_JUMP_SPEED);
+			this->PlayerStatusList->SetPlayerJumpSpeed(PlayerStatusList->fGetPlayerJumpSpeed() + ACCELERATION(PLAYER_JUMP_SPEED)) ;
 			//ジャンプ中のフラグtrue
-			this->bPlayerJumpingFlag = true;
+			this->PlayerStatusList->SetPlayerJumpingFlag(true);
 			//連続ジャンプ回数を加算
-			this->iPlayerJumpCount += 1;
+			this->PlayerStatusList->SetPlayerJumpCount(PlayerStatusList->iGetPlayerJumpCount()+1);
 		}
 
 		//ジャンプ中かつ回避中ではない
-		if (this->bPlayerJumpingFlag == true && this->bPlayerDodgingFlag == false)
+		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true && this->PlayerStatusList->bGetPlayerDodgingFlag() == false)
 		{
 			//ジャンプ速度に地上の影響を与える
-			this->fPlayerJumpSpeed += ACCELERATION(GRAVITY_SREED * GRAVITY_BUFFER);
+			//this->fPlayerJumpSpeed += ACCELERATION(GRAVITY_SREED * GRAVITY_BUFFER);
 			//移動していた方向へ向く
 			vecMove = VAdd(vecMove, this->vecPlayerOldVector);
 		}
@@ -463,6 +382,12 @@ void CharacterPlayer::Player_Gravity()
 
 				/* 落下の加速度を初期化する */
 				fFallSpeed = 0.f;
+				//ジャンプ中のフラグをリセット
+				this->PlayerStatusList->SetPlayerJumpingFlag(false);
+				//連続ジャンプ回数をリセット
+				this->PlayerStatusList->SetPlayerJumpCount(0);
+				//ジャンプ中の回避回数をリセット
+				this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
 			}
 		}
 	}
@@ -478,6 +403,55 @@ void CharacterPlayer::Player_Gravity()
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
+}
+
+// 回避
+void CharacterPlayer::Player_Dodg()
+{
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
+	{
+		//回避
+
+		// 回避フラグをセット
+		this->PlayerStatusList->SetPlayerDodgingFlag(true);
+		// 回避開始時の時間をリセット
+		this->PlayerStatusList->SetPlayerDodgeTime(0.0f);
+		//現在の移動方向へ回避
+		this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecPlayerMove));
+		//回避速度設定
+		this->PlayerStatusList->SetPlayerDodgeSpeed(PLAYER_DODGE_SPEED);
+		//回避状態の進行率をリセット
+		this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
+
+		//ジャンプ中であれば回避回数をカウント
+		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+		{
+			this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount()+1) ;
+		}
+
+		//回避フラグが有効であれば回避処理を行う
+		if (this->PlayerStatusList->bGetPlayerDodgingFlag() == true) 
+		{
+
+			// 時間経過を加算
+			this->PlayerStatusList->SetPlayerDodgeTime(PlayerStatusList->fGetPlayerDodgeTime() + deltaTime);
+
+			// 回避中（設定時間の間）
+			if (this->PlayerStatusList->fGetPlayerDodgeTime() < PLAYER_DODGE_TIME)
+			{
+				//設定時間かけて回避移動を行う
+				VECTOR vecPlayerDodgeMove = VScale(this->vecPlayerDodgeDirection, PLAYER_DODGE_SPEED * deltaTime);
+				vecPlayerMove = vecPlayerDodgeMove;
+			}
+			// 回避終了
+			else
+			{
+				this->PlayerStatusList->SetPlayerDodgingFlag(false);
+				this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
+			}
+		}
+	}
+
 }
 
 // コリジョン更新
