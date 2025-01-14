@@ -105,11 +105,33 @@ void SceneGame::LoadMapData()
 			this->ObjectList->SetPlatform(pPlatform);
 
 			/* ƒ‚ƒfƒ‹ */
-			std::string	name = "Test/LightBlock/Test_Cube";
+			std::string	name = "Test/LightBlock/Test_Cube_1";
 			pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
 
 			/* À•W */
 			VECTOR vecPos = VGet(500.f, 100.f, 0.f);
+			pPlatform->SetPosition(vecPos);
+
+			/* ‰ñ“]—Ê */
+			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
+			pPlatform->SetRotate(vecRot);
+
+			/* Šg‘å—¦ */
+			VECTOR vecScale = VGet(10.f, 1.f, 10.f);
+			pPlatform->SetScale(vecScale);
+		}
+
+		/* Œõ‚é‘«ê(2ŒÂ–Ú) */
+		{
+			PlatformLight_Test* pPlatform = new PlatformLight_Test();
+			this->ObjectList->SetPlatform(pPlatform);
+
+			/* ƒ‚ƒfƒ‹ */
+			std::string	name = "Test/LightBlock/Test_Cube";
+			pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
+
+			/* À•W */
+			VECTOR vecPos = VGet(300.f, 200.f, 300.f);
 			pPlatform->SetPosition(vecPos);
 
 			/* ‰ñ“]—Ê */

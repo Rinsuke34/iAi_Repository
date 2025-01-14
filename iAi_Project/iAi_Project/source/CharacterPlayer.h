@@ -20,7 +20,7 @@ class CharacterPlayer : public CharacterBase
 		virtual void	Initialization()	override;		// ‰Šú‰»
 		virtual void	Update()			override;		// XV
 		virtual void	Draw()				override;		// •`Ê
-		virtual void	BloomDraw()			override {};	// ”­Œõ•`Ê
+		virtual void	BloomDraw()			override;		// ”­Œõ•`Ê
 
 	private:
 	protected:

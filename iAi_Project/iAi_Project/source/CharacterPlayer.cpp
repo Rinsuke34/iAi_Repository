@@ -272,3 +272,43 @@ void CharacterPlayer::CollisionUpdate()
 	/* コリジョンを設定 */
 	this->SetCollision_Capsule(stCapsule);
 }
+
+// 発光描写
+void CharacterPlayer::BloomDraw()
+{
+	/* 元の色を保存 */
+	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
+	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
+
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
+		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
+		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
+		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
+	}
+
+	/* すべてのフレームを黒色で描写(仮) */
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+	}
+
+	/* モデル描写 */
+	MV1DrawModel(this->iModelHandle);
+
+	/* 元の色に戻す */
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
+		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
+		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
+		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
+	}
+}

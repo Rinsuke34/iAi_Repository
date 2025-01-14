@@ -54,11 +54,17 @@ void PlatformBasic::BloomDraw()
 {
 	/* 元の色を保存 */
 	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
-	std::vector<COLOR_F> vecOriginalColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
 
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
-		vecOriginalColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
+		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
+		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
+		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
+		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
 	}
 
 	/* ターゲット以外の色を黒に設定 */
@@ -66,7 +72,10 @@ void PlatformBasic::BloomDraw()
 	{
 		if (i != this->iLightFrameNo)
 		{
-			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 0.f));
+			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
 		}
 	}
 
@@ -76,6 +85,9 @@ void PlatformBasic::BloomDraw()
 	/* 元の色に戻す */
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
-		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalColor[i]);
+		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
+		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
+		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
+		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
 	}
 }

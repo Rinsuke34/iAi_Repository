@@ -45,8 +45,10 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	SetUseASyncLoadFlag(false);
 
 	/* マップハンドル作成 */
-	this->iShadowMapScreenHandle	= MakeShadowMap(SCREEN_SIZE_WIDE * 2, SCREEN_SIZE_HEIGHT * 2);	// シャドウマップ(画面の2倍のサイズで作成)
-	this->iLightMapScreenHandle		= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
+	this->iShadowMapScreenHandle			= MakeShadowMap(SCREEN_SIZE_WIDE * 2, SCREEN_SIZE_HEIGHT * 2);	// シャドウマップ(画面の2倍のサイズで作成)
+	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
+	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
+	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 }
 
 // デストラクタ
@@ -103,7 +105,24 @@ void SceneGame::Draw()
 	ObjectList->DrawAll();
 
 	/* ライトマップ描写 */
-	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iLightMapScreenHandle, FALSE);
+	{
+		/* 描画モードをバイリニアフィルタリングに変更　*/
+		// ※拡大時にドットをぼやけさせる
+		SetDrawMode(DX_DRAWMODE_BILINEAR);
+
+		/* 描画ブレンドモードを加算にする */
+		// ※ライトマップの黒色部分は描写されないようにする
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+
+		/* ライトマップ(ぼかし)を描写 */
+		DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iLightMapScreenHandle_Gauss, FALSE);
+
+		/* 描画ブレンドモードをブレンド無しに戻す */
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+		/* 描画モードを二アレストに戻す */
+		SetDrawMode(DX_DRAWMODE_NEAREST);
+	}
 
 	/* デバッグ描写 */
 	DrawDebug();
@@ -113,7 +132,7 @@ void SceneGame::Draw()
 void SceneGame::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0, -1.f, -1.f));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0, -1.f, 0.f));
 
 	/* シャドウマップの描写範囲設定 */
 	{
@@ -138,20 +157,29 @@ void SceneGame::SetupShadowMap()
 // ライトマップの設定
 void SceneGame::SetupLightMap()
 {
-	/* ライトマップへの描写を開始 */
-	SetDrawScreen(this->iLightMapScreenHandle);
+	/* ライトマップ描写 */
+	{
+		/* ライトマップへの描写を開始 */
+		SetDrawScreen(this->iLightMapScreenHandle);
 
-	/* 画面クリア */
-	ClearDrawScreen();
+		/* 画面クリア */
+		ClearDrawScreen();
 
-	/* カメラの設定 */
-	SetCamera();
+		/* カメラの設定 */
+		SetCamera();
 
-	/* すべてのオブジェクトの発光部分の描写 */
-	ObjectList->BloomDrawAll();
+		/* すべてのオブジェクトの発光部分の描写 */
+		ObjectList->BloomDrawAll();
 
-	/* ライトマップへの描写を終了 */
-	SetDrawScreen(DX_SCREEN_BACK);
+		/* ライトマップへの描写を終了 */
+		SetDrawScreen(DX_SCREEN_BACK);
+	}
+
+	/* ライトマップの縮小版を取得 */
+	GraphFilterBlt(this->iLightMapScreenHandle, this->iLightMapScreenHandle_DownScale, DX_GRAPH_FILTER_DOWN_SCALE, LIGHTMAP_DOWNSCALE);
+
+	/* ライトマップのぼやかした版を取得 */
+	GraphFilterBlt(this->iLightMapScreenHandle_DownScale, this->iLightMapScreenHandle_Gauss, DX_GRAPH_FILTER_GAUSS, LIGHTMAP_GAUSS_WIDTH, LIGHTMAP_GAUSS_RATIO);
 }
 
 // カメラ設定
@@ -230,15 +258,33 @@ void SceneGame::SetCamera_Free()
 // デバッグ描写
 void SceneGame::DrawDebug()
 {
+	int iDrawCount = 0;
+
 	/* シャドウマップ描写 */
 	if (gbDrawShadowMapFlg == true)
 	{
-		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, 0, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT);
+		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
+		iDrawCount++;
 	}
 
 	/* ライトマップ描写 */
 	if (gbDrawLightMapFlg == true)
 	{
-		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * 2, this->iLightMapScreenHandle, FALSE);
+		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle, FALSE);
+		iDrawCount++;
+	}
+
+	/* ライトマップ(縮小)描写 */
+	if (gbDrawLightMapDownScaleFlg == true)
+	{
+		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_DownScale, FALSE);
+		iDrawCount++;
+	}
+
+	/* ライトマップ(ぼかし)描写 */
+	if (gpDrawLightMapGaussFlg == true)
+	{
+		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
+		iDrawCount++;
 	}
 }

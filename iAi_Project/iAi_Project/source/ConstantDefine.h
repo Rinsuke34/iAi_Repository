@@ -29,7 +29,10 @@ static const int STAGE_3_3	= 11;	// ステージ0-3
 static const int CAMERA_MODE_FREE	= 0;	// フリーモード(通常の三人称視点)
 
 /* 描写関連 */
-static const float SHADOWMAP_RANGE	= 1000;	// シャドウマップの描写範囲
+static const float	SHADOWMAP_RANGE			= 1000;		// シャドウマップの描写範囲
+static const int	LIGHTMAP_DOWNSCALE		= 8;		// ライトマップの縮小倍率
+static const int	LIGHTMAP_GAUSS_WIDTH	= 16;		// ぼかしの強さ(8, 16, 32のいずれか)
+static const int	LIGHTMAP_GAUSS_RATIO	= 100;		// ぼかしパラメータ(100につき約1ピクセル分の幅)
 
 /* デバッグ関連 */
 static const int DEBUG_MAP_HEIGHT	= 256;	// デバッグ描写の高さ

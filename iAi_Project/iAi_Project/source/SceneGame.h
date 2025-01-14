@@ -45,6 +45,8 @@ class SceneGame : public SceneBase
 		/* 描写画面関連 */
 		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
+		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
+		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
 
 	protected:
 };
