@@ -2,6 +2,9 @@
 
 #include "CharacterPlayer.h"
 
+/* オブジェクト */
+#include "EffectTest.h"
+
 /* プレイヤークラスの定義 */
 
 // コンストラクタ
@@ -37,6 +40,9 @@ void CharacterPlayer::Update()
 
 	/* 移動処理 */
 	Player_Move();
+
+	/* 攻撃処理(テスト) */
+	Player_Attack();
 }
 
 // 描写
@@ -50,8 +56,6 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
-
 
 	/* テスト用描写 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
@@ -310,5 +314,24 @@ void CharacterPlayer::BloomDraw()
 		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
 		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
 		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
+	}
+}
+
+// プレイヤー攻撃(仮)
+void CharacterPlayer::Player_Attack()
+{
+	/* テスト用攻撃処理 */
+
+	/* 攻撃が入力されているか確認 */
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
+	{
+		EffectBase* Effect_Test = new TestEffect();
+		Effect_Test->Effect_Load("FX_e_bullet");
+		Effect_Test->SetPosition(VAdd(this->vecPosition, VGet(0.f, 10.f, 0.f)));
+
+		dynamic_cast<TestEffect*>(Effect_Test)->Initialization();
+
+		
+		ObjectList->SetEffect(Effect_Test);
 	}
 }

@@ -9,6 +9,7 @@
 
 /* ƒ‰ƒCƒuƒ‰ƒŠ */
 #include "DxLib.h"
+//#include "EffekseerForDXLib.h"
 
 /* ’è‹` */
 #include "AppConstantDefine.h"

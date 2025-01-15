@@ -32,13 +32,6 @@ DataList_Object::~DataList_Object()
 	this->pCharacterPlayer	=	nullptr;
 }
 
-// Jsonからデータをロード
-void DataList_Object::JsonDataLoad()
-{
-	/* Jsonファイルからデータ読み込み */
-	// ※現状は未実装
-}
-
 /* リスト内オブジェクト初期化 */
 // 全オブジェクト初期化
 void DataList_Object::InitializationAll()
@@ -160,7 +153,6 @@ void DataList_Object::DrawAll()
 	/* 登録されているすべてのオブジェクトの描写 */
 	DrawPlayer();
 	DrawEnemy();
-	DrawEffect();
 	DrawBullet();
 	DrawPlatform();
 }
@@ -179,16 +171,6 @@ void DataList_Object::DrawEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->Draw();
-	}
-}
-
-// エフェクト描写
-void DataList_Object::DrawEffect()
-{
-	/* すべてのエフェクトの描写を呼ぶ */
-	for (auto& pEffect : this->pEffectList)
-	{
-		pEffect->Draw();
 	}
 }
 
@@ -219,7 +201,6 @@ void DataList_Object::BloomDrawAll()
 	/* 登録されているすべてのオブジェクトの発光描写 */
 	BloomDrawPlayer();
 	BloomDrawEnemy();
-	BloomDrawEffect();
 	BloomDrawBullet();
 	BloomDrawPlatform();
 }
@@ -238,16 +219,6 @@ void DataList_Object::BloomDrawEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->BloomDraw();
-	}
-}
-
-// エフェクト発光描写
-void DataList_Object::BloomDrawEffect()
-{
-	/* すべてのエフェクトの発光描写を呼ぶ */
-	for (auto& pEffect : this->pEffectList)
-	{
-		pEffect->BloomDraw();
 	}
 }
 

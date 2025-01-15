@@ -145,6 +145,12 @@
     <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー">
       <UniqueIdentifier>{51e3ff2f-de72-4967-8648-9250810d1932}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\エフェクト">
+      <UniqueIdentifier>{050e7cb1-0e08-4da8-8d67-b1dc9cdcb5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\エフェクト">
+      <UniqueIdentifier>{1e026061-22cf-4657-8ff1-93c15d1ef6ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -197,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="source\PlatformLight_Test.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectTest.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="source\PlatformLight_Test.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectTest.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
