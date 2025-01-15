@@ -1,13 +1,13 @@
 /* 2025.01.08 駒沢風助 ファイル作成 */
 
 #pragma once
-#include "ActorBase.h"
-#include "EffekseerForDXLib.h"
+#include "ObjectBase.h"
+#include <EffekseerForDXLib.h>
 
 /* すべてのエフェクトのベースとなるクラスの宣言 */
 
 // エフェクトベースクラス
-class EffectBase : public ActorBase
+class EffectBase : public ObjectBase
 {
 	public:
 		EffectBase();			// コンストラクタ
@@ -15,20 +15,15 @@ class EffectBase : public ActorBase
 
 		virtual void	Initialization()	override {};	// 初期化
 		virtual void	Update()			override {};	// 更新
-		virtual void	Draw()				override {};	// 描写
-		virtual void	BloomDraw()			override {};	// 発光描写
 
-		int	iGetEffectHandle()	{ return this->iEffectHandle; };	// エフェクトハンドルを取得
-		int	iGetCount()			{ return this->iCount; };			// エフェクトのカウントを取得
-
-		void SetEffectHandle(int iEffectHandle)	{ this->iEffectHandle	= iEffectHandle; };		// エフェクトハンドルを設定
-		void SetCount(int iCount)				{ this->iCount			= iCount; };			// エフェクトのカウントを設定
+		virtual void Effect_Load(std::string effectName);		// エフェクト読み込み
+		virtual void Effect_PosUpdate();						// エフェクト位置更新(vecPosに)
 
 	private:
 	protected:
 		/* 関数 */
 
 		/* 変数 */
-		int iEffectHandle;	// エフェクトハンドル
-		int iCount;			// エフェクトのカウント
+		int iEffectHandle_Resource;	// エフェクトハンドル(リソース)
+		int iEffectHandle_Play;		// エフェクトハンドル(実行)
 };

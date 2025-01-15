@@ -7,6 +7,15 @@
 // コンストラクタ
 SceneGame::SceneGame() : SceneBase("Game", 0, false)
 {
+	/* Effekseer初期化処理 */
+	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
+	{
+		// エラーが起きたら直ちに終了
+		DxLib_End();
+		gbEndFlg = true;
+		return;
+	}
+
 	/* 非同期読み込みを有効化する */
 	SetUseASyncLoadFlag(true);
 
@@ -27,13 +36,13 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "3Dモデル管理"を取得 */
-		this->ModelList = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		this->ModelList			= dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 	}
 
 	/* マップデータ読み込み */
@@ -45,7 +54,7 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	SetUseASyncLoadFlag(false);
 
 	/* マップハンドル作成 */
-	this->iShadowMapScreenHandle			= MakeShadowMap(SCREEN_SIZE_WIDE * 2, SCREEN_SIZE_HEIGHT * 2);	// シャドウマップ(画面の2倍のサイズで作成)
+	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);		// シャドウマップ(画面の2倍のサイズで作成)
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
@@ -62,6 +71,9 @@ SceneGame::~SceneGame()
 	/* マップハンドル削除 */
 	DeleteShadowMap(iShadowMapScreenHandle);	// シャドウマップ
 	DeleteGraph(iLightMapScreenHandle);			// ライトマップ
+
+	/* Effkseerの使用を終了する */
+	Effkseer_End();
 }
 
 // 計算
@@ -69,6 +81,9 @@ void SceneGame::Process()
 {
 	/* すべてのオブジェクトの更新 */
 	ObjectList->UpdateAll();
+
+	/* 削除フラグが有効なオブジェクトの削除 */
+	ObjectList->DeleteAll();
 }
 
 // 描画
@@ -104,6 +119,18 @@ void SceneGame::Draw()
 	/* 半透明部分のすべてのオブジェクトを描写 */
 	ObjectList->DrawAll();
 
+	/* エフェクト描写 */
+	{
+		/* エフェクト更新 */
+		UpdateEffekseer3D();
+
+		/* エフェクト用カメラ位置同期 */
+		Effekseer_Sync3DSetting();
+
+		/* エフェクト描写 */
+		DrawEffekseer3D();
+	}
+
 	/* ライトマップ描写 */
 	{
 		/* 描画モードをバイリニアフィルタリングに変更　*/
@@ -132,7 +159,7 @@ void SceneGame::Draw()
 void SceneGame::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0, -1.f, 0.f));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.8f, -1.f, 0.8f));
 
 	/* シャドウマップの描写範囲設定 */
 	{

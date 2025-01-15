@@ -34,6 +34,7 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Gravity();		// 重力
 		void	Player_Move();			// 移動
 		void	Player_Jump();			// ジャンプ
+		void	Player_Attack();		// プレイヤー攻撃(仮)
 
 		void	CollisionUpdate();		// コリジョン更新
 };

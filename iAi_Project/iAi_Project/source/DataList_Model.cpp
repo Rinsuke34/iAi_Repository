@@ -7,7 +7,7 @@
 // コンストラクタ
 DataList_Model::DataList_Model() : DataListBase("DataList_Model")
 {
-	/* 初期化(仮) */
+
 }
 
 // デストラクタ
@@ -22,12 +22,6 @@ DataList_Model::~DataList_Model()
 
 	/* mapをクリアする */
 	pModelHandleList.clear();
-}
-
-// Jsonからデータをロード"※仮作成"
-void DataList_Model::JsonDataLoad()
-{
-
 }
 
 // 3Dモデル取得

@@ -14,17 +14,17 @@ class DataList_Input : public DataListBase
 		DataList_Input();				// コンストラクタ
 		virtual ~DataList_Input();		// デストラクタ
 
-		void	JsonDataLoad();			// Jsonからデータをロード
-
 		/* インターフェイス用入力取得 */
 		bool	bGetInterfaceInput(int iInputType, int iGetInputUI);		// インターフェイス入力取得
 
 		/* ゲームプレイ用入力取得 */
 		bool	bGetGameInputAction(int iInputType, int iGetInputGame);		// ゲームプレイ用入力取得(アクション)
 		VECTOR	vecGetGameInputMove();										// ゲームプレイ用入力取得(移動量)
-		VECTOR	vecGetGameInputAim();										// ゲームプレイ用入力取得(照準)
 
 	private:
+		/* 関数 */
+		void JsonDataLoad();		// Jsonからデータをロード
+
 		/* キーコンフィグ情報 */
 		std::vector<Struct_Json_Input::CONFIG_INFO*>	stConfigJoypad;			// ジョイパッド
 		std::vector<Struct_Json_Input::CONFIG_INFO*>	stConfigKeyboardMouse;	// キーボード＆マウス
