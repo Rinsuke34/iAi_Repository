@@ -32,17 +32,125 @@ void CharacterPlayer::Initialization()
 // 更新
 void CharacterPlayer::Update()
 {
-	/* 重力処理 */
-	Player_Gravity();
+	/* プレイヤーの更新処理 */
 
-	/* ジャンプ処理 */
-	Player_Jump();
+	/* プレイヤーの状態に応じて処理を変更 */
+	int iInput = this->PlayerStatusList->iGetPlayerState();
+	switch (iInput)
+	{
+		/* 基本状態(行動に制約のない状態の総称) */
+		case PLAYER_STATE_IDLE:			// 待機
+		case PLAYER_STATE_WALK:			// 歩行
+		case PLAYER_STATE_RUN_LOW:		// 走行(低速)
+		case PLAYER_STATE_RUN_HIGH:		// 走行(高速)
+		case PLAYER_STATE_JUMP_UP:		// 空中(上昇)
+		case PLAYER_STATE_JUMP_DOWN:	// 空中(下降)
+			/* 重力処理 */
+			Player_Gravity();
 
-	/* 移動処理 */
-	Player_Move();
+			/* ジャンプ処理 */
+			Player_Jump();
 
-	/* 攻撃処理(テスト) */
-	Player_Attack();
+			/* 移動処理 */
+			Player_Move();
+
+			/* 入力取得 */
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+			{
+				/* 居合(構え)状態へ遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_CHARGE);
+			}
+			else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_AIM))
+			{
+				/* クナイ(構え)状態へ遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_THROW_KUNAI_AIM);
+			}
+			else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+			{
+				/* 回避状態に遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+			}
+			break;
+
+		/* 行動制限状態(一部行動に制約あり) */
+		case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
+		case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
+			/* 重力処理 */
+			Player_Gravity();
+
+			/* 移動処理 */
+			Player_Move();
+
+			/* 入力取得 */
+			switch (iInput)
+			{
+				case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
+					/* 攻撃ボタンを離したか */
+					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_ATTACK))
+					{
+						/* 居合(弱)状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_WEAK);
+					}
+					/* 回避を入力したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+					{
+						/* 回避状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+					}
+					break;
+
+				case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
+					/* 攻撃ボタンを押したか */
+					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+					{
+						/* クナイ(投げ)状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_THROW_KUNAI_THROW);
+					}
+					/* 構えを解除したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM))
+					{
+						/* 待機状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+					}
+					/* 回避を入力したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+					{
+						/* 回避状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+					}
+					break;
+			}
+			break;
+
+		/* 攻撃状態 */
+		// 居合系
+		case PLAYER_STATE_DRAW_SWORD_WEAK:		// 居合(弱)
+		case PLAYER_STATE_DRAW_SWORD_STRONG:	// 居合(強)
+			/* 攻撃処理(テスト) */
+			Player_Attack();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+
+		// クナイ系
+		case PLAYER_STATE_THROW_KUNAI_THROW:	// クナイ(投げ)
+			/* 攻撃処理(テスト) */
+			Player_Attack();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+
+		/* 回避状態 */
+		case PLAYER_STATE_DODGE:				// 回避
+			/* 移動処理 */
+			Player_Move();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+	}
 }
 
 // 描写
@@ -186,13 +294,25 @@ void CharacterPlayer::Player_Jump()
 {
 	/* プレイヤーのジャンプ処理 */
 
-	/* ジャンプ入力がされているか確認 */
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+	/* ジャンプ回数が最大数を超えていないか確認 */
+	int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
+	int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount();
+	if (iNowJumpCount < iMaxJumpCount)
 	{
-		// ジャンプ入力がされている場合
-		/* ジャンプ処理 */
-		// 仮で落下速度を-にする処理を行う
-		this->PlayerStatusList->SetPlayerNowFallSpeed(-10.0f);
+		/* ジャンプ入力がされているか確認 */
+		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+		{
+			// ジャンプ入力がされている場合
+			/* ジャンプ処理 */
+			// 仮で落下速度を-にする処理を行う
+			this->PlayerStatusList->SetPlayerNowFallSpeed(-10.0f);
+
+			/* ジャンプ回数を更新 */
+			this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
+
+			/* 空中(上昇)へ遷移 */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_JUMP_UP);
+		}
 	}
 
 	/* コリジョンを更新 */
@@ -203,6 +323,7 @@ void CharacterPlayer::Player_Jump()
 void CharacterPlayer::Player_Gravity()
 {
 	/* プレイヤーの重力処理 */
+	// ※プレイヤーのY方向への移動処理をまとめて行う
 
 	/* 落下量取得 */
 	float fFallSpeed	=	this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
@@ -227,6 +348,9 @@ void CharacterPlayer::Player_Gravity()
 	/* 着地する座標 */
 	float	fStandPosY		= vecNextPosition.y;	// 初期値を移動後の座標に設定
 
+	/* プレイヤーの着地フラグを無効にする */
+	this->PlayerStatusList->SetPlayerLanding(false);
+
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
 	{
@@ -245,6 +369,12 @@ void CharacterPlayer::Player_Gravity()
 
 				/* 落下の加速度を初期化する */
 				fFallSpeed = 0.f;
+
+				/* ジャンプ回数を初期化する */
+				this->PlayerStatusList->SetPlayerNowJumpCount(0);
+
+				/* プレイヤーの着地フラグを有効にする */
+				this->PlayerStatusList->SetPlayerLanding(true);
 			}
 		}
 	}
@@ -257,6 +387,14 @@ void CharacterPlayer::Player_Gravity()
 
 	/* 落下速度を更新 */
 	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
+
+	/* 落下速度が+であるなら空中(下降)に遷移 */
+	if (fFallSpeed < 0)
+	{
+		// 落下速度が+である場合
+		/* 空中(下降)に遷移 */
+		this->PlayerStatusList->SetPlayerState(PLAYER_STATE_JUMP_DOWN);
+	}
 
 	/* コリジョンを更新 */
 	CollisionUpdate();

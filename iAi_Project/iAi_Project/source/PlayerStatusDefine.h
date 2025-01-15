@@ -13,6 +13,7 @@ static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// ƒvƒŒƒCƒ„[‚ÌˆÚ
 static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘åˆÚ“®‘¬“x
 static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// ƒvƒŒƒCƒ„[‚Ì—‰º‰Á‘¬“x
 static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// ƒvƒŒƒCƒ„[‚ÌÅ‘å—‰º‘¬“x
+static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX		= 2;			// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Å‘å”)
 
 /* ƒJƒƒ‰ŠÖ˜A */
 static const float	INIT_CAMERA_RADIUS						= 300;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
@@ -20,3 +21,17 @@ static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
 static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
 static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
+
+/* ƒvƒŒƒCƒ„[ó‘Ô */
+static const int	PLAYER_STATE_IDLE					= 0;	// ‘Ò‹@
+static const int	PLAYER_STATE_WALK					= 1;	// •às
+static const int	PLAYER_STATE_RUN_LOW				= 2;	// ‘–s(’á‘¬)
+static const int	PLAYER_STATE_RUN_HIGH				= 3;	// ‘–s(‚‘¬)
+static const int	PLAYER_STATE_DRAW_SWORD_CHARGE		= 4;	// ‹‡(—­‚ß)
+static const int	PLAYER_STATE_DRAW_SWORD_WEAK		= 5;	// ‹‡(ã)
+static const int	PLAYER_STATE_DRAW_SWORD_STRONG		= 6;	// ‹‡(‹­)
+static const int	PLAYER_STATE_THROW_KUNAI_AIM		= 7;	// ƒNƒiƒC(\‚¦)
+static const int	PLAYER_STATE_THROW_KUNAI_THROW		= 8;	// ƒNƒiƒC(“Š‚°)
+static const int	PLAYER_STATE_DODGE					= 9;	// ‰ñ”ğ
+static const int	PLAYER_STATE_JUMP_UP				= 10;	// ‹ó’†(ã¸)
+static const int	PLAYER_STATE_JUMP_DOWN				= 11;	// ‹ó’†(‰º~)

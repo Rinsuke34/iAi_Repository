@@ -9,15 +9,19 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 {
 	/* 初期化(仮) */
 	/* プレイヤー状態関連 */
-	this->fPlayerNowMoveSpeed		= 0;		// プレイヤーの現在の移動速度
-	this->fPlayerAngleX				= 0;		// プレイヤーのX軸回転量(ラジアン)
-	this->fPlayerNowFallSpeed		= 0;		// プレイヤーの現在の落下速度
+	this->iPlayerState				= PLAYER_STATE_IDLE;	// プレイヤーの状態
+	this->bPlayerLandingFlg			= false;				// プレイヤーが着地しているか
+	this->fPlayerNowMoveSpeed		= 0;					// プレイヤーの現在の移動速度
+	this->fPlayerAngleX				= 0;					// プレイヤーのX軸回転量(ラジアン)
+	this->fPlayerNowFallSpeed		= 0;					// プレイヤーの現在の落下速度
+	this->iPlayerNowJumpCount		= 0;					// プレイヤーのジャンプ回数(現在数)
 
 	/* 能力値関連 */
 	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
 	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
 	this->fPlayerFallAcceleration	= INIT_ATTRIBUTES_FALL_ACCELERATION;	// プレイヤーの落下加速度
 	this->fPlayerMaxFallSpeed		= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// プレイヤーの最大落下速度
+	this->iPlayerMaxJumpCount		= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// プレイヤーのジャンプ回数(最大数)
 
 	/* カメラ関連 */
 	this->iCameraMode						= CAMERA_MODE_FREE;							// カメラモード
