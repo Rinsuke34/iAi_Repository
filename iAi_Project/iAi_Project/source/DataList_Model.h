@@ -2,11 +2,7 @@
 
 #pragma once
 #include "AppFrame.h"
-#include <vector>
 #include <map>
-
-/* データリスト */
-#include "DataList_Object.h"
 
 /* 3Dモデル管理クラスの宣言 */
 
@@ -17,15 +13,13 @@ class DataList_Model : public DataListBase
 		DataList_Model();				// コンストラクタ
 		virtual ~DataList_Model();		// デストラクタ
 
-		void	JsonDataLoad();			// Jsonからデータをロード"※仮作成"
-
 		/* 3Dモデル取得 */
 		int		iGetModel(std::string modelName);			// 3Dモデル取得
 
 	private:
 		/* 管理するデータ */
 		// リスト
-		std::map<std::string, int>	pModelHandleList;		// 3Dモデルリスト
+		std::map<std::string, int>	pModelHandleList;	// 3Dモデルリスト
 
 		/* 関数 */
 		bool	bCheckModel(std::string modelName);			// 3Dモデル存在確認
