@@ -14,6 +14,7 @@ namespace GAME_SETTING
 {
 	const float STICK_DEAD_ZONE = 100; //スティック入力のデッドゾーン（範囲：０～１０００）
 	const int GAME_FRAMES_PER_SECOND = 60; //ゲームの設定FPS
+	
 }
 
 using namespace GAME_SETTING;
@@ -23,7 +24,7 @@ using namespace GAME_SETTING;
 //#define	DEG2RAD(x)			( ((x) / 180.0f ) * PI )
 //#define	RAD2DEG(x)			( ((x) * 180.0f ) / PI )
 //#define	ACCELERATION(x)	( (x) / GAME_FRAMES_PER_SECOND * GAME_FRAMES_PER_SECOND ) //加速度計算マクロ
-
+#define	SECONDS_PER_FRAME (1.0f / GAME_FRAMES_PER_SECOND) //1フレームあたりの秒数
 
 
 
@@ -45,7 +46,7 @@ class CharacterPlayer : public CharacterBase
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
 		DataList_Input*	InputList;	// 入力管理
-
+		XINPUT_STATE stXInputState; //ジョイパッドの入力情報
 		//DataList_Input*			InputList;			// 入力管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
@@ -57,6 +58,7 @@ class CharacterPlayer : public CharacterBase
 		/* 2025.01.10 菊池雅道 関数追加 開始 */
 		void	Player_Dodg();			// 回避
 		/* 2025.01.10 菊池雅道 関数追加 終了 */
+		void	Player_Attack();		// 攻撃
 
 		void	CollisionUpdate();		// コリジョン更新
 };

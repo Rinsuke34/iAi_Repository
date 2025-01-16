@@ -15,9 +15,12 @@ class TestEnemy : public EnemyBase
 		virtual void	Update();		// 更新
 		virtual void	Draw();			// 描写
 
+		COLLISION_CAPSULE stCollisionCapsule;// コリジョン(カプセル)
 	private:
 	protected:
 		/* 関数 */
+		void	CollisionUpdate();		// コリジョン更新
+};
 
 		/* 変数 */
-};
+

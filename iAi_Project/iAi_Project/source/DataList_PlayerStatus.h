@@ -23,17 +23,18 @@ class DataList_PlayerStatus : public DataListBase
 		float	fGetPlayerNowFallSpeed()		  { return this->fPlayerNowFallSpeed; }			// プレイヤーの現在の落下速度取得
 		/* 2025.01.10 菊池雅道 移動関連の関数追加 開始*/
 		//移動（歩き・走り等）
-		VECTOR	fGetPlayerOldVector()			  { return this->vecPlayerOldVector; }			//プレイヤーの移動時のベクトルを取得（ジャンプ慣性等に使用）
-		float	fGetPlayerOldRadian()			  { return this->fPlayerOldRadian; }			//プレイヤーの移動時の角度を取得（方向転換時等に使用）
-		int		iGetPlayerNormalDashFlameCount() { return this->iPlayerNormalDashFlameCount; }	//通常ダッシュ時経過フレーム数
+		VECTOR	vecGetPlayerMoveVector()		 { return this->vecPlayerMoveVector; }				// プレイヤーの移動ベクトルを取得
+		VECTOR  vecGetPlayerDirection()			 { return this->vecPlayerDirection; }				// プレイヤーの向きを取得
+		VECTOR	vecGetPlayerOldVector()			 { return this->vecPlayerOldVector; }			//プレイヤーの移動時のベクトルを取得（ジャンプ慣性等に使用）
+		float	fGetPlayerOldRadian()			 { return this->fPlayerOldRadian; }			//プレイヤーの移動時の角度を取得（方向転換時等に使用）
+
 
 		//ジャンプ
-		float	fGetPlayerJumpSpeed() { return this->fPlayerJumpSpeed; }			//プレイヤージャンプ速度を取得
+
 		int		iGetPlayerJumpCount() { return this->iPlayerJumpCount; }			//プレイヤージャンプ回数を取得
 		bool	bGetPlayerJumpingFlag() { return this->bPlayerJumpingFlag; }			//プレイヤーがジャンプ中かのフラグを取得
 	
 		//回避
-		bool	bGetPlayerDodgingFlag()			  { return this->bPlayerJumpingFlag; }			//プレイヤーが回避中かのフラグを取得
 		bool	bGetPlayerDodgingFlag()			  { return this->bPlayerDodgingFlag; }			//プレイヤーが回避中かのフラグを取得
 		float	fGetPlayerDodgeProgress()		  { return this->fPlayerDodgeProgress; }		// プレイヤー回避モーション進行率を取得 
 	
@@ -73,11 +74,14 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* データ設定 */
 		// プレイヤー状態関連
+
 		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)			{ this->fPlayerNowMoveSpeed		= fPlayerNowMoveSpeed; }		// プレイヤーの現在の移動速度設定
 		void	SetPlayerAngleX(float fPlayerAngleX)						{ this->fPlayerAngleX			= fPlayerAngleX; }				// プレイヤーのX軸回転量(ラジアン)取得
 		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)			{ this->fPlayerNowFallSpeed		= fPlayerNowFallSpeed; }		// プレイヤーの現在の落下速度設定
 		/*2025.01.10 菊池雅道 移動関連の関数追加 開始 */
-		//移動（歩き・走り等）
+		//移動（歩き・走り等）	
+		void	SetPlayerMoveVector(VECTOR vecPlayerMoveVector) { this->vecPlayerMoveVector = vecPlayerMoveVector; }										// プレイヤーの移動ベクトルを設定
+		void	SetPlayerDirection(VECTOR vecPlayerDirection) { this->vecPlayerDirection = vecPlayerDirection; }											// プレイヤーの向きを設定
 		void	SetPlayerOldVector(VECTOR vecPlayerOldVector) { this->vecPlayerOldVector = vecPlayerOldVector; }											//プレイヤーの移動時のベクトルを設定（ジャンプ慣性等に使用）
 		void	SetPlayerOldRadian(float fPlayerOldRadian) { this->fPlayerOldRadian = fPlayerOldRadian; }													//プレイヤーの移動時の角度を設定（方向転換時等に使用）
 		void	SetPlayerNormalDashFlameCount(int iPlayerNormalDashFlameCount) { this->iPlayerNormalDashFlameCount = iPlayerNormalDashFlameCount; }			//通常ダッシュ時経過フレーム数を設定
@@ -86,7 +90,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag) { this->bPlayerJumpingFlag = bPlayerJumpingFlag; }	//プレイヤーがジャンプ中かのフラグを設定
 
 		//回避
-		void	SetPlayerDodgingFlag(bool bPlayerDodgingFlag) { this-> bPlayerDodgingFlag = bPlayerDodgingFlag; }											//プレイヤーが回避中かのフラグを設定
+	
 		void	SetPlayerDodgingFlag(bool bPlayerDodgingFlag) { this->bPlayerDodgingFlag = bPlayerDodgingFlag; }											//プレイヤーが回避中かのフラグを設定
 		void	SetPlayerDodgeProgress(float fPlayerDodgeProgress) { this->fPlayerDodgeProgress = fPlayerDodgeProgress; }									// プレイヤー回避モーション進行率を設定
 		void	SetPlayerDodgeDirection(VECTOR vecPlayerDodgeDirection) { this->vecPlayerDodgeDirection = vecPlayerDodgeDirection; }						// プレイヤー回避方向を設定
@@ -119,7 +123,9 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetCameraRotationalSpeed_Mouse(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed_Mouse		= fCameraRotationalSpeed; };	// カメラの回転速度(マウス)設定
 		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; };		// カメラの回転角度制限設定(上)
 		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; };		// カメラの回転角度制限設定(下)
-
+		
+		COLLISION_SQHERE stPlayerAttackCollisionSqhere;	// コリジョン(球体)
+		int iEnemyHP;	// 敵のHP
 	private:
 		/* プレイヤー状態関連 */
 		float	fPlayerNowMoveSpeed;		// プレイヤーの現在の移動速度
@@ -128,17 +134,18 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* 2025.01.09 菊池雅道 移動関連の変数追加開始 */
 		//移動（歩き・走り等）
+		VECTOR vecPlayerMoveVector; // プレイヤーの移動ベクトル
 		float fPlayerMoveSpeed; //プレイヤー移動速度
 		VECTOR vecPlayerOldVector; //プレイヤーの移動時のベクトルを保存する（ジャンプ慣性等に使用）
 		float fPlayerOldRadian;  //プレイヤーの移動時の角度を保持する※単位はラジアン（方向転換時等に使用）
 		int iPlayerNormalDashFlameCount; //通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
 
 		//ジャンプ
-		bool bPlayerJumpingFlag = false; //プレイヤーがジャンプ中かのフラグ
-		int iPlayerJumpCount = 0; //プレイヤージャンプ回数
+		bool bPlayerJumpingFlag; //プレイヤーがジャンプ中かのフラグ
+		int iPlayerJumpCount; //プレイヤージャンプ回数
 		
 		//回避
-		bool bPlayerDodgingFlag = false; //プレイヤーが回避中かのフラグ
+		bool bPlayerDodgingFlag; //プレイヤーが回避中かのフラグ
 		float fPlayerDodgeProgress; // プレイヤー回避モーション進行率 (範囲：0.0～1.0)		
 		VECTOR vecPlayerDodgeDirection; // プレイヤー回避方向
 		int iPlayerDodgeWhileJumpingCount; //プレイヤージャンプ中の回避回数
@@ -155,7 +162,7 @@ class DataList_PlayerStatus : public DataListBase
 		float fPlayerDodgeTime; // プレイヤー回避時間
 		float fPlayerDodgeSpeed; //プレイヤー回避速度
 		/* 2025.01.09 菊池雅道 移動関連の変数追加終了 */
-
+		
 
 		/* カメラ関連 */
 		int		iCameraMode;						// カメラモード

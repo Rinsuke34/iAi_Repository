@@ -21,6 +21,8 @@ class EnemyBase : public CharacterBase
 		void	SetMaxHP(int iMaxHp)	{ this->iMaxHp = iMaxHp; };		// Å‘åHP‚ğİ’è
 		void	SetNowHP(int iNowHP)	{ this->iNowHP = iNowHP; };		// Œ»İHP‚ğİ’è
 
+
+
 	private:
 	protected:
 		/* ŠÖ” */
@@ -28,4 +30,5 @@ class EnemyBase : public CharacterBase
 		/* •Ï” */
 		int		iMaxHp;		// Å‘åHP
 		int		iNowHP;		// Œ»İHP
+
 };

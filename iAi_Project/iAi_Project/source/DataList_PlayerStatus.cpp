@@ -14,6 +14,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerNowFallSpeed		= 0;		// プレイヤーの現在の落下速度
 
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
+	this->vecPlayerMoveVector = { 0,0,0 };
+	this->vecPlayerDirection = { 0,0,0 };
 	this->vecPlayerOldVector = { 0,0,0 };
 	this->fPlayerOldRadian = 0;
 	this->iPlayerNormalDashFlameCount = 0;
@@ -24,6 +26,13 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->vecPlayerDodgeDirection = VGet(0, 0, 0);
 	this->iPlayerDodgeWhileJumpingCount = 0;
 	this->bPlayerAfterDodgeFlag = false;
+	this->bPlayerJumpingFlag = false;
+	this->iPlayerJumpCount = 0;
+	this-> fPlayerJumpSpeed = 0; //プレイヤージャンプ速度
+	this->fPlayerDodgeTime = 0; // プレイヤー回避時間
+	this->fPlayerDodgeSpeed = 0; //プレイヤー回避速度
+	//回避
+	bool bPlayerDodgingFlag = false; //プレイヤーが回避中かのフラグ
 	/* 2025.01.10 菊池雅道 初期化処理追加 終了 */
 
 	/* 能力値関連 */
@@ -31,6 +40,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
 	this->fPlayerFallAcceleration	= INIT_ATTRIBUTES_FALL_ACCELERATION;	// プレイヤーの落下加速度
 	this->fPlayerMaxFallSpeed		= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// プレイヤーの最大落下速度
+	this->stPlayerAttackCollisionSqhere.fSqhereRadius = 100.0f; //プレイヤーの攻撃判定の半径
+	this->stPlayerAttackCollisionSqhere.vecSqhere = VGet(0,-100, 0); //プレイヤーの攻撃判定の座標
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
 	this->fPlayerMoveSpeed = PLAYER_WALK_MOVE_SPEED;
 	float fPlayerJumpSpeed = PLAYER_JUMP_SPEED; //プレイヤージャンプ速度
@@ -51,7 +62,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fCameraAngleLimitUp				= INIT_CAMERA_ANGLE_LIMIT_UP;				// カメラの回転角度制限(上)
 	this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// カメラの回転角度制限(下)
 
-
+	int iEnemyHP = 0;
 	
 }
 

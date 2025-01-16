@@ -11,4 +11,10 @@ EnemyBase::EnemyBase() : CharacterBase()
 	/* èâä˙âª */
 	this->iMaxHp	= 0;	// ç≈ëÂHP
 	this->iNowHP	= 0;	// åªç›HP
+
+	stCollisionCapsule.vecCapsuleTop = VGet(100, 200, 100);
+	stCollisionCapsule.vecCapsuleBottom = VGet(100, 0, 100);
+	stCollisionCapsule.fCapsuleRadius = 50.f;
 }
+
+
