@@ -1,38 +1,39 @@
-/* 2025.01.07 ファイル追加 駒沢風助 */
+/* 2025.01.16 ファイル追加 駒沢風助 */
 
-#include "SceneGame.h"
+#include "StageBase.h"
 
 /* オブジェクト */
+// ※仮
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
 #include "Enemy_Test.h"
 #include "PlatformLight_Test.h"
 
-/* シーン「ゲーム」の定義(マップ読み込み) */
+/* ステージのベースクラスの定義(マップ読み込み部分) */
 
 // マップデータのロード
-void SceneGame::LoadMapData()
+void StageBase::LoadMapData(int iStageNo)
 {
-	/* 読み込むマップデータの番号を取得 */
-	{
-		/* マップデータのロード処理 */
-	}
+	// 引数
+	// iStageNo		<- ロードを行うステージ番号
+
+	/* マップ名を取得 */
+	std::string MapName = STAGE_NAME[iStageNo];
 
 	/* マップデータの読み込み */
 	{
 		/* 読み込みたいマップデータのパス設定 */
-		std::string path = "resource/MapData/";
-		std::string jsonFile = "Island.json";
-		std::ifstream file(path + jsonFile);
-
-		/* データの入っている場所の名称設定 */
-		std::string jsonObjName = "Island";
+		// ※ファイル名とステージ名が一致するようにする
+		std::string Path	= "resource/MapData/";
+		std::string Format	= ".json";
+		std::ifstream file(Path + MapName + Format);
 
 		/* Jsonファイル読み込み */
 		nlohmann::json json;
 		file >> json;
 
-		nlohmann::json stage = json.at(jsonObjName);
+		/* Jsonファイル内のステージ名と同一の要素を読み込み */
+		nlohmann::json stage = json.at(MapName);
 
 		for (auto& data : stage)
 		{

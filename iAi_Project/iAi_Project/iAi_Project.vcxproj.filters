@@ -151,6 +151,18 @@
     <Filter Include="ソース ファイル\オブジェクト\エフェクト">
       <UniqueIdentifier>{1e026061-22cf-4657-8ff1-93c15d1ef6ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ステージ">
+      <UniqueIdentifier>{215d0676-00e3-4beb-9c2c-3e2126545eb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ステージ">
+      <UniqueIdentifier>{69cb7c40-f1d9-433d-9575-c586cc39c6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ステージ\ベース">
+      <UniqueIdentifier>{46d37e3f-5a34-49d4-9a84-565ba51d7a6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ステージ\ベース">
+      <UniqueIdentifier>{b87dd0af-a828-4bf8-bb81-f436d86a17a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -195,9 +207,6 @@
     <ClCompile Include="source\PlatformBasic.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
     </ClCompile>
-    <ClCompile Include="source\SceneGame_MapLoad.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン</Filter>
-    </ClCompile>
     <ClCompile Include="source\Enemy_Test.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
@@ -206,6 +215,12 @@
     </ClCompile>
     <ClCompile Include="source\EffectTest.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StageBase.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ\ベース</Filter>
+    </ClCompile>
+    <ClCompile Include="source\StageBase_MapLoad.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ\ベース</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="source\EffectTest.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\StageBase.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージ\ベース</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

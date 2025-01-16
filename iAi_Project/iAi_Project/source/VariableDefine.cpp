@@ -4,8 +4,11 @@
 
 /* 広域変数の初期化 */
 
-// 実行中クラス
+/* 実行中クラス */
 DataList_Input* gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
+
+/* ステージ関連 */
+bool gbTutorialFlg					= false;	// チュートリアルフラグ
 
 /* デバッグ用描写管理フラグ */
 bool gbDrawShadowMapFlg				= true;		// シャドウマップの描写

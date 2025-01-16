@@ -26,7 +26,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 // 初期化
 void CharacterPlayer::Initialization()
 {
-
+	/* コリジョンを更新 */
+	CollisionUpdate();
 }
 
 // 更新
