@@ -8,7 +8,7 @@
 PlatformBase::PlatformBase() : ObjectBase()
 {
 	/* 初期化 */
-	this->iModelHandle		= -2;	// モデルハンドル
+	this->iModelHandle		= -1;	// モデルハンドル
 	this->iCollisionFrameNo	= -2;	// コリジョンの設定されたモデルのフレーム番号	
 	this->iLightFrameNo		= -2;	// 発光部分の設定されたモデルのフレーム番号
 }

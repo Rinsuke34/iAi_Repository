@@ -17,7 +17,7 @@ class EffectBase : public ObjectBase
 		virtual void	Update()			override {};	// 更新
 
 		virtual void Effect_Load(std::string effectName);		// エフェクト読み込み
-		virtual void Effect_PosUpdate();						// エフェクト位置更新(vecPosに)
+		virtual void Effect_PosUpdate();						// エフェクト位置更新(現在座標に移動)
 
 	private:
 	protected:

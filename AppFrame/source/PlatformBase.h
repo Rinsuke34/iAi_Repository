@@ -30,15 +30,15 @@ class PlatformBase : public ObjectBase
 
 		int		iGetModelHandle()		{ return this->iModelHandle; };			// モデルハンドルを取得
 		int		iGetCollisionFrameNo()	{ return this->iCollisionFrameNo; };	// コリジョンの設定されたモデルのフレーム番号を取得
-		int		iGetLightHandle()		{ return this->iLightFrameNo; };		// 発光部分の設定されたモデルのフレーム番号を取得
-		VECTOR	vecGetRotate()			{ return this->vecRotate; };			// 回転を取得
-		VECTOR	vecGetScale()			{ return this->vecScale; };				// 拡大を取得
+		int		iGetLightFrameNo()		{ return this->iLightFrameNo; };		// 発光部分の設定されたモデルのフレーム番号を取得
+		VECTOR	vecGetRotate()			{ return this->vecRotate; };			// 回転量を取得
+		VECTOR	vecGetScale()			{ return this->vecScale; };				// 拡大率を取得
 
 		void	SetModelHandle(int iModelHandle)			{ this->iModelHandle		= iModelHandle; };			// モデルハンドルを設定
 		void	SetCollisionFrameNo(int iCollisionFrameNo)	{ this->iCollisionFrameNo	= iCollisionFrameNo; };		// コリジョンの設定されたモデルのフレーム番号を設定
-		void	SetLightHandle(int iLightFrameNo)			{ this->iLightFrameNo		= iLightFrameNo; };			// 発光部分の設定されたモデルのフレーム番号を設定
-		void	SetRotate(VECTOR vecRotate)					{ this->vecRotate			= vecRotate; };				// 回転を設定
-		void	SetScale(VECTOR vecScale)					{ this->vecScale			= vecScale; };				// 拡大を設定
+		void	SetLightFrameNo(int iLightFrameNo)			{ this->iLightFrameNo		= iLightFrameNo; };			// 発光部分の設定されたモデルのフレーム番号を設定
+		void	SetRotate(VECTOR vecRotate)					{ this->vecRotate			= vecRotate; };				// 回転量を設定
+		void	SetScale(VECTOR vecScale)					{ this->vecScale			= vecScale; };				// 拡大率を設定
 
 	private:
 	protected:
@@ -46,8 +46,8 @@ class PlatformBase : public ObjectBase
 
 		/* 変数 */
 		int		iModelHandle;		// モデルハンドル
-		int		iCollisionFrameNo;	// コリジョンの設定されたモデルのフレーム番号	
+		int		iCollisionFrameNo;	// コリジョンの設定されたモデルのフレーム番号
 		int		iLightFrameNo;		// 発光部分の設定されたモデルのフレーム番号
-		VECTOR	vecRotate;			// 回転
-		VECTOR	vecScale;			// 拡大
+		VECTOR	vecRotate;			// 回転量(x,y,z方向それぞれのラジアン)
+		VECTOR	vecScale;			// 拡大率(x,y,z方向それぞれの拡大倍率)
 };

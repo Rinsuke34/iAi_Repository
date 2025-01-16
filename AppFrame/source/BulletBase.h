@@ -28,10 +28,12 @@ class BulletBase : public ActorBase
 		bool	HitCheck(int iModelHandle, int iFrameIndex);	// 球体 - モデル
 
 		COLLISION_SQHERE	stGetCollision_Sqhere() { return this->stCollisionSqhere; };		// コリジョン(球体)を取得
-		VECTOR				GetMoveDirection()		{ return this->vecMoveDirection; };			// 移動方向を取得
+		VECTOR				vecGetMoveDirection()	{ return this->vecDirection; };				// 向きを取得
+		float				fGetMoveSpeed()			{ return this->fMoveSpeed; };				// 移動速度を取得
 
 		void	SetCollision_Capsule(COLLISION_SQHERE stCollisionSqhere)	{ this->stCollisionSqhere	= stCollisionSqhere; };		// コリジョン(球体)を設定
-		void	SetMoveDirection(VECTOR vecMoveDirection)					{ this->vecMoveDirection	= vecMoveDirection; };		// 移動方向を設定
+		void	SetDirection(VECTOR vecDirection)							{ this->vecDirection		= vecDirection; };			// 向きを設定
+		void	SetMoveSpeed(float fMoveSpeed)								{ this->fMoveSpeed			= fMoveSpeed; };			// 移動速度を設定
 
 	private:
 	protected:
@@ -39,5 +41,6 @@ class BulletBase : public ActorBase
 
 		/* 変数 */
 		COLLISION_SQHERE			stCollisionSqhere;		// コリジョン(球体)
-		VECTOR vecMoveDirection;							// 移動方向
+		VECTOR						vecDirection;			// 向き
+		float						fMoveSpeed;				// 移動速度
 };

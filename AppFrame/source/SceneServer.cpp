@@ -150,24 +150,26 @@ void SceneServer::DeleteUnnecessaryScene()
 	// 削除フラグが有効(いずれかのシーンが削除待機状態)であるか
 	if (this->bSceneDeleteFlg == true)
 	{
-		// 削除フラグが有効であるシーンを削除する
+		/* 削除フラグが有効なシーンをを削除 */
 		pstSceneList.erase( std::remove_if(pstSceneList.begin(), pstSceneList.end(), [](SceneBase* pScene)
 		{
-			// 削除フラグが有効であるか確認
+			/* 削除フラグが有効であるか確認　*/
 			if (pScene->bGetDeleteFlg() == true)
 			{
-				/* 削除フラグが有効 */
-				delete pScene;	// メモリを開放する
-				return true;	// 削除を行う
+				// 有効である場合
+				/* メモリを解放する */
+				delete pScene;
+				return true;
 			}
 			else
 			{
-				/* 削除フラグが無効 */
-				return false;	// 削除を行わない
+				// 無効である場合
+				return false;
 			}
 		}), pstSceneList.end());
 
-		this->bSceneDeleteFlg = false;	// シーン削除フラグを元に戻す
+		// シーン削除フラグを元に戻す
+		this->bSceneDeleteFlg = false;
 	}
 }
 
@@ -178,7 +180,8 @@ void SceneServer::DeleteAllScene()
 	// シーンリストに登録されているすべてのシーンを削除する
 	for (auto& Scene : pstSceneList)
 	{
-		delete Scene;	// メモリを開放する
+		/* メモリを解放する */
+		delete Scene;
 	}
 
 	/* シーンリストのクリアを行う */

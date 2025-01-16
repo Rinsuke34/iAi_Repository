@@ -90,14 +90,13 @@ void DataListServer::DeleteDataList(const std::string& cName)
 		if (DataList->stGetDataListName() == cName)
 		{
 			// 一致している場合
-			/* データリストを削除し、メモリを開放する */
+			/* メモリを開放する */
 			delete DataList;
 			return true;
 		}
 		else
 		{
 			// 一致していない場合
-			/* データリストの削除を行わない */
 			return false;
 		}
 	}),pstDataList.end());

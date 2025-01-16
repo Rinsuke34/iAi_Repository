@@ -28,6 +28,6 @@ class EnemyBase : public CharacterBase
 		/* ŠÖ” */
 
 		/* •Ï” */
-		int		iMaxHp;		// Å‘åHP
-		int		iNowHP;		// Œ»İHP
+		int		iMaxHp;			// Å‘åHP
+		int		iNowHP;			// Œ»İHP
 };

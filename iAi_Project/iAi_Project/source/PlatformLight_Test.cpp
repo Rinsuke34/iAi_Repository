@@ -32,7 +32,7 @@ void PlatformLight_Test::Initialization()
 	this->SetCollisionFrameNo(MV1SearchFrame(this->iModelHandle, "Collision"));
 
 	/* 発光フレーム番号取得 */
-	this->SetLightHandle(MV1SearchFrame(this->iModelHandle, "Light"));
+	this->SetLightFrameNo(MV1SearchFrame(this->iModelHandle, "Light"));
 
 	/* コリジョン情報構築 */
 	MV1SetupCollInfo(this->iModelHandle, this->iGetCollisionFrameNo(), 4, 4, 4);

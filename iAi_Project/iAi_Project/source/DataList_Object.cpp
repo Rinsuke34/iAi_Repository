@@ -255,16 +255,19 @@ void DataList_Object::DeleteAll()
 // 削除フラグが有効なエネミーを削除
 void DataList_Object::DeleteEnemy()
 {
+	/* 削除フラグが有効なエネミーを削除 */
 	pEnemyList.erase(std::remove_if(pEnemyList.begin(), pEnemyList.end(), [](EnemyBase* pEnemy)
 		{
-			// 削除フラグが有効であるか確認
+			/* 削除フラグが有効であるか確認　*/
 			if (pEnemy->bGetDeleteFlg() == true)
 			{
+				// 有効である場合
 				delete pEnemy;
 				return true;
 			}
 			else
 			{
+				// 無効である場合
 				return false;
 			}
 		}), pEnemyList.end());
@@ -273,16 +276,20 @@ void DataList_Object::DeleteEnemy()
 // 削除フラグが有効なエフェクトを削除
 void DataList_Object::DeleteEffect()
 {
+	/* 削除フラグが有効なエフェクトを削除 */
 	pEffectList.erase(std::remove_if(pEffectList.begin(), pEffectList.end(), [](EffectBase* pEffect)
 		{
-			// 削除フラグが有効であるか確認
+			/* 削除フラグが有効であるか確認　*/
 			if (pEffect->bGetDeleteFlg() == true)
 			{
+				// 有効である場合
+				/* メモリ解放 */
 				delete pEffect;
 				return true;
 			}
 			else
 			{
+				// 無効である場合
 				return false;
 			}
 		}), pEffectList.end());
@@ -291,16 +298,20 @@ void DataList_Object::DeleteEffect()
 // 削除フラグが有効な弾を削除
 void DataList_Object::DeleteBullet()
 {
+	/* 削除フラグが有効な弾を削除 */
 	pBulletList.erase(std::remove_if(pBulletList.begin(), pBulletList.end(), [](BulletBase* pBullet)
 		{
-			// 削除フラグが有効であるか確認
+			/* 削除フラグが有効であるか確認　*/
 			if (pBullet->bGetDeleteFlg() == true)
 			{
+				// 有効である場合
+				/* メモリ解放 */
 				delete pBullet;
 				return true;
 			}
 			else
 			{
+				// 無効である場合
 				return false;
 			}
 		}), pBulletList.end());
@@ -309,16 +320,20 @@ void DataList_Object::DeleteBullet()
 // 削除フラグが有効なプラットフォームを削除
 void DataList_Object::DeletePlatform()
 {
+	/* 削除フラグが有効なプラットフォームを削除 */
 	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](PlatformBase* pPlatform)
 		{
-			// 削除フラグが有効であるか確認
+			/* 削除フラグが有効であるか確認　*/
 			if (pPlatform->bGetDeleteFlg() == true)
 			{
+				// 有効である場合
+				/* メモリ解放 */
 				delete pPlatform;
 				return true;
 			}
 			else
 			{
+				// 無効である場合
 				return false;
 			}
 		}), pPlatformList.end());
