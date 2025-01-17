@@ -1,4 +1,4 @@
-/* 2025.01.16 ファイル追加 駒沢風助 */
+/* 2025.01.16 ファイル作成 駒沢風助 */
 
 #include "StageBase.h"
 
@@ -25,8 +25,8 @@ void StageBase::LoadMapData(int iStageNo)
 		/* 読み込みたいマップデータのパス設定 */
 		// ※ファイル名とステージ名が一致するようにする
 		std::string Path	= "resource/MapData/";
-		std::string Format	= ".json";
-		std::ifstream file(Path + MapName + Format);
+		std::string Format	= MapName + ".json";
+		std::ifstream file(Path + Format);
 
 		/* Jsonファイル読み込み */
 		nlohmann::json json;
@@ -40,7 +40,8 @@ void StageBase::LoadMapData(int iStageNo)
 			/* プラットフォーム追加(仮) */
 			{
 				/* "オブジェクト管理"にプラットフォームを追加 */
-				PlatformBase* pPlatform = new PlatformBasic();
+				PlatformLight_Test* pPlatform = new PlatformLight_Test();
+				//PlatformBase* pPlatform = new PlatformBasic();
 				this->ObjectList->SetPlatform(pPlatform);
 
 				/* モデル */

@@ -29,7 +29,7 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	// ※チュートリアルフラグに応じて初期ステージを変更
 
 	/* ステージを作成 */
-	StageBase* AddStage = new StageBase();
+	this->pNowStage = new StageBase();
 
 	/* チュートリアルフラグが有効であるか確認 */
 	if (gbTutorialFlg == true)
@@ -52,7 +52,7 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	}
 
 	/* "最初のステージ番号"のステージを読み込む */
-	AddStage->
+	this->pNowStage->LoadMapData(this->iNowStageNo);
 }
 
 // デストラクタ
@@ -69,12 +69,12 @@ SceneGame::~SceneGame()
 // 計算
 void SceneGame::Process()
 {
-
+	this->pNowStage->Process();
 }
 
 // 描画
 void SceneGame::Draw()
 {
-	
+	this->pNowStage->Draw();
 }
 

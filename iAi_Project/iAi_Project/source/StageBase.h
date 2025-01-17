@@ -21,6 +21,8 @@ class StageBase
 		virtual void	Process();			// 計算
 		virtual void	Draw();				// 描画
 
+		virtual void	LoadMapData(int iStageNo);		// マップデータのロード
+
 	private:
 	protected:
 		/* 使用するデータリスト */
@@ -30,7 +32,6 @@ class StageBase
 		DataList_Model*			ModelList;			// 3Dモデル管理
 
 		/* 関数 */
-		virtual void	LoadMapData(int iStageNo);		// マップデータのロード
 		virtual void	SetupShadowMap();				// シャドウマップの設定
 		virtual void	SetupLightMap();				// ライトマップの設定
 		virtual void	SetCamera();					// カメラ設定

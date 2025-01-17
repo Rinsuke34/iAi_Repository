@@ -29,8 +29,8 @@ void SceneHome::Process()
 	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
+		gbTutorialFlg = true;	// チュートリアルフラグ有効化
 		SceneGame* AddScene	= new SceneGame();
-		gbTutorialFlg		= true;	// チュートリアルフラグ有効化
 		gpSceneServer->AddSceneReservation(AddScene, true);
 		return;
 	}
