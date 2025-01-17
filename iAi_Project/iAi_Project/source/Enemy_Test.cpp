@@ -4,41 +4,41 @@
 #include "Bullet.h"
 #include "DataList_Object.h"
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 TestEnemy::TestEnemy(): EnemyBase()
 {
 	this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-	// “G‚Ìƒ‚ƒfƒ‹‚ğƒ[ƒh
+	// ï¿½Gï¿½Ìƒï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½h
 	_handleEnemy = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
-	_vEnemyPos = VGet(0, 300, 0); // “G‚Ì‰ŠúˆÊ’u‚ğİ’è
+	_vEnemyPos = VGet(0, 300, 0); // ï¿½Gï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½İ’ï¿½
 
 
 	//_handleEnemy2 = MV1LoadModel("res/Enemy.mv1");
-	//_vEnemy2Pos = VGet(-700, -100, 1000); // “G‚Ì‰ŠúˆÊ’u‚ğİ’è
+	//_vEnemy2Pos = VGet(-700, -100, 1000); // ï¿½Gï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½İ’ï¿½
 
 	//_handleEnemy3 = MV1LoadModel("res/zako/Enemy.mv1");
-	//_vEnemy3Pos = VGet(-200, 300, 1000); // “G‚Ì‰ŠúˆÊ’u‚ğİ’è
+	//_vEnemy3Pos = VGet(-200, 300, 1000); // ï¿½Gï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½İ’ï¿½
 
 	//_handleEnemy4 = MV1LoadModel("res/Enemy.mv1");
 
-	//_vEnemy4Pos = VGet(-200, -100, 1000); // “G‚Ì‰ŠúˆÊ’u‚ğİ’è
+	//_vEnemy4Pos = VGet(-200, -100, 1000); // ï¿½Gï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½İ’ï¿½
 
 	//_handleEnemy5 = MV1LoadModel("res/Enemy.mv1");
-	//_vEnemy5Pos = VGet(-0, -100, 1000); // “G‚Ì‰ŠúˆÊ’u‚ğİ’è
+	//_vEnemy5Pos = VGet(-0, -100, 1000); // ï¿½Gï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½İ’ï¿½
 	 
 	
-	// HP‚ğİ’è
+	// HPï¿½ï¿½İ’ï¿½
 	this->SetMaxHP(1);
 	this->SetNowHP(1);
 }
 
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 TestEnemy::~TestEnemy()
 {
 
 }
 
-// ‰Šú‰»
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void TestEnemy::Initialization()
 {
 
@@ -48,10 +48,10 @@ void TestEnemy::FireBallFromEnemy()
 {
 	if (CheckHitKey(KEY_INPUT_P)) {
 		Bullet* newBullet = new Bullet();
-		newBullet->_vPos = VGet(_vEnemyPos.x, _vEnemyPos.y , _vEnemyPos.z ); // “G‚ÌˆÊ’u‚©‚ç”­Ë
-		newBullet->_vDir = { 0.0f, 0.0f, -1.0f }; // ‹Ê‚ÌŒü‚«‚ğİ’èi—á: Z•ûŒüj
-		newBullet->_speed = 15.0f; // ‹Ê‚Ì‘¬“x‚ğİ’è
-		// ƒGƒtƒFƒNƒg‚Ì¶¬
+		newBullet->_vPos = VGet(_vEnemyPos.x, _vEnemyPos.y , _vEnemyPos.z ); // ï¿½Gï¿½ÌˆÊ’uï¿½ï¿½ï¿½ç”­ï¿½ï¿½
+		newBullet->_vDir = { 0.0f, 0.0f, -1.0f }; // ï¿½Ê‚ÌŒï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½iï¿½ï¿½: Zï¿½ï¿½ï¿½ï¿½ï¿½j
+		newBullet->_speed = 15.0f; // ï¿½Ê‚Ì‘ï¿½ï¿½xï¿½ï¿½İ’ï¿½
+		// ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½
 		EffectBase* Effect_Test = new TestEffect();
 		Effect_Test->Effect_Load("FX_e_bullet");
 		Effect_Test->SetPosition(VAdd(this->vecPosition, VGet(newBullet->_vPos.x, newBullet->_vPos.y, newBullet->_vPos.z)));
@@ -64,7 +64,7 @@ void TestEnemy::FireBallFromEnemy()
 		_vBullet.push_back(newBullet);
 	}
 
-	// ’e‚ÌXV‚Æíœ
+	// ï¿½eï¿½ÌXï¿½Vï¿½Æíœ
 	for (auto it = _vBullet.begin(); it != _vBullet.end();) {
 		Bullet* newBullet = *it;
 		newBullet->_vPos = VAdd(newBullet->_vPos, VScale(newBullet->_vDir, newBullet->_speed));
@@ -75,18 +75,18 @@ void TestEnemy::FireBallFromEnemy()
 
 void TestEnemy::MoveEnemy() 
 {
-	// Œ»İ‚ÌŠÔ‚ğæ“¾
+	// ï¿½ï¿½ï¿½İ‚Ìï¿½ï¿½Ô‚ï¿½æ“¾
 	int nowTime = GetNowCount();
-	// Œo‰ßŠÔ‚ğŒvZ
-	float deltaTime = (nowTime - _lastTime) / 1000.0f; // ƒ~ƒŠ•b‚ğ•b‚É•ÏŠ·
+	// ï¿½oï¿½ßï¿½ï¿½Ô‚ï¿½vï¿½Z
+	float deltaTime = (nowTime - _lastTime) / 1000.0f; // ï¿½~ï¿½ï¿½ï¿½bï¿½ï¿½bï¿½É•ÏŠï¿½
 	_lastTime = nowTime;
 	_timeSinceLastFire += deltaTime;
 	_timeSinceLastFire2 += deltaTime;
-	// “G‚ÌˆÊ’u‚ğƒ^[ƒQƒbƒgˆÊ’u‚ÉŒü‚©‚Á‚ÄŠŠ‚ç‚©‚ÉˆÚ“®
+	// ï¿½Gï¿½ÌˆÊ’uï¿½ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ê’uï¿½ÉŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄŠï¿½ï¿½ç‚©ï¿½ÉˆÚ“ï¿½
 	_vEnemyPos = VAdd(_vEnemyPos, VScale(VSub(_vEnemyTargetPos, _vEnemyPos), deltaTime));
 
 
-	// ƒ^[ƒQƒbƒgˆÊ’u‚É“’B‚µ‚½‚çV‚µ‚¢ƒ^[ƒQƒbƒgˆÊ’u‚ğİ’è
+	// ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ê’uï¿½É“ï¿½ï¿½Bï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ê’uï¿½ï¿½İ’ï¿½
 	if (VSize(VSub(_vEnemyTargetPos, _vEnemyPos)) < 1.0f) {
 		_vEnemyTargetPos = VGet(rand() % 1201 - 1000, _vEnemyPos.y, rand() % 301 + 1200);
 	}
@@ -95,19 +95,19 @@ void TestEnemy::MoveEnemy()
 
 void TestEnemy::EnemyBulletMove() 
 {
-	//// ’e‚ÌXVˆ—
+	//// ï¿½eï¿½ÌXï¿½Vï¿½ï¿½ï¿½ï¿½
 	for (auto it = _vBullet.begin(); it != _vBullet.end();) {
 
 		++it;
 	}
 
-	//// ‹Ê‚ÌˆÊ’u‚ğXV
+	//// ï¿½Ê‚ÌˆÊ’uï¿½ï¿½Xï¿½V
 	//for (Bullet* Bullet : _vBullet) {
 	//	Bullet->_vPos = VAdd(Bullet->_vPos, VScale(Bullet->_vDir, Bullet->_speed));
 	//	Bullet->_life--;
 	//}
 
-	//// ‹Ê‚Ìõ–½‚ªs‚«‚½‚çíœ
+	//// ï¿½Ê‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½íœ
 	//_vBullet.erase(std::remove_if(_vBullet.begin(), _vBullet.end(), [](Bullet* Bullet) {
 	//	if (Bullet->_life <= 0) {
 	//		delete Bullet;
@@ -119,12 +119,12 @@ void TestEnemy::EnemyBulletMove()
 
 }
 
-// XV
+// ï¿½Xï¿½V
 void TestEnemy::Update()
 {
 	if (this->iGetNowHP() <= 0)
 	{
-		// íœƒtƒ‰ƒO‚ğ—LŒø‚É‚·‚é
+		// ï¿½íœï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½Lï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½
 		this->SetDeleteFlg(true);
 	}
 	//MoveEnemy();
@@ -132,11 +132,11 @@ void TestEnemy::Update()
 	EnemyBulletMove();
 }
 
-// •`Ê
+// ï¿½`ï¿½ï¿½
 void TestEnemy::Draw()
 {
 
-	/* À•Wİ’è */
+	/* ï¿½ï¿½ï¿½Wï¿½İ’ï¿½ */
 	MV1SetPosition(_handleEnemy, _vEnemyPos);
 	DrawSphere3D(vecGetPosition(), 50.f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 	MV1DrawModel(_handleEnemy);

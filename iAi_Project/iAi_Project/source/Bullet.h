@@ -5,25 +5,43 @@ class Bullet : public BulletBase
 public:
 	
 	virtual ~Bullet() {}
-	//Bullet();				// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	//	virtual ~Bullet();		// ƒfƒXƒgƒ‰ƒNƒ^
+	Bullet();				// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+		virtual ~Bullet();		// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+	//Bullet();				// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+	//	virtual ~Bullet();		// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 
-		virtual void	Initialization()	override;		// ‰Šú‰»
-		virtual void	Update()			override;		// XV
-		virtual void	Draw()				override;		// •`Ê
-		virtual void	BloomDraw()			override {};	// ”­Œõ•`Ê
+		virtual void	Initialization()	override;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		virtual void	Update()			override;		// ï¿½Xï¿½V
+		virtual void	Draw()				override;		// ï¿½`ï¿½ï¿½
+		virtual void	BloomDraw()			override {};	// ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½
 
 
-		int		IGetlife() { return this->_life; };		// ’e‚Ì¶‘¶ŠÔ‚ğæ“¾
+		int		IGetlife() { return this->_life; };		// ï¿½eï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½æ“¾
+protected:
 
-		VECTOR _vPos;		// ˆÊ’u
-		VECTOR _vPos2;		// ˆÊ’u
-		VECTOR _vOldPos;	// ‘OƒtƒŒ[ƒ€‚ÌˆÊ’u
-		VECTOR _vDir;		// Œü‚«
-		float	_speed;		// ‘¬“x
-		int		_life;		// ¶‘¶ƒJƒEƒ“ƒ^
-		//void	Prosses();	// ˆ—
-		int _effectHandle; // ’Ç‰Á: ƒGƒtƒFƒNƒgƒnƒ“ƒhƒ‹
+	void	Prosses();	// ï¿½ï¿½ï¿½ï¿½
+
+
+	VECTOR _vPos;		// ï¿½Ê’u
+	VECTOR _vPos2;		// ï¿½Ê’u
+	VECTOR _vOldPos;	// ï¿½Oï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌˆÊ’u
+	VECTOR _vDir;		// ï¿½ï¿½ï¿½ï¿½
+	float	_speed;		// ï¿½ï¿½ï¿½x
+	int		_life;		// ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½^
+
+	int _effectHandle; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+	int _effectHandle2;// = LoadEffekseerEffect("res/FX_e_die03.efkefc");; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+
+	void Update() {
+
+		VECTOR _vPos;		// ï¿½Ê’u
+		VECTOR _vPos2;		// ï¿½Ê’u
+		VECTOR _vOldPos;	// ï¿½Oï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌˆÊ’u
+		VECTOR _vDir;		// ï¿½ï¿½ï¿½ï¿½
+		float	_speed;		// ï¿½ï¿½ï¿½x
+		int		_life;		// ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½^
+		//void	Prosses();	// ï¿½ï¿½ï¿½ï¿½
+		int _effectHandle; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
 		void Prosses()
 		{
 			_vPos = VAdd(_vPos, VScale(_vDir, _speed));
@@ -36,15 +54,19 @@ protected:
 
 
 	
-	int _effectHandle2;// = LoadEffekseerEffect("res/FX_e_die03.efkefc");; // ’Ç‰Á: ƒGƒtƒFƒNƒgƒnƒ“ƒhƒ‹
+	int _effectHandle2;// = LoadEffekseerEffect("res/FX_e_die03.efkefc");; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
 
 	/*void Update() {
 		_vPos = VAdd(_vPos, VScale(_vDir, _speed));
 		SetPosPlayingEffekseer3DEffect(_effectHandle, _vPos.x, _vPos.y, _vPos.z);
 		SetPosPlayingEffekseer3DEffect(_effectHandle2, _vPos.x, _vPos.y, _vPos.z);
 		_life--;
+	}
+	// ï¿½ï¿½Ñ“ï¿½ï¿½ï¿½p
+	int	_cgBall;
+	std::vector<Bullet*> _vBullet;
 	}*/
-	// ”ò‚Ñ“¹‹ï—p
+	// ï¿½ï¿½Ñ“ï¿½ï¿½ï¿½p
 	int	_cgBall;
 	/*std::vector<Bullet*> _vBullet;*/
 
@@ -53,37 +75,72 @@ protected:
 
 };
 
+class Bullet2 : public BulletBase {
+public:
+	virtual ~Bullet2() {}
+	Bullet2();				// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+	virtual ~Bullet2();		// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+
+	virtual void	Initialization()	override;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	virtual void	Update()			override;		// ï¿½Xï¿½V
+	virtual void	Draw()				override;		// ï¿½`ï¿½ï¿½
+	virtual void	BloomDraw()			override {};	// ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½
+	VECTOR _vPos;
+	VECTOR _vDir;
+	float _speed;
+	int _life;
+	float _homingTime; // ï¿½zï¿½[ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½éï¿½Ô‚ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½
+	int _Irradiation;
+
+
+	Bullet2() : _homingTime(2.0f) {
+		StopEffekseer3DEffect(_effectHandle);
+	} // ï¿½ï¿½: 5ï¿½bï¿½Ôƒzï¿½[ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
+
+
+	int _effectHandle; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+
+	void Update() {
+		_vPos = VAdd(_vPos, VScale(_vDir, _speed));
+		SetPosPlayingEffekseer3DEffect(_effectHandle, _vPos.x, _vPos.y, _vPos.z);
+		_life--;
+	}
+	// ï¿½ï¿½Ñ“ï¿½ï¿½ï¿½p
+
+	int	_cgBall2;
+	std::vector<Bullet2*> _vBullet2;
+};
 //class Bullet2 : public BulletBase {
 //public:
 //	virtual ~Bullet2() {}
-//	Bullet2();				// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-//	virtual ~Bullet2();		// ƒfƒXƒgƒ‰ƒNƒ^
+//	Bullet2();				// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
+//	virtual ~Bullet2();		// ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 //
-//	virtual void	Initialization()	override;		// ‰Šú‰»
-//	virtual void	Update()			override;		// XV
-//	virtual void	Draw()				override;		// •`Ê
-//	virtual void	BloomDraw()			override {};	// ”­Œõ•`Ê
+//	virtual void	Initialization()	override;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	virtual void	Update()			override;		// ï¿½Xï¿½V
+//	virtual void	Draw()				override;		// ï¿½`ï¿½ï¿½
+//	virtual void	BloomDraw()			override {};	// ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½
 //	VECTOR _vPos;
 //	VECTOR _vDir;
 //	float _speed;
 //	int _life;
-//	float _homingTime; // ƒz[ƒ~ƒ“ƒO‚·‚éŠÔ‚ğŠÇ—‚·‚é•Ï”
+//	float _homingTime; // ï¿½zï¿½[ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½éï¿½Ô‚ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½
 //	int _Irradiation;
 //
 //
 //	//Bullet2() : _homingTime(2.0f) {
 //	//	StopEffekseer3DEffect(_effectHandle);
-//	//} // —á: 5•bŠÔƒz[ƒ~ƒ“ƒO‚·‚é
+//	//} // ï¿½ï¿½: 5ï¿½bï¿½Ôƒzï¿½[ï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½
 //
 //
-//	int _effectHandle; // ’Ç‰Á: ƒGƒtƒFƒNƒgƒnƒ“ƒhƒ‹
+//	int _effectHandle; // ï¿½Ç‰ï¿½: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
 //
 //	/*void Update() {
 //		_vPos = VAdd(_vPos, VScale(_vDir, _speed));
 //		SetPosPlayingEffekseer3DEffect(_effectHandle, _vPos.x, _vPos.y, _vPos.z);
 //		_life--;
 //	}*/
-//	// ”ò‚Ñ“¹‹ï—p
+//	// ï¿½ï¿½Ñ“ï¿½ï¿½ï¿½p
 //
 //	int	_cgBall2;
 //	std::vector<Bullet2*> _vBullet2;
