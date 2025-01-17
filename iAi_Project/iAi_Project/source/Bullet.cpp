@@ -4,21 +4,21 @@
 #include "Bullet.h"
 
 
-//// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //Bullet::Bullet() : BulletBase()
 //{
-//	// ”ò‚Ñ“¹‹ïƒrƒ‹ƒ{[ƒh
+//	// é£›ã³é“å…·ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰
 //	_cgBall = LoadGraph("resource/Test/ball.png");
 //
 //}
 
-//// ƒfƒXƒgƒ‰ƒNƒ^
+//// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //Bullet::~Bullet()
 //{
 //
 //}
 
-// ‰Šú‰»
+// åˆæœŸåŒ–
 void Bullet::Initialization()
 {
 
@@ -27,27 +27,28 @@ void Bullet::Initialization()
 
 
 
-// XV
+// æ›´æ–°
 void Bullet::Update()
 {
 	if (this->IGetlife() <= 0)
 	{
-		// íœƒtƒ‰ƒO‚ğ—LŒø‚É‚·‚é
+		// å‰Šé™¤ãƒ•ãƒ©ã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 		this->SetDeleteFlg(true);
 	}
+
 }
 
-// •`Ê
+// æå†™
 void Bullet::Draw()
 {
-	/* ‹Ê‚Ì•`‰æˆ—‚ğ’Ç‰Á
+	/* ç‰ã®æç”»å‡¦ç†ã‚’è¿½åŠ 
 	for (Bullet* Bullet : _vBullet)
 	{
-		 ‹Ê‚Ì•`‰æˆ—
+		 ç‰ã®æç”»å‡¦ç†
 		DrawBillboard3D(VGet(0, 300, 300), 50.5f, 50.5f, 3200.f, 0.f, _cgBall, TRUE);
 
 	}*/
-	/* À•Wİ’è */
+	/* åº§æ¨™è¨­å®š */
 	/*MV1SetPosition(_handleEnemy, VGet(0, 300, 0));
 	DrawSphere3D(vecGetPosition(), 50.f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 	MV1DrawModel(_handleEnemy);*/

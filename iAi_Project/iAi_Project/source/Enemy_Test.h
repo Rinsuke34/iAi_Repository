@@ -1,96 +1,96 @@
-/* 2024.12.15 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
+/* 2024.12.15 é§’æ²¢é¢¨åŠ© ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
 
 #pragma once
 #include "Appframe.h"
 #include "EffectTest.h"
 #include "Bullet.h"
 
-/* ƒf[ƒ^ƒŠƒXƒg */
+/* ãƒ‡ãƒ¼ã‚¿ãƒªã‚¹ãƒˆ */
 #include "DataList_Input.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
-/* ƒeƒXƒg—p“GƒNƒ‰ƒX */
+/* ãƒ†ã‚¹ãƒˆç”¨æ•µã‚¯ãƒ©ã‚¹ */
 
-// ƒGƒlƒ~[ƒx[ƒXƒNƒ‰ƒX
+// ã‚¨ãƒãƒŸãƒ¼ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
 class TestEnemy : public EnemyBase
 {
-	public:
-		TestEnemy();				// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		virtual ~TestEnemy();		// ƒfƒXƒgƒ‰ƒNƒ^
+public:
+	TestEnemy();				// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	virtual ~TestEnemy();		// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 
-		virtual void	Initialization()	override;		// ‰Šú‰»
-		virtual void	Update()			override;		// XV
-		virtual void	Draw()				override;		// •`Ê
-		virtual void	BloomDraw()			override {};	// ”­Œõ•`Ê
+	virtual void	Initialization()	override;		// åˆæœŸåŒ–
+	virtual void	Update()			override;		// æ›´æ–°
+	virtual void	Draw()				override;		// æå†™
+	virtual void	BloomDraw()			override {};	// ç™ºå…‰æå†™
 
-	private:
-	protected:
-		/* ŠÖ” */
-		void FireBallFromEnemy(); // “G‚©‚ç‹Ê‚ğ”­Ë‚·‚éƒƒ\ƒbƒh‚ğ’Ç‰Á
-		void FireBallFromEnemy2(); // “G‚©‚ç‹Ê‚ğ”­Ë‚·‚éƒƒ\ƒbƒh‚ğ’Ç‰Á
-		void MoveEnemy(); // “G‚ğˆÚ“®‚³‚¹‚éƒƒ\ƒbƒh‚ğ’Ç‰Á
-		void EnemyBulletMove(); // “G‚ğˆÚ“®‚³‚¹‚éƒƒ\ƒbƒh‚ğ’Ç‰Á
-
-
-
-		/* •Ï” */
-
-		VECTOR _vInitPos;	// ‰ŠúˆÊ’u
-		VECTOR _vDir;	// Œü‚«
-		float _colSubY;	// ƒRƒŠƒWƒ‡ƒ“”»’è‚ÌY•â³(˜ˆÊ’uj
-
-		float _total_time;
-		float _play_time;
+private:
+protected:
+	/* é–¢æ•° */
+	void FireBallFromEnemy(); // æ•µã‹ã‚‰ç‰ã‚’ç™ºå°„ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ 
+	void FireBallFromEnemy2(); // æ•µã‹ã‚‰ç‰ã‚’ç™ºå°„ã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ 
+	void MoveEnemy(); // æ•µã‚’ç§»å‹•ã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ 
+	void EnemyBulletMove(); // æ•µã‚’ç§»å‹•ã•ã›ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ 
 
 
-		bool _isVisible = true; // •`‰æ§Œä—p‚Ìƒtƒ‰ƒO
-		bool _isActive = true; // ’Ç‰Á: ˆ—‚ğ§Œä‚·‚éƒtƒ‰ƒO
+
+	/* å¤‰æ•° */
+
+	VECTOR _vInitPos;	// åˆæœŸä½ç½®
+	VECTOR _vDir;	// å‘ã
+	float _colSubY;	// ã‚³ãƒªã‚¸ãƒ§ãƒ³åˆ¤å®šæ™‚ã®Yè£œæ­£(è…°ä½ç½®ï¼‰
+
+	float _total_time;
+	float _play_time;
 
 
-		int _handleEnemy; // “G‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-		VECTOR _vEnemyPos; // “G‚ÌˆÊ’u
-		VECTOR _vEnemyTargetPos; // _vEnemyTargetPos‚Ì’è‹`‚ğ’Ç‰Á
+	bool _isVisible = true; // æç”»åˆ¶å¾¡ç”¨ã®ãƒ•ãƒ©ã‚°
+	bool _isActive = true; // è¿½åŠ : å‡¦ç†ã‚’åˆ¶å¾¡ã™ã‚‹ãƒ•ãƒ©ã‚°
 
 
-		int _handleEnemy3; // “G‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-		VECTOR _vEnemy3Pos; // “G‚ÌˆÊ’u
-		VECTOR _vEnemy3TargetPos; // _vEnemyTargetPos‚Ì’è‹`‚ğ’Ç‰Á
+	int _handleEnemy; // æ•µã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
+	VECTOR _vEnemyPos; // æ•µã®ä½ç½®
+	VECTOR _vEnemyTargetPos; // _vEnemyTargetPosã®å®šç¾©ã‚’è¿½åŠ 
 
 
-		int _handleEnemy2; // “G‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-		VECTOR _vEnemy2Pos; // “G‚ÌˆÊ’u
-		VECTOR _vEnemy2TargetPos; // _vEnemyTargetPos‚Ì’è‹`‚ğ’Ç‰Á
-
-		int _handleEnemy4; // “G‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-		VECTOR _vEnemy4Pos; // “G‚ÌˆÊ’u
-		VECTOR _vEnemy4TargetPos; // _vEnemyTargetPos‚Ì’è‹`‚ğ’Ç‰Á
-
-		int _handleEnemy5; // “G‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-		VECTOR _vEnemy5Pos; // “G‚ÌˆÊ’u
-
-		float _fireInterval; // ‹Ê‚Ì”­ËŠÔŠu
-		float _fireInterval2; // ‹Ê‚Ì”­ËŠÔŠu
-		float _timeSinceLastFire; // ÅŒã‚É”­Ë‚µ‚Ä‚©‚ç‚ÌŒo‰ßŠÔ
-		float _timeSinceLastFire2; // ÅŒã‚É”­Ë‚µ‚Ä‚©‚ç‚ÌŒo‰ßŠÔ
-
-		float _moveDuration; // ˆÚ“®‚Ì‘±ŠÔ
-		float _moveElapsedTime; // ˆÚ“®‚ÌŒo‰ßŠÔ
-
-		int textureHandle; // ƒeƒNƒXƒ`ƒƒƒnƒ“ƒhƒ‹‚ğ’Ç‰Á
-
-		// ƒtƒ‰ƒO‚ğ’Ç‰Á
-		bool _isFiringBall;
-		bool _isFiringBall2;
-
-		int _lastTime; // ’Ç‰Á: _lastTime ƒƒ“ƒo[•Ï”
-		int _lastMoveTime; // ’Ç‰Á: _lastMoveTime ƒƒ“ƒo[•Ï”
-		float _moveInterval; // ’Ç‰Á: _moveInterval ƒƒ“ƒo[•Ï”
-		// ”ò‚Ñ“¹‹ï—p
-		int	_cgBullet;
-		int	_cgBullet2;
+	int _handleEnemy3; // æ•µã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
+	VECTOR _vEnemy3Pos; // æ•µã®ä½ç½®
+	VECTOR _vEnemy3TargetPos; // _vEnemyTargetPosã®å®šç¾©ã‚’è¿½åŠ 
 
 
-		std::vector<Bullet*> _vBullet;
+	int _handleEnemy2; // æ•µã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
+	VECTOR _vEnemy2Pos; // æ•µã®ä½ç½®
+	VECTOR _vEnemy2TargetPos; // _vEnemyTargetPosã®å®šç¾©ã‚’è¿½åŠ 
 
-		DataList_Object* ObjectList;			// ƒIƒuƒWƒFƒNƒgŠÇ—
+	int _handleEnemy4; // æ•µã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
+	VECTOR _vEnemy4Pos; // æ•µã®ä½ç½®
+	VECTOR _vEnemy4TargetPos; // _vEnemyTargetPosã®å®šç¾©ã‚’è¿½åŠ 
+
+	int _handleEnemy5; // æ•µã®ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
+	VECTOR _vEnemy5Pos; // æ•µã®ä½ç½®
+
+	float _fireInterval; // ç‰ã®ç™ºå°„é–“éš”
+	float _fireInterval2; // ç‰ã®ç™ºå°„é–“éš”
+	float _timeSinceLastFire; // æœ€å¾Œã«ç™ºå°„ã—ã¦ã‹ã‚‰ã®çµŒéæ™‚é–“
+	float _timeSinceLastFire2; // æœ€å¾Œã«ç™ºå°„ã—ã¦ã‹ã‚‰ã®çµŒéæ™‚é–“
+
+	float _moveDuration; // ç§»å‹•ã®æŒç¶šæ™‚é–“
+	float _moveElapsedTime; // ç§»å‹•ã®çµŒéæ™‚é–“
+
+	int textureHandle; // ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿½åŠ 
+
+	// ãƒ•ãƒ©ã‚°ã‚’è¿½åŠ 
+	bool _isFiringBall;
+	bool _isFiringBall2;
+
+	int _lastTime; // è¿½åŠ : _lastTime ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
+	int _lastMoveTime; // è¿½åŠ : _lastMoveTime ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
+	float _moveInterval; // è¿½åŠ : _moveInterval ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°
+	// é£›ã³é“å…·ç”¨
+	int	_cgBullet;
+	int	_cgBullet2;
+
+
+	std::vector<Bullet*> _vBullet;
+
+	DataList_Object* ObjectList;			// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç®¡ç†
 };
