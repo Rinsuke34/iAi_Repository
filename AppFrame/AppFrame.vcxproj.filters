@@ -174,11 +174,11 @@
     <ClCompile Include="source\EffectBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\エフェクト</Filter>
     </ClCompile>
-    <ClCompile Include="source\ObjectBase.cpp">
-      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム</Filter>
-    </ClCompile>
     <ClCompile Include="source\PlatformBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ObjectBase.cpp">
+      <Filter>ソース ファイル\オブジェクト</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

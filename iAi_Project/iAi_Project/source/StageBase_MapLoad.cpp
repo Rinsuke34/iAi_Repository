@@ -40,8 +40,7 @@ void StageBase::LoadMapData(int iStageNo)
 			/* プラットフォーム追加(仮) */
 			{
 				/* "オブジェクト管理"にプラットフォームを追加 */
-				PlatformLight_Test* pPlatform = new PlatformLight_Test();
-				//PlatformBase* pPlatform = new PlatformBasic();
+				PlatformBase* pPlatform = new PlatformBasic();
 				this->ObjectList->SetPlatform(pPlatform);
 
 				/* モデル */
@@ -70,6 +69,9 @@ void StageBase::LoadMapData(int iStageNo)
 				vecRot.x = DEG2RAD(vecRot.x);
 				vecRot.y = DEG2RAD(vecRot.y);
 				vecRot.z = DEG2RAD(vecRot.z);
+				// X軸の回転方向を反転
+				// ※正しいか不明な処理
+				vecRot.x *= -1;
 				// 設定
 				pPlatform->SetRotate(vecRot);
 

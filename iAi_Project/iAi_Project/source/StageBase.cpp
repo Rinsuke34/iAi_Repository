@@ -191,9 +191,9 @@ void StageBase::SetCamera()
 	switch (this->PlayerStatusList->iGetCameraMode())
 	{
 		/* フリーモード */
-	case CAMERA_MODE_FREE:
-		SetCamera_Free();
-		break;
+		case CAMERA_MODE_FREE:
+			SetCamera_Free();
+			break;
 	}
 }
 
