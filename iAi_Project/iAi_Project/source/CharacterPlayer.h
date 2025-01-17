@@ -24,7 +24,7 @@ using namespace GAME_SETTING;
 //#define	DEG2RAD(x)			( ((x) / 180.0f ) * PI )
 //#define	RAD2DEG(x)			( ((x) * 180.0f ) / PI )
 //#define	ACCELERATION(x)	( (x) / GAME_FRAMES_PER_SECOND * GAME_FRAMES_PER_SECOND ) //加速度計算マクロ
-#define	SECONDS_PER_FRAME (1.0f / GAME_FRAMES_PER_SECOND) //1フレームあたりの秒数
+
 
 
 

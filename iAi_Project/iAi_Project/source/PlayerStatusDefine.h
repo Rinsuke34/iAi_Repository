@@ -26,8 +26,9 @@ static const float GRAVITY_SREED = -9.8f; //d—Í‚Ì‘¬“x@YŽ²‚Ì‰º•ûŒü‚È‚Ì‚Åƒ}ƒCƒiƒ
 static const float GRAVITY_BUFFER = 0.1f; //ƒLƒƒƒ‰ƒNƒ^[‚É‚©‚©‚éd—Í’²®@‚P‚æ‚è‘å‚«‚¢‚Æd‚­‚È‚é@‚P‚æ‚è¬‚³‚¢‚ÆŒy‚­‚È‚é
 static const int PLAYER_JUMPING_IN_AIR_LIMIT = 1;//ƒvƒŒƒCƒ„[‚ª‹ó’†ƒWƒƒƒ“ƒv‚Å‚«‚é‰ñ”
 //‰ñ”ðŠÖŒW
-static const float PLAYER_DODGE_SPEED = 50.0f;//ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x
+static const float PLAYER_DODGE_SPEED = 300.0f;//ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x
 static const float PLAYER_DODGE_TIME = 0.3f; //ƒvƒŒƒCƒ„[‚Ì‰ñ”ðŽžŠÔ
+static const int PLAYER_DODGE_IN_AIR_LIMIT = 1;//ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚«‚é‰ñ”
 
 /* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁI—¹ */
 
