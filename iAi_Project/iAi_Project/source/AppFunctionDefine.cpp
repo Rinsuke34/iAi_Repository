@@ -16,13 +16,18 @@ namespace SCENE_SET
 	// ゲーム起動時のシーンをセット
 	void	SetFastScene()
 	{
-		gpSceneServer->AddSceneReservation(new SceneTitle(), true);
+		/* ロード画面追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* タイトルシーンを追加 */
+		gpSceneServer->AddSceneReservation(new SceneTitle());
 	}
 
 	// ロードシーンをセット
 	void	SetLoadScene()
 	{
-		gpSceneServer->AddSceneReservation(new SceneLoad(), false);
+		/* ロードシーンを追加 */
+		gpSceneServer->AddSceneReservation(new SceneLoad());
 	}
 }
 

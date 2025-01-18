@@ -29,16 +29,33 @@ void SceneHome::Process()
 	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
-		gbTutorialFlg = true;	// チュートリアルフラグ有効化
-		SceneGame* AddScene	= new SceneGame();
-		gpSceneServer->AddSceneReservation(AddScene, true);
+		/* チュートリアルフラグを有効化 */
+		gbTutorialFlg = true;
+
+		/* ロード画面追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* 現行シーン削除フラグを有効化 */
+		gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+		/* シーン"ゲーム"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneGame());
 		return;
 	}
 	/* キャンセルが入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
 	{
-		SceneGame* AddScene = new SceneGame();
-		gpSceneServer->AddSceneReservation(AddScene, true);
+		/* チュートリアルフラグを有効化 */
+		gbTutorialFlg = true;
+
+		/* ロード画面追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* 現行シーン削除フラグを有効化 */
+		gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+		/* シーン"ゲーム"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneGame());
 		return;
 	}
 }

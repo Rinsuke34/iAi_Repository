@@ -12,6 +12,7 @@ SceneServer::SceneServer()
 	this->bSceneDeleteFlg			= false;	// シーン削除フラグ
 	this->bSceneAddFlg				= false;	// シーン追加フラグ
 	this->bDeleteCurrentSceneFlg	= false;	// 現行シーン削除フラグ
+	this->bAddLoadSceneFlg			= false;	// ロードシーン追加フラグ
 }
 
 // デストラクタ
@@ -72,24 +73,22 @@ void SceneServer::SceneDraw()
 }
 
 // シーン追加予約
-void SceneServer::AddSceneReservation(SceneBase* NewScene, const bool bAddLoadScene)
+void SceneServer::AddSceneReservation(SceneBase* NewScene)
 {
 	// ※シーンの追加自体は"AddScene"関数で行う
 	// 引数
 	// NewScene			<-	新しくシーンサーバーに登録するシーン
-	// bAddLoadScene	<-	ロードシーンを追加するか(追加するならtrue)
-	//						※ロードシーンを追加する場合現行シーン削除フラグも有効とする
 
 	/* シーン追加フラグの有効化 */
 	this->bSceneAddFlg = true;
 
-	/* ロードシーンを追加するか確認 */
-	if (bAddLoadScene == true)
+	/* ロードシーン追加フラグを確認 */
+	if (this->bAddLoadSceneFlg == true)
 	{
-		// ロードシーンを追加するなら
-		/* 現行シーン削除フラグを有効化 */
-		// ※ロードシーンを挟む場合それ以前のシーンは不要なため削除する
-		this->bDeleteCurrentSceneFlg = true;
+		// 有効である場合
+
+		/* ロードシーン追加フラグの無効化 */
+		this->bAddLoadSceneFlg = false;
 
 		/* ロードシーンの追加 */
 		// ※共通のAppFlameを使用するため各プログラムに応じたシーンに設定する
@@ -195,7 +194,8 @@ void SceneServer::DeleteAllAddScene()
 	// 追加予定のシーンリストに登録されているすべてのシーンを削除する
 	for (auto& Scene : pstAddSceneList)
 	{
-		delete Scene;	// メモリを開放する
+		/* メモリを解放する */
+		delete Scene;
 	}
 
 	/* 追加予定のシーンリストのクリアを行う */

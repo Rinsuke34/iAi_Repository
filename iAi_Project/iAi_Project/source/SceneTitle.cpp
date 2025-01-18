@@ -3,8 +3,6 @@
 #include "SceneTitle.h"
 #include "SceneHome.h"
 
-#include "SceneInputConfig.h"
-
 /* シーン「タイトル」の定義 */
 
 // コンストラクタ
@@ -31,8 +29,14 @@ void SceneTitle::Process()
 	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
-		gpSceneServer->AddSceneReservation(new SceneHome(), true);
-		//gpSceneServer->AddSceneReservation(new SceneInputConfig(), true);
+		/* ロードシーン追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* 現行シーン削除フラグを有効化 */
+		gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+		/* シーン"ホーム"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneHome());
 		return;
 	}
 }
