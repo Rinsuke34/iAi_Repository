@@ -172,8 +172,8 @@
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
     <ClCompile Include="source\SceneTitle.cpp" />
-    <ClCompile Include="source\StageBase.cpp" />
-    <ClCompile Include="source\StageBase_MapLoad.cpp" />
+    <ClCompile Include="source\SceneStage.cpp" />
+    <ClCompile Include="source\SceneStage_MapLoad.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
@@ -189,7 +189,7 @@
     <ClInclude Include="source\PlatformLight_Test.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
-    <ClInclude Include="source\StageBase.h" />
+    <ClInclude Include="source\SceneStage.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />
     <ClInclude Include="source\DataList_Input.h" />

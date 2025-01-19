@@ -8,15 +8,17 @@
 // コンストラクタ
 SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
 
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
 }
 
 // デストラクタ
 SceneTitle::~SceneTitle()
+{
+
+}
+
+// 初期化
+void SceneTitle::Initialization()
 {
 
 }

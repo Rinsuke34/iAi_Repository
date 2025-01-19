@@ -1,6 +1,7 @@
 /* 2025.01.16 ファイル作成 駒沢風助 */
 
 #pragma once
+#include "AppFrame.h"
 #include <nlohmann/json.hpp>
 #include <fstream>
 
@@ -9,17 +10,18 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 
-/* ステージのベースクラスの宣言 */
+/* ステージクラスの宣言 */
 
 // ステージベース
-class StageBase
+class SceneStage : public SceneBase
 {
 	public:
-		StageBase();				// コンストラクタ
-		virtual ~StageBase();		// デストラクタ
+		SceneStage();							// コンストラクタ
+		virtual ~SceneStage();					// デストラクタ
 
-		virtual void	Process();			// 計算
-		virtual void	Draw();				// 描画
+		void	Initialization()	override;	// 初期化
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
 
 		virtual void	LoadMapData(int iStageNo);		// マップデータのロード
 

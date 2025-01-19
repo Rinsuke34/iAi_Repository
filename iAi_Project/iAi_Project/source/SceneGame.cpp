@@ -7,6 +7,28 @@
 // コンストラクタ
 SceneGame::SceneGame() : SceneBase("Game", 0, false)
 {
+	/* 初期化 */
+	this->iNowStageNo	= 0;	// 現在のステージ番号
+	this->iEndStageNo	= 0;	// 最終ステージ番号
+
+	/* ローディング情報の作成 */
+	gstLoadingThread.push_back(std::thread(std::bind(&SceneGame::Initialization, this)));
+}
+
+// デストラクタ
+SceneGame::~SceneGame()
+{
+	/* データリスト削除 */
+	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
+	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
+
+	/* Effkseerの使用を終了する */
+	Effkseer_End();
+}
+
+// 初期化
+void SceneGame::Initialization()
+{
 	/* Effekseer初期化処理 */
 	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
 	{
@@ -27,9 +49,6 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* 初期化 */
 	// ※チュートリアルフラグに応じて初期ステージを変更
-
-	/* ステージを作成 */
-	this->pNowStage = new StageBase();
 
 	/* チュートリアルフラグが有効であるか確認 */
 	if (gbTutorialFlg == true)
@@ -52,29 +71,28 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	}
 
 	/* "最初のステージ番号"のステージを読み込む */
-	this->pNowStage->LoadMapData(this->iNowStageNo);
-}
+	/* ロードシーン追加フラグを有効化 */
+	gpSceneServer->SetAddLoadSceneFlg(true);
 
-// デストラクタ
-SceneGame::~SceneGame()
-{
-	/* データリスト削除 */
-	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
-	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
+	/* シーン"ステージ"を作成 */
+	SceneBase* pAddScene = new SceneStage();
 
-	/* Effkseerの使用を終了する */
-	Effkseer_End();
+	/* シーン"ステージ"をシーンサーバーに追加 */
+	gpSceneServer->AddSceneReservation(pAddScene);
+
+	/* ステージの読み込みを開始 */
+	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData(this->iNowStageNo);
 }
 
 // 計算
 void SceneGame::Process()
 {
-	this->pNowStage->Process();
+
 }
 
 // 描画
 void SceneGame::Draw()
 {
-	this->pNowStage->Draw();
+
 }
 

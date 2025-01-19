@@ -1,6 +1,8 @@
 /* 2024.12.08 駒沢風助 ファイル作成 */
 
 #pragma once
+#include <vector>
+#include <thread>
 #include "AppStructDefine.h"
 #include "Fps.h"
 #include "PlayerInput.h"
@@ -30,3 +32,6 @@ extern int giNowFps;							// 現在のフレームレート
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawSceneListFlg;					// シーンリストの描写
 extern bool	gbDrawDatalistFlg;					// プレイヤーステータスの描写
+
+/* ローディング関連 */
+extern std::vector<std::thread>	gstLoadingThread;	// ローディング処理用スレッド

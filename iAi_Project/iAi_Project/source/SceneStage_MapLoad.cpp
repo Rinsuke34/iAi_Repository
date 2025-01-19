@@ -1,6 +1,6 @@
 /* 2025.01.16 ファイル作成 駒沢風助 */
 
-#include "StageBase.h"
+#include "SceneStage.h"
 
 /* オブジェクト */
 // ※仮
@@ -9,10 +9,10 @@
 #include "Enemy_Test.h"
 #include "PlatformLight_Test.h"
 
-/* ステージのベースクラスの定義(マップ読み込み部分) */
+/* ステージクラスの定義(マップ読み込み部分) */
 
 // マップデータのロード
-void StageBase::LoadMapData(int iStageNo)
+void SceneStage::LoadMapData(int iStageNo)
 {
 	// 引数
 	// iStageNo		<- ロードを行うステージ番号

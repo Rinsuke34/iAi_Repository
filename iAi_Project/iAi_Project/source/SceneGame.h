@@ -9,7 +9,7 @@
 #include "DataList_Model.h"
 
 /* ステージ */
-#include "StageBase.h"
+#include "SceneStage.h"
 
 /* シーン「ゲーム」の宣言 */
 
@@ -20,12 +20,11 @@ class SceneGame : public SceneBase
 		SceneGame();							// コンストラクタ
 		virtual ~SceneGame();					// デストラクタ
 
-		void	Process()	override;			// 計算
-		void	Draw()		override;			// 描画
+		void	Initialization()	override;	// 初期化
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
 
 	private:
-		/* ステージクラス */
-		StageBase* pNowStage;	// 現在のステージ
 
 		/* 変数 */
 		int		iNowStageNo;	// 現在のステージ番号

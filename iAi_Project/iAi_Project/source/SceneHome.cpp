@@ -9,15 +9,17 @@
 // コンストラクタ
 SceneHome::SceneHome() : SceneBase("Home", 0, false)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
 
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
 }
 
 // デストラクタ
 SceneHome::~SceneHome()
+{
+
+}
+
+// 初期化
+void SceneHome::Initialization()
 {
 
 }

@@ -1,11 +1,11 @@
 /* 2025.01.16 ファイル作成 駒沢風助 */
 
-#include "StageBase.h"
+#include "SceneStage.h"
 
-/* ステージのベースクラスの定義 */
+/* ステージクラスの定義 */
 
 // コンストラクタ
-StageBase::StageBase()
+SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 {
 	/* 非同期読み込みを有効化する */
 	SetUseASyncLoadFlag(true);
@@ -41,7 +41,7 @@ StageBase::StageBase()
 }
 
 // デストラクタ
-StageBase::~StageBase()
+SceneStage::~SceneStage()
 {
 	/* データリスト削除 */
 	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
@@ -51,8 +51,14 @@ StageBase::~StageBase()
 	DeleteGraph(iLightMapScreenHandle);			// ライトマップ
 }
 
+// 初期化
+void SceneStage::Initialization()
+{
+	int a = 0;
+}
+
 // 計算
-void StageBase::Process()
+void SceneStage::Process()
 {
 	/* すべてのオブジェクトの更新 */
 	ObjectList->UpdateAll();
@@ -62,7 +68,7 @@ void StageBase::Process()
 }
 
 // 描画
-void StageBase::Draw()
+void SceneStage::Draw()
 {
 	/* 透明度に関係なく描写するよう設定　*/
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
@@ -131,7 +137,7 @@ void StageBase::Draw()
 }
 
 // シャドウマップの設定
-void StageBase::SetupShadowMap()
+void SceneStage::SetupShadowMap()
 {
 	/* ライト方向設定 */
 	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.8f, -1.f, 0.8f));
@@ -157,7 +163,7 @@ void StageBase::SetupShadowMap()
 }
 
 // ライトマップの設定
-void StageBase::SetupLightMap()
+void SceneStage::SetupLightMap()
 {
 	/* ライトマップ描写 */
 	{
@@ -185,7 +191,7 @@ void StageBase::SetupLightMap()
 }
 
 // カメラ設定
-void StageBase::SetCamera()
+void SceneStage::SetCamera()
 {
 	/* カメラモードに応じて処理を変更 */
 	switch (this->PlayerStatusList->iGetCameraMode())
@@ -198,7 +204,7 @@ void StageBase::SetCamera()
 }
 
 // カメラ設定(フリーモード)
-void StageBase::SetCamera_Free()
+void SceneStage::SetCamera_Free()
 {
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
@@ -258,7 +264,7 @@ void StageBase::SetCamera_Free()
 }
 
 // デバッグ描写
-void StageBase::DrawDebug()
+void SceneStage::DrawDebug()
 {
 	int iDrawCount = 0;
 

@@ -22,6 +22,6 @@ namespace PROJECT_INIT
 namespace PUBLIC_PROCESS
 {
 	float	fClamp(float fValue, float fMax, float fMin);								// 値を範囲内に収める
-	bool	bCheckAboveThreshold(unsigned char ucValue, unsigned char ucThreshold);	// 閾値を超えているか確認
+	bool	bCheckAboveThreshold(unsigned char ucValue, unsigned char ucThreshold);		// 閾値を超えているか確認
 	float	fAnalogStickNorm(short sMouseMove);											// アナログスティックの入力を正規化(±1)
 }
