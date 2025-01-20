@@ -32,6 +32,10 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
+
+	/* 初期化 */
+	this->bEditDrawFlg	= false;
+	this->bGoalFlg		= false;
 }
 
 // デストラクタ
@@ -55,11 +59,44 @@ void SceneStage::Initialization()
 // 計算
 void SceneStage::Process()
 {
-	/* すべてのオブジェクトの更新 */
-	ObjectList->UpdateAll();
+	/* エディット画面を描写したか */
+	if (this->bEditDrawFlg == false)
+	{
+		// 未描写の場合(クリアしていない)
+		/* すべてのオブジェクトの更新 */
+		ObjectList->UpdateAll();
 
-	/* 削除フラグが有効なオブジェクトの削除 */
-	ObjectList->DeleteAll();
+		/* 削除フラグが有効なオブジェクトの削除 */
+		ObjectList->DeleteAll();
+
+		/* デバッグ用処理 */
+		/* キャンセルが入力されたらゴールフラグを有効化 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		{
+			// このシーンの削除フラグを有効にする
+			this->bGoalFlg = true;
+		}
+
+		/* ゴールフラグを確認 */
+		if (this->bGoalFlg == true)
+		{
+			// ゴールフラグが有効な場合
+			/* シーン"エディット画面"を作成 */
+			SceneBase* pAddScene = new SceneEdit();
+
+			/* シーン"エディット画面"をシーンサーバーに追加 */
+			gpSceneServer->AddSceneReservation(pAddScene);
+
+			/* エディット画面描写フラグを有効にする */
+			this->bEditDrawFlg = true;
+		}
+	}
+	else
+	{
+		// 描写済みの場合(クリア済み)
+		/* シーンの削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
 }
 
 // 描画

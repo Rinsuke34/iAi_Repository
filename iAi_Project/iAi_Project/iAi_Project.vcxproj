@@ -164,8 +164,10 @@
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
     <ClCompile Include="source\EffectTest.cpp" />
+    <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
     <ClCompile Include="source\PlatformLight_Test.cpp" />
+    <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
     <ClCompile Include="source\SceneInputConfig.cpp" />
@@ -183,12 +185,14 @@
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
     <ClInclude Include="source\EffectTest.h" />
+    <ClInclude Include="source\EnemyGoalObject.h" />
     <ClInclude Include="source\Enemy_Test.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
     <ClInclude Include="source\PlatformLight_Test.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
+    <ClInclude Include="source\SceneEdit.h" />
     <ClInclude Include="source\SceneStage.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />

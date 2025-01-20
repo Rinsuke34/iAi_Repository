@@ -75,9 +75,6 @@ void SceneGame::Initialization()
 	}
 
 	/* "最初のステージ番号"のステージを読み込む */
-	///* ロードシーン追加フラグを有効化 */
-	//gpSceneServer->SetAddLoadSceneFlg(true);
-
 	/* シーン"ステージ"を作成 */
 	SceneBase* pAddScene = new SceneStage();
 
@@ -91,7 +88,31 @@ void SceneGame::Initialization()
 // 計算
 void SceneGame::Process()
 {
+	/* ステージ番号を+1する */
+	this->iNowStageNo++;
 
+	/* ステージ番号が最終ステージ番号を超えていないか確認 */
+	if (this->iNowStageNo <= this->iEndStageNo)
+	{
+		// 超えていない(次のステージがある)場合
+		/* ロードシーン追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* シーン"ステージ"を作成 */
+		SceneBase* pAddScene = new SceneStage();
+
+		/* シーン"ステージ"をシーンサーバーに追加 */
+		gpSceneServer->AddSceneReservation(pAddScene);
+
+		/* ステージの読み込みを開始 */
+		dynamic_cast<SceneStage*>(pAddScene)->LoadMapData(this->iNowStageNo);
+	}
+	else
+	{
+		// 超えている(次のステージがない)場合
+		/* シーン削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
 }
 
 // 描画

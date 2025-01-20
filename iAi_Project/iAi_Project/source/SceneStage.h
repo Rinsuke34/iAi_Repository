@@ -10,6 +10,9 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 
+/* シーン */
+#include "SceneEdit.h"
+
 /* ステージクラスの宣言 */
 
 // ステージベース
@@ -49,5 +52,10 @@ class SceneStage : public SceneBase
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
+
+		/* マップ情報(仮) */
+		// ※データリスト作成予定
+		bool bEditDrawFlg;							// エディット描写フラグ
+		bool bGoalFlg;								// ゴールフラグ
 };
 

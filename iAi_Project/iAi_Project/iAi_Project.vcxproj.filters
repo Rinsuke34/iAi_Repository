@@ -157,6 +157,12 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ステージ">
       <UniqueIdentifier>{69cb7c40-f1d9-433d-9575-c586cc39c6b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\エディット">
+      <UniqueIdentifier>{5d605048-daac-4f5f-be12-d731fd63f230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\エディット">
+      <UniqueIdentifier>{0dbfbb9a-6d4b-4e85-b17d-eae4a3346160}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -215,6 +221,12 @@
     </ClCompile>
     <ClCompile Include="source\SceneStage_MapLoad.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneEdit.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyGoalObject.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneStage.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneEdit.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyGoalObject.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
