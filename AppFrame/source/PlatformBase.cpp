@@ -171,8 +171,10 @@ void PlatformBase::Draw()
 // 発光描写
 void PlatformBase::BloomDraw()
 {
-	/* 元の色を保存 */
+	/* フレーム数を取得 */
 	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
+
+	/* 元の色を保存 */
 	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
 	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
 	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);

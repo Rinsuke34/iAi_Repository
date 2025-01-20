@@ -3,6 +3,7 @@
 #pragma once
 #include <vector>
 #include <thread>
+#include <future>
 #include "AppStructDefine.h"
 #include "Fps.h"
 #include "PlayerInput.h"
@@ -34,4 +35,5 @@ extern bool gbDrawSceneListFlg;					// シーンリストの描写
 extern bool	gbDrawDatalistFlg;					// プレイヤーステータスの描写
 
 /* ローディング関連 */
-extern std::vector<std::thread>	gstLoadingThread;	// ローディング処理用スレッド
+extern std::vector<std::future<void>>	gstLoadingFutures;		// ローディング処理のスレッド追跡用future
+extern bool								gbNowLoadingFlg;		// ローディングフラグ

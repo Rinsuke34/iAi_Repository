@@ -7,9 +7,6 @@
 // コンストラクタ
 SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
-
 	/* データリスト作成 */
 	{
 		/* データリストサーバーに"オブジェクト管理"を追加 */
@@ -29,9 +26,6 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	}
 
 	/* テスト用処理 終了 */
-
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
 
 	/* マップハンドル作成 */
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -54,7 +48,8 @@ SceneStage::~SceneStage()
 // 初期化
 void SceneStage::Initialization()
 {
-	int a = 0;
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
 }
 
 // 計算
@@ -70,6 +65,14 @@ void SceneStage::Process()
 // 描画
 void SceneStage::Draw()
 {
+	/* ローディング中であるか確認 */
+	if (gbNowLoadingFlg == true)
+	{
+		// ローディング中である場合
+		/* 描写を行わない */
+		return;
+	}
+	
 	/* 透明度に関係なく描写するよう設定　*/
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
 

@@ -92,7 +92,10 @@ void SceneStage::LoadMapData(int iStageNo)
 		/* プレイヤー追加(仮) */
 		{
 			/* "オブジェクト管理"にプレイヤーを追加 */
-			ObjectList->SetCharacterPlayer(new CharacterPlayer());
+			CharacterPlayer* AddPlayer = new CharacterPlayer();
+			AddPlayer->SetModelHandle(this->ModelList->iGetModel("Player"));
+
+			ObjectList->SetCharacterPlayer(AddPlayer);
 		}
 
 		/* エネミー追加(仮) */
@@ -144,6 +147,29 @@ void SceneStage::LoadMapData(int iStageNo)
 
 			/* 拡大率 */
 			VECTOR vecScale = VGet(10.f, 1.f, 10.f);
+			pPlatform->SetScale(vecScale);
+		}
+
+		/* 町 */
+		{
+			PlatformBase* pPlatform = new PlatformBasic();
+			this->ObjectList->SetPlatform(pPlatform);
+
+			/* モデル */
+			pPlatform->SetModelHandle(this->ModelList->iGetModel("Test/City/city"));
+
+			/* 座標 */
+			VECTOR vecPos = VGet(0.f, 0.f, 0.f);
+			pPlatform->SetPosition(vecPos);
+
+			/* 回転量 */
+			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
+			pPlatform->SetRotate(vecRot);
+
+			/* 拡大率 */
+			VECTOR vecScale = VGet(1.f, 1.f, 1.f);
+			pPlatform->SetScale(vecScale);
+			// 設定
 			pPlatform->SetScale(vecScale);
 		}
 	}

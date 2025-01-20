@@ -16,9 +16,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
-	/* 仮初期化処理開始 */
-	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
-
 	/* コリジョンを更新 */
 	CollisionUpdate();
 }
@@ -26,6 +23,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 // 初期化
 void CharacterPlayer::Initialization()
 {
+	CharacterBase::Initialization();
+
 	/* コリジョンを更新 */
 	CollisionUpdate();
 }

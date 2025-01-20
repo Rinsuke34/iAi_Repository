@@ -27,4 +27,5 @@ bool gbDrawSceneListFlg	= true;					// シーンリストの描写
 bool gbDrawDatalistFlg	= false;				// データリストの描写
 
 /* ローディング関連 */
-std::vector<std::thread>	gstLoadingThread;	// ローディング処理用スレッド
+std::vector<std::future<void>>	gstLoadingFutures;			// ローディング処理のスレッド追跡用future
+bool							gbNowLoadingFlg	= false;	// ローディングフラグ

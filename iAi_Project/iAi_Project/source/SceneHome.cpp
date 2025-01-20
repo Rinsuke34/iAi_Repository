@@ -21,7 +21,8 @@ SceneHome::~SceneHome()
 // 初期化
 void SceneHome::Initialization()
 {
-
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
 }
 
 // 計算

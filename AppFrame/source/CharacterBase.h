@@ -1,6 +1,7 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 
 #pragma once
+#include <vector>
 #include "ActorBase.h"
 
 /* 名前空間省略 */
@@ -15,7 +16,7 @@ class CharacterBase : public ActorBase
 		CharacterBase();	// コンストラクタ
 		virtual ~CharacterBase() {};		// デストラクタ
 
-		virtual void	Initialization()	override {};	// 初期化
+		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override {};	// 更新
 		virtual void	Draw()				override {};	// 描写
 		virtual void	BloomDraw()			override {};	// 発光描写
@@ -37,9 +38,11 @@ class CharacterBase : public ActorBase
 	private:
 	protected:
 		/* 関数 */
+		void	UpdataLightFrame();						// 発光の設定されたフレームを設定
 
 		/* 変数 */
 		COLLISION_CAPSULE		stCollisionCapsule;		// コリジョン(カプセル)
 		VECTOR					vecDirection;			// 向き
 		int						iInvincibilityTime;		// 無敵時間
+		std::vector<int>		iLightFrameNo;			// 発光部分の設定されたモデルのフレーム番号
 };

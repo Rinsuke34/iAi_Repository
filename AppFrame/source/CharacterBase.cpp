@@ -14,6 +14,13 @@ CharacterBase::CharacterBase() : ActorBase()
 	this->iInvincibilityTime	= {};	// 無敵時間
 }
 
+// 初期化
+void CharacterBase::Initialization()
+{
+	/* 発光するフレームを取得 */
+	UpdataLightFrame();
+}
+
 /* 接触判定(簡易) */
 // カプセル - カプセル
 bool CharacterBase::HitCheck(COLLISION_CAPSULE	stCapsule)
@@ -86,4 +93,28 @@ bool CharacterBase::HitCheck(int iModelHandle, int iFrameIndex)
 	}
 	// 接触していない場合
 	return false;
+}
+
+// 発光の設定されたフレームを設定
+void CharacterBase::UpdataLightFrame()
+{
+	/* モデルハンドルからフレーム数を取得 */
+	int iFrameNum = MV1GetFrameNum(this->iModelHandle);
+
+	/* 発光するフレーム番号を取得する */
+	for (int i = 0; i < iFrameNum; i++)
+	{
+		/* フレーム名取得 */
+		char FrameName = MV1GetFrameName(this->iModelHandle, i);
+	}
+
+
+	///* 子フレームから発光部分を取得 */
+	//for (int i = 0; i < iFrameNum; i++)
+	//{
+	//	/* 子フレーム数を取得 */
+	//	int iFrameChildNum = MV1GetFrameChildNum(this->iModelHandle, )
+	//	/* モデルハンドルから子フレーム数を取得 */
+	//	for(int j = 0; j < )
+	//}
 }

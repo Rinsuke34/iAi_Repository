@@ -12,7 +12,8 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	this->iEndStageNo	= 0;	// 最終ステージ番号
 
 	/* ローディング情報の作成 */
-	gstLoadingThread.push_back(std::thread(std::bind(&SceneGame::Initialization, this)));
+	//gstLoadingFutures.push_back(std::async(std::launch::async, &SceneGame::Initialization, this));
+	Initialization();
 }
 
 // デストラクタ
@@ -29,6 +30,9 @@ SceneGame::~SceneGame()
 // 初期化
 void SceneGame::Initialization()
 {
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
+
 	/* Effekseer初期化処理 */
 	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
 	{
@@ -71,8 +75,8 @@ void SceneGame::Initialization()
 	}
 
 	/* "最初のステージ番号"のステージを読み込む */
-	/* ロードシーン追加フラグを有効化 */
-	gpSceneServer->SetAddLoadSceneFlg(true);
+	///* ロードシーン追加フラグを有効化 */
+	//gpSceneServer->SetAddLoadSceneFlg(true);
 
 	/* シーン"ステージ"を作成 */
 	SceneBase* pAddScene = new SceneStage();
