@@ -74,13 +74,13 @@ void SceneStage::Process()
 		/* 削除フラグが有効なオブジェクトの削除 */
 		ObjectList->DeleteAll();
 
-		/* デバッグ用処理 */
-		/* キャンセルが入力されたらゴールフラグを有効化 */
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-		{
-			// このシーンの削除フラグを有効にする
-			this->bGoalFlg = true;
-		}
+		///* デバッグ用処理 */
+		///* キャンセルが入力されたらゴールフラグを有効化 */
+		//if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		//{
+		//	// このシーンの削除フラグを有効にする
+		//	this->bGoalFlg = true;
+		//}
 
 		/* ゴールフラグを確認 */
 		if (this->bGoalFlg == true)

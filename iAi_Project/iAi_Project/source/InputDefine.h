@@ -1,4 +1,5 @@
 /* 2024.12.22 駒沢風助 ファイル作成 */
+/* 2025.01.21 菊池雅道 定数仮追加 */
 
 #pragma once
 #include <string>
@@ -37,6 +38,8 @@ static const int GAME_RIGHT		= 8;	// 右移動(キーボード＆マウス専用)
 static const int XINPUT_TRIGGER_LEFT	= 0;	// 左トリガー
 static const int XINPUT_TRIGGER_RIGHT	= 1;	// 右トリガー
 
+/* 仮追加 */
+const float STICK_DEAD_ZONE = 0.01f; //スティック入力のデッドゾーン（範囲：範囲：0 ～ 32767）/*2025.01.09 菊池雅道 仮追加 */
 
 /* 入力管理用の構造体 */
 

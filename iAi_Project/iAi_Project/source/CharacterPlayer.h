@@ -34,6 +34,7 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Move();			// 移動
 		void	Player_Jump();			// ジャンプ
 		void	Player_Attack();		// プレイヤー攻撃(仮)
-
+		void	Player_Charge_Attack();	// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
+		void	Player_Dodg();			// 回避 2025.01.09 菊池雅道 関数追加  
 		void	CollisionUpdate();		// コリジョン更新
 };
