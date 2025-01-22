@@ -5,4 +5,14 @@
 
 /* プロジェクトで使用する広域変数の宣言 */
 
-extern DataList_Input* gpDataList_Input;	// プレイヤー入力管理クラス
+/* 実行中クラス */
+extern DataList_Input*	gpDataList_Input;	// プレイヤー入力管理クラス
+
+/* ステージ関連 */
+extern bool gbTutorialFlg;					// チュートリアルフラグ
+
+/* デバッグ用描写管理フラグ */
+extern bool gbDrawShadowMapFlg;				// シャドウマップの描写
+extern bool gbDrawLightMapFlg;				// ライトマップの描写
+extern bool gbDrawLightMapDownScaleFlg;		// ライトマップ(縮小)の描写
+extern bool gpDrawLightMapGaussFlg;			// ライトマップ(ぼかし)のハンドル

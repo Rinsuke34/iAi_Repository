@@ -1,18 +1,15 @@
-/* 2024.12.XX YYYY ZZZZ */
+/* 2025.01.16 駒沢風助 ステージ作成 */
 
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
-#include <nlohmann/json.hpp>
-#include <fstream>
 
 /* データリスト */
-#include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 
-/* シーン */
-
+/* ステージ */
+#include "SceneStage.h"
 
 /* シーン「ゲーム」の宣言 */
 
@@ -23,22 +20,15 @@ class SceneGame : public SceneBase
 		SceneGame();							// コンストラクタ
 		virtual ~SceneGame();					// デストラクタ
 
-		void	Process()	override;			// 計算
-		void	Draw()		override;			// 描画
+		void	Initialization()	override;	// 初期化
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
 
 	private:
-		/* 使用するデータリスト */
-		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Object*		ObjectList;				// オブジェクト管理
-		DataList_PlayerStatus*	PlayerStatusList;		// プレイヤー状態管理
-		DataList_Model*			ModelList;				// 3Dモデル管理
 
-		/* 関数 */
-		void	LoadMapData();						// マップデータのロード
-		void	SetCamera();						// カメラ設定
-
-		/* カメラ関連 */
-		void	SetCamera_Free();					// カメラ設定(フリーモード)
+		/* 変数 */
+		int		iNowStageNo;	// 現在のステージ番号
+		int		iEndStageNo;	// 最終ステージ番号
 
 	protected:
 };

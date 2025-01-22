@@ -13,8 +13,9 @@ class SceneTitle : public SceneBase
 		SceneTitle();							// コンストラクタ
 		virtual ~SceneTitle();					// デストラクタ
 
-		void	Process()	override;			// 計算
-		void	Draw()		override;			// 描画
+		void	Initialization()	override;	// 初期化
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
 
 	private:
 

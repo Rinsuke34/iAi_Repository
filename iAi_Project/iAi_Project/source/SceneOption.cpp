@@ -7,17 +7,20 @@
 // コンストラクタ
 SceneOption::SceneOption() : SceneBase("Option", 0, false)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
 
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
 }
 
 // デストラクタ
 SceneOption::~SceneOption()
 {
 
+}
+
+// 初期化
+void SceneOption::Initialization()
+{
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
 }
 
 // 計算

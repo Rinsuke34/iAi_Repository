@@ -7,13 +7,16 @@ TestEnemy::TestEnemy(): EnemyBase()
 	// HPを設定
 	this->SetMaxHP(1);
 	this->SetNowHP(1);
-	stCollisionCapsule.vecCapsuleTop = VGet(100, 200, 100);
-	stCollisionCapsule.vecCapsuleBottom = VGet(100, 0, 100);
-	stCollisionCapsule.fCapsuleRadius = 50.f;
 }
 
 // デストラクタ
 TestEnemy::~TestEnemy()
+{
+
+}
+
+// 初期化
+void TestEnemy::Initialization()
 {
 
 }
@@ -31,5 +34,5 @@ void TestEnemy::Update()
 // 描写
 void TestEnemy::Draw()
 {
-	DrawCapsule3D(stCollisionCapsule.vecCapsuleTop, stCollisionCapsule.vecCapsuleBottom, stCollisionCapsule.fCapsuleRadius, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
+	DrawSphere3D(vecGetPosition(), 50.f, 32, GetColor(255, 0, 0), GetColor(255, 255, 255), TRUE);
 }

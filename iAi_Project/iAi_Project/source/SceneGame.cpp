@@ -1,5 +1,5 @@
 /* 2024.12.XX YYYY ZZZZ */
-//テスト
+
 #include "SceneGame.h"
 
 /* シーン「ゲーム」の定義 */
@@ -7,139 +7,95 @@
 // コンストラクタ
 SceneGame::SceneGame() : SceneBase("Game", 0, false)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
+	/* 初期化 */
+	this->iNowStageNo	= 0;	// 現在のステージ番号
+	this->iEndStageNo	= 0;	// 最終ステージ番号
 
-	/* テスト用処理 開始 */
-
-	/* データリスト作成 */
-	{
-		/* データリストサーバーに"オブジェクト管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Object());
-
-		/* データリストサーバーに"プレイヤー状態"を追加 */
-		gpDataListServer->AddDataList(new DataList_PlayerStatus());
-
-		/* データリストサーバーに"3Dモデル管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Model());
-	}
-	
-	/* データリスト取得 */
-	{
-		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-
-		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
-
-		/* "3Dモデル管理"を取得 */
-		this->ModelList = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
-	}
-
-	/* マップデータ読み込み */
-	LoadMapData();
-
-	/* テスト用処理 終了 */
-
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
+	/* ローディング情報の作成 */
+	gstLoadingFutures.push_back(std::async(std::launch::async, &SceneGame::Initialization, this));
 }
 
 // デストラクタ
 SceneGame::~SceneGame()
 {
 	/* データリスト削除 */
-	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
 	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
+
+	/* Effkseerの使用を終了する */
+	Effkseer_End();
+}
+
+// 初期化
+void SceneGame::Initialization()
+{
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
+
+	/* Effekseer初期化処理 */
+	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
+	{
+		// エラーが起きたら直ちに終了
+		DxLib_End();
+		gbEndFlg = true;
+		return;
+	}
+
+	/* データリスト作成 */
+	{
+		/* データリストサーバーに"プレイヤー状態"を追加 */
+		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+
+		/* データリストサーバーに"3Dモデル管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Model());
+	}
+
+	/* 初期化 */
+	// ※チュートリアルフラグに応じて初期ステージを変更
+
+	/* チュートリアルフラグが有効であるか確認 */
+	if (gbTutorialFlg == true)
+	{
+		// チュートリアルフラグが有効
+		/* 最初のステージ番号を"チュートリアル開始"に設定 */
+		this->iNowStageNo = STAGE_NO_TUTORIAL_START;
+
+		/* 最終ステージ番号を"チュートリアル終了"に設定 */
+		this->iEndStageNo = STAGE_NO_TUTORIAL_END;
+	}
+	else
+	{
+		// チュートリアルフラグが無効
+		/* 最初のステージ番号を"実践開始"に設定 */
+		this->iNowStageNo = STAGE_NO_PRACTICE_START;
+
+		/* 最終ステージ番号を"実践終了"に設定 */
+		this->iEndStageNo = STAGE_NO_PRACTICE_END;
+	}
+
+	/* "最初のステージ番号"のステージを読み込む */
+	///* ロードシーン追加フラグを有効化 */
+	//gpSceneServer->SetAddLoadSceneFlg(true);
+
+	/* シーン"ステージ"を作成 */
+	SceneBase* pAddScene = new SceneStage();
+
+	/* シーン"ステージ"をシーンサーバーに追加 */
+	gpSceneServer->AddSceneReservation(pAddScene);
+
+	/* ステージの読み込みを開始 */
+	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData(this->iNowStageNo);
 }
 
 // 計算
 void SceneGame::Process()
 {
-	/* すべてのオブジェクトの更新 */
-	ObjectList->UpdateAll();
+
 }
 
 // 描画
 void SceneGame::Draw()
 {
-	/* すべてのオブジェクトの描写 */
-	ObjectList->DrawAll();
 
-	/* カメラの設定 */
-	SetCamera();
 }
 
-// カメラ設定
-void SceneGame::SetCamera()
-{
-	/* カメラモードに応じて処理を変更 */
-	switch (this->PlayerStatusList->iGetCameraMode())
-	{
-		/* フリーモード */
-		case CAMERA_MODE_FREE:
-			SetCamera_Free();
-			break;
-	}
-}
-
-// カメラ設定(フリーモード)
-void SceneGame::SetCamera_Free()
-{
-	/* プレイヤー座標取得 */
-	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
-
-	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, 100, 0));
-	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
-
-	/* 視点変更に必要なデータ取得 */
-	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
-	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
-	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
-
-	/* 入力からカメラ回転量を取得 */
-	/* マウス */
-	{
-		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse;
-		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse;
-	}
-
-	/* コントローラー */
-	{
-		fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
-		fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
-	}
-
-	/* Y軸の回転角度制限 */
-	{
-		float fAngleLimitUp		= this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
-		float fAngleLimitDown	= this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
-
-		if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
-		if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
-	}
-
-	/* 回転量を更新 */
-	{
-		this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
-		this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
-	}
-
-	/* カメラ座標設定 */
-	{
-		float fRadius	= this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
-		float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-		float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-		float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
-
-		this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
-	}
-
-	/* カメラ設定 */
-	{
-		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
-	}
-}

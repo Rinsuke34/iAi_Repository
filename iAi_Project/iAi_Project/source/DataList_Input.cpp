@@ -267,7 +267,58 @@ bool DataList_Input::bGetGameInputAction(int iInputType, int iGetInputGame)
 }
 
 // ゲームプレイ用入力取得(移動量)
-VECTOR DataList_Input::vecGetGameInputMove()
+float DataList_Input::fGetGameInputMove()
+{
+	// 戻り値
+	// float	: 移動入力の強さ(0.f～1.f)
+
+	float	fReturn = 0;
+
+	/* キーボードで移動入力がされているか確認 */
+	if (bGetGameInputAction(INPUT_HOLD, GAME_FORWARD) ||
+		bGetGameInputAction(INPUT_HOLD, GAME_BACK)	||
+		bGetGameInputAction(INPUT_HOLD, GAME_RIGHT)	||
+		bGetGameInputAction(INPUT_HOLD, GAME_LEFT)	)
+	{
+		// 入力されている場合
+		/* 入力の強さを1(最大)で返す */
+		fReturn = 1.f;
+		return fReturn;
+	}
+
+	/* コントローラーで移動入力がされているか確認 */
+	// ※±32767の範囲で出力されるので±1.0fに変換する
+	VECTOR vecReturn = VGet(0.0f, 0.0f, 0.0f);
+	vecReturn.x += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_LEFT]);
+	vecReturn.z += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
+
+	/* 移動方向がある場合 */
+	if (vecReturn.x != -0 || vecReturn.z != -0)
+	{
+		/* 各方向の値を±1以内に収める(キーボードとコントローラの同時入力対策) */
+		vecReturn.x = PUBLIC_PROCESS::fClamp(vecReturn.x, 1.0f, -1.0f);
+		vecReturn.z = PUBLIC_PROCESS::fClamp(vecReturn.z, 1.0f, -1.0f);
+		
+		/* 入力の大きさを取得 */
+		fReturn = VSize(vecReturn);
+
+		/* 2025.01.21 菊池雅道 処理追加 開始 */
+		/* デッドゾーン */
+		if (PUBLIC_PROCESS::bCheckInputDeadzone(fReturn, STICK_DEAD_ZONE))
+		{
+			// デッドゾーン範囲内であるならば
+			/* 入力を無効化 */
+			fReturn = 0;
+		}
+		/* 2025.01.21 菊池雅道 処理追加 終了 */
+	}
+
+	/* 移動方向を返す */
+	return fReturn;
+}
+
+// ゲームプレイ用入力取得(移動方向)
+VECTOR DataList_Input::vecGetGameInputMoveDirection()
 {
 	// 戻り値
 	// VECTOR	: 移動方向(詳細は下記参照)
@@ -279,7 +330,6 @@ VECTOR DataList_Input::vecGetGameInputMove()
 	//	・左	: -X
 	//	※Yは必ず0.0fとなる
 	// ■X,Y,Zの値は-1.0f～1.0fの範囲とする。
-	// ■コントローラー使用時はアナログ値から算出するため、1.fに届かない場合がある。
 	// ■キーボードの場合は上下左右キーで算出するため出力は8方向のみ。
 	// ■コントローラーとキーボードの同時入力があった場合は双方を足し合わせた値を返す。
 	// ■コントローラーは左スティックの入力を使用する。
@@ -290,6 +340,24 @@ VECTOR DataList_Input::vecGetGameInputMove()
 	// ※±32767の範囲で出力されるので±1.0fに変換する
 	vecReturn.x += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_LEFT]);
 	vecReturn.z += PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
+
+	/* 2025.01.21 菊池雅道 処理追加 開始 */
+	/* デッドゾーン */
+	// X方向の入力
+	if (PUBLIC_PROCESS::bCheckInputDeadzone(vecReturn.x, STICK_DEAD_ZONE))
+	{
+		// デッドゾーン範囲内であるならば
+		/* 入力を無効化 */
+		vecReturn.x = 0.f;
+	}
+	// Z方向の入力
+	if (PUBLIC_PROCESS::bCheckInputDeadzone(vecReturn.z, STICK_DEAD_ZONE))
+	{
+		// デッドゾーン範囲内であるならば
+		/* 入力を無効化 */
+		vecReturn.z = 0.f;
+	}
+	/* 2025.01.21 菊池雅道 処理追加 終了 */
 
 	/* キーボードから移動方向を取得 */
 	/* 前進 */
@@ -319,20 +387,10 @@ VECTOR DataList_Input::vecGetGameInputMove()
 	/* 移動方向がある場合 */
 	if (vecReturn.x != -0 || vecReturn.z != -0)
 	{
-		/* 各方向の値を±1以内に収める(キーボードとコントローラの同時入力対策) */
-		vecReturn.x = PUBLIC_PROCESS::fClamp(vecReturn.x, 1.0f, -1.0f);
-		vecReturn.z = PUBLIC_PROCESS::fClamp(vecReturn.z, 1.0f, -1.0f);
-		
-		/* 入力の大きさを取得 */
-		float inputLength = VSize(vecReturn);
-
 		/* 移動方向を正規化 */
 		vecReturn = VNorm(vecReturn);
-
-		/* 移動方向に取得した入力の大きさにスケーリング */
-		vecReturn = VScale(vecReturn, inputLength);
 	}
-
+	
 	/* 移動方向を返す */
 	return vecReturn;
 }

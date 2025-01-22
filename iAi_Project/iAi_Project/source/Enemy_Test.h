@@ -12,15 +12,14 @@ class TestEnemy : public EnemyBase
 		TestEnemy();				// コンストラクタ
 		virtual ~TestEnemy();		// デストラクタ
 
-		virtual void	Update();		// 更新
-		virtual void	Draw();			// 描写
+		virtual void	Initialization()	override;		// 初期化
+		virtual void	Update()			override;		// 更新
+		virtual void	Draw()				override;		// 描写
+		virtual void	BloomDraw()			override {};	// 発光描写
 
-		COLLISION_CAPSULE stCollisionCapsule;// コリジョン(カプセル)
 	private:
 	protected:
 		/* 関数 */
-		void	CollisionUpdate();		// コリジョン更新
-};
 
 		/* 変数 */
-
+};

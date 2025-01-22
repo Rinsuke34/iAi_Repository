@@ -13,7 +13,13 @@ class DataList_Object : public DataListBase
 		DataList_Object();				// コンストラクタ
 		virtual ~DataList_Object();		// デストラクタ
 
-		void	JsonDataLoad();			// Jsonからデータをロード"※仮作成"
+		/* リスト内オブジェクト初期化 */
+		void	InitializationAll();		// 全オブジェクト初期化
+		void	InitializationPlayer();		// プレイヤー初期化
+		void	InitializationEnemy();		// エネミー初期化
+		void	InitializationEffect();		// エフェクト初期化
+		void	InitializationBullet();		// 弾初期化
+		void	InitializationPlatform();	// プラットフォーム初期化
 
 		/* リスト内オブジェクト更新 */
 		void	UpdateAll();			// 全オブジェクト更新
@@ -27,12 +33,22 @@ class DataList_Object : public DataListBase
 		void	DrawAll();				// 全オブジェクト描写
 		void	DrawPlayer();			// プレイヤー描写
 		void	DrawEnemy();			// エネミー描写
-		void	DrawEffect();			// エフェクト描写
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
 
+		/* リスト内オブジェクト発光描写 */
+		void	BloomDrawAll();			// 全オブジェクト発光描写
+		void	BloomDrawPlayer();		// プレイヤー発光描写
+		void	BloomDrawEnemy();		// エネミー発光描写
+		void	BloomDrawBullet();		// 弾発光描写
+		void	BloomDrawPlatform();	// プラットフォーム発光描写
+
 		/* オブジェクト削除 */
+		void	DeleteAll();			// 削除フラグが有効な全オブジェクト削除
 		void	DeleteEnemy();			// 削除フラグが有効なエネミーを削除
+		void	DeleteEffect();			// 削除フラグが有効なエフェクトを削除
+		void	DeleteBullet();			// 削除フラグが有効な弾を削除
+		void	DeletePlatform();		// 削除フラグが有効なプラットフォームを削除
 
 		/* データ取得 */
 		// 単独

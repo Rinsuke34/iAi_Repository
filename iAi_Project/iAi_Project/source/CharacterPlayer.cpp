@@ -3,6 +3,9 @@
 
 #include "CharacterPlayer.h"
 
+/* オブジェクト */
+#include "EffectTest.h"
+
 /* プレイヤークラスの定義 */
 
 // コンストラクタ
@@ -21,38 +24,139 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	CollisionUpdate();
 }
 
+// 初期化
+void CharacterPlayer::Initialization()
+{
+	/* コリジョンを更新 */
+	CollisionUpdate();
+}
+
 // 更新
 void CharacterPlayer::Update()
 {
+	/* プレイヤーの更新処理 */
 
-	/* 重力処理 */
-	Player_Gravity();
+	/* プレイヤーの状態に応じて処理を変更 */
+	int iInput = this->PlayerStatusList->iGetPlayerState();
+	switch (iInput)
+	{
+		/* 基本状態(行動に制約のない状態の総称) */
+		case PLAYER_STATE_IDLE:			// 待機
+		case PLAYER_STATE_WALK:			// 歩行
+		case PLAYER_STATE_RUN_LOW:		// 走行(低速)
+		case PLAYER_STATE_RUN_HIGH:		// 走行(高速)
+		case PLAYER_STATE_JUMP_UP:		// 空中(上昇)
+		case PLAYER_STATE_JUMP_DOWN:	// 空中(下降)
+			/* 重力処理 */
+			Player_Gravity();
 
-	
-	/* 移動処理 */
-	Player_Move();
+			/* ジャンプ処理 */
+			Player_Jump();
 
-	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
-	
-	/* 回避処理 */
-	Player_Dodg();
+			/* 移動処理 */
+			Player_Move();
 
-	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+			/* 回避処理 */
+			Player_Dodg();
 
-	/* ジャンプ処理 */
-	Player_Jump();
+			/* 入力取得 */
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+			{
+				/* 居合(構え)状態へ遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_CHARGE);
+			}
+			else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_AIM))
+			{
+				/* クナイ(構え)状態へ遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_THROW_KUNAI_AIM);
+			}
+			else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+			{
+				
+				/* 回避状態に遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+			}
+			break;
 
+		/* 行動制限状態(一部行動に制約あり) */
+		case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
+		case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
+			/* 重力処理 */
+			Player_Gravity();
 
-	/* 攻撃処理 */
-	Player_Attack();
+			/* 移動処理 */
+			Player_Move();
 
+			/* 入力取得 */
+			switch (iInput)
+			{
+				case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
+					/* 攻撃ボタンを離したか */
+					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_ATTACK))
+					{
+						/* 居合(弱)状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_WEAK);
+					}
+					/* 回避を入力したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+					{
+						/* 回避状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+					}
+					break;
 
-	
-	// 移動量をそのままキャラの向きにする
-	//if (VSize(VGet(this->PlayerStatusList -> vecGetPlayerMoveVector().x, 0, this->PlayerStatusList->vecGetPlayerMoveVector().z)) > 0.f) {		// 移動していない時は無視するため
-		//this->PlayerStatusList -> vecPlayerDirection = vecPlayerMove;
-	//}
-	
+				case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
+					/* 攻撃ボタンを押したか */
+					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+					{
+						/* クナイ(投げ)状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_THROW_KUNAI_THROW);
+					}
+					/* 構えを解除したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM))
+					{
+						/* 待機状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+					}
+					/* 回避を入力したか */
+					else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+					{
+						/* 回避状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
+					}
+					break;
+			}
+			break;
+
+		/* 攻撃状態 */
+		// 居合系
+		case PLAYER_STATE_DRAW_SWORD_WEAK:		// 居合(弱)
+		case PLAYER_STATE_DRAW_SWORD_STRONG:	// 居合(強)
+			/* 攻撃処理(テスト) */
+			Player_Attack();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+
+		// クナイ系
+		case PLAYER_STATE_THROW_KUNAI_THROW:	// クナイ(投げ)
+			/* 攻撃処理(テスト) */
+			Player_Attack();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+
+		/* 回避状態 */
+		case PLAYER_STATE_DODGE:				// 回避
+			/* 移動処理 */
+			Player_Move();
+
+			/* 待機状態に戻す(仮) */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+			break;
+	}
 }
 
 // 描写
@@ -66,8 +170,6 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
-
 
 	/* テスト用描写 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
@@ -115,10 +217,8 @@ void CharacterPlayer::Draw()
 		DrawFormatString(500, 16 * 8, GetColor(255, 255, 255), "RIGHT");
 	}
 
-	/*VECTOR vecMove = this->InputList->vecGetGameInputMove();
-	DrawFormatString(500, 16 * 9, GetColor(255, 255, 255), "X:%f, Z:%f", vecMove.x, vecMove.z);*/
 
-
+	XINPUT_STATE stXInputState;
 	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
 
 	DrawFormatString(500, 16 * 10, GetColor(255, 255, 255), "左トリガ : %u", stXInputState.LeftTrigger);
@@ -126,15 +226,6 @@ void CharacterPlayer::Draw()
 
 	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "移動速度 : %f", fSpeed);
-	DrawFormatString(500, 16 * 15, GetColor(255, 255, 255), "位置 x: %f y:%f z::%f",this -> vecPosition.x, this->vecPosition.y, this->vecPosition.z);
-	VECTOR vecMove = this->PlayerStatusList->vecGetPlayerMoveVector();
-	DrawFormatString(500, 16 * 17, GetColor(255, 255, 255), " 移動 x: %f y:%f z::%f", this->PlayerStatusList->vecGetPlayerMoveVector().x, this->PlayerStatusList->vecGetPlayerMoveVector().y, this->PlayerStatusList->vecGetPlayerMoveVector().z);
-	DrawFormatString(500, 16 * 20, GetColor(255, 255, 255), "ジャンプ : %d", this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP));
-	DrawSphere3D(this->PlayerStatusList->stPlayerAttackCollisionSqhere.vecSqhere, this->PlayerStatusList->stPlayerAttackCollisionSqhere.fSqhereRadius, 32,GetColor(255, 255, 255), GetColor(255, 255, 255), FALSE);
-	
-	DrawFormatString(500, 16 * 22, GetColor(255, 255, 255), "敵HP : %d", this->PlayerStatusList->iEnemyHP);
-	DrawFormatString(500, 16 * 24, GetColor(255, 255, 255), "回避時間 : %f", this->PlayerStatusList->fGetPlayerDodgeTime());
-	
 	
 }
 
@@ -143,169 +234,83 @@ void CharacterPlayer::Player_Move()
 {
 	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
 	/* プレイヤーの移動処理 */
-	// キャラ移動(カメラ設定に合わせて)
-
-		// カメラの向いている角度を取得(仮)
-	VECTOR stVecCameraPosition = this->PlayerStatusList->vecGetCameraPosition();
-	VECTOR stVecCameraTarget = this->PlayerStatusList->vecGetCameraTarget();
-	VECTOR stVecCameraUp = this->PlayerStatusList->vecGetCameraUp();
-	this->PlayerStatusList->fGetCameraAngleX();
-	float sx = stVecCameraPosition.x - stVecCameraTarget.x;
-	float sz = stVecCameraPosition.z - stVecCameraTarget.z;
-	float camrad = atan2(sz, -sx);
-
-	VECTOR vecPlayerMove = { 0,0,0 }; //プレイヤーの移動ベクトル
-
-	//地上にいる場合の処理
-	if (this->PlayerStatusList->bGetPlayerJumpingFlag() == false) {
-
-		// アナログスティックの入力を正規化して移動方向を計算
-		float fStickTiltMagnitude = sqrt(gstJoypadInputData.sAnalogStickX[INPUT_LEFT] * gstJoypadInputData.sAnalogStickX[INPUT_LEFT] + gstJoypadInputData.sAnalogStickY[INPUT_LEFT] * gstJoypadInputData.sAnalogStickY[INPUT_LEFT]);
-		// デッドゾーンを設定
-		
-		if (fStickTiltMagnitude > STICK_DEAD_ZONE)
-		{
-			//正規化した入力方向を取得
-			float fNormalizedInputX = gstJoypadInputData.sAnalogStickY[INPUT_LEFT] / fStickTiltMagnitude;
-			float fNormalizedInputY = gstJoypadInputData.sAnalogStickX[INPUT_LEFT] / fStickTiltMagnitude;
-
-			// カメラ方向を考慮して移動ベクトルを回転
-			float fInputAngle = atan2(fNormalizedInputY, fNormalizedInputX);
-			float fPlayerMoveAngle = fInputAngle + camrad;
-
-			// 回避後フラグがtrueなら最大ダッシュ状態になる
-			if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
-			{
-				this->PlayerStatusList-> SetPlayerNowMoveSpeed(PLAER_DASH_MAX_SPEED);
-				
-			}
-			// スティックの倒し具合で速度を変化
-			else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH) {
-				//走り（通常）
-				this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAER_DASH_NOMAL_SPEED);
-				this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
-
-				//一定フレームがたったら走り（最大）へ
-				if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
-				{
-					this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAER_DASH_MAX_SPEED);
-				}
-			}
-			else
-			{
-				//歩き
-				this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
-				this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
-			}
-			//移動の方向と速度をベクトルに設定
-			vecPlayerMove.z = -cos(fPlayerMoveAngle) * this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-			vecPlayerMove.x = -sin(fPlayerMoveAngle) * this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-
-			//移動の角度を保存する（後の処理に使用）
-			this->PlayerStatusList->SetPlayerOldRadian(fPlayerMoveAngle);
-			this->PlayerStatusList->SetPlayerAngleX(fPlayerMoveAngle);
-		}
-		//スティックの傾きがデッドゾーン以下
-		else
-		{
-			//回避後フラグをリセット
-			this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
-	
-			// 移動入力がされていない場合
-			// 移動速度を0にする //
-			this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
-
-		}
-
-		
-
-	}
-	//空中にいる場合の処理
-	else
-	{
-
-		// アナログスティックの入力を正規化して移動方向を計算
-		float fStickTiltMagnitude = sqrt(stXInputState.ThumbLX * stXInputState.ThumbLX + stXInputState.ThumbLY * stXInputState.ThumbLY);
-
-		// デッドゾーンを設定
-		if (fStickTiltMagnitude > STICK_DEAD_ZONE)
-		{
-			//正規化した入力方向を取得
-			float fNormalizedX = stXInputState.ThumbLY / fStickTiltMagnitude;
-			float fNormalizedY = stXInputState.ThumbLX / fStickTiltMagnitude;
-
-			// カメラ方向を考慮して移動ベクトルを回転
-			float fInputAngle = atan2(fNormalizedY, fNormalizedX);
-			float fPlayerMoveAngle = fInputAngle + camrad;
-
-			//空中での移動速度を設定
-			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAER_DASH_MAX_SPEED);
-
-			//移動の方向と速度をベクトルに設定
-			vecPlayerMove.z = -cos(fPlayerMoveAngle) * this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-			vecPlayerMove.x = -sin(fPlayerMoveAngle) * this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-			//移動の角度を保存する（後の処理に使用）
-			this->PlayerStatusList->SetPlayerOldRadian(fPlayerMoveAngle);
-			this->PlayerStatusList->SetPlayerAngleX(fPlayerMoveAngle);
-		}
-	}
-	//移動のベクトルを保存する（後の処理に使用）
-	this->PlayerStatusList->SetPlayerOldVector(vecPlayerMove);
-	this->PlayerStatusList->SetPlayerMoveVector(vecPlayerMove);
-	this->vecPosition = VAdd(this->vecPosition, this->PlayerStatusList->vecGetPlayerMoveVector());
-	//}
-
-	/* 入力による移動量を取得 */
-	//VECTOR vecInput = this->InputList->vecGetGameInputMove();
+	// アナログスティックの入力の強さを取得
+	float fStickTiltMagnitude	= this->InputList->fGetGameInputMove();
+	VECTOR vecInput				= this->InputList->vecGetGameInputMoveDirection();
 
 	/* 移動入力がされているか確認 */
-	//if (vecInput.x != 0 || vecInput.z != 0)
-	//{
-	//	// 移動入力がされている場合
-	//	/* 現在の移動速度取得 */
-	//	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
+	if (vecInput.x != 0 || vecInput.z != 0)
+	{
+		// 移動入力がされている場合
+		/* 現在の移動速度取得 */
+		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
+		
+			
+		// 回避後フラグがtrueなら最大ダッシュ状態になる
+		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
+		{
+			fSpeed = PLAER_DASH_MAX_SPEED;
+		}
+			
+		// スティックの倒し具合で速度を変化
+		else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH) 
+		{
+			//走り（通常）
+			fSpeed = PLAER_DASH_NOMAL_SPEED;
+			//フレーム数をカウント
+			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
-	//	/* 加速度を適用 */
-	//	fSpeed += this->PlayerStatusList->fGetPlayerMoveAcceleration();
+			//一定フレームがたったら走り（最大）へ
+			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
+			{
+				fSpeed = PLAER_DASH_MAX_SPEED;
+			}
+		}
+		else
+		{
+			//歩き
+			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
+			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
+			fSpeed = PLAYER_WALK_MOVE_SPEED;
+		}
+		/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 
-	//	/* 最大速度を超えていないか確認 */
-	//	float fMaxSpeed = this->PlayerStatusList->fGetPlayerMaxMoveSpeed();
-	//	if (fSpeed > fMaxSpeed)
-	//	{
-	//		// 最大速度を超えている場合
-	//		/* 最大速度に設定 */
-	//		fSpeed = fMaxSpeed;
-	//	}
+		/* 現在速度を更新 */
+		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
 
-	//	/* 現在速度を更新 */
-	//	this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
 
-	//	/* カメラの水平方向の向きを移動用の向きに設定 */
-	//	float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+		/* 移動量を算出 */
+		VECTOR vecMove;
+		vecMove.x	= +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecMove.y	= 0.0f;
+		vecMove.z	= -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecMove		= VScale(vecMove, fSpeed);
 
-	//	/* 移動量を算出 */
-	//	VECTOR vecMove;
-	//	vecMove.x	= +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-	//	vecMove.y	= 0.0f;
-	//	vecMove.z	= -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-	//	vecMove		= VScale(vecMove, fSpeed);
+		/* 移動後の座標を算出 */
+		VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
 
-	//	/* 移動後の座標を算出 */
-	//	VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
+		/* 道中でオブジェクトに接触しているか判定 */
+		// 制作予定
 
-	//	/* 道中でオブジェクトに接触しているか判定 */
-	//	// 制作予定
-
-	//	/* プレイヤーの座標を移動させる */
-	//	this->vecPosition = vecNextPosition;
+		/* プレイヤーの座標を移動させる */
+		this->vecPosition = vecNextPosition;
 
 		/* プレイヤーの向きを移動方向に合わせる */
-		//float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-		//fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
-		//this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
-	//}
-	
+		float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+		fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
+		this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+	}
+	else
+	{
+		// 移動入力がされていない場合
+		/* 移動速度を0にする */
+		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
+		//回避後フラグをリセット
+		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
 
+	}
 	/* コリジョンを更新 */
 	CollisionUpdate();
 }
@@ -315,62 +320,119 @@ void CharacterPlayer::Player_Jump()
 {
 	/* プレイヤーのジャンプ処理 */
 
-	/* ジャンプ入力がされているか確認 */
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+	/* ジャンプ回数が最大数を超えていないか確認 */
+	int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
+	int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount();
+	if (iNowJumpCount < iMaxJumpCount)
 	{
-
-		// ジャンプ入力がされている場合
-		//ジャンプ
-		//連続ジャンプ回数の制限以内
-		if (this->PlayerStatusList->iGetPlayerJumpCount() <= PLAYER_JUMPING_IN_AIR_LIMIT)
+		/* ジャンプ入力がされているか確認 */
+		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
 		{
-			//ジャンプ速度リセット
-			this->PlayerStatusList->SetPlayerJumpSpeed(0);
-			//ジャンプの加速度を与える
-			this->PlayerStatusList->SetPlayerJumpSpeed(PlayerStatusList->fGetPlayerJumpSpeed() + ACCELERATION(PLAYER_JUMP_SPEED)) ;
+			// ジャンプ入力がされている場合
+			/* ジャンプ処理 */
+			// 仮で落下速度を-にする処理を行う
+			this->PlayerStatusList->SetPlayerNowFallSpeed(-50.0f);
+
+			/* ジャンプ回数を更新 */
+			this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
 			//ジャンプ中のフラグtrue
 			this->PlayerStatusList->SetPlayerJumpingFlag(true);
-			//連続ジャンプ回数を加算
-			this->PlayerStatusList->SetPlayerJumpCount(PlayerStatusList->iGetPlayerJumpCount()+1);
+			/* 空中(上昇)へ遷移 */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_JUMP_UP);
 		}
-
-	//	//ジャンプの移動ベクトルを位置ベクトルに反映
-		/*this->vecPosition = VAdd(this->vecPosition, vecMove);*/
-
-	//	// 仮で落下速度を-にする処理を行う
-	//this->PlayerStatusList->SetPlayerNowFallSpeed(-100.0f);
 	}
 
-	//ジャンプ中かつ回避中ではない
-	if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true && this->PlayerStatusList->bGetPlayerDodgingFlag() == false)
-	{
-		//ジャンプ速度に地上の影響を与える
-		this->PlayerStatusList->SetPlayerJumpSpeed(this->PlayerStatusList->fGetPlayerJumpSpeed() + ACCELERATION(GRAVITY_SREED * GRAVITY_BUFFER));
-		//移動していた方向へ向く
-		this->PlayerStatusList->SetPlayerMoveVector(VGet(this->PlayerStatusList->vecGetPlayerOldVector().x, 0 ,this->PlayerStatusList->vecGetPlayerOldVector().z));
-		
-	}
-	//ジャンプ速度をプレイヤー移動ベクトルにセット
-	this->PlayerStatusList->SetPlayerMoveVector(VGet(0, this->PlayerStatusList->fGetPlayerJumpSpeed(), 0));
-	this->vecPosition = VAdd(this->vecPosition, this->PlayerStatusList->vecGetPlayerMoveVector());
 	/* コリジョンを更新 */
 	CollisionUpdate();
+}
+
+// 回避
+void CharacterPlayer::Player_Dodg()
+{
+	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
+	/* 入力による移動量を取得 */
+	VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+	/* カメラの水平方向の向きを移動用の向きに設定 */
+	float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+	/* 移動量を算出 */
+	VECTOR vecMove;
+	vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+	vecMove.y = 0.0f;
+	vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+	
+	//回避フラグがたっておらず、（ジャンプ中であれば）回避回数制限以内の状態で、回避ボタンが押された
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true && this->PlayerStatusList->bGetPlayerDodgingFlag() == false && this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
+	{	
+		// 回避フラグをセット
+		this->PlayerStatusList->SetPlayerDodgingFlag(true);
+		// 回避開始時の時間をリセット
+		this->PlayerStatusList->SetPlayerNowDodgeFlame(0.0f);
+		//現在の移動方向へ回避
+		this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
+	
+		//回避状態の進行率をリセット
+		this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
+	}
+
+	//回避フラグが有効であれば回避処理を行う
+	if (this->PlayerStatusList->bGetPlayerDodgingFlag() == true)
+	{
+		//ジャンプ中であれば回避回数をカウント
+		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+		{
+			this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
+		}
+
+		// 時間経過を加算
+		this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
+
+		// 回避中（設定時間の間）
+		if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
+		{
+			//設定時間かけて回避移動を行う
+			// 回避中（設定時間の間）
+			vecMove = VScale(vecMove, PLAYER_DODGE_SPEED);
+
+			/* 移動後の座標を算出 */
+			VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
+
+			/* 道中でオブジェクトに接触しているか判定 */
+			// 制作予定
+
+			/* プレイヤーの座標を移動させる */
+			this->vecPosition = vecNextPosition;
+		}
+		// 回避終了
+		else
+		{
+			this->PlayerStatusList->SetPlayerDodgingFlag(false);
+			this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
+		}
+	}
+
+	/* プレイヤーの向きを移動方向に合わせる */
+	float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+	fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
+	this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 }
 
 // 重力
 void CharacterPlayer::Player_Gravity()
 {
 	/* プレイヤーの重力処理 */
+	// ※プレイヤーのY方向への移動処理をまとめて行う
 
 	/* 落下量取得 */
 	float fFallSpeed	=	this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
 	fFallSpeed			+=	this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
-	
+
 	/* 重力による移動後の座標を取得 */
 	VECTOR vecNextPosition	=	this->vecPosition;
-	//vecNextPosition.y		=	this->PlayerStatusList->vecGetPlayerMoveVector().y;
-	//vecNextPosition.y = vecNextPosition.y + this->PlayerStatusList->vecGetPlayerMoveVector().y;
-	vecNextPosition.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();
+	vecNextPosition.y		-=	this->PlayerStatusList->fGetPlayerNowFallSpeed();
+
 	/* 主人公の上部分の当たり判定から下方向へ向けた線分を作成 */
 	COLLISION_LINE stCollision;
 	stCollision.vecLineStart	=	this->vecPosition;
@@ -385,6 +447,9 @@ void CharacterPlayer::Player_Gravity()
 
 	/* 着地する座標 */
 	float	fStandPosY		= vecNextPosition.y;	// 初期値を移動後の座標に設定
+
+	/* プレイヤーの着地フラグを無効にする */
+	this->PlayerStatusList->SetPlayerLanding(false);
 
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
@@ -404,15 +469,21 @@ void CharacterPlayer::Player_Gravity()
 
 				/* 落下の加速度を初期化する */
 				fFallSpeed = 0.f;
+
+				/* ジャンプ回数を初期化する */
+				this->PlayerStatusList->SetPlayerNowJumpCount(0);
+
+				/* プレイヤーの着地フラグを有効にする */
+				this->PlayerStatusList->SetPlayerLanding(true);
+
+				/* 2025.01.09 菊池雅道　移動処理追加 追加 */
+
 				//ジャンプ中のフラグをリセット
 				this->PlayerStatusList->SetPlayerJumpingFlag(false);
-				//連続ジャンプ回数をリセット
-				this->PlayerStatusList->SetPlayerJumpCount(0);
+
 				//ジャンプ中の回避回数をリセット
 				this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
-
-				//ジャンプ速度リセット
-				this->PlayerStatusList->SetPlayerJumpSpeed(0);
+				/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 			}
 		}
 	}
@@ -426,82 +497,16 @@ void CharacterPlayer::Player_Gravity()
 	/* 落下速度を更新 */
 	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
 
+	/* 落下速度が+であるなら空中(下降)に遷移 */
+	if (fFallSpeed < 0)
+	{
+		// 落下速度が+である場合
+		/* 空中(下降)に遷移 */
+		this->PlayerStatusList->SetPlayerState(PLAYER_STATE_JUMP_DOWN);
+	}
+
 	/* コリジョンを更新 */
 	CollisionUpdate();
-}
-
-// 回避
-void CharacterPlayer::Player_Dodg()
-{
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true && this->PlayerStatusList->bGetPlayerDodgingFlag() == false && this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount()< PLAYER_DODGE_IN_AIR_LIMIT)
-	{
-		//回避
-
-		// 回避フラグをセット
-		this->PlayerStatusList->SetPlayerDodgingFlag(true);
-		// 回避開始時の時間をリセット
-		this->PlayerStatusList->SetPlayerDodgeTime(0.0f);
-		//現在の移動方向へ回避
-		this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(VGet(this->PlayerStatusList->vecGetPlayerMoveVector().x,0, this->PlayerStatusList->vecGetPlayerMoveVector().z)));
-		//回避速度設定
-		this->PlayerStatusList->SetPlayerDodgeSpeed(PLAYER_DODGE_SPEED);
-		//回避状態の進行率をリセット
-		this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
-	}
-
-	//回避フラグが有効であれば回避処理を行う
-	if (this->PlayerStatusList->bGetPlayerDodgingFlag() == true)
-	{
-		//ジャンプ中であれば回避回数をカウント
-		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
-		{
-			this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
-		}
-
-		// 時間経過を加算
-		this->PlayerStatusList->SetPlayerDodgeTime(this->PlayerStatusList->fGetPlayerDodgeTime() + SECONDS_PER_FRAME);
-
-		// 回避中（設定時間の間）
-		if (this->PlayerStatusList->fGetPlayerDodgeTime() <= PLAYER_DODGE_TIME)
-		{
-			//設定時間かけて回避移動を行う
-		// 回避中（設定時間の間）
-			VECTOR vecPlayerDodgeMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (PLAYER_DODGE_TIME - this->PlayerStatusList->fGetPlayerDodgeTime()));
-			this->PlayerStatusList->SetPlayerMoveVector(vecPlayerDodgeMove);		
-		}
-		// 回避終了
-		else
-		{
-			this->PlayerStatusList->SetPlayerDodgingFlag(false);
-			this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
-
-		}
-		this->vecPosition = VAdd(this->vecPosition, this->PlayerStatusList->vecGetPlayerMoveVector());
-	}
-}
-
-void CharacterPlayer::Player_Attack()
-{
-	/* プレイヤーの攻撃処理 */
-
-	/* 攻撃入力がされているか確認 */
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
-	{
-		this->PlayerStatusList->stPlayerAttackCollisionSqhere.vecSqhere = this->vecPosition;
-		// 攻撃入力がされている場合
-		// 攻撃処理を行う
-		auto& PlatformList = ObjectList->GetEnemyList();
-
-		for (auto* platform : PlatformList)
-		{
-			if (platform->HitCheck(this->PlayerStatusList->stPlayerAttackCollisionSqhere))
-			{
-				platform->SetNowHP(platform->iGetNowHP() -1);
-			}
-			this->PlayerStatusList->iEnemyHP = platform->iGetNowHP();
-
-		}
-	}
 }
 
 // コリジョン更新
@@ -517,4 +522,63 @@ void CharacterPlayer::CollisionUpdate()
 
 	/* コリジョンを設定 */
 	this->SetCollision_Capsule(stCapsule);
+}
+
+// 発光描写
+void CharacterPlayer::BloomDraw()
+{
+	/* 元の色を保存 */
+	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
+	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
+	std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
+
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
+		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
+		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
+		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
+	}
+
+	/* すべてのフレームを黒色で描写(仮) */
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+		MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+	}
+
+	/* モデル描写 */
+	MV1DrawModel(this->iModelHandle);
+
+	/* 元の色に戻す */
+	for (int i = 0; i < iBackUpFrames; i++)
+	{
+		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
+		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
+		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
+		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
+	}
+}
+
+// プレイヤー攻撃(仮)
+void CharacterPlayer::Player_Attack()
+{
+	/* テスト用攻撃処理 */
+
+	/* 攻撃が入力されているか確認 */
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
+	{
+		EffectBase* Effect_Test = new TestEffect();
+		Effect_Test->Effect_Load("FX_e_bullet");
+		Effect_Test->SetPosition(VAdd(this->vecPosition, VGet(0.f, 10.f, 0.f)));
+
+		dynamic_cast<TestEffect*>(Effect_Test)->Initialization();
+
+		
+		ObjectList->SetEffect(Effect_Test);
+	}
 }

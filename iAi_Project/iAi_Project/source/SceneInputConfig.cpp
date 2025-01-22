@@ -7,17 +7,20 @@
 // コンストラクタ
 SceneInputConfig::SceneInputConfig() : SceneBase("Option - InputConfig", 1, false)
 {
-	/* 非同期読み込みを有効化する */
-	SetUseASyncLoadFlag(true);
 
-	/* 非同期読み込みを無効化する */
-	SetUseASyncLoadFlag(false);
 }
 
 // デストラクタ
 SceneInputConfig::~SceneInputConfig()
 {
 
+}
+
+// 初期化
+void SceneInputConfig::Initialization()
+{
+	/* SceneBaseの初期化を実施(リソース競合対策) */
+	SceneBase::Initialization();
 }
 
 // 計算
@@ -30,15 +33,6 @@ void SceneInputConfig::Process()
 		this->bDeleteFlg = true;
 		return;
 	}
-
-	///* いずれかのボタンが入力されたらシーンを削除 */
-	//// 仮作成
-	//if (gstInputData_Interaction.igRel != 0)
-	//{
-	//	// このシーンの削除フラグを有効にする
-	//	this->bDeleteFlg = true;
-	//	return;
-	//}
 }
 
 // 描画
@@ -46,3 +40,4 @@ void SceneInputConfig::Draw()
 {
 
 }
+

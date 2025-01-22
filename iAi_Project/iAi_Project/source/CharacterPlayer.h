@@ -9,26 +9,6 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
 
-//ゲーム全般の設定に関する設定値
-namespace GAME_SETTING
-{
-	const float STICK_DEAD_ZONE = 100; //スティック入力のデッドゾーン（範囲：０～１０００）
-	const int GAME_FRAMES_PER_SECOND = 60; //ゲームの設定FPS
-	
-}
-
-using namespace GAME_SETTING;
-
-// 計算用マクロ
-//#define	PI	(3.1415926535897932386f)
-//#define	DEG2RAD(x)			( ((x) / 180.0f ) * PI )
-//#define	RAD2DEG(x)			( ((x) * 180.0f ) / PI )
-//#define	ACCELERATION(x)	( (x) / GAME_FRAMES_PER_SECOND * GAME_FRAMES_PER_SECOND ) //加速度計算マクロ
-
-
-
-
-
 /* プレイヤークラスの宣言 */
 
 // プレイヤークラス
@@ -38,16 +18,16 @@ class CharacterPlayer : public CharacterBase
 		CharacterPlayer();				// コンストラクタ
 		virtual ~CharacterPlayer() {};	// デストラクタ
 
-		virtual void	Update();	// 更新
-		virtual void	Draw();		// 描写
+		virtual void	Initialization()	override;		// 初期化
+		virtual void	Update()			override;		// 更新
+		virtual void	Draw()				override;		// 描写
+		virtual void	BloomDraw()			override;		// 発光描写
 
 	private:
 	protected:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Input*	InputList;	// 入力管理
-		XINPUT_STATE stXInputState; //ジョイパッドの入力情報
-		//DataList_Input*			InputList;			// 入力管理
+		DataList_Input*			InputList;			// 入力管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
 
@@ -55,10 +35,9 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Gravity();		// 重力
 		void	Player_Move();			// 移動
 		void	Player_Jump();			// ジャンプ
+		void	Player_Attack();		// プレイヤー攻撃(仮)
 		/* 2025.01.10 菊池雅道 関数追加 開始 */
 		void	Player_Dodg();			// 回避
 		/* 2025.01.10 菊池雅道 関数追加 終了 */
-		void	Player_Attack();		// 攻撃
-
 		void	CollisionUpdate();		// コリジョン更新
 };

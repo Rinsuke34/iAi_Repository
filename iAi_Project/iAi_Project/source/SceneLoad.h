@@ -10,13 +10,16 @@
 class SceneLoad : public SceneBase
 {
 	public:
-		SceneLoad();							// コンストラクタ
-		virtual ~SceneLoad();				// デストラクタ
+		SceneLoad();			// コンストラクタ
+		virtual ~SceneLoad();	// デストラクタ
 
-		void	Process()	override;			// 計算
-		void	Draw()		override;			// 描画
+		void	Initialization()	override;	// 初期化
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
 
 	private:
+		/* テスト用 */
+		int iTestCount;
 
 	protected:
 };
