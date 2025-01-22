@@ -20,8 +20,11 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 	// エフェクト
 	this->pEffectList.clear();
 
-	// プラットフォーム
-	this->pPlatformList.clear();
+	// プラットフォーム(コリジョン)
+	this->pCollisionList.clear();
+
+	// プラットフォーム(描写オブジェクト)
+	this->pBackGroundList.clear();
 }
 
 // デストラクタ
@@ -84,10 +87,16 @@ void DataList_Object::InitializationBullet()
 // プラットフォーム初期化
 void DataList_Object::InitializationPlatform()
 {
-	/* 稼働プラットフォームの初期化を呼ぶ */
-	for (auto& pPlatform : this->pPlatformList)
+	/* プラットフォーム(コリジョン)の初期化 */
+	for (auto& pCollision : this->pCollisionList)
 	{
-		pPlatform->Initialization();
+		pCollision->Initialization();
+	}
+
+	/* プラットフォーム(描写モデル)の初期化 */
+	for (auto& pBackGround : this->pBackGroundList)
+	{
+		pBackGround->Initialization();
 	}
 }
 
@@ -187,10 +196,10 @@ void DataList_Object::DrawBullet()
 // プラットフォーム描写
 void DataList_Object::DrawPlatform()
 {
-	/* すべてのプラットフォームの描写を呼ぶ */
-	for (auto& pPlatform : this->pPlatformList)
+	/* プラットフォーム(描写モデル)の描写を呼ぶ */
+	for (auto& pBackGround : this->pBackGroundList)
 	{
-		pPlatform->Draw();
+		pBackGround->Draw();
 	}
 }
 
@@ -235,10 +244,10 @@ void DataList_Object::BloomDrawBullet()
 // プラットフォーム発光描写
 void DataList_Object::BloomDrawPlatform()
 {
-	/* すべてのプラットフォームの発光描写を呼ぶ */
-	for (auto& pPlatform : this->pPlatformList)
+	/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
+	for (auto& pBackGround : this->pBackGroundList)
 	{
-		pPlatform->BloomDraw();
+		pBackGround->BloomDraw();
 	}
 }
 
@@ -320,21 +329,39 @@ void DataList_Object::DeleteBullet()
 // 削除フラグが有効なプラットフォームを削除
 void DataList_Object::DeletePlatform()
 {
-	/* 削除フラグが有効なプラットフォームを削除 */
-	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](PlatformBase* pPlatform)
+	/* 削除フラグが有効なプラットフォーム(コリジョン)を削除 */
+	pCollisionList.erase(std::remove_if(pCollisionList.begin(), pCollisionList.end(), [](CollisionBase* pCollision)
+	{
+		/* 削除フラグが有効であるか確認　*/
+		if (pCollision->bGetDeleteFlg() == true)
 		{
-			/* 削除フラグが有効であるか確認　*/
-			if (pPlatform->bGetDeleteFlg() == true)
-			{
-				// 有効である場合
-				/* メモリ解放 */
-				delete pPlatform;
-				return true;
-			}
-			else
-			{
-				// 無効である場合
-				return false;
-			}
-		}), pPlatformList.end());
+			// 有効である場合
+			/* メモリ解放 */
+			delete pCollision;
+			return true;
+		}
+		else
+		{
+			// 無効である場合
+			return false;
+		}
+	}), pCollisionList.end());
+
+	/* 削除フラグが有効なプラットフォーム(描写モデル)を削除 */
+	pBackGroundList.erase(std::remove_if(pBackGroundList.begin(), pBackGroundList.end(), [](BackGroundBase* pBackGround)
+	{
+		/* 削除フラグが有効であるか確認　*/
+		if (pBackGround->bGetDeleteFlg() == true)
+		{
+			// 有効である場合
+			/* メモリ解放 */
+			delete pBackGround;
+			return true;
+		}
+		else
+		{
+			// 無効である場合
+			return false;
+		}
+	}), pBackGroundList.end());
 }

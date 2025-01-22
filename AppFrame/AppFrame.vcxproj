@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\ActorBase.cpp" />
+    <ClCompile Include="source\BackGroundBase.cpp" />
     <ClCompile Include="source\BulletBase.cpp" />
     <ClCompile Include="source\CharacterBase.cpp" />
+    <ClCompile Include="source\CollisionBase.cpp" />
     <ClCompile Include="source\DataListBase.cpp" />
     <ClCompile Include="source\DataListServer.cpp" />
     <ClCompile Include="source\EffectBase.cpp" />
@@ -40,8 +42,10 @@
     <ClInclude Include="source\ActorBase.h" />
     <ClInclude Include="source\AppFrame.h" />
     <ClInclude Include="source\AppConstantDefine.h" />
+    <ClInclude Include="source\BackGroundBase.h" />
     <ClInclude Include="source\BulletBase.h" />
     <ClInclude Include="source\CharacterBase.h" />
+    <ClInclude Include="source\CollisionBase.h" />
     <ClInclude Include="source\DataListBase.h" />
     <ClInclude Include="source\DataListServer.h" />
     <ClInclude Include="source\EffectBase.h" />

@@ -55,20 +55,22 @@ class DataList_Object : public DataListBase
 		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
 
 		// リスト
-		std::vector<EnemyBase*>&	GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
-		std::vector<EffectBase*>&	GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
-		std::vector<BulletBase*>&	GetBulletList()		{ return this->pBulletList; }		// 弾取得
-		std::vector<PlatformBase*>&	GetPlatformList()	{ return this->pPlatformList; }		// プラットフォーム取得
+		std::vector<EnemyBase*>&		GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
+		std::vector<EffectBase*>&		GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
+		std::vector<BulletBase*>&		GetBulletList()		{ return this->pBulletList; }		// 弾取得
+		std::vector<CollisionBase*>&	GetCollisionList()	{ return this->pCollisionList; }	// プラットフォーム(コリジョン)
+		std::vector<BackGroundBase*>&	GetBackGroundList() { return this->pBackGroundList; }	// プラットフォーム(描写モデル)
 		
 		/* データ設定 */
 		// 単独
 		void	SetCharacterPlayer(CharacterBase* pCharacter)	{ this->pCharacterPlayer = pCharacter; }	// プレイヤー設定
 
 		// リスト
-		void	SetEnemy(EnemyBase* pEnemy)				{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
-		void	SetEffect(EffectBase* pEffect)			{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
-		void	SetBullet(BulletBase* pBullet)			{ pBulletList.emplace_back(pBullet); };			// 弾追加
-		void	SetPlatform(PlatformBase* pPlatform)	{ pPlatformList.emplace_back(pPlatform); };		// プラットフォーム追加
+		void	SetEnemy(EnemyBase* pEnemy)					{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
+		void	SetEffect(EffectBase* pEffect)				{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
+		void	SetBullet(BulletBase* pBullet)				{ pBulletList.emplace_back(pBullet); };			// 弾追加
+		void	SetCollision(CollisionBase* pCollision)		{ pCollisionList.emplace_back(pCollision); };	// プラットフォーム(コリジョン)追加
+		void	SetBackGround(BackGroundBase* pBackGround)	{ pBackGroundList.emplace_back(pBackGround); };	// プラットフォーム(描写モデル)追加
 
 	private:
 		/* 管理するデータ */
@@ -79,7 +81,8 @@ class DataList_Object : public DataListBase
 		std::vector<EnemyBase*>			pEnemyList;			// エネミー
 		std::vector<EffectBase*>		pEffectList;		// エフェクト
 		std::vector<BulletBase*>		pBulletList;		// 弾
-		std::vector<PlatformBase*>		pPlatformList;		// プラットフォーム
+		std::vector<CollisionBase*>		pCollisionList;		// プラットフォーム(コリジョン)
+		std::vector<BackGroundBase*>	pBackGroundList;	// プラットフォーム(描写モデル)
 
 	protected:
 };

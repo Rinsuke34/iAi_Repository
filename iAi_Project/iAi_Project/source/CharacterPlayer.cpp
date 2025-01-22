@@ -445,7 +445,7 @@ void CharacterPlayer::Player_Gravity()
 
 	/* 以下、仮処理(近いオブジェクトのみ対象にするようにする) */
 	/* 足場を取得 */
-	auto& PlatformList = ObjectList->GetPlatformList();
+	auto& PlatformList = ObjectList->GetCollisionList();
 
 	/* 着地する座標 */
 	float	fStandPosY		= vecNextPosition.y;	// 初期値を移動後の座標に設定

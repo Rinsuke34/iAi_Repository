@@ -7,7 +7,6 @@
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
 #include "Enemy_Test.h"
-#include "PlatformLight_Test.h"
 #include "EnemyGoalObject.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
@@ -33,69 +32,126 @@ void SceneStage::LoadMapData()
 		nlohmann::json json;
 		file >> json;
 
-		/* プラットフォーム読み込み */
+		/* プラットフォーム(描写オブジェクト)読み込み */
 		{
-			/* Jsonファイル内のステージ名と同一の要素を読み込み */
-			nlohmann::json stage = json.at(MapName);
+			/* Jsonファイルから読み込み */
+			std::string Type	= "/Object";
+			std::string GetName = MapName + Type;
+			nlohmann::json stage = json.at(GetName);
 
 			for (auto& data : stage)
 			{
-				/* プラットフォーム追加 */
-				{
-					/* "オブジェクト管理"にプラットフォームを追加 */
-					PlatformBase* pPlatform = new PlatformBasic();
-					this->ObjectList->SetPlatform(pPlatform);
+				/* "オブジェクト管理"にプラットフォーム(描写モデル)を追加 */
+				BackGroundBase* pBackGround = new BackGroundBase();
+				this->ObjectList->SetBackGround(pBackGround);
 
-					/* モデル */
-					std::string	name;
-					data.at("objectName").get_to(name);
-					pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
+				/* モデル */
+				std::string	name;
+				data.at("objectName").get_to(name);
+				pBackGround->SetModelHandle(this->ModelList->iGetModel(name));
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
-					pPlatform->SetPosition(vecPos);
+				/* 座標 */
+				VECTOR vecPos;
+				// 読み込み
+				data.at("translate").at("x").get_to(vecPos.x);
+				data.at("translate").at("z").get_to(vecPos.y);
+				data.at("translate").at("y").get_to(vecPos.z);
+				// Z座標反転
+				vecPos.z *= -1;
+				// 設定
+				pBackGround->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
-					pPlatform->SetRotate(vecRot);
+				/* 回転量 */
+				VECTOR vecRot;
+				// 読み込み
+				data.at("rotate").at("x").get_to(vecRot.x);
+				data.at("rotate").at("z").get_to(vecRot.y);
+				data.at("rotate").at("y").get_to(vecRot.z);
+				// degree -> radian変換
+				vecRot.x = DEG2RAD(vecRot.x);
+				vecRot.y = DEG2RAD(vecRot.y);
+				vecRot.z = DEG2RAD(vecRot.z);
+				// X軸の回転方向を反転
+				// ※正しいか不明な処理
+				vecRot.x *= -1;
+				// 設定
+				pBackGround->SetRotate(vecRot);
 
-					/* 拡大率 */
-					VECTOR vecScale;
-					// 読み込み
-					data.at("scale").at("x").get_to(vecScale.x);
-					data.at("scale").at("z").get_to(vecScale.y);
-					data.at("scale").at("y").get_to(vecScale.z);
-					// 設定
-					pPlatform->SetScale(vecScale);
-				}
+				/* 拡大率 */
+				VECTOR vecScale;
+				// 読み込み
+				data.at("scale").at("x").get_to(vecScale.x);
+				data.at("scale").at("z").get_to(vecScale.y);
+				data.at("scale").at("y").get_to(vecScale.z);
+				// 設定
+				pBackGround->SetScale(vecScale);
+			}
+		}
+
+		/* プラットフォーム(コリジョン)読み込み */
+		{
+			/* Jsonファイルから読み込み */
+			std::string Type		= "/Collision";
+			std::string GetName		= MapName + Type;
+			nlohmann::json stage	= json.at(GetName);
+
+			for (auto& data : stage)
+			{
+				/* "オブジェクト管理"にプラットフォーム(コリジョン)を追加 */
+				CollisionBase* pCollision = new CollisionBase();
+				this->ObjectList->SetCollision(pCollision);
+
+				/* モデル */
+				std::string	name;
+				data.at("objectName").get_to(name);
+				pCollision->SetModelHandle(this->ModelList->iGetModel(name));
+
+				/* 座標 */
+				VECTOR vecPos;
+				// 読み込み
+				data.at("translate").at("x").get_to(vecPos.x);
+				data.at("translate").at("z").get_to(vecPos.y);
+				data.at("translate").at("y").get_to(vecPos.z);
+				// Z座標反転
+				vecPos.z *= -1;
+				// 設定
+				pCollision->SetPosition(vecPos);
+
+				/* 回転量 */
+				VECTOR vecRot;
+				// 読み込み
+				data.at("rotate").at("x").get_to(vecRot.x);
+				data.at("rotate").at("z").get_to(vecRot.y);
+				data.at("rotate").at("y").get_to(vecRot.z);
+				// degree -> radian変換
+				vecRot.x = DEG2RAD(vecRot.x);
+				vecRot.y = DEG2RAD(vecRot.y);
+				vecRot.z = DEG2RAD(vecRot.z);
+				// X軸の回転方向を反転
+				// ※正しいか不明な処理
+				vecRot.x *= -1;
+				// 設定
+				pCollision->SetRotate(vecRot);
+
+				/* 拡大率 */
+				VECTOR vecScale;
+				// 読み込み
+				data.at("scale").at("x").get_to(vecScale.x);
+				data.at("scale").at("z").get_to(vecScale.y);
+				data.at("scale").at("y").get_to(vecScale.z);
+				// 設定
+				pCollision->SetScale(vecScale);
 			}
 		}
 
 		/* マーカー読み込み */
 		{
-			/* Jsonファイル内のマーカーを読み込み */
-			nlohmann::json marker = json.at("Marker");
+			/* Jsonファイルから読み込み */
+			std::string Type = "/Marker";
+			std::string GetName = MapName + Type;
+			nlohmann::json stage = json.at(GetName);
 
-			for (auto& data : marker)
+			for (auto& data : stage)
 			{
 				/* マーカー名取得 */
 				std::string	name;
@@ -157,73 +213,6 @@ void SceneStage::LoadMapData()
 			ObjectList->SetEnemy(AddEnemy);
 
 			AddEnemy->SetPosition(VGet(100, 100, 100));
-		}
-
-		/* 光る足場追加(仮) */
-		{
-			PlatformLight_Test* pPlatform = new PlatformLight_Test();
-			this->ObjectList->SetPlatform(pPlatform);
-
-			/* モデル */
-			std::string	name = "Test/LightBlock/Test_Cube_1";
-			pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
-
-			/* 座標 */
-			VECTOR vecPos = VGet(500.f, 100.f, 0.f);
-			pPlatform->SetPosition(vecPos);
-
-			/* 回転量 */
-			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
-			pPlatform->SetRotate(vecRot);
-
-			/* 拡大率 */
-			VECTOR vecScale = VGet(10.f, 1.f, 10.f);
-			pPlatform->SetScale(vecScale);
-		}
-
-		/* 光る足場(2個目) */
-		{
-			PlatformLight_Test* pPlatform = new PlatformLight_Test();
-			this->ObjectList->SetPlatform(pPlatform);
-
-			/* モデル */
-			std::string	name = "Test/LightBlock/Test_Cube";
-			pPlatform->SetModelHandle(this->ModelList->iGetModel(name));
-
-			/* 座標 */
-			VECTOR vecPos = VGet(300.f, 200.f, 300.f);
-			pPlatform->SetPosition(vecPos);
-
-			/* 回転量 */
-			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
-			pPlatform->SetRotate(vecRot);
-
-			/* 拡大率 */
-			VECTOR vecScale = VGet(10.f, 1.f, 10.f);
-			pPlatform->SetScale(vecScale);
-		}
-
-		/* 町 */
-		{
-			PlatformBase* pPlatform = new PlatformBasic();
-			this->ObjectList->SetPlatform(pPlatform);
-
-			/* モデル */
-			pPlatform->SetModelHandle(this->ModelList->iGetModel("Test/City/city"));
-
-			/* 座標 */
-			VECTOR vecPos = VGet(0.f, 0.f, 0.f);
-			pPlatform->SetPosition(vecPos);
-
-			/* 回転量 */
-			VECTOR vecRot = VGet(0.f, 0.f, 0.f);
-			pPlatform->SetRotate(vecRot);
-
-			/* 拡大率 */
-			VECTOR vecScale = VGet(1.f, 1.f, 1.f);
-			pPlatform->SetScale(vecScale);
-			// 設定
-			pPlatform->SetScale(vecScale);
 		}
 	}
 

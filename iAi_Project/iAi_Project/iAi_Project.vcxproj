@@ -167,7 +167,6 @@
     <ClCompile Include="source\EffectTest.cpp" />
     <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
-    <ClCompile Include="source\PlatformLight_Test.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
@@ -192,7 +191,6 @@
     <ClInclude Include="source\GameStatusDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
-    <ClInclude Include="source\PlatformLight_Test.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
