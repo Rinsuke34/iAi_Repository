@@ -4,7 +4,7 @@
 #include "AppFrame.h"
 #include "PublicInclude.h"
 
-/* シーン「ホーム」の宣言 */
+/* シーン"ホーム画面"の宣言 */
 
 // シーン "ホーム画面"
 class SceneHome : public SceneBase

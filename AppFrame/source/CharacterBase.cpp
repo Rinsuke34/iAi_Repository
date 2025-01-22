@@ -47,11 +47,11 @@ void CharacterBase::BloomDraw()
 		{
 			// 発光フレームである場合
 			/* 対象フレームを赤色で描写(仮) */
-			// 設定はできているが描写されていない？
-			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(255.f, 255.f, 255.f, 1.f));
-			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(255.f, 255.f, 255.f, 1.f));
-			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(255.f, 255.f, 255.f, 1.f));
-			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(255.f, 255.f, 255.f, 1.f));
+			// 分かりやすいように赤色で描写中(実際はモデルの色をそのまま描写予定)
+			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
+			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
+			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
+			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
 		}
 		else
 		{
@@ -151,7 +151,7 @@ bool CharacterBase::HitCheck(int iModelHandle, int iFrameIndex)
 	return false;
 }
 
-// 発光の設定されたフレームを設定
+// 発光の設定されたフレームを取得
 void CharacterBase::UpdataLightFrame()
 {
 	/* モデルハンドルからフレーム数を取得 */
@@ -166,8 +166,28 @@ void CharacterBase::UpdataLightFrame()
 		/* 最初の5文字が"Light"であるか確認 */
 		if (strncmp(cFrameName, "Light", 5) == 0)
 		{
-			// 発光フレーム番号を取得
+			/* 発光フレーム番号を取得 */
 			this->aiLightFrameNo.push_back(i);
+
+			/* 発光フレームの親フレーム番号を取得 */
+			int parentFrame = MV1GetFrameParent(this->iModelHandle, i);
+
+			/* 発光フレームの親フレームが存在するならば */
+			while (parentFrame >= 0)
+			{
+				// 親フレームが存在する場合
+				/* 親フレーム番号を追加 */
+				this->aiLightFrameNo.push_back(parentFrame);
+
+				/* 親フレーム番号の親フレームを取得 */
+				parentFrame = MV1GetFrameParent(this->iModelHandle, parentFrame);
+			}
 		}
 	}
+
+	/* 発光フレーム番号を昇順にソート */
+	std::sort(this->aiLightFrameNo.begin(), this->aiLightFrameNo.end());
+
+	/* 重複している番号を削除 */
+	this->aiLightFrameNo.erase(std::unique(this->aiLightFrameNo.begin(), this->aiLightFrameNo.end()), this->aiLightFrameNo.end());
 }

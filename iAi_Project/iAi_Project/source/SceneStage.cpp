@@ -9,6 +9,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 {
 	/* データリスト作成 */
 	{
+		/* データリストサーバーに"プレイヤー状態"を追加 */
+		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+
 		/* データリストサーバーに"オブジェクト管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_Object());
 	}
@@ -23,9 +26,10 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 		/* "3Dモデル管理"を取得 */
 		this->ModelList			= dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
-	}
 
-	/* テスト用処理 終了 */
+		/* "ゲーム状態管理"を取得 */
+		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+	}
 
 	/* マップハンドル作成 */
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
@@ -42,6 +46,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 SceneStage::~SceneStage()
 {
 	/* データリスト削除 */
+	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
 
 	/* マップハンドル削除 */
@@ -119,26 +124,29 @@ void SceneStage::Draw()
 	/* ライトマップ作成 */
 	SetupLightMap();
 
-	/* カメラの設定 */
-	SetCamera();
+	/* オブジェクト描写 */
+	{
+		/* カメラの設定 */
+		SetCamera();
 
-	/* 描写に使用するシャドウマップの設定 */
-	SetUseShadowMap(0, this->iShadowMapScreenHandle);
+		/* 描写に使用するシャドウマップの設定 */
+		SetUseShadowMap(0, this->iShadowMapScreenHandle);
 
-	/* 半透明部分を描写しないよう設定 */
-	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
+		/* 半透明部分を描写しないよう設定 */
+		MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
 
-	/* 半透明部分のないすべてのオブジェクトを描写 */
-	ObjectList->DrawAll();
+		/* 半透明部分のないすべてのオブジェクトを描写 */
+		ObjectList->DrawAll();
 
-	/* 描写に使用するシャドウマップの設定を解除 */
-	SetUseShadowMap(this->iShadowMapScreenHandle, -1);
+		/* 描写に使用するシャドウマップの設定を解除 */
+		SetUseShadowMap(this->iShadowMapScreenHandle, -1);
 
-	/* 半透明部分のみ描写するように設定 */
-	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);
+		/* 半透明部分のみ描写するように設定 */
+		MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);
 
-	/* 半透明部分のすべてのオブジェクトを描写 */
-	ObjectList->DrawAll();
+		/* 半透明部分のすべてのオブジェクトを描写 */
+		ObjectList->DrawAll();
+	}
 
 	/* エフェクト描写 */
 	{
@@ -159,7 +167,7 @@ void SceneStage::Draw()
 		SetDrawMode(DX_DRAWMODE_BILINEAR);
 
 		/* 描画ブレンドモードを加算にする */
-		// ※ライトマップの黒色部分は描写されないようにする
+		// ※ライトマップの黒色部分を描写されないようにする
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
 		/* ライトマップ(ぼかし)を描写 */
@@ -210,6 +218,9 @@ void SceneStage::SetupLightMap()
 		/* ライトマップへの描写を開始 */
 		SetDrawScreen(this->iLightMapScreenHandle);
 
+		/* ライティングを無効化 */
+		SetUseLighting(FALSE);
+
 		/* 画面クリア */
 		ClearDrawScreen();
 
@@ -221,6 +232,9 @@ void SceneStage::SetupLightMap()
 
 		/* ライトマップへの描写を終了 */
 		SetDrawScreen(DX_SCREEN_BACK);
+
+		/* ライティングを有効化 */
+		SetUseLighting(TRUE);
 	}
 
 	/* ライトマップの縮小版を取得 */

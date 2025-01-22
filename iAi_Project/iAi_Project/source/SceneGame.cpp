@@ -7,9 +7,20 @@
 // コンストラクタ
 SceneGame::SceneGame() : SceneBase("Game", 0, false)
 {
-	/* 初期化 */
-	this->iNowStageNo	= 0;	// 現在のステージ番号
-	this->iEndStageNo	= 0;	// 最終ステージ番号
+	/* データリスト作成 */
+	{
+		/* データリストサーバーに"3Dモデル管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Model());
+
+		/* データリストサーバーに"ゲーム状態管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_GameStatus());
+	}
+
+	/* データリスト取得 */
+	{
+		/* "ゲーム状態管理"を取得 */
+		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+	}
 
 	/* ローディング情報の作成 */
 	//gstLoadingFutures.push_back(std::async(std::launch::async, &SceneGame::Initialization, this));
@@ -20,8 +31,8 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 SceneGame::~SceneGame()
 {
 	/* データリスト削除 */
-	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
+	gpDataListServer->DeleteDataList("DataList_GameStatus");	// ゲーム状態管理
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();
@@ -59,19 +70,19 @@ void SceneGame::Initialization()
 	{
 		// チュートリアルフラグが有効
 		/* 最初のステージ番号を"チュートリアル開始"に設定 */
-		this->iNowStageNo = STAGE_NO_TUTORIAL_START;
+		this->GameStatusList->SetNowStageNo(STAGE_NO_TUTORIAL_START);
 
 		/* 最終ステージ番号を"チュートリアル終了"に設定 */
-		this->iEndStageNo = STAGE_NO_TUTORIAL_END;
+		this->GameStatusList->SetEndStageNo(STAGE_NO_TUTORIAL_END);
 	}
 	else
 	{
 		// チュートリアルフラグが無効
 		/* 最初のステージ番号を"実践開始"に設定 */
-		this->iNowStageNo = STAGE_NO_PRACTICE_START;
+		this->GameStatusList->SetNowStageNo(STAGE_NO_PRACTICE_START);
 
 		/* 最終ステージ番号を"実践終了"に設定 */
-		this->iEndStageNo = STAGE_NO_PRACTICE_END;
+		this->GameStatusList->SetEndStageNo(STAGE_NO_PRACTICE_END);
 	}
 
 	/* "最初のステージ番号"のステージを読み込む */
@@ -82,19 +93,25 @@ void SceneGame::Initialization()
 	gpSceneServer->AddSceneReservation(pAddScene);
 
 	/* ステージの読み込みを開始 */
-	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData(this->iNowStageNo);
+	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
 }
 
 // 計算
 void SceneGame::Process()
 {
+	/* 現在のステージ番号を取得 */
+	int iNowStageNo = this->GameStatusList->iGetNowStageNo();
+
 	/* ステージ番号を+1する */
-	this->iNowStageNo++;
+	iNowStageNo++;
 
 	/* ステージ番号が最終ステージ番号を超えていないか確認 */
-	if (this->iNowStageNo <= this->iEndStageNo)
+	if (iNowStageNo <= this->GameStatusList->iGetEndStageNo())
 	{
 		// 超えていない(次のステージがある)場合
+		/* ステージ番号を設定 */
+		this->GameStatusList->SetNowStageNo(iNowStageNo);
+
 		/* ロードシーン追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);
 
@@ -105,13 +122,22 @@ void SceneGame::Process()
 		gpSceneServer->AddSceneReservation(pAddScene);
 
 		/* ステージの読み込みを開始 */
-		dynamic_cast<SceneStage*>(pAddScene)->LoadMapData(this->iNowStageNo);
+		dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
 	}
 	else
 	{
 		// 超えている(次のステージがない)場合
 		/* シーン削除フラグを有効にする */
 		this->bDeleteFlg = true;
+
+		/* ロード画面追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* 現行シーン削除フラグを有効化 */
+		gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+		/* シーン"ホーム画面"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneHome());
 	}
 }
 

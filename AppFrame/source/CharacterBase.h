@@ -1,7 +1,6 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 
 #pragma once
-#include <vector>
 #include "ActorBase.h"
 
 /* 名前空間省略 */
@@ -38,7 +37,7 @@ class CharacterBase : public ActorBase
 	private:
 	protected:
 		/* 関数 */
-		void	UpdataLightFrame();						// 発光の設定されたフレームを設定
+		void	UpdataLightFrame();						// 発光の設定されたフレームを取得
 
 		/* 変数 */
 		COLLISION_CAPSULE		stCollisionCapsule;		// コリジョン(カプセル)

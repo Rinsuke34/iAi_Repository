@@ -13,10 +13,10 @@
 /* ステージクラスの定義(マップ読み込み部分) */
 
 // マップデータのロード
-void SceneStage::LoadMapData(int iStageNo)
+void SceneStage::LoadMapData()
 {
-	// 引数
-	// iStageNo		<- ロードを行うステージ番号
+	/* 現在のステージ番号を取得 */
+	int iStageNo = this->GameStatusList->iGetNowStageNo();
 
 	/* マップ名を取得 */
 	std::string MapName = STAGE_NAME[iStageNo];

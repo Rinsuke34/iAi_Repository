@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
+    <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Model.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
@@ -182,11 +183,13 @@
   <ItemGroup>
     <ClInclude Include="source\CharacterPlayer.h" />
     <ClInclude Include="source\ConstantDefine.h" />
+    <ClInclude Include="source\DataList_GameStatus.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
     <ClInclude Include="source\EffectTest.h" />
     <ClInclude Include="source\EnemyGoalObject.h" />
     <ClInclude Include="source\Enemy_Test.h" />
+    <ClInclude Include="source\GameStatusDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
     <ClInclude Include="source\PlatformLight_Test.h" />

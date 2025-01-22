@@ -8,9 +8,7 @@
 PlatformBase::PlatformBase() : ObjectBase()
 {
 	/* 初期化 */
-	this->iModelHandle		= -1;	// モデルハンドル
-	this->iCollisionFrameNo	= -2;	// コリジョンの設定されたモデルのフレーム番号	
-	this->iLightFrameNo		= -2;	// 発光部分の設定されたモデルのフレーム番号
+	this->iModelHandle		= 0;	// モデルハンドル
 }
 
 // デストラクタ
@@ -32,17 +30,11 @@ void PlatformBase::Initialization()
 	/* モデル拡大 */
 	MV1SetScale(this->iModelHandle, this->vecScale);
 
-	/* コリジョンフレーム番号取得 */
-	this->SetCollisionFrameNo(MV1SearchFrame(this->iModelHandle, "Collision"));
+	/* コリジョンフレーム設定 */
+	UpdateCollisionFrame();
 
 	/* 発光フレーム番号取得 */
-	this->SetLightFrameNo(MV1SearchFrame(this->iModelHandle, "Light"));
-
-	/* コリジョン情報構築 */
-	MV1SetupCollInfo(this->iModelHandle, this->iGetCollisionFrameNo(), 4, 4, 4);
-
-	/* コリジョンフレームを非表示に設定 */
-	MV1SetFrameVisible(this->iModelHandle, this->iGetCollisionFrameNo(), FALSE);
+	UpdataLightFrame();
 }
 
 /* 接触判定(簡易) */
@@ -53,6 +45,14 @@ bool PlatformBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 	// stCapsule	: 判定するカプセルコリジョン
 	// 戻り値
 	// bool : 接触している(true) / 接触していない(false)
+
+	/* コリジョンフレームが存在しないか確認 */
+	if (this->iCollisionFrameNo < 0)
+	{
+		// 存在しない場合
+		/* 非接触として判定する */
+		return false;
+	}
 
 	// ポリゴンとの接触情報
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
@@ -70,7 +70,7 @@ bool PlatformBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 		// 接触している場合
 		return true;
 	}
-	// 接触していない場合
+	//接触していない場合
 	return false;
 }
 
@@ -81,6 +81,14 @@ bool PlatformBase::HitCheck(COLLISION_SQHERE	stSqhere)
 	// stCapsule	: 判定する球体コリジョン
 	// 戻り値
 	// bool			: 接触している(true) / 接触していない(false)
+
+	/* コリジョンフレームが存在しないか確認 */
+	if (this->iCollisionFrameNo < 0)
+	{
+		// 存在しない場合
+		/* 非接触として判定する */
+		return false;
+	}
 
 	// ポリゴンとの接触情報
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
@@ -109,6 +117,14 @@ bool PlatformBase::HitCheck(COLLISION_LINE		stLine)
 	// stLine	: 判定する線分コリジョン
 	// 戻り値
 	// bool		: 接触している(true) / 接触していない(false)
+
+	/* コリジョンフレームが存在しないか確認 */
+	if (this->iCollisionFrameNo < 0)
+	{
+		// 存在しない場合
+		/* 非接触として判定する */
+		return false;
+	}
 
 	// ポリゴンとの接触情報
 	MV1_COLL_RESULT_POLY stHitPolyDim;
@@ -142,6 +158,15 @@ MV1_COLL_RESULT_POLY PlatformBase::HitCheck_Line(COLLISION_LINE	stLine)
 
 	// ポリゴンとの接触情報
 	MV1_COLL_RESULT_POLY stHitPolyDim;
+
+	/* コリジョンフレームが存在しないか確認 */
+	if (this->iCollisionFrameNo < 0)
+	{
+		// 存在しない場合
+		/* 非接触として判定する */
+		stHitPolyDim.HitFlag = FALSE;
+		return stHitPolyDim;
+	}
 
 	/* プラットフォームのモデルと対象の線分コリジョンが接触しているかの情報取得 */
 	stHitPolyDim = MV1CollCheck_Line(
@@ -182,6 +207,7 @@ void PlatformBase::BloomDraw()
 
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
+		/* フレームの色を取得 */
 		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
 		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
 		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
@@ -191,8 +217,11 @@ void PlatformBase::BloomDraw()
 	/* ターゲット以外の色を黒に設定 */
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
-		if (i != this->iLightFrameNo)
+		/* 発光フレームではないか確認 */
+		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end() == false)
 		{
+			// 発光フレームではない場合
+			/* フレームの色を黒色に設定 */
 			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
 			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
 			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
@@ -206,9 +235,69 @@ void PlatformBase::BloomDraw()
 	/* 元の色に戻す */
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
+		/* フレームの色を元の色に設定 */
 		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
 		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
 		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
 		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
+	}
+}
+
+// 発光の設定されたフレームを取得
+void PlatformBase::UpdataLightFrame()
+{
+	/* モデルハンドルからフレーム数を取得 */
+	int iFrameNum = MV1GetFrameNum(this->iModelHandle);
+
+	/* 発光するフレーム番号を取得する */
+	for (int i = 0; i < iFrameNum; i++)
+	{
+		/* フレーム名取得 */
+		const char* cFrameName = MV1GetFrameName(this->iModelHandle, i);
+
+		/* 最初の5文字が"Light"であるか確認 */
+		if (strncmp(cFrameName, "Light", 5) == 0)
+		{
+			/* 発光フレーム番号を取得 */
+			this->aiLightFrameNo.push_back(i);
+
+			/* 発光フレームの親フレーム番号を取得 */
+			int parentFrame = MV1GetFrameParent(this->iModelHandle, i);
+
+			/* 発光フレームの親フレームが存在するならば */
+			while (parentFrame >= 0)
+			{
+				// 親フレームが存在する場合
+				/* 親フレーム番号を追加 */
+				this->aiLightFrameNo.push_back(parentFrame);
+
+				/* 親フレーム番号の親フレームを取得 */
+				parentFrame = MV1GetFrameParent(this->iModelHandle, parentFrame);
+			}
+		}
+	}
+
+	/* 発光フレーム番号を昇順にソート */
+	std::sort(this->aiLightFrameNo.begin(), this->aiLightFrameNo.end());
+
+	/* 重複している番号を削除 */
+	this->aiLightFrameNo.erase(std::unique(this->aiLightFrameNo.begin(), this->aiLightFrameNo.end()), this->aiLightFrameNo.end());
+}
+
+// コリジョンの設定されたフレームの設定
+void PlatformBase::UpdateCollisionFrame()
+{
+	/* コリジョンフレーム番号取得 */
+	this->iCollisionFrameNo = MV1SearchFrame(this->iModelHandle, "Collision");
+
+	/* コリジョンフレームの取得が成功したか確認 */
+	if(this->iCollisionFrameNo >= 0)
+	{
+		// 成功した(設定されていた)場合
+		/* コリジョンの設定されたフレームのコリジョン情報構築 */
+		MV1SetupCollInfo(this->iModelHandle, this->iCollisionFrameNo, 4, 4, 4);
+
+		/* コリジョンの設定されたフレームを描写しないように設定 */
+		MV1SetFrameVisible(this->iModelHandle, this->iCollisionFrameNo, FALSE);
 	}
 }

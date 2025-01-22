@@ -5,10 +5,10 @@
 #include "PublicInclude.h"
 
 /* データリスト */
-#include "DataList_PlayerStatus.h"
-#include "DataList_Model.h"
+#include "DataList_GameStatus.h"
 
-/* ステージ */
+/* シーン */
+#include "SceneHome.h"
 #include "SceneStage.h"
 
 /* シーン「ゲーム」の宣言 */
@@ -25,10 +25,8 @@ class SceneGame : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
-
-		/* 変数 */
-		int		iNowStageNo;	// 現在のステージ番号
-		int		iEndStageNo;	// 最終ステージ番号
+		/* 使用するデータリスト */
+		DataList_GameStatus*	GameStatusList;	// ゲーム状態管理
 
 	protected:
 };

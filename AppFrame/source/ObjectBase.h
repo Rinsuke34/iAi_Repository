@@ -2,6 +2,8 @@
 
 #pragma once
 #include <DxLib.h>
+#include <vector>
+#include <algorithm>
 #include "AppStructDefine.h"
 
 /* すべてのオブジェクトのベースとなるクラスの宣言 */
