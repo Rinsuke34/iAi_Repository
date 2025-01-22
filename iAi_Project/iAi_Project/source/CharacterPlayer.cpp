@@ -1,6 +1,5 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道　移動処理追加 */
-
 #include "CharacterPlayer.h"
 
 /* オブジェクト */
@@ -227,6 +226,7 @@ void CharacterPlayer::Draw()
 	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "移動速度 : %f", fSpeed);
 	
+	DrawFormatString(500, 16 * 14, GetColor(255, 255, 255), "回避フレーム数 : %d", this->PlayerStatusList->iGetPlayerNowDodgeFlame());
 }
 
 // 移動

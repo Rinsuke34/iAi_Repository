@@ -71,32 +71,3 @@ float PUBLIC_PROCESS::fAnalogStickNorm(short sMouseMove)
 	/* 入力値を±1の範囲へ正規化 */
 	return (float)sMouseMove / 32767.f;
 }
-
-/* 2025.01.21 菊池雅道 デッドゾーン処理追加 開始*/
-// 入力値がデッドゾーンの範囲内であるか確認
-bool PUBLIC_PROCESS::bCheckInputDeadzone(float fInput, float fDeadzone)
-{
-	// 引数
-	// fInput		<- 確認する値
-	// fDeadzone	<- デッドゾーン
-	// 戻り値
-	// bool			<- デッドゾーンの範囲内であるか(true:範囲内である、false:範囲内ではない)
-
-	bool bReturn = false;
-
-	/* デッドゾーンの範囲内であるか確認 */
-	if ((-fDeadzone < fInput) && (fInput < +fDeadzone))
-	{
-		// デッドゾーンの範囲内なら
-		/* trueを返す */
-		bReturn = true;
-	}
-	else
-	{
-		bReturn = false;
-	}
-
-	return bReturn;
-
-}
-/* 2025.01.21 菊池雅道 デッドゾーン処理追加 終了*/

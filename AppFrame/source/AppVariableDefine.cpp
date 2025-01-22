@@ -23,5 +23,9 @@ DataListServer* gpDataListServer	= nullptr;	// データリストサーバークラス
 int giNowFps	= 0;							// 現在のフレームレート
 
 /* デバッグ用描写管理フラグ */
-bool gbDrawSceneListFlg	= false;				// シーンリストの描写
-bool gbDrawDatalistFlg	= true;					// プレイヤーステータスの描写
+bool gbDrawSceneListFlg	= true;					// シーンリストの描写
+bool gbDrawDatalistFlg	= false;				// データリストの描写
+
+/* ローディング関連 */
+std::vector<std::future<void>>	gstLoadingFutures;			// ローディング処理のスレッド追跡用future
+bool							gbNowLoadingFlg	= false;	// ローディングフラグ

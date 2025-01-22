@@ -21,3 +21,10 @@ SceneBase::SceneBase(const std::string& cName, const int iLayer, const bool bLow
 	this->bDeleteFlg			= false;					// 削除フラグを無効化
 	this->bLowerLayerStopFlg	= bLowerLayerStopFlg;		// 下位レイヤーの計算停止フラグを設定
 }
+
+// 初期化
+void SceneBase::Initialization()
+{
+	/* 共有リソースのロックを取得 */
+	std::lock_guard<std::mutex> lock(mtx);
+}

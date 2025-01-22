@@ -15,8 +15,10 @@ class CharacterBase : public ActorBase
 		CharacterBase();	// コンストラクタ
 		virtual ~CharacterBase() {};		// デストラクタ
 
-		virtual void	Update() {};		// 更新
-		virtual void	Draw() {};			// 描写
+		virtual void	Initialization()	override {};	// 初期化
+		virtual void	Update()			override {};	// 更新
+		virtual void	Draw()				override {};	// 描写
+		virtual void	BloomDraw()			override {};	// 発光描写
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)
@@ -25,10 +27,12 @@ class CharacterBase : public ActorBase
 		bool	HitCheck(int iModelHandle, int iFrameIndex);	// カプセル - モデル
 
 		COLLISION_CAPSULE	stGetCollision_Capsule()	{ return this->stCollisionCapsule; };		// コリジョン(カプセル)を取得
-		VECTOR				GetDirection()				{ return this->vecDirection; };				// 向きを取得
+		VECTOR				vecGetDirection()			{ return this->vecDirection; };				// 向きを取得
+		int					iGetInvincibilityTime()		{ return this->iInvincibilityTime; };		// 無敵時間を取得
 
 		void	SetCollision_Capsule(COLLISION_CAPSULE stCollisionCapsule)	{ this->stCollisionCapsule	= stCollisionCapsule; };	// コリジョン(カプセル)を設定
 		void	SetDirection(VECTOR vecDirection)							{ this->vecDirection		= vecDirection; };			// 向きを設定
+		void	SetInvincibilityTime(int iInvincibilityTime)				{ this->iInvincibilityTime	= iInvincibilityTime; };	// 無敵時間を設定
 
 	private:
 	protected:
@@ -36,5 +40,6 @@ class CharacterBase : public ActorBase
 
 		/* 変数 */
 		COLLISION_CAPSULE		stCollisionCapsule;		// コリジョン(カプセル)
-		VECTOR vecDirection;							// 向き
+		VECTOR					vecDirection;			// 向き
+		int						iInvincibilityTime;		// 無敵時間
 };

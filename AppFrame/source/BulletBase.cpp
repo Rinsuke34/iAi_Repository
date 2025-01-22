@@ -8,8 +8,9 @@
 BulletBase::BulletBase() : ActorBase()
 {
 	/* 初期化 */
-	this->stCollisionSqhere = {};	// コリジョン(球体)
-	this->vecMoveDirection	= {};	// 移動方向
+	this->stCollisionSqhere	= {};	// コリジョン(球体)
+	this->vecDirection		= {};	// 向き
+	this->fMoveSpeed		= 0;	// 移動速度
 }
 
 /* 接触判定(簡易) */

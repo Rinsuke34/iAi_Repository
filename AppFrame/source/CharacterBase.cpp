@@ -11,6 +11,7 @@ CharacterBase::CharacterBase() : ActorBase()
 	/* 初期化 */
 	this->stCollisionCapsule	= {};	// コリジョン(カプセル)
 	this->vecDirection			= {};	// 向き
+	this->iInvincibilityTime	= {};	// 無敵時間
 }
 
 /* 接触判定(簡易) */

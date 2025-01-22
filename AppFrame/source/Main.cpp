@@ -17,7 +17,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Main::DxLibInit();
 
 	if (DxLib_Init() == -1)
-	{	// エラーが起きたら直ちに終了
+	{
+		// エラーが起きたら直ちに終了
 		return -1;
 	}
 
@@ -72,55 +73,58 @@ void Main::DxLibInit()
 	/* 画面の解像度を横1920×縦1080、1ドットあたり32ビットに指定する */
 	SetGraphMode(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, 32);
 
-	// ウィンドウモードに指定する
+	/* ウィンドウモードに指定する */
 	ChangeWindowMode(true);
 
-	// ウィンドウが非アクティブでもプログラムを実行させる
+	/* ウィンドウが非アクティブでもプログラムを実行させる */
 	SetAlwaysRunFlag(true);
 }
 
 // メインプログラム初期化
 void Main::MainInit()
 {
-	// 描画先画面を裏画面にセット
+	/* 描画先画面を裏画面にセット */
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// FPSを固定するクラスを追加
+	/* FPSを固定するクラスを追加 */
 	gpFps = new Fps();
 
-	// プレイヤー入力を取得するクラスを追加
+	/* プレイヤー入力を取得するクラスを追加 */
 	gpPlayerInput = new PlayerInput();
 
-	// シーンサーバーを作成
+	/* シーンサーバーを作成 */
 	gpSceneServer = new SceneServer();
 
-	// データリストサーバーを作成
+	/* データリストサーバーを作成 */
 	gpDataListServer = new DataListServer();
 
-	// シーンを初期状態に設定
+	/* シーンを初期状態に設定 */
 	// ※共通のAppFlameを使用するため各プログラムに応じたシーンに設定する
 	SCENE_SET::SetFastScene();
 
-	// プロジェクト初期化処理
+	/* Z深度設定 */
+	SetZBufferBitDepth(SCREEN_Z_BUFFER_BIT_DEPTH);
+
+	/* プロジェクト初期化処理 */
 	PROJECT_INIT::Init();
 }
 
 // 終了処理
 void Main::MainEnd()
 {
-	// プレイヤー入力を取得するクラスを削除する
+	/* プレイヤー入力を取得するクラスを削除する */
 	delete gpPlayerInput;
 
-	// FPSを固定するクラスを削除する
+	/* FPSを固定するクラスを削除する */
 	delete gpFps;
 
-	// シーンサーバーを削除する
+	/* シーンサーバーを削除する */
 	delete gpSceneServer;
 
-	// データリストサーバーを削除する
+	/* データリストサーバーを削除する */
 	delete gpDataListServer;
 
-	// DXライブラリの使用を終了する
+	/* DXライブラリの使用を終了する */
 	DxLib_End();
 }
 

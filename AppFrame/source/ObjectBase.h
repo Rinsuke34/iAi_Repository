@@ -13,7 +13,8 @@ class ObjectBase
 		ObjectBase();					// コンストラクタ
 		virtual ~ObjectBase() {};		// デストラクタ
 
-		virtual void	Update() {};	// 更新
+		virtual void	Initialization()	{};		// 初期化
+		virtual void	Update()			{};		// 更新
 
 		bool	bGetDeleteFlg()		{ return this->bDeleteFlg; };		// 削除フラグを取得
 		VECTOR	vecGetPosition()	{ return this->vecPosition; };		// 座標を取得
