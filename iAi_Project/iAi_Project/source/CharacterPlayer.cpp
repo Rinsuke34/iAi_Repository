@@ -1,12 +1,14 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道　移動処理追加 */
+/* 2025.01.22 菊池雅道　攻撃処理追加 */
 #include "CharacterPlayer.h"
 
 /* オブジェクト */
 #include "EffectTest.h"
 
 /* プレイヤークラスの定義 */
-
+VECTOR vecTest;
+int iFlamecount = 0;
 // コンストラクタ
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
@@ -18,6 +20,10 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 	/* 仮初期化処理開始 */
 	this->iModelHandle = MV1LoadModel("resource/ModelData/Test/Player/Karisotai_1217.mv1");
+	
+	this->stCollisionCapsule.vecCapsuleTop = VGet(0,0,0);
+	this->stCollisionCapsule.vecCapsuleBottom = VGet(0, 0, 0);
+	this->stCollisionCapsule.fCapsuleRadius = 0.f;
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
@@ -34,7 +40,7 @@ void CharacterPlayer::Initialization()
 void CharacterPlayer::Update()
 {
 	/* プレイヤーの更新処理 */
-
+	
 	/* プレイヤーの状態に応じて処理を変更 */
 	int iInput = this->PlayerStatusList->iGetPlayerState();
 	switch (iInput)
@@ -58,10 +64,13 @@ void CharacterPlayer::Update()
 			/* 回避処理 */
 			Player_Dodg();
 
+			/* 攻撃処理 */
+			Player_Charge_Attack();
+
 			/* 入力取得 */
-			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+			if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK))
 			{
-				/* 居合(構え)状態へ遷移 */
+				/* 溜め居合(溜め)状態へ遷移 */
 				this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_CHARGE);
 			}
 			else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_AIM))
@@ -78,23 +87,28 @@ void CharacterPlayer::Update()
 			break;
 
 		/* 行動制限状態(一部行動に制約あり) */
-		case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
-		case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
+		case PLAYER_STATE_DRAW_SWORD_CHARGE:			// 溜め居合(溜め)
+		case PLAYER_STATE_DRAW_SWORD_CHARGE_ATTACKING:	// 溜め居合(攻撃)
+		case PLAYER_STATE_DRAW_SWORD_CHARGE_FINISH:		// 溜め居合(終了)
+		case PLAYER_STATE_THROW_KUNAI_AIM:				// クナイ(構え)
 			/* 重力処理 */
 			Player_Gravity();
 
 			/* 移動処理 */
 			Player_Move();
 
+			/* 攻撃処理 */
+			Player_Charge_Attack();
+
 			/* 入力取得 */
 			switch (iInput)
 			{
-				case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 居合(溜め)
+				case PLAYER_STATE_DRAW_SWORD_CHARGE:	// 溜め居合(溜め)
 					/* 攻撃ボタンを離したか */
 					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_ATTACK))
 					{
-						/* 居合(弱)状態に遷移 */
-						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_WEAK);
+						/* 溜め居合(攻撃)状態に遷移 */
+						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_CHARGE_ATTACKING);	
 					}
 					/* 回避を入力したか */
 					else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
@@ -102,6 +116,9 @@ void CharacterPlayer::Update()
 						/* 回避状態に遷移 */
 						this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DODGE);
 					}
+					break;
+				
+				case PLAYER_STATE_DRAW_SWORD_CHARGE_FINISH:	// 溜め居合(終了)
 					break;
 
 				case PLAYER_STATE_THROW_KUNAI_AIM:		// クナイ(構え)
@@ -216,7 +233,6 @@ void CharacterPlayer::Draw()
 		DrawFormatString(500, 16 * 8, GetColor(255, 255, 255), "RIGHT");
 	}
 
-
 	XINPUT_STATE stXInputState;
 	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
 
@@ -225,10 +241,14 @@ void CharacterPlayer::Draw()
 
 	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "移動速度 : %f", fSpeed);
-	
-	DrawFormatString(500, 16 * 14, GetColor(255, 255, 255), "回避フレーム数 : %d", this->PlayerStatusList->iGetPlayerNowDodgeFlame());
-}
 
+	DrawFormatString(500, 16 * 14, GetColor(255, 255, 255), "フレーム数 : %d", this->PlayerStatusList->iPlayerNowAttakChargeFlame);
+
+	DrawFormatString(500, 16 * 16, GetColor(255, 255, 255), "X : %f Y : %f Z : %f", vecTest.x, vecTest.y, vecTest.z);
+
+	DrawSphere3D(vecTest, 100.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
+
+}
 // 移動
 void CharacterPlayer::Player_Move()
 {
@@ -518,7 +538,7 @@ void CharacterPlayer::CollisionUpdate()
 	COLLISION_CAPSULE stCapsule;
 	stCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, 100, 0));
 	stCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, 0, 0));
-	stCapsule.fCapsuleRadius	= 50.0f;
+	stCapsule.fCapsuleRadius	= 100.0f;
 
 	/* コリジョンを設定 */
 	this->SetCollision_Capsule(stCapsule);
@@ -582,3 +602,65 @@ void CharacterPlayer::Player_Attack()
 		ObjectList->SetEffect(Effect_Test);
 	}
 }
+
+/* 2025.01.22 菊池雅道　攻撃処理追加 開始 */
+// プレイヤー溜め攻撃
+void CharacterPlayer::Player_Charge_Attack()
+{
+	/* 仮ターゲットを設定 */
+	VECTOR vecTarget = VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition());
+	vecTarget = VNorm(vecTarget);
+	vecTarget = VScale(vecTarget, 2000);
+	vecTarget = VAdd(this->vecPosition, vecTarget);	
+	
+	if (this->PlayerStatusList->iGetPlayerState() == PLAYER_STATE_DRAW_SWORD_CHARGE)
+	{
+		this->PlayerStatusList->iPlayerNowAttakChargeFlame += 2;
+
+		this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());	// プレイヤーの向きを設定
+
+		VECTOR vecMove;
+		vecMove = VSub(vecTarget, this->vecPosition);
+		vecMove = VNorm(vecMove);
+		vecMove = VScale(vecMove, this->PlayerStatusList->iPlayerNowAttakChargeFlame);
+		/* 移動後の座標を算出 */
+		VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
+		vecTarget = vecNextPosition;
+		vecTest = vecNextPosition;
+	}
+
+	if(this->PlayerStatusList->iGetPlayerState() == PLAYER_STATE_DRAW_SWORD_CHARGE_ATTACKING)
+	{
+		/* 現在の移動速度取得 */
+		VECTOR vecMove;
+		vecMove = VSub(vecTarget, this->vecPosition);
+		vecMove = VNorm(vecMove);
+		vecMove = VScale(vecMove, this->PlayerStatusList->iPlayerNowAttakChargeFlame);
+		/* 移動後の座標を算出 */
+		VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
+		vecTarget = vecNextPosition;
+		vecTest = vecNextPosition;
+		/* プレイヤーの座標を移動させる */
+		this->vecPosition = vecNextPosition;
+		COLLISION_SQHERE stCollisionSqhere;
+		stCollisionSqhere.vecSqhere = vecTarget;
+		stCollisionSqhere.fSqhereRadius = 100.0f;
+		/* コリジョンを更新 */
+		CollisionUpdate();
+		/* 溜め居合(終了)状態に遷移 */
+		if (this->HitCheck(stCollisionSqhere))
+		{
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATE_DRAW_SWORD_CHARGE_FINISH);
+		}
+	}
+	
+	if (this->PlayerStatusList->iGetPlayerState() == PLAYER_STATE_DRAW_SWORD_CHARGE_FINISH)
+	{
+		iFlamecount = 0;
+		this->PlayerStatusList->iPlayerNowAttakChargeFlame = 0;
+		this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
+	}
+	
+	
+}
+/* 2025.01.22 菊池雅道　攻撃処理追加 終了 */

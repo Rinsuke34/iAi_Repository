@@ -1,5 +1,6 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道 移動関連の定数追加 */
+/* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
 
 #pragma once
 #include <vector>
@@ -108,6 +109,13 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; };		// カメラの回転角度制限設定(上)
 		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; };		// カメラの回転角度制限設定(下)
 
+		/* 2025.01.22 菊池雅道 攻撃関連の変数追加開始 */
+		//攻撃
+		VECTOR vecPlayerChargeAttakPoint;	//プレイヤー溜め攻撃の目的地
+		VECTOR vecPlayerChargeAttakVector;	//プレイヤー溜め攻撃の方向
+		int iPlayerNowAttakChargeFlame;		//現在のプレイヤー溜め攻撃チャージフレーム数
+		/* 2025.01.22 菊池雅道 攻撃関連の変数追加終了 */
+
 	private:
 		/* プレイヤー状態関連 */
 		int		iPlayerState;				// プレイヤーの状態
@@ -119,37 +127,34 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* 2025.01.09 菊池雅道 移動関連の変数追加開始 */
 		//移動（歩き・走り等）
-		float fPlayerMoveSpeed; //プレイヤー現在の移動速度
-		VECTOR vecPlayerOldVector; //プレイヤーの移動時のベクトルを保存する（ジャンプ慣性等に使用）
-		float fPlayerOldRadian;  //プレイヤーの移動時の角度を保持する※単位はラジアン（方向転換時等に使用）
-		int iPlayerNormalDashFlameCount; //通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
+		float fPlayerMoveSpeed;				//プレイヤー現在の移動速度
+		VECTOR vecPlayerOldVector;			//プレイヤーの移動時のベクトルを保存する（ジャンプ慣性等に使用）
+		float fPlayerOldRadian;				//プレイヤーの移動時の角度を保持する※単位はラジアン（方向転換時等に使用）
+		int iPlayerNormalDashFlameCount;	//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
 
 		//ジャンプ
 		bool bPlayerJumpingFlag; //プレイヤーがジャンプ中かのフラグ
-		int iPlayerJumpCount; //プレイヤーの現在のジャンプ回数
+		int iPlayerJumpCount;	 //プレイヤーの現在のジャンプ回数
 
 		//回避
-		int iPlayerNowDodgeFlame; // プレイヤーの現在の回避フレーム数
-		bool bPlayerDodgingFlag; //プレイヤーが回避中かのフラグ
-		float fPlayerDodgeProgress; // プレイヤー回避モーション進行率 (範囲：0.0～1.0)		
-		VECTOR vecPlayerDodgeDirection; // プレイヤー回避方向
-		int iPlayerDodgeWhileJumpingCount; //プレイヤージャンプ中の回避回数
-		bool bPlayerAfterDodgeFlag;//プレイヤーの回避後フラグ
-
+		int iPlayerNowDodgeFlame;			// プレイヤーの現在の回避フレーム数
+		bool bPlayerDodgingFlag;			//プレイヤーが回避中かのフラグ
+		float fPlayerDodgeProgress;			// プレイヤー回避モーション進行率 (範囲：0.0～1.0)		
+		VECTOR vecPlayerDodgeDirection;		// プレイヤー回避方向
+		int iPlayerDodgeWhileJumpingCount;	//プレイヤージャンプ中の回避回数
+		bool bPlayerAfterDodgeFlag;			//プレイヤーの回避後フラグ
 		/* 2025.01.09 菊池雅道 移動関連の変数追加終了 */
-
+		
 		/* 能力値関連 */
 		float	fPlayerMoveAcceleration;	// プレイヤーの移動加速度
 		float	fPlayerMaxMoveSpeed;		// プレイヤーの最大移動速度
 		float	fPlayerFallAcceleration;	// プレイヤーの落下加速度
 		float	fPlayerMaxFallSpeed;		// プレイヤーの最大落下速度
 		int		iPlayerMaxJumpCount;		// プレイヤーのジャンプ回数(最大数)
-
 		/* 2025.01.09 菊池雅道 移動関連の変数追加開始 */
 		float fPlayerJumpSpeed; //プレイヤージャンプ速度
 		float fPlayerDodgeSpeed; //プレイヤー回避速度
 		/* 2025.01.09 菊池雅道 移動関連の変数追加終了 */
-
 		/* カメラ関連 */
 		int		iCameraMode;						// カメラモード
 		VECTOR	vecCameraUp;						// カメラの上方向
