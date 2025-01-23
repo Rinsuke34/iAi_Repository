@@ -169,6 +169,12 @@
     <Filter Include="ソース ファイル\データリスト\ゲーム状態管理">
       <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\バレット">
+      <UniqueIdentifier>{10bf6242-2663-4da7-9e4c-eba1e4648fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット">
+      <UniqueIdentifier>{e8a7f619-3dc4-4823-913f-dfa6988ff221}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -233,6 +239,12 @@
     </ClCompile>
     <ClCompile Include="source\DataList_GameStatus.cpp">
       <Filter>ソース ファイル\データリスト\ゲーム状態管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletPlayerMeleeWeak.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectPlayerMeleeWeak.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +325,12 @@
     </ClInclude>
     <ClInclude Include="source\GameStatusDefine.h">
       <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerMeleeWeak.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectPlayerMeleeWeak.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

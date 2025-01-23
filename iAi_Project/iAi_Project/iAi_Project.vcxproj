@@ -158,12 +158,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp" />
+    <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Model.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
+    <ClCompile Include="source\EffectPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\EffectTest.cpp" />
     <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
@@ -180,11 +182,13 @@
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />
     <ClInclude Include="source\ConstantDefine.h" />
     <ClInclude Include="source\DataList_GameStatus.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
+    <ClInclude Include="source\EffectPlayerMeleeWeak.h" />
     <ClInclude Include="source\EffectTest.h" />
     <ClInclude Include="source\EnemyGoalObject.h" />
     <ClInclude Include="source\Enemy_Test.h" />

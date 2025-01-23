@@ -9,7 +9,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 {
 	/* 初期化(仮) */
 	/* プレイヤー状態関連 */
-	this->iPlayerState				= PLAYER_STATE_IDLE;	// プレイヤーの状態
+	this->iPlayerState				= PLAYER_STATUS_FREE;	// プレイヤーの状態
+	this->iPlayerMotion				= PLAYER_MOTION_IDLE;	// プレイヤーのモーション
 	this->bPlayerLandingFlg			= false;				// プレイヤーが着地しているか
 	this->fPlayerNowMoveSpeed		= 0;					// プレイヤーの現在の移動速度
 	this->fPlayerAngleX				= 0;					// プレイヤーのX軸回転量(ラジアン)
