@@ -15,4 +15,6 @@ extern bool gbTutorialFlg;					// チュートリアルフラグ
 extern bool gbDrawShadowMapFlg;				// シャドウマップの描写
 extern bool gbDrawLightMapFlg;				// ライトマップの描写
 extern bool gbDrawLightMapDownScaleFlg;		// ライトマップ(縮小)の描写
-extern bool gpDrawLightMapGaussFlg;			// ライトマップ(ぼかし)のハンドル
+extern bool gbDrawLightMapGaussFlg;			// ライトマップ(ぼかし)のハンドル
+extern bool gbDrawCollisionFlg;				// コリジョン描写
+extern bool gbDrawDeleteBackGroundFlg;		// バックグランド非表示

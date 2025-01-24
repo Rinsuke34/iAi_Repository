@@ -16,9 +16,10 @@ class CharacterBase : public ActorBase
 		virtual ~CharacterBase() {};		// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
-		virtual void	Update()			override {};	// 更新
-		virtual void	Draw()				override {};	// 描写
+		virtual void	Update()			override	{};	// 更新
+		virtual void	Draw()				override	{};	// 描写
 		virtual void	BloomDraw()			override;		// 発光描写
+		virtual void	CollisionDraw();					// 当たり判定描写
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)

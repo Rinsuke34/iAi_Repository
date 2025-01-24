@@ -77,6 +77,14 @@ void CharacterBase::BloomDraw()
 	}
 }
 
+// 当たり判定描写
+void CharacterBase::CollisionDraw()
+{
+	/* 当たり判定を描写 */
+	int iColor	= GetColor(255, 0, 0);
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, iColor, iColor, FALSE);
+}
+
 /* 接触判定(簡易) */
 // カプセル - カプセル
 bool CharacterBase::HitCheck(COLLISION_CAPSULE	stCapsule)

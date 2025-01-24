@@ -20,6 +20,7 @@ class BulletBase : public ActorBase
 		virtual void	Update()			override	{};	// XV
 		virtual void	Draw()				override	{};	// •`Ê
 		virtual void	BloomDraw()			override	{};	// ”­Œõ•`Ê
+		virtual void	CollisionDraw();					// “–‚½‚è”»’è•`Ê
 
 		/* ÚG”»’è */
 		// ŠÈˆÕ“I‚ÈŒ‹‰Ê(ÚG‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©)

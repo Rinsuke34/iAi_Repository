@@ -14,4 +14,6 @@ bool gbTutorialFlg					= false;	// チュートリアルフラグ
 bool gbDrawShadowMapFlg				= true;		// シャドウマップの描写
 bool gbDrawLightMapFlg				= true;		// ライトマップの描写
 bool gbDrawLightMapDownScaleFlg		= true;		// ライトマップ(縮小)の描写
-bool gpDrawLightMapGaussFlg			= true;		// ライトマップ(ぼかし)のハンドル
+bool gbDrawLightMapGaussFlg			= true;		// ライトマップ(ぼかし)のハンドル
+bool gbDrawCollisionFlg				= true;		// 全オブジェクトのコリジョン描写
+bool gbDrawDeleteBackGroundFlg		= true;		// バックグランドオブジェクトの非表示

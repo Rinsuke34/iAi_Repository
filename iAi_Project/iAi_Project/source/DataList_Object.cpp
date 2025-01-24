@@ -171,6 +171,14 @@ void DataList_Object::DrawPlayer()
 {
 	/* プレイヤーの描写を呼ぶ */
 	this->pCharacterPlayer->Draw();
+
+	/* コリジョン描写フラグが有効であるか確認 */
+	if (gbDrawCollisionFlg == true)
+	{
+		// 有効である場合
+		/* コリジョンの描写 */
+		this->pCharacterPlayer->CollisionDraw();
+	}
 }
 
 // エネミー描写
@@ -180,6 +188,14 @@ void DataList_Object::DrawEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->Draw();
+
+		/* コリジョン描写フラグが有効であるか確認 */
+		if (gbDrawCollisionFlg == true)
+		{
+			// 有効である場合
+			/* コリジョンの描写 */
+			pEnemy->CollisionDraw();
+		}
 	}
 }
 
@@ -190,16 +206,40 @@ void DataList_Object::DrawBullet()
 	for (auto& pBullet : this->pBulletList)
 	{
 		pBullet->Draw();
+
+		/* コリジョン描写フラグが有効であるか確認 */
+		if (gbDrawCollisionFlg == true)
+		{
+			// 有効である場合
+			/* コリジョンの描写 */
+			pBullet->CollisionDraw();
+		}
 	}
 }
 
 // プラットフォーム描写
 void DataList_Object::DrawPlatform()
 {
-	/* プラットフォーム(描写モデル)の描写を呼ぶ */
-	for (auto& pBackGround : this->pBackGroundList)
+	/*　バックグランド非表示フラグが無効であるか確認 */
+	if (gbDrawDeleteBackGroundFlg == false)
 	{
-		pBackGround->Draw();
+		// 無効である場合
+		/* プラットフォーム(描写モデル)の描写を呼ぶ */
+		for (auto& pBackGround : this->pBackGroundList)
+		{
+			pBackGround->Draw();
+		}
+	}
+	
+	/* コリジョン描写フラグが有効であるか確認 */
+	if (gbDrawCollisionFlg == true)
+	{
+		// 有効である場合
+		/* コリジョンの描写 */
+		for (auto& pCollision : this->pCollisionList)
+		{
+			pCollision->CollisionDraw();
+		}
 	}
 }
 
@@ -244,10 +284,15 @@ void DataList_Object::BloomDrawBullet()
 // プラットフォーム発光描写
 void DataList_Object::BloomDrawPlatform()
 {
-	/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
-	for (auto& pBackGround : this->pBackGroundList)
+	/*　バックグランド非表示フラグが無効であるか確認 */
+	if (gbDrawDeleteBackGroundFlg == false)
 	{
-		pBackGround->BloomDraw();
+		// 無効である場合
+		/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
+		for (auto& pBackGround : this->pBackGroundList)
+		{
+			pBackGround->BloomDraw();
+		}
 	}
 }
 

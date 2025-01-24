@@ -20,6 +20,16 @@ void CollisionBase::Initialization()
 	UpdateCollisionFrame();
 }
 
+// 当たり判定描写
+void CollisionBase::CollisionDraw()
+{
+	/* コリジョンの設定されたフレームを描写するよう設定 */
+	MV1SetFrameVisible(this->iModelHandle, this->iCollisionFrameNo, TRUE);
+
+	/* モデル描写 */
+	MV1DrawModel(this->iModelHandle);
+}
+
 /* 接触判定(簡易) */
 // モデル - カプセル
 bool CollisionBase::HitCheck(COLLISION_CAPSULE	stCapsule)

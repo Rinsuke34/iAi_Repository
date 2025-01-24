@@ -344,7 +344,7 @@ void SceneStage::DrawDebug()
 	}
 
 	/* ライトマップ(ぼかし)描写 */
-	if (gpDrawLightMapGaussFlg == true)
+	if (gbDrawLightMapGaussFlg == true)
 	{
 		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
 		iDrawCount++;

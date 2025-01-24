@@ -13,6 +13,14 @@ BulletBase::BulletBase() : ActorBase()
 	this->fMoveSpeed		= 0;	// 移動速度
 }
 
+// 当たり判定描写
+void BulletBase::CollisionDraw()
+{
+	/* 当たり判定を描写 */
+	int Color = GetColor(255, 0, 0);
+	DrawSphere3D(stCollisionSqhere.vecSqhere, stCollisionSqhere.fSqhereRadius, 16, Color, Color, FALSE);
+}
+
 /* 接触判定(簡易) */
 // 球体 - カプセル
 bool BulletBase::HitCheck(COLLISION_CAPSULE	stCapsule)

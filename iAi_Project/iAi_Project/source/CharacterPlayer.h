@@ -24,6 +24,7 @@ class CharacterPlayer : public CharacterBase
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
 		virtual void	Draw()				override;		// 描写
+		virtual void	CollisionDraw()		override;		// 当たり判定描写
 
 	private:
 	protected:
@@ -53,5 +54,10 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Projectile();			// 遠距離攻撃
 
 		/* 変数 */
-		VECTOR	vecMove;		// 移動量
+		VECTOR				vecMove;				// 移動量
+
+		/* デバッグ描写用コリジョン */
+		COLLISION_LINE		stVerticalCollision;	// 垂直方向のコリジョン
+		VECTOR				vecLandingPos;			// 垂直方向のコリジョンが地面に着地する位置
+		COLLISION_CAPSULE	stHorizontalCollision;	// 水平方向コリジョン
 };

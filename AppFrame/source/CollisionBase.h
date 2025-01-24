@@ -17,6 +17,7 @@ class CollisionBase : public PlatformBase
 		virtual ~CollisionBase() {};	// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
+		virtual void	CollisionDraw();					// 当たり判定描写
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)

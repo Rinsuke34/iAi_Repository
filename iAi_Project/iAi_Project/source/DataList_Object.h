@@ -3,6 +3,7 @@
 #pragma once
 #include "AppFrame.h"
 #include <vector>
+#include "PublicInclude.h"
 
 /* オブジェクト管理クラスの宣言 */
 
