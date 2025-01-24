@@ -661,6 +661,5 @@ void CharacterPlayer::Player_Charge_Attack()
 		this->PlayerStatusList->SetPlayerState(PLAYER_STATE_IDLE);
 	}
 	
-	
 }
 /* 2025.01.22 ‹e’r‰ë“¹@UŒ‚ˆ—’Ç‰Á I—¹ */
