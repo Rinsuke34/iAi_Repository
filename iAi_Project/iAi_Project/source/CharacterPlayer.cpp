@@ -4,11 +4,13 @@
 /* 2025.01.24 菊池雅道　攻撃処理追加 */
 #include "CharacterPlayer.h"
 
-/* プレイヤークラスの定義 */
-
-/* デバッグ用 後で削除 */
+// デバッグ用 後で削除
+/* 強攻撃目的地点表示用 */
 VECTOR vecTest;
+/* 弱攻撃攻撃範囲表示用 */
+COLLISION_SQHERE stTestCollision;
 
+/* プレイヤークラスの定義 */
 // コンストラクタ
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
@@ -148,6 +150,8 @@ void CharacterPlayer::Draw()
 	DrawFormatString(500, 16 * 16, GetColor(255, 255, 255), "X : %f Y : %f Z : %f", vecTest.x, vecTest.y, vecTest.z);
 
 	DrawSphere3D(vecTest, 40.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
+
+	DrawSphere3D(stTestCollision.vecSqhere, stTestCollision.fSqhereRadius, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), false);
 }
 
 // 移動
@@ -658,7 +662,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	{
 		// 攻撃入力がされていない場合
 		/* 攻撃チャージフレームに応じて処理を変更 */
-		if (iNowAttakChargeFlame < 5)
+		if (iNowAttakChargeFlame < 10)
 		{
 			// 5フレーム未満の場合
 			/* プレイヤーの状態を"近接攻撃中(弱)"に設定 */
@@ -689,6 +693,46 @@ void CharacterPlayer::Player_Melee_Weak()
 	pAddEffect->Effect_Load("FX_slash/FX_slash");
 	pAddEffect->SetPosition(this->vecPosition);
 	pAddEffect->Initialization();
+
+	/* 2025.01.22 菊池雅道　攻撃処理追加 開始 */
+	//仮の弱攻撃処理
+
+	/* 攻撃に使う弾を作成 */
+	BulletPlayerMeleeWeak* pAddBullet = new BulletPlayerMeleeWeak;
+
+	// プレイヤーの少し前の位置を求める※Y軸方向に関しては考えないものとする
+	/* モデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
+	VECTOR vecMeleeWeakVector = { 0,0,-1 };
+	/* プレイヤーの角度からY軸の回転行列を求める */
+	MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
+	/* プレイヤーの少し前の位置ベクトルを求める */
+	vecMeleeWeakVector = VTransform(vecMeleeWeakVector, matPlayerRotation);
+	vecMeleeWeakVector = VNorm(vecMeleeWeakVector);
+	vecMeleeWeakVector = VScale(vecMeleeWeakVector, 100);
+	vecMeleeWeakVector = VAdd(this->vecPosition, vecMeleeWeakVector);
+	
+	/* 弾の球体コリジョン作成 ※プレイヤーの少し前に出す */
+	COLLISION_SQHERE stMeleeWeakCollision{VAdd(vecMeleeWeakVector,VGet(0,100,0)),100};
+	
+	/* デバッグ用に弾のコリジョンを表示 */
+	stTestCollision = stMeleeWeakCollision;
+
+	/* 弾の球体コリジョンを設定 */
+	pAddBullet->SetCollision_Capsule(stMeleeWeakCollision);
+
+	/* 敵のリストを取得 */
+	auto& PlatformList = ObjectList->GetEnemyList();
+
+	// 弾と敵の当たり判定を行う 
+	for (auto* platform : PlatformList)
+	{
+		if (pAddBullet->HitCheck(platform->stGetCollision_Capsule()))
+		{
+			/* 当たったらダメージを受ける */
+			platform->SetNowHP(platform->iGetNowHP() - 1);
+		}
+	}
+	/* 2025.01.22 菊池雅道　攻撃処理追加 終了 */
 
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);

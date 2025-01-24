@@ -18,7 +18,9 @@ TestEnemy::~TestEnemy()
 // ‰Šú‰»
 void TestEnemy::Initialization()
 {
-
+	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition,VGet(0,100,0));
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }
 
 // XV

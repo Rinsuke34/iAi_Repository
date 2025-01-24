@@ -212,7 +212,7 @@ void SceneStage::LoadMapData()
 			TestEnemy* AddEnemy = new TestEnemy();
 			ObjectList->SetEnemy(AddEnemy);
 
-			AddEnemy->SetPosition(VGet(100, 100, 100));
+			AddEnemy->SetPosition(VGet(0, -1000, 0));
 		}
 	}
 
