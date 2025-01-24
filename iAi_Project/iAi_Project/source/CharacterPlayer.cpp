@@ -12,7 +12,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->vecMove					= {};					// 移動量
 		this->stVerticalCollision		= {};					// 垂直方向のコリジョン
-		this->vecLandingPos				= VGet(0.f, 0.f, 0.f);	// 垂直方向のコリジョンが地面に着地する位置
 		this->stHorizontalCollision[0]	= {};					// 水平方向コリジョン(上)
 		this->stHorizontalCollision[1]	= {};					// 水平方向コリジョン(下)
 	}
@@ -164,10 +163,14 @@ void CharacterPlayer::CollisionDraw()
 {
 	CharacterBase::CollisionDraw();
 
+	/* プレイヤー座標 */
+	int iColor = GetColor(255, 0, 0);
+	DrawLine3D(VAdd(this->vecPosition, VGet(+50, 0, 0)), VAdd(this->vecPosition, VGet(-50, 0, 0)), iColor);
+	DrawLine3D(VAdd(this->vecPosition, VGet(0, 0, +50)), VAdd(this->vecPosition, VGet(0, 0, -50)), iColor);
+
 	/* 垂直方向のコリジョン */
-	int iColor	= GetColor(0, 255, 0);
+	iColor	= GetColor(0, 255, 0);
 	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, iColor);
-	DrawSphere3D(this->vecLandingPos, 10.f, 16, iColor, iColor, FALSE);
 
 	/* 並行方向のコリジョン */
 	iColor	= GetColor(0, 0, 255);
@@ -448,11 +451,8 @@ void CharacterPlayer::Movement_Vertical()
 				/* 落下の加速度を更新 */
 				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-				/* 地面とヒットした座標を保存 */
-				this->vecLandingPos	= stHitPolyDim.HitPosition;
-
-				/* ヒットした座標がプレイヤーの座標より低い位置であるか確認 */
-				if (fStandPosY < this->vecPosition.y)
+				/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
+				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
 				{
 					// 着地座標がプレイヤーの現在位置より低い場合
 					// ※ 地面に着地したと判定する
@@ -481,8 +481,8 @@ void CharacterPlayer::Movement_Vertical()
 					// ※ 天井に頭をぶつけたと判定する
 					/* 着地座標を更新 */
 					// ※現在の高さに設定
-					//fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - 5.f;
-					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT;
+					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - 5.f;
+					//fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT;
 
 					/* ループを抜ける */
 					break;
@@ -668,15 +668,15 @@ void CharacterPlayer::Player_Melee_Posture()
 	{
 		// 攻撃入力がされていない場合
 		/* 攻撃チャージフレームに応じて処理を変更 */
-		if (iNowAttakChargeFlame < 5)
+		if (iNowAttakChargeFlame < PLAYER_CHARGE_TO_STRONG_TIME)
 		{
-			// 5フレーム未満の場合
+			// 強攻撃に切り替わる前の場合
 			/* プレイヤーの状態を"近接攻撃中(弱)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_WEEK);
 		}
 		else
 		{
-			// 5フレーム以上の場合
+			// 強攻撃にならない場合
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
 
