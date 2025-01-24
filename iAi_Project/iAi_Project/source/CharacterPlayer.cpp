@@ -8,16 +8,26 @@ VECTOR vecTest;
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
-	/* データリスト取得 */
-	this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
-	this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
-	this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	{
+		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->vecMove					= {};					// 移動量
+		this->stVerticalCollision		= {};					// 垂直方向のコリジョン
+		this->vecLandingPos				= VGet(0.f, 0.f, 0.f);	// 垂直方向のコリジョンが地面に着地する位置
+		this->stHorizontalCollision[0]	= {};					// 水平方向コリジョン(上)
+		this->stHorizontalCollision[1]	= {};					// 水平方向コリジョン(下)
+	}
 
-	this->vecMove				= VGet(0.f, 0.f, 0.f);	// 移動量
-	this->vecMove				= {};					// 移動量
-	this->stVerticalCollision	= {};					// 垂直方向のコリジョン
-	this->vecLandingPos			= VGet(0.f, 0.f, 0.f);	// 垂直方向のコリジョンが地面に着地する位置
-	this->stHorizontalCollision	= {};					// 水平方向コリジョン
+	/* データリスト取得 */
+	{
+		/* "入力管理"を取得 */
+		this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	}
 }
 
 // 初期化
@@ -161,7 +171,8 @@ void CharacterPlayer::CollisionDraw()
 
 	/* 並行方向のコリジョン */
 	iColor	= GetColor(0, 0, 255);
-	DrawCapsule3D(this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
+	DrawCapsule3D(this->stHorizontalCollision[0].vecCapsuleTop, this->stHorizontalCollision[0].vecCapsuleBottom, this->stHorizontalCollision[0].fCapsuleRadius, 16, iColor, iColor, FALSE);
+	DrawCapsule3D(this->stHorizontalCollision[1].vecCapsuleTop, this->stHorizontalCollision[1].vecCapsuleBottom, this->stHorizontalCollision[1].fCapsuleRadius, 16, iColor, iColor, FALSE);
 }
 
 // 移動
@@ -406,8 +417,7 @@ void CharacterPlayer::Movement_Vertical()
 
 	/* 主人公の上部分の当たり判定から下方向へ向けた線分を作成 */
 	this->stVerticalCollision.vecLineStart		=	this->vecPosition;
-	this->stVerticalCollision.vecLineStart.y	+=	160;		// ※頭があたる高さ
-
+	this->stVerticalCollision.vecLineStart.y	+=	PLAYER_HEIGHT;
 	this->stVerticalCollision.vecLineEnd		=	stVerticalCollision.vecLineStart;
 	this->stVerticalCollision.vecLineEnd.y		-=	9999;
 
@@ -432,33 +442,52 @@ void CharacterPlayer::Movement_Vertical()
 		{
 			// 接触している場合
 			/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
-			if (stHitPolyDim.HitPosition.y > fStandPosY)
+			if (stHitPolyDim.HitPosition.y >= fStandPosY)
 			{
 				// 現在の着地座標より高い位置である場合
-				/* 着地座標を更新 */
-				fStandPosY = stHitPolyDim.HitPosition.y;
-
 				/* 落下の加速度を更新 */
 				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-				/* ジャンプ回数を初期化する */
-				this->PlayerStatusList->SetPlayerNowJumpCount(0);
+				/* 地面とヒットした座標を保存 */
+				this->vecLandingPos	= stHitPolyDim.HitPosition;
 
-				/* プレイヤーの着地フラグを有効にする */
-				this->PlayerStatusList->SetPlayerLanding(true);
+				/* ヒットした座標がプレイヤーの座標より低い位置であるか確認 */
+				if (fStandPosY < this->vecPosition.y)
+				{
+					// 着地座標がプレイヤーの現在位置より低い場合
+					// ※ 地面に着地したと判定する
+					/* 着地座標を更新 */
+					// ※着地した座標に設定する
+					fStandPosY = stHitPolyDim.HitPosition.y;
 
-				/* 2025.01.09 菊池雅道　移動処理追加 追加 */
+					/* ジャンプ回数を初期化する */
+					this->PlayerStatusList->SetPlayerNowJumpCount(0);
 
-				//ジャンプ中のフラグをリセット
-				this->PlayerStatusList->SetPlayerJumpingFlag(false);
+					/* プレイヤーの着地フラグを有効にする */
+					this->PlayerStatusList->SetPlayerLanding(true);
 
-				//ジャンプ中の回避回数をリセット
-				this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
-				/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+					/* 2025.01.09 菊池雅道　移動処理追加 追加 */
+
+					//ジャンプ中のフラグをリセット
+					this->PlayerStatusList->SetPlayerJumpingFlag(false);
+
+					//ジャンプ中の回避回数をリセット
+					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
+					/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+				}
+				else
+				{
+					// 着地座標がプレイヤーの現在位置より高い場合
+					// ※ 天井に頭をぶつけたと判定する
+					/* 着地座標を更新 */
+					// ※現在の高さに設定
+					//fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - 5.f;
+					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT;
+
+					/* ループを抜ける */
+					break;
+				}
 			}
-
-			/* ヒットした座標を保存 */
-			this->vecLandingPos = stHitPolyDim.HitPosition;
 		}
 	}
 
@@ -512,9 +541,12 @@ void CharacterPlayer::Movement_Horizontal()
 	{
 		/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
 		// カプセルコリジョン
-		stHorizontalCollision.vecCapsuleBottom	= VAdd(this->vecPosition,	VGet(0.f, 45.f, 0.f));	// 現在の座標
-		stHorizontalCollision.vecCapsuleTop		= VAdd(vecNextPosition,		VGet(0.f, 45.f, 0.f));	// 移動後の座標
-		stHorizontalCollision.fCapsuleRadius	= 15.f;
+		stHorizontalCollision[0].vecCapsuleBottom	= VAdd(this->vecPosition,	VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));	// 現在の座標
+		stHorizontalCollision[0].vecCapsuleTop		= VAdd(vecNextPosition,		VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));	// 移動後の座標
+		stHorizontalCollision[0].fCapsuleRadius		= PLAYER_WIDE;
+		stHorizontalCollision[1].vecCapsuleBottom	= VAdd(this->vecPosition,	VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));	// 現在の座標
+		stHorizontalCollision[1].vecCapsuleTop		= VAdd(vecNextPosition,		VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));	// 移動後の座標
+		stHorizontalCollision[1].fCapsuleRadius		= PLAYER_WIDE;
 
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetCollisionList();
@@ -523,10 +555,11 @@ void CharacterPlayer::Movement_Horizontal()
 		for (auto* platform : PlatformList)
 		{
 			/* 足場との接触判定 */
-			bool bHitFlg = platform->HitCheck(stHorizontalCollision);
+			bool bUpHitFlg		= platform->HitCheck(stHorizontalCollision[0]);
+			bool bDownHitFlg	= platform->HitCheck(stHorizontalCollision[1]);
 
 			/* 接触しているか確認 */
-			if (bHitFlg == true)
+			if (bUpHitFlg == true || bDownHitFlg == true)
 			{
 				/* 接触している場合 */
 				vecNextPosition = this->vecPosition;
@@ -547,9 +580,9 @@ void CharacterPlayer::Movement_Horizontal()
 void CharacterPlayer::CollisionUpdate()
 {
 	/* プレイヤーのコリジョンを更新 */
-	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, 135, 0));
-	this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, 15, 0));
-	this->stCollisionCapsule.fCapsuleRadius		= 15.f;
+	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0));
+	this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0));
+	this->stCollisionCapsule.fCapsuleRadius		= PLAYER_WIDE;
 }
 
 // 攻撃状態遷移管理

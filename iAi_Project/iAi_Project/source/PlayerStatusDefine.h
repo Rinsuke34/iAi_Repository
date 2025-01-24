@@ -9,7 +9,7 @@
 
 /* 初期化用の定数(仮) */
 // 今後Jsonから読み込めるようにする予定
-/* 能力値関連 */
+/* 能力値関連(最大値) */
 static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// プレイヤーの移動加速度
 static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// プレイヤーの最大移動速度
 static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// プレイヤーの落下加速度
@@ -66,3 +66,8 @@ static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 8;	// クナイ(投げ)
 static const int	PLAYER_MOTION_DODGE					= 9;	// 回避
 static const int	PLAYER_MOTION_JUMP_UP				= 10;	// ジャンプ(上昇)
 static const int	PLAYER_MOTION_JUMP_DOWN				= 11;	// ジャンプ(下降)
+
+/* プレイヤー処理用定数 */
+static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
+static const float	PLAYER_WIDE							= 15.f;		// 幅(当たり判定)
+static const float	PLAYER_CLIMBED_HEIGHT				= 35.f;		// 歩きで登れる高さ

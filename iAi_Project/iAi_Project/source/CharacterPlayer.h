@@ -57,7 +57,7 @@ class CharacterPlayer : public CharacterBase
 		VECTOR				vecMove;				// 移動量
 
 		/* デバッグ描写用コリジョン */
-		COLLISION_LINE		stVerticalCollision;	// 垂直方向のコリジョン
-		VECTOR				vecLandingPos;			// 垂直方向のコリジョンが地面に着地する位置
-		COLLISION_CAPSULE	stHorizontalCollision;	// 水平方向コリジョン
+		COLLISION_LINE		stVerticalCollision;		// 垂直方向のコリジョン
+		VECTOR				vecLandingPos;				// 垂直方向のコリジョンが地面に着地する位置
+		COLLISION_CAPSULE	stHorizontalCollision[2];	// 水平方向コリジョン(0:上側, 1:下側)
 };
