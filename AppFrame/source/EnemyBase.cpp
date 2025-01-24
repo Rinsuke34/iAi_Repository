@@ -10,5 +10,5 @@ EnemyBase::EnemyBase() : CharacterBase()
 {
 	/* èâä˙âª */
 	this->iMaxHp	= 0;	// ç≈ëÂHP
-	this->iNowHP	= 0;	// åªç›HP
+	this->iNowHp	= 0;	// åªç›HP
 }

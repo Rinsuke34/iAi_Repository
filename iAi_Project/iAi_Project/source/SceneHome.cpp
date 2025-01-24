@@ -4,7 +4,7 @@
 #include "SceneGame.h"
 
 
-/* シーン「ホーム」の定義 */
+/* シーン"ホーム画面"の定義 */
 
 // コンストラクタ
 SceneHome::SceneHome() : SceneBase("Home", 0, false)

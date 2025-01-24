@@ -97,9 +97,6 @@
     <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム">
       <UniqueIdentifier>{f4dfc76d-1f22-4fed-9a82-8a06554a5df3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\稼働プラットフォーム">
-      <UniqueIdentifier>{8c3bcf2b-5145-4410-9905-dafdfa949811}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ">
       <UniqueIdentifier>{8c78b777-6cd1-49c4-b698-ddb8a3fb50f3}</UniqueIdentifier>
     </Filter>
@@ -118,9 +115,6 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム">
       <UniqueIdentifier>{a567878f-3be2-486c-ae68-247e9de2ac16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\稼働プラットフォーム">
-      <UniqueIdentifier>{964d616c-1fa3-44e5-a43f-946e5c1eaa95}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\汎用計算">
       <UniqueIdentifier>{7ba01d80-664d-4c8d-bbfb-d7203d1adfcd}</UniqueIdentifier>
     </Filter>
@@ -129,6 +123,18 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\エフェクト">
       <UniqueIdentifier>{b414d5cb-b3ba-44b0-9254-ec0b2cfcec9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\コリジョン">
+      <UniqueIdentifier>{272ac610-5ad5-4733-8c6e-51621ab2aba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド">
+      <UniqueIdentifier>{581f9f90-91fa-4a10-a549-4f7aefbc7797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\コリジョン">
+      <UniqueIdentifier>{cc5fcf34-aa9b-4111-9393-8cfead9b4267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド">
+      <UniqueIdentifier>{1a0a3693-31e5-4015-a25b-6d8054ecb8aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +185,12 @@
     </ClCompile>
     <ClCompile Include="source\ObjectBase.cpp">
       <Filter>ソース ファイル\オブジェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BackGroundBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CollisionBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +250,12 @@
     </ClInclude>
     <ClInclude Include="source\EffectBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BackGroundBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CollisionBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

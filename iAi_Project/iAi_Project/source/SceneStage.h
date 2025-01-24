@@ -9,6 +9,10 @@
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
+#include "DataList_GameStatus.h"
+
+/* シーン */
+#include "SceneEdit.h"
 
 /* ステージクラスの宣言 */
 
@@ -23,15 +27,15 @@ class SceneStage : public SceneBase
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
-		virtual void	LoadMapData(int iStageNo);		// マップデータのロード
+		virtual void	LoadMapData();			// マップデータのロード
 
 	private:
 	protected:
 		/* 使用するデータリスト */
-		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 		DataList_Model*			ModelList;			// 3Dモデル管理
+		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 
 		/* 関数 */
 		virtual void	SetupShadowMap();				// シャドウマップの設定
@@ -49,5 +53,10 @@ class SceneStage : public SceneBase
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
+
+		/* マップ情報(仮) */
+		// ※データリスト作成予定
+		bool bEditDrawFlg;							// エディット描写フラグ
+		bool bGoalFlg;								// ゴールフラグ
 };
 

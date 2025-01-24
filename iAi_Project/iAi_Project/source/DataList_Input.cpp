@@ -330,6 +330,7 @@ VECTOR DataList_Input::vecGetGameInputMoveDirection()
 	//	・左	: -X
 	//	※Yは必ず0.0fとなる
 	// ■X,Y,Zの値は-1.0f～1.0fの範囲とする。
+	// ■コントローラー使用時はアナログ値から算出するため、1.fに届かない場合がある。
 	// ■キーボードの場合は上下左右キーで算出するため出力は8方向のみ。
 	// ■コントローラーとキーボードの同時入力があった場合は双方を足し合わせた値を返す。
 	// ■コントローラーは左スティックの入力を使用する。
@@ -390,7 +391,7 @@ VECTOR DataList_Input::vecGetGameInputMoveDirection()
 		/* 移動方向を正規化 */
 		vecReturn = VNorm(vecReturn);
 	}
-	
+
 	/* 移動方向を返す */
 	return vecReturn;
 }

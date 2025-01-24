@@ -1,23 +1,22 @@
-/* 2024.12.XX YYYY ZZZZ */
+/* 2025.01.19 ファイル作成 駒沢風助 */
 
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
 
-/* シーン"ホーム画面"の宣言 */
+/* シーン"エディット"クラスの宣言 */
 
-// シーン "ホーム画面"
-class SceneHome : public SceneBase
+// シーン"エディット"
+class SceneEdit : public SceneBase
 {
 	public:
-		SceneHome();							// コンストラクタ
-		virtual ~SceneHome();					// デストラクタ
+		SceneEdit();							// コンストラクタ
+		virtual ~SceneEdit();					// デストラクタ
 
 		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
 	private:
-
 	protected:
 };

@@ -18,10 +18,10 @@ class EnemyBase : public CharacterBase
 		virtual void	BloomDraw()			override {};	// ”­Œõ•`Ê
 
 		int		iGetMaxHP()	{ return this->iMaxHp; };		// Å‘åHP‚ğæ“¾
-		int		iGetNowHP()	{ return this->iNowHP; };		// Œ»İHP‚ğæ“¾
+		int		iGetNowHP()	{ return this->iNowHp; };		// Œ»İHP‚ğæ“¾
 
 		void	SetMaxHP(int iMaxHp)	{ this->iMaxHp = iMaxHp; };		// Å‘åHP‚ğİ’è
-		void	SetNowHP(int iNowHP)	{ this->iNowHP = iNowHP; };		// Œ»İHP‚ğİ’è
+		void	SetNowHP(int iNowHP)	{ this->iNowHp = iNowHP; };		// Œ»İHP‚ğİ’è
 
 	private:
 	protected:
@@ -29,5 +29,5 @@ class EnemyBase : public CharacterBase
 
 		/* •Ï” */
 		int		iMaxHp;			// Å‘åHP
-		int		iNowHP;			// Œ»İHP
+		int		iNowHp;			// Œ»İHP
 };

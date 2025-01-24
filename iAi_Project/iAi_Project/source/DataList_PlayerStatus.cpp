@@ -10,7 +10,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 {
 	/* 初期化(仮) */
 	/* プレイヤー状態関連 */
-	this->iPlayerState				= PLAYER_STATE_IDLE;	// プレイヤーの状態
+	this->iPlayerState				= PLAYER_STATUS_FREE;	// プレイヤーの状態
+	this->iPlayerMotion				= PLAYER_MOTION_IDLE;	// プレイヤーのモーション
 	this->bPlayerLandingFlg			= false;				// プレイヤーが着地しているか
 	this->fPlayerNowMoveSpeed		= 0;					// プレイヤーの現在の移動速度
 	this->fPlayerAngleX				= 0;					// プレイヤーのX軸回転量(ラジアン)
@@ -18,18 +19,23 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerNowJumpCount		= 0;					// プレイヤーのジャンプ回数(現在数)
 
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
-	this->iPlayerNormalDashFlameCount = 0;			//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
-	this->bPlayerJumpingFlag = false;				//プレイヤーがジャンプ中かのフラグ
-	this->iPlayerJumpCount = 0;						//プレイヤーの現在のジャンプ回数
-	this->fPlayerDodgeProgress = 0.0f;				//プレイヤー回避モーション進行度
-	this->vecPlayerDodgeDirection = { 0, 0, 0 };	//プレイヤー回避方向
-	this->iPlayerDodgeWhileJumpingCount = 0;		//プレイヤージャンプ中の回避回数
-	this->fPlayerJumpSpeed = 0;						//プレイヤージャンプ速度
-	this->iPlayerNowDodgeFlame = 0;					// プレイヤーの現在の回避フレーム数
-	this->fPlayerDodgeSpeed = 0;					//プレイヤー回避速度
-	this->bPlayerDodgingFlag = false;				//プレイヤーが回避中かのフラグ
+	this->iPlayerNormalDashFlameCount		= 0;			//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
+	this->bPlayerJumpingFlag				= false;		//プレイヤーがジャンプ中かのフラグ
+	this->iPlayerJumpCount					= 0;			//プレイヤーの現在のジャンプ回数
+	this->fPlayerDodgeProgress				= 0.0f;			//プレイヤー回避モーション進行度
+	this->vecPlayerDodgeDirection			= { 0, 0, 0 };	//プレイヤー回避方向
+	this->iPlayerDodgeWhileJumpingCount		= 0;			//プレイヤージャンプ中の回避回数
+	this->fPlayerJumpSpeed					= 0;			//プレイヤージャンプ速度
+	this->iPlayerNowDodgeFlame				= 0;			// プレイヤーの現在の回避フレーム数
+	this->fPlayerDodgeSpeed					= 0;			//プレイヤー回避速度
+	this->bPlayerDodgingFlag				= false;		//プレイヤーが回避中かのフラグ
+	this->bPlayerAfterDodgeFlag				= false;		//プレイヤーの回避後フラグ
 	/* 2025.01.10 菊池雅道 初期化処理追加 終了 */
-	this->iPlayerNowAttakChargeFlame = 0;//現在のプレイヤー溜め攻撃チャージフレーム数  2025.01.22 菊池雅道 初期化処理追加
+	/* 2025.01.22 菊池雅道 初期化処理追加 開始 */
+	this->iPlayerNowAttakChargeFlame		= 0;			//現在のプレイヤー溜め攻撃チャージフレーム数  2025.01.22 菊池雅道 初期化処理追加
+	this->vecPlayerChargeAttakTargetPoint	= { 0, 0, 0 };	//プレイヤー溜め攻撃の目的地
+	/* 2025.01.22 菊池雅道 初期化処理追加 終了 */
+
 	/* 能力値関連 */
 	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
 	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度

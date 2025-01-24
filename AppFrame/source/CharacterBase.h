@@ -15,10 +15,10 @@ class CharacterBase : public ActorBase
 		CharacterBase();	// コンストラクタ
 		virtual ~CharacterBase() {};		// デストラクタ
 
-		virtual void	Initialization()	override {};	// 初期化
+		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override {};	// 更新
 		virtual void	Draw()				override {};	// 描写
-		virtual void	BloomDraw()			override {};	// 発光描写
+		virtual void	BloomDraw()			override;		// 発光描写
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)
@@ -37,9 +37,11 @@ class CharacterBase : public ActorBase
 	private:
 	protected:
 		/* 関数 */
+		void	UpdataLightFrame();						// 発光の設定されたフレームを取得
 
 		/* 変数 */
 		COLLISION_CAPSULE		stCollisionCapsule;		// コリジョン(カプセル)
 		VECTOR					vecDirection;			// 向き
 		int						iInvincibilityTime;		// 無敵時間
+		std::vector<int>		aiLightFrameNo;			// 発光フレーム番号
 };

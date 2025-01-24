@@ -1,3 +1,4 @@
+#pragma once
 /* 2024.12.26 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
 /* 2025.01.09‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì•Ï”EŠÖ”’Ç‰Á */
 
@@ -29,8 +30,8 @@ static const float GRAVITY_SREED = -9.8f; //d—Í‚Ì‘¬“x@Y²‚Ì‰º•ûŒü‚È‚Ì‚Åƒ}ƒCƒiƒ
 static const float GRAVITY_BUFFER = 0.1f; //ƒLƒƒƒ‰ƒNƒ^[‚É‚©‚©‚éd—Í’²®@‚P‚æ‚è‘å‚«‚¢‚Æd‚­‚È‚é@‚P‚æ‚è¬‚³‚¢‚ÆŒy‚­‚È‚é
 static const int PLAYER_JUMPING_IN_AIR_LIMIT = 1;//ƒvƒŒƒCƒ„[‚ª‹ó’†ƒWƒƒƒ“ƒv‚Å‚«‚é‰ñ”
 //‰ñ”ğŠÖŒW
-static const float PLAYER_DODGE_SPEED = 100.0f;//ƒvƒŒƒCƒ„[‚Ì‰ñ”ğ‘¬“x
-static const int PLAYER_DODGE_FLAME = 30.0f; //ƒvƒŒƒCƒ„[‚Ì‰ñ”ğƒtƒŒ[ƒ€”
+static const float PLAYER_DODGE_SPEED	= 100.0f;//ƒvƒŒƒCƒ„[‚Ì‰ñ”ğ‘¬“x
+static const int PLAYER_DODGE_FLAME= 30.0f; //ƒvƒŒƒCƒ„[‚Ì‰ñ”ğƒtƒŒ[ƒ€”
 static const int PLAYER_DODGE_IN_AIR_LIMIT = 1;//ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ğ‚Å‚«‚é‰ñ”
 /* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁI—¹ */
 
@@ -42,17 +43,26 @@ static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ
 static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
 
 /* ƒvƒŒƒCƒ„[ó‘Ô */
-static const int	PLAYER_STATE_IDLE							= 0;	// ‘Ò‹@
-static const int	PLAYER_STATE_WALK							= 1;	// •às
-static const int	PLAYER_STATE_RUN_LOW						= 2;	// ‘–s(’á‘¬)
-static const int	PLAYER_STATE_RUN_HIGH						= 3;	// ‘–s(‚‘¬)
-static const int	PLAYER_STATE_DRAW_SWORD_CHARGE				= 4;	// —­‚ß‹‡(—­‚ß)
-static const int	PLAYER_STATE_DRAW_SWORD_CHARGE_ATTACKING	= 12;	// —­‚ß‹‡(UŒ‚’†)
-static const int	PLAYER_STATE_DRAW_SWORD_CHARGE_FINISH		= 13;	// —­‚ß‹‡(I—¹)
-static const int	PLAYER_STATE_DRAW_SWORD_WEAK				= 5;	// ‹‡(ã)
-static const int	PLAYER_STATE_DRAW_SWORD_STRONG				= 6;	// ‹‡(‹­)
-static const int	PLAYER_STATE_THROW_KUNAI_AIM				= 7;	// ƒNƒiƒC(\‚¦)
-static const int	PLAYER_STATE_THROW_KUNAI_THROW				= 8;	// ƒNƒiƒC(“Š‚°)
-static const int	PLAYER_STATE_DODGE							= 9;	// ‰ñ”ğ
-static const int	PLAYER_STATE_JUMP_UP						= 10;	// ‹ó’†(ã¸)
-static const int	PLAYER_STATE_JUMP_DOWN						= 11;	// ‹ó’†(‰º~)
+// ¦ó‘Ô‚É‰‚¶‚Ä‰Â”\‚Ès“®‚ª•Ï‚í‚é
+static const int	PLAYER_STATUS_EVENT					= 0;	// ƒCƒxƒ“ƒgó‘Ô(‘€ì•s‰Â)
+static const int	PLAYER_STATUS_FREE					= 1;	// ©—Ró‘Ô
+static const int	PLAYER_STATUS_DODGING				= 2;	// ‰ñ”ğó‘Ô’†
+static const int	PLAYER_STATUS_MELEE_POSTURE			= 3;	// ‹ßÚUŒ‚\‚¦’†
+static const int	PLAYER_STATUS_MELEE_WEEK			= 4;	// ‹ßÚUŒ‚’†(ã)
+static const int	PLAYER_STATUS_MELEE_STRONG			= 5;	// ‹ßÚUŒ‚’†(‹­)
+static const int	PLAYER_STATUS_PROJECTILE_POSTURE	= 6;	// ‰“‹——£UŒ‚\‚¦’†
+static const int	PLAYER_STATUS_PROJECTILE			= 7;	// ‰“‹——£UŒ‚’†
+
+/* ƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“ */
+static const int	PLAYER_MOTION_IDLE					= 0;	// ‘Ò‹@
+static const int	PLAYER_MOTION_WALK					= 1;	// •às
+static const int	PLAYER_MOTION_RUN_LOW				= 2;	// ‘–s(’á‘¬)
+static const int	PLAYER_MOTION_RUN_HIGH				= 3;	// ‘–s(‚‘¬)
+static const int	PLAYER_MOTION_DRAW_SWORD_CHARGE		= 4;	// ‹‡(—­‚ß)
+static const int	PLAYER_MOTION_DRAW_SWORD_WEAK		= 5;	// ‹‡(ã)
+static const int	PLAYER_MOTION_DRAW_SWORD_STRONG		= 6;	// ‹‡(‹­)
+static const int	PLAYER_MOTION_THROW_KUNAI_AIM		= 7;	// ƒNƒiƒC(\‚¦)
+static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 8;	// ƒNƒiƒC(“Š‚°)
+static const int	PLAYER_MOTION_DODGE					= 9;	// ‰ñ”ğ
+static const int	PLAYER_MOTION_JUMP_UP				= 10;	// ƒWƒƒƒ“ƒv(ã¸)
+static const int	PLAYER_MOTION_JUMP_DOWN				= 11;	// ƒWƒƒƒ“ƒv(‰º~)

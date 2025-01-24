@@ -9,6 +9,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 {
 	/* データリスト作成 */
 	{
+		/* データリストサーバーに"プレイヤー状態"を追加 */
+		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+
 		/* データリストサーバーに"オブジェクト管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_Object());
 	}
@@ -23,21 +26,27 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 		/* "3Dモデル管理"を取得 */
 		this->ModelList			= dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
-	}
 
-	/* テスト用処理 終了 */
+		/* "ゲーム状態管理"を取得 */
+		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+	}
 
 	/* マップハンドル作成 */
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
+
+	/* 初期化 */
+	this->bEditDrawFlg	= false;
+	this->bGoalFlg		= false;
 }
 
 // デストラクタ
 SceneStage::~SceneStage()
 {
 	/* データリスト削除 */
+	gpDataListServer->DeleteDataList("DataList_PlayerStatus");	// プレイヤー状態
 	gpDataListServer->DeleteDataList("DataList_Object");		// オブジェクト管理
 
 	/* マップハンドル削除 */
@@ -55,11 +64,44 @@ void SceneStage::Initialization()
 // 計算
 void SceneStage::Process()
 {
-	/* すべてのオブジェクトの更新 */
-	ObjectList->UpdateAll();
+	/* エディット画面を描写したか */
+	if (this->bEditDrawFlg == false)
+	{
+		// 未描写の場合(クリアしていない)
+		/* すべてのオブジェクトの更新 */
+		ObjectList->UpdateAll();
 
-	/* 削除フラグが有効なオブジェクトの削除 */
-	ObjectList->DeleteAll();
+		/* 削除フラグが有効なオブジェクトの削除 */
+		ObjectList->DeleteAll();
+
+		///* デバッグ用処理 */
+		///* キャンセルが入力されたらゴールフラグを有効化 */
+		//if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		//{
+		//	// このシーンの削除フラグを有効にする
+		//	this->bGoalFlg = true;
+		//}
+
+		/* ゴールフラグを確認 */
+		if (this->bGoalFlg == true)
+		{
+			// ゴールフラグが有効な場合
+			/* シーン"エディット画面"を作成 */
+			SceneBase* pAddScene = new SceneEdit();
+
+			/* シーン"エディット画面"をシーンサーバーに追加 */
+			gpSceneServer->AddSceneReservation(pAddScene);
+
+			/* エディット画面描写フラグを有効にする */
+			this->bEditDrawFlg = true;
+		}
+	}
+	else
+	{
+		// 描写済みの場合(クリア済み)
+		/* シーンの削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
 }
 
 // 描画
@@ -82,26 +124,29 @@ void SceneStage::Draw()
 	/* ライトマップ作成 */
 	SetupLightMap();
 
-	/* カメラの設定 */
-	SetCamera();
+	/* オブジェクト描写 */
+	{
+		/* カメラの設定 */
+		SetCamera();
 
-	/* 描写に使用するシャドウマップの設定 */
-	SetUseShadowMap(0, this->iShadowMapScreenHandle);
+		/* 描写に使用するシャドウマップの設定 */
+		SetUseShadowMap(0, this->iShadowMapScreenHandle);
 
-	/* 半透明部分を描写しないよう設定 */
-	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
+		/* 半透明部分を描写しないよう設定 */
+		MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
 
-	/* 半透明部分のないすべてのオブジェクトを描写 */
-	ObjectList->DrawAll();
+		/* 半透明部分のないすべてのオブジェクトを描写 */
+		ObjectList->DrawAll();
 
-	/* 描写に使用するシャドウマップの設定を解除 */
-	SetUseShadowMap(this->iShadowMapScreenHandle, -1);
+		/* 描写に使用するシャドウマップの設定を解除 */
+		SetUseShadowMap(this->iShadowMapScreenHandle, -1);
 
-	/* 半透明部分のみ描写するように設定 */
-	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);
+		/* 半透明部分のみ描写するように設定 */
+		MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);
 
-	/* 半透明部分のすべてのオブジェクトを描写 */
-	ObjectList->DrawAll();
+		/* 半透明部分のすべてのオブジェクトを描写 */
+		ObjectList->DrawAll();
+	}
 
 	/* エフェクト描写 */
 	{
@@ -122,7 +167,7 @@ void SceneStage::Draw()
 		SetDrawMode(DX_DRAWMODE_BILINEAR);
 
 		/* 描画ブレンドモードを加算にする */
-		// ※ライトマップの黒色部分は描写されないようにする
+		// ※ライトマップの黒色部分を描写されないようにする
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
 		/* ライトマップ(ぼかし)を描写 */
@@ -173,6 +218,9 @@ void SceneStage::SetupLightMap()
 		/* ライトマップへの描写を開始 */
 		SetDrawScreen(this->iLightMapScreenHandle);
 
+		/* ライティングを無効化 */
+		SetUseLighting(FALSE);
+
 		/* 画面クリア */
 		ClearDrawScreen();
 
@@ -184,6 +232,9 @@ void SceneStage::SetupLightMap()
 
 		/* ライトマップへの描写を終了 */
 		SetDrawScreen(DX_SCREEN_BACK);
+
+		/* ライティングを有効化 */
+		SetUseLighting(TRUE);
 	}
 
 	/* ライトマップの縮小版を取得 */
