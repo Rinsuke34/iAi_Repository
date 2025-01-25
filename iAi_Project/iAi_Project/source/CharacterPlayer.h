@@ -7,6 +7,7 @@
 #include "DataList_Input.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
+#include "DataList_Model.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"

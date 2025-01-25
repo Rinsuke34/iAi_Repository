@@ -165,9 +165,6 @@ void SceneStage::LoadMapData()
 					CharacterPlayer* pPlayer = new CharacterPlayer();
 					ObjectList->SetCharacterPlayer(pPlayer);
 
-					/* ÉÇÉfÉã */
-					pPlayer->SetModelHandle(this->ModelList->iGetModel("Player"));
-
 					/* ç¿ïW */
 					VECTOR vecPos;
 					// ì«Ç›çûÇ›

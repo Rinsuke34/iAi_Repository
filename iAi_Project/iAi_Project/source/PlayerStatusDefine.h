@@ -72,4 +72,6 @@ static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
 static const float	PLAYER_WIDE							= 15.f;		// 幅(当たり判定)
 static const float	PLAYER_CLIMBED_HEIGHT				= 35.f;		// 歩きで登れる高さ
 static const int	PLAYER_CHARGE_TO_STRONG_TIME		= 5;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
-
+static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// プレイヤーの移動用コリジョン上側
+static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// プレイヤーの移動用コリジョン下側
+static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// プレイヤーの移動用コリジョン数

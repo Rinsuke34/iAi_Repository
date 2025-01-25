@@ -171,6 +171,36 @@ MV1_COLL_RESULT_POLY CollisionBase::HitCheck_Line(COLLISION_LINE	stLine)
 	return stHitPolyDim;
 }
 
+// モデル - カプセル
+MV1_COLL_RESULT_POLY_DIM CollisionBase::HitCheck_Capsule(COLLISION_CAPSULE	stCapsule)
+{
+	// 引数
+	// stCapsule				: 判定するカプセルコリジョン
+	// 戻り値
+	// MV1_COLL_RESULT_POLY_DIM	: 接触情報
+
+	// ポリゴンとの接触情報
+	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
+
+	/* コリジョンフレームが存在しないか確認 */
+	if (this->iCollisionFrameNo < 0)
+	{
+		// 存在しない場合
+		/* 非接触として判定する */
+		stHitPolyDim.HitNum = FALSE;
+		return stHitPolyDim;
+	}
+
+	/* プラットフォームのモデルと対象のカプセルコリジョンが接触しているかの情報取得 */
+	stHitPolyDim = MV1CollCheck_Capsule(
+		/* このオブジェクトのコリジョン */
+		this->iModelHandle, this->iCollisionFrameNo,
+		/* 判定するオブジェクトのコリジョン */
+		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius);
+
+	return stHitPolyDim;
+}
+
 // コリジョンの設定されたフレームの設定
 void CollisionBase::UpdateCollisionFrame()
 {
