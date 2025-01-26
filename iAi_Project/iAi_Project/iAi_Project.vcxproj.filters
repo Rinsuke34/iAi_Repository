@@ -246,6 +246,9 @@
     <ClCompile Include="source\EffectSelfDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
+    <ClCompile Include="source\BulletPlayerMeleeStrong.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -331,6 +334,9 @@
     </ClInclude>
     <ClInclude Include="source\EffectSelfDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerMeleeStrong.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

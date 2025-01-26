@@ -158,6 +158,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp" />
+    <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />
     <ClInclude Include="source\ConstantDefine.h" />

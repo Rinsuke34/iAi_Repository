@@ -220,6 +220,37 @@ void CharacterPlayer::Player_Move()
 	VECTOR vecInput				= this->InputList->vecGetGameInputMoveDirection();	// 移動方向
 	VECTOR vecAddMove			= VGet(0, 0, 0);									// 移動量(加算用)
 
+	/* プレイヤーの状態を取得 */
+	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+
+	/* プレイヤーの状態に応じて移動速度の倍率を設定 */
+	float fMoveSpeedRatio = 1.f;
+	switch (iPlayerState)
+	{
+		/* 移動処理を通常通りに行う状態 */
+		case PLAYER_STATUS_FREE:				// 自由状態
+			/* 補正無しにする */
+			fMoveSpeedRatio = 1.f;
+			break;
+
+		/* 移動処理を速度を抑えて行う状態 */
+		case PLAYER_STATUS_MELEE_POSTURE:		// 近接攻撃構え中
+		case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+			/* 移動速度補正0.5倍にする */
+			// ※仮の値
+			fMoveSpeedRatio = 0.5f;
+			break;
+
+		/* 移動処理を行わない状態 */
+		case PLAYER_STATUS_DODGING:				// 回避状態中
+		case PLAYER_STATUS_MELEE_WEEK:			// 近接攻撃中(弱)
+		case PLAYER_STATUS_MELEE_STRONG:		// 近接攻撃中(強)
+		case PLAYER_STATUS_PROJECTILE:			// 遠距離攻撃中
+			/* 移動処理を終了する */
+			// ※これらの状態では移動処理を行わない
+			return;
+	}
+
 	/* 移動入力がされているか確認 */
 	if (vecInput.x != 0 || vecInput.z != 0)
 	{
@@ -315,7 +346,7 @@ void CharacterPlayer::Player_Jump()
 						// ジャンプ入力がされている場合
 						/* ジャンプ処理 */
 						// 仮で落下速度を-にする処理を行う
-						this->PlayerStatusList->SetPlayerNowFallSpeed(-50.0f);
+						this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
 
 						/* ジャンプ回数を更新 */
 						this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
@@ -810,8 +841,11 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
 
-			/* プレイヤーのため攻撃用のカウントを初期化する */
+			/* プレイヤーのため攻撃用のカウントを初期化 */
 			this->PlayerStatusList->SetPlayerChargeAttackCount(0);
+
+			/* 落下の加速度を初期化 */
+			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 		}
 
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
@@ -952,23 +986,48 @@ void CharacterPlayer::Player_Charge_Attack()
 				/* 移動量分プレイヤーを移動させる */
 				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), PLAYER_MELEE_STRONG_MOVESPEED));
 			}
-			else if (iCount == iMoveCount + 1)
+			else
 			{
-				// 移動回数+1である場合(最後の移動の場合)
+				// 最後の移動の場合
 				/* 最後の移動量を取得 */
 				float	iLastMove = fMove - (iMoveCount * PLAYER_MELEE_STRONG_MOVESPEED);
 
 				/* 最後の移動量分プレイヤーを移動させる */
 				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), iLastMove));
-			}
-			else
-			{
+
 				// それら以外である場合(一連の行動が終了した場合)
 				/* プレイヤーの状態を"自由状態"に遷移 */
 				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
 				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_END);
+			}
+
+			/* 近接攻撃として扱う弾を作成 */
+			// ※通常の弾とは違いカプセル型で作成する
+			{
+				BulletPlayerMeleeStrong* pBulletMeleeStrong = new BulletPlayerMeleeStrong;
+
+				/* 弾に使用するカプセルを作成 */
+				COLLISION_CAPSULE stBulletCollision;
+
+				/* コリジョンの算出 */
+				{
+					/* 当たり判定は大きめに取る(仮で半径をプレイヤーの全長に設定) */
+					stBulletCollision.fCapsuleRadius = PLAYER_HEIGHT;
+
+					/* 片方は現在のプレイヤーの中心に設定 */
+					stBulletCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
+
+					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
+					stBulletCollision.vecCapsuleBottom = VAdd(stBulletCollision.vecCapsuleTop, this->vecMove);
+				}
+
+				/* 作成した弾にコリジョンを設定 */
+				pBulletMeleeStrong->SetCollision_Capsule(stBulletCollision);
+
+				/* バレットリストに追加 */
+				ObjectList->SetBullet(pBulletMeleeStrong);
 			}
 		}
 	}

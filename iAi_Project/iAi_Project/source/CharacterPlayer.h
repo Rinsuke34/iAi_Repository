@@ -13,6 +13,7 @@
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
+#include "BulletPlayerMeleeStrong.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -56,6 +57,7 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Projectile();				// 遠距離攻撃
 
 		/* オブジェクトのハンドル */
+		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
 		/* 変数 */

@@ -8,10 +8,11 @@
 BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 {
 	/* 初期化 */
-	this->iObjectType = OBJECT_TYPE_BULLET_PLAYER;	// オブジェクトの種類
+	this->iObjectType	= OBJECT_TYPE_BULLET_PLAYER;	// オブジェクトの種類を"弾(プレイヤー)"に設定
+	this->pEffect		= nullptr;
 
 	/* 仮追加 */
-	iDeleteCount = 60;
+	iDeleteCount = 30;
 }
 
 // デストラクタ
