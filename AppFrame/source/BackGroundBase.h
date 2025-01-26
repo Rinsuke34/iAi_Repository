@@ -17,7 +17,6 @@ class BackGroundBase : public PlatformBase
 		virtual ~BackGroundBase() {};	// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
-		virtual void	Update()			override {};	// 更新
 		virtual void	Draw();								// 描写
 		virtual void	BloomDraw();						// 発光描写
 

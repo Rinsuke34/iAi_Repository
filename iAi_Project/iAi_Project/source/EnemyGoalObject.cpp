@@ -7,13 +7,26 @@
 // コンストラクタ
 EnemyGoalObject::EnemyGoalObject() : EnemyBase()
 {
-	/* HPを設定(仮) */
+	/* 初期化 */
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
 
-	/* 初期化 */
 	/* データリスト取得 */
-	this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	{
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	}
+
+	/* モデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Player");
+	}
 }
 
 // デストラクタ
@@ -39,10 +52,4 @@ void EnemyGoalObject::Update()
 	{
 		// ダメージを受けた場合
 	}
-}
-
-// 描写
-void EnemyGoalObject::Draw()
-{
-	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.fCapsuleRadius, 40, 8, GetColor(255, 0, 0), GetColor(255, 0, 0));
 }

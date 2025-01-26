@@ -3,6 +3,10 @@
 #pragma once
 #include "Appframe.h"
 
+/* データリスト */
+#include "DataList_Model.h"
+#include "DataList_Object.h"
+
 /* テスト用敵クラス */
 
 // エネミーベースクラス
@@ -14,11 +18,12 @@ class TestEnemy : public EnemyBase
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
-		virtual void	Draw()				override;		// 描写
-		virtual void	BloomDraw()			override {};	// 発光描写
 
 	private:
 	protected:
+		/* 使用するデータリスト */
+		DataList_Object* ObjectList;			// オブジェクト管理
+
 		/* 関数 */
 
 		/* 変数 */

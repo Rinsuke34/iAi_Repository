@@ -9,7 +9,7 @@ PlatformBase::PlatformBase() : ObjectBase()
 {
 	/* ‰Šú‰» */
 	this->iModelHandle		= 0;					// ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-	this->vecRotate			= VGet(0.f, 0.f, 0.f);	// ‰ñ“]—Ê
+	this->vecRotation			= VGet(0.f, 0.f, 0.f);	// ‰ñ“]—Ê
 	this->vecScale			= VGet(1.f, 1.f, 1.f);	// Šg‘å—¦
 }
 
@@ -27,7 +27,7 @@ void PlatformBase::Initialization()
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
 	/* ƒ‚ƒfƒ‹‰ñ“] */
-	MV1SetRotationXYZ(this->iModelHandle, this->vecRotate);
+	MV1SetRotationXYZ(this->iModelHandle, this->vecRotation);
 
 	/* ƒ‚ƒfƒ‹Šg‘å */
 	MV1SetScale(this->iModelHandle, this->vecScale);

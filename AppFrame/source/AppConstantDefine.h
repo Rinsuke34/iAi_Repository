@@ -32,3 +32,11 @@ static const int INPUT_DIRECTION	= 2;	// 左右の総数(※マジックナンバー対策で作成
 
 // 初期閾値
 static const unsigned char	INIT_TRIGGER_THRESHOLD	= 10;	// トリガー入力の初期閾値
+
+/* オブジェクトのタイプ */
+// ※接触判定を行う際に使用
+static const int OBJECT_TYPE_PLAYER			= 0;	// プレイヤー
+static const int OBJECT_TYPE_ENEMY			= 1;	// エネミー
+static const int OBJECT_TYPE_BULLET_PLAYER	= 2;	// 弾丸(プレイヤー)
+static const int OBJECT_TYPE_BULLET_ENEMY	= 3;	// 弾丸(エネミー)
+
