@@ -21,11 +21,14 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
 
 		/* 変数 */
-		this->vecMove											= VGet(0.f, 0.f, 0.f);	// 移動量
-		this->stVerticalCollision								= {};					// 垂直方向のコリジョン
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};					// 水平方向コリジョン(上側)
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};					// 水平方向コリジョン(下側)
-		this->iObjectType										= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
+		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
+
+		/* 変数(デバッグ用) */
+		this->stVerticalCollision								= {};		// 垂直方向のコリジョン
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};		// 水平方向コリジョン(下側)
+		this->stMeleeStrongMoveCollsion							= {};		// 近接攻撃(強)のコリジョン(移動後の座標)
 	}
 
 	/* データリスト取得 */
@@ -203,6 +206,10 @@ void CharacterPlayer::CollisionDraw()
 	iColor	= GetColor(0, 0, 255);
 	DrawCapsule3D(this->stHorizontalCollision[0].vecCapsuleTop, this->stHorizontalCollision[0].vecCapsuleBottom, this->stHorizontalCollision[0].fCapsuleRadius, 16, iColor, iColor, FALSE);
 	DrawCapsule3D(this->stHorizontalCollision[1].vecCapsuleTop, this->stHorizontalCollision[1].vecCapsuleBottom, this->stHorizontalCollision[1].fCapsuleRadius, 16, iColor, iColor, FALSE);
+
+	/* 強攻撃移動後座標 */
+	iColor = GetColor(255, 0, 255);
+	DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
 }
 
 // 移動
@@ -747,36 +754,45 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* プレイヤーの現在の攻撃チャージフレームの取得 */
 	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
 
-	/* 2025.01.24 菊池雅道　攻撃処理追加　開始 */
-	/* 仮ターゲットを設定（後に削除） */
-	VECTOR vecTarget = VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition());
-	vecTarget = VNorm(vecTarget);
-	vecTarget = VScale(vecTarget, 2000);
-	vecTarget = VAdd(this->vecPosition, vecTarget);
+	/* 2025.01.24 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始*/
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
 		// 攻撃入力がされている場合
-		/* プレイヤーの現在の攻撃チャージフレームを加算 */
-		PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
+		/* プレイヤーモーションが"居合(溜め)"以外であるか確認 */
+		// if
+		{
+			// 居合(溜め)以外である場合
+			/* プレイヤーモーションを"居合(溜め)"に変更 */
+		}
 
-		//以下から近距離攻撃(強)のチャージ処理
-		/* プレイヤーの向きをカメラの向きに固定 */
-		this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());	
+		/* 近接攻撃(強)チャージ処理 */
+		{
+			/* プレイヤーの現在の攻撃チャージフレームを加算 */
+			PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
 
-		/* プレイヤーの移動先を算出 */
-		VECTOR vecMove;
-		vecMove = VSub(vecTarget, this->vecPosition);
-		vecMove = VNorm(vecMove);
-		vecMove = VScale(vecMove, this->PlayerStatusList->iGetPlayerNowAttakChargeFlame());
-		
-		/* 移動後の座標を設定 */
-		this->PlayerStatusList->SetPlayerChargeAttakTargetPoint(VAdd(this->vecPosition, vecMove));
+			/* プレイヤーの向きをカメラの向きに固定 */
+			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 
-		/* 移動後の座標を設定(デバッグ用) */
-		vecTest = this->PlayerStatusList->vecGetPlayerChargeAttakTargetPoint();
-		/* 2025.01.24 菊池雅道　攻撃処理追加　終了 */
+			/* 移動量算出 */
+			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 10.f;
+
+			/* 移動方向算出 */
+			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
+
+			/* デバッグ用移動後座標を作成 */
+			this->stMeleeStrongMoveCollsion.vecCapsuleTop		= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
+			this->stMeleeStrongMoveCollsion.vecCapsuleBottom	= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
+			this->stMeleeStrongMoveCollsion.fCapsuleRadius		= PLAYER_WIDE;
+
+			/* 近接攻撃(強)による移動量を設定 */
+			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMove));
+		}
+
+		/* 2025.01.24 菊池雅道　攻撃処理追加	終了 */
+		/* 2025.01.26 駒沢風助	コード修正		終了*/
 	}
 	else
 	{
@@ -794,12 +810,14 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
 
-			/* 未完成なのでとりあえず自由状態に戻す */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+			/* プレイヤーのため攻撃用のカウントを初期化する */
+			this->PlayerStatusList->SetPlayerChargeAttackCount(0);
 		}
 
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
-		PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+
+		
 	}
 }
 
@@ -889,39 +907,78 @@ void CharacterPlayer::Player_Melee_Weak()
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
 }
 
-/* 2025.01.22 菊池雅道　攻撃処理追加 開始 */
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	/* 現在の移動速度取得 */
-	VECTOR vecMove;
-	vecMove = VSub(PlayerStatusList->vecGetPlayerChargeAttakTargetPoint(), this->vecPosition);
-	vecMove = VNorm(vecMove);
-	vecMove = VScale(vecMove, this->PlayerStatusList->iGetPlayerNowAttakChargeFlame());
+	/* 2025.01.22 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始 */
 
-	/* 移動先の座標を算出 */
-	vecTest = this->PlayerStatusList->vecGetPlayerChargeAttakTargetPoint();
-	
-	/* 移動先の座標に球体コリジョンを設定(目的地とする) */
-	COLLISION_SQHERE stCollisionSqhere;
-	stCollisionSqhere.vecSqhere = this->PlayerStatusList->vecGetPlayerChargeAttakTargetPoint();
-	stCollisionSqhere.fSqhereRadius = 50.0f;
-	
-	/* プレイヤーの座標を移動させる */
-	this->vecPosition = this->PlayerStatusList->vecGetPlayerChargeAttakTargetPoint();
+	/* 溜め攻撃用のカウントを取得 */
+	int iChargeAttackCount = this->PlayerStatusList->iGetPlayerChargeAttackCount();
 
-	/* コリジョンを更新 */
-	CollisionUpdate();
-
-	// 移動先の球体コリジョン(目的地)に触れたら
-	if (this->HitCheck(stCollisionSqhere))
+	/* カウントを確認 */
+	if (iChargeAttackCount == 0)
 	{
-		/* 自由状態に遷移 */
-		this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+		// 0である場合
+		// ※モーション遷移直後である場合
+		/* プレイヤーのモーションを近接攻撃(強)に変更する */
 	}
-	
+	else if(iChargeAttackCount <= 20)
+	{
+		// 20以下である場合
+		/* モーションの初期動作中?なのでこの状態では攻撃しない */
+	}
+	else
+	{
+		// 21以上である場合
+		/* 攻撃＆移動処理 */
+		{
+			/* 近接攻撃(強)による移動量を取得 */
+			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
+
+			/* 移動量をfloat型で取得 */
+			float fMove	= VSize(vecMoveDirection);
+
+			/* 攻撃＆移動処理に入ってからのカウントを取得 */
+			int iCount	= iChargeAttackCount - 20;
+
+			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
+			int	iMoveCount = fMove / PLAYER_MELEE_STRONG_MOVESPEED;
+
+			/* プレイヤー移動 */
+			if (iCount <= iMoveCount)
+			{
+				// 現在のカウントが移動回数以下である場合
+				/* 移動量分プレイヤーを移動させる */
+				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), PLAYER_MELEE_STRONG_MOVESPEED));
+			}
+			else if (iCount == iMoveCount + 1)
+			{
+				// 移動回数+1である場合(最後の移動の場合)
+				/* 最後の移動量を取得 */
+				float	iLastMove = fMove - (iMoveCount * PLAYER_MELEE_STRONG_MOVESPEED);
+
+				/* 最後の移動量分プレイヤーを移動させる */
+				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), iLastMove));
+			}
+			else
+			{
+				// それら以外である場合(一連の行動が終了した場合)
+				/* プレイヤーの状態を"自由状態"に遷移 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+
+				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
+				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_END);
+			}
+		}
+	}
+
+	/* 溜め攻撃用のカウントを+1する */
+	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
+
+	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
+	/* 2025.01.26 駒沢風助	コード修正		終了 */	
 }
-/* 2025.01.22 菊池雅道　攻撃処理追加 終了 */
 
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()

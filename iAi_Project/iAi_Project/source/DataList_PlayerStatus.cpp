@@ -10,14 +10,13 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 {
 	/* 初期化(仮) */
 	/* プレイヤー状態関連 */
-	this->iPlayerState				= PLAYER_STATUS_FREE;	// プレイヤーの状態
-	this->iPlayerMotion				= PLAYER_MOTION_IDLE;	// プレイヤーのモーション
-	this->bPlayerLandingFlg			= false;				// プレイヤーが着地しているか
-	this->fPlayerNowMoveSpeed		= 0;					// プレイヤーの現在の移動速度
-	this->fPlayerAngleX				= 0;					// プレイヤーのX軸回転量(ラジアン)
-	this->fPlayerNowFallSpeed		= 0;					// プレイヤーの現在の落下速度
-	this->iPlayerNowJumpCount		= 0;					// プレイヤーのジャンプ回数(現在数)
-
+	this->iPlayerState						= PLAYER_STATUS_FREE;	// プレイヤーの状態
+	this->iPlayerMotion						= PLAYER_MOTION_IDLE;	// プレイヤーのモーション
+	this->bPlayerLandingFlg					= false;				// プレイヤーが着地しているか
+	this->fPlayerNowMoveSpeed				= 0;					// プレイヤーの現在の移動速度
+	this->fPlayerAngleX						= 0;					// プレイヤーのX軸回転量(ラジアン)
+	this->fPlayerNowFallSpeed				= 0;					// プレイヤーの現在の落下速度
+	this->iPlayerNowJumpCount				= 0;					// プレイヤーのジャンプ回数(現在数)
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
 	this->iPlayerNormalDashFlameCount		= 0;			//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
 	this->bPlayerJumpingFlag				= false;		//プレイヤーがジャンプ中かのフラグ
@@ -32,8 +31,9 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	/* 2025.01.10 菊池雅道 初期化処理追加 終了 */
 	/* 2025.01.22 菊池雅道 初期化処理追加 開始 */
 	this->iPlayerNowAttakChargeFlame		= 0;			//現在のプレイヤー溜め攻撃チャージフレーム数  2025.01.22 菊池雅道 初期化処理追加
-	this->vecPlayerChargeAttakTargetPoint	= { 0, 0, 0 };	//プレイヤー溜め攻撃の目的地
+	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };	//プレイヤー溜め攻撃の目的地
 	/* 2025.01.22 菊池雅道 初期化処理追加 終了 */
+	this->iPlayerChargeAttackCount			= 0;			// 近接攻撃(強)のカウント
 
 	/* 能力値関連 */
 	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度

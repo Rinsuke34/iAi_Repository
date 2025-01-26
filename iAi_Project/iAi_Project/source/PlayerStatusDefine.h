@@ -17,22 +17,22 @@ static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// プレイヤーの最大
 static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX		= 2;			// プレイヤーのジャンプ回数(最大数)
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
-//移動関係
-static const float PLAYER_WALK_MOVE_SPEED = 1.0f; //プレイヤーの歩きの移動速度
-static const float PLAER_DASH_NOMAL_SPEED = 5.0f; //プレイヤーの走り（通常）の移動速度
-static const float PLAER_DASH_MAX_SPEED = 10.0f; //プレイヤーの走り（最大）の移動速度
-static const int FLAME_COUNT_TO_MAX_SPEED = 180; //プレイヤーの走りの通常→最大になるフレーム数
-static const float STICK_TILT_PLAER_DASH = 0.8f; //プレイヤーが走り状態になるスティックの傾き（範囲：最大1）
+// 移動関係
+static const float	PLAYER_WALK_MOVE_SPEED				= 1.0f;			// プレイヤーの歩きの移動速度
+static const float	PLAER_DASH_NOMAL_SPEED				= 5.0f;			// プレイヤーの走り（通常）の移動速度
+static const float	PLAER_DASH_MAX_SPEED				= 10.0f;		// プレイヤーの走り（最大）の移動速度
+static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;			// プレイヤーの走りの通常→最大になるフレーム数
+static const float	STICK_TILT_PLAER_DASH				= 0.8f;			// プレイヤーが走り状態になるスティックの傾き（範囲：最大1）
 
-//ジャンプ関係
-static const float PLAYER_JUMP_SPEED = 50.0f; //プレイヤーのジャンプの速度
-static const float GRAVITY_SREED = -9.8f; //重力の速度　Y軸の下方向なのでマイナスとする
-static const float GRAVITY_BUFFER = 0.1f; //キャラクターにかかる重力調整　１より大きいと重くなる　１より小さいと軽くなる
-static const int PLAYER_JUMPING_IN_AIR_LIMIT = 1;//プレイヤーが空中ジャンプできる回数
-//回避関係
-static const float PLAYER_DODGE_SPEED	= 100.0f;//プレイヤーの回避速度
-static const int PLAYER_DODGE_FLAME= 30.0f; //プレイヤーの回避フレーム数
-static const int PLAYER_DODGE_IN_AIR_LIMIT = 1;//プレイヤーが空中で回避できる回数
+// ジャンプ関係
+static const float	PLAYER_JUMP_SPEED					= 50.0f;		// プレイヤーのジャンプの速度
+static const float	GRAVITY_SREED						= -9.8f;		// 重力の速度　Y軸の下方向なのでマイナスとする
+static const float	GRAVITY_BUFFER						= 0.1f;			// キャラクターにかかる重力調整　１より大きいと重くなる　１より小さいと軽くなる
+static const int	PLAYER_JUMPING_IN_AIR_LIMIT			= 1;			// プレイヤーが空中ジャンプできる回数
+// 回避関係
+static const float	PLAYER_DODGE_SPEED					= 100.0f;		// プレイヤーの回避速度
+static const int	PLAYER_DODGE_FLAME					= 30.0f;		// プレイヤーの回避フレーム数
+static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// プレイヤーが空中で回避できる回数
 /* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
 
 /* カメラ関連 */
@@ -61,11 +61,12 @@ static const int	PLAYER_MOTION_RUN_HIGH				= 3;	// 走行(高速)
 static const int	PLAYER_MOTION_DRAW_SWORD_CHARGE		= 4;	// 居合(溜め)
 static const int	PLAYER_MOTION_DRAW_SWORD_WEAK		= 5;	// 居合(弱)
 static const int	PLAYER_MOTION_DRAW_SWORD_STRONG		= 6;	// 居合(強)
-static const int	PLAYER_MOTION_THROW_KUNAI_AIM		= 7;	// クナイ(構え)
-static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 8;	// クナイ(投げ)
-static const int	PLAYER_MOTION_DODGE					= 9;	// 回避
-static const int	PLAYER_MOTION_JUMP_UP				= 10;	// ジャンプ(上昇)
-static const int	PLAYER_MOTION_JUMP_DOWN				= 11;	// ジャンプ(下降)
+static const int	PLAYER_MOTION_DRAW_SWORD_END		= 7;	// 居合(強)(終了)
+static const int	PLAYER_MOTION_THROW_KUNAI_AIM		= 8;	// クナイ(構え)
+static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 9;	// クナイ(投げ)
+static const int	PLAYER_MOTION_DODGE					= 10;	// 回避
+static const int	PLAYER_MOTION_JUMP_UP				= 11;	// ジャンプ(上昇)
+static const int	PLAYER_MOTION_JUMP_DOWN				= 12;	// ジャンプ(下降)
 
 /* プレイヤー処理用定数 */
 static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
@@ -75,3 +76,4 @@ static const int	PLAYER_CHARGE_TO_STRONG_TIME		= 5;		// 近接攻撃が強攻撃に切り替
 static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// プレイヤーの移動用コリジョン上側
 static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// プレイヤーの移動用コリジョン下側
 static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// プレイヤーの移動用コリジョン数
+static const int	PLAYER_MELEE_STRONG_MOVESPEED		= 100;		// 近接攻撃(強)の移動速度
