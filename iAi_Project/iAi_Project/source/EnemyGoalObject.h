@@ -4,6 +4,7 @@
 #include "Appframe.h"
 
 /* データリスト */
+#include "DataList_Model.h"
 #include "DataList_Object.h"
 
 /* ゴールオブジェクトクラスの宣言 */
@@ -18,7 +19,6 @@ class EnemyGoalObject : public EnemyBase
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
-		virtual void	Draw()				override;		// 描写
 
 	private:
 	protected:

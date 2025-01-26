@@ -165,8 +165,8 @@
     <ClCompile Include="source\DataList_Model.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
-    <ClCompile Include="source\EffectPlayerMeleeWeak.cpp" />
-    <ClCompile Include="source\EffectTest.cpp" />
+    <ClCompile Include="source\EffectManualDelete.cpp" />
+    <ClCompile Include="source\EffectSelfDelete.cpp" />
     <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
@@ -188,8 +188,8 @@
     <ClInclude Include="source\DataList_GameStatus.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
-    <ClInclude Include="source\EffectPlayerMeleeWeak.h" />
-    <ClInclude Include="source\EffectTest.h" />
+    <ClInclude Include="source\EffectManualDelete.h" />
+    <ClInclude Include="source\EffectSelfDelete.h" />
     <ClInclude Include="source\EnemyGoalObject.h" />
     <ClInclude Include="source\Enemy_Test.h" />
     <ClInclude Include="source\GameStatusDefine.h" />

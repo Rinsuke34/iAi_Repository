@@ -13,7 +13,6 @@
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
-#include "EffectPlayerMeleeWeak.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -49,12 +48,15 @@ class CharacterPlayer : public CharacterBase
 		void	Movement_Horizontal();		// 移動処理(水平方向)
 
 		// 攻撃アクション
-		void	Player_Attack_Transition();		// 攻撃状態遷移管理
-		void	Player_Melee_Posture();			// 近接攻撃(構え)
-		void	Player_Melee_Weak();			// 近接攻撃(弱)
-		void	Player_Charge_Attack();			// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
-		void	Player_Projectile_Posture();	// 遠距離攻撃(構え)
-		void	Player_Projectile();			// 遠距離攻撃
+		void	Player_Attack_Transition();			// 攻撃状態遷移管理
+		void	Player_Melee_Posture();				// 近接攻撃(構え)
+		void	Player_Melee_Weak();				// 近接攻撃(弱)
+		void	Player_Charge_Attack();				// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
+		void	Player_Projectile_Posture();		// 遠距離攻撃(構え)
+		void	Player_Projectile();				// 遠距離攻撃
+
+		/* オブジェクトのハンドル */
+		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

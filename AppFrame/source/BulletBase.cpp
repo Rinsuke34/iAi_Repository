@@ -11,6 +11,7 @@ BulletBase::BulletBase() : ActorBase()
 	this->stCollisionSqhere	= {};	// コリジョン(球体)
 	this->vecDirection		= {};	// 向き
 	this->fMoveSpeed		= 0;	// 移動速度
+	this->iTargetObjectType	= 0;	// 接触する対象となるオブジェクトのタイプ
 }
 
 // 当たり判定描写

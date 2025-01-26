@@ -3,6 +3,12 @@
 #pragma once
 #include "Appframe.h"
 
+/* データリスト */
+#include "DataList_Object.h"
+
+/* オブジェクト */
+#include "EffectManualDelete.h"
+
 /* 近接攻撃(弱)クラスの宣言 */
 
 // 近接攻撃(弱)
@@ -14,10 +20,12 @@ class BulletPlayerMeleeWeak : public BulletBase
 
 		virtual void	Initialization()	override;	// 初期化
 		virtual void	Update()			override;	// 更新
-		virtual void	Draw()				override;	// 描写
-		virtual void	BloomDraw()			override;	// 発光描写
 
 	private:
+		/* オブジェクト(エフェクト)のハンドル */
+		EffectManualDelete* pEffect;
+
+		int iDeleteCount;	// 仮追加の削除カウント
+
 	protected:
-	
 };

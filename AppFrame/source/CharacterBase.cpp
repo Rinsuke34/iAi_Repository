@@ -9,9 +9,8 @@
 CharacterBase::CharacterBase() : ActorBase()
 {
 	/* 初期化 */
-	this->stCollisionCapsule	= {};	// コリジョン(カプセル)
-	this->vecDirection			= {};	// 向き
-	this->iInvincibilityTime	= {};	// 無敵時間
+	this->stCollisionCapsule	= {};					// コリジョン(カプセル)
+	this->iInvincibilityTime	= {};					// 無敵時間
 }
 
 // 初期化
@@ -78,6 +77,19 @@ void CharacterBase::CollisionDraw()
 	/* 当たり判定を描写 */
 	int iColor	= GetColor(255, 0, 0);
 	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, iColor, iColor, FALSE);
+}
+
+// 描写
+void CharacterBase::Draw()
+{
+	/* 座標設定 */
+	MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+	/* モデル回転 */
+	MV1SetRotationXYZ(this->iModelHandle, this->vecRotation);
+
+	/* モデル描写 */
+	MV1DrawModel(this->iModelHandle);
 }
 
 /* 接触判定(簡易) */

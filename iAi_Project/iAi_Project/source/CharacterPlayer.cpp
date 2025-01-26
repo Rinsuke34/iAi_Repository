@@ -1,7 +1,8 @@
-/* 2024.12.15 駒沢風助 ファイル作成 */
+/* 2024.12.15 駒沢風助	ファイル作成 */
 /* 2025.01.09 菊池雅道　移動処理追加 */
 /* 2025.01.22 菊池雅道　攻撃処理追加 */
 /* 2025.01.24 菊池雅道　攻撃処理追加 */
+
 #include "CharacterPlayer.h"
 
 // デバッグ用 後で削除
@@ -16,11 +17,15 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
 	{
-		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
-		this->vecMove					= {};					// 移動量
-		this->stVerticalCollision		= {};					// 垂直方向のコリジョン
+		/* オブジェクトのハンドル */
+		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
 
-		for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++) { this->stHorizontalCollision[i] = {}; }	// 水平方向コリジョン
+		/* 変数 */
+		this->vecMove											= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->stVerticalCollision								= {};					// 垂直方向のコリジョン
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};					// 水平方向コリジョン(上側)
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};					// 水平方向コリジョン(下側)
+		this->iObjectType										= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
 	}
 
 	/* データリスト取得 */
@@ -35,7 +40,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
-	/* プレイヤーモデル取得 */
+	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
@@ -114,7 +119,7 @@ void CharacterPlayer::Draw()
 	MV1DrawModel(this->iModelHandle);
 
 	/* テスト用描写 */
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
+	/*if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
 	{
 		DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "JUMP");
 	}
@@ -177,7 +182,7 @@ void CharacterPlayer::Draw()
 	DrawSphere3D(stTestCollision.vecSqhere, stTestCollision.fSqhereRadius, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), false);
 	DrawFormatString(500, 16 * 17, GetColor(255, 255, 255), "プレイヤー座標(%f, %f, %f)", this->vecPosition.x, this->vecPosition.y, this->vecPosition.z);
 	DrawFormatString(500, 16 * 18, GetColor(255, 255, 255), "プレイヤー移動量(%f, %f, %f)", this->vecMove.x, this->vecMove.y, this->vecMove.z);
-	DrawFormatString(500, 16 * 19, GetColor(255, 255, 255), "プレイヤー移動速度 : %f", VSize(this->vecMove));
+	DrawFormatString(500, 16 * 19, GetColor(255, 255, 255), "プレイヤー移動速度 : %f", VSize(this->vecMove));*/
 }
 
 // 当たり判定描写
@@ -362,74 +367,89 @@ void CharacterPlayer::Player_Gravity()
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
-	/* 2025.01.09 菊池雅道　移動処理追加 開始 */
-	/* 入力による移動量を取得 */
-	VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
-
-	/* カメラの水平方向の向きを移動用の向きに設定 */
-	float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-	/* 移動量を算出 */
-	VECTOR vecMove;
-	vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-	vecMove.y = 0.0f;
-	vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	
-	//回避フラグがたっておらず、（ジャンプ中であれば）回避回数制限以内の状態で、回避ボタンが押された
-	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true && this->PlayerStatusList->bGetPlayerDodgingFlag() == false && this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
-	{	
-		// 回避フラグをセット
-		this->PlayerStatusList->SetPlayerDodgingFlag(true);
-		// 回避開始時の時間をリセット
-		this->PlayerStatusList->SetPlayerNowDodgeFlame(0.0f);
-		//現在の移動方向へ回避
-		this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
-	
-		//回避状態の進行率をリセット
-		this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
-	}
+	/* プレイヤーの状態を取得 */
+	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
 
-	//回避フラグが有効であれば回避処理を行う
-	if (this->PlayerStatusList->bGetPlayerDodgingFlag() == true)
+	/* プレイヤー場外が"回避状態中"であるか確認 */
+	if (iPlayerState == PLAYER_STATUS_DODGING)
 	{
-		//ジャンプ中であれば回避回数をカウント
-		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
-		{
-			this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
-		}
-
-		// 時間経過を加算
-		this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
-
-		// 回避中（設定時間の間）
+		// 回避中である場合
+		/* 回避状態が維持される時間を超えていないか確認 */
 		if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
 		{
-			//設定時間かけて回避移動を行う
-			// 回避中（設定時間の間）
-			vecMove = VScale(vecMove, PLAYER_DODGE_SPEED);
+			// 超えていない(回避状態を継続する)場合
+			/* 回避による移動方向を設定 */
+			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED);
 
-			/* 移動後の座標を算出 */
-			VECTOR vecNextPosition = VAdd(this->vecPosition, vecMove);
-
-			/* 道中でオブジェクトに接触しているか判定 */
-			// 制作予定
-
-			/* プレイヤーの座標を移動させる */
-			this->vecPosition = vecNextPosition;
+			/* 回避の経過時間を進める */
+			this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
 		}
-		// 回避終了
 		else
 		{
-			this->PlayerStatusList->SetPlayerDodgingFlag(false);
+			// 超えている(回避状態を終了する)場合
+			/* 回避完了直後フラグを有効にする */
 			this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
+
+			/* プレイヤー状態を"自由状態"に設定 */
+			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+		}
+	}
+	else
+	{
+		// 回避中でない場合
+		/* 回避が入力されているか確認 */
+		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
+		{
+			// 回避が入力されている場合
+			/* 空中での回避回数制限を超えていないか */
+			if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
+			{
+				/* 回避開始時の時間をリセット */
+				this->PlayerStatusList->SetPlayerNowDodgeFlame(0.0f);
+
+				/* 回避方向設定 */
+				{
+					/* 入力による移動量を取得 */
+					VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+					/* カメラの水平方向の向きを移動用の向きに設定 */
+					float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+					/* 移動量を算出 */
+					VECTOR vecMove;
+					vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+					vecMove.y = 0.0f;
+					vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+
+					/* 回避の移動方向を現在の移動用の向きに設定 */
+					this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
+				}
+
+				/* 回避状態の進行率をリセット */
+				this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
+
+				/* 落下の加速度を初期化 */
+				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
+				/* プレイヤー状態を"回避状態中"に設定 */
+				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_DODGING);
+
+				/* プレイヤーが着地していないかを確認 */
+				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+				{
+					// 着地していない場合
+					/* 空中での回避回数のカウントを進める */
+					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
+				}
+			}
 		}
 	}
 
-	/* プレイヤーの向きを移動方向に合わせる */
-	//float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-	//fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
-	//this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
-	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+	/* 2025.01.09 菊池雅道　移動処理追加	終了 */
+	/* 2025.01.26 駒沢風助	コード修正		終了*/
 }
 
 // 移動処理(垂直方向)
@@ -471,7 +491,7 @@ void CharacterPlayer::Movement_Vertical()
 			if (stHitPolyDim.HitPosition.y >= fStandPosY)
 			{
 				// 現在の着地座標より高い位置である場合
-				/* 落下の加速度を更新 */
+				/* 落下の加速度を初期化 */
 				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
 				/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
@@ -786,55 +806,84 @@ void CharacterPlayer::Player_Melee_Posture()
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
 {
+	/* 2025.01.22 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始*/
+
 	/* 攻撃モーションを確認 */
-	// ※攻撃モーションが終了したら、自由状態に遷移するようにする
-
-	/* プレイヤーの向きの方向にエフェクトを出す */
-	EffectPlayerMeleeWeak* pAddEffect = new EffectPlayerMeleeWeak();
-	ObjectList->SetEffect(pAddEffect);
-	pAddEffect->Effect_Load("FX_slash/FX_slash");
-	pAddEffect->SetPosition(this->vecPosition);
-	pAddEffect->Initialization();
-
-	/* 2025.01.22 菊池雅道　攻撃処理追加 開始 */
-	//仮の弱攻撃処理
-
-	/* 攻撃に使う弾を作成 */
-	BulletPlayerMeleeWeak* pAddBullet = new BulletPlayerMeleeWeak;
-
-	// プレイヤーの少し前の位置を求める※Y軸方向に関しては考えないものとする
-	/* モデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
-	VECTOR vecMeleeWeakVector = { 0,0,-1 };
-	/* プレイヤーの角度からY軸の回転行列を求める */
-	MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
-	/* プレイヤーの少し前の位置ベクトルを求める */
-	vecMeleeWeakVector = VTransform(vecMeleeWeakVector, matPlayerRotation);
-	vecMeleeWeakVector = VNorm(vecMeleeWeakVector);
-	vecMeleeWeakVector = VScale(vecMeleeWeakVector, 100);
-	vecMeleeWeakVector = VAdd(this->vecPosition, vecMeleeWeakVector);
-	
-	/* 弾の球体コリジョン作成 ※プレイヤーの少し前に出す */
-	COLLISION_SQHERE stMeleeWeakCollision{VAdd(vecMeleeWeakVector,VGet(0,100,0)),100};
-	
-	/* デバッグ用に弾のコリジョンを表示 */
-	stTestCollision = stMeleeWeakCollision;
-
-	/* 弾の球体コリジョンを設定 */
-	pAddBullet->SetCollision_Capsule(stMeleeWeakCollision);
-
-	/* 敵のリストを取得 */
-	auto& PlatformList = ObjectList->GetEnemyList();
-
-	// 弾と敵の当たり判定を行う 
-	for (auto* platform : PlatformList)
+	// ※現在のモーションが近接攻撃(弱)であるか確認
+	// if
 	{
-		if (pAddBullet->HitCheck(platform->stGetCollision_Capsule()))
+		// 近接攻撃(弱)である場合
+		/* プレイヤーモーションの現在のカウントを進める */
+
+		/* 現在のモーションの総時間を取得 */
+
+		/* 現在のモーションの総時間を超えているか */
+		// if
 		{
-			/* 当たったらダメージを受ける */
-			platform->SetNowHP(platform->iGetNowHP() - 1);
+			// 超えている場合
+			/* プレイヤー状態を"自由状態"に変更 */
+			//this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+
+			/* プレイヤーのモーションを"待機"に設定 */
+			//this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WAIT);
+
+			/* プレイヤーのモーションの現在のカウントを初期化 */
+
+			/* バレットクラス"近接攻撃(弱)"の削除フラグを有効 */
+			//this->pAddBullet->SetDeleteFlag(true);
+
+			/* このクラスで所持するバレットクラス"近接攻撃(弱)"のハンドルを初期化 */
+			//this->pBulletMeleeWeak = nullptr;
 		}
 	}
-	/* 2025.01.22 菊池雅道　攻撃処理追加 終了 */
+	// else
+	{
+		// 近接攻撃(弱)でない場合
+		/* プレイヤーのモーションを近接攻撃(弱)に設定 */
+		
+		/* プレイヤーのモーションの現在のカウントを初期化 */
+
+		/* 近接攻撃として扱う弾を作成 */
+		// ※現在のプレイヤーの向きに弾を作成
+		this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
+
+		/* 生成座標を取得 */
+		{
+			/* 攻撃の生成方向の設定 */
+			// ※プレイヤーの向きではなくカメラの向きとする
+			VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+
+			/* カメラの水平方向の向きを移動用の向きに設定 */
+			float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+			/* 攻撃座標を算出 */
+			VECTOR vecAdd;
+			// 方向
+			vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+			vecAdd.y = 0.f;
+			vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+			vecAdd = VNorm(vecAdd);
+			vecAdd = VScale(vecAdd, PLAYER_WIDE);
+			// 高さ
+			vecAdd.y = PLAYER_HEIGHT / 2.f;
+
+			/* 攻撃生成座標を設定 */
+			this->pBulletMeleeWeak->SetPosition(VAdd(this->vecPosition, vecAdd));
+		}
+
+		/* 攻撃の向きを設定 */
+		this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetCameraAngleX()), 0.0f));
+
+		/* 初期化を行う */
+		this->pBulletMeleeWeak->Initialization();
+
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletMeleeWeak);
+	}
+
+	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
+	/* 2025.01.26 駒沢風助	コード修正		終了 */
 
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);

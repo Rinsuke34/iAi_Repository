@@ -12,11 +12,6 @@ class EnemyBase : public CharacterBase
 		EnemyBase();				// コンストラクタ
 		virtual ~EnemyBase() {};	// デストラクタ
 
-		virtual void	Initialization()	override {};	// 初期化
-		virtual void	Update()			override {};	// 更新
-		virtual void	Draw()				override {};	// 描写
-		virtual void	BloomDraw()			override {};	// 発光描写
-
 		int		iGetMaxHP()	{ return this->iMaxHp; };		// 最大HPを取得
 		int		iGetNowHP()	{ return this->iNowHp; };		// 現在HPを取得
 

@@ -28,7 +28,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerJumpSpeed					= 0;			//プレイヤージャンプ速度
 	this->iPlayerNowDodgeFlame				= 0;			// プレイヤーの現在の回避フレーム数
 	this->fPlayerDodgeSpeed					= 0;			//プレイヤー回避速度
-	this->bPlayerDodgingFlag				= false;		//プレイヤーが回避中かのフラグ
 	this->bPlayerAfterDodgeFlag				= false;		//プレイヤーの回避後フラグ
 	/* 2025.01.10 菊池雅道 初期化処理追加 終了 */
 	/* 2025.01.22 菊池雅道 初期化処理追加 開始 */

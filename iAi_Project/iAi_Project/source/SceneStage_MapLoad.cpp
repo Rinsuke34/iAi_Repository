@@ -75,7 +75,7 @@ void SceneStage::LoadMapData()
 				// ¦³‚µ‚¢‚©•s–¾‚Èˆ—
 				vecRot.x *= -1;
 				// Ý’è
-				pBackGround->SetRotate(vecRot);
+				pBackGround->SetRotation(vecRot);
 
 				/* Šg‘å—¦ */
 				VECTOR vecScale;
@@ -131,7 +131,7 @@ void SceneStage::LoadMapData()
 				// ¦³‚µ‚¢‚©•s–¾‚Èˆ—
 				vecRot.x *= -1;
 				// Ý’è
-				pCollision->SetRotate(vecRot);
+				pCollision->SetRotation(vecRot);
 
 				/* Šg‘å—¦ */
 				VECTOR vecScale;
@@ -209,7 +209,7 @@ void SceneStage::LoadMapData()
 			TestEnemy* AddEnemy = new TestEnemy();
 			ObjectList->SetEnemy(AddEnemy);
 
-			AddEnemy->SetPosition(VGet(100, 100, 100));
+			AddEnemy->SetPosition(VGet(1000.f, -1000.f, 0.f));
 		}
 	}
 

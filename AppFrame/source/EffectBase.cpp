@@ -40,9 +40,15 @@ void EffectBase::Effect_Load(std::string effectName)
 	this->iEffectHandle_Resource = LoadEffekseerEffect(FileName.c_str());
 }
 
-// エフェクト位置更新(vecPosに)
+// エフェクト位置更新
 void EffectBase::Effect_PosUpdate()
 {
 	/* エフェクトの描写座標を現在のvecPositionに設定 */
 	SetPosPlayingEffekseer3DEffect(this->iEffectHandle_Play, this->vecPosition.x, this->vecPosition.y, this->vecPosition.z);
+}
+
+// エフェクト回転量更新
+void EffectBase::Effect_RotationUpdate()
+{
+	SetRotationPlayingEffekseer3DEffect(this->iEffectHandle_Play, this->vecRotation.x, this->vecRotation.y, this->vecRotation.z);
 }

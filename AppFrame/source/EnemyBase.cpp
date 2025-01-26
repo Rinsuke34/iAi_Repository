@@ -9,6 +9,7 @@
 EnemyBase::EnemyBase() : CharacterBase()
 {
 	/* 初期化 */
-	this->iMaxHp	= 0;	// 最大HP
-	this->iNowHp	= 0;	// 現在HP
+	this->iMaxHp			= 0;					// 最大HP
+	this->iNowHp			= 0;					// 現在HP
+	this->iObjectType		= OBJECT_TYPE_ENEMY;	// オブジェクトの種類
 }
