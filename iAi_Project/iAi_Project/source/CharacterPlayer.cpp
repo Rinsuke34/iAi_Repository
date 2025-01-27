@@ -223,14 +223,16 @@ void CharacterPlayer::Player_Move()
 	/* プレイヤーの状態を取得 */
 	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
 
-	/* プレイヤーの状態に応じて移動速度の倍率を設定 */
-	float fMoveSpeedRatio = 1.f;
+	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
+	float	fMoveSpeedRatio		= 1.f;		// 移動速度(倍率)
+	bool	bPlayerAngleSetFlg	= true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
 	switch (iPlayerState)
 	{
 		/* 移動処理を通常通りに行う状態 */
 		case PLAYER_STATUS_FREE:				// 自由状態
 			/* 補正無しにする */
-			fMoveSpeedRatio = 1.f;
+			fMoveSpeedRatio		= 1.f;
+			bPlayerAngleSetFlg	= true;
 			break;
 
 		/* 移動処理を速度を抑えて行う状態 */
@@ -238,7 +240,8 @@ void CharacterPlayer::Player_Move()
 		case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
 			/* 移動速度補正0.5倍にする */
 			// ※仮の値
-			fMoveSpeedRatio = 0.5f;
+			fMoveSpeedRatio		= 0.5f;
+			bPlayerAngleSetFlg	= false;
 			break;
 
 		/* 移動処理を行わない状態 */
@@ -262,21 +265,21 @@ void CharacterPlayer::Player_Move()
 		// 回避後フラグがtrueなら最大ダッシュ状態になる
 		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
 		{
-			fSpeed = PLAER_DASH_MAX_SPEED;
+			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 		}
 
 		// スティックの倒し具合で速度を変化
 		else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH) 
 		{
 			//走り（通常）
-			fSpeed = PLAER_DASH_NOMAL_SPEED;
+			fSpeed = PLAER_DASH_NOMAL_SPEED * fMoveSpeedRatio;
 			//フレーム数をカウント
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
 			//一定フレームがたったら走り（最大）へ
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
 			{
-				fSpeed = PLAER_DASH_MAX_SPEED;
+				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 			}
 		}
 		else
@@ -284,7 +287,7 @@ void CharacterPlayer::Player_Move()
 			//歩き
 			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
-			fSpeed = PLAYER_WALK_MOVE_SPEED;
+			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 		}
 		/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 
@@ -300,10 +303,15 @@ void CharacterPlayer::Player_Move()
 		vecAddMove.z	= -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
 		vecAddMove		= VScale(vecAddMove, fSpeed);
 
-		/* プレイヤーの向きを移動方向に合わせる */
-		float fPlayerAngle	= atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-		fPlayerAngle		= fAngleX - fPlayerAngle;			// カメラの向きと合成
-		this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+		/* プレイヤーの向きを移動方向に合わせるか確認 */
+		if (bPlayerAngleSetFlg == true)
+		{
+			// 合わせる場合
+			/* プレイヤーの向きを移動方向に合わせる */
+			float fPlayerAngle	= atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+			fPlayerAngle		= fAngleX - fPlayerAngle;			// カメラの向きと合成
+			this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+		}
 	}
 	else
 	{
