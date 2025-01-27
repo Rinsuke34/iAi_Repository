@@ -75,7 +75,7 @@ void SceneStage::LoadMapData()
 				// ※正しいか不明な処理
 				vecRot.x *= -1;
 				// 設定
-				pBackGround->SetRotate(vecRot);
+				pBackGround->SetRotation(vecRot);
 
 				/* 拡大率 */
 				VECTOR vecScale;
@@ -131,7 +131,7 @@ void SceneStage::LoadMapData()
 				// ※正しいか不明な処理
 				vecRot.x *= -1;
 				// 設定
-				pCollision->SetRotate(vecRot);
+				pCollision->SetRotation(vecRot);
 
 				/* 拡大率 */
 				VECTOR vecScale;
@@ -164,9 +164,6 @@ void SceneStage::LoadMapData()
 					/* "オブジェクト管理"にプレイヤーを追加 */
 					CharacterPlayer* pPlayer = new CharacterPlayer();
 					ObjectList->SetCharacterPlayer(pPlayer);
-
-					/* モデル */
-					pPlayer->SetModelHandle(this->ModelList->iGetModel("Player"));
 
 					/* 座標 */
 					VECTOR vecPos;
@@ -212,7 +209,22 @@ void SceneStage::LoadMapData()
 			TestEnemy* AddEnemy = new TestEnemy();
 			ObjectList->SetEnemy(AddEnemy);
 
-			AddEnemy->SetPosition(VGet(0, -1000, 0));
+			AddEnemy->SetPosition(VGet(1000.f, -1000.f, 0.f));
+
+			AddEnemy = new TestEnemy();
+			ObjectList->SetEnemy(AddEnemy);
+
+			AddEnemy->SetPosition(VGet(500.f, -1000.f, 0.f));
+
+			AddEnemy = new TestEnemy();
+			ObjectList->SetEnemy(AddEnemy);
+
+			AddEnemy->SetPosition(VGet(0.f, -1000.f, 0.f));
+
+			AddEnemy = new TestEnemy();
+			ObjectList->SetEnemy(AddEnemy);
+
+			AddEnemy->SetPosition(VGet(-500.f, -1000.f, 0.f));
 		}
 	}
 

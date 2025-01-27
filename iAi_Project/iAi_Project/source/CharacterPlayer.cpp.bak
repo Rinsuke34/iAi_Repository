@@ -8,12 +8,35 @@ VECTOR vecTest;
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
-	/* データリスト取得 */
-	this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
-	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
-	this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	{
+		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->vecMove					= {};					// 移動量
+		this->stVerticalCollision		= {};					// 垂直方向のコリジョン
 
-	this->vecMove			= VGet(0,0,0);		// 移動量
+		for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++) { this->stHorizontalCollision[i] = {}; }	// 水平方向コリジョン
+	}
+
+	/* データリスト取得 */
+	{
+		/* "入力管理"を取得 */
+		this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	}
+
+	/* プレイヤーモデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Player/Models/Player");
+	}
 }
 
 // 初期化
@@ -143,6 +166,31 @@ void CharacterPlayer::Draw()
 	DrawFormatString(500, 16 * 16, GetColor(255, 255, 255), "X : %f Y : %f Z : %f", vecTest.x, vecTest.y, vecTest.z);
 
 	DrawSphere3D(vecTest, 80.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
+
+
+	DrawFormatString(500, 16 * 17, GetColor(255, 255, 255), "プレイヤー座標(%f, %f, %f)", this->vecPosition.x, this->vecPosition.y, this->vecPosition.z);
+	DrawFormatString(500, 16 * 18, GetColor(255, 255, 255), "プレイヤー移動量(%f, %f, %f)", this->vecMove.x, this->vecMove.y, this->vecMove.z);
+	DrawFormatString(500, 16 * 19, GetColor(255, 255, 255), "プレイヤー移動速度 : %f", VSize(this->vecMove));
+}
+
+// 当たり判定描写
+void CharacterPlayer::CollisionDraw()
+{
+	CharacterBase::CollisionDraw();
+
+	/* プレイヤー座標 */
+	int iColor = GetColor(255, 0, 0);
+	DrawLine3D(VAdd(this->vecPosition, VGet(+50, 0, 0)), VAdd(this->vecPosition, VGet(-50, 0, 0)), iColor);
+	DrawLine3D(VAdd(this->vecPosition, VGet(0, 0, +50)), VAdd(this->vecPosition, VGet(0, 0, -50)), iColor);
+
+	/* 垂直方向のコリジョン */
+	iColor	= GetColor(0, 255, 0);
+	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, iColor);
+
+	/* 並行方向のコリジョン */
+	iColor	= GetColor(0, 0, 255);
+	DrawCapsule3D(this->stHorizontalCollision[0].vecCapsuleTop, this->stHorizontalCollision[0].vecCapsuleBottom, this->stHorizontalCollision[0].fCapsuleRadius, 16, iColor, iColor, FALSE);
+	DrawCapsule3D(this->stHorizontalCollision[1].vecCapsuleTop, this->stHorizontalCollision[1].vecCapsuleBottom, this->stHorizontalCollision[1].fCapsuleRadius, 16, iColor, iColor, FALSE);
 }
 
 // 移動
@@ -160,7 +208,6 @@ void CharacterPlayer::Player_Move()
 		/* 現在の移動速度取得 */
 		float fSpeed	= this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 
-		/* 2025.01.09 菊池雅道　移動処理追加 開始 */
 		/* 最大速度を超えていないか確認 */
 		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
 		{
@@ -371,9 +418,9 @@ void CharacterPlayer::Player_Dodg()
 	}
 
 	/* プレイヤーの向きを移動方向に合わせる */
-	float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-	fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
-	this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+	//float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+	//fPlayerAngle = fAngleX - fPlayerAngle;					// カメラの向きと合成
+	//this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
 	/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 }
 
@@ -387,12 +434,10 @@ void CharacterPlayer::Movement_Vertical()
 	vecNextPosition.z		= this->vecPosition.z;
 
 	/* 主人公の上部分の当たり判定から下方向へ向けた線分を作成 */
-	COLLISION_LINE stCollision;
-	stCollision.vecLineStart = this->vecPosition;
-	stCollision.vecLineStart.y += 100;		// ※歩きで登れる高さの上限
-
-	stCollision.vecLineEnd = stCollision.vecLineStart;
-	stCollision.vecLineEnd.y -= 9999;
+	this->stVerticalCollision.vecLineStart		=	this->vecPosition;
+	this->stVerticalCollision.vecLineStart.y	+=	PLAYER_HEIGHT;
+	this->stVerticalCollision.vecLineEnd		=	stVerticalCollision.vecLineStart;
+	this->stVerticalCollision.vecLineEnd.y		-=	9999;
 
 	/* 以下、仮処理(近いオブジェクトのみ対象にするようにする) */
 	/* 足場を取得 */
@@ -408,36 +453,51 @@ void CharacterPlayer::Movement_Vertical()
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
 	{
-		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollision);
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
 
 		/* 接触しているか確認 */
 		if (stHitPolyDim.HitFlag == 1)
 		{
 			// 接触している場合
 			/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
-			if (stHitPolyDim.HitPosition.y > fStandPosY)
+			if (stHitPolyDim.HitPosition.y >= fStandPosY)
 			{
 				// 現在の着地座標より高い位置である場合
-				/* 着地座標を更新 */
-				fStandPosY = stHitPolyDim.HitPosition.y;
-
 				/* 落下の加速度を更新 */
 				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-				/* ジャンプ回数を初期化する */
-				this->PlayerStatusList->SetPlayerNowJumpCount(0);
+				/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
+				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
+				{
+					// 着地座標がプレイヤーの現在位置より低い場合
+					// ※ 地面に着地したと判定する
+					/* 着地座標を着地した座標に更新 */
+					fStandPosY = stHitPolyDim.HitPosition.y;
 
-				/* プレイヤーの着地フラグを有効にする */
-				this->PlayerStatusList->SetPlayerLanding(true);
+					/* ジャンプ回数を初期化する */
+					this->PlayerStatusList->SetPlayerNowJumpCount(0);
 
-				/* 2025.01.09 菊池雅道　移動処理追加 追加 */
+					/* プレイヤーの着地フラグを有効にする */
+					this->PlayerStatusList->SetPlayerLanding(true);
 
-				//ジャンプ中のフラグをリセット
-				this->PlayerStatusList->SetPlayerJumpingFlag(false);
+					/* 2025.01.09 菊池雅道　移動処理追加 追加 */
 
-				//ジャンプ中の回避回数をリセット
-				this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
-				/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+					//ジャンプ中のフラグをリセット
+					this->PlayerStatusList->SetPlayerJumpingFlag(false);
+
+					//ジャンプ中の回避回数をリセット
+					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
+					/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+				}
+				else
+				{
+					// 着地座標がプレイヤーの現在位置より高い場合
+					/* 着地座標をプレイヤーが天井にめり込まない高さに更新 */
+					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
+
+					/* ループを抜ける */
+					break;
+				}
 			}
 		}
 	}
@@ -490,11 +550,14 @@ void CharacterPlayer::Movement_Horizontal()
 
 	/* 道中でオブジェクトに接触しているか判定 */
 	{
-		/* 現在位置から移動後座標へ向けた線分を作成 */
-		// ※仮でプレイヤーの中心部分辺りから線分を作成(+y100)
-		COLLISION_LINE stCollision;
-		stCollision.vecLineStart	= this->vecPosition;
-		stCollision.vecLineEnd		= vecNextPosition;
+		/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
+		// ※ 元の位置から移動後の位置へ向けたカプセルコリジョンを作成
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleBottom	= VAdd(this->vecPosition,	VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleTop		= VAdd(vecNextPosition,		VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].fCapsuleRadius		= PLAYER_WIDE;
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleBottom	= VAdd(this->vecPosition,	VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop		= VAdd(vecNextPosition,		VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius	= PLAYER_WIDE;
 
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetCollisionList();
@@ -503,22 +566,64 @@ void CharacterPlayer::Movement_Horizontal()
 		for (auto* platform : PlatformList)
 		{
 			/* 足場との接触判定 */
-			MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollision);
-
-			/* 接触しているか確認 */
-			if (stHitPolyDim.HitFlag == 1)
+			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
 			{
-				// 接触している場合
-				/* ヒットした座標が現時点での移動後座標より近い位置であるか確認 */
-				float fHitDistance = VSize(VSub(stHitPolyDim.HitPosition, this->vecPosition));	// ヒットした座標までの距離
-				float fNextDistance = VSize(VSub(vecNextPosition, this->vecPosition));			// 移動後座標までの距離
-				if (fHitDistance < fNextDistance)
+				/* オブジェクトと接触しているか確認 */
+				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stHorizontalCollision[i]);
+
+				/* 接触しているか確認 */
+				if (stHitPolyDim.HitNum > 0)
 				{
-					// 現時点での移動後座標より近い位置である場合
-					/* 移動後座標を更新 */
-					//vecNextPosition = stHitPolyDim.HitPosition;
-					// %押し出し処理ができていないため元の座標に戻す形で対応
-					vecNextPosition = this->vecPosition;
+					// 1つ以上のポリゴンが接触している場合
+					/* 法線ベクトルの作成 */
+					VECTOR vecNormalSum		= VGet(0.f, 0.f, 0.f);
+
+					/* ポリゴンと接触した座標 */
+					VECTOR vecHitPos		= VGet(0.f, 0.f, 0.f);
+
+					/* 接触したポリゴンから法線ベクトルを取得し加算する */
+					for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					{
+						/* 法線ベクトルを取得 */
+						// ※ 法線ベクトルが0であるならば、加算しない
+						if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+						{
+							// 法線ベクトルが0でない場合
+							/* 法線ベクトルのY軸を初期化 */
+							stHitPolyDim.Dim[j].Normal.y = 0.f;
+
+							/* 法線ベクトルを正規化 */
+							VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+
+							/* 法線ベクトルを合計に加算 */
+							vecNormalSum = VAdd(vecNormalSum, vecNormal);
+						}
+					}
+
+					/* 取得した法線ベクトルを正規化 */
+					// ※ 取得した法線ベクトルの平均を取得
+					vecNormalSum = VNorm(vecNormalSum);
+
+					/* 移動後座標に球体ポリゴンを作成 */
+					COLLISION_SQHERE stSphere;
+					stSphere.vecSqhere		= vecNextPosition;
+					stSphere.fSqhereRadius	= PLAYER_WIDE;
+
+					/* 法線の方向にプレイヤーを押し出す */
+					// ※ 対象のコリジョンと接触しなくなるまで押し出す
+					// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
+					bool bHitFlag = true;
+					while (bHitFlag)
+					{
+						/* 球体ポリゴンを法線ベクトルの方向へ移動 */
+						stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
+
+						/* 球体とポリゴンの接触判定 */
+						bHitFlag = platform->HitCheck(stSphere);
+					}
+
+					/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
+					vecNextPosition = stSphere.vecSqhere;
 				}
 			}
 		}
@@ -537,13 +642,9 @@ void CharacterPlayer::Movement_Horizontal()
 void CharacterPlayer::CollisionUpdate()
 {
 	/* プレイヤーのコリジョンを更新 */
-	COLLISION_CAPSULE stCapsule;
-	stCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, 100, 0));
-	stCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, 0, 0));
-	stCapsule.fCapsuleRadius	= 50.0f;
-
-	/* コリジョンを設定 */
-	this->SetCollision_Capsule(stCapsule);
+	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0));
+	this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0));
+	this->stCollisionCapsule.fCapsuleRadius		= PLAYER_WIDE;
 }
 
 // 攻撃状態遷移管理
@@ -629,15 +730,15 @@ void CharacterPlayer::Player_Melee_Posture()
 	{
 		// 攻撃入力がされていない場合
 		/* 攻撃チャージフレームに応じて処理を変更 */
-		if (iNowAttakChargeFlame < 5)
+		if (iNowAttakChargeFlame < PLAYER_CHARGE_TO_STRONG_TIME)
 		{
-			// 5フレーム未満の場合
+			// 強攻撃に切り替わる前の場合
 			/* プレイヤーの状態を"近接攻撃中(弱)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_WEEK);
 		}
 		else
 		{
-			// 5フレーム以上の場合
+			// 強攻撃にならない場合
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
 
@@ -697,7 +798,6 @@ void CharacterPlayer::Player_Charge_Attack()
 		this->PlayerStatusList->iPlayerNowAttakChargeFlame = 0;
 	}
 }
-/* 2025.01.22 菊池雅道　攻撃処理追加 終了 */
 
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()

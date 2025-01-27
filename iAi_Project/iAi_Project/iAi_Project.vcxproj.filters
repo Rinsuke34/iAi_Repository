@@ -222,9 +222,6 @@
     <ClCompile Include="source\Enemy_Test.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
-    <ClCompile Include="source\EffectTest.cpp">
-      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
-    </ClCompile>
     <ClCompile Include="source\SceneStage.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
     </ClCompile>
@@ -243,8 +240,14 @@
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClCompile>
-    <ClCompile Include="source\EffectPlayerMeleeWeak.cpp">
+    <ClCompile Include="source\EffectManualDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectSelfDelete.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletPlayerMeleeStrong.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,9 +311,6 @@
     <ClInclude Include="source\Enemy_Test.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
-    <ClInclude Include="source\EffectTest.h">
-      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
-    </ClInclude>
     <ClInclude Include="source\SceneStage.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージ</Filter>
     </ClInclude>
@@ -329,8 +329,14 @@
     <ClInclude Include="source\BulletPlayerMeleeWeak.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
-    <ClInclude Include="source\EffectPlayerMeleeWeak.h">
+    <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectSelfDelete.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerMeleeStrong.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

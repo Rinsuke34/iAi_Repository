@@ -12,16 +12,13 @@ class ActorBase : public ObjectBase
 		ActorBase();			// コンストラクタ
 		virtual ~ActorBase();	// デストラクタ
 
-		virtual void	Initialization()	override	{};	// 初期化
-		virtual void	Update()			override	{};	// 更新
-		virtual void	Draw()							{};	// 描写
-		virtual void	BloomDraw()						{};	// 発光描写
-
 		int		iGetModelHandle()	{ return this->iModelHandle; };		// モデルハンドルを取得
 		int		iGetLightFrameNo()	{ return this->iLightFrameNo; };	// 発光部分の設定されたモデルのフレーム番号を取得
+		int		iGetObjectType()	{ return this->iObjectType; };		// オブジェクトの種類を取得
 
 		void	SetModelHandle(int iModelHandle)	{ this->iModelHandle	= iModelHandle; };	// モデルハンドルを設定
 		void	SetLightFrameNo(int iLightFrameNo)	{ this->iLightFrameNo	= iLightFrameNo; };	// 発光部分の設定されたモデルのフレーム番号を取得
+		void	SetObjectType(int iObjectType)		{ this->iObjectType		= iObjectType; };	// オブジェクトの種類を設定
 
 	private:
 	protected:
@@ -30,4 +27,5 @@ class ActorBase : public ObjectBase
 		/* 変数 */
 		int		iModelHandle;	// モデルハンドル
 		int		iLightFrameNo;	// 発光部分の設定されたモデルのフレーム番号
+		int		iObjectType;	// オブジェクトの種類
 };

@@ -196,33 +196,87 @@ void DataList_Object::DrawBullet()
 // プラットフォーム描写
 void DataList_Object::DrawPlatform()
 {
-	/* プラットフォーム(描写モデル)の描写を呼ぶ */
-	for (auto& pBackGround : this->pBackGroundList)
+	/*　バックグランド非表示フラグが無効であるか確認 */
+	if (gbDrawDeleteBackGroundFlg == false)
 	{
-		pBackGround->Draw();
+		// 無効である場合
+		/* プラットフォーム(描写モデル)の描写を呼ぶ */
+		for (auto& pBackGround : this->pBackGroundList)
+		{
+			pBackGround->Draw();
+		}
+	}
+}
+
+/* リスト内オブジェクトコリジョン描写 */
+// 全オブジェクトコリジョン描写
+void DataList_Object::DrawAll_Collision()
+{
+	/* 登録されているすべてのオブジェクトのコリジョン描写 */
+	DrawPlayer_Collision();
+	DrawEnemy_Collision();
+	DrawBullet_Collision();
+	DrawPlatform_Collision();
+}
+
+// プレイヤーコリジョン描写
+void DataList_Object::DrawPlayer_Collision()
+{
+	/* プレイヤーコリジョン描写を呼ぶ */
+	this->pCharacterPlayer->CollisionDraw();
+}
+
+// エネミーコリジョン描写
+void DataList_Object::DrawEnemy_Collision()
+{
+	/* すべてのエネミーコリジョン描写を呼ぶ */
+	for (auto& pEnemy : this->pEnemyList)
+	{
+		pEnemy->CollisionDraw();
+	}
+}
+
+// 弾コリジョン描写
+void DataList_Object::DrawBullet_Collision()
+{
+	/* すべての弾コリジョン描写を呼ぶ */
+	for (auto& pBullet : this->pBulletList)
+	{
+		pBullet->CollisionDraw();
+	}
+}
+
+// プラットフォームコリジョン描写
+void DataList_Object::DrawPlatform_Collision()
+{
+	// 有効である場合
+	/* プラットフォーム(コリジョン)の描写を呼ぶ */
+	for (auto& pCollision : this->pCollisionList)
+	{
+		pCollision->CollisionDraw();
 	}
 }
 
 /* リスト内オブジェクト発光描写 */
 // 全オブジェクト発光描写
-void DataList_Object::BloomDrawAll()
+void DataList_Object::DrawAll_Bloom()
 {
 	/* 登録されているすべてのオブジェクトの発光描写 */
-	BloomDrawPlayer();
-	BloomDrawEnemy();
-	BloomDrawBullet();
-	BloomDrawPlatform();
+	DrawPlayer_Bloom();
+	DrawEnemy_Bloom();
+	DrawBullet_Bloom();
+	DrawPlatform_Bloom();
 }
 
 // プレイヤー発光描写
-void DataList_Object::BloomDrawPlayer()
+void DataList_Object::DrawPlayer_Bloom()
 {
 	/* プレイヤーの発光描写を呼ぶ */
 	this->pCharacterPlayer->BloomDraw();
 }
 
 // エネミー発光描写
-void DataList_Object::BloomDrawEnemy()
+void DataList_Object::DrawEnemy_Bloom()
 {
 	/* すべてのエネミーの発光描写を呼ぶ */
 	for (auto& pEnemy : this->pEnemyList)
@@ -232,7 +286,7 @@ void DataList_Object::BloomDrawEnemy()
 }
 
 // 弾発光描写
-void DataList_Object::BloomDrawBullet()
+void DataList_Object::DrawBullet_Bloom()
 {
 	/* すべての弾の発光描写を呼ぶ */
 	for (auto& pBullet : this->pBulletList)
@@ -242,12 +296,17 @@ void DataList_Object::BloomDrawBullet()
 }
 
 // プラットフォーム発光描写
-void DataList_Object::BloomDrawPlatform()
+void DataList_Object::DrawPlatform_Bloom()
 {
-	/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
-	for (auto& pBackGround : this->pBackGroundList)
+	/*　バックグランド非表示フラグが無効であるか確認 */
+	if (gbDrawDeleteBackGroundFlg == false)
 	{
-		pBackGround->BloomDraw();
+		// 無効である場合
+		/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
+		for (auto& pBackGround : this->pBackGroundList)
+		{
+			pBackGround->BloomDraw();
+		}
 	}
 }
 

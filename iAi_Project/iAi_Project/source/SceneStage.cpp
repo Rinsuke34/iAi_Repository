@@ -146,6 +146,17 @@ void SceneStage::Draw()
 
 		/* 半透明部分のすべてのオブジェクトを描写 */
 		ObjectList->DrawAll();
+
+		/* コリジョン描写フラグが有効であるか確認 */
+		if (gbDrawCollisionFlg == true)
+		{
+			/* コリジョン描写 */
+			/* 半透明かどうか関係なく描画するように設定 */
+			MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
+
+			/* すべてのオブジェクトのコリジョンを描写 */
+			ObjectList->DrawAll_Collision();
+		}
 	}
 
 	/* エフェクト描写 */
@@ -169,6 +180,9 @@ void SceneStage::Draw()
 		/* 描画ブレンドモードを加算にする */
 		// ※ライトマップの黒色部分を描写されないようにする
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+
+		/* ライトマップを描写 */
+		DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iLightMapScreenHandle, FALSE);
 
 		/* ライトマップ(ぼかし)を描写 */
 		DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iLightMapScreenHandle_Gauss, FALSE);
@@ -228,7 +242,7 @@ void SceneStage::SetupLightMap()
 		SetCamera();
 
 		/* すべてのオブジェクトの発光部分の描写 */
-		ObjectList->BloomDrawAll();
+		ObjectList->DrawAll_Bloom();
 
 		/* ライトマップへの描写を終了 */
 		SetDrawScreen(DX_SCREEN_BACK);
@@ -291,8 +305,8 @@ void SceneStage::SetCamera_Free()
 		float fAngleLimitUp = this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
 		float fAngleLimitDown = this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
 
-		if (fCameraAngleY > fAngleLimitUp) { fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
-		if (fCameraAngleY < fAngleLimitDown) { fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
+		if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
+		if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
 	}
 
 	/* 回転量を更新 */
@@ -303,7 +317,7 @@ void SceneStage::SetCamera_Free()
 
 	/* カメラ座標設定 */
 	{
-		float fRadius = this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
+		float fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
 		float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
 		float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
 		float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
@@ -344,7 +358,7 @@ void SceneStage::DrawDebug()
 	}
 
 	/* ライトマップ(ぼかし)描写 */
-	if (gpDrawLightMapGaussFlg == true)
+	if (gbDrawLightMapGaussFlg == true)
 	{
 		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
 		iDrawCount++;

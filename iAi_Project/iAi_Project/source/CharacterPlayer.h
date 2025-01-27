@@ -9,10 +9,11 @@
 #include "DataList_Input.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
+#include "DataList_Model.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
-#include "EffectPlayerMeleeWeak.h"
+#include "BulletPlayerMeleeStrong.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -26,6 +27,7 @@ class CharacterPlayer : public CharacterBase
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
 		virtual void	Draw()				override;		// 描写
+		virtual void	CollisionDraw()		override;		// 当たり判定描写
 
 	private:
 	protected:
@@ -47,13 +49,22 @@ class CharacterPlayer : public CharacterBase
 		void	Movement_Horizontal();		// 移動処理(水平方向)
 
 		// 攻撃アクション
-		void	Player_Attack_Transition();		// 攻撃状態遷移管理
-		void	Player_Melee_Posture();			// 近接攻撃(構え)
-		void	Player_Melee_Weak();			// 近接攻撃(弱)
-		void	Player_Charge_Attack();			// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
-		void	Player_Projectile_Posture();	// 遠距離攻撃(構え)
-		void	Player_Projectile();			// 遠距離攻撃
+		void	Player_Attack_Transition();			// 攻撃状態遷移管理
+		void	Player_Melee_Posture();				// 近接攻撃(構え)
+		void	Player_Melee_Weak();				// 近接攻撃(弱)
+		void	Player_Charge_Attack();				// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
+		void	Player_Projectile_Posture();		// 遠距離攻撃(構え)
+		void	Player_Projectile();				// 遠距離攻撃
+
+		/* オブジェクトのハンドル */
+		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
+		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
 		/* 変数 */
-		VECTOR	vecMove;		// 移動量
+		VECTOR				vecMove;				// 移動量
+
+		/* 変数デバッグ用 */
+		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
+		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
+		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
 };

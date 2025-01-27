@@ -1,6 +1,7 @@
 /* 2024.12.08 駒沢風助 ファイル作成 */
 
 #pragma once
+#include <DxLib.h>
 
 /* AppFrameで使用する関数の宣言 */
 
@@ -21,8 +22,9 @@ namespace PROJECT_INIT
 // 汎用計算系
 namespace PUBLIC_PROCESS
 {
-	float	fClamp(float fValue, float fMax, float fMin);								// 値を範囲内に収める
-	bool	bCheckAboveThreshold(unsigned char ucValue, unsigned char ucThreshold);		// 閾値を超えているか確認
-	float	fAnalogStickNorm(short sMouseMove);											// アナログスティックの入力を正規化(±1)
-	bool	bCheckInputDeadzone(float fInput, float fDeadzone);							// 入力値がデッドゾーンの範囲内であるか確認		/* 2025.01.21 菊池雅道 デッドゾーン処理追加 */
+	float	fClamp(float fValue, float fMax, float fMin);																			// 値を範囲内に収める
+	bool	bCheckAboveThreshold(unsigned char ucValue, unsigned char ucThreshold);													// 閾値を超えているか確認
+	float	fAnalogStickNorm(short sMouseMove);																						// アナログスティックの入力を正規化(±1)
+	bool	bCheckInputDeadzone(float fInput, float fDeadzone);																		// 入力値がデッドゾーンの範囲内であるか確認		/* 2025.01.21 菊池雅道 デッドゾーン処理追加 */
+	VECTOR	vecGetLineCrossPoint(VECTOR vecLineAStart, VECTOR vecLineADirection, VECTOR vecLineBStart, VECTOR vecLineBDirection);	// 2つの線分の交点を取得
 }

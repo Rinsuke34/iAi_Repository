@@ -9,9 +9,8 @@
 CharacterBase::CharacterBase() : ActorBase()
 {
 	/* 初期化 */
-	this->stCollisionCapsule	= {};	// コリジョン(カプセル)
-	this->vecDirection			= {};	// 向き
-	this->iInvincibilityTime	= {};	// 無敵時間
+	this->stCollisionCapsule	= {};					// コリジョン(カプセル)
+	this->iInvincibilityTime	= {};					// 無敵時間
 }
 
 // 初期化
@@ -46,12 +45,7 @@ void CharacterBase::BloomDraw()
 		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end())
 		{
 			// 発光フレームである場合
-			/* 対象フレームを赤色で描写(仮) */
-			// 分かりやすいように赤色で描写中(実際はモデルの色をそのまま描写予定)
-			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
-			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
-			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
-			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
+			/* 変更を行わない */
 		}
 		else
 		{
@@ -75,6 +69,27 @@ void CharacterBase::BloomDraw()
 		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
 		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
 	}
+}
+
+// 当たり判定描写
+void CharacterBase::CollisionDraw()
+{
+	/* 当たり判定を描写 */
+	int iColor	= GetColor(255, 0, 0);
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, iColor, iColor, FALSE);
+}
+
+// 描写
+void CharacterBase::Draw()
+{
+	/* 座標設定 */
+	MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+	/* モデル回転 */
+	MV1SetRotationXYZ(this->iModelHandle, this->vecRotation);
+
+	/* モデル描写 */
+	MV1DrawModel(this->iModelHandle);
 }
 
 /* 接触判定(簡易) */

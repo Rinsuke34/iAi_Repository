@@ -100,3 +100,37 @@ bool PUBLIC_PROCESS::bCheckInputDeadzone(float fInput, float fDeadzone)
 
 }
 /* 2025.01.21 菊池雅道 デッドゾーン処理追加 終了*/
+
+// 2つの線分の交点を取得
+VECTOR PUBLIC_PROCESS::vecGetLineCrossPoint(VECTOR vecLineAStart, VECTOR vecLineADirection, VECTOR vecLineBStart, VECTOR vecLineBDirection)
+{
+	// 引数
+	// vecLineAStart		<- 線分Aの始点
+	// vecLineADirection	<- 線分Aの方向
+	// vecLineBStart		<- 線分Bの始点
+	// vecLineBDirection	<- 線分Bの方向
+
+	VECTOR vecReturn;
+
+	/* 直線が平行であるか確認 */
+	VECTOR vecGetLineCrossPoint	= VCross(vecLineADirection, vecLineBDirection);		// 外積
+	float fCrossSize = VSize(vecGetLineCrossPoint);									// 外積の大きさ
+
+	/* 直線が平行でないか確認 */
+	if (fCrossSize == 0.f)
+	{
+		// 平行である場合
+		/* 交点を取得できないため、始点を返す */
+		vecReturn = vecLineAStart;
+		return vecReturn;
+	}
+
+	// パラメータ t1 を計算
+	VECTOR diff = VSub(vecLineBStart, vecLineAStart);
+
+	// パラメータ t1 の内積を計算
+	float t1 = VDot(diff, VCross(vecLineBDirection, vecGetLineCrossPoint)) / (fCrossSize * fCrossSize);
+
+	// 直線1上の交点を計算
+	return VAdd(vecLineAStart, VScale(vecLineADirection, t1));
+}

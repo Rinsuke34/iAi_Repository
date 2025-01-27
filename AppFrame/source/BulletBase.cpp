@@ -11,6 +11,15 @@ BulletBase::BulletBase() : ActorBase()
 	this->stCollisionSqhere	= {};	// コリジョン(球体)
 	this->vecDirection		= {};	// 向き
 	this->fMoveSpeed		= 0;	// 移動速度
+	this->iTargetObjectType	= 0;	// 接触する対象となるオブジェクトのタイプ
+}
+
+// 当たり判定描写
+void BulletBase::CollisionDraw()
+{
+	/* 当たり判定を描写 */
+	int Color = GetColor(255, 0, 0);
+	DrawSphere3D(stCollisionSqhere.vecSqhere, stCollisionSqhere.fSqhereRadius, 16, Color, Color, FALSE);
 }
 
 /* 接触判定(簡易) */

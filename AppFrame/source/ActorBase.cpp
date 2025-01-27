@@ -11,6 +11,7 @@ ActorBase::ActorBase() : ObjectBase()
 	/* 初期化 */
 	this->iModelHandle	= -1;	// モデルハンドル
 	this->iLightFrameNo	= -2;	// 発光部分の設定されたモデルのフレーム番号
+	this->iObjectType	= -1;	// オブジェクトの種類
 }
 
 // デストラクタ
