@@ -46,6 +46,9 @@ void EnemyGoalObject::Initialization()
 	this->stCollisionCapsule.vecCapsuleBottom	= this->vecPosition;
 	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.f, 100.f, 0.f));
 	this->stCollisionCapsule.fCapsuleRadius		= 100.0f;
+
+	/* コアフレーム番号取得 */
+	LoadCoreFrameNo();
 }
 
 // 更新

@@ -31,6 +31,12 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
 	}
 
+	/* UI追加 */
+	{
+		/* クロスヘア */
+		gpSceneServer->AddSceneReservation(new SceneUi_Crosshairs());
+	}
+
 	/* マップハンドル作成 */
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
@@ -53,9 +59,6 @@ SceneStage::~SceneStage()
 // 初期化
 void SceneStage::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
-
 	/* ゲーム状態を"ゲーム実行"に変更 */
 	this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 

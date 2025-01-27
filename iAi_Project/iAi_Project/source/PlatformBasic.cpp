@@ -7,7 +7,7 @@
 // コンストラクタ
 PlatformBasic::PlatformBasic() : PlatformBase()
 {
-
+	
 }
 
 // デストラクタ

@@ -29,7 +29,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};		// 水平方向コリジョン(下側)
 		this->stMeleeStrongMoveCollsion							= {};		// 近接攻撃(強)のコリジョン(移動後の座標)
-		this->stMeleeSearchCollision							= {};		// 近接攻撃(強)のロックオン範囲コリジョン
+		//this->stMeleeSearchCollision							= {};		// 近接攻撃(強)のロックオン範囲コリジョン
 	}
 
 	/* データリスト取得 */
@@ -212,9 +212,9 @@ void CharacterPlayer::CollisionDraw()
 	iColor = GetColor(255, 255, 0);
 	DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
 
-	/* 強攻撃ロックオン範囲 */
-	iColor = GetColor(255, 0, 255);
-	DrawCapsule3D(this->stMeleeSearchCollision.vecCapsuleTop, this->stMeleeSearchCollision.vecCapsuleBottom, this->stMeleeSearchCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
+	///* 強攻撃ロックオン範囲 */
+	//iColor = GetColor(255, 0, 255);
+	//DrawCapsule3D(this->stMeleeSearchCollision.vecCapsuleTop, this->stMeleeSearchCollision.vecCapsuleBottom, this->stMeleeSearchCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
 }
 
 // 移動
@@ -839,38 +839,20 @@ void CharacterPlayer::Player_Melee_Posture()
 			{
 				/* ロックオン範囲のコリジョン作成 */
 				{
+					/* ロックオン範囲コリジョン */
+					COLLISION_CAPSULE stMeleeSearchCollision;
+
 					/* 半径はとりあえず移動時の当たり判定と同じサイズに */
-					this->stMeleeSearchCollision.fCapsuleRadius = PLAYER_HEIGHT;
+					stMeleeSearchCollision.fCapsuleRadius = PLAYER_HEIGHT;
 
 					/* 片方は現在のプレイヤーの中心に設定 */
-					this->stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
+					stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
 
 					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
-					this->stMeleeSearchCollision.vecCapsuleBottom = VAdd(this->stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
-				}
-				
-				/* ロックオン範囲に存在するエネミーを取得 */
-				{
-					/* エネミーリストを取得 */
-					auto& EnemyList = ObjectList->GetEnemyList();
+					stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
 
-					/* プレイヤーの攻撃と接触するか確認 */
-					for (auto* enemy : EnemyList)
-					{
-						/* ロックオン範囲に接触しているか確認 */
-						if (enemy->HitCheck(this->stMeleeSearchCollision) == true)
-						{
-							// 接触している場合
-							/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
-							enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
-						}
-						else
-						{
-							// 接触していない場合
-							/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
-							enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
-						}
-					}
+					/* ロックオン範囲のコリジョンを設定 */
+					this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);
 				}
 			}
 

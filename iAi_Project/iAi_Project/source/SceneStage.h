@@ -13,6 +13,7 @@
 
 /* シーン */
 #include "SceneEdit.h"
+#include "SceneUi_Crosshairs.h"
 
 /* ステージクラスの宣言 */
 

@@ -264,6 +264,9 @@
     <ClCompile Include="source\EnemyGoalObject.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneUi_Crosshairs.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -355,6 +358,9 @@
     </ClInclude>
     <ClInclude Include="source\EnemyGoalObject.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Crosshairs.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

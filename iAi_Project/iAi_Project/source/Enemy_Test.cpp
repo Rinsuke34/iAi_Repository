@@ -35,9 +35,13 @@ TestEnemy::~TestEnemy()
 // 初期化
 void TestEnemy::Initialization()
 {
+	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition,VGet(0,100,0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
+
+	/* コアフレーム番号取得 */
+	LoadCoreFrameNo();
 }
 
 // 更新

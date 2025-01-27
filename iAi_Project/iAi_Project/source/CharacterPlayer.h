@@ -63,9 +63,8 @@ class CharacterPlayer : public CharacterBase
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
 
-		/* 変数デバッグ用 */
+		/* 変数(デバッグ用) */
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
-		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン
 };

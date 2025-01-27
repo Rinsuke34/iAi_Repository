@@ -14,7 +14,7 @@ class SceneBase
 		SceneBase(const std::string& cName, const int iLayer, const bool bLowerLayerStopFlg);		// コンストラクタ
 		virtual ~SceneBase() {};																	// デストラクタ
 
-		virtual void	Initialization();		// 初期化
+		virtual void	Initialization()	{};	// 初期化
 		virtual void	Process()			{};	// 計算
 		virtual void	Draw()				{};	// 描画
 
