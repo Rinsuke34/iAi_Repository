@@ -29,6 +29,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};		// 水平方向コリジョン(下側)
 		this->stMeleeStrongMoveCollsion							= {};		// 近接攻撃(強)のコリジョン(移動後の座標)
+		this->stMeleeSearchCollision							= {};		// 近接攻撃(強)のロックオン範囲コリジョン
 	}
 
 	/* データリスト取得 */
@@ -208,8 +209,12 @@ void CharacterPlayer::CollisionDraw()
 	DrawCapsule3D(this->stHorizontalCollision[1].vecCapsuleTop, this->stHorizontalCollision[1].vecCapsuleBottom, this->stHorizontalCollision[1].fCapsuleRadius, 16, iColor, iColor, FALSE);
 
 	/* 強攻撃移動後座標 */
-	iColor = GetColor(255, 0, 255);
+	iColor = GetColor(255, 255, 0);
 	DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
+
+	/* 強攻撃ロックオン範囲 */
+	iColor = GetColor(255, 0, 255);
+	DrawCapsule3D(this->stMeleeSearchCollision.vecCapsuleTop, this->stMeleeSearchCollision.vecCapsuleBottom, this->stMeleeSearchCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
 }
 
 // 移動
@@ -454,7 +459,7 @@ void CharacterPlayer::Player_Dodg()
 			if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
 			{
 				/* 回避開始時の時間をリセット */
-				this->PlayerStatusList->SetPlayerNowDodgeFlame(0.0f);
+				this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
 
 				/* 回避方向設定 */
 				{
@@ -809,25 +814,73 @@ void CharacterPlayer::Player_Melee_Posture()
 
 		/* 近接攻撃(強)チャージ処理 */
 		{
-			/* プレイヤーの現在の攻撃チャージフレームを加算 */
-			PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
+
+			/* チャージフレームが最大値を超えていないか確認 */
+			if (iNowAttakChargeFlame < PLAYER_MELEE_CHARGE_MAX)
+			{
+				/* プレイヤーの現在の攻撃チャージフレームを加算 */
+				PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
+			}
 
 			/* プレイヤーの向きをカメラの向きに固定 */
 			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 
 			/* 移動量算出 */
-			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 10.f;
+			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
 
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
 
-			/* デバッグ用移動後座標を作成 */
-			this->stMeleeStrongMoveCollsion.vecCapsuleTop		= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
-			this->stMeleeStrongMoveCollsion.vecCapsuleBottom	= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
-			this->stMeleeStrongMoveCollsion.fCapsuleRadius		= PLAYER_WIDE;
-
 			/* 近接攻撃(強)による移動量を設定 */
 			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMove));
+
+			/* 攻撃チャージフレームが強攻撃に派生しているか確認 */
+			if (iNowAttakChargeFlame >= PLAYER_CHARGE_TO_STRONG_TIME)
+			{
+				/* ロックオン範囲のコリジョン作成 */
+				{
+					/* 半径はとりあえず移動時の当たり判定と同じサイズに */
+					this->stMeleeSearchCollision.fCapsuleRadius = PLAYER_HEIGHT;
+
+					/* 片方は現在のプレイヤーの中心に設定 */
+					this->stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
+
+					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
+					this->stMeleeSearchCollision.vecCapsuleBottom = VAdd(this->stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
+				}
+				
+				/* ロックオン範囲に存在するエネミーを取得 */
+				{
+					/* エネミーリストを取得 */
+					auto& EnemyList = ObjectList->GetEnemyList();
+
+					/* プレイヤーの攻撃と接触するか確認 */
+					for (auto* enemy : EnemyList)
+					{
+						/* ロックオン範囲に接触しているか確認 */
+						if (enemy->HitCheck(this->stMeleeSearchCollision) == true)
+						{
+							// 接触している場合
+							/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
+							enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
+						}
+						else
+						{
+							// 接触していない場合
+							/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+							enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+						}
+					}
+				}
+			}
+
+			/* デバッグ用処理 */
+			{
+				/* デバッグ用移動後座標を設定 */
+				this->stMeleeStrongMoveCollsion.vecCapsuleTop		= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
+				this->stMeleeStrongMoveCollsion.vecCapsuleBottom	= VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
+				this->stMeleeStrongMoveCollsion.fCapsuleRadius		= PLAYER_WIDE;
+			}
 		}
 
 		/* 2025.01.24 菊池雅道　攻撃処理追加	終了 */
@@ -858,8 +911,6 @@ void CharacterPlayer::Player_Melee_Posture()
 
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
 		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
-
-		
 	}
 }
 
@@ -986,7 +1037,7 @@ void CharacterPlayer::Player_Charge_Attack()
 			int iCount = iChargeAttackCount;
 
 			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
-			int	iMoveCount = fMove / PLAYER_MELEE_STRONG_MOVESPEED;
+			int	iMoveCount = (int)(fMove / PLAYER_MELEE_STRONG_MOVESPEED);
 
 			/* プレイヤー移動 */
 			if (iCount <= iMoveCount)

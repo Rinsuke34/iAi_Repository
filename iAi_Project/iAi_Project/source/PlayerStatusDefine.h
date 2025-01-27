@@ -31,7 +31,7 @@ static const float	GRAVITY_BUFFER						= 0.1f;			// ƒLƒƒƒ‰ƒNƒ^[‚É‚©‚©‚éd—Í’²®
 static const int	PLAYER_JUMPING_IN_AIR_LIMIT			= 1;			// ƒvƒŒƒCƒ„[‚ª‹ó’†ƒWƒƒƒ“ƒv‚Å‚«‚é‰ñ”
 // ‰ñ”ðŠÖŒW
 static const float	PLAYER_DODGE_SPEED					= 100.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x
-static const int	PLAYER_DODGE_FLAME					= 10.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒtƒŒ[ƒ€”
+static const int	PLAYER_DODGE_FLAME					= 10;			// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒtƒŒ[ƒ€”
 static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚«‚é‰ñ”
 /* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁI—¹ */
 
@@ -77,3 +77,4 @@ static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ
 static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“‰º‘¤
 static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“”
 static const int	PLAYER_MELEE_STRONG_MOVESPEED		= 100;		// ‹ßÚUŒ‚(‹­)‚ÌˆÚ“®‘¬“x
+static const int	PLAYER_MELEE_CHARGE_MAX				= 180;		// ‹ßÚUŒ‚‚ÌÅ‘å—­‚ßŽžŠÔ

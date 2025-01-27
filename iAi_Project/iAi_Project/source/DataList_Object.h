@@ -5,6 +5,9 @@
 #include <vector>
 #include "PublicInclude.h"
 
+/* オブジェクト */
+#include "EnemyBasic.h"
+
 /* オブジェクト管理クラスの宣言 */
 
 // オブジェクト管理クラス
@@ -63,7 +66,7 @@ class DataList_Object : public DataListBase
 		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
 
 		// リスト
-		std::vector<EnemyBase*>&		GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
+		std::vector<EnemyBasic*>&		GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
 		std::vector<EffectBase*>&		GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
 		std::vector<BulletBase*>&		GetBulletList()		{ return this->pBulletList; }		// 弾取得
 		std::vector<CollisionBase*>&	GetCollisionList()	{ return this->pCollisionList; }	// プラットフォーム(コリジョン)
@@ -74,7 +77,7 @@ class DataList_Object : public DataListBase
 		void	SetCharacterPlayer(CharacterBase* pCharacter)	{ this->pCharacterPlayer = pCharacter; }	// プレイヤー設定
 
 		// リスト
-		void	SetEnemy(EnemyBase* pEnemy)					{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
+		void	SetEnemy(EnemyBasic* pEnemy)				{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
 		void	SetEffect(EffectBase* pEffect)				{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
 		void	SetBullet(BulletBase* pBullet)				{ pBulletList.emplace_back(pBullet); };			// 弾追加
 		void	SetCollision(CollisionBase* pCollision)		{ pCollisionList.emplace_back(pCollision); };	// プラットフォーム(コリジョン)追加
@@ -86,7 +89,7 @@ class DataList_Object : public DataListBase
 		CharacterBase*					pCharacterPlayer;	// プレイヤー
 
 		// リスト
-		std::vector<EnemyBase*>			pEnemyList;			// エネミー
+		std::vector<EnemyBasic*>		pEnemyList;			// エネミー
 		std::vector<EffectBase*>		pEffectList;		// エフェクト
 		std::vector<BulletBase*>		pBulletList;		// 弾
 		std::vector<CollisionBase*>		pCollisionList;		// プラットフォーム(コリジョン)

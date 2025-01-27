@@ -2,7 +2,7 @@
 #include "Enemy_Test.h"
 
 // コンストラクタ
-TestEnemy::TestEnemy(): EnemyBase()
+TestEnemy::TestEnemy() : EnemyBasic()
 {
 	// HPを設定
 	this->iMaxHp = 1;
@@ -46,7 +46,7 @@ void TestEnemy::Update()
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
 
-	/* 足場と接触するか確認 */
+	/* プレイヤー攻撃と接触するか確認 */
 	for (auto* bullet : BulletList)
 	{
 		/* オブジェクトタイプが"弾(プレイヤー)"であるか確認 */

@@ -175,6 +175,18 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット">
       <UniqueIdentifier>{e8a7f619-3dc4-4823-913f-dfa6988ff221}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック">
+      <UniqueIdentifier>{d62c1475-32e3-45da-9431-254952e8e21f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック">
+      <UniqueIdentifier>{528618ed-5f7c-45fc-8d41-e74965629227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト">
+      <UniqueIdentifier>{a192f62e-0a72-46e3-b517-2767e885f0f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト">
+      <UniqueIdentifier>{486ac4b5-280b-44c6-8504-6a5071cbe00f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -231,9 +243,6 @@
     <ClCompile Include="source\SceneEdit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyGoalObject.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_GameStatus.cpp">
       <Filter>ソース ファイル\データリスト\ゲーム状態管理</Filter>
     </ClCompile>
@@ -248,6 +257,12 @@
     </ClCompile>
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyGoalObject.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -317,9 +332,6 @@
     <ClInclude Include="source\SceneEdit.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyGoalObject.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
-    </ClInclude>
     <ClInclude Include="source\DataList_GameStatus.h">
       <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
     </ClInclude>
@@ -337,6 +349,12 @@
     </ClInclude>
     <ClInclude Include="source\BulletPlayerMeleeStrong.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyGoalObject.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

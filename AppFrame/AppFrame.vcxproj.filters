@@ -136,6 +136,12 @@
     <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド">
       <UniqueIdentifier>{1a0a3693-31e5-4015-a25b-6d8054ecb8aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\ギミック">
+      <UniqueIdentifier>{bdf7a7f6-bcfb-4197-b10d-f135b9dc2856}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\ギミック">
+      <UniqueIdentifier>{88fd4004-f4d1-4d3f-abf5-60f661d3babf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -191,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="source\CollisionBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\ギミック</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="source\CollisionBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\ギミック</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

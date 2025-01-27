@@ -30,7 +30,6 @@ class SceneStage : public SceneBase
 		virtual void	LoadMapData();			// マップデータのロード
 
 	private:
-	protected:
 		/* 使用するデータリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
@@ -42,8 +41,9 @@ class SceneStage : public SceneBase
 		virtual void	SetupLightMap();				// ライトマップの設定
 		virtual void	SetCamera();					// カメラ設定
 
-		/* カメラ関連 */
+		/* カメラモード関連 */
 		void	SetCamera_Free();					// カメラ設定(フリーモード)
+		void	SetCamera_Lock();					// カメラ設定(固定モード)
 
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写
@@ -53,10 +53,5 @@ class SceneStage : public SceneBase
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
-
-		/* マップ情報(仮) */
-		// ※データリスト作成予定
-		bool bEditDrawFlg;							// エディット描写フラグ
-		bool bGoalFlg;								// ゴールフラグ
 };
 

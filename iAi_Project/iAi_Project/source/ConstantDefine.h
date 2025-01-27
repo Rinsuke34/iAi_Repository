@@ -43,11 +43,9 @@ static const std::string STAGE_NAME[STAGE_MAX] =
     "Stage_3_1", "Stage_3_2", "Stage_3_3"
 };
 
-
-
-
 /* カメラ関連 */
 static const int	CAMERA_MODE_FREE	= 0;	// フリーモード(通常の三人称視点)
+static const int    CAMERA_MODE_LOCK    = 1;    // 固定
 
 /* 描写関連 */
 static const int	SHADOWMAP_SIZE			= 2048;		// シャドウマップのサイズ
@@ -62,3 +60,9 @@ static const int DEBUG_MAP_WIDTH	= 256;	// デバッグ描写の横幅
 
 // Effekseer関連
 static const int EFFECT_MAX_PARTICLE	= 8000;		// エフェクトの最大パーティクル数
+
+/* ロックオン関係 */
+// エネミーのプレイヤーからのロックオン状態
+static const int PLAYER_LOCKON_NONE     = 0;    // ロックオンされていない
+static const int PLAYER_LOCKON_RANGE    = 1;    // ロックオン範囲内である
+static const int PLAYER_LOCKON_TARGET   = 2;    // ロックオンされている

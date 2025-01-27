@@ -184,7 +184,7 @@ void SceneStage::LoadMapData()
 				{
 					// ゴール地点の場合
 					/* "オブジェクト管理"にゴールオブジェクトを追加 */
-					EnemyBase* pGoal = new EnemyGoalObject();
+					EnemyBasic* pGoal = new EnemyGoalObject();
 					ObjectList->SetEnemy(pGoal);
 
 					/* 座標 */

@@ -36,10 +36,6 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
-
-	/* 初期化 */
-	this->bEditDrawFlg	= false;
-	this->bGoalFlg		= false;
 }
 
 // デストラクタ
@@ -59,48 +55,55 @@ void SceneStage::Initialization()
 {
 	/* SceneBaseの初期化を実施(リソース競合対策) */
 	SceneBase::Initialization();
+
+	/* ゲーム状態を"ゲーム実行"に変更 */
+	this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+
+	/* カメラモードを"フリーモード"に変更 */
+	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
 }
 
 // 計算
 void SceneStage::Process()
 {
-	/* エディット画面を描写したか */
-	if (this->bEditDrawFlg == false)
+	/* ゲーム状態を確認 */
+	int iGameStatus = this->GameStatusList->iGetGameStatus();
+
+	/* ゲーム状態に応じて処理を変更 */
+	switch (iGameStatus)
 	{
-		// 未描写の場合(クリアしていない)
-		/* すべてのオブジェクトの更新 */
-		ObjectList->UpdateAll();
+		/* "ゲーム実行"状態 */
+		case GAMESTATUS_PLAY_GAME:
+			/* すべてのオブジェクトの更新 */
+			ObjectList->UpdateAll();
 
-		/* 削除フラグが有効なオブジェクトの削除 */
-		ObjectList->DeleteAll();
+			/* 削除フラグが有効なオブジェクトの削除 */
+			ObjectList->DeleteAll();
+			break;
 
-		///* デバッグ用処理 */
-		///* キャンセルが入力されたらゴールフラグを有効化 */
-		//if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-		//{
-		//	// このシーンの削除フラグを有効にする
-		//	this->bGoalFlg = true;
-		//}
+		/* "エディット"状態 */
+		case GAMESTATUS_EDIT:
+			/* エディット画面作成処理 */
+			{
+				/* カメラモードを"固定"に変更 */
+				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_LOCK);
 
-		/* ゴールフラグを確認 */
-		if (this->bGoalFlg == true)
-		{
-			// ゴールフラグが有効な場合
-			/* シーン"エディット画面"を作成 */
-			SceneBase* pAddScene = new SceneEdit();
+				/* シーン"エディット画面"を作成 */
+				SceneBase* pAddScene = new SceneEdit();
 
-			/* シーン"エディット画面"をシーンサーバーに追加 */
-			gpSceneServer->AddSceneReservation(pAddScene);
+				/* シーン"エディット画面"をシーンサーバーに追加 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
+			break;
 
-			/* エディット画面描写フラグを有効にする */
-			this->bEditDrawFlg = true;
-		}
-	}
-	else
-	{
-		// 描写済みの場合(クリア済み)
-		/* シーンの削除フラグを有効にする */
-		this->bDeleteFlg = true;
+		/* "次のステージへ遷移"状態 */
+		case GAMESTATUS_NEXTSTAGE:
+			/* シーンの削除フラグを有効にする */
+			this->bDeleteFlg = true;
+
+			/* ゲーム状態を"ゲーム実行"に変更する */
+			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			break;
 	}
 }
 
@@ -268,6 +271,11 @@ void SceneStage::SetCamera()
 		case CAMERA_MODE_FREE:
 			SetCamera_Free();
 			break;
+
+		/* 固定モード */
+		case CAMERA_MODE_LOCK:
+			SetCamera_Lock();
+			break;
 	}
 }
 
@@ -326,6 +334,16 @@ void SceneStage::SetCamera_Free()
 	}
 
 	/* カメラ設定 */
+	{
+		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+	}
+}
+
+// カメラ設定(固定モード)
+void SceneStage::SetCamera_Lock()
+{
+	/* カメラ設定 */
+	// ※更新は行わない
 	{
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
 	}

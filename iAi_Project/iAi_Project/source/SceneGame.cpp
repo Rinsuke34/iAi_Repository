@@ -144,6 +144,9 @@ void SceneGame::Process()
 // 描画
 void SceneGame::Draw()
 {
+	/* 現在のステージ番号を取得 */
+	int iNowStageNo = this->GameStatusList->iGetNowStageNo();
 
+	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "現在のステージ番号 ： %d", iNowStageNo);
 }
 

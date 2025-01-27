@@ -7,10 +7,13 @@
 #include "DataList_Model.h"
 #include "DataList_Object.h"
 
+/* オブジェクト */
+#include "EnemyBasic.h"
+
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class TestEnemy : public EnemyBase
+class TestEnemy : public EnemyBasic
 {
 	public:
 		TestEnemy();				// コンストラクタ
@@ -23,8 +26,4 @@ class TestEnemy : public EnemyBase
 	protected:
 		/* 使用するデータリスト */
 		DataList_Object* ObjectList;			// オブジェクト管理
-
-		/* 関数 */
-
-		/* 変数 */
 };
