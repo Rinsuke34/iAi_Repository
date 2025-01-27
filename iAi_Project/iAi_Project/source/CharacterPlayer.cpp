@@ -957,11 +957,11 @@ void CharacterPlayer::Player_Charge_Attack()
 		// ※モーション遷移直後である場合
 		/* プレイヤーのモーションを近接攻撃(強)に変更する */
 	}
-	else if(iChargeAttackCount <= 20)
-	{
-		// 20以下である場合
-		/* モーションの初期動作中?なのでこの状態では攻撃しない */
-	}
+	//else if(iChargeAttackCount <= 20)
+	//{
+	//	// 20以下である場合
+	//	/* モーションの初期動作中?なのでこの状態では攻撃しない */
+	//}
 	else
 	{
 		// 21以上である場合
@@ -974,7 +974,8 @@ void CharacterPlayer::Player_Charge_Attack()
 			float fMove	= VSize(vecMoveDirection);
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
-			int iCount	= iChargeAttackCount - 20;
+			//int iCount	= iChargeAttackCount - 20;
+			int iCount = iChargeAttackCount;
 
 			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
 			int	iMoveCount = fMove / PLAYER_MELEE_STRONG_MOVESPEED;

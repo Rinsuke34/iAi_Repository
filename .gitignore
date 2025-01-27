@@ -404,9 +404,6 @@ FodyWeavers.xsd
 # resourceフォルダを無視する
 /iAi_Project/iAi_Project/resource/
 
-# includeフォルダを無視する
-/iAi_Project/iAi_Project/source/include/
-
 # ビルド時に作成されるフォルダを無視する
 /AppFrame/x64/
 /iAi_Project/x64/
