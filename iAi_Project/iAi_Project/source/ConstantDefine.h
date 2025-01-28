@@ -43,10 +43,6 @@ static const std::string STAGE_NAME[STAGE_MAX] =
     "Stage_3_1", "Stage_3_2", "Stage_3_3"
 };
 
-/* カメラ関連 */
-static const int	CAMERA_MODE_FREE	= 0;	// フリーモード(通常の三人称視点)
-static const int    CAMERA_MODE_LOCK    = 1;    // 固定
-
 /* 描写関連 */
 static const int	SHADOWMAP_SIZE			= 2048;		// シャドウマップのサイズ
 static const float	SHADOWMAP_RANGE			= 1024;		// シャドウマップの描写範囲

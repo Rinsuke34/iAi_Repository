@@ -43,8 +43,9 @@ class SceneStage : public SceneBase
 		virtual void	SetCamera();					// カメラ設定
 
 		/* カメラモード関連 */
-		void	SetCamera_Free();					// カメラ設定(フリーモード)
-		void	SetCamera_Lock();					// カメラ設定(固定モード)
+		void	SetCamera_Free();					// カメラ設定(フリー)
+		void	SetCamera_Lock();					// カメラ設定(固定)
+		void	SetCamera_Aim();					// カメラ設定(構え(ズーム))
 
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写

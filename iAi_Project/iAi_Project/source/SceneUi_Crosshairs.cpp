@@ -32,7 +32,7 @@ void SceneUi_Crosshairs::Process()
 	}
 
 	/* 最も画面の中心点から近いエネミーを取得する */
-	NearEnemy stNearEnemy = { nullptr, 99999.f };
+	NearEnemy stNearEnemy = { nullptr, 0.f };
 
 	/* エネミーリストを取得 */
 	auto& EnemyList = ObjectList->GetEnemyList();
@@ -65,7 +65,7 @@ void SceneUi_Crosshairs::Process()
 				float fDistance = (fx * fx) + (fy * fy);
 
 				/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
-				if (fDistance < stNearEnemy.fDistance)
+				if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
 				{
 					// 近い場合
 					/* 最も画面の中心点から近いエネミーを更新 */
@@ -95,6 +95,9 @@ void SceneUi_Crosshairs::Process()
 		/* プレイヤー視点でのロックオン状態を"ロックオンされている"に設定 */
 		stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);
 	}
+
+	/* ロックオン対象のエネミーをデータリストに設定する */
+	this->PlayerStatusList->SetPlayerLockOnEnemy(stNearEnemy.pEnemy);
 }
 
 // 描画

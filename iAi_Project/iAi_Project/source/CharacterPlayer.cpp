@@ -831,6 +831,9 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
 
+			/* 縦方向には移動しないように設定 */
+			vecMoveDirection.y = 0;
+
 			/* 近接攻撃(強)による移動量を設定 */
 			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMove));
 
@@ -842,8 +845,8 @@ void CharacterPlayer::Player_Melee_Posture()
 					/* ロックオン範囲コリジョン */
 					COLLISION_CAPSULE stMeleeSearchCollision;
 
-					/* 半径はとりあえず移動時の当たり判定と同じサイズに */
-					stMeleeSearchCollision.fCapsuleRadius = PLAYER_HEIGHT;
+					/* 半径はとりあえず広めに */
+					stMeleeSearchCollision.fCapsuleRadius = 300.f;
 
 					/* 片方は現在のプレイヤーの中心に設定 */
 					stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
@@ -1007,12 +1010,28 @@ void CharacterPlayer::Player_Charge_Attack()
 	{
 		// 21以上である場合
 		/* 攻撃＆移動処理 */
+		// ※ロックオン中のエネミーが存在するかで処理を分岐させる
 		{
+			/* ロックオン中のエネミーを取得 */
+			EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+
 			/* 近接攻撃(強)による移動量を取得 */
 			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 
 			/* 移動量をfloat型で取得 */
-			float fMove	= VSize(vecMoveDirection);
+			float fMove = VSize(vecMoveDirection);
+
+			/* ロックオン中のエネミーが存在するか */
+			if (pLockOnEnemy != nullptr)
+			{
+				// 存在する場合
+				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
+				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+
+				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
+				fMove += 500.f;
+				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
+			}
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
 			//int iCount	= iChargeAttackCount - 20;

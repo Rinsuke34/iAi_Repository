@@ -1,4 +1,3 @@
-#pragma once
 /* 2024.12.26 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
 /* 2025.01.09‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì•Ï”EŠÖ”’Ç‰Á */
 
@@ -36,11 +35,16 @@ static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚
 /* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰ÁI—¹ */
 
 /* ƒJƒƒ‰ŠÖ˜A */
+// Šî–{î•ñ
 static const float	INIT_CAMERA_RADIUS						= 300;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒRƒ“ƒgƒ[ƒ‰[)
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
 static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
 static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
+// ƒJƒƒ‰ó‘Ô
+static const int	CAMERA_MODE_FREE						= 0;				// ƒtƒŠ[ƒ‚[ƒh(’Êí‚ÌŽOlÌŽ‹“_)
+static const int    CAMERA_MODE_LOCK						= 1;				// ŒÅ’è
+static const int	CAMERA_MODE_AIM							= 2;				// \‚¦(ƒY[ƒ€)
 
 /* ƒvƒŒƒCƒ„[ó‘Ô */
 // ¦ó‘Ô‚É‰ž‚¶‚Ä‰Â”\‚Ès“®‚ª•Ï‚í‚é

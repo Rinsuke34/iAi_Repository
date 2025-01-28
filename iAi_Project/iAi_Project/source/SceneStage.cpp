@@ -270,14 +270,20 @@ void SceneStage::SetCamera()
 	/* カメラモードに応じて処理を変更 */
 	switch (this->PlayerStatusList->iGetCameraMode())
 	{
-		/* フリーモード */
+		/* フリー */
 		case CAMERA_MODE_FREE:
 			SetCamera_Free();
 			break;
 
-		/* 固定モード */
+		/* 固定 */
 		case CAMERA_MODE_LOCK:
 			SetCamera_Lock();
+			break;
+
+		/* 構え(ズーム) */
+		//case CAMERA_MODE_FREE:
+		case CAMERA_MODE_AIM:
+			SetCamera_Aim();
 			break;
 	}
 }
@@ -289,14 +295,14 @@ void SceneStage::SetCamera_Free()
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, 100, 0));
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
 	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
 
 	/* 視点変更に必要なデータ取得 */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
-	float fCameraRotationalSpeed_Controller = this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
-	float fCameraRotationalSpeed_Mouse = this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
+	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
 
 	/* 入力からカメラ回転量を取得 */
 	/* マウス */
@@ -347,6 +353,87 @@ void SceneStage::SetCamera_Lock()
 {
 	/* カメラ設定 */
 	// ※更新は行わない
+	{
+		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+	}
+}
+
+// カメラ設定(構え(ズーム))
+void  SceneStage::SetCamera_Aim()
+{
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* 視点変更に必要なデータ取得 */
+	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
+
+	/* 入力からカメラ回転量を取得 */
+	/* マウス */
+	{
+		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse * 0.5f;
+		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse * 0.5f;
+	}
+
+	/* コントローラー */
+	{
+		fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]) * 0.5f;
+		fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]) * 0.5f;
+	}
+
+	/* Y軸の回転角度制限 */
+	{
+		float fAngleLimitUp		= this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
+		float fAngleLimitDown	= this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
+
+		if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
+		if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
+	}
+
+	/* 回転量を更新 */
+	{
+		this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
+		this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
+	}
+
+	{
+		/* プレイヤーの前方 */
+		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+
+		/* 攻撃座標を算出 */
+		VECTOR vecAdd;
+		// 方向
+		vecAdd.x = +(sinf(fCameraAngleX) * vecInput.z) - (cosf(fCameraAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fCameraAngleX) * vecInput.z) - (sinf(fCameraAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		vecAdd = VScale(vecAdd, 500.f);
+
+		/* カメラ注視点設定 */
+		this->PlayerStatusList->SetCameraTarget(VAdd(vecAdd, vecPlayerPos));
+	}
+	
+	{
+		/* プレイヤーの前方 */
+		VECTOR vecInput = VGet(1.f, 0.f, 0.f);
+
+		/* 攻撃座標を算出 */
+		VECTOR vecAdd;
+		// 方向
+		vecAdd.x = +(sinf(fCameraAngleX) * vecInput.z) - (cosf(fCameraAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fCameraAngleX) * vecInput.z) - (sinf(fCameraAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		vecAdd = VScale(vecAdd, 50.f);
+		vecAdd = VAdd(vecAdd, VGet(0, 200, 0));
+
+		/* カメラ座標設定 */
+		this->PlayerStatusList->SetCameraPosition(VAdd(vecAdd, vecPlayerPos));
+	}
+
+	/* カメラ設定 */
 	{
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
 	}

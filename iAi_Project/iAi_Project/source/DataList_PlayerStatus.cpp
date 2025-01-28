@@ -34,6 +34,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };	//プレイヤー溜め攻撃の目的地
 	/* 2025.01.22 菊池雅道 初期化処理追加 終了 */
 	this->iPlayerChargeAttackCount			= 0;			// 近接攻撃(強)のカウント
+	this->pLockOnEnemy						= nullptr;		// ロックオン対象のエネミー
 
 	/* 能力値関連 */
 	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
