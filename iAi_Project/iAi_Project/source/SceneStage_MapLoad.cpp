@@ -24,8 +24,8 @@ void SceneStage::LoadMapData()
 	{
 		/* 読み込みたいマップデータのパス設定 */
 		// ※ファイル名とステージ名が一致するようにする
-		std::string Path	= "resource/MapData/";
-		std::string Format	= MapName + ".json";
+		std::string Path = "resource/MapData/";
+		std::string Format = MapName + ".json";
 		std::ifstream file(Path + Format);
 
 		/* Jsonファイル読み込み */
@@ -35,7 +35,7 @@ void SceneStage::LoadMapData()
 		/* プラットフォーム(描写オブジェクト)読み込み */
 		{
 			/* Jsonファイルから読み込み */
-			std::string Type	= "/Object";
+			std::string Type = "/Object";
 			std::string GetName = MapName + Type;
 			nlohmann::json stage = json.at(GetName);
 
@@ -91,9 +91,9 @@ void SceneStage::LoadMapData()
 		/* プラットフォーム(コリジョン)読み込み */
 		{
 			/* Jsonファイルから読み込み */
-			std::string Type		= "/Collision";
-			std::string GetName		= MapName + Type;
-			nlohmann::json stage	= json.at(GetName);
+			std::string Type = "/Collision";
+			std::string GetName = MapName + Type;
+			nlohmann::json stage = json.at(GetName);
 
 			for (auto& data : stage)
 			{
@@ -200,31 +200,43 @@ void SceneStage::LoadMapData()
 				}
 			}
 		}
-	}
 
-	/* テスト用仮オブジェクト追加処理 */
-	{
-		/* エネミー追加(仮) */
+		/* エネミー読み込み */
 		{
-			TestEnemy* AddEnemy = new TestEnemy();
-			ObjectList->SetEnemy(AddEnemy);
+			/* Jsonファイルから読み込み */
+			std::string Type = "/Enemy";
+			std::string GetName = MapName + Type;
+			nlohmann::json stage = json.at(GetName);
 
-			AddEnemy->SetPosition(VGet(1000.f, -1000.f, 0.f));
+			for (auto& data : stage)
+			{
+				/* エネミー名取得 */
+				std::string	name;
+				data.at("objectName").get_to(name);
 
-			AddEnemy = new TestEnemy();
-			ObjectList->SetEnemy(AddEnemy);
+				/* エネミータイプ確認 */
+				if (name == "Substance2")
+				{
+					// エネミー(仮)の場合
+					/* "オブジェクト管理"にエネミー(仮)を追加 */
+					TestEnemy* AddEnemy = new TestEnemy();
+					ObjectList->SetEnemy(AddEnemy);
 
-			AddEnemy->SetPosition(VGet(500.f, -1000.f, 0.f));
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					AddEnemy->SetPosition(vecPos);
 
-			AddEnemy = new TestEnemy();
-			ObjectList->SetEnemy(AddEnemy);
-
-			AddEnemy->SetPosition(VGet(0.f, -1000.f, 0.f));
-
-			AddEnemy = new TestEnemy();
-			ObjectList->SetEnemy(AddEnemy);
-
-			AddEnemy->SetPosition(VGet(-500.f, -1000.f, 0.f));
+					/* 回転量 */
+					// 後ほど追加
+				}
+			}
 		}
 	}
 

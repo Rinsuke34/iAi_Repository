@@ -14,6 +14,9 @@
 /* シーン */
 #include "SceneEdit.h"
 #include "SceneUi_Crosshairs.h"
+#include "SceneUi_Combo.h"
+#include "SceneUi_Hp.h"
+#include "SceneUi_Kunai.h"
 
 /* ステージクラスの宣言 */
 
@@ -43,6 +46,7 @@ class SceneStage : public SceneBase
 		virtual void	SetCamera();					// カメラ設定
 
 		/* カメラモード関連 */
+		void	CameraRotateUpdata();				// 入力によるカメラ回転量取得
 		void	SetCamera_Free();					// カメラ設定(フリー)
 		void	SetCamera_Lock();					// カメラ設定(固定)
 		void	SetCamera_Aim();					// カメラ設定(構え(ズーム))

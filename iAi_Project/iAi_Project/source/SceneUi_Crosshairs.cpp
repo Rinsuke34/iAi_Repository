@@ -5,7 +5,7 @@
 /* UI(クロスヘア)クラスの定義 */
 
 // コンストラクタ
-SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 10, false)
+SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false)
 {
 	/* データリスト取得 */
 	{
