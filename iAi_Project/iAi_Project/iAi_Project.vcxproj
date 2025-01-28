@@ -180,7 +180,10 @@
     <ClCompile Include="source\SceneTitle.cpp" />
     <ClCompile Include="source\SceneStage.cpp" />
     <ClCompile Include="source\SceneStage_MapLoad.cpp" />
+    <ClCompile Include="source\SceneUi_Combo.cpp" />
     <ClCompile Include="source\SceneUi_Crosshairs.cpp" />
+    <ClCompile Include="source\SceneUi_Hp.cpp" />
+    <ClCompile Include="source\SceneUi_Kunai.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
@@ -204,7 +207,10 @@
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
     <ClInclude Include="source\SceneStage.h" />
+    <ClInclude Include="source\SceneUi_Combo.h" />
     <ClInclude Include="source\SceneUi_Crosshairs.h" />
+    <ClInclude Include="source\SceneUi_Hp.h" />
+    <ClInclude Include="source\SceneUi_Kunai.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />
     <ClInclude Include="source\DataList_Input.h" />

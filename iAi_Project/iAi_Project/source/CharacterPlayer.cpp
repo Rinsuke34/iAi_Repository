@@ -29,7 +29,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};		// 水平方向コリジョン(下側)
 		this->stMeleeStrongMoveCollsion							= {};		// 近接攻撃(強)のコリジョン(移動後の座標)
-		//this->stMeleeSearchCollision							= {};		// 近接攻撃(強)のロックオン範囲コリジョン
 	}
 
 	/* データリスト取得 */
@@ -62,11 +61,17 @@ void CharacterPlayer::Initialization()
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
+
+	/* カメラモードを"フリーモード"に変更 */
+	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
 }
 
 // 更新
 void CharacterPlayer::Update()
 {
+	/* カメラモードを"フリーモード"に変更 */
+	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
+
 	/* 接触確認 */
 	{
 		// ※攻撃やオブジェクトに対する当たり判定処理を行う
@@ -121,72 +126,6 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
-	/* テスト用描写 */
-	/*if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
-	{
-		DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "JUMP");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
-	{
-		DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "ATTACK");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
-	{
-		DrawFormatString(500, 16 * 2, GetColor(255, 255, 255), "AIM");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_RESET) == true)
-	{
-		DrawFormatString(500, 16 * 3, GetColor(255, 255, 255), "RESET");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_DODGE) == true)
-	{
-		DrawFormatString(500, 16 * 4, GetColor(255, 255, 255), "DODGE");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_FORWARD) == true)
-	{
-		DrawFormatString(500, 16 * 5, GetColor(255, 255, 255), "FORWARD");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_BACK) == true)
-	{
-		DrawFormatString(500, 16 * 6, GetColor(255, 255, 255), "BACK");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_LEFT) == true)
-	{
-		DrawFormatString(500, 16 * 7, GetColor(255, 255, 255), "LEFT");
-	}
-
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_RIGHT) == true)
-	{
-		DrawFormatString(500, 16 * 8, GetColor(255, 255, 255), "RIGHT");
-	}
-
-	XINPUT_STATE stXInputState;
-	GetJoypadXInputState(DX_INPUT_PAD1, &stXInputState);
-
-	DrawFormatString(500, 16 * 10, GetColor(255, 255, 255), "左トリガ : %u", stXInputState.LeftTrigger);
-	DrawFormatString(500, 16 * 11, GetColor(255, 255, 255), "右トリガ : %u", stXInputState.RightTrigger);
-
-	float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-	DrawFormatString(500, 16 * 12, GetColor(255, 255, 255), "移動速度 : %f", fSpeed);
-	
-	DrawFormatString(500, 16 * 14, GetColor(255, 255, 255), "フレーム数 : %d", this->PlayerStatusList->iPlayerNowAttakChargeFlame);
-
-	DrawFormatString(500, 16 * 16, GetColor(255, 255, 255), "X : %f Y : %f Z : %f", vecTest.x, vecTest.y, vecTest.z);
-
-	DrawSphere3D(vecTest, 40.0f, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), TRUE);
-
-	DrawSphere3D(stTestCollision.vecSqhere, stTestCollision.fSqhereRadius, 32, GetColor(255, 255, 255), GetColor(255, 255, 255), false);
-	DrawFormatString(500, 16 * 17, GetColor(255, 255, 255), "プレイヤー座標(%f, %f, %f)", this->vecPosition.x, this->vecPosition.y, this->vecPosition.z);
-	DrawFormatString(500, 16 * 18, GetColor(255, 255, 255), "プレイヤー移動量(%f, %f, %f)", this->vecMove.x, this->vecMove.y, this->vecMove.z);
-	DrawFormatString(500, 16 * 19, GetColor(255, 255, 255), "プレイヤー移動速度 : %f", VSize(this->vecMove));*/
 }
 
 // 当たり判定描写
@@ -212,9 +151,15 @@ void CharacterPlayer::CollisionDraw()
 	iColor = GetColor(255, 255, 0);
 	DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
 
-	///* 強攻撃ロックオン範囲 */
-	//iColor = GetColor(255, 0, 255);
-	//DrawCapsule3D(this->stMeleeSearchCollision.vecCapsuleTop, this->stMeleeSearchCollision.vecCapsuleBottom, this->stMeleeSearchCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
+	/* 強攻撃ロックオン範囲 */
+	iColor = GetColor(255, 0, 255);
+	COLLISION_CAPSULE stMeleeCollision = this->PlayerStatusList->stGetMeleeSearchCollision();
+	DrawCapsule3D(stMeleeCollision.vecCapsuleTop, stMeleeCollision.vecCapsuleBottom, stMeleeCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
+
+	/* カメラ注視点 */
+	iColor = GetColor(0, 255, 255);
+	DrawLine3D(VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(+50, 0, 0)), VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(-50, 0, 0)), iColor);
+	DrawLine3D(VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(0, 0, +50)), VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(0, 0, -50)), iColor);
 }
 
 // 移動
@@ -265,7 +210,6 @@ void CharacterPlayer::Player_Move()
 		// 移動入力がされている場合
 		/* 現在の移動速度取得 */
 		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
-		
 			
 		// 回避後フラグがtrueなら最大ダッシュ状態になる
 		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
@@ -826,7 +770,9 @@ void CharacterPlayer::Player_Melee_Posture()
 			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 
 			/* 移動量算出 */
-			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
+			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
+			// 臨時でちょっと長めにする
+			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
 
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
@@ -840,19 +786,25 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 攻撃チャージフレームが強攻撃に派生しているか確認 */
 			if (iNowAttakChargeFlame >= PLAYER_CHARGE_TO_STRONG_TIME)
 			{
+				/* カメラモードを"構え(ズーム)"に変更 */
+				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM);
+
 				/* ロックオン範囲のコリジョン作成 */
 				{
 					/* ロックオン範囲コリジョン */
 					COLLISION_CAPSULE stMeleeSearchCollision;
 
-					/* 半径はとりあえず広めに */
-					stMeleeSearchCollision.fCapsuleRadius = 300.f;
+					/* ロックオン範囲の半径を取得 */
+					stMeleeSearchCollision.fCapsuleRadius = this->PlayerStatusList->fGetPlayerRockOnRadius();
 
 					/* 片方は現在のプレイヤーの中心に設定 */
 					stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
 
-					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
-					stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
+					///* もう片方は移動後(推定)のプレイヤーの中心に設定 */
+					//stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
+					// 臨時でプレイヤーの注視点に設定
+					stMeleeSearchCollision.vecCapsuleBottom = this->PlayerStatusList->vecGetCameraTarget();
+					stMeleeSearchCollision.vecCapsuleBottom.y = stMeleeSearchCollision.vecCapsuleTop.y;
 
 					/* ロックオン範囲のコリジョンを設定 */
 					this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);
