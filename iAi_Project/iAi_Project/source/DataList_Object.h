@@ -34,11 +34,12 @@ class DataList_Object : public DataListBase
 		void	UpdatePlatform();		// プラットフォーム更新
 
 		/* リスト内オブジェクト描写 */
-		void	DrawAll();				// 全オブジェクト描写
+		void	DrawAll();				// 全オブジェクト描写(エフェクトを除く)
 		void	DrawPlayer();			// プレイヤー描写
 		void	DrawEnemy();			// エネミー描写
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
+		void	DrawEffect();			// エフェクト描写
 
 		/* リスト内オブジェクトコリジョン描写 */
 		void	DrawAll_Collision();		// 全オブジェクトコリジョン描写

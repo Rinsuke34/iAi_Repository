@@ -41,6 +41,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* "プレイヤー状態"を取得 */
 		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+		/* "エフェクトリソース管理"を取得 */
+		this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
 	}
 
 	/* モデル取得 */

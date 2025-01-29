@@ -13,11 +13,7 @@ EffectSelfDelete::EffectSelfDelete() : EffectBase()
 // 初期化
 void EffectSelfDelete::Initialization()
 {
-	/* エフェクト座標更新 */
-	this->Effect_PosUpdate();
-
-	/* エフェクト再生開始 */
-	this->iEffectHandle_Play = PlayEffekseer3DEffect(this->iEffectHandle_Resource);
+	EffectBase::Initialization();
 }
 
 // 更新

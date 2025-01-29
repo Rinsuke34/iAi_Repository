@@ -156,7 +156,7 @@ void DataList_Object::UpdatePlatform()
 }
 
 /* リスト内オブジェクト描写 */
-// 全オブジェクト描写
+// 全オブジェクト描写(エフェクトを除く)
 void DataList_Object::DrawAll()
 {
 	/* 登録されているすべてのオブジェクトの描写 */
@@ -205,6 +205,16 @@ void DataList_Object::DrawPlatform()
 		{
 			pBackGround->Draw();
 		}
+	}
+}
+
+// エフェクト描写
+void DataList_Object::DrawEffect()
+{
+	/* すべてのエフェクトの描写を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->Draw();
 	}
 }
 

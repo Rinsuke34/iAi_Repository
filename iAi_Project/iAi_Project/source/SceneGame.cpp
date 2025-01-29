@@ -14,6 +14,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"ゲーム状態管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_GameStatus());
+
+		/* データリストサーバーに"エフェクトリソース管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Effect());
 	}
 
 	/* データリスト取得 */
@@ -33,6 +36,7 @@ SceneGame::~SceneGame()
 	/* データリスト削除 */
 	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
 	gpDataListServer->DeleteDataList("DataList_GameStatus");	// ゲーム状態管理
+	gpDataListServer->DeleteDataList("DataList_Effect");		// エフェクトリソース管理
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();
@@ -51,15 +55,6 @@ void SceneGame::Initialization()
 		DxLib_End();
 		gbEndFlg = true;
 		return;
-	}
-
-	/* データリスト作成 */
-	{
-		/* データリストサーバーに"プレイヤー状態"を追加 */
-		gpDataListServer->AddDataList(new DataList_PlayerStatus());
-
-		/* データリストサーバーに"3Dモデル管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Model());
 	}
 
 	/* 初期化 */

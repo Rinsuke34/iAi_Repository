@@ -10,6 +10,7 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
 #include "DataList_Model.h"
+#include "DataList_Effect.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
@@ -36,6 +37,7 @@ class CharacterPlayer : public CharacterBase
 		DataList_Input*			InputList;			// 入力管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
+		DataList_Effect*		EffectList;			// エフェクトリソース管理
 
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新

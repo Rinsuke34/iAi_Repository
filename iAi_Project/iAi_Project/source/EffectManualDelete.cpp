@@ -8,26 +8,3 @@ EffectManualDelete::EffectManualDelete() : EffectBase()
 {
 
 }
-
-// 初期化
-void EffectManualDelete::Initialization()
-{
-	/* エフェクト座標更新 */
-	Effect_PosUpdate();
-
-	/* エフェクト回転量更新 */
-	Effect_RotationUpdate();
-
-	/* エフェクト再生開始 */
-	this->iEffectHandle_Play = PlayEffekseer3DEffect(this->iEffectHandle_Resource);	
-}
-
-// 更新
-void EffectManualDelete::Update()
-{
-	/* エフェクト座標更新 */
-	Effect_PosUpdate();
-
-	/* エフェクト回転量更新 */
-	Effect_RotationUpdate();
-}

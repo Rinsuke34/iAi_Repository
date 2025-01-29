@@ -13,10 +13,14 @@ class EffectBase : public ObjectBase
 		EffectBase();			// コンストラクタ
 		virtual ~EffectBase();	// デストラクタ
 
-		virtual void	Update();	// 更新
-		virtual void	Draw();		// 描写
+		virtual void	Initialization()	override;		// 初期化
+		virtual void	Update();							// 更新
+		virtual void	Draw();								// 描写
 
-		void Effect_Load(std::string effectName);		// エフェクト読み込み
+		int		iGetEffectHandle()					{ return this->iEffectHandle; }				// エフェクトハンドル取得
+
+		void	SetEffectHandle(int iEffectHandle)	{ this->iEffectHandle = iEffectHandle; }	// エフェクトハンドル設定
+
 		void Effect_PosUpdate();						// エフェクト位置更新(現在座標に移動)
 		void Effect_RotationUpdate();					// エフェクト回転量更新(現在回転に設定)
 
@@ -25,6 +29,5 @@ class EffectBase : public ObjectBase
 		/* 関数 */
 
 		/* 変数 */
-		int iEffectHandle_Resource;	// エフェクトハンドル(リソース)
-		int iEffectHandle_Play;		// エフェクトハンドル(実行)
+		int iEffectHandle;		// エフェクトハンドル
 };
