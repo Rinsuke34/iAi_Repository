@@ -37,7 +37,7 @@ void BulletPlayerMeleeWeak::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->Effect_Load("FX_slash/FX_slash");
+		this->pEffect->Effect_Load("FX_charge/FX_charge");
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);

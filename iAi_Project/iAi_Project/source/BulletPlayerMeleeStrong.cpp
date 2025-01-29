@@ -106,6 +106,7 @@ bool BulletPlayerMeleeStrong::HitCheck(int iModelHandle, int iFrameIndex)
 		// ÚG‚µ‚Ä‚¢‚éê‡
 		return true;
 	}
+
 	// ÚG‚µ‚Ä‚¢‚È‚¢ê‡
 	return false;
 }

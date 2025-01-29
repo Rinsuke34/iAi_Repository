@@ -14,6 +14,7 @@
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
+#include "EffectSelfDelete.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -59,6 +60,15 @@ class CharacterPlayer : public CharacterBase
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
+
+		/* エフェクトのハンドル */
+		EffectSelfDelete*	pLandEffect;			//着地エフェクト
+		EffectManualDelete* pChargeEffect;			//溜めエフェクト
+		EffectSelfDelete*	pChargeFinishEffect;	//溜め完了エフェクト
+		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
+		EffectSelfDelete*   pChargeAttakEffect;		//居合(溜め)攻撃エフェクト
+		EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
+
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
