@@ -21,6 +21,25 @@ EffectBase::~EffectBase()
 	DeleteEffekseerEffect(this->iEffectHandle_Resource);
 }
 
+// 更新
+void EffectBase::Update()
+{
+	/* エフェクト座標更新 */
+	Effect_PosUpdate();
+
+	/* エフェクト回転量更新 */
+	Effect_RotationUpdate();
+}
+
+
+// 描写
+void EffectBase::Draw()
+{
+	/* エフェクトを描写 */
+	DrawEffekseer3D_Draw(this->iEffectHandle_Play);
+}
+
+
 // エフェクト読み込み
 void EffectBase::Effect_Load(std::string effectName)
 {

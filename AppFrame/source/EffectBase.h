@@ -13,6 +13,9 @@ class EffectBase : public ObjectBase
 		EffectBase();			// コンストラクタ
 		virtual ~EffectBase();	// デストラクタ
 
+		virtual void	Update();	// 更新
+		virtual void	Draw();		// 描写
+
 		void Effect_Load(std::string effectName);		// エフェクト読み込み
 		void Effect_PosUpdate();						// エフェクト位置更新(現在座標に移動)
 		void Effect_RotationUpdate();					// エフェクト回転量更新(現在回転に設定)

@@ -161,6 +161,7 @@
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
+    <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Model.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />
     <ClInclude Include="source\ConstantDefine.h" />
+    <ClInclude Include="source\DataList_Effect.h" />
     <ClInclude Include="source\DataList_GameStatus.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />

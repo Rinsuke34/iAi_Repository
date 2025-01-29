@@ -800,11 +800,11 @@ void CharacterPlayer::Player_Melee_Posture()
 					/* 片方は現在のプレイヤーの中心に設定 */
 					stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
 
-					///* もう片方は移動後(推定)のプレイヤーの中心に設定 */
-					//stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
-					// 臨時でプレイヤーの注視点に設定
-					stMeleeSearchCollision.vecCapsuleBottom = this->PlayerStatusList->vecGetCameraTarget();
-					stMeleeSearchCollision.vecCapsuleBottom.y = stMeleeSearchCollision.vecCapsuleTop.y;
+					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
+					stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
+					//// 臨時でプレイヤーの注視点に設定
+					//stMeleeSearchCollision.vecCapsuleBottom = this->PlayerStatusList->vecGetCameraTarget();
+					//stMeleeSearchCollision.vecCapsuleBottom.y = stMeleeSearchCollision.vecCapsuleTop.y;
 
 					/* ロックオン範囲のコリジョンを設定 */
 					this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);

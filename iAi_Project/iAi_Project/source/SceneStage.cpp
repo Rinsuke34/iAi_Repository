@@ -339,8 +339,11 @@ void SceneStage::SetCamera_Free()
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
+	//VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
 	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+
+	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
 	float fRadius	= this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
@@ -367,6 +370,40 @@ void SceneStage::SetCamera_Lock()
 // カメラ設定(構え(ズーム))
 void  SceneStage::SetCamera_Aim()
 {
+	///* 現在の回転量等を取得 */
+	//float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	//float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+
+	///* プレイヤー座標取得 */
+	//VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	///* カメラ注視点設定 */
+	//VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
+	//float fRadius		= 800.f;												// 注視点からの距離
+	//vecCameraTarget.x	= fRadius * +sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+	//vecCameraTarget.y	= fRadius * +sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+	//vecCameraTarget.z	= fRadius * -cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+
+	///* カメラの先端をロックオン範囲の奥に合わせる */
+	////vecCameraTarget = this->PlayerStatusList->stGetMeleeSearchCollision().vecCapsuleBottom;
+
+	//this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+
+	///* カメラ座標設定 */
+	////VECTOR vecCameraPosition	= VAdd(vecPlayerPos, VGet(0.f, PLAYER_HEIGHT - 20.f, 0.f));
+	//VECTOR vecCameraPosition	= VAdd(vecPlayerPos, VGet(0.f, PLAYER_HEIGHT + 40.f, 0.f));
+	////fRadius				= 250.f;												// 注視点からの距離
+	//fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
+	////fCameraAngleX		= fCameraAngleX + DX_PI_F / 4.f;						// 右後ろに配置するための角度調整
+	////vecCameraPosition.x = fRadius * -sinf(fCameraAngleX) + vecCameraPosition.x; // X座標
+	////vecCameraPosition.y = fRadius * -sinf(fCameraAngleY) + vecCameraPosition.y; // Y座標
+	////vecCameraPosition.z = fRadius * +cosf(fCameraAngleX) + vecCameraPosition.z; // Z座標
+	//vecCameraPosition.x = fRadius * -sinf(fCameraAngleX) + vecCameraPosition.x;	// X座標
+	//vecCameraPosition.y = fRadius * -sinf(fCameraAngleY) + vecCameraPosition.y;	// Y座標
+	//vecCameraPosition.z = fRadius * +cosf(fCameraAngleX) + vecCameraPosition.z;	// Z座標
+
+	//this->PlayerStatusList->SetCameraPosition(vecCameraPosition);
+
 	/* 現在の回転量等を取得 */
 	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
 	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
@@ -375,26 +412,18 @@ void  SceneStage::SetCamera_Aim()
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
-	float fRadius		= 800.f;												// 注視点からの距離
-	vecCameraTarget.x	= fRadius * +sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-	vecCameraTarget.y	= fRadius * +sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-	vecCameraTarget.z	= fRadius * -cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
+	this->PlayerStatusList->SetCameraTarget(VAdd(vecCameraTarget, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove()));
 
-	/* カメラの先端をロックオン範囲の奥に合わせる */
-	//vecCameraTarget = this->PlayerStatusList->stGetMeleeSearchCollision().vecCapsuleBottom;
-
-	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
-	VECTOR vecCameraPosition	= VAdd(vecPlayerPos, VGet(0.f, PLAYER_HEIGHT - 20.f, 0.f));
-	fRadius				= 200.f;												// 注視点からの距離
-	fCameraAngleX		= fCameraAngleX + DX_PI_F / 4.0f;						// 右後ろに配置するための角度調整
-	vecCameraPosition.x = fRadius * -sinf(fCameraAngleX) + vecCameraPosition.x; // X座標
-	vecCameraPosition.y = fRadius * -sinf(fCameraAngleY) + vecCameraPosition.y; // Y座標
-	vecCameraPosition.z = fRadius * +cosf(fCameraAngleX) + vecCameraPosition.z; // Z座標
+	float fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
+	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
-	this->PlayerStatusList->SetCameraPosition(vecCameraPosition);
+	this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
 
 	/* カメラ設定 */
 	SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());

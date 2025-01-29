@@ -37,7 +37,7 @@ static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚
 
 /* ƒJƒƒ‰ŠÖ˜A */
 // Šî–{î•ñ
-static const float	INIT_CAMERA_RADIUS						= 300;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
+static const float	INIT_CAMERA_RADIUS						= 400;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒRƒ“ƒgƒ[ƒ‰[)
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
 static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
