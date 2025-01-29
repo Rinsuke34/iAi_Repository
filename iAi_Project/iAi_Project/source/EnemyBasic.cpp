@@ -12,6 +12,22 @@ EnemyBasic::EnemyBasic() : EnemyBase()
 	this->iCoreFrameNo		= -1;					// コアフレーム番号を初期化
 }
 
+// デストラクタ
+EnemyBasic::~EnemyBasic()
+{
+	/* プレイヤーのコンボ数加算＆継続時間リセット */
+	{
+		/* データリスト取得 */
+		DataList_Score* ScoreList = dynamic_cast<DataList_Score*>(gpDataListServer->GetDataList("DataList_Score"));
+
+		/* プレイヤーのコンボ数加算 */
+		ScoreList->SetPlayerComboNowCount(ScoreList->iGetPlayerComboNowCount() + 1);
+
+		/* プレイヤーのコンボ継続時間リセット */
+		ScoreList->SetPlayerComboDuration(PLAYER_COMBO_DURATION);
+	}
+}
+
 // コアフレーム番号取得
 void EnemyBasic::LoadCoreFrameNo()
 {

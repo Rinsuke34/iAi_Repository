@@ -183,7 +183,6 @@ void SceneStage::Draw()
 		Effekseer_Sync3DSetting();
 
 		/* エフェクト描写 */
-		//DrawEffekseer3D();
 		ObjectList->DrawEffect();
 	}
 
@@ -416,13 +415,14 @@ void  SceneStage::SetCamera_Aim()
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
 	this->PlayerStatusList->SetCameraTarget(VAdd(vecCameraTarget, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove()));
 
-	vecCameraTarget.y += 20.f;
+	/* 少し高い位置に設定 */
+	vecCameraTarget.y += 10.f;
 
 	/* カメラ座標設定 */
 	float fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
-	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecPlayerPos.x;		// X座標
+	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecPlayerPos.y;		// Y座標
+	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecPlayerPos.z;		// Z座標
 
 	this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
 

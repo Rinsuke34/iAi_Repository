@@ -17,6 +17,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"エフェクトリソース管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_Effect());
+
+		/* データリストサーバーに"スコア関連管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Score());
 	}
 
 	/* データリスト取得 */
@@ -34,9 +37,19 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 SceneGame::~SceneGame()
 {
 	/* データリスト削除 */
-	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
-	gpDataListServer->DeleteDataList("DataList_GameStatus");	// ゲーム状態管理
-	gpDataListServer->DeleteDataList("DataList_Effect");		// エフェクトリソース管理
+	{
+		/* 3Dモデル管理 */
+		gpDataListServer->DeleteDataList("DataList_Model");
+
+		/* ゲーム状態管理 */
+		gpDataListServer->DeleteDataList("DataList_GameStatus");
+
+		/* エフェクトリソース管理 */
+		gpDataListServer->DeleteDataList("DataList_Effect");
+
+		/* スコア関連管理 */
+		gpDataListServer->DeleteDataList("DataList_Score");
+	}
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();

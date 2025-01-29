@@ -285,6 +285,9 @@
     <ClCompile Include="source\DataList_Effect.cpp">
       <Filter>ソース ファイル\データリスト\エフェクトリソース管理</Filter>
     </ClCompile>
+    <ClCompile Include="source\DataList_Score.cpp">
+      <Filter>ソース ファイル\データリスト\スコア</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -391,6 +394,12 @@
     </ClInclude>
     <ClInclude Include="source\DataList_Effect.h">
       <Filter>ヘッダー ファイル\データリスト\エフェクトリソース管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Score.h">
+      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScoreDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

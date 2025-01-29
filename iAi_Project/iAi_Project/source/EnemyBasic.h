@@ -4,6 +4,9 @@
 #include "Appframe.h"
 #include "PublicInclude.h"
 
+/* データリスト */
+#include "DataList_Score.h"
+
 /* 基本エネミークラスの宣言 */
 
 // 基本エネミークラス
@@ -11,7 +14,7 @@ class EnemyBasic : public EnemyBase
 {
 	public:
 		EnemyBasic();				// コンストラクタ
-		virtual ~EnemyBasic() {};	// デストラクタ
+		virtual ~EnemyBasic();		// デストラクタ
 
 		void	LoadCoreFrameNo();	// コアフレーム番号取得
 

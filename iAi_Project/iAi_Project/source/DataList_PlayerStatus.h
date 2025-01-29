@@ -147,7 +147,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerAfterDodgeFlag;			// プレイヤーの回避後フラグ														/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		VECTOR	vecPlayerChargeAttakTargetMove;	// 近接攻撃(強)による移動量														/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
 		int		iPlayerChargeAttackCount;		// 近接攻撃(強)のカウント
-		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー
+		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー		
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン
