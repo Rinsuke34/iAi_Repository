@@ -3,6 +3,7 @@
 /* 2025.01.22 菊池雅道	攻撃処理追加 */
 /* 2025.01.24 菊池雅道	攻撃処理追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
+/* 2025.01.30 菊池雅道	モーション処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -21,16 +22,24 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* オブジェクトのハンドル */
 		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
 
+		/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 		/* エフェクトのハンドル */
-		this->pLandEffect = nullptr;				//着地エフェクト
-		this->pChargeEffect = nullptr;				//溜めエフェクト
-		this->pChargeFinishEffect = nullptr;		//溜め完了エフェクト
-		this->pChargeHoldEffect = nullptr;			//溜め完了後エフェクト
-		this->pChargeAttakEffect = nullptr;			//居合(溜め)攻撃エフェクト
-		this->pDashEffect = nullptr;				//ダッシュエフェクト
+		this->pLandEffect			=	nullptr;		//着地エフェクト
+		this->pChargeEffect			=	nullptr;		//溜めエフェクト
+		this->pChargeFinishEffect	=	nullptr;		//溜め完了エフェクト
+		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト
+		this->pChargeAttakEffect	=	nullptr;		//居合(溜め)攻撃エフェクト
+		this->pDashEffect			=	nullptr;		//ダッシュエフェクト
+		this->pDodgeEffect			=	nullptr;		//回避エフェクト
+		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
+		/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
+		this->iMotionAttachIndex	=	-1;		// アタッチするモーションのインデックス(何もアタッチしない)
+		this->iOldMotion			=	-1;		// 以前にアタッチされたモーション(何もアタッチしない)
+		this->fMotionTotalTime		=	0;		// モーションの総時間
+		this->fMoionPlayTime		=	0;		// モーションの再生時間
+		/* 2025.01.30 菊池雅道	モーション処理追加 終了 */
 
-		
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
@@ -85,6 +94,9 @@ void CharacterPlayer::Update()
 	/* 移動量をリセット */
 	this->vecMove = VGet(0, 0, 0);		// 移動量
 
+	/* プレイヤーのモーション状態を保存する */
+	iOldMotion = this->PlayerStatusList->iGetPlayerMotion();
+
 	/* 攻撃系アクション処理 */
 	{
 		/* 攻撃状態遷移管理 */
@@ -118,6 +130,10 @@ void CharacterPlayer::Update()
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
+
+	
+	/* モーション遷移管理 */
+	Player_Motion_Transition();
 }
 
 // 描写
@@ -131,6 +147,9 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
+
+	/* 再生時間をセットする */
+	MV1SetAttachAnimTime(this->iModelHandle, this->iMotionAttachIndex , this->fMoionPlayTime);
 
 	/* テスト用描写 */
 	/*if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_JUMP) == true)
@@ -197,8 +216,6 @@ void CharacterPlayer::Draw()
 	DrawFormatString(500, 16 * 17, GetColor(255, 255, 255), "プレイヤー座標(%f, %f, %f)", this->vecPosition.x, this->vecPosition.y, this->vecPosition.z);
 	DrawFormatString(500, 16 * 18, GetColor(255, 255, 255), "プレイヤー移動量(%f, %f, %f)", this->vecMove.x, this->vecMove.y, this->vecMove.z);
 	DrawFormatString(500, 16 * 19, GetColor(255, 255, 255), "プレイヤー移動速度 : %f", VSize(this->vecMove));*/
-
-	DrawFormatString(500, 16 * 20, GetColor(255, 255, 255), "%d", this->PlayerStatusList->bGetPlayerLandingFlg());
 }
 
 // 当たり判定描写
@@ -266,6 +283,7 @@ void CharacterPlayer::Player_Move()
 
 	/* 2025.01.09 菊池雅道	移動処理追加		開始	*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始	*/
+	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 
 	/* 移動入力がされているか確認 */
 	if (vecInput.x != 0 || vecInput.z != 0)
@@ -278,6 +296,9 @@ void CharacterPlayer::Player_Move()
 		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
 		{
 			fSpeed = PLAER_DASH_MAX_SPEED;
+
+			/* モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
 		}
 
 		// スティックの倒し具合で速度を変化
@@ -288,6 +309,9 @@ void CharacterPlayer::Player_Move()
 			//フレーム数をカウント
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
+			/* モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_LOW);
+
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
 			{
@@ -296,24 +320,18 @@ void CharacterPlayer::Player_Move()
 					/* ダッシュエフェクトを生成 */
 					this->pDashEffect = new EffectSelfDelete;
 
-					/* エフェクトの読み込み */
+					/* ダッシュエフェクト読み込み */
 					this->pDashEffect->Effect_Load("FX_dash/FX_dash");
 
-					/* 仮追加 */
+					/* ダッシュエフェクトの時間設定 */
 					this->pDashEffect->SetDeleteCount(30);
 
-					/* エフェクトの座標設定 */
-					this->pDashEffect->SetPosition(this->vecPosition);
-
-					/* エフェクトの回転量設定 */
-					this->pDashEffect->SetRotation(this->vecRotation);
-
-					/* エフェクトの初期化 */
+					/* ダッシュエフェクトの初期化 */
 					this->pDashEffect->Initialization();
 
-					/* エフェクトをリストに登録 */
+					/* ダッシュエフェクトをリストに登録 */
 					{
-						/* エフェクトをリストに登録 */
+						/* ダッシュエフェクトをリストに登録 */
 						this->ObjectList->SetEffect(this->pDashEffect);
 					}
 				}
@@ -322,6 +340,9 @@ void CharacterPlayer::Player_Move()
 			else if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
 			{
 				fSpeed = PLAER_DASH_MAX_SPEED;
+
+				/* 走行(高速)モーション設定 */
+				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
 			}
 		}
 		else
@@ -330,15 +351,38 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
 			fSpeed = PLAYER_WALK_MOVE_SPEED;
+
+			/* 歩行モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
 		}
 		
 		// エフェクトが存在している場合、情報を更新する
 		if (pDashEffect != nullptr)
 		{
-			/* エフェクトの位置を設定 */
-			this->pDashEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 80, 0)));
+			/* エフェクトの生成方向の設定 */
+			// ※プレイヤーの前に出す
+			VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+
+			/* カメラの水平方向の向きを移動用の向きに設定 */
+			float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+
+			/* エフェクトの座標を算出 */
+			VECTOR vecAdd;
+			// 方向
+			vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+			vecAdd.y = 0.f;
+			vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+			vecAdd = VNorm(vecAdd);
+			// 移動速度分離す
+			vecAdd = VScale(vecAdd, PLAER_DASH_MAX_SPEED);
+			// 高さ
+			vecAdd.y = PLAYER_HEIGHT / 2.f;
+
+			/* エフェクトの座標設定 */
+			this->pDashEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+
 			/* エフェクトの回転量設定 */
-			this->pDashEffect->SetRotation(this->vecRotation);
+			this->pDashEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 		}
 
 		/* 2025.01.09 菊池雅道	移動処理追加		終了	*/
@@ -366,13 +410,25 @@ void CharacterPlayer::Player_Move()
 		// 移動入力がされていない場合
 		/* 移動速度を0にする */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
+
 		//回避後フラグをリセット
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
+		
+		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
+		if (this->PlayerStatusList->iGetPlayerMotion() == PLAYER_MOTION_DRAW_SWORD_END)
+		{
+		}
+		else
+		{
+			/* 待機モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_IDLE);
+		}
 	}
 
 	/* 移動量を加算 */
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
 }
+/* 2025.01.30 菊池雅道	モーション処理追加 終了 */
 
 // ジャンプ
 void CharacterPlayer::Player_Jump()
@@ -407,6 +463,7 @@ void CharacterPlayer::Player_Jump()
 						/* ジャンプ回数を更新 */
 						this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
 
+						/* ジャンプ中フラグを有効にする */
 						this->PlayerStatusList->SetPlayerJumpingFlag(true);
 					}
 				}
@@ -461,8 +518,9 @@ void CharacterPlayer::Player_Gravity()
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
-	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始*/
+	/* 2025.01.09 菊池雅道　	移動処理追加		開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始 */
+	/* 2025.01.29 菊池雅道　	エフェクト処理追加	開始 */
 	
 	/* プレイヤーの状態を取得 */
 	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
@@ -539,30 +597,24 @@ void CharacterPlayer::Player_Dodg()
 					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
 				}
 
-				/* エフェクト追加 */
+				/* 回避エフェクト追加 */
 				{
-					/* ダッシュエフェクトを生成 */
-					this->pDashEffect = new EffectSelfDelete;
+					/* 回避エフェクトを生成 */
+					this->pDodgeEffect = new EffectSelfDelete;
 
-					/* エフェクトの読み込み */
-					this->pDashEffect->Effect_Load("FX_dash/FX_dash");
+					/* 回避エフェクトの読み込み */
+					this->pDodgeEffect->Effect_Load("FX_dash/FX_dash");
 
-					/* 仮追加 */
-					this->pDashEffect->SetDeleteCount(60);
+					/* 回避エフェクトの時間を設定 */
+					this->pDodgeEffect->SetDeleteCount(30);
 
-					/* エフェクトの座標設定 */
-					this->pDashEffect->SetPosition(this->vecPosition);
+					/* 回避エフェクトの初期化 */
+					this->pDodgeEffect->Initialization();
 
-					/* エフェクトの回転量設定 */
-					this->pDashEffect->SetRotation(this->vecRotation);
-
-					/* エフェクトの初期化 */
-					this->pDashEffect->Initialization();
-
-					/* エフェクトをリストに登録 */
+					/* 回避エフェクトをリストに登録 */
 					{
-						/* エフェクトをリストに登録 */
-						this->ObjectList->SetEffect(this->pDashEffect);
+						/* 回避エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(this->pDodgeEffect);
 					}
 				}
 			}
@@ -570,16 +622,37 @@ void CharacterPlayer::Player_Dodg()
 	}
 
 	// エフェクトが存在している場合、情報を更新する
-	if (pDashEffect != nullptr)
+	if (pDodgeEffect != nullptr)
 	{
-		/* エフェクトの位置を設定 */
-		this->pDashEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 80, 0)));
+		/* エフェクトの生成方向の設定 */
+		// ※プレイヤーの前に出す
+		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+
+		/* エフェクトの座標を算出 */
+		VECTOR vecAdd;
+		// 方向
+		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		// 回避時の速度分離す
+		vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
+		// 高さ
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
+
+		/* エフェクトの座標設定 */
+		this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+
 		/* エフェクトの回転量設定 */
-		this->pDashEffect->SetRotation(this->vecRotation);
+		this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 	}
 
-	/* 2025.01.09 菊池雅道　移動処理追加	終了 */
-	/* 2025.01.26 駒沢風助	コード修正		終了*/
+	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
+	/* 2025.01.26 駒沢風助	コード修正		終了 */
+	/* 2025.01.29 菊池雅道　	エフェクト処理追加	開始 */
 }
 
 // 移動処理(垂直方向)
@@ -605,8 +678,8 @@ void CharacterPlayer::Movement_Vertical()
 	// ※初期値を移動後の座標に設定
 	float	fStandPosY = vecNextPosition.y;
 
-	/* 現在の着地フラグを保持 */
-	bool bLandingFlg = this->PlayerStatusList->bGetPlayerLandingFlg();
+	/* 現在のジャンプフラグを保持 */
+	bool bjumppingFlg = this->PlayerStatusList->bGetPlayerJumpingFlag();
 
 	/* プレイヤーの着地フラグを無効にする */
 	this->PlayerStatusList->SetPlayerLanding(false);
@@ -667,10 +740,13 @@ void CharacterPlayer::Movement_Vertical()
 	
 	/* 2025.01.27 菊池雅道	エフェクト処理追加	開始*/
 	/* 着地フラグが無効→有効になったか確認 */
-	if (bLandingFlg == false && this->PlayerStatusList->bGetPlayerLandingFlg() == true)
+	if (bjumppingFlg == true && this->PlayerStatusList->bGetPlayerJumpingFlag()== false)
 	{
+		/* プレイヤーの状態を取得 */
+		int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+
 		/* 回避中にエフェクトが出ないようにする */
-		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == false)
+		if (iPlayerState != PLAYER_STATUS_DODGING)
 		{
 			/* エフェクト追加 */
 			{
@@ -680,7 +756,7 @@ void CharacterPlayer::Movement_Vertical()
 				/* エフェクトの読み込み */
 				this->pLandEffect->Effect_Load("FX_land/FX_land");
 
-				/* 仮追加 */
+				/* エフェクトの時間を設定 */
 				this->pLandEffect->SetDeleteCount(30);
 
 				/* エフェクトの座標設定 */
@@ -714,12 +790,13 @@ void CharacterPlayer::Movement_Vertical()
 	/* モーションを更新 */
 	{
 		/* 空中にいる(着地していない)か確認 */
-		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == false)
+		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
 			// 空中にいる(着地していない)場合
 			/* 攻撃を構えていない状態であるか確認 */
+			/* 強攻撃(近接)中でないか確認 */
 			// ※構えている最中は落下モーションに遷移させない
-			if ((iPlayerState != PLAYER_STATUS_MELEE_POSTURE) && (iPlayerState != PLAYER_STATUS_PROJECTILE_POSTURE))
+			if ((iPlayerState != PLAYER_STATUS_MELEE_POSTURE) && (iPlayerState != PLAYER_STATUS_PROJECTILE_POSTURE) && (iPlayerState != PLAYER_STATUS_MELEE_STRONG))
 			{
 				/* 上昇しているか確認 */
 				if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
@@ -913,6 +990,8 @@ void CharacterPlayer::Player_Attack_Transition()
 	}
 }
 
+/* 2025.01.27 菊池雅道	エフェクト処理追加 追加 */
+/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 // 近接攻撃(構え)
 void CharacterPlayer::Player_Melee_Posture()
 {
@@ -926,25 +1005,29 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
-		// 攻撃入力がされている場合
-		/* プレイヤーモーションが"居合(溜め)"以外であるか確認 */
-		if (this->PlayerStatusList->iGetPlayerMotion() != PLAYER_MOTION_DRAW_SWORD_CHARGE)
+		// 攻撃チャージフレームが0ならば
+		if (iNowAttakChargeFlame == 0)
 		{
-			// 居合(溜め)以外である場合
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_CHARGE);
 
-			/* 居合(溜め)のエフェクトを生成 */
+			/* 溜めのエフェクトを生成 */
 			this->pChargeEffect = new EffectManualDelete;
-			/* エフェクトの読み込み */
+
+			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->Effect_Load("FX_charge/FX_charge");
 
-			/* エフェクトの初期化 */
+			/* 溜めエフェクトの座標設定(仮座標) */
+			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 170, 0)));
+			/* 溜めエフェクトの回転量設定 */
+			this->pChargeEffect->SetRotation(this->vecRotation);
+
+			/* 溜めエフェクトの初期化 */
 			this->pChargeEffect->Initialization();
 
-			/* エフェクトをリストに登録 */
+			/* 溜めエフェクトをリストに登録 */
 			{
-				/* エフェクトをリストに登録 */
+				/* 溜めエフェクトをリストに登録 */
 				this->ObjectList->SetEffect(this->pChargeEffect);
 			}
 		}
@@ -994,10 +1077,12 @@ void CharacterPlayer::Player_Melee_Posture()
 			}
 
 			/* 溜め完了エフェクトの座標設定 */
-			this->pChargeFinishEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 80, 0)));
+			this->pChargeFinishEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
+			/* 溜めエフェクトは削除 */
 			this->pChargeEffect->SetDeleteFlg(true);
 
+			/* 溜め完了後エフェクトを生成 */
 			this->pChargeHoldEffect = new EffectManualDelete;
 
 			/* エフェクトの読み込み */
@@ -1016,18 +1101,18 @@ void CharacterPlayer::Player_Melee_Posture()
 		//エフェクトが存在している場合、情報を更新する
 		if (this->pChargeEffect != nullptr)
 		{
-			/* 溜めエフェクトの座標設定 */
-			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 80, 0)));
+			/* 溜めエフェクトの座標設定(仮座標) */
+			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+			/* 溜めエフェクトの回転量設定 */
+			this->pChargeEffect->SetRotation(this->vecRotation);
 		}
 		if (this->pChargeHoldEffect != nullptr)
 		{
-			/* 溜め完了語エフェクトの座標設定 */
-			this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 80, 0)));
+			/* 溜め完了エフェクトの座標設定(仮座標) */
+			this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+			/* 溜め完了エフェクトの回転量設定 */
+			this->pChargeEffect->SetRotation(this->vecRotation);
 		}
-		
-	
-		/* 居合(溜め)エフェクトの回転量設定 */
-		this->pChargeEffect->SetRotation(this->vecRotation);
 	}
 	else
 	{
@@ -1055,25 +1140,26 @@ void CharacterPlayer::Player_Melee_Posture()
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
 		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
 
-
+		//エフェクトが存在している場合、削除する
 		if (this->pChargeEffect != nullptr)
 		{
-			/* 居合(溜め)エフェクトを削除 */
+			/* 溜めエフェクトを削除 */
 			this->pChargeEffect->SetDeleteFlg(true);
 		}
-
 		if (this->pChargeHoldEffect != nullptr)
 		{
-			/* 居合(溜め)エフェクトを削除 */
+			/* 溜め完了後エフェクトを削除 */
 			this->pChargeHoldEffect->SetDeleteFlg(true);
 		}
 	}
 }
+/* 2025.01.27 菊池雅道	エフェクト処理追加 追加 */
+/* 2025.01.30 菊池雅道	モーション処理追加 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
 {
-	/* 2025.01.22 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.22 菊池雅道　攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 
 	/* 攻撃モーションを確認 */
@@ -1151,7 +1237,7 @@ void CharacterPlayer::Player_Melee_Weak()
 
 	/* 2025.01.22 菊池雅道	攻撃処理追加		終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */
-	/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
+	/* 2025.01.27 菊池雅道	エフェクト処理追加	終了 */
 
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
@@ -1160,8 +1246,10 @@ void CharacterPlayer::Player_Melee_Weak()
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	/* 2025.01.22 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.22 菊池雅道　	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始 */
+	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
+	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 
 	/* 溜め攻撃用のカウントを取得 */
 	int iChargeAttackCount = this->PlayerStatusList->iGetPlayerChargeAttackCount();
@@ -1172,6 +1260,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		// 0である場合
 		// ※モーション遷移直後である場合
 		/* プレイヤーのモーションを近接攻撃(強)に変更する */
+		this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_STRONG);
 	}
 	else if(iChargeAttackCount <= 20)
 	{
@@ -1212,14 +1301,13 @@ void CharacterPlayer::Player_Charge_Attack()
 				/* 最後の移動量分プレイヤーを移動させる */
 				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), iLastMove));
 
-				// それら以外である場合(一連の行動が終了した場合)
 				/* プレイヤーの状態を"自由状態"に遷移 */
 				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
 				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_END);
 			}
-
+			
 			/* 近接攻撃として扱う弾を作成 */
 			// ※通常の弾とは違いカプセル型で作成する
 			{
@@ -1255,7 +1343,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				/* エフェクトの読み込み */
 				this->pChargeAttakEffect->Effect_Load("FX_iai_dash/FX_iai_dash");
 
-				/* 仮追加 */
+				/* エフェクトの再生時間を設定 */
 				this->pChargeAttakEffect->SetDeleteCount(30);
 
 				/* エフェクトの座標設定 */
@@ -1281,8 +1369,10 @@ void CharacterPlayer::Player_Charge_Attack()
 	/* 溜め攻撃用のカウントを+1する */
 	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
 
-	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
+	/* 2025.01.22 菊池雅道　	攻撃処理追加		終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */	
+	/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
+	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 }
 
 // 遠距離攻撃(構え)
@@ -1298,3 +1388,123 @@ void CharacterPlayer::Player_Projectile()
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
 }
+
+/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
+// プレイヤーのモーション遷移管理
+void CharacterPlayer::Player_Motion_Transition()
+{
+	/* アタッチしたアニメーションの総再生時間を取得する*/
+	this->fMotionTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMotionAttachIndex);
+
+	// 居合(強)(終了)モーションは１ループ再生する
+	if (iOldMotion == PLAYER_MOTION_DRAW_SWORD_END)
+	{	
+		// モーションの再生時間が総再生時間を超えていなければ ※総再生時間そのままだとスルーされるので-2しています
+		if (fMoionPlayTime <= this->fMotionTotalTime -2)
+		{
+			/* モーションの再生時間を進める */
+			this->fMoionPlayTime += 1.0f;
+		}
+		else
+		{
+			/* 居合(強)(終了)モーションをデタッチ */
+			MV1DetachAnim(this->iModelHandle, this->iMotionAttachIndex);
+			
+			/* 居合(強)(終了)モーションが終わったら、待機モーションをアタッチ */
+			this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
+		}
+	}
+	// それ以外は、モーションが変わっていなければ再生時間を進める
+	else  if (iOldMotion == this->PlayerStatusList->iGetPlayerMotion())
+	{
+		/* モーションの再生時間を進める */
+		this->fMoionPlayTime += 1.0f;
+	}
+	// モーションが変わった場合の処理
+	else
+	{
+		// モーションがアタッチされていたら 
+		if (this->iMotionAttachIndex != -1)
+		{
+			/* モーションをデタッチ */
+			MV1DetachAnim(this->iModelHandle, this->iMotionAttachIndex);
+		}
+
+		/* プレイヤーのモーション状態を取得 */
+		int iPlayerMotion = this->PlayerStatusList->iGetPlayerMotion();
+
+		// プレイヤーのモーション状態に応じて、モーションをアタッチする
+		switch (iPlayerMotion)
+		{
+			/* 待機 */
+			case PLAYER_MOTION_IDLE:
+				/* 待機モーションをアタッチ */
+				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
+				break;
+
+			/* 歩行 */
+			case PLAYER_MOTION_WALK:
+			/* 走行(低速) */
+			case PLAYER_MOTION_RUN_LOW:
+			/* 走行(高速) */
+			case PLAYER_MOTION_RUN_HIGH:
+			/* 走りモーションをアタッチ */
+				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_move_run"), -1, FALSE);
+				break;
+
+			/* 居合(溜め) */
+			case PLAYER_MOTION_DRAW_SWORD_CHARGE:
+				/* 居合（溜め）モーションをアタッチ */
+				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
+				break;
+
+			/* 居合(弱) */
+			case PLAYER_MOTION_DRAW_SWORD_WEAK:
+				break;
+				/* 居合(強) */
+			case PLAYER_MOTION_DRAW_SWORD_STRONG:
+				/* 居合（溜め）モーションをアタッチ */
+				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_step"), -1, FALSE);
+				break;
+
+			/* 居合(強)(終了) */
+			case PLAYER_MOTION_DRAW_SWORD_END:
+				/* 居合(強)(終了)モーションをアタッチ */
+				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_finish"), -1, FALSE);
+				break;
+
+			/* クナイ(構え) */
+			case PLAYER_MOTION_THROW_KUNAI_AIM:
+				break;
+
+			/* クナイ(投げ) */
+			case PLAYER_MOTION_THROW_KUNAI_THROW:
+				break;
+
+			/* 回避 */
+			case PLAYER_MOTION_DODGE:
+				break;
+
+			/* ジャンプ(上昇) */
+			case PLAYER_MOTION_JUMP_UP:
+				break;
+
+			/* ジャンプ(下降) */
+			case PLAYER_MOTION_JUMP_DOWN:
+				break;
+
+			return;
+		}
+
+		/* モーションの再生時間をリセットする */
+		this->fMoionPlayTime = 0.0f;
+	}
+
+	// モーションの再生時間が総再生時間を超えた場合
+	if (this->fMoionPlayTime > this->fMotionTotalTime)
+	{
+		/* モーションの再生時間をリセットする */
+		this->fMoionPlayTime = 0.0f;
+	}
+}
+/* 2025.01.30 菊池雅道	モーション処理追加 終了 */

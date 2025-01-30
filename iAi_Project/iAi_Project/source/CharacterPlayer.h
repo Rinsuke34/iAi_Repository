@@ -1,6 +1,8 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道 回避関連の関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の関数追加 */
+/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
+/* 2025.01.30 菊池雅道 モーション関連の関数・変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -57,10 +59,14 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Projectile_Posture();		// 遠距離攻撃(構え)
 		void	Player_Projectile();				// 遠距離攻撃
 
+		// モーション関連
+		void	Player_Motion_Transition();			// モーション遷移管理　2025.01.30 菊池雅道 関数追加 
+
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
+		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 開始 */
 		/* エフェクトのハンドル */
 		EffectSelfDelete*	pLandEffect;			//着地エフェクト
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
@@ -68,7 +74,15 @@ class CharacterPlayer : public CharacterBase
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
 		EffectSelfDelete*   pChargeAttakEffect;		//居合(溜め)攻撃エフェクト
 		EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
+		EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
+		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
+		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */
+		int		iMotionAttachIndex;		// アタッチされるモーションのインデックス
+		int		iOldMotion;				// 以前にアタッチされたモーション
+		float	fMotionTotalTime;		// モーションの総時間
+		float	fMoionPlayTime;			// モーションの再生時間
+		/* 2025.01.30 菊池雅道 モーション関連の変数追加 終了 */
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

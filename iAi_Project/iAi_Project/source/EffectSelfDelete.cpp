@@ -16,6 +16,9 @@ void EffectSelfDelete::Initialization()
 	/* エフェクト座標更新 */
 	this->Effect_PosUpdate();
 
+	/* エフェクト回転量更新 */
+	Effect_RotationUpdate();
+
 	/* エフェクト再生開始 */
 	this->iEffectHandle_Play = PlayEffekseer3DEffect(this->iEffectHandle_Resource);
 }
@@ -37,4 +40,7 @@ void EffectSelfDelete::Update()
 
 	/* エフェクト座標更新 */
 	this->Effect_PosUpdate();
+
+	/* エフェクト回転量更新 */
+	Effect_RotationUpdate();
 }
