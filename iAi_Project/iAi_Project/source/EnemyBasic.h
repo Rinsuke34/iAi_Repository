@@ -8,6 +8,9 @@
 #include "DataList_Score.h"
 #include "DataList_Effect.h"
 
+/* エフェクト */
+#include "EffectSelfDelete.h"
+
 /* 基本エネミークラスの宣言 */
 
 // 基本エネミークラス

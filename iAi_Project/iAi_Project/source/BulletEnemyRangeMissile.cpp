@@ -37,8 +37,7 @@ void BulletEnemyRangeMissile::Initialization()
 
 		/* エフェクトの読み込み */
 		this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet")));
-		/*this->vecDirection;
-		this->fMoveSpeed;*/
+
 		/* エフェクトの座標設定 */
 		this->eEffect->SetPosition(this->vecPosition);
 

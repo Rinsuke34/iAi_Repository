@@ -33,7 +33,7 @@ void BulletEnemyRangeNormal::Initialization()
 
 	/* エフェクト追加 */
 	{
-		/* 近接攻撃(弱)のエフェクトを生成 */
+		/* ミサイルエフェクトを生成 */
 		this->eEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */

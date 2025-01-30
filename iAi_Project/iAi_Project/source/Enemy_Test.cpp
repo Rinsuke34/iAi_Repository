@@ -72,33 +72,7 @@ void TestEnemy::MoveEnemy()
 		static int startTime = nowTime;
 		// 3秒後に発動
 		if (nowTime - startTime > 3000) { // 3秒後に発動
-			this->SetDeleteFlg(true);
-			/* エフェクト追加 */
-			{
-				/* 近接攻撃(弱)のエフェクトを生成 */
-				this->eEffect = new EffectManualDelete();
-
-				/* エフェクトの読み込み */
-				this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
-
-				/* エフェクトの座標設定 */
-				this->eEffect->SetPosition(this->vecPosition);
-
-				/* エフェクトの回転量設定 */
-				this->eEffect->SetRotation(this->vecRotation);
-
-				/* エフェクトの初期化 */
-				this->eEffect->Initialization();
-
-				/* エフェクトをリストに登録 */
-				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->eEffect);
-			 
-				}
-			}
+			this->bDeleteFlg = true;
 			effectPlayed = true; // エフェクトが再生されたことを記録
 			startTime = nowTime; // タイマーをリセット
 
@@ -132,32 +106,7 @@ void TestEnemy::Update()
 	if (this->iGetNowHP() <= 0)
 	{
 		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
-		/* エフェクト追加 */
-		{
-			/* 近接攻撃(弱)のエフェクトを生成 */
-			this->eEffect = new EffectManualDelete();
-
-			/* エフェクトの読み込み */
-			this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
-
-			/* エフェクトの座標設定 */
-			this->eEffect->SetPosition(this->vecPosition);
-
-			/* エフェクトの回転量設定 */
-			this->eEffect->SetRotation(this->vecRotation);
-
-			/* エフェクトの初期化 */
-			this->eEffect->Initialization();
-
-			/* エフェクトをリストに登録 */
-			{
-				/* "オブジェクト管理"データリストを取得 */
-				DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-				/* エフェクトをリストに登録 */
-				ObjectListHandle->SetEffect(this->eEffect);
-			}
-		}
+		this->bDeleteFlg = true;
 	}
 	MoveEnemy();
 	

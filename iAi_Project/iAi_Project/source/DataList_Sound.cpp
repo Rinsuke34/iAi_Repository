@@ -11,6 +11,9 @@ DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 	this->iBgmVolume	= 128;		// BGMの音量(0 ～ 255)
 	this->iBgmHandle	= 0;		// BGMのハンドル
 	this->iSeVolum		= 128;		// SEの音量(0 ～ 255)
+
+	/* 全てのSEを取得 */
+	SE_AllSetHandle();
 }
 
 // デストラクタ
@@ -20,6 +23,7 @@ DataList_Sound::~DataList_Sound()
 	InitSoundMem();
 }
 
+/* BGM系 */
 // BGMを設定
 void DataList_Sound::BGM_SetHandle(int iBgmNo)
 {
@@ -97,3 +101,35 @@ void DataList_Sound::BGM_StopSound()
 		StopSoundMem(this->iBgmHandle);
 	}
 }
+
+/* SE系 */
+// 全てのサウンドハンドルを取得
+void DataList_Sound::SE_AllSetHandle()
+{
+	/* リソースファイルから全てのサウンドを取得 */
+	for (int i = 0; i < SE_MAX; i++)
+	{
+		/* ファイル名を取得 */
+		std::string	FileName	= SE_NAME[i];
+		
+		/* 対象のSEファイルのパスを取得 */
+		std::string FilePath	= "resource/SoundData/SE/" + FileName + ".wav";
+		
+		/* サウンドを読み込み */
+		int iAddSoundHandle		= LoadSoundMem(FilePath.c_str());
+
+		/* サウンドをリストに追加 */
+		this->pSeHandleList[FileName] = iAddSoundHandle;
+	}
+}
+
+// サウンドを再生
+void DataList_Sound::SE_PlaySound(int iSeNo)
+{
+	// 引数
+	// iSeNo		<- 読み込むSEの番号
+
+	/* SEを再生する */
+	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo]], DX_PLAYTYPE_BACK);
+}
+

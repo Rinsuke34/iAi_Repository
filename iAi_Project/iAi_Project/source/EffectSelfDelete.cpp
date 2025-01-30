@@ -2,7 +2,7 @@
 
 #include "EffectSelfDelete.h"
 
-/* 手動で削除タイミングを設定するエフェクトクラスの定義 */
+/* 時間経過で削除されるエフェクトクラスの定義 */
 // コンストラクタ
 EffectSelfDelete::EffectSelfDelete() : EffectBase()
 {

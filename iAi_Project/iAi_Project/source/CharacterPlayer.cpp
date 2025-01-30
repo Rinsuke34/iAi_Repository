@@ -312,6 +312,9 @@ void CharacterPlayer::Player_Jump()
 						this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
 
 						this->PlayerStatusList->SetPlayerJumpingFlag(true);
+
+						/* ジャンプのSEを再生 */
+						gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
 					}
 				}
 			}
@@ -442,6 +445,9 @@ void CharacterPlayer::Player_Dodg()
 					/* 空中での回避回数のカウントを進める */
 					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
 				}
+
+				/* 回避のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
 			}
 		}
 	}
@@ -765,8 +771,17 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* チャージフレームが最大値を超えていないか確認 */
 			if (iNowAttakChargeFlame < PLAYER_MELEE_CHARGE_MAX)
 			{
+				// 超えていない場合
 				/* プレイヤーの現在の攻撃チャージフレームを加算 */
 				PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
+
+				/* 加算によりチャージフレームが最大値に達したか確認 */
+				if ((iNowAttakChargeFlame + 1) == PLAYER_MELEE_CHARGE_MAX)
+				{
+					// 最大値に達した場合
+					/* 溜め居合チャージ完了のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE_COMPLETE);
+				}
 			}
 
 			/* プレイヤーの向きをカメラの向きに固定 */
@@ -936,6 +951,9 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */
 
+	/* 近接攻撃(弱)のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
+
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
 }
@@ -955,6 +973,9 @@ void CharacterPlayer::Player_Charge_Attack()
 		// 0である場合
 		// ※モーション遷移直後である場合
 		/* プレイヤーのモーションを近接攻撃(強)に変更する */
+
+		/* 溜め居合攻撃のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
 	}
 	//else if(iChargeAttackCount <= 20)
 	//{

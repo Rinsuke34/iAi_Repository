@@ -97,33 +97,8 @@ void EscapeEnemy::Update()
 	{
 		// 削除フラグを有効にする
 		this->SetDeleteFlg(true);
-		/* エフェクト追加 */
-		{
-			/* 近接攻撃(弱)のエフェクトを生成 */
-			this->eEffect = new EffectManualDelete();
-
-			/* エフェクトの読み込み */
-			this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
-
-			/* エフェクトの座標設定 */
-			this->eEffect->SetPosition(this->vecPosition);
-
-			/* エフェクトの回転量設定 */
-			this->eEffect->SetRotation(this->vecRotation);
-
-			/* エフェクトの初期化 */
-			this->eEffect->Initialization();
-
-			/* エフェクトをリストに登録 */
-			{
-				/* "オブジェクト管理"データリストを取得 */
-				DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-				/* エフェクトをリストに登録 */
-				ObjectListHandle->SetEffect(this->eEffect);
-
-			}
-		}
 	}
+
 	MoveEnemy();
 	
 	this->stCollisionCapsule.fCapsuleRadius = 100;

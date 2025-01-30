@@ -22,7 +22,8 @@ class DataList_Sound : public DataListBase
 		void BGM_StopSound();					// BGMを停止
 
 		/* SE系 */
-		//void SE_AllSetHandle();					// 全てのサウンドハンドルを取得
+		void SE_AllSetHandle();					// 全てのサウンドハンドルを取得
+		void SE_PlaySound(int iSeNo);			// サウンドを再生
 
 	private:
 		/* BGM関係 */
