@@ -1,9 +1,12 @@
-/* 2025.01.28 石川智也 ファイル作成 */
-#include "Enemy_Test.h"
+/* 2025.01.30 石川智也 ファイル作成 */
+#include "EnemyMissile.h"
 
 // コンストラクタ
-TestEnemy::TestEnemy() : EnemyBasic()
+MissileEnemy::MissileEnemy() : EnemyBasic()
 {
+
+	/* オブジェクトのハンドル */
+	this->pBulletRangeMissile = nullptr;	// 近接攻撃(弱)の弾
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
@@ -24,90 +27,76 @@ TestEnemy::TestEnemy() : EnemyBasic()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
 	}
-	
-	this->eEffect	= nullptr;
+
+	this->eEffect = nullptr;
 }
 
 // デストラクタ
-TestEnemy::~TestEnemy()
+MissileEnemy::~MissileEnemy()
 {
-
+	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 // 初期化
-void TestEnemy::Initialization()
+void MissileEnemy::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition,VGet(0,100,0));
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 }
 
-void TestEnemy::MoveEnemy()
+void MissileEnemy::MoveEnemy()
 {
-
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
-	// 現在の時間を取得
-	int nowTime = GetNowCount();
-	static bool effectPlayed = false; // エフェクトが再生されたかどうかを追跡するフラグ
-	// actioncount 変数に基づく動作
+
 	VECTOR VRot = VGet(0, 0, 0); // 回転量
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z); // プレイヤーの方向を向く
 	this->vecRotation = VRot; // 回転量を設定
-	if (actioncount == 0 && !effectPlayed) {
-		//	// キャラクターをプレイヤーに近づける
-		VECTOR direction = VNorm(VSub(playerPos,this->vecPosition));
-		this->vecPosition = VAdd(this->vecPosition, VScale(direction, 5.0f)); // 速度を調整
-		// プレイヤーに近づいたらカウントを増やす
-		if (VSize(VSub(playerPos, this->vecPosition)) < 50.0f) { // 距離の閾値を設定
-			actioncount = 2;
-		}
-	}
-	else if (actioncount == 2 && !effectPlayed) {
-		// 一定時間後に発動
-		static int startTime = nowTime;
-		// 3秒後に発動
-		if (nowTime - startTime > 3000) { // 3秒後に発動
-			this->SetDeleteFlg(true);
-			/* エフェクト追加 */
-			{
-				/* 近接攻撃(弱)のエフェクトを生成 */
-				this->eEffect = new EffectManualDelete();
-
-				/* エフェクトの読み込み */
-				this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
-
-				/* エフェクトの座標設定 */
-				this->eEffect->SetPosition(this->vecPosition);
-
-				/* エフェクトの回転量設定 */
-				this->eEffect->SetRotation(this->vecRotation);
-
-				/* エフェクトの初期化 */
-				this->eEffect->Initialization();
-
-				/* エフェクトをリストに登録 */
-				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->eEffect);
-			 
-				}
-			}
-			effectPlayed = true; // エフェクトが再生されたことを記録
-			startTime = nowTime; // タイマーをリセット
-
-		}
+	if (CheckHitKey(KEY_INPUT_O))
+	{
+		Player_Range_Missile();
 	}
 }
 
+void MissileEnemy::Player_Range_Missile()
+{
+	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
+	/* 攻撃の生成方向の設定 */
+	/* 攻撃座標を算出 */
+	VECTOR vecAdd;
+	// 方向
+	vecAdd.x = 0.f;
+	vecAdd.y = 0.f;
+	vecAdd.z = 0.f;
+	vecAdd = VNorm(vecAdd);
+	vecAdd = VScale(vecAdd, 100);
+	// 高さ
+	vecAdd.y = 100 / 2.f;
+	vecAdd.x = 15 / 2.f;
+
+	// 攻撃生成座標を設定 
+	this->pBulletRangeMissile->SetPosition(VAdd(this->vecPosition, vecAdd));
+
+	// 攻撃の向きを設定
+	this->pBulletRangeMissile->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
+
+	//初期化
+	this->pBulletRangeMissile->Initialization();
+
+	//バレットリストに追加
+	ObjectList->SetBullet(this->pBulletRangeMissile);
+
+
+
+}
+
 // 更新
-void TestEnemy::Update()
+void MissileEnemy::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -129,13 +118,15 @@ void TestEnemy::Update()
 		}
 	}
 
+
+
 	if (this->iGetNowHP() <= 0)
 	{
 		// 削除フラグを有効にする
 		this->SetDeleteFlg(true);
 		/* エフェクト追加 */
 		{
-			/* 近接攻撃(弱)のエフェクトを生成 */
+			/*爆発エフェクトを生成 */
 			this->eEffect = new EffectManualDelete();
 
 			/* エフェクトの読み込み */
@@ -144,6 +135,7 @@ void TestEnemy::Update()
 			/* エフェクトの座標設定 */
 			this->eEffect->SetPosition(this->vecPosition);
 
+			this->eEffect->SetRotation(this->vecRotation); // 回転量を設定
 			/* エフェクトの回転量設定 */
 			this->eEffect->SetRotation(this->vecRotation);
 
@@ -160,7 +152,7 @@ void TestEnemy::Update()
 		}
 	}
 	MoveEnemy();
-	
+	//Player_Range_Normal();
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;

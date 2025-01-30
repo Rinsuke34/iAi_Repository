@@ -1,4 +1,4 @@
-/* 2024.12.15 駒沢風助 ファイル作成 */
+/* 2024.01.28 石川智也 ファイル作成 */
 
 #pragma once
 #include "Appframe.h"
@@ -14,15 +14,15 @@
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class TestEnemy : public EnemyBasic
+class EscapeEnemy : public EnemyBasic
 {
 	public:
-		TestEnemy();				// コンストラクタ
-		virtual ~TestEnemy();		// デストラクタ
-
+		EscapeEnemy();				// コンストラクタ
+		virtual ~EscapeEnemy();		// デストラクタ
+	
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
-
+	
 	private:
 		EffectManualDelete* eEffect;
 	protected:
@@ -30,5 +30,5 @@ class TestEnemy : public EnemyBasic
 		DataList_Object* ObjectList;			// オブジェクト管理
 		void MoveEnemy(); // 敵を移動させるメソッドを追加
 
-		int actioncount;
+		int _lastTime; // 追加: _lastTime メンバー変数
 };

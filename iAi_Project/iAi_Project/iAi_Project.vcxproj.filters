@@ -297,6 +297,21 @@
     <ClCompile Include="source\DataList_Sound.cpp">
       <Filter>ソース ファイル\データリスト\サウンド管理</Filter>
     </ClCompile>
+    <ClCompile Include="source\EnemyEscape.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyMissile.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyNormal.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletEnemyRangeMissile.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletEnemyRangeNormal.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -415,6 +430,21 @@
     </ClInclude>
     <ClInclude Include="source\SoundDefine.h">
       <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyEscape.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyMissile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyNormal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeMissile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeNormal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

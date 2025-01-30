@@ -7,7 +7,10 @@
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
 #include "Enemy_Test.h"
+#include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
+#include "EnemyNormal.h"
+#include "EnemyMissile.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 

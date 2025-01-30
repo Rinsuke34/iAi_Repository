@@ -6,6 +6,7 @@
 
 /* データリスト */
 #include "DataList_Score.h"
+#include "DataList_Effect.h"
 
 /* 基本エネミークラスの宣言 */
 

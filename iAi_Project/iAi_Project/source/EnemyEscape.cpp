@@ -1,8 +1,8 @@
-/* 2025.01.28 石川智也 ファイル作成 */
-#include "Enemy_Test.h"
+/* 2025.01.2８ 石川智也 ファイル作成 */
+#include "EnemyEscape.h"
 
 // コンストラクタ
-TestEnemy::TestEnemy() : EnemyBasic()
+EscapeEnemy::EscapeEnemy() : EnemyBasic()
 {
 	// HPを設定
 	this->iMaxHp = 1;
@@ -24,18 +24,16 @@ TestEnemy::TestEnemy() : EnemyBasic()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
 	}
-	
-	this->eEffect	= nullptr;
 }
 
 // デストラクタ
-TestEnemy::~TestEnemy()
+EscapeEnemy::~EscapeEnemy()
 {
 
 }
 
 // 初期化
-void TestEnemy::Initialization()
+void EscapeEnemy::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -46,68 +44,32 @@ void TestEnemy::Initialization()
 	LoadCoreFrameNo();
 }
 
-void TestEnemy::MoveEnemy()
+void EscapeEnemy::MoveEnemy()
 {
-
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 	// 現在の時間を取得
 	int nowTime = GetNowCount();
-	static bool effectPlayed = false; // エフェクトが再生されたかどうかを追跡するフラグ
-	// actioncount 変数に基づく動作
+	// 経過時間を計算
+	float deltaTime = (nowTime - _lastTime) / 1000.0f; // ミリ秒を秒に変換
+	_lastTime = nowTime;
+
 	VECTOR VRot = VGet(0, 0, 0); // 回転量
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z); // プレイヤーの方向を向く
 	this->vecRotation = VRot; // 回転量を設定
-	if (actioncount == 0 && !effectPlayed) {
-		//	// キャラクターをプレイヤーに近づける
-		VECTOR direction = VNorm(VSub(playerPos,this->vecPosition));
-		this->vecPosition = VAdd(this->vecPosition, VScale(direction, 5.0f)); // 速度を調整
-		// プレイヤーに近づいたらカウントを増やす
-		if (VSize(VSub(playerPos, this->vecPosition)) < 50.0f) { // 距離の閾値を設定
-			actioncount = 2;
-		}
-	}
-	else if (actioncount == 2 && !effectPlayed) {
-		// 一定時間後に発動
-		static int startTime = nowTime;
-		// 3秒後に発動
-		if (nowTime - startTime > 3000) { // 3秒後に発動
-			this->SetDeleteFlg(true);
-			/* エフェクト追加 */
-			{
-				/* 近接攻撃(弱)のエフェクトを生成 */
-				this->eEffect = new EffectManualDelete();
-
-				/* エフェクトの読み込み */
-				this->eEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
-
-				/* エフェクトの座標設定 */
-				this->eEffect->SetPosition(this->vecPosition);
-
-				/* エフェクトの回転量設定 */
-				this->eEffect->SetRotation(this->vecRotation);
-
-				/* エフェクトの初期化 */
-				this->eEffect->Initialization();
-
-				/* エフェクトをリストに登録 */
-				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->eEffect);
-			 
-				}
-			}
-			effectPlayed = true; // エフェクトが再生されたことを記録
-			startTime = nowTime; // タイマーをリセット
-
-		}
+	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
+	if (distanceToPlayerX < 600.0f && distanceToPlayerZ < 600.0f) { // x軸とz軸の距離が100未満の場合
+		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
+		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, 5.0f));
+		VECTOR VRot = VGet(0, 0, 0); // 回転量
+		VRot.y = atan2f(playerPos.x - this->vecPosition.x, playerPos.z - this->vecPosition.z); // プレイヤーの方向を向く
+		this->vecRotation = VRot; // 回転量を設定
 	}
 }
 
 // 更新
-void TestEnemy::Update()
+void EscapeEnemy::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -128,6 +90,8 @@ void TestEnemy::Update()
 			}
 		}
 	}
+
+
 
 	if (this->iGetNowHP() <= 0)
 	{
@@ -156,6 +120,7 @@ void TestEnemy::Update()
 				DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 				/* エフェクトをリストに登録 */
 				ObjectListHandle->SetEffect(this->eEffect);
+
 			}
 		}
 	}
