@@ -35,6 +35,11 @@ static const int	PLAYER_DODGE_FLAME					= 10;			// プレイヤーの回避フレーム数
 static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// プレイヤーが空中で回避できる回数
 /* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
 
+/* 2025.01.29 菊池雅道 攻撃関連の定数追加 開始 */
+// 攻撃関係
+static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// 近接攻撃中(強)の溜め完了フレーム数
+/* 2025.01.29 菊池雅道 攻撃関連の定数追加 完了 */
+
 /* カメラ関連 */
 // 基本情報
 static const float	INIT_CAMERA_RADIUS						= 400;				// カメラの中心点からの距離

@@ -218,7 +218,10 @@ void SceneStage::Draw()
 void SceneStage::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.8f, -1.f, 0.8f));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.f, -1.f, 0.f));
+
+//	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.002f);
+	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.05f);
 
 	/* シャドウマップの描写範囲設定 */
 	{
