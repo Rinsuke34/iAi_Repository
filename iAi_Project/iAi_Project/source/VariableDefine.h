@@ -1,12 +1,16 @@
 /* 2024.12.21 駒沢風助 ファイル作成 */
 
 #pragma once
+
+/* データリスト */
 #include "DataList_Input.h"
+#include "DataList_Sound.h"
 
 /* プロジェクトで使用する広域変数の宣言 */
 
 /* 実行中クラス */
 extern DataList_Input*	gpDataList_Input;	// プレイヤー入力管理クラス
+extern DataList_Sound*	gpDataList_Sound;	// サウンド管理クラス
 
 /* ステージ関連 */
 extern bool gbTutorialFlg;					// チュートリアルフラグ

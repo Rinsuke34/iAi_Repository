@@ -58,8 +58,8 @@ SceneGame::~SceneGame()
 // ‰Šú‰»
 void SceneGame::Initialization()
 {
-	/* SceneBase‚Ì‰Šú‰»‚ğÀ{(ƒŠƒ\[ƒX‹£‡‘Îô) */
-	SceneBase::Initialization();
+	/* BGM‚ğİ’è */
+	gpDataList_Sound->BGM_SetHandle(BGM_STAGE);
 
 	/* Effekseer‰Šú‰»ˆ— */
 	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)

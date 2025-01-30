@@ -193,6 +193,12 @@
     <Filter Include="ヘッダー ファイル\データリスト\エフェクトリソース管理">
       <UniqueIdentifier>{20677129-197b-4cf7-9207-dbaae9117c3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\サウンド管理">
+      <UniqueIdentifier>{6c3a869f-8491-4469-b35f-9e894ccd5b33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\サウンド管理">
+      <UniqueIdentifier>{8b7a6cd1-c3fa-4f54-8126-67a1029c3937}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -287,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="source\DataList_Score.cpp">
       <Filter>ソース ファイル\データリスト\スコア</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Sound.cpp">
+      <Filter>ソース ファイル\データリスト\サウンド管理</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +409,12 @@
     </ClInclude>
     <ClInclude Include="source\ScoreDefine.h">
       <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Sound.h">
+      <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,10 +3,13 @@
 #include "AppFrame.h"
 #include "VariableDefine.h"
 
+/* シーン */
 #include "SceneTitle.h"
 #include "SceneLoad.h"
 
+/* データリスト */
 #include "DataList_Input.h"
+#include "DataList_Sound.h"
 
 /* AppFrameで使用する関数の定義 */
 
@@ -40,7 +43,13 @@ namespace PROJECT_INIT
 		/* データリストサーバーに"プレイヤー入力管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_Input());
 
+		/* データリストサーバーに"サウンド管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Sound());
+
 		/* 今追加した"プレイヤー入力管理"を取得 */
-		gpDataList_Input = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+		gpDataList_Input	= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+
+		/* 今追加した"サウンド管理"を取得 */
+		gpDataList_Sound	= dynamic_cast<DataList_Sound*>(gpDataListServer->GetDataList("DataList_Sound"));
 	}
 }

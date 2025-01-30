@@ -183,7 +183,8 @@ void SceneStage::Draw()
 		Effekseer_Sync3DSetting();
 
 		/* エフェクト描写 */
-		ObjectList->DrawEffect();
+		//ObjectList->DrawEffect();
+		DrawEffekseer3D();
 	}
 
 	/* ライトマップ描写 */
