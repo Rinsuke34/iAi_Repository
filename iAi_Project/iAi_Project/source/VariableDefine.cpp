@@ -16,5 +16,5 @@ bool gbDrawShadowMapFlg				= true;		// シャドウマップの描写
 bool gbDrawLightMapFlg				= true;		// ライトマップの描写
 bool gbDrawLightMapDownScaleFlg		= true;		// ライトマップ(縮小)の描写
 bool gbDrawLightMapGaussFlg			= true;		// ライトマップ(ぼかし)のハンドル
-bool gbDrawCollisionFlg				= false;		// 全オブジェクトのコリジョン描写
-bool gbDrawDeleteBackGroundFlg		= false;		// バックグランドオブジェクトの非表示
+bool gbDrawCollisionFlg				= true;		// 全オブジェクトのコリジョン描写
+bool gbDrawDeleteBackGroundFlg		= true;		// バックグランドオブジェクトの非表示

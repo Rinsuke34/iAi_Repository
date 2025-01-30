@@ -7,6 +7,7 @@
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
 #include "Enemy_Test.h"
+#include "EnemyNormal.h"
 #include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
 #include "EnemyNormal.h"
@@ -222,7 +223,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(仮)の場合
 					/* "オブジェクト管理"にエネミー(仮)を追加 */
-					TestEnemy* AddEnemy = new TestEnemy();
+					NormalEnemy* AddEnemy = new NormalEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
 					/* 座標 */

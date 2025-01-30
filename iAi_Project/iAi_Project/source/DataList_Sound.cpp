@@ -10,7 +10,7 @@ DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 	/* ‰Šú‰» */
 	this->iBgmVolume	= 128;		// BGM‚Ì‰¹—Ê(0 ` 255)
 	this->iBgmHandle	= 0;		// BGM‚Ìƒnƒ“ƒhƒ‹
-	this->iSeVolum		= 128;		// SE‚Ì‰¹—Ê(0 ` 255)
+	this->iSeVolum		= 64;		// SE‚Ì‰¹—Ê(0 ` 255)
 
 	/* ‘S‚Ä‚ÌSE‚ğæ“¾ */
 	SE_AllSetHandle();

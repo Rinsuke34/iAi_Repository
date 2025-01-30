@@ -56,4 +56,13 @@ void SceneUi_Hp::Draw()
 {
 	/* HPƒtƒŒ[ƒ€•`‰æ(‰¼) */
 	DrawGraph(100, 740, this->iCgHandle_Hp_Frame, TRUE);
+
+	/* Œ»ÝHP */
+	DrawFormatString(500, 700 + 16 * 0, GetColor(255, 255, 255), "Œ»ÝHP : %d", this->PlayerStatusList->iGetPlayerNowHp());
+
+	/* Å‘åHP */
+	DrawFormatString(500, 700 + 16 * 1, GetColor(255, 255, 255), "Å‘åHP : %d", this->PlayerStatusList->iGetPlayerMaxHp());
+
+	/* –³“GŽžŠÔ */
+	DrawFormatString(500, 700 + 16 * 2, GetColor(255, 255, 255), "–³“GŽžŠÔ : %d", this->PlayerStatusList->iGetPlayerNowInvincibleTime());
 }

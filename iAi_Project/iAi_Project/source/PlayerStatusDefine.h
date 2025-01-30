@@ -15,6 +15,8 @@ static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// プレイヤーの落
 static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// プレイヤーの最大落下速度
 static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX		= 2;			// プレイヤーのジャンプ回数(最大数)
 static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ロックオン範囲の半径
+static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// プレイヤーの最大HP
+static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// プレイヤーの最大無敵時間
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
 // 移動関係
