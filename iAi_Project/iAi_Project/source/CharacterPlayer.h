@@ -69,13 +69,10 @@ class CharacterPlayer : public CharacterBase
 
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 開始 */
 		/* エフェクトのハンドル */
-		EffectSelfDelete*	pLandEffect;			//着地エフェクト
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
-		EffectSelfDelete*	pChargeFinishEffect;	//溜め完了エフェクト
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
-		EffectSelfDelete*   pChargeAttakEffect;		//居合(溜め)攻撃エフェクト
-		EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
-		EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
+		//EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
+		//EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
 		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */

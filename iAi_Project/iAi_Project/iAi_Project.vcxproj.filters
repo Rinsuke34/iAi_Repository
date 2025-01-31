@@ -342,6 +342,9 @@
     <ClCompile Include="source\Enemy_Test.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneUi_Debug.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -475,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="source\EnemyNormal.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Debug.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

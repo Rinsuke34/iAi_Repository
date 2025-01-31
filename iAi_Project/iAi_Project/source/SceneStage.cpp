@@ -117,6 +117,12 @@ void SceneStage::Process()
 			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 	}
+
+	// デバッグメニューを出す(エンターキー)
+	if (CheckHitKey(KEY_INPUT_RETURN) == 1)
+	{
+		gpSceneServer->AddSceneReservation(new SceneUi_Debug());
+	}
 }
 
 // 描画
@@ -183,7 +189,7 @@ void SceneStage::Draw()
 		Effekseer_Sync3DSetting();
 
 		/* エフェクト描写 */
-		ObjectList->DrawEffect();
+		//ObjectList->DrawEffect();
 		//DrawEffekseer3D();
 	}
 
@@ -218,7 +224,7 @@ void SceneStage::Draw()
 void SceneStage::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.f, -1.f, 0.f));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.2f, -1.f, 0.f));
 
 //	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.002f);
 	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.05f);

@@ -24,13 +24,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 		/* エフェクトのハンドル */
-		this->pLandEffect			=	nullptr;		//着地エフェクト
 		this->pChargeEffect			=	nullptr;		//溜めエフェクト
-		this->pChargeFinishEffect	=	nullptr;		//溜め完了エフェクト
 		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト
-		this->pChargeAttakEffect	=	nullptr;		//居合(溜め)攻撃エフェクト
-		this->pDashEffect			=	nullptr;		//ダッシュエフェクト
-		this->pDodgeEffect			=	nullptr;		//回避エフェクト
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
 		/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
@@ -102,8 +97,14 @@ void CharacterPlayer::Update()
 		HitCheck();
 	}
 
-	/* 移動量をリセット */
-	this->vecMove = VGet(0, 0, 0);		// 移動量
+	/* 毎フレームの初期化処理 */
+	{
+		/* 移動量をリセット */
+		this->vecMove = VGet(0, 0, 0);
+
+		/* ロックオン範囲コリジョン使用フラグを無効化 */
+		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
+	}
 
 	/* プレイヤーのモーション状態を保存する */
 	iOldMotion = this->PlayerStatusList->iGetPlayerMotion();
@@ -182,14 +183,18 @@ void CharacterPlayer::CollisionDraw()
 	DrawCapsule3D(this->stHorizontalCollision[0].vecCapsuleTop, this->stHorizontalCollision[0].vecCapsuleBottom, this->stHorizontalCollision[0].fCapsuleRadius, 16, iColor, iColor, FALSE);
 	DrawCapsule3D(this->stHorizontalCollision[1].vecCapsuleTop, this->stHorizontalCollision[1].vecCapsuleBottom, this->stHorizontalCollision[1].fCapsuleRadius, 16, iColor, iColor, FALSE);
 
-	/* 強攻撃移動後座標 */
-	iColor = GetColor(255, 255, 0);
-	DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
+	/* 強攻撃を使用する場合 */
+	if (this->PlayerStatusList->bGetMeleeSearchCollisionUseFlg() == true)
+	{
+		/* 強攻撃ロックオン範囲 */
+		iColor = GetColor(255, 0, 255);
+		COLLISION_CAPSULE stMeleeCollision = this->PlayerStatusList->stGetMeleeSearchCollision();
+		DrawCapsule3D(stMeleeCollision.vecCapsuleTop, stMeleeCollision.vecCapsuleBottom, stMeleeCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
 
-	/* 強攻撃ロックオン範囲 */
-	iColor = GetColor(255, 0, 255);
-	COLLISION_CAPSULE stMeleeCollision = this->PlayerStatusList->stGetMeleeSearchCollision();
-	DrawCapsule3D(stMeleeCollision.vecCapsuleTop, stMeleeCollision.vecCapsuleBottom, stMeleeCollision.fCapsuleRadius, 16, iColor, iColor, FALSE);
+		/* 強攻撃移動後座標 */
+		iColor = GetColor(255, 255, 0);
+		DrawCapsule3D(this->stMeleeStrongMoveCollsion.vecCapsuleTop, this->stMeleeStrongMoveCollsion.vecCapsuleBottom, this->stMeleeStrongMoveCollsion.fCapsuleRadius, 16, iColor, iColor, FALSE);
+	}
 
 	/* カメラ注視点 */
 	iColor = GetColor(0, 255, 255);
@@ -257,9 +262,6 @@ void CharacterPlayer::Player_Move()
 			
 			/* モーション設定 */
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
-			
-			/* モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
 		}
 
 		// スティックの倒し具合で速度を変化
@@ -279,21 +281,21 @@ void CharacterPlayer::Player_Move()
 				/* エフェクト追加 */
 				{
 					/* ダッシュエフェクトを生成 */
-					this->pDashEffect = new EffectSelfDelete;
+					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
 					/* ダッシュエフェクト読み込み */
-					this->pDashEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
+					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
 
 					/* ダッシュエフェクトの時間設定 */
-					this->pDashEffect->SetDeleteCount(30);
+					pAddEffect->SetDeleteCount(30);
 
 					/* ダッシュエフェクトの初期化 */
-					this->pDashEffect->Initialization();
+					pAddEffect->Initialization();
 
 					/* ダッシュエフェクトをリストに登録 */
 					{
 						/* ダッシュエフェクトをリストに登録 */
-						this->ObjectList->SetEffect(this->pDashEffect);
+						this->ObjectList->SetEffect(pAddEffect);
 					}
 				}
 			}
@@ -318,33 +320,33 @@ void CharacterPlayer::Player_Move()
 		}
 		/* 2025.01.09 菊池雅道　移動処理追加 終了 */
 		// エフェクトが存在している場合、情報を更新する
-		if (pDashEffect != nullptr)
-		{
-			/* エフェクトの生成方向の設定 */
-			// ※プレイヤーの前に出す
-			VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+		//if (pDashEffect != nullptr)
+		//{
+		//	/* エフェクトの生成方向の設定 */
+		//	// ※プレイヤーの前に出す
+		//	VECTOR vecInput = VGet(0.f, 0.f, 1.f);
 
-			/* カメラの水平方向の向きを移動用の向きに設定 */
-			float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+		//	/* カメラの水平方向の向きを移動用の向きに設定 */
+		//	float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
 
-			/* エフェクトの座標を算出 */
-			VECTOR vecAdd;
-			// 方向
-			vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-			vecAdd.y = 0.f;
-			vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-			vecAdd = VNorm(vecAdd);
-			// 移動速度分離す
-			vecAdd = VScale(vecAdd, PLAER_DASH_MAX_SPEED);
-			// 高さ
-			vecAdd.y = PLAYER_HEIGHT / 2.f;
+		//	/* エフェクトの座標を算出 */
+		//	VECTOR vecAdd;
+		//	// 方向
+		//	vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		//	vecAdd.y = 0.f;
+		//	vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		//	vecAdd = VNorm(vecAdd);
+		//	// 移動速度分離す
+		//	vecAdd = VScale(vecAdd, PLAER_DASH_MAX_SPEED);
+		//	// 高さ
+		//	vecAdd.y = PLAYER_HEIGHT / 2.f;
 
-			/* エフェクトの座標設定 */
-			this->pDashEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+		//	/* エフェクトの座標設定 */
+		//	this->pDashEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-			/* エフェクトの回転量設定 */
-			this->pDashEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-		}
+		//	/* エフェクトの回転量設定 */
+		//	this->pDashEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+		//}
 
 		/* 2025.01.09 菊池雅道	移動処理追加		終了	*/
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
@@ -422,7 +424,8 @@ void CharacterPlayer::Player_Jump()
 						// ジャンプ入力がされている場合
 						/* ジャンプ処理 */
 						// 仮で落下速度を-にする処理を行う
-						this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
+						//this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
+						this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
 
 						/* ジャンプ回数を更新 */
 						this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
@@ -565,21 +568,21 @@ void CharacterPlayer::Player_Dodg()
 				/* 回避エフェクト追加 */
 				{
 					/* 回避エフェクトを生成 */
-					this->pDodgeEffect = new EffectSelfDelete;
+					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
 					/* 回避エフェクトの読み込み */
-					this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash / FX_dash")));
+					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash / FX_dash")));
 
 					/* 回避エフェクトの時間を設定 */
-					this->pDodgeEffect->SetDeleteCount(30);
+					pAddEffect->SetDeleteCount(30);
 
 					/* 回避エフェクトの初期化 */
-					this->pDodgeEffect->Initialization();
+					pAddEffect->Initialization();
 
 					/* 回避エフェクトをリストに登録 */
 					{
 						/* 回避エフェクトをリストに登録 */
-						this->ObjectList->SetEffect(this->pDodgeEffect);
+						this->ObjectList->SetEffect(pAddEffect);
 					}
 				}
 
@@ -590,33 +593,33 @@ void CharacterPlayer::Player_Dodg()
 	}
 
 	/* 2025.01.09 菊池雅道　移動処理追加	終了 */
-	if (pDodgeEffect != nullptr)
-	{
-		/* エフェクトの生成方向の設定 */
-		// ※プレイヤーの前に出す
-		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+	//if (pDodgeEffect != nullptr)
+	//{
+	//	/* エフェクトの生成方向の設定 */
+	//	// ※プレイヤーの前に出す
+	//	VECTOR vecInput = VGet(0.f, 0.f, 1.f);
 
-		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+	//	/* カメラの水平方向の向きを移動用の向きに設定 */
+	//	float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
 
-		/* エフェクトの座標を算出 */
-		VECTOR vecAdd;
-		// 方向
-		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-		vecAdd.y = 0.f;
-		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-		vecAdd = VNorm(vecAdd);
-		// 回避時の速度分離す
-		vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-		// 高さ
-		vecAdd.y = PLAYER_HEIGHT / 2.f;
+	//	/* エフェクトの座標を算出 */
+	//	VECTOR vecAdd;
+	//	// 方向
+	//	vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+	//	vecAdd.y = 0.f;
+	//	vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+	//	vecAdd = VNorm(vecAdd);
+	//	// 回避時の速度分離す
+	//	vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
+	//	// 高さ
+	//	vecAdd.y = PLAYER_HEIGHT / 2.f;
 
-		/* エフェクトの座標設定 */
-		this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+	//	/* エフェクトの座標設定 */
+	//	this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-		/* エフェクトの回転量設定 */
-		this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-	}
+	//	/* エフェクトの回転量設定 */
+	//	this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+	//}
 
 	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了*/
@@ -717,27 +720,27 @@ void CharacterPlayer::Movement_Vertical()
 			/* エフェクト追加 */
 			{
 				/* 着地のエフェクトを生成 */
-				this->pLandEffect = new EffectSelfDelete;
+				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
 				/* エフェクトの読み込み */
-				this->pLandEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_land/FX_land")));
+				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_land/FX_land")));
 
 				/* エフェクトの時間を設定 */
-				this->pLandEffect->SetDeleteCount(30);
+				pAddEffect->SetDeleteCount(30);
 
 				/* エフェクトの座標設定 */
-				this->pLandEffect->SetPosition(this->vecPosition);
+				pAddEffect->SetPosition(this->vecPosition);
 
 				/* エフェクトの回転量設定 */
-				this->pLandEffect->SetRotation(this->vecRotation);
+				pAddEffect->SetRotation(this->vecRotation);
 
 				/* エフェクトの初期化 */
-				this->pLandEffect->Initialization();
+				pAddEffect->Initialization();
 
 				/* エフェクトをリストに登録 */
 				{
 					/* エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(this->pLandEffect);
+					this->ObjectList->SetEffect(pAddEffect);
 				}
 			}
 		}
@@ -1047,25 +1050,25 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_CHARGE);
 
-			/* 溜めのエフェクトを生成 */
-			this->pChargeEffect = new EffectManualDelete;
+			///* 溜めのエフェクトを生成 */
+			//this->pChargeEffect = new EffectManualDelete;
 
-			/* 溜めエフェクトの読み込み */
-			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
+			///* 溜めエフェクトの読み込み */
+			//this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
 
-			/* 溜めエフェクトの座標設定(仮座標) */
-			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 170, 0)));
-			/* 溜めエフェクトの回転量設定 */
-			this->pChargeEffect->SetRotation(this->vecRotation);
+			///* 溜めエフェクトの座標設定(仮座標) */
+			//this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 170, 0)));
+			///* 溜めエフェクトの回転量設定 */
+			//this->pChargeEffect->SetRotation(this->vecRotation);
 
-			/* 溜めエフェクトの初期化 */
-			this->pChargeEffect->Initialization();
+			///* 溜めエフェクトの初期化 */
+			//this->pChargeEffect->Initialization();
 
-			/* 溜めエフェクトをリストに登録 */
-			{
-				/* 溜めエフェクトをリストに登録 */
-				this->ObjectList->SetEffect(this->pChargeEffect);
-			}
+			///* 溜めエフェクトをリストに登録 */
+			//{
+			//	/* 溜めエフェクトをリストに登録 */
+			//	this->ObjectList->SetEffect(this->pChargeEffect);
+			//}
 		}
 
 		/* 近接攻撃(強)チャージ処理 */
@@ -1111,28 +1114,28 @@ void CharacterPlayer::Player_Melee_Posture()
 				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM);
 				
 				/* 溜め完了エフェクトを生成 */
-				this->pChargeFinishEffect = new EffectSelfDelete;
+				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
 				/* 溜め完了エフェクトの読み込み */
-				this->pChargeFinishEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
+				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
 
 				/* 溜め完了エフェクトの初期化 */
-				this->pChargeFinishEffect->Initialization();
+				pAddEffect->Initialization();
 
 				/* 溜め完了エフェクトの時間を設定 */
-				this->pChargeFinishEffect->SetDeleteCount(20);
+				pAddEffect->SetDeleteCount(20);
 
 				/* 溜め完了エフェクトをリストに登録 */
 				{
 					/* 溜め完了エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(this->pChargeFinishEffect);
+					this->ObjectList->SetEffect(pAddEffect);
 				}
 
 				/* 溜め完了エフェクトの座標設定 */
-				this->pChargeFinishEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
 				/* 溜めエフェクトは削除 */
-				this->pChargeEffect->SetDeleteFlg(true);
+				//this->pChargeEffect->SetDeleteFlg(true);
 
 				/* 溜め完了後エフェクトを生成 */
 				this->pChargeHoldEffect = new EffectManualDelete;
@@ -1167,23 +1170,26 @@ void CharacterPlayer::Player_Melee_Posture()
 
 					/* ロックオン範囲のコリジョンを設定 */
 					this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);
+
+					/* ロックオン範囲コリジョン使用フラグを有効化 */
+					this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(true);
 				}
 			}
 			
-			//エフェクトが存在している場合、情報を更新する
-			if (this->pChargeEffect != nullptr)
-			{
-				/* 溜めエフェクトの座標設定(仮座標) */
-				this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-				/* 溜めエフェクトの回転量設定 */
-				this->pChargeEffect->SetRotation(this->vecRotation);
-			}
+			////エフェクトが存在している場合、情報を更新する
+			//if (this->pChargeEffect != nullptr)
+			//{
+			//	/* 溜めエフェクトの座標設定(仮座標) */
+			//	this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+			//	/* 溜めエフェクトの回転量設定 */
+			//	this->pChargeEffect->SetRotation(this->vecRotation);
+			//}
 			if (this->pChargeHoldEffect != nullptr)
 			{
 				/* 溜め完了エフェクトの座標設定(仮座標) */
 				this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 				/* 溜め完了エフェクトの回転量設定 */
-				this->pChargeEffect->SetRotation(this->vecRotation);
+				//this->pChargeEffect->SetRotation(this->vecRotation);
 			}
 
 			/* デバッグ用処理 */
@@ -1210,7 +1216,7 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 		else
 		{
-			// 強攻撃にならない場合
+			// 強攻撃になる場合
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
 
@@ -1224,12 +1230,12 @@ void CharacterPlayer::Player_Melee_Posture()
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
 		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
 
-		//エフェクトが存在している場合、削除する
-		if (this->pChargeEffect != nullptr)
-		{
-			/* 溜めエフェクトを削除 */
-			this->pChargeEffect->SetDeleteFlg(true);
-		}
+		////エフェクトが存在している場合、削除する
+		//if (this->pChargeEffect != nullptr)
+		//{
+		//	/* 溜めエフェクトを削除 */
+		//	this->pChargeEffect->SetDeleteFlg(true);
+		//}
 		if (this->pChargeHoldEffect != nullptr)
 		{
 			/* 溜め完了後エフェクトを削除 */
@@ -1440,29 +1446,29 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* エフェクト追加 */
 			{
 				/* 居合(強)のエフェクトを生成 */
-				this->pChargeAttakEffect = new EffectSelfDelete;
+				EffectSelfDelete* pAddEffect = new EffectSelfDelete();
 
 				/* エフェクトの読み込み */
-				this->pChargeAttakEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_iai_dash/FX_iai_dash")));
+				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_iai_dash/FX_iai_dash")));
 
 				/* エフェクトの再生時間を設定 */
-				this->pChargeAttakEffect->SetDeleteCount(30);
+				pAddEffect->SetDeleteCount(30);
 
 				/* エフェクトの座標設定 */
-				this->pChargeAttakEffect->SetPosition(this->vecPosition);
+				pAddEffect->SetPosition(this->vecPosition);
 
 				/* エフェクトの回転量設定 */
-				this->pChargeAttakEffect->SetRotation(this->vecRotation);
+				pAddEffect->SetRotation(this->vecRotation);
 
 				/* エフェクトの初期化 */
-				this->pChargeAttakEffect->Initialization();
+				pAddEffect->Initialization();
 
 				/* エフェクトをリストに登録 */
 				{
 					/* "オブジェクト管理"データリストを取得 */
 					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->pChargeAttakEffect);
+					ObjectListHandle->SetEffect(pAddEffect);
 				}
 			}
 		}

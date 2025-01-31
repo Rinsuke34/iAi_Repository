@@ -34,66 +34,87 @@ void SceneUi_Crosshairs::Process()
 	/* 最も画面の中心点から近いエネミーを取得する */
 	NearEnemy stNearEnemy = { nullptr, 0.f };
 
-	/* エネミーリストを取得 */
-	auto& EnemyList = ObjectList->GetEnemyList();
-
-	/* ロックオン範囲内のエネミーのうち最も画面中央に近いエネミーをロックオン対象に設定 */
-	for (auto* enemy : EnemyList)
+	/* 強攻撃ロックオン使用フラグを確認 */
+	if (this->PlayerStatusList->bGetMeleeSearchCollisionUseFlg() == true)
 	{
-		/* ロックオン範囲に接触しているか確認 */
-		if (enemy->HitCheck(this->PlayerStatusList->stGetMeleeSearchCollision()) == true)
+		// 使用する場合
+		/* エネミーリストを取得 */
+		auto& EnemyList = ObjectList->GetEnemyList();
+
+		/* ロックオン範囲内のエネミーのうち最も画面中央に近いエネミーをロックオン対象に設定 */
+		for (auto* enemy : EnemyList)
 		{
-			// 接触している場合
-			/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
-			enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
-
-			// ロックオン範囲内である場合
-			/* コアのワールド座標を取得 */
-			VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
-
-			/* コアの座標をスクリーン座標に変換 */
-			VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
-
-			/* スクリーン座標が有効であるか確認 */
-			// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
-			if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
+			/* ロックオン範囲に接触しているか確認 */
+			if (enemy->HitCheck(this->PlayerStatusList->stGetMeleeSearchCollision()) == true)
 			{
-				// 有効である場合
-				/* 画面の中心との差を求める */
-				float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
-				float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
-				float fDistance = (fx * fx) + (fy * fy);
+				// 接触している場合
+				/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
+				enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
 
-				/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
-				if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+				// ロックオン範囲内である場合
+				/* コアのワールド座標を取得 */
+				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+
+				/* コアの座標をスクリーン座標に変換 */
+				VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+
+				/* スクリーン座標が有効であるか確認 */
+				// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
+				if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
 				{
-					// 近い場合
-					/* 最も画面の中心点から近いエネミーを更新 */
-					stNearEnemy.pEnemy = enemy;
-					stNearEnemy.fDistance = fDistance;
+					// 有効である場合
+					/* 画面の中心との差を求める */
+					float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
+					float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
+					float fDistance = (fx * fx) + (fy * fy);
+
+					/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
+					if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+					{
+						// 近い場合
+						/* 最も画面の中心点から近いエネミーを更新 */
+						stNearEnemy.pEnemy = enemy;
+						stNearEnemy.fDistance = fDistance;
+					}
+				}
+				else
+				{
+					// 無効である場合
+					/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+					enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 				}
 			}
 			else
 			{
-				// 無効である場合
+				// 接触していない場合
 				/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
 				enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 			}
 		}
-		else
+
+		/* 最も画面の中心点から近いエネミーをロックオン対象に指定 */
+		if (stNearEnemy.pEnemy != nullptr)
 		{
-			// 接触していない場合
-			/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
-			enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+			// ロックオン対象が存在する場合
+			/* プレイヤー視点でのロックオン状態を"ロックオンされている"に設定 */
+			stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);
 		}
 	}
-
-	/* 最も画面の中心点から近いエネミーをロックオン対象に指定 */
-	if (stNearEnemy.pEnemy != nullptr)
+	else
 	{
-		// ロックオン対象が存在する場合
-		/* プレイヤー視点でのロックオン状態を"ロックオンされている"に設定 */
-		stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);
+		// 使用しない場合
+		/* ロックオン対象のエネミーを取得 */
+		EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+
+		/* ロックオン対象のエネミーが存在するか確認 */
+		if (pLockOnEnemy != nullptr)
+		{
+			/* ロックオン対象のエネミーをロックオン対象外に変更 */
+			pLockOnEnemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+
+			/* ロックオン対象のエネミーを該当無し状態にする */
+			this->PlayerStatusList->SetPlayerLockOnEnemy(nullptr);
+		}
 	}
 
 	/* ロックオン対象のエネミーをデータリストに設定する */

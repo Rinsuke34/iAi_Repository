@@ -49,7 +49,8 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
 
 		/* 判定処理用コリジョン */
-		COLLISION_CAPSULE	stGetMeleeSearchCollision()	{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
+		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
+		bool				bGetMeleeSearchCollisionUseFlg()	{ return this->bMeleeSearchCollisionUseFlg; };	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを取得
 
 		// 能力値関連※プレイヤーの装備等によって上下する可能性のあるステータス)
 		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
@@ -98,6 +99,7 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* 判定処理用コリジョン */
 		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// 近接攻撃(強)のロックオン範囲コリジョンを設定
+		void	SetMeleeSearchCollisionUseFlg(bool bMeleeSearchCollisionUseFlg)		{ this->bMeleeSearchCollisionUseFlg		= bMeleeSearchCollisionUseFlg; }		// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを設定
 
 		// 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス)
 		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)				{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// プレイヤーの移動加速度設定
@@ -161,6 +163,7 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン
+		bool				bMeleeSearchCollisionUseFlg;	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグ
 		
 		/* 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス))*/
 		float	fPlayerMoveAcceleration;		// プレイヤーの移動加速度

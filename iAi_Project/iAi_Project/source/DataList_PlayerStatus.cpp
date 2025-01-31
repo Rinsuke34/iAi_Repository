@@ -37,6 +37,9 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->pLockOnEnemy						= nullptr;						// ロックオン対象のエネミー
 	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;		// プレイヤーの現在のHP
 	this->iPlayerNowInvincibleTime			= 0;							// プレイヤーの現在の残り無敵時間
+
+	/* 判定処理用コリジョン */
+	this->bMeleeSearchCollisionUseFlg		= false;
 	
 	/* 能力値関連 */
 	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度

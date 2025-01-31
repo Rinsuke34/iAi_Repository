@@ -17,6 +17,7 @@
 #include "SceneUi_Combo.h"
 #include "SceneUi_Hp.h"
 #include "SceneUi_Kunai.h"
+#include "SceneUi_Debug.h"
 
 /* ステージクラスの宣言 */
 

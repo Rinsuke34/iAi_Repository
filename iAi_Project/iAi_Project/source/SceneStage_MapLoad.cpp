@@ -219,7 +219,8 @@ void SceneStage::LoadMapData()
 				data.at("objectName").get_to(name);
 
 				/* エネミータイプ確認 */
-				if (name == "Substance2")
+				if (name == "Substance2" ||
+					name == "Substance")
 				{
 					// エネミー(仮)の場合
 					/* "オブジェクト管理"にエネミー(仮)を追加 */
