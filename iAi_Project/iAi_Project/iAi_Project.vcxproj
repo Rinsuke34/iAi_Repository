@@ -185,6 +185,7 @@
     <ClCompile Include="source\SceneInputConfig.cpp" />
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
+    <ClCompile Include="source\SceneStage_Camera.cpp" />
     <ClCompile Include="source\SceneTitle.cpp" />
     <ClCompile Include="source\SceneStage.cpp" />
     <ClCompile Include="source\SceneStage_MapLoad.cpp" />

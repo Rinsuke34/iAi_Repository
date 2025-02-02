@@ -8,8 +8,9 @@
 #include "PublicInclude.h"
 #include "PlayerStatusDefine.h"
 
-/* オブジェクト */
-#include "EnemyBasic.h"
+/* 前方参照 */
+// ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
+class EnemyBasic;
 
 /* プレイヤー状態管理クラスの宣言 */
 
@@ -64,8 +65,12 @@ class DataList_PlayerStatus : public DataListBase
 
 		// カメラ関連
 		int		iGetCameraMode()							{ return this->iCameraMode; }							// カメラモード取得
+		int		iGetCameraMode_Old()						{ return this->iCameraMode_Old; }						// カメラモード取得(変更前)
 		VECTOR	vecGetCameraUp()							{ return this->vecCameraUp; }							// カメラの上方向取得
-		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; }						// カメラの座標取得
+		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; }						// カメラの座標取得(現在地点)
+		VECTOR	vecGetCameraPosition_Start()				{ return this->vecCameraPosition_Start; }				// カメラの座標取得(移動前地点)
+		VECTOR	vecGetCameraPosition_Target()				{ return this->vecCameraPosition_Target; }				// カメラの座標取得(移動後地点)
+		int		iGetCameraPositionLeapCount()				{ return this->iCameraPositionLeapCount; }				// カメラ座標の線形保管用カウント取得
 		VECTOR	vecGetCameraTarget()						{ return this->vecCameraTarget; }						// カメラの注視点取得
 		float	fGetCameraRadius()							{ return this->fCameraRadius; }							// カメラの中心点からの距離取得
 		float	fGetCameraAngleX()							{ return this->fCameraAngleX; }							// カメラのX軸回転量(ラジアン)取得
@@ -117,8 +122,12 @@ class DataList_PlayerStatus : public DataListBase
 
 		// カメラ関連
 		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; }				// カメラモード設定
+		void	SetCameraMode_Old(int iCameraMode_Old)								{ this->iCameraMode_Old						= iCameraMode_Old; }			// カメラモード(変更前)設定
 		void	SetCameraUp(VECTOR vecCameraUp)										{ this->vecCameraUp							= vecCameraUp; }				// カメラの上方向設定
-		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; }			// カメラの座標設定
+		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; }			// カメラの座標設定(現在地点)
+		void	SetCameraPosition_Start(VECTOR vecCameraPosition_Start)				{ this->vecCameraPosition_Start				= vecCameraPosition_Start; }	// カメラの座標設定(移動前地点)
+		void	SetCameraPosition_Target(VECTOR vecCameraPosition_Target)			{ this->vecCameraPosition_Target			= vecCameraPosition_Target; }	// カメラの座標設定(移動後地点)
+		void	SetCameraPositionLeapCount(int iCameraPositionLeapCount)			{ this->iCameraPositionLeapCount			= iCameraPositionLeapCount; }	// カメラ座標の線形保管用カウント設定
 		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; }			// カメラの注視点設定
 		void	SetCameraRadius(float fCameraRadius)								{ this->fCameraRadius						= fCameraRadius; }				// カメラの中心点からの距離設定
 		void	SetCameraAngleX(float fCameraAngleX)								{ this->fCameraAngleX						= fCameraAngleX; }				// カメラのX軸回転量(ラジアン)設定
@@ -179,8 +188,12 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* カメラ関連 */
 		int		iCameraMode;						// カメラモード
+		int		iCameraMode_Old;					// カメラモード(変更前)
 		VECTOR	vecCameraUp;						// カメラの上方向
-		VECTOR	vecCameraPosition;					// カメラの座標
+		VECTOR	vecCameraPosition;					// カメラの座標(現在地点)
+		VECTOR	vecCameraPosition_Start;			// カメラの座標(移動前地点)
+		VECTOR	vecCameraPosition_Target;			// カメラの座標(移動後地点)
+		int		iCameraPositionLeapCount;			// カメラ座標の線形保管用カウント
 		VECTOR	vecCameraTarget;					// カメラの注視点
 		float	fCameraRadius;						// カメラの中心点からの距離(ズーム量)
 		float	fCameraAngleX;						// カメラのX軸回転量(ラジアン)

@@ -71,8 +71,6 @@ class CharacterPlayer : public CharacterBase
 		/* エフェクトのハンドル */
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
-		//EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
-		//EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
 		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */
