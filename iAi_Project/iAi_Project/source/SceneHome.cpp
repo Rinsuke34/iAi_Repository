@@ -49,8 +49,8 @@ void SceneHome::Process()
 	/* キャンセルが入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
 	{
-		/* チュートリアルフラグを有効化 */
-		gbTutorialFlg = true;
+		/* チュートリアルフラグを無効化 */
+		gbTutorialFlg = false;
 
 		/* ロード画面追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);

@@ -345,6 +345,9 @@
     <ClCompile Include="source\SceneUi_Debug.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneStage_Camera.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">

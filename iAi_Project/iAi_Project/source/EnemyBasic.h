@@ -7,6 +7,7 @@
 /* データリスト */
 #include "DataList_Score.h"
 #include "DataList_Effect.h"
+#include "DataList_Object.h"
 
 /* エフェクト */
 #include "EffectSelfDelete.h"

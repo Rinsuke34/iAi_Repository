@@ -52,7 +52,8 @@ void SceneStage::LoadMapData()
 				/* モデル */
 				std::string	name;
 				data.at("objectName").get_to(name);
-				pBackGround->SetModelHandle(this->ModelList->iGetModel(name));
+				std::string Path = "Object/" + name + "/" + name;
+				pBackGround->SetModelHandle(this->ModelList->iGetModel(Path));
 
 				/* 座標 */
 				VECTOR vecPos;
@@ -108,7 +109,8 @@ void SceneStage::LoadMapData()
 				/* モデル */
 				std::string	name;
 				data.at("objectName").get_to(name);
-				pCollision->SetModelHandle(this->ModelList->iGetModel(name));
+				std::string Path = "Collision/" + name;
+				pCollision->SetModelHandle(this->ModelList->iGetModel(Path));
 
 				/* 座標 */
 				VECTOR vecPos;

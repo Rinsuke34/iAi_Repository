@@ -124,6 +124,21 @@ void SceneUi_Crosshairs::Process()
 // 描画
 void SceneUi_Crosshairs::Draw()
 {
+	/* エネミーのロックオン描写 */
+	Draw_RockOn();
+
+	/* カメラモードが構え"ズーム"であるか確認 */	
+	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM)
+	{
+		// 構え"ズーム"である場合
+		/* 溜め攻撃による移動後座標を描写 */
+		Draw_Move();
+	}
+}
+
+// 描写(ロックオンエネミー)
+void SceneUi_Crosshairs::Draw_RockOn()
+{
 	/* エネミーリストを取得 */
 	auto& EnemyList = ObjectList->GetEnemyList();
 
@@ -132,6 +147,8 @@ void SceneUi_Crosshairs::Draw()
 	{
 		/* プレイヤー視点でのロックオン状態を取得 */
 		int iLockOnType = enemy->iGetPlayerLockOnType();
+		VECTOR vecCoreWord;
+		VECTOR vecCoreScreen;
 
 		/* ロックオン状態によって描写を変更 */
 		switch (iLockOnType)
@@ -142,37 +159,61 @@ void SceneUi_Crosshairs::Draw()
 
 			case PLAYER_LOCKON_RANGE:
 				// ロックオン範囲内である場合
-				{
-					/* コアのワールド座標を取得 */
-					VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+				/* コアのワールド座標を取得 */
+				vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
-					/* コアの座標をスクリーン座標に変換 */
-					VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+				/* コアの座標をスクリーン座標に変換 */
+				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
-					/* クロスヘアの代わりに十字架を描写 */
-					DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(100, 0, 0), TRUE);
-					DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(100, 0, 0), TRUE);
-				}
+				/* クロスヘアの代わりに十字架を描写 */
+				// ※仮処理
+				DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(100, 0, 0), TRUE);
+				DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(100, 0, 0), TRUE);
 				break;
 
 			case PLAYER_LOCKON_TARGET:
 				// ロックオン対象である場合
-				{
-					/* コアのワールド座標を取得 */
-					VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+				/* コアのワールド座標を取得 */
+				vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
-					/* コアの座標をスクリーン座標に変換 */
-					VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+				/* コアの座標をスクリーン座標に変換 */
+				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
-					/* クロスヘアの代わりに十字架を描写 */
-					DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(255, 0, 0), TRUE);
-					DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(255, 0, 0), TRUE);
-				}
-				break;
+				/* クロスヘアの代わりに十字架を描写 */
+				// ※仮処理
+				DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(255, 0, 0), TRUE);
+				DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(255, 0, 0), TRUE);
+			break;
 		}
 	}
 
 	/* 画面中央にも十字架を作成 */
+	// ※仮処理
 	DrawBox((SCREEN_SIZE_WIDE / 2) - 20, (SCREEN_SIZE_HEIGHT / 2) - 2, (SCREEN_SIZE_WIDE / 2) + 20, (SCREEN_SIZE_HEIGHT / 2) + 2, GetColor(0, 100, 0), TRUE);
 	DrawBox((SCREEN_SIZE_WIDE / 2) - 2, (SCREEN_SIZE_HEIGHT / 2) - 20, (SCREEN_SIZE_WIDE / 2) + 2, (SCREEN_SIZE_HEIGHT / 2) + 20, GetColor(0, 100, 0), TRUE);
+}
+
+// 描写(溜め攻撃の移動後座標)
+void SceneUi_Crosshairs::Draw_Move()
+{
+	/* プレイヤーの座標を取得 */
+	VECTOR vecPlayer = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* 移動後の座標の座標を取得 */
+	VECTOR vecTarget = VAdd(this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove(), vecPlayer);
+
+	/* 現在の座標と移動後の座標間の四角形を描写 */
+	// ※仮作成(ポリゴンにする予定)
+	VECTOR Pos[4];
+
+	Pos[0] = VAdd(vecPlayer, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
+	Pos[1] = VAdd(vecPlayer, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
+
+	Pos[2] = VAdd(vecTarget, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
+	Pos[3] = VAdd(vecTarget, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
+
+	DrawTriangle3D(Pos[0], Pos[1], Pos[2], GetColor(255, 255, 255), TRUE);
+	DrawTriangle3D(Pos[3], Pos[2], Pos[1], GetColor(255, 255, 255), TRUE);
+
+	DrawLine3D(vecPlayer, vecTarget, GetColor(255, 255, 255));
 }
