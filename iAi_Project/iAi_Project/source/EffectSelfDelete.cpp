@@ -2,7 +2,7 @@
 
 #include "EffectSelfDelete.h"
 
-/* 手動で削除タイミングを設定するエフェクトクラスの定義 */
+/* 時間経過で削除されるエフェクトクラスの定義 */
 // コンストラクタ
 EffectSelfDelete::EffectSelfDelete() : EffectBase()
 {
@@ -13,14 +13,7 @@ EffectSelfDelete::EffectSelfDelete() : EffectBase()
 // 初期化
 void EffectSelfDelete::Initialization()
 {
-	/* エフェクト座標更新 */
-	this->Effect_PosUpdate();
-
-	/* エフェクト回転量更新 */
-	Effect_RotationUpdate();
-
-	/* エフェクト再生開始 */
-	this->iEffectHandle_Play = PlayEffekseer3DEffect(this->iEffectHandle_Resource);
+	EffectBase::Initialization();
 }
 
 // 更新

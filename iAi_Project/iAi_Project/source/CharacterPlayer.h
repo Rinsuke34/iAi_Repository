@@ -1,8 +1,6 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道 回避関連の関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の関数追加 */
-/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
-/* 2025.01.30 菊池雅道 モーション関連の関数・変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -12,6 +10,7 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Object.h"
 #include "DataList_Model.h"
+#include "DataList_Effect.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
@@ -39,9 +38,11 @@ class CharacterPlayer : public CharacterBase
 		DataList_Input*			InputList;			// 入力管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
+		DataList_Effect*		EffectList;			// エフェクトリソース管理
 
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新
+		void	HitCheck();				// 当たり判定処理
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ
@@ -62,22 +63,16 @@ class CharacterPlayer : public CharacterBase
 		// モーション関連
 		void	Player_Motion_Transition();			// モーション遷移管理　2025.01.30 菊池雅道 関数追加 
 
-		// エフェクト
-		void	EffectTest();						// エフェクトテスト
-
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 開始 */
 		/* エフェクトのハンドル */
-		//EffectSelfDelete*	pLandEffect;			//着地エフェクト
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
-		//EffectSelfDelete*	pChargeFinishEffect;	//溜め完了エフェクト
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
-		//EffectSelfDelete*   pChargeAttakEffect;		//居合(溜め)攻撃エフェクト
 		//EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
-		EffectManualDelete*	pDodgeEffect;			//回避エフェクト
+		//EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
 		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */
@@ -90,8 +85,16 @@ class CharacterPlayer : public CharacterBase
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
 
-		/* 変数デバッグ用 */
+		/* 変数(デバッグ用) */
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
+
+		/* 構造体(テストのためここで定義) */
+		// 最もプレイヤーから近いエネミー
+		struct NearEnemy
+		{
+			EnemyBasic* pEnemy;		// エネミーのポインタ
+			float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
+		};
 };

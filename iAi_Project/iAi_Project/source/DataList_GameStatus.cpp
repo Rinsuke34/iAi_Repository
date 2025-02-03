@@ -8,5 +8,9 @@
 DataList_GameStatus::DataList_GameStatus() : DataListBase("DataList_GameStatus")
 {
 	/* ‰Šú‰» */
-	this->iGameStatus	= GAMESTATUS_NORMAL;
+	{
+		this->iGameStatus	= GAMESTATUS_PLAY_GAME;
+		this->iNowStageNo	= 0;
+		this->iEndStageNo	= 0;
+	}
 }

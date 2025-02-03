@@ -13,9 +13,6 @@ class EffectManualDelete : public EffectBase
 		EffectManualDelete();				// コンストラクタ
 		virtual ~EffectManualDelete() {};	// デストラクタ
 
-		virtual void	Initialization()	override;		// 初期化
-		virtual void	Update()			override;		// 更新
-
 	private:
 	protected:
 };

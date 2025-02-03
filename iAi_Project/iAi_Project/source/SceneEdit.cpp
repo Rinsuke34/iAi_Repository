@@ -7,7 +7,11 @@
 // コンストラクタ
 SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 {
-
+	/* データリスト取得 */
+	{
+		/* "ゲーム状態管理"を取得 */
+		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+	}
 }
 
 // デストラクタ
@@ -25,17 +29,32 @@ void SceneEdit::Initialization()
 // 計算
 void SceneEdit::Process()
 {
-	/* 決定が入力されたら */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+	/* ゲーム状態を確認 */
+	int iGameStatus = this->GameStatusList->iGetGameStatus();
+
+	/* ゲーム状態に応じて処理を変更 */
+	switch (iGameStatus)
 	{
-		// このシーンの削除フラグを有効にする
-		this->bDeleteFlg = true;
-		return;
+		/* "エディット"状態 */
+		case GAMESTATUS_EDIT:
+			/* 決定が入力されたら */
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			{
+				/* ゲーム状態を"次のステージへ遷移"に変更する */
+				this->GameStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
+			}
+			break;
+
+		/* "次のステージへ遷移"状態 */
+		case GAMESTATUS_NEXTSTAGE:
+			/* シーンの削除フラグを有効にする */
+			this->bDeleteFlg = true;
+			break;
 	}
 }
 
 // 描画
 void SceneEdit::Draw()
 {
-	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "決定			：次のステージへ");
+	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：次のステージへ");
 }

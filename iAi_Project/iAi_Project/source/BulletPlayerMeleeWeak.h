@@ -5,6 +5,7 @@
 
 /* データリスト */
 #include "DataList_Object.h"
+#include "DataList_Effect.h"
 
 /* オブジェクト */
 #include "EffectManualDelete.h"

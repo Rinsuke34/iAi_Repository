@@ -7,10 +7,14 @@
 #include "DataList_Model.h"
 #include "DataList_Object.h"
 
+/* オブジェクト */
+#include "EnemyBasic.h"
+#include "EffectManualDelete.h"
+
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class TestEnemy : public EnemyBase
+class TestEnemy : public EnemyBasic
 {
 	public:
 		TestEnemy();				// コンストラクタ
@@ -20,11 +24,11 @@ class TestEnemy : public EnemyBase
 		virtual void	Update()			override;		// 更新
 
 	private:
+		EffectManualDelete* eEffect;
 	protected:
 		/* 使用するデータリスト */
 		DataList_Object* ObjectList;			// オブジェクト管理
+		void MoveEnemy(); // 敵を移動させるメソッドを追加
 
-		/* 関数 */
-
-		/* 変数 */
+		int actioncount;
 };

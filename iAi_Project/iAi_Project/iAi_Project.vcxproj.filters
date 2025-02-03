@@ -175,6 +175,60 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット">
       <UniqueIdentifier>{e8a7f619-3dc4-4823-913f-dfa6988ff221}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック">
+      <UniqueIdentifier>{d62c1475-32e3-45da-9431-254952e8e21f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック">
+      <UniqueIdentifier>{528618ed-5f7c-45fc-8d41-e74965629227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト">
+      <UniqueIdentifier>{a192f62e-0a72-46e3-b517-2767e885f0f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト">
+      <UniqueIdentifier>{486ac4b5-280b-44c6-8504-6a5071cbe00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\エフェクトリソース管理">
+      <UniqueIdentifier>{897dc08e-30cd-49ab-a4f1-d042b3845100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\エフェクトリソース管理">
+      <UniqueIdentifier>{20677129-197b-4cf7-9207-dbaae9117c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\サウンド管理">
+      <UniqueIdentifier>{6c3a869f-8491-4469-b35f-9e894ccd5b33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\サウンド管理">
+      <UniqueIdentifier>{8b7a6cd1-c3fa-4f54-8126-67a1029c3937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\バレット\エネミー">
+      <UniqueIdentifier>{d4065827-d666-4598-9b8c-e58a8993dfac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー">
+      <UniqueIdentifier>{6c99a494-a4a4-454b-920f-7ffe2a0a433a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆">
+      <UniqueIdentifier>{a9bbb1d5-b14e-4865-8d4d-c09eecfc8d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走">
+      <UniqueIdentifier>{7c28a010-ed37-4b42-9306-1916cf852706}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル">
+      <UniqueIdentifier>{45b9068a-4edc-43a6-a37c-8cf78ad20cac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル">
+      <UniqueIdentifier>{bfc42c4b-128d-4874-a755-3376935990e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆">
+      <UniqueIdentifier>{9bda7d4f-9913-460b-8385-9f40fc276f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル">
+      <UniqueIdentifier>{80cc1db6-3bc5-4645-8fef-1d3e5b00143e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走">
+      <UniqueIdentifier>{52989d01-205a-49cf-b8be-b33828c680bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル">
+      <UniqueIdentifier>{1236f9ae-013d-4a09-b2ab-9618026844d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -219,9 +273,6 @@
     <ClCompile Include="source\PlatformBasic.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
     </ClCompile>
-    <ClCompile Include="source\Enemy_Test.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
-    </ClCompile>
     <ClCompile Include="source\SceneStage.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
     </ClCompile>
@@ -231,14 +282,8 @@
     <ClCompile Include="source\SceneEdit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyGoalObject.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_GameStatus.cpp">
       <Filter>ソース ファイル\データリスト\ゲーム状態管理</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BulletPlayerMeleeWeak.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClCompile>
     <ClCompile Include="source\EffectManualDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
@@ -246,8 +291,59 @@
     <ClCompile Include="source\EffectSelfDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
+    <ClCompile Include="source\EnemyBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyGoalObject.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Crosshairs.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Combo.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Hp.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Kunai.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Effect.cpp">
+      <Filter>ソース ファイル\データリスト\エフェクトリソース管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Score.cpp">
+      <Filter>ソース ファイル\データリスト\スコア</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Sound.cpp">
+      <Filter>ソース ファイル\データリスト\サウンド管理</Filter>
+    </ClCompile>
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\バレット</Filter>
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletPlayerMeleeWeak.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletEnemyRangeMissile.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletEnemyRangeNormal.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyMissile.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyNormal.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemyEscape.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Test.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Debug.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,17 +404,11 @@
     <ClInclude Include="source\PlatformBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
     </ClInclude>
-    <ClInclude Include="source\Enemy_Test.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
-    </ClInclude>
     <ClInclude Include="source\SceneStage.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージ</Filter>
     </ClInclude>
     <ClInclude Include="source\SceneEdit.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
-    </ClInclude>
-    <ClInclude Include="source\EnemyGoalObject.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
     <ClInclude Include="source\DataList_GameStatus.h">
       <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
@@ -337,6 +427,60 @@
     </ClInclude>
     <ClInclude Include="source\BulletPlayerMeleeStrong.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyGoalObject.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Crosshairs.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Combo.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Hp.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Kunai.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Effect.h">
+      <Filter>ヘッダー ファイル\データリスト\エフェクトリソース管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Score.h">
+      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScoreDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Sound.h">
+      <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeMissile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeNormal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Test.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyEscape.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyMissile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyNormal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Debug.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

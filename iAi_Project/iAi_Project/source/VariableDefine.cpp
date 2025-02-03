@@ -5,7 +5,8 @@
 /* 広域変数の初期化 */
 
 /* 実行中クラス */
-DataList_Input* gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
+DataList_Input*	gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
+DataList_Sound*	gpDataList_Sound	= nullptr;	// サウンド管理クラス
 
 /* ステージ関連 */
 bool gbTutorialFlg					= false;	// チュートリアルフラグ

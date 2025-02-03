@@ -32,8 +32,8 @@ void BulletPlayerMeleeStrong::Update()
 void BulletPlayerMeleeStrong::CollisionDraw()
 {
 	/* “–‚½‚è”»’è‚ğ•`Ê */
-	//int Color = GetColor(255, 0, 0);
-	//DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, Color, Color, FALSE);
+	int Color = GetColor(255, 0, 0);
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, Color, Color, FALSE);
 }
 
 /* ÚG”»’è(ŠÈˆÕ) */
@@ -106,7 +106,6 @@ bool BulletPlayerMeleeStrong::HitCheck(int iModelHandle, int iFrameIndex)
 		// ÚG‚µ‚Ä‚¢‚éê‡
 		return true;
 	}
-
 	// ÚG‚µ‚Ä‚¢‚È‚¢ê‡
 	return false;
 }

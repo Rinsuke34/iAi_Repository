@@ -13,6 +13,11 @@
 
 /* シーン */
 #include "SceneEdit.h"
+#include "SceneUi_Crosshairs.h"
+#include "SceneUi_Combo.h"
+#include "SceneUi_Hp.h"
+#include "SceneUi_Kunai.h"
+#include "SceneUi_Debug.h"
 
 /* ステージクラスの宣言 */
 
@@ -30,7 +35,6 @@ class SceneStage : public SceneBase
 		virtual void	LoadMapData();			// マップデータのロード
 
 	private:
-	protected:
 		/* 使用するデータリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
@@ -42,8 +46,11 @@ class SceneStage : public SceneBase
 		virtual void	SetupLightMap();				// ライトマップの設定
 		virtual void	SetCamera();					// カメラ設定
 
-		/* カメラ関連 */
-		void	SetCamera_Free();					// カメラ設定(フリーモード)
+		/* カメラモード関連 */
+		void	CameraRotateUpdata();				// 入力によるカメラ回転量取得
+		void	SetCamera_Free();					// カメラ設定(フリー)
+		void	SetCamera_Lock();					// カメラ設定(固定)
+		void	SetCamera_Aim();					// カメラ設定(構え(ズーム))
 
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写
@@ -53,10 +60,5 @@ class SceneStage : public SceneBase
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
-
-		/* マップ情報(仮) */
-		// ※データリスト作成予定
-		bool bEditDrawFlg;							// エディット描写フラグ
-		bool bGoalFlg;								// ゴールフラグ
 };
 

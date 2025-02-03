@@ -14,6 +14,12 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"ゲーム状態管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_GameStatus());
+
+		/* データリストサーバーに"エフェクトリソース管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Effect());
+
+		/* データリストサーバーに"スコア関連管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Score());
 	}
 
 	/* データリスト取得 */
@@ -31,8 +37,19 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 SceneGame::~SceneGame()
 {
 	/* データリスト削除 */
-	gpDataListServer->DeleteDataList("DataList_Model");			// 3Dモデル管理
-	gpDataListServer->DeleteDataList("DataList_GameStatus");	// ゲーム状態管理
+	{
+		/* 3Dモデル管理 */
+		gpDataListServer->DeleteDataList("DataList_Model");
+
+		/* ゲーム状態管理 */
+		gpDataListServer->DeleteDataList("DataList_GameStatus");
+
+		/* エフェクトリソース管理 */
+		gpDataListServer->DeleteDataList("DataList_Effect");
+
+		/* スコア関連管理 */
+		gpDataListServer->DeleteDataList("DataList_Score");
+	}
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();
@@ -41,8 +58,8 @@ SceneGame::~SceneGame()
 // 初期化
 void SceneGame::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
+	/* BGMを設定 */
+	gpDataList_Sound->BGM_SetHandle(BGM_STAGE);
 
 	/* Effekseer初期化処理 */
 	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
@@ -51,15 +68,6 @@ void SceneGame::Initialization()
 		DxLib_End();
 		gbEndFlg = true;
 		return;
-	}
-
-	/* データリスト作成 */
-	{
-		/* データリストサーバーに"プレイヤー状態"を追加 */
-		gpDataListServer->AddDataList(new DataList_PlayerStatus());
-
-		/* データリストサーバーに"3Dモデル管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Model());
 	}
 
 	/* 初期化 */
@@ -144,6 +152,9 @@ void SceneGame::Process()
 // 描画
 void SceneGame::Draw()
 {
+	/* 現在のステージ番号を取得 */
+	int iNowStageNo = this->GameStatusList->iGetNowStageNo();
 
+	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "現在のステージ番号 ： %d", iNowStageNo);
 }
 

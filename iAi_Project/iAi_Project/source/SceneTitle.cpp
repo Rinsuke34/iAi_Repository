@@ -8,7 +8,8 @@
 // コンストラクタ
 SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
 {
-
+	/* 初期化 */
+	Initialization();
 }
 
 // デストラクタ
@@ -20,8 +21,8 @@ SceneTitle::~SceneTitle()
 // 初期化
 void SceneTitle::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
+	/* BGMを設定 */
+	gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
 }
 
 // 計算

@@ -158,17 +158,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp" />
+    <ClCompile Include="source\BulletEnemyRangeMissile.cpp" />
+    <ClCompile Include="source\BulletEnemyRangeNormal.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
+    <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Model.cpp" />
     <ClCompile Include="source\DataList_Object.cpp" />
     <ClCompile Include="source\DataList_PlayerStatus.cpp" />
+    <ClCompile Include="source\DataList_Score.cpp" />
+    <ClCompile Include="source\DataList_Sound.cpp" />
     <ClCompile Include="source\EffectManualDelete.cpp" />
     <ClCompile Include="source\EffectSelfDelete.cpp" />
+    <ClCompile Include="source\EnemyBasic.cpp" />
+    <ClCompile Include="source\EnemyEscape.cpp" />
     <ClCompile Include="source\EnemyGoalObject.cpp" />
+    <ClCompile Include="source\EnemyMissile.cpp" />
+    <ClCompile Include="source\EnemyNormal.cpp" />
     <ClCompile Include="source\Enemy_Test.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
@@ -179,20 +188,34 @@
     <ClCompile Include="source\SceneTitle.cpp" />
     <ClCompile Include="source\SceneStage.cpp" />
     <ClCompile Include="source\SceneStage_MapLoad.cpp" />
+    <ClCompile Include="source\SceneUi_Combo.cpp" />
+    <ClCompile Include="source\SceneUi_Crosshairs.cpp" />
+    <ClCompile Include="source\SceneUi_Debug.cpp" />
+    <ClCompile Include="source\SceneUi_Hp.cpp" />
+    <ClCompile Include="source\SceneUi_Kunai.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BulletEnemyRangeMissile.h" />
+    <ClInclude Include="source\BulletEnemyRangeNormal.h" />
     <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />
     <ClInclude Include="source\ConstantDefine.h" />
+    <ClInclude Include="source\DataList_Effect.h" />
     <ClInclude Include="source\DataList_GameStatus.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
+    <ClInclude Include="source\DataList_Score.h" />
+    <ClInclude Include="source\DataList_Sound.h" />
     <ClInclude Include="source\EffectManualDelete.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
+    <ClInclude Include="source\EnemyBasic.h" />
+    <ClInclude Include="source\EnemyEscape.h" />
     <ClInclude Include="source\EnemyGoalObject.h" />
+    <ClInclude Include="source\EnemyMissile.h" />
+    <ClInclude Include="source\EnemyNormal.h" />
     <ClInclude Include="source\Enemy_Test.h" />
     <ClInclude Include="source\GameStatusDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
@@ -201,6 +224,13 @@
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
     <ClInclude Include="source\SceneStage.h" />
+    <ClInclude Include="source\SceneUi_Combo.h" />
+    <ClInclude Include="source\SceneUi_Crosshairs.h" />
+    <ClInclude Include="source\SceneUi_Debug.h" />
+    <ClInclude Include="source\SceneUi_Hp.h" />
+    <ClInclude Include="source\SceneUi_Kunai.h" />
+    <ClInclude Include="source\ScoreDefine.h" />
+    <ClInclude Include="source\SoundDefine.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />
     <ClInclude Include="source\DataList_Input.h" />

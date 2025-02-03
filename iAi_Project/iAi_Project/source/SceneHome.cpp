@@ -9,7 +9,8 @@
 // コンストラクタ
 SceneHome::SceneHome() : SceneBase("Home", 0, false)
 {
-
+	/* 初期化 */
+	Initialization();
 }
 
 // デストラクタ
@@ -21,8 +22,8 @@ SceneHome::~SceneHome()
 // 初期化
 void SceneHome::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
+	/* BGMを設定 */
+	gpDataList_Sound->BGM_SetHandle(BGM_HOME);
 }
 
 // 計算

@@ -31,6 +31,21 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
 	}
 
+	/* UI追加 */
+	{
+		/* クロスヘア */
+		gpSceneServer->AddSceneReservation(new SceneUi_Crosshairs());
+
+		/* HP */
+		gpSceneServer->AddSceneReservation(new SceneUi_Hp());
+
+		/* クナイ */
+		gpSceneServer->AddSceneReservation(new SceneUi_Kunai());
+
+		/* コンボ */
+		gpSceneServer->AddSceneReservation(new SceneUi_Combo());
+	}
+
 	/* マップハンドル作成 */
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
@@ -38,8 +53,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 
 	/* 初期化 */
-	this->bEditDrawFlg	= false;
-	this->bGoalFlg		= false;
+	Initialization();
 }
 
 // デストラクタ
@@ -57,50 +71,57 @@ SceneStage::~SceneStage()
 // 初期化
 void SceneStage::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
+	/* ゲーム状態を"ゲーム実行"に変更 */
+	this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 }
 
 // 計算
 void SceneStage::Process()
 {
-	/* エディット画面を描写したか */
-	if (this->bEditDrawFlg == false)
+	/* ゲーム状態を確認 */
+	int iGameStatus = this->GameStatusList->iGetGameStatus();
+
+	/* ゲーム状態に応じて処理を変更 */
+	switch (iGameStatus)
 	{
-		// 未描写の場合(クリアしていない)
-		/* すべてのオブジェクトの更新 */
-		ObjectList->UpdateAll();
+		/* "ゲーム実行"状態 */
+		case GAMESTATUS_PLAY_GAME:
+			/* すべてのオブジェクトの更新 */
+			ObjectList->UpdateAll();
 
-		/* 削除フラグが有効なオブジェクトの削除 */
-		ObjectList->DeleteAll();
+			/* 削除フラグが有効なオブジェクトの削除 */
+			ObjectList->DeleteAll();
+			break;
 
-		///* デバッグ用処理 */
-		///* キャンセルが入力されたらゴールフラグを有効化 */
-		//if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-		//{
-		//	// このシーンの削除フラグを有効にする
-		//	this->bGoalFlg = true;
-		//}
+		/* "エディット"状態 */
+		case GAMESTATUS_EDIT:
+			/* エディット画面作成処理 */
+			{
+				/* カメラモードを"固定"に変更 */
+				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_LOCK);
 
-		/* ゴールフラグを確認 */
-		if (this->bGoalFlg == true)
-		{
-			// ゴールフラグが有効な場合
-			/* シーン"エディット画面"を作成 */
-			SceneBase* pAddScene = new SceneEdit();
+				/* シーン"エディット画面"を作成 */
+				SceneBase* pAddScene = new SceneEdit();
 
-			/* シーン"エディット画面"をシーンサーバーに追加 */
-			gpSceneServer->AddSceneReservation(pAddScene);
+				/* シーン"エディット画面"をシーンサーバーに追加 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
+			break;
 
-			/* エディット画面描写フラグを有効にする */
-			this->bEditDrawFlg = true;
-		}
+		/* "次のステージへ遷移"状態 */
+		case GAMESTATUS_NEXTSTAGE:
+			/* シーンの削除フラグを有効にする */
+			this->bDeleteFlg = true;
+
+			/* ゲーム状態を"ゲーム実行"に変更する */
+			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			break;
 	}
-	else
+
+	// デバッグメニューを出す(エンターキー)
+	if (CheckHitKey(KEY_INPUT_RETURN) == 1)
 	{
-		// 描写済みの場合(クリア済み)
-		/* シーンの削除フラグを有効にする */
-		this->bDeleteFlg = true;
+		gpSceneServer->AddSceneReservation(new SceneUi_Debug());
 	}
 }
 
@@ -168,7 +189,8 @@ void SceneStage::Draw()
 		Effekseer_Sync3DSetting();
 
 		/* エフェクト描写 */
-		DrawEffekseer3D();
+		//ObjectList->DrawEffect();
+		//DrawEffekseer3D();
 	}
 
 	/* ライトマップ描写 */
@@ -202,7 +224,10 @@ void SceneStage::Draw()
 void SceneStage::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.8f, -1.f, 0.8f));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VGet(0.2f, -1.f, 0.f));
+
+//	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.002f);
+	SetShadowMapAdjustDepth(this->iShadowMapScreenHandle, 0.05f);
 
 	/* シャドウマップの描写範囲設定 */
 	{
@@ -264,71 +289,155 @@ void SceneStage::SetCamera()
 	/* カメラモードに応じて処理を変更 */
 	switch (this->PlayerStatusList->iGetCameraMode())
 	{
-		/* フリーモード */
+		/* フリー */
 		case CAMERA_MODE_FREE:
+			CameraRotateUpdata();
 			SetCamera_Free();
 			break;
+
+		/* 固定 */
+		case CAMERA_MODE_LOCK:
+			SetCamera_Lock();
+			break;
+
+		/* 構え(ズーム) */
+		case CAMERA_MODE_AIM:
+			CameraRotateUpdata();
+			SetCamera_Aim();
+			break;
 	}
+}
+
+// 入力によるカメラ回転量取得
+void SceneStage::CameraRotateUpdata()
+{
+	/* 現在の回転量等を取得 */
+	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
+
+	/* 入力からカメラ回転量を取得 */
+	/* マウス */
+	fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse;
+	fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse;
+
+	/* コントローラー */
+	fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
+	fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
+
+	/* Y軸の回転角度制限 */
+	float fAngleLimitUp		= this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
+	float fAngleLimitDown	= this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
+
+	if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
+	if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
+
+	/* 回転量を更新 */
+	this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
+	this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
 }
 
 // カメラ設定(フリーモード)
 void SceneStage::SetCamera_Free()
 {
+	/* 現在の回転量等を取得 */
+	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, 100, 0));
+	//VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
 	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
 
-	/* 視点変更に必要なデータ取得 */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
-	float fCameraRotationalSpeed_Controller = this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
-	float fCameraRotationalSpeed_Mouse = this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
-
-	/* 入力からカメラ回転量を取得 */
-	/* マウス */
-	{
-		fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse;
-		fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse;
-	}
-
-	/* コントローラー */
-	{
-		fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]);
-		fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]);
-	}
-
-	/* Y軸の回転角度制限 */
-	{
-		float fAngleLimitUp = this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
-		float fAngleLimitDown = this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
-
-		if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
-		if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
-	}
-
-	/* 回転量を更新 */
-	{
-		this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
-		this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
-	}
+	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
-	{
-		float fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
-		float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-		float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-		float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+	float fRadius	= this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
+	float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+	float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+	float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
-		this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
-	}
+	this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
 
 	/* カメラ設定 */
+	SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+}
+
+// カメラ設定(固定モード)
+void SceneStage::SetCamera_Lock()
+{
+	/* カメラ設定 */
+	// ※更新は行わない
 	{
 		SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
 	}
+}
+
+// カメラ設定(構え(ズーム))
+void  SceneStage::SetCamera_Aim()
+{
+	///* 現在の回転量等を取得 */
+	//float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	//float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+
+	///* プレイヤー座標取得 */
+	//VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	///* カメラ注視点設定 */
+	//VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 20.f, 0));
+	//float fRadius		= 800.f;												// 注視点からの距離
+	//vecCameraTarget.x	= fRadius * +sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+	//vecCameraTarget.y	= fRadius * +sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+	//vecCameraTarget.z	= fRadius * -cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+
+	///* カメラの先端をロックオン範囲の奥に合わせる */
+	////vecCameraTarget = this->PlayerStatusList->stGetMeleeSearchCollision().vecCapsuleBottom;
+
+	//this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+
+	///* カメラ座標設定 */
+	////VECTOR vecCameraPosition	= VAdd(vecPlayerPos, VGet(0.f, PLAYER_HEIGHT - 20.f, 0.f));
+	//VECTOR vecCameraPosition	= VAdd(vecPlayerPos, VGet(0.f, PLAYER_HEIGHT + 40.f, 0.f));
+	////fRadius				= 250.f;												// 注視点からの距離
+	//fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
+	////fCameraAngleX		= fCameraAngleX + DX_PI_F / 4.f;						// 右後ろに配置するための角度調整
+	////vecCameraPosition.x = fRadius * -sinf(fCameraAngleX) + vecCameraPosition.x; // X座標
+	////vecCameraPosition.y = fRadius * -sinf(fCameraAngleY) + vecCameraPosition.y; // Y座標
+	////vecCameraPosition.z = fRadius * +cosf(fCameraAngleX) + vecCameraPosition.z; // Z座標
+	//vecCameraPosition.x = fRadius * -sinf(fCameraAngleX) + vecCameraPosition.x;	// X座標
+	//vecCameraPosition.y = fRadius * -sinf(fCameraAngleY) + vecCameraPosition.y;	// Y座標
+	//vecCameraPosition.z = fRadius * +cosf(fCameraAngleX) + vecCameraPosition.z;	// Z座標
+
+	//this->PlayerStatusList->SetCameraPosition(vecCameraPosition);
+
+	/* 現在の回転量等を取得 */
+	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* カメラ注視点設定 */
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
+	this->PlayerStatusList->SetCameraTarget(VAdd(vecCameraTarget, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove()));
+
+	/* 少し高い位置に設定 */
+	vecCameraTarget.y += 10.f;
+
+	/* カメラ座標設定 */
+	float fRadius = this->PlayerStatusList->fGetCameraRadius();				// 注視点からの距離
+	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecPlayerPos.x;		// X座標
+	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecPlayerPos.y;		// Y座標
+	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecPlayerPos.z;		// Z座標
+
+	this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
+
+	/* カメラ設定 */
+	SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
 }
 
 // デバッグ描写

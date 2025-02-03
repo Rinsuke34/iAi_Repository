@@ -4,6 +4,9 @@
 #include "AppFrame.h"
 #include "PublicInclude.h"
 
+/* データリスト */
+#include "DataList_GameStatus.h"
+
 /* シーン"エディット"クラスの宣言 */
 
 // シーン"エディット"
@@ -18,5 +21,6 @@ class SceneEdit : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
-	protected:
+		/* 使用するデータリスト */
+		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 };
