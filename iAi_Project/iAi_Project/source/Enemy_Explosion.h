@@ -1,4 +1,4 @@
-/* 2024.01.30 石川智也 ファイル作成 */
+/* 2024.12.15 駒沢風助 ファイル作成 */
 
 #pragma once
 #include "Appframe.h"
@@ -9,32 +9,43 @@
 
 /* オブジェクト */
 #include "EnemyBasic.h"
+#include "EnemyDefine.h"
 #include "EffectManualDelete.h"
-#include "BulletEnemyRangeMissile.h"
-#include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class MissileEnemy : public EnemyBasic
+class ExplosionEnemy : public EnemyBasic
 {
 public:
-	MissileEnemy();				// コンストラクタ
-	virtual ~MissileEnemy();		// デストラクタ
+	ExplosionEnemy();				// コンストラクタ
+	virtual ~ExplosionEnemy();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
 
 private:
+	/* エフェクト */
 	EffectManualDelete* pEffect;
-protected:
+
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
 
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Missile_Shot();			// イクラ弾攻撃
 
-	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
+	/*関数*/
+	void MoveEnemy(); // 敵を移動させるメソッドを追加
 
+
+	/*変数*/
+	int iXdistance;			// X軸の距離
+
+	int iZdistance;			// Z軸の距離
+
+	float fSpeed;			// 移動速度
+
+	int iDetonationRange;	//起爆範囲内
+
+	int iLastTime;			//起爆タイマー
+
+protected:
 };

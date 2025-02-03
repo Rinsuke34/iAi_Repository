@@ -9,6 +9,7 @@
 
 /* オブジェクト */
 #include "EnemyBasic.h"
+#include "EnemyDefine.h"
 #include "EffectManualDelete.h"
 
 /* テスト用敵クラス */
@@ -24,11 +25,21 @@ class EscapeEnemy : public EnemyBasic
 		virtual void	Update()			override;		// 更新
 	
 	private:
-		EffectManualDelete* eEffect;
-	protected:
+	/* エフェクト */
+	EffectManualDelete* pEffect;
+
 		/* 使用するデータリスト */
 		DataList_Object* ObjectList;			// オブジェクト管理
+
+	/* 関数 */
 		void MoveEnemy(); // 敵を移動させるメソッドを追加
 
-		int _lastTime; // 追加: _lastTime メンバー変数
+	/* 変数 */
+	int iXescapedistance;			// X軸の距離
+
+	int iZescapedistance;			// Z軸の距離
+
+	float fEscapespeed;			// 移動速度
+
+protected:
 };

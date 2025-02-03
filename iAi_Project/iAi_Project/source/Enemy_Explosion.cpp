@@ -1,12 +1,17 @@
-/* 2025.01.30 石川智也 ファイル作成 */
-#include "EnemyMissile.h"
+/* 2025.01.28 石川智也 ファイル作成 */
+#include "Enemy_Explosion.h"
 
 // コンストラクタ
-MissileEnemy::MissileEnemy() : EnemyBasic()
+ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 {
 
-	/* オブジェクトのハンドル */
-	this->pBulletRangeMissile = nullptr;	// ミサイルの弾
+
+	this->iXdistance = ENEMY_X_DISTANCE;		// X軸の距離
+	this->iZdistance = ENEMY_Z_DISTANCE;		// Z軸の距離
+	this->fSpeed = ENEMY_SPEED;				// 移動速度
+	this->iDetonationRange = ENEMY_DETONATION_RANGE;	//起爆範囲内
+	this->iLastTime = ENEMY_DETONATION_TIME;	//起爆タイマー
+
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
@@ -28,19 +33,17 @@ MissileEnemy::MissileEnemy() : EnemyBasic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
 	}
 
-
-	this->pPlayer = ObjectList->GetCharacterPlayer();
 	this->pEffect = nullptr;
 }
 
 // デストラクタ
-MissileEnemy::~MissileEnemy()
+ExplosionEnemy::~ExplosionEnemy()
 {
-	/* 紐づいているエフェクトの削除フラグを有効化 */
+
 }
 
 // 初期化
-void MissileEnemy::Initialization()
+void ExplosionEnemy::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -51,12 +54,15 @@ void MissileEnemy::Initialization()
 	LoadCoreFrameNo();
 }
 
-// 敵を移動させる
-void MissileEnemy::MoveEnemy()
+void ExplosionEnemy::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
+
+
+	// 現在の時間を取得
+	int nowTime = GetNowCount();
 
 	//エネミーの向きを初期化する
 	VECTOR VRot = VGet(0, 0, 0);
@@ -71,57 +77,55 @@ void MissileEnemy::MoveEnemy()
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
+	//起爆カウントを初期化
+	static bool iActioncount = false;
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
-		// ミサイルを発射する
-		Player_Range_Missile_Shot();
+		// 起爆カウントが進んでいるか確認
+		if (iActioncount == false)
+		{
+			// 起爆カウントが進んでいる場合
+			// エネミーをプレイヤーに近づける
+			VECTOR direction = VNorm(VSub(playerPos, this->vecPosition));
+
+			// プレイヤーに向かう方向と速度を取得
+			this->vecPosition = VAdd(this->vecPosition, VScale(direction, ENEMY_SPEED));
+
+			// プレイヤーがエネミーの起爆範囲内に入ったかどうかを確認
+			if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_DETONATION_RANGE)
+			{
+				// プレイヤーがエネミーの起爆範囲内に入った場合
+				//起爆カウントを開始
+				iActioncount = true;
+			}
+		}
+		//プレイヤーが探知範囲内おり起爆カウントが進んでいる場合であるか確認
+		else if (iActioncount == true)
+		{
+			//プレイヤーが探知範囲内おり起爆カウントが進んでいる場合
+			//タイマーを取得
+			static int startTime = nowTime;
+
+			// タイマーが3秒以上経過しているかどうかを確認
+			if (nowTime - startTime > ENEMY_DETONATION_TIME)
+			{
+				//タイマーが3秒以上経過している場合
+				//エネミーの削除フラグを有効にする
+				this->bDeleteFlg = true;
+
+				//タイマーをリセットする
+				startTime = nowTime;
+
+			}
+		}
 	}
 }
 
-// ミサイル弾の発射
-void MissileEnemy::Player_Range_Missile_Shot()
-{
-	// ミサイルを生成
-	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
-
-	/* 攻撃の生成方向の設定 */
-	/* 攻撃座標を算出 */
-
-	//エネミーの向きを初期化
-	VECTOR vecAdd = VGet(0, 0, 0);
-
-	// 発射させる方向を設定
-	vecAdd = VNorm(vecAdd);
-
-	// 発射させる高さと幅を設定
-	vecAdd.y = PLAYER_HEIGHT / 2.f;
-	vecAdd.x = PLAYER_WIDE / 2.f;
-
-	// 攻撃生成座標をエネミーが向いている方向に設定
-	this->pBulletRangeMissile->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-	// 移動する弾の向きを設定
-	this->pBulletRangeMissile->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
-
-	//初期化
-	this->pBulletRangeMissile->Initialization();
-
-	//バレットリストに追加
-	ObjectList->SetBullet(this->pBulletRangeMissile);
-
-
-
-}
-
-
-
-
-
 // 更新
-void MissileEnemy::Update()
+void ExplosionEnemy::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -143,12 +147,10 @@ void MissileEnemy::Update()
 		}
 	}
 
-
-
 	if (this->iGetNowHP() <= 0)
 	{
 		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
+		this->bDeleteFlg = true;
 	}
 
 	// エネミーを移動させる

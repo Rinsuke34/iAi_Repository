@@ -1,4 +1,4 @@
-/* 2024.01.30 石川智也 ファイル作成 */
+/* 2024.01.29 石川智也 ファイル作成 */
 
 #pragma once
 #include "Appframe.h"
@@ -10,31 +10,43 @@
 /* オブジェクト */
 #include "EnemyBasic.h"
 #include "EffectManualDelete.h"
-#include "BulletEnemyRangeMissile.h"
+#include "BulletEnemyRangeBeam.h"
 #include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class MissileEnemy : public EnemyBasic
+class BeamEnemy : public EnemyBasic
 {
 public:
-	MissileEnemy();				// コンストラクタ
-	virtual ~MissileEnemy();		// デストラクタ
+	BeamEnemy();				// コンストラクタ
+	virtual ~BeamEnemy();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
 
 private:
 	EffectManualDelete* pEffect;
-protected:
+	EffectManualDelete* pEffectWarning;
+
+
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Missile_Shot();			// イクラ弾攻撃
+	void	Player_Range_Beam_Shot();			// ビームの発射
 
-	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
+	BulletEnemyRangeBeam* pBulletRangeBeam;	// ビーム
+
+	int		iFiringCount;	// 発射カウント
+
+	int		iGuidanceCount;	// 誘導カウント
+
+	VECTOR vecWarning;
+
+	int		iModelFootHandle;	// エネミー足元モデルハンドル
+protected:
+
 
 };
