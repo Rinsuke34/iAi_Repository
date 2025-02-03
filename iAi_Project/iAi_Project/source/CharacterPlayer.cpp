@@ -1,9 +1,10 @@
 /* 2024.12.15 駒沢風助	ファイル作成 */
-/* 2025.01.09 菊池雅道　移動処理追加 */
-/* 2025.01.22 菊池雅道　攻撃処理追加 */
-/* 2025.01.24 菊池雅道　攻撃処理追加 */
+/* 2025.01.09 菊池雅道	移動処理追加 */
+/* 2025.01.22 菊池雅道	攻撃処理追加 */
+/* 2025.01.24 菊池雅道	攻撃処理追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.01.30 菊池雅道	モーション処理追加 */
+/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -1201,7 +1202,7 @@ void CharacterPlayer::Player_Melee_Posture()
 			}
 		}
 
-		/* 2025.01.24 菊池雅道　攻撃処理追加	終了 */
+		/* 2025.01.24 菊池雅道	攻撃処理追加		終了 */
 		/* 2025.01.26 駒沢風助	コード修正		終了*/
 	}
 	else
@@ -1338,6 +1339,7 @@ void CharacterPlayer::Player_Charge_Attack()
 {
 	/* 2025.01.22 菊池雅道　攻撃処理追加	開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始 */
+	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	開始 */
 
 	/* 溜め攻撃用のカウントを取得 */
 	int iChargeAttackCount = this->PlayerStatusList->iGetPlayerChargeAttackCount();
@@ -1474,11 +1476,72 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 	}
 
+	// 溜め攻撃後、次の敵を探す処理
+	// 仮でプレイヤーのモーションが"居合(強)(終了)"になったタイミングとする
+	if (this->PlayerStatusList->iGetPlayerMotion() == PLAYER_MOTION_DRAW_SWORD_END)
+	{
+		/* 索敵範囲を設定※値は仮 */
+		COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
+
+		/* プレイヤーに近いエネミーを取得する */
+		NearEnemy stNearEnemy = { nullptr, 0.f };
+
+		/* エネミーリストを取得 */
+		auto& EnemyList = ObjectList->GetEnemyList();
+
+		/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
+		for (auto* enemy : EnemyList)
+		{
+			/* 索敵範囲に接触しているか確認 */
+			if (enemy->HitCheck(stSearchSqere) == true)
+			{
+				// 索敵範囲内である場合
+				/* コアのワールド座標を取得 */
+				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+
+				/* プレイヤーとの差を求める */
+				float fx = vecCoreWord.x - this->vecPosition.x;
+				float fy = vecCoreWord.y - this->vecPosition.y;
+				float fDistance = (fx * fx) + (fy * fy);
+
+				/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
+				if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+				{
+					// 近い場合
+					/* プレイヤーから近いエネミーを更新 */
+					stNearEnemy.pEnemy = enemy;
+					stNearEnemy.fDistance = fDistance;
+				}
+			}
+		}
+
+		/* 最もプレイヤー近いエネミーを対象に指定 */
+		if (stNearEnemy.pEnemy != nullptr)
+		{
+			//対象が存在する場合
+			/* プレイヤーから見た敵の向きを取得 */
+			VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
+
+			/* プレイヤーから見た敵の向きを正規化 */
+			vecNearEnemy = VNorm(vecNearEnemy);
+
+			/* プレイヤーから見た敵の角度を取得 */
+			float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
+
+			/* プレイヤーの向きを設定 */
+			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
+
+			/* プレイヤーの向きにカメラの向きを固定 */
+			this->PlayerStatusList->SetCameraAngleX(this->PlayerStatusList->fGetPlayerAngleX());
+		}
+		
+	}
 	/* 溜め攻撃用のカウントを+1する */
 	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
 
-	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
+	/* 2025.01.22 菊池雅道	攻撃処理追加				終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */	
+	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	終了 */
 }
 
 // 遠距離攻撃(構え)

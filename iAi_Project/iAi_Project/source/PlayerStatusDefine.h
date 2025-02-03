@@ -1,5 +1,7 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
-/* 2025.01.09菊池雅道 移動関連の変数・関数追加 */
+/* 2025.01.09 菊池雅道 移動関連の定数追加 */
+/* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
+/* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -44,10 +46,11 @@ static const int	PLAYER_DODGE_FLAME					= 10;			// プレイヤーの回避フレーム数
 static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// プレイヤーが空中で回避できる回数
 /* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
 
-/* 2025.01.29 菊池雅道 攻撃関連の定数追加 開始 */
+
 // 攻撃関係
-static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// 近接攻撃中(強)の溜め完了フレーム数
-/* 2025.01.29 菊池雅道 攻撃関連の定数追加 完了 */
+static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// 近接攻撃中(強)の溜め完了フレーム数		/* 2025.01.29 菊池雅道 攻撃関連の定数追加 */
+static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// 近接攻撃中(強)後の索敵範囲			/* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
+
 
 /* カメラ関連 */
 // 基本情報

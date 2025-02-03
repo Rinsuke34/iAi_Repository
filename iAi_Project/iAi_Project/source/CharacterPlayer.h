@@ -71,6 +71,8 @@ class CharacterPlayer : public CharacterBase
 		/* エフェクトのハンドル */
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
+		//EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
+		//EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
 		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */
@@ -87,4 +89,12 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
+
+		/* 構造体(テストのためここで定義) */
+		// 最もプレイヤーから近いエネミー
+		struct NearEnemy
+		{
+			EnemyBasic* pEnemy;		// エネミーのポインタ
+			float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
+		};
 };
