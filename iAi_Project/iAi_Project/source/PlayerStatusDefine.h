@@ -61,7 +61,7 @@ static const int	CAMERA_MODE_FREE						= 0;				// フリーモード(通常の三人称視点)
 static const int    CAMERA_MODE_LOCK						= 1;				// 固定
 static const int	CAMERA_MODE_AIM							= 2;				// 構え(ズーム)
 // 線形補間
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 20;				// カメラ座標の線形保管用カウントの最大値
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形保管用カウントの最大値
 
 /* プレイヤー状態 */
 // ※状態に応じて可能な行動が変わる

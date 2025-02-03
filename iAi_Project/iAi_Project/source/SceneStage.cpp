@@ -314,4 +314,6 @@ void SceneStage::DrawDebug()
 		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
 		iDrawCount++;
 	}
+
+	DrawFormatString(800, 360 + 16 * 2, GetColor(255, 255, 255), "線形補完カウント : %d", this->PlayerStatusList->iGetCameraPositionLeapCount());
 }
