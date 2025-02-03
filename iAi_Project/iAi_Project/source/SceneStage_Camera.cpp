@@ -7,6 +7,10 @@
 // カメラ設定
 void SceneStage::SetCamera()
 {
+	/* グローバルアンビエントライトカラーを赤色に設定 */
+	// ※デフォルトの黒色だと暗すぎるので赤色に変更
+	SetGlobalAmbientLight(GetColorF(1.0f, 0.0f, 0.0f, 0.0f));
+
 	/* カメラモードが変更されているか確認 */
 	if (this->PlayerStatusList->iGetCameraMode() != this->PlayerStatusList->iGetCameraMode_Old())
 	{
@@ -27,7 +31,7 @@ void SceneStage::SetCamera()
 		/* フリー */
 		case CAMERA_MODE_FREE:
 			/* カメラ設定 */
-			CameraRotateUpdata(fChangeCameraRatio);
+			//CameraRotateUpdata(fChangeCameraRatio);
 			SetCamera_Free();
 			break;
 
@@ -41,14 +45,14 @@ void SceneStage::SetCamera()
 		case CAMERA_MODE_AIM:
 			/* カメラ回転倍率を変更 */
 			fChangeCameraRatio = 0.5f;
-			CameraRotateUpdata(fChangeCameraRatio);
+			//CameraRotateUpdata(fChangeCameraRatio);
 			/* カメラ設定 */
 			SetCamera_Aim();
 			break;
 	}
 
 	/* 入力によるカメラ回転の取得処理を実施 */
-	//CameraRotateUpdata(fChangeCameraRatio);
+	CameraRotateUpdata(fChangeCameraRatio);
 
 	/* カメラ座標の補正 */
 	// ※一瞬で切り替わると違和感があるため、カメラ座標に補間処理を行う

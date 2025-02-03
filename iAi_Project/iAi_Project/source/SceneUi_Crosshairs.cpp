@@ -147,6 +147,8 @@ void SceneUi_Crosshairs::Draw_RockOn()
 	{
 		/* プレイヤー視点でのロックオン状態を取得 */
 		int iLockOnType = enemy->iGetPlayerLockOnType();
+		VECTOR vecCoreWord;
+		VECTOR vecCoreScreen;
 
 		/* ロックオン状態によって描写を変更 */
 		switch (iLockOnType)
@@ -158,10 +160,10 @@ void SceneUi_Crosshairs::Draw_RockOn()
 			case PLAYER_LOCKON_RANGE:
 				// ロックオン範囲内である場合
 				/* コアのワールド座標を取得 */
-				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+				vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
 				/* コアの座標をスクリーン座標に変換 */
-				VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
 				/* クロスヘアの代わりに十字架を描写 */
 				// ※仮処理
@@ -172,10 +174,10 @@ void SceneUi_Crosshairs::Draw_RockOn()
 			case PLAYER_LOCKON_TARGET:
 				// ロックオン対象である場合
 				/* コアのワールド座標を取得 */
-				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+				vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
 				/* コアの座標をスクリーン座標に変換 */
-				VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
 				/* クロスヘアの代わりに十字架を描写 */
 				// ※仮処理
