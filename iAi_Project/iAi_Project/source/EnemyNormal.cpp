@@ -28,7 +28,8 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
 	}
 
-	this->eEffect = nullptr;
+	this->pPlayer = ObjectList->GetCharacterPlayer();
+	this->pEffect = nullptr;
 }
 
 // デストラクタ
@@ -49,42 +50,60 @@ void NormalEnemy::Initialization()
 	LoadCoreFrameNo();
 }
 
+// 敵を移動させる
 void NormalEnemy::MoveEnemy()
 {
-	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
-	VECTOR playerPos = player->vecGetPosition();
+	// プレイヤーの座標を取得
+	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	VECTOR VRot = VGet(0, 0, 0); // 回転量
-	VRot.y = atan2f(this->vecPosition.x -playerPos.x, this->vecPosition.z - playerPos.z); // プレイヤーの方向を向く
-	this->vecRotation = VRot; // 回転量を設定
-	if(CheckHitKey(KEY_INPUT_P))
+	//エネミーの向きを初期化する
+	VECTOR VRot = VGet(0, 0, 0);
+
+	//プレイヤーの方向を向くようにエネミーの向きを定義
+	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
+
+	//エネミーの向きを設定
+	this->vecRotation = VRot;
+
+	//プレイヤーとエネミーのXZ軸の距離を取得
+	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
+
+
+	//プレイヤーが探知範囲内にいるか確認
+	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
-		Player_Range_Normal();
+		// プレイヤーが探知範囲内にいる場合
+		// ノーマル弾を発射する
+		Player_Range_Normal_Shot();
 	}
 }
 
-void NormalEnemy::Player_Range_Normal()
+// ノーマル弾の発射
+void NormalEnemy::Player_Range_Normal_Shot()
 {
-	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
-	VECTOR playerPos = player->vecGetPosition();
+	// プレイヤーの座標を取得
+	VECTOR playerPos = pPlayer->vecGetPosition();
+
+	// ノーマル弾を生成
 	this-> pBulletRangeNormal = new BulletEnemyRangeNormal;
 	/* 攻撃の生成方向の設定 */
 	/* 攻撃座標を算出 */
-	VECTOR vecAdd;
-	// 方向
-	vecAdd.x = 0.f;
-	vecAdd.y = 0.f;
-	vecAdd.z = 0.f;
+
+	//エネミーの向きを初期化
+	VECTOR vecAdd = VGet(0, 0, 0);
+
+	// 発射させる方向を設定
 	vecAdd = VNorm(vecAdd);
-	vecAdd = VScale(vecAdd, 100);
-	// 高さ
-	vecAdd.y = 100 / 2.f;
+
+	// 発射させる高さと幅を設定
+	vecAdd.y = PLAYER_HEIGHT / 2.f;
 	vecAdd.x = PLAYER_WIDE / 2.f;
 
 	// 攻撃生成座標をエネミーが向いている方向に設定
 	this->pBulletRangeNormal->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-	// 攻撃の向きを設定
+	// 移動する弾の向きを設定
 	this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
 	
 	//初期化
@@ -126,9 +145,10 @@ void NormalEnemy::Update()
 		this->SetDeleteFlg(true);
 	}
 
+	// エネミーを移動させる
 	MoveEnemy();
 
-	//Player_Range_Normal();
+	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;

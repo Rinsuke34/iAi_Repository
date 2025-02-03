@@ -3,6 +3,7 @@
 #pragma once
 #include "Appframe.h"
 #include "PublicInclude.h"
+#include "EnemyDefine.h"
 
 /* データリスト */
 #include "DataList_Score.h"

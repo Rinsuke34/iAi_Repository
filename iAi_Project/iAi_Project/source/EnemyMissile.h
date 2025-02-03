@@ -11,6 +11,7 @@
 #include "EnemyBasic.h"
 #include "EffectManualDelete.h"
 #include "BulletEnemyRangeMissile.h"
+#include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
@@ -25,13 +26,15 @@ public:
 	virtual void	Update()			override;		// 更新
 
 private:
-	EffectManualDelete* eEffect;
+	EffectManualDelete* pEffect;
 protected:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Missile();			// イクラ弾攻撃
+	CharacterBase* pPlayer;			// プレイヤー
 
-	BulletEnemyRangeMissile* pBulletRangeMissile;	// 近接攻撃(弱)の弾
+	void	MoveEnemy();					// 敵を移動させるメソッドを追加
+	void	Player_Range_Missile_Shot();			// イクラ弾攻撃
+
+	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
 
 };

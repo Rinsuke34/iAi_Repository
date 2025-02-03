@@ -6,7 +6,6 @@
 // Å¶âº
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
-#include "Enemy_Test.h"
 #include "EnemyNormal.h"
 #include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
