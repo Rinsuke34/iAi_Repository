@@ -8,15 +8,17 @@
 BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 {
 	/* 初期化 */
-	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(プレイヤー)"に設定
+	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(エネミー)"に設定
 	this->pEffect = nullptr;
 
 	this->iDurationCount = ENEMY_MISSILE_DURATION_COUNT;				// ミサイル弾の持続カウント
 	this->iBulletUPCount = ENEMY_MISSILE_BULLET_UP_COUNT;				// ミサイル弾打ち上げカウント
 	this->iBulletDownCount = ENEMY_MISSILE_BULLET_DOWN_COUNT;			// ミサイル弾打ち下げカウント
 	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;	// ミサイル誘導カウント
-	/* 仮追加 */
+
 	this->pPlayer = ObjectList->GetCharacterPlayer();					// プレイヤーの取得
+
+	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;	// ミサイル弾の持続カウント
 }
 
 // デストラクタ

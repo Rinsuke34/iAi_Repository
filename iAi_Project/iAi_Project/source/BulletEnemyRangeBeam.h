@@ -12,14 +12,14 @@
 #include "EnemyBulletDefine.h"
 
 
-/* ノーマル弾クラスの宣言 */
+/* ビームクラスの宣言 */
 
-// ノーマル弾
-class BulletEnemyRangeNormal : public BulletBase
+// ビーム
+class BulletEnemyRangeBeam : public BulletBase
 {
 public:
-	BulletEnemyRangeNormal();				// コンストラクタ
-	virtual ~BulletEnemyRangeNormal();		// デストラクタ
+	BulletEnemyRangeBeam();				// コンストラクタ
+	virtual ~BulletEnemyRangeBeam();		// デストラクタ
 
 	virtual void	Initialization()	override;	// 初期化
 	virtual void	Update()			override;	// 更新
@@ -32,14 +32,14 @@ private:
 	DataList_Object* ObjectList;			// オブジェクト管理
 
 
-	void BulletEnemyRangeNormalMove();	// ノーマル弾の移動処理
+	void BulletEnemyRangeBeamMove();	// ビームの移動処理
 
-	int iDurationCount;	// ノーマル弾の持続カウント
+	int iDurationCount;	// ビームの持続カウント
 
-	int iBulletCount;		// ノーマル弾発射カウント
+	int iBulletCount;		// ビーム発射カウント
 
 
-	int iEnemyNormalDurationCount;		//ノーマル弾の持続カウント
+	int iEnemyBeamDurationCount;		//ビームの持続カウント
 protected:
 
 };

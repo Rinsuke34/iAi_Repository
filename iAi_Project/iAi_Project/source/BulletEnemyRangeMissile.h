@@ -47,5 +47,8 @@ private:
 
 	int iBulletGuidanceCount;	// ミサイル誘導カウント
 
+
+	int iEnemyMissileDurationCount;	//ミサイル弾の持続カウント
+
 protected:
 };

@@ -191,7 +191,7 @@ void SceneStage::SetupEffectScreen()
 
 	/* エフェクト描写 */
 	//ObjectList->DrawEffect();
-	//DrawEffekseer3D();
+	DrawEffekseer3D();
 }
 
 // 画面エフェクト
