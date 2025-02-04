@@ -158,11 +158,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp" />
+    <ClCompile Include="source\BulletEnemyRangeBeam.cpp" />
     <ClCompile Include="source\BulletEnemyRangeMissile.cpp" />
     <ClCompile Include="source\BulletEnemyRangeNormal.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
+    <ClCompile Include="source\CharacterPlayerAttack.cpp" />
+    <ClCompile Include="source\CharacterPlayerDraw.cpp" />
+    <ClCompile Include="source\CharacterPlayerMove.cpp" />
     <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
@@ -174,6 +178,7 @@
     <ClCompile Include="source\EffectManualDelete.cpp" />
     <ClCompile Include="source\EffectSelfDelete.cpp" />
     <ClCompile Include="source\EnemyBasic.cpp" />
+    <ClCompile Include="source\EnemyBeam.cpp" />
     <ClCompile Include="source\EnemyEscape.cpp" />
     <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\EnemyMissile.cpp" />
@@ -186,6 +191,7 @@
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
     <ClCompile Include="source\SceneStage_Camera.cpp" />
+    <ClCompile Include="source\SceneStage_Draw.cpp" />
     <ClCompile Include="source\SceneTitle.cpp" />
     <ClCompile Include="source\SceneStage.cpp" />
     <ClCompile Include="source\SceneStage_MapLoad.cpp" />
@@ -198,6 +204,7 @@
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\BulletEnemyRangeBeam.h" />
     <ClInclude Include="source\BulletEnemyRangeMissile.h" />
     <ClInclude Include="source\BulletEnemyRangeNormal.h" />
     <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
@@ -213,6 +220,7 @@
     <ClInclude Include="source\EffectManualDelete.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
     <ClInclude Include="source\EnemyBasic.h" />
+    <ClInclude Include="source\EnemyBeam.h" />
     <ClInclude Include="source\EnemyBulletDefine.h" />
     <ClInclude Include="source\EnemyDefine.h" />
     <ClInclude Include="source\EnemyEscape.h" />
