@@ -348,6 +348,9 @@
     <ClCompile Include="source\Enemy_Explosion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneStage_Draw.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
