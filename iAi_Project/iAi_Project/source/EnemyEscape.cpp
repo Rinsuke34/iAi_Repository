@@ -4,6 +4,12 @@
 // コンストラクタ
 EscapeEnemy::EscapeEnemy() : EnemyBasic()
 {
+
+	this->iXescapedistance = ENEMY_X_ESCAPE_DISTANCE;		// X軸の距離
+	this->iZescapedistance = ENEMY_Z_ESCAPE_DISTANCE;		// Z軸の距離
+	this->fEscapespeed = ENEMY_ESCAPE_SPEED;			// 移動速度
+
+
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
@@ -22,7 +28,7 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
 	}
 }
 
@@ -46,25 +52,41 @@ void EscapeEnemy::Initialization()
 
 void EscapeEnemy::MoveEnemy()
 {
+	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
-	// 現在の時間を取得
-	int nowTime = GetNowCount();
-	// 経過時間を計算
-	float deltaTime = (nowTime - _lastTime) / 1000.0f; // ミリ秒を秒に変換
-	_lastTime = nowTime;
 
-	VECTOR VRot = VGet(0, 0, 0); // 回転量
-	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z); // プレイヤーの方向を向く
-	this->vecRotation = VRot; // 回転量を設定
+	//エネミーの向きを初期化する
+	VECTOR VRot = VGet(0, 0, 0);
+
+	//プレイヤーの方向を向くようにエネミーの向きを定義
+	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
+
+	//エネミーの向きを設定
+	this->vecRotation = VRot;
+
+	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
-	if (distanceToPlayerX < 600.0f && distanceToPlayerZ < 600.0f) { // x軸とz軸の距離が100未満の場合
+
+	//プレイヤーが探知範囲内にいるか確認
+	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
+	{
+		// プレイヤーが探知範囲内にいる場合
+		// プレイヤーから逃げる
 		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
-		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, 5.0f));
-		VECTOR VRot = VGet(0, 0, 0); // 回転量
-		VRot.y = atan2f(playerPos.x - this->vecPosition.x, playerPos.z - this->vecPosition.z); // プレイヤーの方向を向く
-		this->vecRotation = VRot; // 回転量を設定
+
+		// プレイヤーから逃げる方向と速度を設定
+		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, ENEMY_ESCAPE_SPEED));
+
+		// エネミーの向きを初期化する
+		VECTOR VRot = VGet(0, 0, 0);
+
+		// プレイヤーの方向を向くようにエネミーの向きを定義
+		VRot.y = atan2f(playerPos.x - this->vecPosition.x, playerPos.z - this->vecPosition.z);
+
+		// エネミーの向きを設定
+		this->vecRotation = VRot;
 	}
 }
 

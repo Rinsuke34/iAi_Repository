@@ -2,10 +2,6 @@
 
 #include "EnemyBasic.h"
 
-/* データリスト */
-// ※循環参照対策でここで定義する
-#include "DataList_Object.h"
-
 /* 基本エネミークラスの定義 */
 
 // コンストラクタ

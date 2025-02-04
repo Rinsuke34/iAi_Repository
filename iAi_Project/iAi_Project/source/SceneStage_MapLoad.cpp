@@ -6,7 +6,6 @@
 // ※仮
 #include "CharacterPlayer.h"
 #include "PlatformBasic.h"
-#include "Enemy_Test.h"
 #include "EnemyNormal.h"
 #include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
@@ -52,7 +51,8 @@ void SceneStage::LoadMapData()
 				/* モデル */
 				std::string	name;
 				data.at("objectName").get_to(name);
-				pBackGround->SetModelHandle(this->ModelList->iGetModel(name));
+				std::string Path = "Object/" + name + "/" + name;
+				pBackGround->SetModelHandle(this->ModelList->iGetModel(Path));
 
 				/* 座標 */
 				VECTOR vecPos;
@@ -108,7 +108,8 @@ void SceneStage::LoadMapData()
 				/* モデル */
 				std::string	name;
 				data.at("objectName").get_to(name);
-				pCollision->SetModelHandle(this->ModelList->iGetModel(name));
+				std::string Path = "Collision/" + name;
+				pCollision->SetModelHandle(this->ModelList->iGetModel(Path));
 
 				/* 座標 */
 				VECTOR vecPos;

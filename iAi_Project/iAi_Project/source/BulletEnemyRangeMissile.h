@@ -8,11 +8,13 @@
 
 /* オブジェクト */
 #include "EffectManualDelete.h"
+#include "EnemyBulletDefine.h"
+#include "PlayerStatusDefine.h"
 
 
-/* 近接攻撃(弱)クラスの宣言 */
+/*ミサイル弾クラスの宣言 */
 
-// 近接攻撃(弱)
+// ミサイル弾
 class BulletEnemyRangeMissile : public BulletBase
 {
 public:
@@ -23,12 +25,27 @@ public:
 	virtual void	Update()			override;	// 更新
 
 private:
-	/* オブジェクト(エフェクト)のハンドル */
-	EffectManualDelete* eEffect;
 
-	int iDeleteCount;	// 仮追加の削除カウント
+	/* 使用するデータリスト */
+	DataList_Object* ObjectList;			// オブジェクト管理
+	CharacterBase* pPlayer;			// プレイヤー
+
+
+	/* オブジェクト(エフェクト)のハンドル */
+	EffectManualDelete* pEffect;//ミサイル弾のエフェクト
+
+	EffectManualDelete* pEffectExplosion;//ミサイル弾着弾エフェクト
+
+
+	void BulletEnemyRangeMissileMove();	// ミサイル弾の移動処理
+
+	int iDurationCount;			// 弾の持続カウント
+
+	int iBulletUPCount;			// ミサイル弾打ち上げカウント
+
+	int iBulletDownCount;		// ミサイル弾打ち下げカウント
+
+	int iBulletGuidanceCount;	// ミサイル誘導カウント
 
 protected:
-	DataList_Object* ObjectList;			// オブジェクト管理
-	void BulletEnemyRangeMissileMove();	// 敵の弾の移動処理
 };

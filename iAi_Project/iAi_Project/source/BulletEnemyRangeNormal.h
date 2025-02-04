@@ -9,11 +9,12 @@
 /* オブジェクト */
 #include "EffectManualDelete.h"
 #include "CharacterPlayer.h"
+#include "EnemyBulletDefine.h"
 
 
-/* 近接攻撃(弱)クラスの宣言 */
+/* ノーマル弾クラスの宣言 */
 
-// 近接攻撃(弱)
+// ノーマル弾
 class BulletEnemyRangeNormal : public BulletBase
 {
 public:
@@ -25,14 +26,17 @@ public:
 
 private:
 	/* オブジェクト(エフェクト)のハンドル */
-	EffectManualDelete* eEffect;
+	EffectManualDelete* pEffect;
 
-	int iDeleteCount;	// 仮追加の削除カウント
-
-protected:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 
 
-	void BulletEnemyRangeNormalMove();	// 敵の弾の移動処理
+	void BulletEnemyRangeNormalMove();	// ノーマル弾の移動処理
+
+	int iDurationCount;	// ノーマル弾の持続カウント
+
+	int iBulletCount;		// ノーマル弾発射カウント
+protected:
+
 };

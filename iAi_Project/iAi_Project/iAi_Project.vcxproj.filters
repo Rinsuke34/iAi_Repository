@@ -339,11 +339,23 @@
     <ClCompile Include="source\EnemyEscape.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
     </ClCompile>
-    <ClCompile Include="source\Enemy_Test.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
-    </ClCompile>
     <ClCompile Include="source\SceneUi_Debug.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneStage_Camera.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Explosion.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerMove.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerAttack.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerDraw.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -467,9 +479,6 @@
     <ClInclude Include="source\BulletEnemyRangeNormal.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
-    <ClInclude Include="source\Enemy_Test.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
-    </ClInclude>
     <ClInclude Include="source\EnemyEscape.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
     </ClInclude>
@@ -481,6 +490,15 @@
     </ClInclude>
     <ClInclude Include="source\SceneUi_Debug.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Explosion.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyBulletDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
