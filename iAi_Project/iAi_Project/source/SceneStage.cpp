@@ -190,7 +190,7 @@ void SceneStage::Draw()
 
 		/* エフェクト描写 */
 		//ObjectList->DrawEffect();
-		//DrawEffekseer3D();
+		DrawEffekseer3D();
 	}
 
 	/* ライトマップ描写 */

@@ -90,6 +90,34 @@ void CharacterPlayer::Player_Move()
 					/* ダッシュエフェクトの時間設定 */
 					pAddEffect->SetDeleteCount(30);
 
+					/* エフェクトの生成方向の設定 */
+					// ※プレイヤーの前に出す
+					VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+
+					/* カメラの水平方向の向きを移動用の向きに設定 */
+					float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+
+					/* エフェクトの座標を算出 */
+					VECTOR vecAdd;
+
+					// 方向
+					vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+					vecAdd.y = 0.f;
+					vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+					vecAdd = VNorm(vecAdd);
+
+					// 回避時の速度分離す
+					vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
+
+					// 高さ
+					vecAdd.y = PLAYER_HEIGHT / 2.f;
+
+					/* ダッシュエフェクトの座標設定 */
+					pAddEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+
+					/* ダッシュエフェクトの回転量設定 */
+					pAddEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+
 					/* ダッシュエフェクトの初期化 */
 					pAddEffect->Initialization();
 
@@ -119,35 +147,6 @@ void CharacterPlayer::Player_Move()
 			/* 歩行モーション設定 */
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
 		}
-		/* 2025.01.09 菊池雅道　移動処理追加 終了 */
-		// エフェクトが存在している場合、情報を更新する
-		//if (pDashEffect != nullptr)
-		//{
-		//	/* エフェクトの生成方向の設定 */
-		//	// ※プレイヤーの前に出す
-		//	VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-		//	/* カメラの水平方向の向きを移動用の向きに設定 */
-		//	float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
-
-		//	/* エフェクトの座標を算出 */
-		//	VECTOR vecAdd;
-		//	// 方向
-		//	vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-		//	vecAdd.y = 0.f;
-		//	vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-		//	vecAdd = VNorm(vecAdd);
-		//	// 移動速度分離す
-		//	vecAdd = VScale(vecAdd, PLAER_DASH_MAX_SPEED);
-		//	// 高さ
-		//	vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-		//	/* エフェクトの座標設定 */
-		//	this->pDashEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-		//	/* エフェクトの回転量設定 */
-		//	this->pDashEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-		//}
 
 		/* 2025.01.09 菊池雅道	移動処理追加		終了	*/
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
@@ -307,6 +306,7 @@ void CharacterPlayer::Player_Dodg()
 
 			/* 回避の経過時間を進める */
 			this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
+
 		}
 		else
 		{
@@ -316,6 +316,11 @@ void CharacterPlayer::Player_Dodg()
 
 			/* プレイヤー状態を"自由状態"に設定 */
 			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+
+			/* 回避エフェクトを削除 */
+			this->pDodgeEffect->SetDeleteFlg(true);
+			/* 回避エフェクトのポインタを削除 */
+			this->pDodgeEffect = nullptr;
 		}
 	}
 	else
@@ -366,61 +371,67 @@ void CharacterPlayer::Player_Dodg()
 					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
 				}
 
+				/* 回避のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
+
 				/* 回避エフェクト追加 */
 				{
 					/* 回避エフェクトを生成 */
-					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+					this->pDodgeEffect = new EffectManualDelete;
 
 					/* 回避エフェクトの読み込み */
-					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash / FX_dash")));
+					this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
 
-					/* 回避エフェクトの時間を設定 */
-					pAddEffect->SetDeleteCount(30);
+					/* エフェクトの座標設定 */
+					this->pDodgeEffect->SetPosition(this->vecPosition);
+
+					/* エフェクトの回転量設定 */
+					this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 					/* 回避エフェクトの初期化 */
-					pAddEffect->Initialization();
+					this->pDodgeEffect->Initialization();
 
 					/* 回避エフェクトをリストに登録 */
 					{
 						/* 回避エフェクトをリストに登録 */
-						this->ObjectList->SetEffect(pAddEffect);
+						this->ObjectList->SetEffect(this->pDodgeEffect);
 					}
 				}
-
-				/* 回避のSEを再生 */
-				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
 			}
 		}
 	}
 
 	/* 2025.01.09 菊池雅道　移動処理追加	終了 */
-	//if (pDodgeEffect != nullptr)
-	//{
-	//	/* エフェクトの生成方向の設定 */
-	//	// ※プレイヤーの前に出す
-	//	VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+	if (pDodgeEffect != nullptr)
+	{
+		/* エフェクトの生成方向の設定 */
+		// ※プレイヤーの前に出す
+		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
 
-	//	/* カメラの水平方向の向きを移動用の向きに設定 */
-	//	float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
 
-	//	/* エフェクトの座標を算出 */
-	//	VECTOR vecAdd;
-	//	// 方向
-	//	vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-	//	vecAdd.y = 0.f;
-	//	vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-	//	vecAdd = VNorm(vecAdd);
-	//	// 回避時の速度分離す
-	//	vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-	//	// 高さ
-	//	vecAdd.y = PLAYER_HEIGHT / 2.f;
+		/* エフェクトの座標を算出 */
+		VECTOR vecAdd;
+		
+		// 方向
+		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		
+		// 回避時の速度分離す
+		vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
+		
+		// 高さ
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
 
-	//	/* エフェクトの座標設定 */
-	//	this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
+		/* エフェクトの座標設定 */
+		this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-	//	/* エフェクトの回転量設定 */
-	//	this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-	//}
+		/* エフェクトの回転量設定 */
+		this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+	}
 
 	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了*/
@@ -523,24 +534,24 @@ void CharacterPlayer::Movement_Vertical()
 				/* 着地のエフェクトを生成 */
 				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
-				/* エフェクトの読み込み */
+				/* 着地エフェクトの読み込み */
 				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_land/FX_land")));
 
-				/* エフェクトの時間を設定 */
+				/* 着地エフェクトの時間を設定 */
 				pAddEffect->SetDeleteCount(30);
 
-				/* エフェクトの座標設定 */
+				/* 着地エフェクトの座標設定 */
 				pAddEffect->SetPosition(this->vecPosition);
 
-				/* エフェクトの回転量設定 */
+				/* 着地エフェクトの回転量設定 */
 				pAddEffect->SetRotation(this->vecRotation);
 
-				/* エフェクトの初期化 */
+				/* 着地エフェクトの初期化 */
 				pAddEffect->Initialization();
 
-				/* エフェクトをリストに登録 */
+				/* 着地エフェクトをリストに登録 */
 				{
-					/* エフェクトをリストに登録 */
+					/* 着地エフェクトをリストに登録 */
 					this->ObjectList->SetEffect(pAddEffect);
 				}
 			}

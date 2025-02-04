@@ -1,6 +1,7 @@
 /* 2024.12.15 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道 回避関連の関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の関数追加 */
+/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -71,8 +72,7 @@ class CharacterPlayer : public CharacterBase
 		/* エフェクトのハンドル */
 		EffectManualDelete* pChargeEffect;			//溜めエフェクト
 		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
-		//EffectSelfDelete*	pDashEffect;			//ダッシュエフェクト
-		//EffectSelfDelete*	pDodgeEffect;			//回避エフェクト
+		EffectManualDelete*	pDodgeEffect;			//回避エフェクト
 		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
 
 		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */

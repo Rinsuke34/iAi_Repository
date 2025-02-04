@@ -16,6 +16,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* エフェクトのハンドル */
 		this->pChargeEffect			=	nullptr;		//溜めエフェクト
 		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト
+		this->pDodgeEffect			=	nullptr;		//回避エフェクト
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
 		/* 2025.01.30 菊池雅道	モーション処理追加 開始 */

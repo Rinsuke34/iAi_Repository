@@ -79,43 +79,43 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* プレイヤーの現在の攻撃チャージフレームの取得 */
 	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
 
-	/* 2025.01.24 菊池雅道　攻撃処理追加	開始 */
+	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加	開始*/
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
-		// 攻撃チャージフレームが0ならば
-		if (iNowAttakChargeFlame == 0)
+		// 攻撃チャージフレームが強攻撃の切り替わりに達したら
+		if (iNowAttakChargeFlame == PLAYER_CHARGE_TO_STRONG_TIME)
 		{
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_CHARGE);
 
-			///* 溜めのエフェクトを生成 */
-			//this->pChargeEffect = new EffectManualDelete;
+			/* 溜めのエフェクトを生成 */
+			this->pChargeEffect = new EffectManualDelete;
 
-			///* 溜めエフェクトの読み込み */
-			//this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
+			/* 溜めエフェクトの読み込み */
+			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
 
-			///* 溜めエフェクトの座標設定(仮座標) */
-			//this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 170, 0)));
-			///* 溜めエフェクトの回転量設定 */
-			//this->pChargeEffect->SetRotation(this->vecRotation);
+			/* 溜めエフェクトの座標設定(仮座標) */
+			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
-			///* 溜めエフェクトの初期化 */
-			//this->pChargeEffect->Initialization();
+			/* 溜めエフェクトの回転量設定 */
+			this->pChargeEffect->SetRotation(this->vecRotation);
 
-			///* 溜めエフェクトをリストに登録 */
-			//{
-			//	/* 溜めエフェクトをリストに登録 */
-			//	this->ObjectList->SetEffect(this->pChargeEffect);
-			//}
+			/* 溜めエフェクトの初期化 */
+			this->pChargeEffect->Initialization();
+
+			/* 溜めエフェクトをリストに登録 */
+			{
+				/* 溜めエフェクトをリストに登録 */
+				this->ObjectList->SetEffect(this->pChargeEffect);
+			}
 		}
 
 		/* 近接攻撃(強)チャージ処理 */
 		{
-
 			/* チャージフレームが最大値を超えていないか確認 */
 			if (iNowAttakChargeFlame < PLAYER_MELEE_CHARGE_MAX)
 			{
@@ -129,9 +129,54 @@ void CharacterPlayer::Player_Melee_Posture()
 					// 最大値に達した場合
 					/* 溜め居合チャージ完了のSEを再生 */
 					gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE_COMPLETE);
+
+					/* 溜めエフェクトは削除 */
+					this->pChargeEffect->SetDeleteFlg(true);
+
+					/* 溜め完了エフェクトを生成 */
+					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+
+					/* 溜め完了エフェクトの読み込み */
+					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
+
+					/* 溜め完了エフェクトの初期化 */
+					pAddEffect->Initialization();
+
+					/* 溜め完了エフェクトの時間を設定 */
+					pAddEffect->SetDeleteCount(20);
+
+					/* 溜め完了エフェクトをリストに登録 */
+					{
+						/* 溜め完了エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(pAddEffect);
+					}
+
+					/* 溜め完了エフェクトの座標設定(仮) */
+					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+
+					/* 溜め完了後エフェクトを生成 */
+					this->pChargeHoldEffect = new EffectManualDelete;
+					
+					/* 溜め完了後エフェクトの読み込み */
+					this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
+					
+					/* 溜め完了後エフェクトの座標設定(仮座標) */
+					this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+					
+					/* 溜め完了後エフェクトの回転量設定 */
+					this->pChargeHoldEffect->SetRotation(this->vecRotation);
+
+					/* 溜め完了後エフェクトの初期化 */
+					this->pChargeHoldEffect->Initialization();
+
+					/* 溜め完了後エフェクトをリストに登録 */
+					{
+						/* 溜め完了後エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(this->pChargeHoldEffect);
+					}
 				}
 			}
-
+		
 			/* プレイヤーの向きをカメラの向きに固定 */
 			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 
@@ -155,44 +200,7 @@ void CharacterPlayer::Player_Melee_Posture()
 				/* カメラモードを"構え(ズーム)"に変更 */
 				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM);
 
-				/* 溜め完了エフェクトを生成 */
-				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
-
-				/* 溜め完了エフェクトの読み込み */
-				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
-
-				/* 溜め完了エフェクトの初期化 */
-				pAddEffect->Initialization();
-
-				/* 溜め完了エフェクトの時間を設定 */
-				pAddEffect->SetDeleteCount(20);
-
-				/* 溜め完了エフェクトをリストに登録 */
-				{
-					/* 溜め完了エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(pAddEffect);
-				}
-
-				/* 溜め完了エフェクトの座標設定 */
-				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-
-				/* 溜めエフェクトは削除 */
-				//this->pChargeEffect->SetDeleteFlg(true);
-
-				/* 溜め完了後エフェクトを生成 */
-				this->pChargeHoldEffect = new EffectManualDelete;
-				/* エフェクトの読み込み */
-				this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
-
-				/* エフェクトの初期化 */
-				this->pChargeHoldEffect->Initialization();
-
-				/* エフェクトをリストに登録 */
-				{
-					/* エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(this->pChargeHoldEffect);
-				}
-
+				
 				/* ロックオン範囲のコリジョン作成 */
 				{
 					/* ロックオン範囲コリジョン */
@@ -218,20 +226,20 @@ void CharacterPlayer::Player_Melee_Posture()
 				}
 			}
 
-			////エフェクトが存在している場合、情報を更新する
-			//if (this->pChargeEffect != nullptr)
-			//{
-			//	/* 溜めエフェクトの座標設定(仮座標) */
-			//	this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-			//	/* 溜めエフェクトの回転量設定 */
-			//	this->pChargeEffect->SetRotation(this->vecRotation);
-			//}
+			//エフェクトが存在している場合、情報を更新する
+			if (this->pChargeEffect != nullptr)
+			{
+				/* 溜めエフェクトの座標設定(仮座標) */
+				this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
+				/* 溜めエフェクトの回転量設定 */
+				this->pChargeEffect->SetRotation(this->vecRotation);
+			}
 			if (this->pChargeHoldEffect != nullptr)
 			{
 				/* 溜め完了エフェクトの座標設定(仮座標) */
 				this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 				/* 溜め完了エフェクトの回転量設定 */
-				//this->pChargeEffect->SetRotation(this->vecRotation);
+				this->pChargeEffect->SetRotation(this->vecRotation);
 			}
 
 			/* デバッグ用処理 */
@@ -243,8 +251,9 @@ void CharacterPlayer::Player_Melee_Posture()
 			}
 		}
 
-		/* 2025.01.24 菊池雅道	攻撃処理追加		終了 */
+		/* 2025.01.24 菊池雅道	攻撃処理追加		終了*/
 		/* 2025.01.26 駒沢風助	コード修正		終了*/
+		/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
 	}
 	else
 	{
@@ -267,21 +276,29 @@ void CharacterPlayer::Player_Melee_Posture()
 
 			/* 落下の加速度を初期化 */
 			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
 		}
 
 		/* プレイヤーの現在の攻撃チャージフレームをリセット */
 		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+	}
 
-		////エフェクトが存在している場合、削除する
-		//if (this->pChargeEffect != nullptr)
-		//{
-		//	/* 溜めエフェクトを削除 */
-		//	this->pChargeEffect->SetDeleteFlg(true);
-		//}
+	//エフェクトの削除
+	//近接攻撃構え状態が解除された場合
+	if (this->PlayerStatusList->iGetPlayerState() != PLAYER_STATUS_MELEE_POSTURE)
+	{
+		//エフェクトが存在している場合、削除する
+		if (this->pChargeEffect != nullptr)
+		{
+			/* 溜めエフェクトを削除 */
+			this->pChargeEffect->SetDeleteFlg(true);
+			this->pChargeEffect = nullptr;
+		}
 		if (this->pChargeHoldEffect != nullptr)
 		{
 			/* 溜め完了後エフェクトを削除 */
 			this->pChargeHoldEffect->SetDeleteFlg(true);
+			this->pChargeHoldEffect = nullptr;
 		}
 	}
 }
@@ -491,27 +508,25 @@ void CharacterPlayer::Player_Charge_Attack()
 				/* 居合(強)のエフェクトを生成 */
 				EffectSelfDelete* pAddEffect = new EffectSelfDelete();
 
-				/* エフェクトの読み込み */
+				/* 居合(強)エフェクトの読み込み */
 				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_iai_dash/FX_iai_dash")));
 
-				/* エフェクトの再生時間を設定 */
+				/* 居合(強)エフェクトの再生時間を設定 */
 				pAddEffect->SetDeleteCount(30);
 
-				/* エフェクトの座標設定 */
+				/* 居合(強)エフェクトの座標設定 */
 				pAddEffect->SetPosition(this->vecPosition);
 
-				/* エフェクトの回転量設定 */
+				/* 居合(強)エフェクトの回転量設定 */
 				pAddEffect->SetRotation(this->vecRotation);
 
-				/* エフェクトの初期化 */
+				/*居合(強) エフェクトの初期化 */
 				pAddEffect->Initialization();
 
-				/* エフェクトをリストに登録 */
+				/* 居合(強)エフェクトをリストに登録 */
 				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(pAddEffect);
+					/* 居合(強)エフェクトをリストに登録 */
+					this->ObjectList->SetEffect(pAddEffect);
 				}
 			}
 		}
