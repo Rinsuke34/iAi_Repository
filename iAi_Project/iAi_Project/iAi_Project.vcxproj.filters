@@ -229,23 +229,17 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル">
       <UniqueIdentifier>{1236f9ae-013d-4a09-b2ab-9618026844d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム">
-      <UniqueIdentifier>{3e4ae57c-d86a-4a9f-a35e-c745e9171c85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット">
-      <UniqueIdentifier>{4165ddfa-27fd-413e-8620-3cd74f5754fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ミサイル">
-      <UniqueIdentifier>{e3400757-a89b-494c-9781-4e8fccdcb412}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ノーマル弾">
-      <UniqueIdentifier>{931c4b9c-25a9-4b16-9a36-7b481f017e4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ビーム">
-      <UniqueIdentifier>{05c81579-3b6c-4d44-b541-c8392b12a746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム">
-      <UniqueIdentifier>{fa45e884-68b8-4da5-b1aa-dd8102912ae5}</UniqueIdentifier>
+      <UniqueIdentifier>{e3f0d775-4fe2-4b43-8b4e-af33a51f65cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム">
+      <UniqueIdentifier>{f17f8a74-1275-4627-93d5-b50b8bf9221d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー">
+      <UniqueIdentifier>{6bfa5771-b023-4bbd-8b5a-fba2d22be604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー">
+      <UniqueIdentifier>{f2b2c71e-9df6-4443-9961-b41dfc8d8e73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +360,18 @@
     <ClCompile Include="source\Enemy_Explosion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneStage_Draw.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerAttack.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerDraw.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerMove.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
     <ClCompile Include="source\EnemyBeam.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム</Filter>
     </ClCompile>
@@ -443,17 +449,11 @@
     <ClInclude Include="source\GameStatusDefine.h">
       <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
     </ClInclude>
-    <ClInclude Include="source\BulletPlayerMeleeWeak.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
-    </ClInclude>
     <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
     <ClInclude Include="source\EffectSelfDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BulletPlayerMeleeStrong.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット</Filter>
     </ClInclude>
     <ClInclude Include="source\EnemyBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
@@ -506,20 +506,26 @@
     <ClInclude Include="source\EnemyDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
-    <ClInclude Include="source\BulletEnemyRangeMissile.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ミサイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BulletEnemyRangeNormal.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ノーマル弾</Filter>
-    </ClInclude>
-    <ClInclude Include="source\EnemyBulletDefine.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット</Filter>
-    </ClInclude>
     <ClInclude Include="source\EnemyBeam.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム</Filter>
     </ClInclude>
     <ClInclude Include="source\BulletEnemyRangeBeam.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミーバレット\ビーム</Filter>
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeMissile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletEnemyRangeNormal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerMeleeStrong.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerMeleeWeak.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemyBulletDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -164,6 +164,9 @@
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
+    <ClCompile Include="source\CharacterPlayerAttack.cpp" />
+    <ClCompile Include="source\CharacterPlayerDraw.cpp" />
+    <ClCompile Include="source\CharacterPlayerMove.cpp" />
     <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
@@ -188,6 +191,7 @@
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
     <ClCompile Include="source\SceneStage_Camera.cpp" />
+    <ClCompile Include="source\SceneStage_Draw.cpp" />
     <ClCompile Include="source\SceneTitle.cpp" />
     <ClCompile Include="source\SceneStage.cpp" />
     <ClCompile Include="source\SceneStage_MapLoad.cpp" />
