@@ -176,7 +176,9 @@
     <ClCompile Include="source\DataList_Score.cpp" />
     <ClCompile Include="source\DataList_Sound.cpp" />
     <ClCompile Include="source\EffectManualDelete.cpp" />
+    <ClCompile Include="source\EffectManualDelete_PlayerFollow.cpp" />
     <ClCompile Include="source\EffectSelfDelete.cpp" />
+    <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp" />
     <ClCompile Include="source\EnemyBasic.cpp" />
     <ClCompile Include="source\EnemyBeam.cpp" />
     <ClCompile Include="source\EnemyEscape.cpp" />
@@ -218,7 +220,9 @@
     <ClInclude Include="source\DataList_Score.h" />
     <ClInclude Include="source\DataList_Sound.h" />
     <ClInclude Include="source\EffectManualDelete.h" />
+    <ClInclude Include="source\EffectManualDelete_PlayerFollow.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
+    <ClInclude Include="source\EffectSelfDelete_PlayerFollow.h" />
     <ClInclude Include="source\EnemyBasic.h" />
     <ClInclude Include="source\EnemyBeam.h" />
     <ClInclude Include="source\EnemyBulletDefine.h" />

@@ -70,5 +70,7 @@ class SceneStage : public SceneBase
 		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
 		// マスクハンドル
 		int iMotionBlurMaskHandle;					// モーションブラー用のマスクハンドル
+		// シェーダーハンドル
+		int iSpeedLineShaderHandle;					// 集中線用のシェーダーハンドル
 };
 
