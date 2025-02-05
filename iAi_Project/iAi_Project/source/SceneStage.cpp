@@ -80,6 +80,8 @@ SceneStage::~SceneStage()
 	DeleteShadowMap(this->iShadowMapScreenHandle);
 	// マスクハンドル
 	DeleteMask(this->iMotionBlurMaskHandle);
+	// シェーダーハンドル
+	DeleteShader(this->iSpeedLineShaderHandle);
 }
 
 // 初期化

@@ -378,6 +378,12 @@
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
     </ClCompile>
+    <ClCompile Include="source\EffectManualDelete_PlayerFollow.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -526,6 +532,12 @@
     </ClInclude>
     <ClInclude Include="source\EnemyBulletDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectSelfDelete_PlayerFollow.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectManualDelete_PlayerFollow.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

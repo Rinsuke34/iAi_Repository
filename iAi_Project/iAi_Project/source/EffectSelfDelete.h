@@ -21,7 +21,6 @@ class EffectSelfDelete : public EffectBase
 		void	SetDeleteCount(int iDeleteCount)	{ this->iDeleteCount = iDeleteCount; };	// 削除までのカウントを設定
 
 	protected:
-	private:
 		/* 変数 */
 		int iDeleteCount;		// クラス削除までのカウント
 };

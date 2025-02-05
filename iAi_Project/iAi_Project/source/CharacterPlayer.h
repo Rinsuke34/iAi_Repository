@@ -18,6 +18,7 @@
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
 #include "EffectSelfDelete.h"
+#include "EffectSelfDelete_PlayerFollow.h"
 
 /* プレイヤークラスの宣言 */
 

@@ -17,5 +17,9 @@ class SceneUi_Debug : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
-		int		iSelectNo;
+		/* 関数 */
+		void	GetInput();		// プレイヤーの入力取得
+
+		/* 変数 */
+		int		iSelectNo;		// 選択中の項目の番号
 };
