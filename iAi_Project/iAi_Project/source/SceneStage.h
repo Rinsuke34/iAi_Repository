@@ -42,9 +42,12 @@ class SceneStage : public SceneBase
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 
 		/* 関数 */
-		virtual void	SetupShadowMap();				// シャドウマップの設定
-		virtual void	SetupLightMap();				// ライトマップの設定
-		virtual void	SetCamera();					// カメラ設定
+		void	SetupShadowMap();				// シャドウマップの設定
+		void	SetupLightMap();				// ライトマップの設定
+		void	SetupMainScreen();				// メインの描写処理
+		void	SetupEffectScreen();			// エフェクトの描写処理
+		void	SetupScreenEffects();			// 画面エフェクト
+		void	SetCamera();					// カメラ設定
 
 		/* カメラモード関連 */
 		void	CameraRotateUpdata(float fRate);	// 入力によるカメラ回転量取得
@@ -57,9 +60,15 @@ class SceneStage : public SceneBase
 		void	DrawDebug();						// デバッグ描写
 
 		/* 描写画面関連 */
-		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
+		// 画像ハンドル
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
+		int iMainScreenHandle;						// メイン画面のハンドル
+		int iMainScreenEffectHandle;				// メイン画面(画面エフェクト用)のハンドル
+		// シャドウマップハンドル
+		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
+		// マスクハンドル
+		int iMotionBlurMaskHandle;					// モーションブラー用のマスクハンドル
 };
 

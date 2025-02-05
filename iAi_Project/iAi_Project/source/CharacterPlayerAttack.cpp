@@ -2,9 +2,11 @@
 /* 2025.01.22 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á */
 /* 2025.01.24 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á */
 /* 2025.02.03 ‹e’r‰ë“¹	‹ß‹——£UŒ‚(‹­)Œã‚Ìˆ—’Ç‰Á */
+/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ */
 
 #include "CharacterPlayer.h"
 
+/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ ŠJŽn */
 // UŒ‚ó‘Ô‘JˆÚŠÇ—
 void CharacterPlayer::Player_Attack_Transition()
 {
@@ -16,60 +18,61 @@ void CharacterPlayer::Player_Attack_Transition()
 	//           --> \‚¦(‰“‹——£) ---> UŒ‚(‰“‹——£) --
 
 	/* ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ðŽæ“¾ */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* ƒvƒŒƒCƒ„[ó‘Ô‚É‰ž‚¶‚Äˆ—‚ð•ÏX */
-	switch (iPlayerState)
+	switch (iPlayerAttackState)
 	{
 		/* Ž©—Ró‘Ô */
-	case PLAYER_STATUS_FREE:
+	case PLAYER_ATTACKSTATUS_FREE:
 		/* UŒ‚“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©Šm”F */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 		{
 			// UŒ‚“ü—Í‚ª‚³‚ê‚Ä‚¢‚éê‡
 			/* ƒvƒŒƒCƒ„[ó‘Ô‚ð"‹ßÚUŒ‚\‚¦’†"‚ÉÝ’è */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_POSTURE);
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
 		}
 		/* ƒGƒCƒ€(\‚¦)“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©Šm”F */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_AIM) == true)
 		{
 			// ƒGƒCƒ€(\‚¦)“ü—Í‚ª‚³‚ê‚Ä‚¢‚éê‡
 			/* ƒvƒŒƒCƒ„[ó‘Ô‚ð"‰“‹——£UŒ‚\‚¦’†"‚ÉÝ’è */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_PROJECTILE_POSTURE);
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 		}
 		break;
 
 		/* ‹ßÚUŒ‚\‚¦’† */
-	case PLAYER_STATUS_MELEE_POSTURE:
+	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:
 		/* ‹ßÚUŒ‚(\‚¦) */
 		Player_Melee_Posture();
 		break;
 
 		/* ‹ßÚUŒ‚’†(Žã) */
-	case PLAYER_STATUS_MELEE_WEEK:
+	case PLAYER_ATTACKSTATUS_MELEE_WEEK:
 		/* ‹ßÚUŒ‚(Žã) */
 		Player_Melee_Weak();
 		break;
 
 		/* ‹ßÚUŒ‚’†(‹­) */
-	case PLAYER_STATUS_MELEE_STRONG:
+	case PLAYER_ATTACKSTATUS_MELEE_STRONG:
 		/* ‹ß‹——£UŒ‚(‹­) */
 		Player_Charge_Attack();
 		break;
 
 		/* ‰“‹——£UŒ‚\‚¦’† */
-	case PLAYER_STATUS_PROJECTILE_POSTURE:
+	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:
 		/* ‰“‹——£UŒ‚(\‚¦) */
 		Player_Projectile_Posture();
 		break;
 
 		/* ‰“‹——£UŒ‚’† */
-	case PLAYER_STATUS_PROJECTILE:
+	case PLAYER_ATTACKSTATUS_PROJECTILE:
 		/* ‰“‹——£UŒ‚ */
 		Player_Projectile();
 		break;
 	}
 }
+/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ I—¹ */
 
 /* 2025.01.27 ‹e’r‰ë“¹	ƒGƒtƒFƒNƒgˆ—’Ç‰Á ’Ç‰Á */
 /* 2025.01.30 ‹e’r‰ë“¹	ƒ‚[ƒVƒ‡ƒ“ˆ—’Ç‰Á ŠJŽn */
@@ -82,6 +85,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 2025.01.24 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á		ŠJŽn */
 	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³		ŠJŽn*/
 	/* 2025.01.27 ‹e’r‰ë“¹	ƒGƒtƒFƒNƒgˆ—’Ç‰Á	ŠJŽn*/
+	/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ ŠJŽn */
 
 	/* UŒ‚“ü—Í‚ª‚³‚ê‚Ä‚¢‚é‚©Šm”F */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -263,13 +267,13 @@ void CharacterPlayer::Player_Melee_Posture()
 		{
 			// ‹­UŒ‚‚ÉØ‚è‘Ö‚í‚é‘O‚Ìê‡
 			/* ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ð"‹ßÚUŒ‚’†(Žã)"‚ÉÝ’è */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_WEEK);
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_WEEK);
 		}
 		else
 		{
 			// ‹­UŒ‚‚É‚È‚éê‡
 			/* ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ð"‹ßÚUŒ‚’†(‹­)"‚ÉÝ’è */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_MELEE_STRONG);
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_STRONG);
 
 			/* ƒvƒŒƒCƒ„[‚Ì‚½‚ßUŒ‚—p‚ÌƒJƒEƒ“ƒg‚ð‰Šú‰» */
 			this->PlayerStatusList->SetPlayerChargeAttackCount(0);
@@ -285,8 +289,10 @@ void CharacterPlayer::Player_Melee_Posture()
 
 	//ƒGƒtƒFƒNƒg‚Ìíœ
 	//‹ßÚUŒ‚\‚¦ó‘Ô‚ª‰ðœ‚³‚ê‚½ê‡
-	if (this->PlayerStatusList->iGetPlayerState() != PLAYER_STATUS_MELEE_POSTURE)
+	if (this->PlayerStatusList->iGetPlayerAttackState() != PLAYER_ATTACKSTATUS_MELEE_POSTURE)
 	{
+		this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+
 		//ƒGƒtƒFƒNƒg‚ª‘¶Ý‚µ‚Ä‚¢‚éê‡Aíœ‚·‚é
 		if (this->pChargeEffect != nullptr)
 		{
@@ -302,12 +308,14 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 	}
 }
+/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ I—¹ */
 
 // ‹ßÚUŒ‚(Žã)
 void CharacterPlayer::Player_Melee_Weak()
 {
-	/* 2025.01.22 ‹e’r‰ë“¹@UŒ‚ˆ—’Ç‰Á	ŠJŽn */
-	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³		ŠJŽn*/
+	/* 2025.01.22 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á		ŠJŽn */
+	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³		ŠJŽn */
+	/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ ŠJŽn */
 
 	/* UŒ‚ƒ‚[ƒVƒ‡ƒ“‚ðŠm”F */
 	// ¦Œ»Ý‚Ìƒ‚[ƒVƒ‡ƒ“‚ª‹ßÚUŒ‚(Žã)‚Å‚ ‚é‚©Šm”F
@@ -389,15 +397,18 @@ void CharacterPlayer::Player_Melee_Weak()
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
 	/* –¢Š®¬‚È‚Ì‚Å‚Æ‚è‚ ‚¦‚¸Ž©—Ró‘Ô‚É–ß‚· */
-	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }
+/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ I—¹ */
+
 
 // ‹ß‹——£UŒ‚(‹­)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	/* 2025.01.22 ‹e’r‰ë“¹@UŒ‚ˆ—’Ç‰Á	ŠJŽn */
+	/* 2025.01.22 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á		ŠJŽn */
 	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³		ŠJŽn */
 	/* 2025.02.03 ‹e’r‰ë“¹	‹ß‹——£UŒ‚(‹­)Œã‚Ìˆ—’Ç‰Á	ŠJŽn */
+	/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³ ŠJŽn */
 
 	/* —­‚ßUŒ‚—p‚ÌƒJƒEƒ“ƒg‚ðŽæ“¾ */
 	int iChargeAttackCount = this->PlayerStatusList->iGetPlayerChargeAttackCount();
@@ -470,7 +481,7 @@ void CharacterPlayer::Player_Charge_Attack()
 
 				// ‚»‚ê‚çˆÈŠO‚Å‚ ‚éê‡(ˆê˜A‚Ìs“®‚ªI—¹‚µ‚½ê‡)
 				/* ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ð"Ž©—Ró‘Ô"‚É‘JˆÚ */
-				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
 				/* ƒvƒŒƒCƒ„[‚Ìƒ‚[ƒVƒ‡ƒ“‚ð"‹‡(‹­)(I—¹)"‚É•ÏX */
 				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_END);
@@ -596,20 +607,21 @@ void CharacterPlayer::Player_Charge_Attack()
 	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
 
 	/* 2025.01.22 ‹e’r‰ë“¹	UŒ‚ˆ—’Ç‰Á				I—¹ */
-	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³		I—¹ */
+	/* 2025.01.26 ‹î‘ò•—•	ƒR[ƒhC³				I—¹ */
 	/* 2025.02.03 ‹e’r‰ë“¹	‹ß‹——£UŒ‚(‹­)Œã‚Ìˆ—’Ç‰Á	I—¹ */
+	/* 2025.02.05 ‹e’r‰ë“¹	ƒXƒe[ƒ^ƒXŠÖ˜AC³			I—¹ */
 }
 
 // ‰“‹——£UŒ‚(\‚¦)
 void CharacterPlayer::Player_Projectile_Posture()
 {
 	/* –¢Š®¬‚È‚Ì‚Å‚Æ‚è‚ ‚¦‚¸Ž©—Ró‘Ô‚É–ß‚· */
-	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }
 
 // ‰“‹——£UŒ‚
 void CharacterPlayer::Player_Projectile()
 {
 	/* –¢Š®¬‚È‚Ì‚Å‚Æ‚è‚ ‚¦‚¸Ž©—Ró‘Ô‚É–ß‚· */
-	this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }

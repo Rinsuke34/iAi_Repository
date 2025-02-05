@@ -13,3 +13,5 @@ static const int	ENEMY_DETONATION_TIME	= 3000;		// エネミーの起爆時間
 static const int	ENEMY_X_ESCAPE_DISTANCE	= 600;		// エネミーのX軸の逃げる範囲
 static const int	ENEMY_Z_ESCAPE_DISTANCE	= 600;		// エネミーのZ軸の逃げる範囲
 static const int	ENEMY_ESCAPE_SPEED		= 5;		// エネミーの逃げる速度
+static const int	ENEMY_NORMAL_BULLET_INTERVAL			= 180;		//ノーマルエネミーの弾の発射間隔
+static const int	ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL	= 20;		//ノーマルエネミーの弾の誘導間隔

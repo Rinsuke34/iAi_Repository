@@ -37,7 +37,7 @@ void BulletPlayerMeleeWeak::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_slash/FX_slash")));
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);

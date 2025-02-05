@@ -5,6 +5,7 @@
 
 #pragma once
 #include "Appframe.h"
+#include "PublicInclude.h"
 
 /* データリスト */
 #include "DataList_Input.h"
@@ -89,12 +90,4 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
-
-		/* 構造体(テストのためここで定義) */
-		// 最もプレイヤーから近いエネミー
-		struct NearEnemy
-		{
-			EnemyBasic* pEnemy;		// エネミーのポインタ
-			float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
-		};
 };

@@ -1,12 +1,12 @@
 /* 2025.01.29 石川智也 ファイル作成 */
-#include "EnemyNormal.h"
+#include "EnemyBeam.h"
 
 // コンストラクタ
-NormalEnemy::NormalEnemy() : EnemyBasic()
+BeamEnemy::BeamEnemy() : EnemyBasic()
 {
 
 	/* オブジェクトのハンドル */
-	this->pBulletRangeNormal = nullptr;	// 近接攻撃(弱)の弾
+	this->pBulletRangeBeam = nullptr;	// ビームの弾
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
@@ -25,7 +25,7 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
 
 		/* エネミー足元モデルハンドル取得 */
 		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
@@ -44,13 +44,13 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-NormalEnemy::~NormalEnemy()
+BeamEnemy::~BeamEnemy()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 // 初期化
-void NormalEnemy::Initialization()
+void BeamEnemy::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -62,7 +62,7 @@ void NormalEnemy::Initialization()
 }
 
 // 敵を移動させる
-void NormalEnemy::MoveEnemy()
+void BeamEnemy::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
@@ -148,25 +148,26 @@ void NormalEnemy::MoveEnemy()
 			// モデルのフレーム２番を表示
 			MV1SetFrameVisible(iModelHandle, 2, TRUE);
 			// 発射カウントが0以下の場合
-		// ノーマル弾を発射する
-		Player_Range_Normal_Shot();
+			// ノーマル弾を発射する
+			Player_Range_Beam_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+		}
 	}
-}
 
 
 }
 
-// ノーマル弾の発射
-void NormalEnemy::Player_Range_Normal_Shot()
+// ビームの発射
+void BeamEnemy::Player_Range_Beam_Shot()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	// ノーマル弾を生成
-	this-> pBulletRangeNormal = new BulletEnemyRangeNormal;
+	// ビームを生成
+	this->pBulletRangeBeam = new BulletEnemyRangeBeam;
+
 	/* 攻撃の生成方向の設定 */
 	/* 攻撃座標を算出 */
 
@@ -181,23 +182,23 @@ void NormalEnemy::Player_Range_Normal_Shot()
 	vecAdd.x = PLAYER_WIDE / 2.f;
 
 	// 攻撃生成座標をエネミーが向いている方向に設定
-	this->pBulletRangeNormal->SetPosition(VAdd(this->vecPosition, vecAdd));
+	this->pBulletRangeBeam->SetPosition(VAdd(this->vecPosition, vecAdd));
 
 	// 移動する弾の向きを設定
-	this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
-	
+	this->pBulletRangeBeam->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
+
 	//初期化
-	this->pBulletRangeNormal->Initialization();
+	this->pBulletRangeBeam->Initialization();
 
 	//バレットリストに追加
-	ObjectList->SetBullet(this->pBulletRangeNormal);
+	ObjectList->SetBullet(this->pBulletRangeBeam);
 
 
-	
+
 }
 
 // 更新
-void NormalEnemy::Update()
+void BeamEnemy::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();

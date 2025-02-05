@@ -10,17 +10,17 @@
 /* オブジェクト */
 #include "EnemyBasic.h"
 #include "EffectManualDelete.h"
-#include "BulletEnemyRangeNormal.h"
+#include "BulletEnemyRangeBeam.h"
 #include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class NormalEnemy : public EnemyBasic
+class BeamEnemy : public EnemyBasic
 {
 public:
-	NormalEnemy();				// コンストラクタ
-	virtual ~NormalEnemy();		// デストラクタ
+	BeamEnemy();				// コンストラクタ
+	virtual ~BeamEnemy();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
@@ -35,9 +35,9 @@ private:
 	CharacterBase* pPlayer;			// プレイヤー
 
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
+	void	Player_Range_Beam_Shot();			// ビームの発射
 
-	BulletEnemyRangeNormal* pBulletRangeNormal;	// ノーマル弾
+	BulletEnemyRangeBeam* pBulletRangeBeam;	// ビーム
 
 	int		iFiringCount;	// 発射カウント
 

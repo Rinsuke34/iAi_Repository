@@ -2,6 +2,7 @@
 
 #pragma once
 #include "AppFrame.h"
+#include "PublicInclude.h"
 
 /* データリスト */
 #include "DataList_Object.h"
@@ -29,13 +30,5 @@ class SceneUi_Crosshairs : public SceneBase
 		/* 関数 */
 		void	Draw_RockOn();		// 描写(ロックオンエネミー)
 		void	Draw_Move();		// 描写(溜め攻撃の移動後座標)
-
-		/* 構造体(ここでしか使用しないのでここで定義) */
-		// 最も画面の中心点から近いエネミー
-		struct NearEnemy
-		{
-			EnemyBasic* pEnemy;		// エネミーのポインタ
-			float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
-		};
 };
 
