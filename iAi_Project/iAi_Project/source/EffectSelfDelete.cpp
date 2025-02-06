@@ -32,7 +32,7 @@ void EffectSelfDelete::Update()
 	}
 
 	/* エフェクト座標更新 */
-	this->Effect_PosUpdate();
+	Effect_PosUpdate();
 
 	/* エフェクト回転量更新 */
 	Effect_RotationUpdate();

@@ -2,6 +2,7 @@
 /* 2025.01.09 菊池雅道 回避関連の関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の関数追加 */
 /* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
+/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
 #pragma once
 #include "Appframe.h"
@@ -18,6 +19,8 @@
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
 #include "EffectSelfDelete.h"
+#include "EffectSelfDelete_PlayerFollow.h"
+#include "EffectManualDelete_PlayerFollow.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -69,19 +72,15 @@ class CharacterPlayer : public CharacterBase
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
-		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 開始 */
 		/* エフェクトのハンドル */
-		EffectManualDelete* pChargeEffect;			//溜めエフェクト
-		EffectManualDelete* pChargeHoldEffect;		//溜め完了後エフェクト
-		EffectManualDelete*	pDodgeEffect;			//回避エフェクト
-		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 終了 */
+		EffectManualDelete_PlayerFollow* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow* pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow*	pDodgeEffect;		//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
-		/* 2025.01.30 菊池雅道 モーション関連の変数追加 開始 */
-		int		iMotionAttachIndex;		// アタッチされるモーションのインデックス
-		int		iOldMotion;				// 以前にアタッチされたモーション
-		float	fMotionTotalTime;		// モーションの総時間
-		float	fMoionPlayTime;			// モーションの再生時間
-		/* 2025.01.30 菊池雅道 モーション関連の変数追加 終了 */
+		int		iMotionAttachIndex;		// アタッチされるモーションのインデックス		/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
+		int		iOldMotion;				// 以前にアタッチされたモーション				/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
+		float	fMotionTotalTime;		// モーションの総時間							/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
+		float	fMoionPlayTime;			// モーションの再生時間							/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

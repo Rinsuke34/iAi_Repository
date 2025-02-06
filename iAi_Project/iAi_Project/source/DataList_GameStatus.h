@@ -1,5 +1,4 @@
 /* 2025.01.22 駒沢風助 ファイル作成 */
-/* 2025.02.05 菊池雅道 スローモーションに関する関数・変数追加 */
 
 #pragma once
 #include "AppFrame.h"
@@ -21,9 +20,9 @@ class DataList_GameStatus : public DataListBase
 		bool	bGetGameSlowFlg()	{ return this->bGameSlowFlg; };	// スローモーションフラグを取得		/*2025.02.05 菊池雅道 スローモーションに関する関数追加 */
 
 		/* データ設定 */
-		void	SetGameStatus(int iGameStatus)	{ this->iGameStatus = iGameStatus; };		// ゲーム状態を設定
-		void	SetNowStageNo(int iNowStageNo)	{ this->iNowStageNo = iNowStageNo; };		// ゲーム状態を設定
-		void	SetEndStageNo(int iEndStageNo)	{ this->iEndStageNo = iEndStageNo; };		// 最終ステージ番号を設定
+		void	SetGameStatus(int iGameStatus)	{ this->iGameStatus = iGameStatus; };	// ゲーム状態を設定
+		void	SetNowStageNo(int iNowStageNo)	{ this->iNowStageNo = iNowStageNo; };	// ゲーム状態を設定
+		void	SetEndStageNo(int iEndStageNo)	{ this->iEndStageNo = iEndStageNo; };	// 最終ステージ番号を設定
 		void	SetGameSlowFlg(bool bGameSlowFlg) { this->bGameSlowFlg = bGameSlowFlg; };	// スローモーションフラグを設定		/*2025.02.05 スローモーションに関する菊池雅道 関数追加 */
 
 	private:

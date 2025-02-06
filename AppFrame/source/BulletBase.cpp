@@ -18,8 +18,8 @@ BulletBase::BulletBase() : ActorBase()
 void BulletBase::CollisionDraw()
 {
 	/* “–‚½‚è”»’è‚ğ•`Ê */
-	/*int Color = GetColor(255, 0, 0);
-	DrawSphere3D(stCollisionSqhere.vecSqhere, stCollisionSqhere.fSqhereRadius, 16, Color, Color, FALSE);*/
+	int Color = GetColor(255, 0, 0);
+	DrawSphere3D(stCollisionSqhere.vecSqhere, stCollisionSqhere.fSqhereRadius, 16, Color, Color, FALSE);
 }
 
 /* ÚG”»’è(ŠÈˆÕ) */

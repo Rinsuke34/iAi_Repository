@@ -1,8 +1,10 @@
 /* 2025.02.04 菊池雅道	ファイル作成 */
 /* 2025.01.22 菊池雅道	攻撃処理追加 */
 /* 2025.01.24 菊池雅道	攻撃処理追加 */
+/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
+/* 2025.02.27 菊池雅道	エフェクト処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -74,8 +76,6 @@ void CharacterPlayer::Player_Attack_Transition()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
-/* 2025.01.27 菊池雅道	エフェクト処理追加 追加 */
-/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 // 近接攻撃(構え)
 void CharacterPlayer::Player_Melee_Posture()
 {
@@ -84,8 +84,9 @@ void CharacterPlayer::Player_Melee_Posture()
 
 	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
-	/* 2025.01.27 菊池雅道	エフェクト処理追加	開始*/
+	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.02.27 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -97,7 +98,7 @@ void CharacterPlayer::Player_Melee_Posture()
 			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_CHARGE);
 
 			/* 溜めのエフェクトを生成 */
-			this->pChargeEffect = new EffectManualDelete;
+			this->pChargeEffect = new EffectManualDelete_PlayerFollow(true);
 
 			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
@@ -138,7 +139,7 @@ void CharacterPlayer::Player_Melee_Posture()
 					this->pChargeEffect->SetDeleteFlg(true);
 
 					/* 溜め完了エフェクトを生成 */
-					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
 
 					/* 溜め完了エフェクトの読み込み */
 					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
@@ -159,7 +160,7 @@ void CharacterPlayer::Player_Melee_Posture()
 					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
 					/* 溜め完了後エフェクトを生成 */
-					this->pChargeHoldEffect = new EffectManualDelete;
+					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow(true);
 					
 					/* 溜め完了後エフェクトの読み込み */
 					this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
@@ -230,22 +231,6 @@ void CharacterPlayer::Player_Melee_Posture()
 				}
 			}
 
-			//エフェクトが存在している場合、情報を更新する
-			if (this->pChargeEffect != nullptr)
-			{
-				/* 溜めエフェクトの座標設定(仮座標) */
-				this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-				/* 溜めエフェクトの回転量設定 */
-				this->pChargeEffect->SetRotation(this->vecRotation);
-			}
-			if (this->pChargeHoldEffect != nullptr)
-			{
-				/* 溜め完了エフェクトの座標設定(仮座標) */
-				this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-				/* 溜め完了エフェクトの回転量設定 */
-				this->pChargeEffect->SetRotation(this->vecRotation);
-			}
-
 			/* デバッグ用処理 */
 			{
 				/* デバッグ用移動後座標を設定 */
@@ -257,7 +242,6 @@ void CharacterPlayer::Player_Melee_Posture()
 
 		/* 2025.01.24 菊池雅道	攻撃処理追加		終了*/
 		/* 2025.01.26 駒沢風助	コード修正		終了*/
-		/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
 	}
 	else
 	{
@@ -308,13 +292,15 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 	}
 }
+/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.02.27 菊池雅道	エフェクト処理修正 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
 {
 	/* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 
 	/* 攻撃モーションを確認 */
@@ -607,7 +593,7 @@ void CharacterPlayer::Player_Charge_Attack()
 	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
 
 	/* 2025.01.22 菊池雅道	攻撃処理追加				終了 */
-	/* 2025.01.26 駒沢風助	コード修正				終了 */
+	/* 2025.01.26 駒沢風助	コード修正		終了 */
 	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
 }

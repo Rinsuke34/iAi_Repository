@@ -161,21 +161,21 @@ void CharacterPlayer::HitCheck()
 	/* プレイヤーが被弾処理を行うか(無敵か)判定するフラグ */
 	bool bHiteFlag = true;
 
-	
-	/* 無敵時間中であるか確認 */
-	if (this->PlayerStatusList->iGetPlayerNowInvincibleTime() > 0)
-	{
-		// 無敵時間中である場合
-		/* 無敵時間を減少 */
-		this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerNowInvincibleTime() - 1);
-	}
-	else
-	{
-		// 無敵時間中でない場合
+
+		/* 無敵時間中であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerNowInvincibleTime() > 0)
+		{
+			// 無敵時間中である場合
+			/* 無敵時間を減少 */
+			this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerNowInvincibleTime() - 1);
+		}
+		else
+		{
+			// 無敵時間中でない場合
 		/* プレイヤーの移動状態が被弾処理を受ける状態か確認 */
 		switch (iPlayerMoveState)
-		{
-		/* 被弾処理を行う状態 */
+			{
+				/* 被弾処理を行う状態 */
 		case PLAYER_MOVESTATUS_FREE:			// 自由状態
 				
 			/* 被弾処理を行う状態 */
@@ -216,40 +216,40 @@ void CharacterPlayer::HitCheck()
 			break;
 		}
 	
-		/* 被弾処理 */
+				/* 被弾処理 */
 		/* 被弾処理を行う状態か確認する */
 		if(bHiteFlag == true)
-		{
-			/* バレットリストを取得 */
-			auto& BulletList = ObjectList->GetBulletList();
-
-			/* 弾との当たり判定 */
-			for (auto* bullet : BulletList)
-			{
-				/* オブジェクトタイプが弾丸(敵)であるなら判定を行う */
-				if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_ENEMY)
 				{
-					// 弾丸(敵)である場合
-					/* 弾丸との当たり判定 */
-					if (bullet->HitCheck(this->stCollisionCapsule))
+					/* バレットリストを取得 */
+					auto& BulletList = ObjectList->GetBulletList();
+
+					/* 弾との当たり判定 */
+					for (auto* bullet : BulletList)
 					{
-						// 当たっている場合
-						/* プレイヤーのHPを減少 */
-						this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+						/* オブジェクトタイプが弾丸(敵)であるなら判定を行う */
+						if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_ENEMY)
+						{
+							// 弾丸(敵)である場合
+							/* 弾丸との当たり判定 */
+							if (bullet->HitCheck(this->stCollisionCapsule))
+							{
+								// 当たっている場合
+								/* プレイヤーのHPを減少 */
+								this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
 
-						/* プレイヤーの無敵時間を設定 */
-						this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+								/* プレイヤーの無敵時間を設定 */
+								this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 
-						/* 弾の削除フラグを有効にする */
-						bullet->SetDeleteFlg(true);
+								/* 弾の削除フラグを有効にする */
+								bullet->SetDeleteFlg(true);
 
-						/* 被ダメージのSEを再生 */
-						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+								/* 被ダメージのSEを再生 */
+								gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+							}
+						}
 					}
 				}
-			}
-		}
-	}	
+	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 

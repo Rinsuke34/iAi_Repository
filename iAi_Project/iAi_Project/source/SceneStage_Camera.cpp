@@ -31,7 +31,6 @@ void SceneStage::SetCamera()
 		/* フリー */
 		case CAMERA_MODE_FREE:
 			/* カメラ設定 */
-			//CameraRotateUpdata(fChangeCameraRatio);
 			SetCamera_Free();
 			break;
 
@@ -45,7 +44,7 @@ void SceneStage::SetCamera()
 		case CAMERA_MODE_AIM:
 			/* カメラ回転倍率を変更 */
 			fChangeCameraRatio = 0.5f;
-			//CameraRotateUpdata(fChangeCameraRatio);
+
 			/* カメラ設定 */
 			SetCamera_Aim();
 			break;

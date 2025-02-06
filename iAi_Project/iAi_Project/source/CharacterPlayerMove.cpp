@@ -1,6 +1,9 @@
 /* 2025.02.04 菊池雅道	ファイル作成 */
 /* 2025.01.09 菊池雅道	移動処理追加 */
+/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
+/* 2025.02.07 菊池雅道	エフェクト処理修正 */
+
 
 #include "CharacterPlayer.h"
 
@@ -20,13 +23,13 @@ void CharacterPlayer::Player_Move()
 	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
-	float	fMoveSpeedRatio = 1.f;			// 移動速度(倍率)
+	float	fMoveSpeedRatio = 1.f;		// 移動速度(倍率)
 	bool	bPlayerAngleSetFlg = true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
 	bool	bPlayerMoveFlg = true;			// プレイヤーの移動を行うかのフラグ	
 	
 	switch (iPlayerMoveState)
 	{
-	/* 移動処理を通常通りに行う状態 */
+		/* 移動処理を通常通りに行う状態 */
 	case PLAYER_MOVESTATUS_FREE:				// 自由状態
 
 		/* 移動処理を行う */
@@ -60,10 +63,9 @@ void CharacterPlayer::Player_Move()
 
 		/* プレイヤーの向きを移動方向に合わせる */
 		bPlayerAngleSetFlg = true;
-		
 		break;
 
-	/* 移動処理を速度を抑えて行う状態 */
+		/* 移動処理を速度を抑えて行う状態 */
 	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
 	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
 		
@@ -75,7 +77,7 @@ void CharacterPlayer::Player_Move()
 		bPlayerAngleSetFlg = false;
 		break;
 
-	/* 移動処理を行わない状態 */
+		/* 移動処理を行わない状態 */
 	case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
 	case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
 	case PLAYER_ATTACKSTATUS_PROJECTILE:		// 遠距離攻撃中
@@ -83,136 +85,114 @@ void CharacterPlayer::Player_Move()
 	}
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
-	/* 2025.01.09 菊池雅道	移動処理追加		開始	*/
+	/* 2025.01.09 菊池雅道	移動処理追加	   開始 */
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始	*/
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
+	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+
 	/* 移動入力がされているか確認 */
 	if ((vecInput.x != 0 || vecInput.z != 0))
 	{
 		/* 移動処理を行う状態か確認 */
 		if (bPlayerMoveFlg = true)
-		{
-			// 移動入力がされている場合
-			/* 現在の移動速度取得 */
-			float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
+	{
+		// 移動入力がされている場合
+		/* 現在の移動速度取得 */
+		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 
-			// 回避後フラグがtrueなら最大ダッシュ状態になる
-			if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
+		// 回避後フラグがtrueなら最大ダッシュ状態になる
+		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
+		{
+			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
+
+			/* モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
+		}
+
+		// スティックの倒し具合で速度を変化
+		else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH)
+		{
+			//走り（通常）
+			fSpeed = PLAER_DASH_NOMAL_SPEED * fMoveSpeedRatio;
+			//フレーム数をカウント
+			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
+
+			//一定フレームがたったら走り（最大）へ
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_LOW);
+
+			//一定フレームに達した時、ダッシュエフェクトを出現させる
+			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
+			{
+				/* エフェクト追加 */
+				{
+					/* ダッシュエフェクトを生成 */
+					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
+
+					/* ダッシュエフェクト読み込み */
+					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
+
+					/* ダッシュエフェクトの時間設定 */
+					pAddEffect->SetDeleteCount(30);
+
+					///* ダッシュエフェクトの回転量設定 */
+					pAddEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+
+					/* ダッシュエフェクトの初期化 */
+					pAddEffect->Initialization();
+
+					/* ダッシュエフェクトをリストに登録 */
+					{
+						/* ダッシュエフェクトをリストに登録 */
+						this->ObjectList->SetEffect(pAddEffect);
+					}
+				}
+			}
+			//一定フレーム以上になったら走り（最大）へ
+			else if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
 			{
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
-				/* モーション設定 */
+				/* 走行(高速)モーション設定 */
 				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
 			}
-
-			// スティックの倒し具合で速度を変化
-			else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH)
-			{
-				//走り（通常）
-				fSpeed = PLAER_DASH_NOMAL_SPEED * fMoveSpeedRatio;
-				//フレーム数をカウント
-				this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
-
-				//一定フレームがたったら走り（最大）へ
-				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_LOW);
-
-				//一定フレームに達した時、ダッシュエフェクトを出現させる
-				if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
-				{
-					/* エフェクト追加 */
-					{
-						/* ダッシュエフェクトを生成 */
-						EffectSelfDelete* pAddEffect = new EffectSelfDelete;
-
-						/* ダッシュエフェクト読み込み */
-						pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
-
-						/* ダッシュエフェクトの時間設定 */
-						pAddEffect->SetDeleteCount(30);
-
-						/* エフェクトの生成方向の設定 */
-						// ※プレイヤーの前に出す
-						VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-						/* カメラの水平方向の向きを移動用の向きに設定 */
-						float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
-
-						/* エフェクトの座標を算出 */
-						VECTOR vecAdd;
-
-						// 方向
-						vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-						vecAdd.y = 0.f;
-						vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-						vecAdd = VNorm(vecAdd);
-
-						// 回避時の速度分離す
-						vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-
-						// 高さ
-						vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-						/* ダッシュエフェクトの座標設定 */
-						pAddEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-						/* ダッシュエフェクトの回転量設定 */
-						pAddEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-
-						/* ダッシュエフェクトの初期化 */
-						pAddEffect->Initialization();
-
-						/* ダッシュエフェクトをリストに登録 */
-						{
-							/* ダッシュエフェクトをリストに登録 */
-							this->ObjectList->SetEffect(pAddEffect);
-						}
-					}
-				}
-				//一定フレーム以上になったら走り（最大）へ
-				else if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
-				{
-					fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
-
-					/* 走行(高速)モーション設定 */
-					this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
-				}
-			}
-			else
-			{
-				//歩き
-				this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
-				this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
-				fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
-
-				/* 歩行モーション設定 */
-				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
-			}
-
-			/* 2025.01.09 菊池雅道	移動処理追加		終了	*/
-			/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
-
-			/* 現在速度を更新 */
-			this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
-
-			/* カメラの水平方向の向きを移動用の向きに設定 */
-			float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-			/* 移動量を算出 */
-			vecAddMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-			vecAddMove.y = 0.0f;
-			vecAddMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-			vecAddMove = VScale(vecAddMove, fSpeed);
-
-			/* プレイヤーの向きを移動方向に合わせるか確認 */
-			if (bPlayerAngleSetFlg == true)
-			{
-				// 合わせる場合
-				/* プレイヤーの向きを移動方向に合わせる */
-				float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-				fPlayerAngle = fAngleX - fPlayerAngle;			// カメラの向きと合成
-				this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
-			}
 		}
+		else
+		{
+			//歩き
+			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
+			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
+			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
+
+			/* 歩行モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
+		}
+
+		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
+		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
+		/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
+
+		/* 現在速度を更新 */
+		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
+
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+		/* 移動量を算出 */
+		vecAddMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecAddMove.y = 0.0f;
+		vecAddMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecAddMove = VScale(vecAddMove, fSpeed);
+
+		/* プレイヤーの向きを移動方向に合わせるか確認 */
+		if (bPlayerAngleSetFlg == true)
+		{
+			// 合わせる場合
+			/* プレイヤーの向きを移動方向に合わせる */
+			float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
+			fPlayerAngle = fAngleX - fPlayerAngle;			// カメラの向きと合成
+			this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+		}
+	}
 	}
 	else
 	{
@@ -252,7 +232,7 @@ void CharacterPlayer::Player_Jump()
 	// ※要相談
 	switch (iPlayerMoveState)
 	{
-	/* ジャンプ可能な状態 */
+		/* ジャンプ可能な状態 */
 	case PLAYER_MOVESTATUS_FREE:				// 自由状態
 		
 		/* ジャンプ処理を行う */
@@ -291,7 +271,7 @@ void CharacterPlayer::Player_Jump()
 		break;
 	}
 
-	/* プレイヤーのジャンプ処理 */
+		/* プレイヤーのジャンプ処理 */
 	/* 移動処理を行う状態か確認 */
 	if (bJumpFlag == true)
 	{
@@ -348,7 +328,7 @@ void CharacterPlayer::Player_Gravity()
 	case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
 
 		/* 重力処理を行わない(重力処理を終了) */
-		bGravityFlag = true;
+		bGravityFlag = false;
 		break;
 	}
 
@@ -373,17 +353,20 @@ void CharacterPlayer::Player_Gravity()
 		break;
 	}
 
-	// ※現在bGravityFlagで重力処理は分けていない（要相談）
+	/* 重力処理実行フラグの確認 */
+	if(bGravityFlag == true)
+	{
+		// 重力処理を行う場合
+		/* 落下量取得 */
+		float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
+		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
 
-	/* 落下量取得 */
-	float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
-	fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
+		/* 落下の加速度を更新 */
+		this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
 
-	/* 落下の加速度を更新 */
-	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
-
-	/* 重力による移動後の座標を取得 */
-	this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();
+		/* 重力による移動後の座標を取得 */
+		this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();	
+	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
@@ -391,9 +374,12 @@ void CharacterPlayer::Player_Gravity()
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
-	/* 2025.01.09 菊池雅道　	移動処理追加		開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始 */
+	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
+	/* 2025.01.26 駒沢風助	コード修正		開始*/
+	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+	
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -482,13 +468,10 @@ void CharacterPlayer::Player_Dodg()
 				/* 回避エフェクト追加 */
 				{
 					/* 回避エフェクトを生成 */
-					this->pDodgeEffect = new EffectManualDelete;
+					this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
 
 					/* 回避エフェクトの読み込み */
 					this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
-
-					/* エフェクトの座標設定 */
-					this->pDodgeEffect->SetPosition(this->vecPosition);
 
 					/* エフェクトの回転量設定 */
 					this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
@@ -506,44 +489,11 @@ void CharacterPlayer::Player_Dodg()
 		}
 	}
 
-	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
+	/* 2025.01.09 菊池雅道	移動処理追加 終了 */
+	/* 2025.01.26 駒沢風助	コード修正 終了 */
+	/* 2025.01.27 菊池雅道　エフェクト処理追加 終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-
-	/* 回避エフェクトが存在している場合 */
-	if (pDodgeEffect != nullptr)
-	{
-		/* エフェクトの生成方向の設定 */
-		// ※プレイヤーの前に出す
-		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
-
-		/* エフェクトの座標を算出 */
-		VECTOR vecAdd;
-		
-		// 方向
-		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-		vecAdd.y = 0.f;
-		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-		vecAdd = VNorm(vecAdd);
-		
-		// 回避時の速度分離す
-		vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-		
-		// 高さ
-		vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-		/* エフェクトの座標設定 */
-		this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-		/* エフェクトの回転量設定 */
-		this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-	}
-
-	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
-	/* 2025.01.26 駒沢風助	コード修正		終了*/
-	/* 2025.01.29 菊池雅道　	エフェクト処理追加	開始 */
+	/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
 }
 
 // 移動処理(垂直方向)
@@ -681,7 +631,7 @@ void CharacterPlayer::Movement_Vertical()
 	{
 		/* 空中にいる(着地していない)か確認 */
 		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
-		{	
+		{
 			/* 攻撃を構えていない状態であるか確認 */
 			// ※構えている最中は落下モーションに遷移させない
 			/* 近接攻撃構え中でないか確認 */
