@@ -25,7 +25,7 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
 
 		/* エネミー足元モデルハンドル取得 */
 		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");

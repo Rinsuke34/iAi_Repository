@@ -15,6 +15,8 @@ BulletEnemyRangeBeam::BulletEnemyRangeBeam() : BulletBase()
 	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// ビーム発射カウント
 
 	this->iEnemyBeamDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ビームの持続カウント
+	// エネミーの位置を初期化
+	this->vecEnemyPosition = VGet(0, 0, 0);
 }
 
 // デストラクタ
@@ -29,8 +31,9 @@ void BulletEnemyRangeBeam::Initialization()
 {
 	/* 当たり判定設定 */
 	{
-		this->stCollisionSqhere.vecSqhere = this->vecPosition;
-		this->stCollisionSqhere.fSqhereRadius = 50.0f;
+		this->stCollisionCapsule.fCapsuleRadius = 50.0f;
+		this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(100, 0, 0)); // 横に設定
+		this->stCollisionCapsule.vecCapsuleBottom = VGet(0, 0, 0); // 初期化
 	}
 
 	/* エフェクト追加 */
@@ -58,6 +61,9 @@ void BulletEnemyRangeBeam::Initialization()
 			ObjectListHandle->SetEffect(this->pEffect);
 		}
 	}
+
+	//エネミーの位置を設定
+	this->vecEnemyPosition = this->vecPosition;
 }
 
 // ビームの移動処理
@@ -81,12 +87,15 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	// ビームの移動座標と向きと速度を更新
 	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
 
+	// エネミーのリストを取得
+	auto& enemyList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
+
 	// ビームのコリジョン座標を更新
-	this->stCollisionSqhere.vecSqhere = this->vecPosition;
+	this->stCollisionCapsule.vecCapsuleTop = this->vecPosition; // 開始地点を更新
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecEnemyPosition; // 終了地点をエネミーの位置に固定
 
 	// ビームのエフェクト座標を更新
 	this->pEffect->SetPosition(this->vecPosition);
-
 }
 
 // 更新
@@ -109,4 +118,10 @@ void BulletEnemyRangeBeam::Update()
 
 	// ビームの移動処理
 	BulletEnemyRangeBeamMove();
+}
+
+// コリジョン描写
+void BulletEnemyRangeBeam::CollisionDraw()
+{
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 12, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 }

@@ -32,5 +32,4 @@
 #include "PlatformBase.h"
 #include "BulletBase.h"
 #include "EnemyBase.h"
-#include "CollisionBase.h"
-#include "BackGroundBase.h"
+#include "SkySqhereBase.h"

@@ -6,7 +6,7 @@
 // ※基本的に継承先で要素を構築する
 
 // コンストラクタ
-GimmickBase::GimmickBase() : CollisionBase()
+GimmickBase::GimmickBase() : PlatformBase()
 {
 
 }

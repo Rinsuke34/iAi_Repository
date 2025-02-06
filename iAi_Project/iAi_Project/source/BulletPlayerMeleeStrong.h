@@ -30,5 +30,6 @@ class BulletPlayerMeleeStrong : public BulletBase
 		COLLISION_CAPSULE	stCollisionCapsule;		// コリジョン(カプセル)
 
 		int iDeleteCount;	// 仮追加の削除カウント
+
 	protected:
 };

@@ -3,14 +3,20 @@
 #include "SceneStage.h"
 
 /* オブジェクト */
-// ※仮
+// ※仮処理(増えたりする可能性あり)
+// プレイヤー
 #include "CharacterPlayer.h"
-#include "PlatformBasic.h"
+// エネミー
 #include "EnemyNormal.h"
 #include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
 #include "EnemyNormal.h"
 #include "EnemyMissile.h"
+#include "EnemyBeam.h"
+// プラットフォーム
+#include "PlatformBasic.h"
+// スカイスフィア
+#include "SkySqhereBasic.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -44,15 +50,15 @@ void SceneStage::LoadMapData()
 
 			for (auto& data : stage)
 			{
-				/* "オブジェクト管理"にプラットフォーム(描写モデル)を追加 */
-				BackGroundBase* pBackGround = new BackGroundBase();
-				this->ObjectList->SetBackGround(pBackGround);
+				/* "オブジェクト管理"にプラットフォームを追加 */
+				PlatformBase* pPlatform = new PlatformBase();
+				this->ObjectList->SetPlatform(pPlatform);
 
 				/* モデル */
 				std::string	name;
 				data.at("objectName").get_to(name);
 				std::string Path = "Object/" + name + "/" + name;
-				pBackGround->SetModelHandle(this->ModelList->iGetModel(Path));
+				pPlatform->SetModelHandle(this->ModelList->iGetModel(Path));
 
 				/* 座標 */
 				VECTOR vecPos;
@@ -63,7 +69,7 @@ void SceneStage::LoadMapData()
 				// Z座標反転
 				vecPos.z *= -1;
 				// 設定
-				pBackGround->SetPosition(vecPos);
+				pPlatform->SetPosition(vecPos);
 
 				/* 回転量 */
 				VECTOR vecRot;
@@ -79,7 +85,7 @@ void SceneStage::LoadMapData()
 				// ※正しいか不明な処理
 				vecRot.x *= -1;
 				// 設定
-				pBackGround->SetRotation(vecRot);
+				pPlatform->SetRotation(vecRot);
 
 				/* 拡大率 */
 				VECTOR vecScale;
@@ -88,64 +94,7 @@ void SceneStage::LoadMapData()
 				data.at("scale").at("z").get_to(vecScale.y);
 				data.at("scale").at("y").get_to(vecScale.z);
 				// 設定
-				pBackGround->SetScale(vecScale);
-			}
-		}
-
-		/* プラットフォーム(コリジョン)読み込み */
-		{
-			/* Jsonファイルから読み込み */
-			std::string Type = "/Collision";
-			std::string GetName = MapName + Type;
-			nlohmann::json stage = json.at(GetName);
-
-			for (auto& data : stage)
-			{
-				/* "オブジェクト管理"にプラットフォーム(コリジョン)を追加 */
-				CollisionBase* pCollision = new CollisionBase();
-				this->ObjectList->SetCollision(pCollision);
-
-				/* モデル */
-				std::string	name;
-				data.at("objectName").get_to(name);
-				std::string Path = "Collision/" + name;
-				pCollision->SetModelHandle(this->ModelList->iGetModel(Path));
-
-				/* 座標 */
-				VECTOR vecPos;
-				// 読み込み
-				data.at("translate").at("x").get_to(vecPos.x);
-				data.at("translate").at("z").get_to(vecPos.y);
-				data.at("translate").at("y").get_to(vecPos.z);
-				// Z座標反転
-				vecPos.z *= -1;
-				// 設定
-				pCollision->SetPosition(vecPos);
-
-				/* 回転量 */
-				VECTOR vecRot;
-				// 読み込み
-				data.at("rotate").at("x").get_to(vecRot.x);
-				data.at("rotate").at("z").get_to(vecRot.y);
-				data.at("rotate").at("y").get_to(vecRot.z);
-				// degree -> radian変換
-				vecRot.x = DEG2RAD(vecRot.x);
-				vecRot.y = DEG2RAD(vecRot.y);
-				vecRot.z = DEG2RAD(vecRot.z);
-				// X軸の回転方向を反転
-				// ※正しいか不明な処理
-				vecRot.x *= -1;
-				// 設定
-				pCollision->SetRotation(vecRot);
-
-				/* 拡大率 */
-				VECTOR vecScale;
-				// 読み込み
-				data.at("scale").at("x").get_to(vecScale.x);
-				data.at("scale").at("z").get_to(vecScale.y);
-				data.at("scale").at("y").get_to(vecScale.z);
-				// 設定
-				pCollision->SetScale(vecScale);
+				pPlatform->SetScale(vecScale);
 			}
 		}
 
@@ -225,7 +174,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(仮)の場合
 					/* "オブジェクト管理"にエネミー(仮)を追加 */
-					NormalEnemy* AddEnemy = new NormalEnemy();
+					BeamEnemy* AddEnemy = new BeamEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
 					/* 座標 */
@@ -243,6 +192,17 @@ void SceneStage::LoadMapData()
 					// 後ほど追加
 				}
 			}
+		}
+
+		/* スカイスフィア追加 */
+		// ※標準で追加する
+		{
+			/* "オブジェクト管理"にスカイスフィアを追加 */
+			SkySqhereBasic* pSkySqhere = new SkySqhereBasic();
+			ObjectList->SetSkySqhere(pSkySqhere);
+
+			/* モデル */
+			pSkySqhere->SetModelHandle(this->ModelList->iGetModel("SkySqhere/skysphere"));
 		}
 	}
 
