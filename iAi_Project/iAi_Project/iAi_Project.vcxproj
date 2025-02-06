@@ -202,6 +202,7 @@
     <ClCompile Include="source\SceneUi_Debug.cpp" />
     <ClCompile Include="source\SceneUi_Hp.cpp" />
     <ClCompile Include="source\SceneUi_Kunai.cpp" />
+    <ClCompile Include="source\SkySqhereBasic.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
@@ -245,6 +246,7 @@
     <ClInclude Include="source\SceneUi_Hp.h" />
     <ClInclude Include="source\SceneUi_Kunai.h" />
     <ClInclude Include="source\ScoreDefine.h" />
+    <ClInclude Include="source\SkySqhereBasic.h" />
     <ClInclude Include="source\SoundDefine.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />
