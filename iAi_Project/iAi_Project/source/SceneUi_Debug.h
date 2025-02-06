@@ -18,8 +18,9 @@ class SceneUi_Debug : public SceneBase
 
 	private:
 		/* 関数 */
-		void	GetInput();		// プレイヤーの入力取得
+		bool	bToggleFlg(bool bFlg);		// trueとfalseの切り替え
 
 		/* 変数 */
-		int		iSelectNo;		// 選択中の項目の番号
+		std::vector<bool*>	pDebugManu;		// デバッグ用広域変数の項目一覧
+		int					iSelectNo;		// 選択中の項目の番号
 };
