@@ -167,6 +167,7 @@
     <ClCompile Include="source\CharacterPlayerAttack.cpp" />
     <ClCompile Include="source\CharacterPlayerDraw.cpp" />
     <ClCompile Include="source\CharacterPlayerMove.cpp" />
+    <ClCompile Include="source\CharacterPlayer_Motion.cpp" />
     <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameStatus.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="source\GameStatusDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PlatformBasic.h" />
+    <ClInclude Include="source\PlayerMotionDefine.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />

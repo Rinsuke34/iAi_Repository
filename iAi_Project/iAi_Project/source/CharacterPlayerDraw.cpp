@@ -14,8 +14,8 @@ void CharacterPlayer::Draw()
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
 
-	/* 再生時間をセットする */
-	MV1SetAttachAnimTime(this->iModelHandle, this->iMotionAttachIndex, this->fMoionPlayTime);
+	///* 再生時間をセットする */
+	//MV1SetAttachAnimTime(this->iModelHandle, this->iMotionAttachIndex, this->fMoionPlayTime);
 }
 
 // 当たり判定描写

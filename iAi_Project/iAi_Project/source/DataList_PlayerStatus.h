@@ -8,6 +8,7 @@
 #include "AppFrame.h"
 #include "PublicInclude.h"
 #include "PlayerStatusDefine.h"
+#include "PlayerMotionDefine.h"
 
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
@@ -26,7 +27,6 @@ class DataList_PlayerStatus : public DataListBase
 		// プレイヤー状態関連
 		int		iGetPlayerMoveState()				{ return this->iPlayerMoveState; }					// プレイヤーの移動状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
 		int		iGetPlayerAttackState()				{ return this->iPlayerAttackState; }				// プレイヤーの攻撃状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		int		iGetPlayerMotion()					{ return this->iPlayerMotion; }						// プレイヤーのモーション取得
 		bool	bGetPlayerLandingFlg()				{ return this->bPlayerLandingFlg; }					// プレイヤーが空中にいるかのフラグ取得
 		float	fGetPlayerNowMoveSpeed()			{ return this->fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度取得
 		float	fGetPlayerAngleX()					{ return this->fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
@@ -50,6 +50,14 @@ class DataList_PlayerStatus : public DataListBase
 		EnemyBasic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
 		int		iGetPlayerNowHp()					{ return this->iPlayerNowHp; }						// プレイヤーの現在のHPを取得
 		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
+
+		/* プレイヤーモーション関連 */
+		int		iGetPlayerMotion_Move()				{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
+		int		iGetPlayerMotion_Attack()			{ return this->iPlayerMotion_Attack; }				// プレイヤーモーション(攻撃系)を取得
+		int		iGetPlayerMotion_Move_Old()			{ return this->iPlayerMotion_Move_Old; }			// 変更前プレイヤーモーション(移動系)を取得
+		int		iGetPlayerMotion_Attack_Old()		{ return this->iPlayerMotion_Attack_Old; }			// 変更前プレイヤーモーション(攻撃系)を取得
+		float	fGetMotionCount_Move()				{ return this->fMotionCount_Move; }					// モーションカウント(移動系)を取得
+		float	fGetMotionCount_Attack()			{ return this->fMotionCount_Attack; }				// モーションカウント(攻撃系)を取得
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
@@ -86,7 +94,6 @@ class DataList_PlayerStatus : public DataListBase
 		// プレイヤー状態関連
 		void	SetPlayerMoveState(int iPlayerMoveState)							{ this->iPlayerMoveState				= iPlayerMoveState; }					// プレイヤーの移動状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
 		void	SetPlayerAttackState(int iPlayerAttackState)						{ this->iPlayerAttackState				= iPlayerAttackState; }					// プレイヤーの攻撃状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		void	SetPlayerMotion(int iPlayerMotion)									{ this->iPlayerMotion					= iPlayerMotion; };						// プレイヤーのモーション設定
 		void	SetPlayerLanding(bool bPlayerLanding)								{ this->bPlayerLandingFlg				= bPlayerLanding; }						// プレイヤーが空中にいるかのフラグ設定
 		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)					{ this->fPlayerNowMoveSpeed				= fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度設定
 		void	SetPlayerAngleX(float fPlayerAngleX)								{ this->fPlayerAngleX					= fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
@@ -104,6 +111,14 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerLockOnEnemy(EnemyBasic* pLockOnEnemy)						{ this->pLockOnEnemy					= pLockOnEnemy; };						// ロックオン対象のエネミーを設定
 		void	SetPlayerNowHp(int iPlayerNowHp)									{ this->iPlayerNowHp					= iPlayerNowHp; }						// プレイヤーの現在のHPを設定
 		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)			{ this->iPlayerNowInvincibleTime		= iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を設定
+
+		/* プレイヤーモーション関連 */
+		void	SetPlayerMotion_Move(int iPlayerMotion_Move)						{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
+		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)					{ this->iPlayerMotion_Attack			= iPlayerMotion_Attack; };				// プレイヤーモーション(攻撃系)を設定
+		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)				{ this->iPlayerMotion_Move_Old			= iPlayerMotion_Move_Old; };			// 変更前プレイヤーモーション(移動系)を設定
+		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)			{ this->iPlayerMotion_Attack_Old		= iPlayerMotion_Attack_Old; };			// 変更前プレイヤーモーション(攻撃系)を設定
+		void	SetMotionCount_Move(float fMotionCount_Move)						{ this->fMotionCount_Move				= fMotionCount_Move; };					// モーションカウント(移動系)
+		void	SetMotionCount_Attack(float fMotionCount_Attack)					{ this->fMotionCount_Attack				= fMotionCount_Attack; };				// モーションカウント(攻撃系)を設定
 
 		/* 判定処理用コリジョン */
 		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// 近接攻撃(強)のロックオン範囲コリジョンを設定
@@ -151,7 +166,6 @@ class DataList_PlayerStatus : public DataListBase
 		/* プレイヤー状態関連 */
 		int		iPlayerMoveState;				// プレイヤーの移動状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
 		int		iPlayerAttackState;				// プレイヤーの攻撃状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
-		int		iPlayerMotion;					// プレイヤーの状態(モーション)
 		bool	bPlayerLandingFlg;				// プレイヤーが着地しているかのフラグ
 		float	fPlayerNowMoveSpeed;			// プレイヤーの現在の移動速度
 		float	fPlayerAngleX;					// プレイヤーのX軸回転量(ラジアン)
@@ -173,6 +187,14 @@ class DataList_PlayerStatus : public DataListBase
 		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー
 		int		iPlayerNowHp;					// プレイヤーの現在のHP
 		int		iPlayerNowInvincibleTime;		// プレイヤーの現在の残り無敵時間
+
+		/* プレイヤーモーション関連 */
+		int		iPlayerMotion_Move;				// プレイヤーモーション(移動系)
+		int		iPlayerMotion_Attack;			// プレイヤーモーション(攻撃系)
+		int		iPlayerMotion_Move_Old;			// 変更前プレイヤーモーション(移動系)
+		int		iPlayerMotion_Attack_Old;		// 変更前プレイヤーモーション(攻撃系)
+		float	fMotionCount_Move;				// モーションカウント(移動系)
+		float	fMotionCount_Attack;			// モーションカウント(攻撃系)
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン

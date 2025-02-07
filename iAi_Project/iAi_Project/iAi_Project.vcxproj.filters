@@ -393,6 +393,9 @@
     <ClCompile Include="source\SkySqhereBasic.cpp">
       <Filter>ソース ファイル\オブジェクト\スカイスフィア</Filter>
     </ClCompile>
+    <ClCompile Include="source\CharacterPlayer_Motion.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -550,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="source\SkySqhereBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\スカイスフィア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerMotionDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

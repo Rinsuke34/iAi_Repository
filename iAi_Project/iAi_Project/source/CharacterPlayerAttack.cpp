@@ -94,7 +94,7 @@ void CharacterPlayer::Player_Melee_Posture()
 		if (iNowAttakChargeFlame == PLAYER_CHARGE_TO_STRONG_TIME)
 		{
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_CHARGE);
+			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
 			/* 溜めのエフェクトを生成 */
 			this->pChargeEffect = new EffectManualDelete;
@@ -419,7 +419,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		// 0である場合
 		// ※モーション遷移直後である場合
 		/* プレイヤーのモーションを近接攻撃(強)に変更する */
-		this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_STRONG);
+		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
 
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
@@ -484,7 +484,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
-				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_DRAW_SWORD_END);
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
 			}
 
 			/* 近接攻撃として扱う弾を作成 */
@@ -545,7 +545,7 @@ void CharacterPlayer::Player_Charge_Attack()
 
 	// 溜め攻撃後、次の敵を探す処理
 	// 仮でプレイヤーのモーションが"居合(強)(終了)"になったタイミングとする
-	if (this->PlayerStatusList->iGetPlayerMotion() == PLAYER_MOTION_DRAW_SWORD_END)
+	if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 	{
 		/* 索敵範囲を設定※値は仮 */
 		COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
