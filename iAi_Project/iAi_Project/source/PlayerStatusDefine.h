@@ -2,6 +2,7 @@
 /* 2025.01.09 菊池雅道 移動関連の定数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
 /* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
+/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
 
 #pragma once
 #include <string>
@@ -66,16 +67,23 @@ static const int	CAMERA_MODE_AIM							= 2;				// 構え(ズーム)
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形保管用カウントの最大値
 
-/* プレイヤー状態 */
+/* 2025.02.05 菊池雅道 ステータス関連の定数修正 開始 */
+/* プレイヤー移動状態 */
 // ※状態に応じて可能な行動が変わる
-static const int	PLAYER_STATUS_EVENT					= 0;	// イベント状態(操作不可)
-static const int	PLAYER_STATUS_FREE					= 1;	// 自由状態
-static const int	PLAYER_STATUS_DODGING				= 2;	// 回避状態中
-static const int	PLAYER_STATUS_MELEE_POSTURE			= 3;	// 近接攻撃構え中
-static const int	PLAYER_STATUS_MELEE_WEEK			= 4;	// 近接攻撃中(弱)
-static const int	PLAYER_STATUS_MELEE_STRONG			= 5;	// 近接攻撃中(強)
-static const int	PLAYER_STATUS_PROJECTILE_POSTURE	= 6;	// 遠距離攻撃構え中
-static const int	PLAYER_STATUS_PROJECTILE			= 7;	// 遠距離攻撃中
+static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)
+static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態
+static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中
+
+/* プレイヤー攻撃状態 */
+// ※状態に応じて可能な行動が変わる
+static const int	PLAYER_ATTACKSTATUS_EVENT				= 0;	// イベント状態(操作不可)
+static const int	PLAYER_ATTACKSTATUS_FREE				= 1;	// 自由状態
+static const int	PLAYER_ATTACKSTATUS_MELEE_POSTURE		= 2;	// 近接攻撃構え中
+static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)
+static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
+/* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
 
 /* プレイヤーモーション */
 static const int	PLAYER_MOTION_IDLE					= 0;	// 待機

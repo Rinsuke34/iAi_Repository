@@ -124,23 +124,17 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\エフェクト">
       <UniqueIdentifier>{b414d5cb-b3ba-44b0-9254-ec0b2cfcec9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\コリジョン">
-      <UniqueIdentifier>{272ac610-5ad5-4733-8c6e-51621ab2aba2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド">
-      <UniqueIdentifier>{581f9f90-91fa-4a10-a549-4f7aefbc7797}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\コリジョン">
-      <UniqueIdentifier>{cc5fcf34-aa9b-4111-9393-8cfead9b4267}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド">
-      <UniqueIdentifier>{1a0a3693-31e5-4015-a25b-6d8054ecb8aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\ギミック">
       <UniqueIdentifier>{bdf7a7f6-bcfb-4197-b10d-f135b9dc2856}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム\ギミック">
       <UniqueIdentifier>{88fd4004-f4d1-4d3f-abf5-60f661d3babf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\スカイスフィア">
+      <UniqueIdentifier>{055c6dbd-4130-486c-af60-887e5c6b3074}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\スカイスフィア">
+      <UniqueIdentifier>{a58b53ad-6f1f-473a-81d1-b5f4a9513898}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,14 +186,11 @@
     <ClCompile Include="source\ObjectBase.cpp">
       <Filter>ソース ファイル\オブジェクト</Filter>
     </ClCompile>
-    <ClCompile Include="source\BackGroundBase.cpp">
-      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド</Filter>
-    </ClCompile>
-    <ClCompile Include="source\CollisionBase.cpp">
-      <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
-    </ClCompile>
     <ClCompile Include="source\GimmickBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\プラットフォーム\ギミック</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SkySqhereBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\スカイスフィア</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,14 +251,11 @@
     <ClInclude Include="source\EffectBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\エフェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\BackGroundBase.h">
-      <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\バックグラウンド</Filter>
-    </ClInclude>
-    <ClInclude Include="source\CollisionBase.h">
-      <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\コリジョン</Filter>
-    </ClInclude>
     <ClInclude Include="source\GimmickBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\プラットフォーム\ギミック</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SkySqhereBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\スカイスフィア</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

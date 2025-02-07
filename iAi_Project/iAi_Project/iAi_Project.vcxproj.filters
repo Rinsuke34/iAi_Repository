@@ -241,6 +241,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー">
       <UniqueIdentifier>{f2b2c71e-9df6-4443-9961-b41dfc8d8e73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\スカイスフィア">
+      <UniqueIdentifier>{bf796828-cd10-4854-be15-88307cadbea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\スカイスフィア">
+      <UniqueIdentifier>{89c85d66-4ab1-4035-aa7d-e7728dda34ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -377,6 +383,15 @@
     </ClCompile>
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectManualDelete_PlayerFollow.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp">
+      <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SkySqhereBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\スカイスフィア</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +541,15 @@
     </ClInclude>
     <ClInclude Include="source\EnemyBulletDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectSelfDelete_PlayerFollow.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectManualDelete_PlayerFollow.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SkySqhereBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\スカイスフィア</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

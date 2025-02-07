@@ -17,5 +17,10 @@ class SceneUi_Debug : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
-		int		iSelectNo;
+		/* 関数 */
+		bool	bToggleFlg(bool bFlg);		// trueとfalseの切り替え
+
+		/* 変数 */
+		std::vector<bool*>	pDebugManu;		// デバッグ用広域変数の項目一覧
+		int					iSelectNo;		// 選択中の項目の番号
 };

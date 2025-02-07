@@ -176,7 +176,9 @@
     <ClCompile Include="source\DataList_Score.cpp" />
     <ClCompile Include="source\DataList_Sound.cpp" />
     <ClCompile Include="source\EffectManualDelete.cpp" />
+    <ClCompile Include="source\EffectManualDelete_PlayerFollow.cpp" />
     <ClCompile Include="source\EffectSelfDelete.cpp" />
+    <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp" />
     <ClCompile Include="source\EnemyBasic.cpp" />
     <ClCompile Include="source\EnemyBeam.cpp" />
     <ClCompile Include="source\EnemyEscape.cpp" />
@@ -200,6 +202,7 @@
     <ClCompile Include="source\SceneUi_Debug.cpp" />
     <ClCompile Include="source\SceneUi_Hp.cpp" />
     <ClCompile Include="source\SceneUi_Kunai.cpp" />
+    <ClCompile Include="source\SkySqhereBasic.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
@@ -218,7 +221,9 @@
     <ClInclude Include="source\DataList_Score.h" />
     <ClInclude Include="source\DataList_Sound.h" />
     <ClInclude Include="source\EffectManualDelete.h" />
+    <ClInclude Include="source\EffectManualDelete_PlayerFollow.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
+    <ClInclude Include="source\EffectSelfDelete_PlayerFollow.h" />
     <ClInclude Include="source\EnemyBasic.h" />
     <ClInclude Include="source\EnemyBeam.h" />
     <ClInclude Include="source\EnemyBulletDefine.h" />
@@ -241,6 +246,7 @@
     <ClInclude Include="source\SceneUi_Hp.h" />
     <ClInclude Include="source\SceneUi_Kunai.h" />
     <ClInclude Include="source\ScoreDefine.h" />
+    <ClInclude Include="source\SkySqhereBasic.h" />
     <ClInclude Include="source\SoundDefine.h" />
     <ClInclude Include="source\StructDefine.h" />
     <ClInclude Include="source\VariableDefine.h" />

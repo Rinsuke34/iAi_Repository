@@ -11,8 +11,7 @@
 #include "CharacterPlayer.h"
 #include "EnemyBulletDefine.h"
 
-
-/* ビームクラスの宣言 */
+/* ビームクラスの定義 */
 
 // ビーム
 class BulletEnemyRangeBeam : public BulletBase
@@ -23,6 +22,7 @@ public:
 
 	virtual void	Initialization()	override;	// 初期化
 	virtual void	Update()			override;	// 更新
+	virtual void	CollisionDraw()		override;	// 当たり判定描写
 
 private:
 	/* オブジェクト(エフェクト)のハンドル */
@@ -31,6 +31,8 @@ private:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 
+	/* 当たり判定 */
+	COLLISION_CAPSULE stCollisionCapsule;	// カプセル型の当たり判定
 
 	void BulletEnemyRangeBeamMove();	// ビームの移動処理
 
@@ -38,8 +40,10 @@ private:
 
 	int iBulletCount;		// ビーム発射カウント
 
-
 	int iEnemyBeamDurationCount;		//ビームの持続カウント
+
+	VECTOR vecEnemyPosition; // エネミーの位置を保持するメンバ変数を追加
+
 protected:
 
 };

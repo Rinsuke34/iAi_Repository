@@ -1,56 +1,96 @@
 /* 2025.02.04 菊池雅道	ファイル作成 */
 /* 2025.01.09 菊池雅道	移動処理追加 */
+/* 2025.02.05 菊池雅道	ステータス関連修正 */
 
 #include "CharacterPlayer.h"
 
 // 移動
 void CharacterPlayer::Player_Move()
 {
+	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+
 	/* プレイヤー移動量取得 */
 	float fStickTiltMagnitude = this->InputList->fGetGameInputMove();				// スティックを倒した強さ
 	VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();	// 移動方向
 	VECTOR vecAddMove = VGet(0, 0, 0);									// 移動量(加算用)
 
-	/* プレイヤーの状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
 	float	fMoveSpeedRatio = 1.f;		// 移動速度(倍率)
 	bool	bPlayerAngleSetFlg = true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
-	switch (iPlayerState)
+	bool	bPlayerMoveFlg = true;			// プレイヤーの移動を行うかのフラグ	
+	
+	switch (iPlayerMoveState)
 	{
 		/* 移動処理を通常通りに行う状態 */
-	case PLAYER_STATUS_FREE:				// 自由状態
-		/* 補正無しにする */
+	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+
+		/* 移動処理を行う */
+		bPlayerMoveFlg = true;
+		
+		/* 移動速度補正無しにする */
 		fMoveSpeedRatio = 1.f;
+
+		/* プレイヤーの向きを移動方向に合わせる */
+		bPlayerAngleSetFlg = true;
+		
+		break;
+
+	/* 移動処理を行わない状態 */
+	case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+	
+		// 移動処理を行わない
+		bPlayerMoveFlg = false;
+		
+		break;
+	}
+
+	switch (iPlayerAttackState)
+	{
+	
+	/* 移動処理を通常通りに行う状態 */
+	case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
+		
+		/* 移動速度補正無しにする */
+		fMoveSpeedRatio = 1.f;
+
+		/* プレイヤーの向きを移動方向に合わせる */
 		bPlayerAngleSetFlg = true;
 		break;
 
 		/* 移動処理を速度を抑えて行う状態 */
-	case PLAYER_STATUS_MELEE_POSTURE:		// 近接攻撃構え中
-	case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+		
 		/* 移動速度補正0.5倍にする */
 		// ※仮の値
 		fMoveSpeedRatio = 0.5f;
+
+		/* プレイヤーの向きを移動方向に合わせない */
 		bPlayerAngleSetFlg = false;
 		break;
 
 		/* 移動処理を行わない状態 */
-	case PLAYER_STATUS_DODGING:				// 回避状態中
-	case PLAYER_STATUS_MELEE_WEEK:			// 近接攻撃中(弱)
-	case PLAYER_STATUS_MELEE_STRONG:		// 近接攻撃中(強)
-	case PLAYER_STATUS_PROJECTILE:			// 遠距離攻撃中
-		/* 移動処理を終了する */
-		// ※これらの状態では移動処理を行わない
-		return;
+	case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
+	case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
+	case PLAYER_ATTACKSTATUS_PROJECTILE:		// 遠距離攻撃中
+		break;	
 	}
+	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
 	/* 2025.01.09 菊池雅道	移動処理追加		開始	*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始	*/
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 
 	/* 移動入力がされているか確認 */
-	if (vecInput.x != 0 || vecInput.z != 0)
+	if ((vecInput.x != 0 || vecInput.z != 0))
+	{
+		/* 移動処理を行う状態か確認 */
+		if (bPlayerMoveFlg = true)
 	{
 		// 移動入力がされている場合
 		/* 現在の移動速度取得 */
@@ -173,6 +213,7 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
 		}
 	}
+	}
 	else
 	{
 		// 移動入力がされていない場合
@@ -196,22 +237,63 @@ void CharacterPlayer::Player_Move()
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
 }
 
+/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
-	/* プレイヤーの状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+	/* ジャンプ処理を行うかのフラグ */
+	bool bJumpFlag = true;
 
-	/* プレイヤーの状態がジャンプ可能であるか確認 */
+	/* プレイヤーの移動状態がジャンプ可能であるか確認 */
 	// ※要相談
-	switch (iPlayerState)
+	switch (iPlayerMoveState)
 	{
 		/* ジャンプ可能な状態 */
-	case PLAYER_STATUS_FREE:				// 自由状態
-	case PLAYER_STATUS_MELEE_POSTURE:		// 近接攻撃構え中			
-	case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-	case PLAYER_STATUS_PROJECTILE:			// 遠距離攻撃中
+	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+		
+		/* ジャンプ処理を行う */
+		bJumpFlag = true;
+	
+		break;
+
+	/* ジャンプ不可能な状態 */
+	case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+		
+		/* ジャンプ処理を行う */
+		bJumpFlag = false;
+		
+		break;
+	}
+
+	/* プレイヤーの攻撃状態がジャンプ可能であるか確認 */
+	// ※要相談
+	switch (iPlayerAttackState)
+	{
+	/* ジャンプ可能な状態 */
+	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+	case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+		
+		/* ジャンプ処理を行う */
+		bJumpFlag = true;
+		break;
+	
+	/* ジャンプ不可能な状態 */
+	case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
+	case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
+		
+		/* ジャンプ処理を行わない */
+		bJumpFlag = false;
+		break;
+	}
+
 		/* プレイヤーのジャンプ処理 */
+	/* 移動処理を行う状態か確認 */
+	if (bJumpFlag == true)
 	{
 		/* ジャンプ回数が最大数を超えていないか確認 */
 		int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
@@ -237,64 +319,90 @@ void CharacterPlayer::Player_Jump()
 			}
 		}
 	}
-	break;
-
-	/* ジャンプ不可能な状態 */
-	case PLAYER_STATUS_DODGING:			// 回避状態中
-	case PLAYER_STATUS_MELEE_WEEK:		// 近接攻撃中(弱)
-	case PLAYER_STATUS_MELEE_STRONG:	// 近接攻撃中(強)
-		break;
-	}
 }
+/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
+/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // 重力処理
 void CharacterPlayer::Player_Gravity()
 {
-	/* プレイヤーの状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+	/* プレイヤーの重力処理を行うかのフラグ */
+	bool bGravityFlag = true;
 
-	/* プレイヤーが重力処理を行う状態であるか確認 */
+	/* プレイヤーが重力処理を行う移動状態であるか確認 */
 	// ※要相談
-	switch (iPlayerState)
+	switch (iPlayerMoveState)
 	{
 		/* 重力処理を行う状態 */
-	case PLAYER_STATUS_FREE:				// 自由状態		
-	case PLAYER_STATUS_MELEE_POSTURE:		// 近接攻撃構え中		
-	case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-		/* 重力処理を実行 */
+	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+
+		/* 重力処理を行う */
+		bGravityFlag = true;
 		break;
 
 		/* 重力処理を行わない状態 */
-	case PLAYER_STATUS_DODGING:			// 回避状態中
-	case PLAYER_STATUS_MELEE_WEEK:		// 近接攻撃中(弱)
-	case PLAYER_STATUS_MELEE_STRONG:	// 近接攻撃中(強)
-	case PLAYER_STATUS_PROJECTILE:		// 遠距離攻撃中
+	case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
+
 		/* 重力処理を行わない(重力処理を終了) */
-		return;
+		bGravityFlag = false;
+		break;
 	}
 
-	/* 落下量取得 */
-	float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
-	fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
+	/* プレイヤーが重力処理を行う攻撃状態であるか確認 */
+	// ※要相談
+	switch (iPlayerAttackState)
+	{
+		/* 重力処理を行う状態 */
+	case PLAYER_ATTACKSTATUS_FREE:					// 自由状態		
+	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中		
+	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+		/* 重力処理を行う */
+		bGravityFlag = true;
+		break;
 
-	/* 落下の加速度を更新 */
-	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
+		/* 重力処理を行わない状態 */
+	case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)
+	case PLAYER_ATTACKSTATUS_MELEE_STRONG:			// 近接攻撃中(強)
+	case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+		/* 重力処理を行わない(重力処理を終了) */
+		bGravityFlag = false;
+		break;
+	}
 
-	/* 重力による移動後の座標を取得 */
-	this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();
+	/* 重力処理実行フラグの確認 */
+	if(bGravityFlag == true)
+	{
+		// 重力処理を行う場合
+		/* 落下量取得 */
+		float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
+		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
+
+		/* 落下の加速度を更新 */
+		this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
+
+		/* 重力による移動後の座標を取得 */
+		this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();	
+	}
 }
+/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+
 
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
 	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
+	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 
-	/* プレイヤーの状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
 
 	/* プレイヤー場外が"回避状態中"であるか確認 */
-	if (iPlayerState == PLAYER_STATUS_DODGING)
+	if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
 	{
 		// 回避中である場合
 		/* 回避状態が維持される時間を超えていないか確認 */
@@ -315,7 +423,7 @@ void CharacterPlayer::Player_Dodg()
 			this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
 
 			/* プレイヤー状態を"自由状態"に設定 */
-			this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
+			this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
 
 			/* 回避エフェクトを削除 */
 			this->pDodgeEffect->SetDeleteFlg(true);
@@ -361,7 +469,7 @@ void CharacterPlayer::Player_Dodg()
 				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
 				/* プレイヤー状態を"回避状態中"に設定 */
-				this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_DODGING);
+				this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
 
 				/* プレイヤーが着地していないかを確認 */
 				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
@@ -401,7 +509,10 @@ void CharacterPlayer::Player_Dodg()
 		}
 	}
 
-	/* 2025.01.09 菊池雅道　移動処理追加	終了 */
+	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
+	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+
+	/* 回避エフェクトが存在している場合 */
 	if (pDodgeEffect != nullptr)
 	{
 		/* エフェクトの生成方向の設定 */
@@ -524,10 +635,10 @@ void CharacterPlayer::Movement_Vertical()
 	if (bjumppingFlg == true && this->PlayerStatusList->bGetPlayerJumpingFlag() == false)
 	{
 		/* プレイヤーの状態を取得 */
-		int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+		int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
 
 		/* 回避中にエフェクトが出ないようにする */
-		if (iPlayerState != PLAYER_STATUS_DODGING)
+		if (iPlayerMoveState != PLAYER_MOVESTATUS_DODGING)
 		{
 			/* エフェクト追加 */
 			{
@@ -565,19 +676,25 @@ void CharacterPlayer::Movement_Vertical()
 	/* プレイヤー座標を更新 */
 	this->vecPosition = vecNextPosition;
 
+	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 現在のプレイヤー状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* モーションを更新 */
 	{
 		/* 空中にいる(着地していない)か確認 */
 		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
-			// 空中にいる(着地していない)場合
 			/* 攻撃を構えていない状態であるか確認 */
-			/* 強攻撃(近接)中でないか確認 */
 			// ※構えている最中は落下モーションに遷移させない
-			if ((iPlayerState != PLAYER_STATUS_MELEE_POSTURE) && (iPlayerState != PLAYER_STATUS_PROJECTILE_POSTURE) && (iPlayerState != PLAYER_STATUS_MELEE_STRONG))
+			/* 近接攻撃構え中でないか確認 */
+			if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_POSTURE)
+			{
+				/* 遠距離攻撃構え中でないか確認 */
+				if (iPlayerAttackState != PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
+				{
+					/* 強攻撃(近接)中でないか確認 */
+					if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
 			{
 				/* 上昇しているか確認 */
 				if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
@@ -592,10 +709,14 @@ void CharacterPlayer::Movement_Vertical()
 					/* モーションを"ジャンプ(下降)"に設定 */
 					PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_JUMP_DOWN);
 				}
+
+					}
 			}
 		}
 	}
 }
+}
+/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()

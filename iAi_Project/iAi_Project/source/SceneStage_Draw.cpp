@@ -29,19 +29,6 @@ void SceneStage::Draw()
 
 	/* メイン画面を描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenHandle, FALSE);
-
-	/* 画面エフェクトの描写処理 */
-	// ※ノイズやぼかし等画面に直接関与するエフェクト
-	SetupScreenEffects();
-
-	/////* 描画ブレンドモードを加算にする (黒色部分が透明になる) */
-	////SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-
-	///* 画像をメイン画面に重ねて描写 */
-	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenEffectHandle, TRUE);
-
-	/////* 描画ブレンドモードをブレンド無しに戻す */
-	////SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 // シャドウマップの設定
@@ -197,35 +184,13 @@ void SceneStage::SetupEffectScreen()
 // 画面エフェクト
 void SceneStage::SetupScreenEffects()
 {
-	///* メイン画面(画面エフェクト用)への描写を開始 */
-	//SetDrawScreen(this->iMainScreenEffectHandle);
+	/* メイン画面(画面エフェクト用)への描写を開始 */
+	SetDrawScreen(this->iMainScreenEffectHandle);
 
-	///* 画面クリア */
-	//ClearDrawScreen();
+	/* 画面クリア */
+	ClearDrawScreen();
 
-	///* 画面エフェクト(モーションブラー) */
-	//{
-	//	/* マスク画面を作成 */
-	//	CreateMaskScreen();
-
-	//	/* 中央部分のみ白、周囲は黒のマスクを描写 */
-	//	// ここでは白色部分が中央を示し、黒色部分がぼかしを適用するエリアです
-	//	//DrawFillMask(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMotionBlurMaskHandle);
-	//
-	//	DrawMask(0, 0, this->iMotionBlurMaskHandle, DX_MASKTRANS_BLACK);
-
-	//	/* メイン画面を描写 */
-	//	DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(255, 0, 0), TRUE);
-	//	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenHandle, TRUE);
-
-	//	/* ガウスフィルタ(ぼかし)を適用 */
-	//	//GraphFilterBlt(this->iMainScreenEffectHandle, this->iMainScreenEffectHandle, DX_GRAPH_FILTER_GAUSS, LIGHTMAP_GAUSS_WIDTH, LIGHTMAP_GAUSS_RATIO);
-
-	//	/* マスク画面を削除 */
-	//	DeleteMaskScreen();
-	//}
-
-	///* メイン画面(画面エフェクト用)への描写を終了 */
-	//SetDrawScreen(DX_SCREEN_BACK);
+	/* メイン画面(画面エフェクト用)への描写を終了 */
+	SetDrawScreen(DX_SCREEN_BACK);
 }
 

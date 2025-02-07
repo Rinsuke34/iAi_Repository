@@ -12,9 +12,9 @@ DataList_Sound*	gpDataList_Sound	= nullptr;	// サウンド管理クラス
 bool gbTutorialFlg					= false;	// チュートリアルフラグ
 
 /* デバッグ用描写管理フラグ */
-bool gbDrawShadowMapFlg				= true;		// シャドウマップの描写
-bool gbDrawLightMapFlg				= true;		// ライトマップの描写
-bool gbDrawLightMapDownScaleFlg		= true;		// ライトマップ(縮小)の描写
-bool gbDrawLightMapGaussFlg			= true;		// ライトマップ(ぼかし)のハンドル
-bool gbDrawCollisionFlg				= true;		// 全オブジェクトのコリジョン描写
-bool gbDrawDeleteBackGroundFlg		= true;		// バックグランドオブジェクトの非表示
+bool gbDrawShadowMapFlg				= false;		// シャドウマップの描写
+bool gbDrawLightMapFlg				= false;		// ライトマップの描写
+bool gbDrawLightMapDownScaleFlg		= false;		// ライトマップ(縮小)の描写
+bool gbDrawLightMapGaussFlg			= false;		// ライトマップ(ぼかし)のハンドル
+bool gbDrawCollisionFlg				= false;		// 全オブジェクトのコリジョン描写
+bool gbDrawDeleteBackGroundFlg		= false;		// バックグランドオブジェクトの非表示

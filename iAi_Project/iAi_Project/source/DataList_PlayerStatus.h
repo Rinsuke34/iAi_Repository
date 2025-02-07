@@ -1,6 +1,7 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
 /* 2025.01.09 菊池雅道 移動関連の変数・関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の変数・関数追加 */
+/* 2025.02.05 菊池雅道 ステータス関連の変数・関数修正 */
 
 #pragma once
 #include <vector>
@@ -23,7 +24,8 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* データ取得 */
 		// プレイヤー状態関連
-		int		iGetPlayerState()					{ return this->iPlayerState; }						// プレイヤーの状態取得
+		int		iGetPlayerMoveState()				{ return this->iPlayerMoveState; }					// プレイヤーの移動状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
+		int		iGetPlayerAttackState()				{ return this->iPlayerAttackState; }				// プレイヤーの攻撃状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
 		int		iGetPlayerMotion()					{ return this->iPlayerMotion; }						// プレイヤーのモーション取得
 		bool	bGetPlayerLandingFlg()				{ return this->bPlayerLandingFlg; }					// プレイヤーが空中にいるかのフラグ取得
 		float	fGetPlayerNowMoveSpeed()			{ return this->fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度取得
@@ -82,7 +84,8 @@ class DataList_PlayerStatus : public DataListBase
 
 		/* データ設定 */
 		// プレイヤー状態関連
-		void	SetPlayerState(int iPlayerState)									{ this->iPlayerState					= iPlayerState; }						// プレイヤーの状態設定
+		void	SetPlayerMoveState(int iPlayerMoveState)							{ this->iPlayerMoveState				= iPlayerMoveState; }					// プレイヤーの移動状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
+		void	SetPlayerAttackState(int iPlayerAttackState)						{ this->iPlayerAttackState				= iPlayerAttackState; }					// プレイヤーの攻撃状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
 		void	SetPlayerMotion(int iPlayerMotion)									{ this->iPlayerMotion					= iPlayerMotion; };						// プレイヤーのモーション設定
 		void	SetPlayerLanding(bool bPlayerLanding)								{ this->bPlayerLandingFlg				= bPlayerLanding; }						// プレイヤーが空中にいるかのフラグ設定
 		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)					{ this->fPlayerNowMoveSpeed				= fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度設定
@@ -146,7 +149,8 @@ class DataList_PlayerStatus : public DataListBase
 
 	private:
 		/* プレイヤー状態関連 */
-		int		iPlayerState;					// プレイヤーの状態(アクション)
+		int		iPlayerMoveState;				// プレイヤーの移動状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
+		int		iPlayerAttackState;				// プレイヤーの攻撃状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
 		int		iPlayerMotion;					// プレイヤーの状態(モーション)
 		bool	bPlayerLandingFlg;				// プレイヤーが着地しているかのフラグ
 		float	fPlayerNowMoveSpeed;			// プレイヤーの現在の移動速度

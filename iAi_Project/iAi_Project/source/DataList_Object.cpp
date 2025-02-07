@@ -11,6 +11,9 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 	// プレイヤー
 	this->pCharacterPlayer	=	nullptr;
 
+	// スカイスフィア
+	this->pSkySqhere		=	nullptr;
+
 	// エネミー
 	this->pEnemyList.clear();
 	
@@ -20,19 +23,43 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 	// エフェクト
 	this->pEffectList.clear();
 
-	// プラットフォーム(コリジョン)
-	this->pCollisionList.clear();
-
-	// プラットフォーム(描写オブジェクト)
-	this->pBackGroundList.clear();
+	// プラットフォーム
+	this->pPlatformList.clear();
 }
 
 // デストラクタ
 DataList_Object::~DataList_Object()
 {
 	/* 解放 */
-	// リストはvectorのため、自動解放される
-	this->pCharacterPlayer	=	nullptr;
+	// プレイヤー
+	delete this->pCharacterPlayer;
+
+	// スカイスフィア
+	delete this->pSkySqhere;
+
+	// エネミー
+	for (auto& pEnemy : this->pEnemyList)
+	{
+		delete pEnemy;
+	}
+
+	// 弾
+	for (auto& pBullet : this->pBulletList)
+	{
+		delete pBullet;
+	}
+
+	// エフェクト
+	for (auto& pEffect : this->pEffectList)
+	{
+		delete pEffect;
+	}
+
+	// プラットフォーム
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		delete pPlatform;
+	}
 }
 
 /* リスト内オブジェクト初期化 */
@@ -41,6 +68,7 @@ void DataList_Object::InitializationAll()
 {
 	/* 登録されているすべてのオブジェクトの初期化 */
 	InitializationPlayer();
+	InitializationSkySqhere();
 	InitializationEnemy();
 	InitializationEffect();
 	InitializationBullet();
@@ -52,6 +80,13 @@ void DataList_Object::InitializationPlayer()
 {
 	/* プレイヤーの初期化を呼ぶ */
 	this->pCharacterPlayer->Initialization();
+}
+
+// スカイスフィア初期化
+void DataList_Object::InitializationSkySqhere()
+{
+	/* スカイスフィアの初期化 */
+	this->pSkySqhere->Initialization();
 }
 
 // エネミー初期化
@@ -87,16 +122,10 @@ void DataList_Object::InitializationBullet()
 // プラットフォーム初期化
 void DataList_Object::InitializationPlatform()
 {
-	/* プラットフォーム(コリジョン)の初期化 */
-	for (auto& pCollision : this->pCollisionList)
+	/* プラットフォームの初期化 */
+	for (auto& pPlatform : this->pPlatformList)
 	{
-		pCollision->Initialization();
-	}
-
-	/* プラットフォーム(描写モデル)の初期化 */
-	for (auto& pBackGround : this->pBackGroundList)
-	{
-		pBackGround->Initialization();
+		pPlatform->Initialization();
 	}
 }
 
@@ -106,6 +135,7 @@ void DataList_Object::UpdateAll()
 {
 	/* 登録されているすべてのオブジェクトの更新 */
 	UpdatePlayer();
+	UpdateSkySqhere();
 	UpdateEnemy();
 	UpdateEffect();
 	UpdateBullet();
@@ -117,6 +147,13 @@ void DataList_Object::UpdatePlayer()
 {
 	/* プレイヤーの更新を呼ぶ */
 	this->pCharacterPlayer->Update();
+}
+
+// スカイスフィア更新
+void DataList_Object::UpdateSkySqhere()
+{
+	/* スカイスフィアの更新を呼ぶ */
+	this->pSkySqhere->Update();
 }
 
 // エネミー更新
@@ -161,6 +198,7 @@ void DataList_Object::DrawAll()
 {
 	/* 登録されているすべてのオブジェクトの描写 */
 	DrawPlayer();
+	DrawSkySqhere();
 	DrawEnemy();
 	DrawBullet();
 	DrawPlatform();
@@ -171,6 +209,13 @@ void DataList_Object::DrawPlayer()
 {
 	/* プレイヤーの描写を呼ぶ */
 	this->pCharacterPlayer->Draw();
+}
+
+// スカイスフィア描写
+void DataList_Object::DrawSkySqhere()
+{
+	/* スカイスフィアの描写を呼ぶ */
+	this->pSkySqhere->Draw();
 }
 
 // エネミー描写
@@ -200,10 +245,10 @@ void DataList_Object::DrawPlatform()
 	if (gbDrawDeleteBackGroundFlg == false)
 	{
 		// 無効である場合
-		/* プラットフォーム(描写モデル)の描写を呼ぶ */
-		for (auto& pBackGround : this->pBackGroundList)
+		/* プラットフォームの描写を呼ぶ */
+		for (auto& pPlatform : this->pPlatformList)
 		{
-			pBackGround->Draw();
+			pPlatform->Draw();
 		}
 	}
 }
@@ -224,6 +269,7 @@ void DataList_Object::DrawAll_Collision()
 {
 	/* 登録されているすべてのオブジェクトのコリジョン描写 */
 	DrawPlayer_Collision();
+	DrawSkySqhere_Collision();
 	DrawEnemy_Collision();
 	DrawBullet_Collision();
 	DrawPlatform_Collision();
@@ -234,6 +280,13 @@ void DataList_Object::DrawPlayer_Collision()
 {
 	/* プレイヤーコリジョン描写を呼ぶ */
 	this->pCharacterPlayer->CollisionDraw();
+}
+
+// スカイスフィアコリジョン描写
+void DataList_Object::DrawSkySqhere_Collision()
+{
+	/* スカイスフィアコリジョン描写を呼ぶ */
+	this->pSkySqhere->CollisionDraw();
 }
 
 // エネミーコリジョン描写
@@ -260,10 +313,10 @@ void DataList_Object::DrawBullet_Collision()
 void DataList_Object::DrawPlatform_Collision()
 {
 	// 有効である場合
-	/* プラットフォーム(コリジョン)の描写を呼ぶ */
-	for (auto& pCollision : this->pCollisionList)
+	/* プラットフォームの描写を呼ぶ */
+	for (auto& pPlatform : this->pPlatformList)
 	{
-		pCollision->CollisionDraw();
+		pPlatform->CollisionDraw();
 	}
 }
 
@@ -273,6 +326,7 @@ void DataList_Object::DrawAll_Bloom()
 {
 	/* 登録されているすべてのオブジェクトの発光描写 */
 	DrawPlayer_Bloom();
+	DrawSkySqhere_Bloom();
 	DrawEnemy_Bloom();
 	DrawBullet_Bloom();
 	DrawPlatform_Bloom();
@@ -283,6 +337,13 @@ void DataList_Object::DrawPlayer_Bloom()
 {
 	/* プレイヤーの発光描写を呼ぶ */
 	this->pCharacterPlayer->BloomDraw();
+}
+
+// スカイスフィア発光描写
+void DataList_Object::DrawSkySqhere_Bloom()
+{
+	/* スカイスフィアの発光描写を呼ぶ */
+	this->pSkySqhere->BloomDraw();
 }
 
 // エネミー発光描写
@@ -312,16 +373,17 @@ void DataList_Object::DrawPlatform_Bloom()
 	if (gbDrawDeleteBackGroundFlg == false)
 	{
 		// 無効である場合
-		/* プラットフォーム(描写モデル)の発光描写を呼ぶ */
-		for (auto& pBackGround : this->pBackGroundList)
+		/* プラットフォームの発光描写を呼ぶ */
+		for (auto& pPlatform : this->pPlatformList)
 		{
-			pBackGround->BloomDraw();
+			pPlatform->BloomDraw();
 		}
 	}
 }
 
 /* リスト内オブジェクト削除 */
 // 削除フラグが有効な全オブジェクト削除
+// ※単独のデータはデストラクタで開放されるため、リストで管理しているデータのみ対象とする。
 void DataList_Object::DeleteAll()
 {
 	DeleteEnemy();
@@ -398,15 +460,15 @@ void DataList_Object::DeleteBullet()
 // 削除フラグが有効なプラットフォームを削除
 void DataList_Object::DeletePlatform()
 {
-	/* 削除フラグが有効なプラットフォーム(コリジョン)を削除 */
-	pCollisionList.erase(std::remove_if(pCollisionList.begin(), pCollisionList.end(), [](CollisionBase* pCollision)
+	/* 削除フラグが有効なプラットフォームを削除 */
+	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](PlatformBase* pPlatform)
 	{
 		/* 削除フラグが有効であるか確認　*/
-		if (pCollision->bGetDeleteFlg() == true)
+		if (pPlatform->bGetDeleteFlg() == true)
 		{
 			// 有効である場合
 			/* メモリ解放 */
-			delete pCollision;
+			delete pPlatform;
 			return true;
 		}
 		else
@@ -414,23 +476,5 @@ void DataList_Object::DeletePlatform()
 			// 無効である場合
 			return false;
 		}
-	}), pCollisionList.end());
-
-	/* 削除フラグが有効なプラットフォーム(描写モデル)を削除 */
-	pBackGroundList.erase(std::remove_if(pBackGroundList.begin(), pBackGroundList.end(), [](BackGroundBase* pBackGround)
-	{
-		/* 削除フラグが有効であるか確認　*/
-		if (pBackGround->bGetDeleteFlg() == true)
-		{
-			// 有効である場合
-			/* メモリ解放 */
-			delete pBackGround;
-			return true;
-		}
-		else
-		{
-			// 無効である場合
-			return false;
-		}
-	}), pBackGroundList.end());
+	}), pPlatformList.end());
 }

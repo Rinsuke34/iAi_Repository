@@ -1,10 +1,7 @@
 /* 2024.12.15 駒沢風助	ファイル作成 */
-/* 2025.01.09 菊池雅道	移動処理追加 */
-/* 2025.01.22 菊池雅道	攻撃処理追加 */
-/* 2025.01.24 菊池雅道	攻撃処理追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.01.30 菊池雅道	モーション処理追加 */
-/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加 */
+/* 2025.02.05 菊池雅道	ステータス関連修正 */
 
 #include "CharacterPlayer.h"
 
@@ -153,14 +150,18 @@ void CharacterPlayer::CollisionUpdate()
 	this->stCollisionCapsule.fCapsuleRadius		= PLAYER_WIDE;
 }
 
+/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 当たり判定処理 */
 void CharacterPlayer::HitCheck()
 {
-	/* プレイヤーの状態を取得 */
-	int iPlayerState = this->PlayerStatusList->iGetPlayerState();
+	/* プレイヤーの移動状態を取得 */
+	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+	/* プレイヤーが被弾処理を行うか(無敵か)判定するフラグ */
+	bool bHiteFlag = true;
 
-	/* 被弾処理 */
-	{
+
 		/* 無敵時間中であるか確認 */
 		if (this->PlayerStatusList->iGetPlayerNowInvincibleTime() > 0)
 		{
@@ -171,16 +172,53 @@ void CharacterPlayer::HitCheck()
 		else
 		{
 			// 無敵時間中でない場合
-			/* 被弾処理を受けるかどうか判定 */
-			switch (iPlayerState)
+		/* プレイヤーの移動状態が被弾処理を受ける状態か確認 */
+		switch (iPlayerMoveState)
 			{
 				/* 被弾処理を行う状態 */
-				case PLAYER_STATUS_FREE:				// 自由状態
-				case PLAYER_STATUS_MELEE_POSTURE:		// 近接攻撃構え中
-				case PLAYER_STATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-				case PLAYER_STATUS_MELEE_STRONG:		// 近接攻撃中(強)
-				case PLAYER_STATUS_PROJECTILE:			// 遠距離攻撃中
+		case PLAYER_MOVESTATUS_FREE:			// 自由状態
+				
+			/* 被弾処理を行う状態 */
+			bHiteFlag = true;
+					
+			break;
+
+		/* 被弾処理を行わない状態(無敵状態) */
+		case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+				
+			/* 被弾処理を行わない(無敵状態) */
+			bHiteFlag = true;
+					
+			break;
+		}
+		
+		/* 被弾処理を受けるプレイヤーの攻撃状態か確認 */
+		switch (iPlayerAttackState)
+		{
+			/* 被弾処理を行う状態 */
+		case PLAYER_ATTACKSTATUS_FREE:				// 自由状態
+		case PLAYER_ATTACKSTATUS_MELEE_POSTURE:		// 近接攻撃構え中
+		case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+		case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
+		case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+				
+			/* 被弾処理を行う */
+			bHiteFlag = true;
+
+			break;
+
+			/* 被弾処理を行わない状態(無敵状態) */
+		case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)
+				
+			/* 被弾処理を行わない(無敵状態) */
+			bHiteFlag = false;
+
+			break;
+		}
+	
 				/* 被弾処理 */
+		/* 被弾処理を行う状態か確認する */
+		if(bHiteFlag == true)
 				{
 					/* バレットリストを取得 */
 					auto& BulletList = ObjectList->GetBulletList();
@@ -211,17 +249,9 @@ void CharacterPlayer::HitCheck()
 						}
 					}
 				}
-				break;
-
-				/* 被弾処理を行わない状態(無敵状態) */
-				case PLAYER_STATUS_DODGING:				// 回避状態中
-				case PLAYER_STATUS_MELEE_WEEK:			// 近接攻撃中(弱)
-					/* 被弾処理を行わない */
-					break;
-			}
-		}
 	}
 }
+/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
 /* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 // プレイヤーのモーション遷移管理
