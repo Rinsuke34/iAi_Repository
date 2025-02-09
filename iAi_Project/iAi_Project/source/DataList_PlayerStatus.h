@@ -52,12 +52,16 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
 
 		/* プレイヤーモーション関連 */
-		int		iGetPlayerMotion_Move()				{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
-		int		iGetPlayerMotion_Attack()			{ return this->iPlayerMotion_Attack; }				// プレイヤーモーション(攻撃系)を取得
-		int		iGetPlayerMotion_Move_Old()			{ return this->iPlayerMotion_Move_Old; }			// 変更前プレイヤーモーション(移動系)を取得
-		int		iGetPlayerMotion_Attack_Old()		{ return this->iPlayerMotion_Attack_Old; }			// 変更前プレイヤーモーション(攻撃系)を取得
-		float	fGetMotionCount_Move()				{ return this->fMotionCount_Move; }					// モーションカウント(移動系)を取得
-		float	fGetMotionCount_Attack()			{ return this->fMotionCount_Attack; }				// モーションカウント(攻撃系)を取得
+		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
+		int		iGetPlayerMotion_Move_Old()				{ return this->iPlayerMotion_Move_Old; }			// 変更前プレイヤーモーション(移動系)を取得
+		int		iGetPlayerMotion_Attack()				{ return this->iPlayerMotion_Attack; }				// プレイヤーモーション(攻撃系)を取得
+		int		iGetPlayerMotion_Attack_Old()			{ return this->iPlayerMotion_Attack_Old; }			// 変更前プレイヤーモーション(攻撃系)を取得
+		float	fGetMotionTimer_Move()					{ return this->fMotionTimer_Move; }					// モーションカウント(移動系)を取得
+		float	fGetMotionTimer_Move_End()				{ return this->fMotionTimer_Move_End; }				// モーションカウント(移動系/終了時間)を取得
+		float	fGetMotionTimer_Attack()				{ return this->fMotionTimer_Attack; }				// モーションカウント(攻撃系)を取得
+		float	fGetMotionTimer_Attack_End()			{ return this->fMotionTimer_Attack_End; }			// モーションカウント(攻撃系/終了時間)を取得
+		int		iGetPlayerMotionAttachIndex_Move()		{ return this->iPlayerMotionAttachIndex_Move; }		// プレイヤーモーション(移動系)のアタッチ番号
+		int		iGetPlayerMotionAttachIndex_Attack()	{ return this->iPlayerMotionAttachIndex_Attack; }	// プレイヤーモーション(攻撃系)のアタッチ番号
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
@@ -113,12 +117,16 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)			{ this->iPlayerNowInvincibleTime		= iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を設定
 
 		/* プレイヤーモーション関連 */
-		void	SetPlayerMotion_Move(int iPlayerMotion_Move)						{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
-		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)					{ this->iPlayerMotion_Attack			= iPlayerMotion_Attack; };				// プレイヤーモーション(攻撃系)を設定
-		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)				{ this->iPlayerMotion_Move_Old			= iPlayerMotion_Move_Old; };			// 変更前プレイヤーモーション(移動系)を設定
-		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)			{ this->iPlayerMotion_Attack_Old		= iPlayerMotion_Attack_Old; };			// 変更前プレイヤーモーション(攻撃系)を設定
-		void	SetMotionCount_Move(float fMotionCount_Move)						{ this->fMotionCount_Move				= fMotionCount_Move; };					// モーションカウント(移動系)
-		void	SetMotionCount_Attack(float fMotionCount_Attack)					{ this->fMotionCount_Attack				= fMotionCount_Attack; };				// モーションカウント(攻撃系)を設定
+		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
+		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)					{ this->iPlayerMotion_Move_Old			= iPlayerMotion_Move_Old; };			// 変更前プレイヤーモーション(移動系)を設定
+		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)						{ this->iPlayerMotion_Attack			= iPlayerMotion_Attack; };				// プレイヤーモーション(攻撃系)を設定
+		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)				{ this->iPlayerMotion_Attack_Old		= iPlayerMotion_Attack_Old; };			// 変更前プレイヤーモーション(攻撃系)を設定
+		void	SetMotionCount_Move(float fMotionCount_Move)							{ this->fMotionTimer_Move				= fMotionCount_Move; };					// モーションカウント(移動系)
+		void	SetMotionCount_Move_End(float fMotionCount_Move_End)					{ this->fMotionTimer_Move_End			= fMotionCount_Move_End; };				// モーションカウント(移動系/終了時間)を設定
+		void	SetMotionCount_Attack(float fMotionCount_Attack)						{ this->fMotionTimer_Attack				= fMotionCount_Attack; };				// モーションカウント(攻撃系)を設定
+		void	SetMotionCount_Attack_End(float fMotionCount_Attack_End)				{ this->fMotionTimer_Attack_End			= fMotionCount_Attack_End; };			// モーションカウント(攻撃系/終了時間)を設定
+		void	SetPlayerMotionAttachIndex_Move(int iPlayerMotionAttachIndex_Move)		{ this->iPlayerMotionAttachIndex_Move	= iPlayerMotionAttachIndex_Move; }		// プレイヤーモーション(移動系)のアタッチ番号
+		void	SetPlayerMotionAttachIndex_Attack(int iPlayerMotionAttachIndex_Attack)	{ this->iPlayerMotionAttachIndex_Attack	= iPlayerMotionAttachIndex_Attack; }	// プレイヤーモーション(攻撃系)のアタッチ番号
 
 		/* 判定処理用コリジョン */
 		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// 近接攻撃(強)のロックオン範囲コリジョンを設定
@@ -189,12 +197,16 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerNowInvincibleTime;		// プレイヤーの現在の残り無敵時間
 
 		/* プレイヤーモーション関連 */
-		int		iPlayerMotion_Move;				// プレイヤーモーション(移動系)
-		int		iPlayerMotion_Attack;			// プレイヤーモーション(攻撃系)
-		int		iPlayerMotion_Move_Old;			// 変更前プレイヤーモーション(移動系)
-		int		iPlayerMotion_Attack_Old;		// 変更前プレイヤーモーション(攻撃系)
-		float	fMotionCount_Move;				// モーションカウント(移動系)
-		float	fMotionCount_Attack;			// モーションカウント(攻撃系)
+		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)
+		int		iPlayerMotion_Move_Old;				// 変更前プレイヤーモーション(移動系)
+		int		iPlayerMotion_Attack;				// プレイヤーモーション(攻撃系)
+		int		iPlayerMotion_Attack_Old;			// 変更前プレイヤーモーション(攻撃系)
+		float	fMotionTimer_Move;					// モーションタイマー(移動系)
+		float	fMotionTimer_Move_End;				// モーションタイマー(移動系/終了時間)
+		float	fMotionTimer_Attack;				// モーションタイマー(攻撃系)
+		float	fMotionTimer_Attack_End;			// モーションタイマー(攻撃系/終了時間)
+		int		iPlayerMotionAttachIndex_Move;		// プレイヤーモーション(移動系)のアタッチ番号
+		int		iPlayerMotionAttachIndex_Attack;	// プレイヤーモーション(攻撃系)のアタッチ番号
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン

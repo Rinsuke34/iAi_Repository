@@ -6,40 +6,131 @@
 // プレイヤーのモーション遷移管理
 void CharacterPlayer::Player_Motion_Transition()
 {
-	/* アニメーション番号取得 */
-	int iMotionNo_Move		= MV1GetAnimIndex(this->iModelHandle, MOTION_MOVE_RUN.c_str());
-	int iMotionNo_Attack	= MV1GetAnimIndex(this->iModelHandle, MOTION_CHARGE_LOOP.c_str());
+	/* 現在のモーション番号を取得 */
+	int iMotionNo_Move		= this->PlayerStatusList->iGetPlayerMotion_Move();
+	int iMotionNo_Attack	= this->PlayerStatusList->iGetPlayerMotion_Attack();
 
-	/* モーションのアタッチ */
-	int iAttachHandle_Move		= MV1AttachAnim(this->iModelHandle, iMotionNo_Move, -1);
-	int iAttachHandle_Attack	= MV1AttachAnim(this->iModelHandle, iMotionNo_Attack, -1);
+	/* 移動系モーション */
+	{
+		/* モーションが変更されているか確認 */
+		if (iMotionNo_Move != this->PlayerStatusList->iGetPlayerMotion_Move_Old())
+		{
+			// 変更されている場合
+			/* 現在のモーションをデタッチする */
+			MV1DetachAnim(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
 
-	/* 現在のモーションの総再生時間を取得 */
-	int iAnimTime_Move		= MV1GetAttachAnimTime(this->iModelHandle, iMotionNo_Move);
-	int iAnimTime_Attack	= MV1GetAttachAnimTime(this->iModelHandle, iMotionNo_Attack);
+			/* 変更したいモーションのモーション番号を取得 */
+			int iMotionIndex	= MV1GetAnimIndex(this->iModelHandle, PlayerMotionList[iMotionNo_Move].strMotionName.c_str());
 
-	/* アニメーションブレンド率をセット */
-	float blend = 0.5f;
-	//MV1SetAttachAnimBlendRate(this->iModelHandle, iAttachHandle_Move,	1.f - blend);
-	//MV1SetAttachAnimBlendRate(this->iModelHandle, iAttachHandle_Attack, blend);
+			/* モーションをアタッチする */
+			this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
 
-	/* 現在のモーション再生時間を取得 */
-	float fNowMotionTime_Move = this->PlayerStatusList->fGetMotionCount_Attack();
-	
-	/* モーションの再生時間を設定 */
-	MV1SetAttachAnimTime(this->iModelHandle, iAttachHandle_Move, fNowMotionTime_Move);
+			/* 現在のモーションを更新する */
+			this->PlayerStatusList->SetPlayerMotion_Move_Old(iMotionNo_Move);
 
-	/* モーション時間を進める */
-	fNowMotionTime_Move += 1.f;
+			/* アニメーションタイマーを初期化する */
+			this->PlayerStatusList->SetMotionCount_Move(0.f);
 
-	/* モーションの最大時間を取得 */
-	float fMaxTime_Move = MV1GetAttachAnimTotalTime(this->iModelHandle, iAttachHandle_Move);
+			/* アニメーションの終了時間を再設定する */
+			this->PlayerStatusList->SetMotionCount_Move_End(this->PlayerMotionList[iMotionNo_Move].fMotion_MaxTime);
+		}
 
-	/* 最大時間を超えているか */
-	if (fMaxTime_Move < fNowMotionTime_Move)	{ fNowMotionTime_Move = 0; }	// 再生時間を初期化
+		/* 現在のモーション再生時間を取得 */
+		float fNowMotionTime_Move = this->PlayerStatusList->fGetMotionTimer_Move();
 
-	/* モーションの再生時間を設定 */
-	this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Move);
+		/* モーション時間を進める */
+		fNowMotionTime_Move += 1.f;
+
+		/* 最大時間を超えているか */
+		if (fNowMotionTime_Move > this->PlayerStatusList->fGetMotionTimer_Move_End())
+		{
+			// 超えている場合
+			/* 再生時間を初期化 */
+			fNowMotionTime_Move = 0.f;
+
+			/* モーション番号を変更後の値に設定 */
+			this->PlayerStatusList->SetPlayerMotion_Move(this->PlayerMotionList[iMotionNo_Move].iNextMotionID);
+		}
+
+		/* モーションの再生時間を設定 */
+		this->PlayerStatusList->SetMotionCount_Move(fNowMotionTime_Move);
+	}
+
+	/* 攻撃系モーション */
+	{
+		/* モーションが変更されているか確認 */
+		if (iMotionNo_Attack != this->PlayerStatusList->iGetPlayerMotion_Attack_Old())
+		{
+			// 変更されている場合
+			/* 現在のモーションをデタッチする */
+			MV1DetachAnim(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack());
+
+			/* 変更したいモーションのモーション番号を取得 */
+			int iMotionIndex = MV1GetAnimIndex(this->iModelHandle, PlayerMotionList[iMotionNo_Attack].strMotionName.c_str());
+
+			/* モーションをアタッチする */
+			this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
+
+			/* 現在のモーションを更新する */
+			this->PlayerStatusList->SetPlayerMotion_Attack_Old(iMotionNo_Attack);
+
+			/* アニメーションタイマーを初期化する */
+			this->PlayerStatusList->SetMotionCount_Attack(0.f);
+
+			/* アニメーションの終了時間を再設定する */
+			this->PlayerStatusList->SetMotionCount_Attack_End(this->PlayerMotionList[iMotionNo_Attack].fMotion_MaxTime);
+		}
+
+		/* 現在のモーション再生時間を取得 */
+		float fNowMotionTime_Move = this->PlayerStatusList->fGetMotionTimer_Attack();
+
+		/* モーション時間を進める */
+		fNowMotionTime_Move += 1.f;
+
+		/* 最大時間を超えているか */
+		if (fNowMotionTime_Move > this->PlayerStatusList->fGetMotionTimer_Attack_End())
+		{
+			fNowMotionTime_Move = 0.f;
+		}
+
+		/* モーションの再生時間を設定 */
+		this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Move);
+	}
+
+	///* アニメーション番号取得 */
+	//int iMotionNo_Move		= MV1GetAnimIndex(this->iModelHandle, MOTION_MOVE_RUN.c_str());
+	//int iMotionNo_Attack	= MV1GetAnimIndex(this->iModelHandle, MOTION_CHARGE_LOOP.c_str());
+
+	///* モーションのアタッチ */
+	//int iAttachHandle_Move		= MV1AttachAnim(this->iModelHandle, iMotionNo_Move, -1);
+	//int iAttachHandle_Attack	= MV1AttachAnim(this->iModelHandle, iMotionNo_Attack, -1);
+
+	///* 現在のモーションの総再生時間を取得 */
+	//int iAnimTime_Move		= MV1GetAttachAnimTime(this->iModelHandle, iMotionNo_Move);
+	//int iAnimTime_Attack	= MV1GetAttachAnimTime(this->iModelHandle, iMotionNo_Attack);
+
+	///* アニメーションブレンド率をセット */
+	//float blend = 0.5f;
+	////MV1SetAttachAnimBlendRate(this->iModelHandle, iAttachHandle_Move,	1.f - blend);
+	////MV1SetAttachAnimBlendRate(this->iModelHandle, iAttachHandle_Attack, blend);
+
+	///* 現在のモーション再生時間を取得 */
+	//float fNowMotionTime_Move = this->PlayerStatusList->fGetMotionTimer_Attack();
+	//
+	///* モーションの再生時間を設定 */
+	//MV1SetAttachAnimTime(this->iModelHandle, iAttachHandle_Move, fNowMotionTime_Move);
+
+	///* モーション時間を進める */
+	//fNowMotionTime_Move += 0.1f;
+
+	///* モーションの最大時間を取得 */
+	//float fMaxTime_Move = MV1GetAttachAnimTotalTime(this->iModelHandle, iAttachHandle_Move);
+
+	///* 最大時間を超えているか */
+	//if (fMaxTime_Move < fNowMotionTime_Move)	{ fNowMotionTime_Move = 0; }	// 再生時間を初期化
+
+	///* モーションの再生時間を設定 */
+	//this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Move);
 
 	///* アタッチしたアニメーションの総再生時間を取得する*/
 	//this->fMotionTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMotionAttachIndex);

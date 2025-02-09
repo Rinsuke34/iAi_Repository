@@ -39,12 +39,15 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerNowInvincibleTime			= 0;							// プレイヤーの現在の残り無敵時間
 
 	/* プレイヤーモーション関連 */
-	this->iPlayerMotion_Move				= MOTION_ID_MOVE_IDLE;			// プレイヤーモーション(移動系)
+	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// プレイヤーモーション(移動系)
+	this->iPlayerMotion_Move_Old			= -1;							// 変更前プレイヤーモーション(移動系)
 	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;		// プレイヤーモーション(攻撃系)
-	this->iPlayerMotion_Move_Old			= MOTION_ID_MOVE_IDLE;			// 変更前プレイヤーモーション(移動系)
-	this->iPlayerMotion_Attack_Old			= MOTION_ID_ATTACK_NONE;		// 変更前プレイヤーモーション(攻撃系)
-	this->fMotionCount_Move					= 0;							// モーションカウント(移動系)
-	this->fMotionCount_Attack				= 0;							// モーションカウント(攻撃系)
+	this->iPlayerMotion_Attack_Old			= -1;							// 変更前プレイヤーモーション(攻撃系)
+	
+	this->fMotionTimer_Move					= 0;							// モーションカウント(移動系)
+	this->fMotionTimer_Move_End				= 0;							// モーションカウント(移動系/終了時間)
+	this->fMotionTimer_Attack				= 0;							// モーションカウント(攻撃系)
+	this->fMotionTimer_Attack_End			= 0;							// モーションカウント(攻撃系/終了時間)
 
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;

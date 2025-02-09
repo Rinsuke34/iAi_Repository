@@ -231,7 +231,7 @@ void CharacterPlayer::Player_Move()
 		else
 		{
 			/* ‘Ò‹@ƒ‚[ƒVƒ‡ƒ“Ý’è */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_IDLE);
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
 		}
 	}
 
