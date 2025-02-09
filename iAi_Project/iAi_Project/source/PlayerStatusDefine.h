@@ -85,21 +85,6 @@ static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
 
-/* プレイヤーモーション */
-static const int	PLAYER_MOTION_IDLE					= 0;	// 待機
-static const int	PLAYER_MOTION_WALK					= 1;	// 歩行
-static const int	PLAYER_MOTION_RUN_LOW				= 2;	// 走行(低速)
-static const int	PLAYER_MOTION_RUN_HIGH				= 3;	// 走行(高速)
-static const int	PLAYER_MOTION_DRAW_SWORD_CHARGE		= 4;	// 居合(溜め)
-static const int	PLAYER_MOTION_DRAW_SWORD_WEAK		= 5;	// 居合(弱)
-static const int	PLAYER_MOTION_DRAW_SWORD_STRONG		= 6;	// 居合(強)
-static const int	PLAYER_MOTION_DRAW_SWORD_END		= 7;	// 居合(強)(終了)
-static const int	PLAYER_MOTION_THROW_KUNAI_AIM		= 8;	// クナイ(構え)
-static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 9;	// クナイ(投げ)
-static const int	PLAYER_MOTION_DODGE					= 10;	// 回避
-static const int	PLAYER_MOTION_JUMP_UP				= 11;	// ジャンプ(上昇)
-static const int	PLAYER_MOTION_JUMP_DOWN				= 12;	// ジャンプ(下降)
-
 /* プレイヤー処理用定数 */
 static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
 static const float	PLAYER_WIDE							= 15.f;		// 幅(当たり判定)

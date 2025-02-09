@@ -105,8 +105,8 @@ void CharacterPlayer::Player_Move()
 		{
 			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
-			/* モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 		}
 
 		// スティックの倒し具合で速度を変化
@@ -118,7 +118,8 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
 			//一定フレームがたったら走り（最大）へ
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_LOW);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
@@ -153,7 +154,8 @@ void CharacterPlayer::Player_Move()
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 				/* 走行(高速)モーション設定 */
-				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 			}
 		}
 		else
@@ -163,8 +165,8 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
 			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 
-			/* 歩行モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 		}
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
@@ -203,13 +205,13 @@ void CharacterPlayer::Player_Move()
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
 
 		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
-		if (this->PlayerStatusList->iGetPlayerMotion() == PLAYER_MOTION_DRAW_SWORD_END)
+		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
 		}
 		else
 		{
 			/* 待機モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_IDLE);
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
 		}
 	}
 
@@ -648,13 +650,13 @@ void CharacterPlayer::Movement_Vertical()
 						{
 							// 上昇している場合
 							/* モーションを"ジャンプ(上昇)"に設定 */
-							PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_JUMP_UP);
+							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
 						}
 						else
 						{
 							// 下降している場合
 							/* モーションを"ジャンプ(下降)"に設定 */
-							PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_JUMP_DOWN);
+							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
 						}
 
 					}

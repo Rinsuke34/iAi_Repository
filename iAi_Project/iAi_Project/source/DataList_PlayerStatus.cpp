@@ -12,7 +12,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	/* プレイヤー状態関連 */
 	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;		// プレイヤーの移動状態
 	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;		// プレイヤーの攻撃状態
-	this->iPlayerMotion						= PLAYER_MOTION_IDLE;			// プレイヤーのモーション
 	this->bPlayerLandingFlg					= false;						// プレイヤーが着地しているか
 	this->fPlayerNowMoveSpeed				= 0;							// プレイヤーの現在の移動速度
 	this->fPlayerAngleX						= 0;							// プレイヤーのX軸回転量(ラジアン)
@@ -38,6 +37,17 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->pLockOnEnemy						= nullptr;						// ロックオン対象のエネミー
 	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;		// プレイヤーの現在のHP
 	this->iPlayerNowInvincibleTime			= 0;							// プレイヤーの現在の残り無敵時間
+
+	/* プレイヤーモーション関連 */
+	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// プレイヤーモーション(移動系)
+	this->iPlayerMotion_Move_Old			= -1;							// 変更前プレイヤーモーション(移動系)
+	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;		// プレイヤーモーション(攻撃系)
+	this->iPlayerMotion_Attack_Old			= -1;							// 変更前プレイヤーモーション(攻撃系)
+	
+	this->fMotionTimer_Move					= 0;							// モーションカウント(移動系)
+	this->fMotionTimer_Move_End				= 0;							// モーションカウント(移動系/終了時間)
+	this->fMotionTimer_Attack				= 0;							// モーションカウント(攻撃系)
+	this->fMotionTimer_Attack_End			= 0;							// モーションカウント(攻撃系/終了時間)
 
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;
