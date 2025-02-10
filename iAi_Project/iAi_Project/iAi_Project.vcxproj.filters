@@ -241,6 +241,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー">
       <UniqueIdentifier>{f2b2c71e-9df6-4443-9961-b41dfc8d8e73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\NewFilter1">
+      <UniqueIdentifier>{b72c807e-38f6-4055-ab75-27bd1334964a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\スカイスフィア">
+      <UniqueIdentifier>{4501488b-19f3-4bcd-a7f1-fad1187f857d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -383,6 +389,12 @@
     </ClCompile>
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterPlayerMotion.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SkySqhereBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\NewFilter1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -538,6 +550,12 @@
     </ClInclude>
     <ClInclude Include="source\EffectSelfDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerMotionDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SkySqhereBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\スカイスフィア</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

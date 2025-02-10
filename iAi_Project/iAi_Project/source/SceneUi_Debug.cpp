@@ -7,140 +7,49 @@
 // コンストラクタ
 SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 {
+	/* 初期化 */
 	this->iSelectNo	= 0;
+
+	/* グローバル変数をデバッグ項目に登録 */
+	pDebugManu.push_back(&gbDrawSceneListFlg);			// シーンリストの描写
+	pDebugManu.push_back(&gbDrawDatalistFlg);			// データリストの描写
+	pDebugManu.push_back(&gbDrawShadowMapFlg);			// シャドウマップの描写
+	pDebugManu.push_back(&gbDrawLightMapFlg);			// ライトマップの描写
+	pDebugManu.push_back(&gbDrawLightMapDownScaleFlg);	// ライトマップ(縮小)の描写
+	pDebugManu.push_back(&gbDrawLightMapGaussFlg);		// ライトマップ(ぼかし)のハンドル
+	pDebugManu.push_back(&gbDrawCollisionFlg);			// 全オブジェクトのコリジョン描写
+	pDebugManu.push_back(&gbDrawDeleteBackGroundFlg);	// バックグランドオブジェクトの非表示
 }
 
 // 計算
 void SceneUi_Debug::Process()
 {
-	/* 入力取得 */
-	// 上
+	/* プレイヤーの入力取得 */
+	// ※プレイヤーの入力に応じて選択中の項目番号を変更する
+	// 上入力
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 	{
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+		this->iSelectNo -= 1;
+		if (this->iSelectNo < 0)
 		{
-			this->iSelectNo -= 1;
-			if (this->iSelectNo < 0)
-			{
-				this->iSelectNo = 0;
-			}
+			this->iSelectNo = 0;
 		}
 	}
-	
-	// 下
+
+	// 下入力
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 	{
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+		this->iSelectNo += 1;
+		if (this->iSelectNo > pDebugManu.size())
 		{
-			this->iSelectNo += 1;
-			if (this->iSelectNo > 8)
-			{
-				this->iSelectNo = 8;
-			}
+			this->iSelectNo = (int)pDebugManu.size();
 		}
 	}
 
 	// 決定
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
-		switch (this->iSelectNo)
-		{
-			case 0:
-				if (gbDrawSceneListFlg == true)
-				{
-					gbDrawSceneListFlg = false;
-				}
-				else
-				{
-					gbDrawSceneListFlg = true;
-				}
-				break;
-
-			case 1:
-				if (gbDrawDatalistFlg == true)
-				{
-					gbDrawDatalistFlg = false;
-				}
-				else
-				{
-					gbDrawDatalistFlg = true;
-				}
-				break;
-
-			case 2:
-				if (gbDrawShadowMapFlg == true)
-				{
-					gbDrawShadowMapFlg = false;
-				}
-				else
-				{
-					gbDrawShadowMapFlg = true;
-				}
-				break;
-
-			case 3:
-				if (gbDrawLightMapFlg == true)
-				{
-					gbDrawLightMapFlg = false;
-				}
-				else
-				{
-					gbDrawLightMapFlg = true;
-				}
-				break;
-
-			case 4:
-				if (gbDrawLightMapDownScaleFlg == true)
-				{
-					gbDrawLightMapDownScaleFlg = false;
-				}
-				else
-				{
-					gbDrawLightMapDownScaleFlg = true;
-				}
-				break;
-
-			case 5:
-				if (gbDrawLightMapGaussFlg == true)
-				{
-					gbDrawLightMapGaussFlg = false;
-				}
-				else
-				{
-					gbDrawLightMapGaussFlg = true;
-				}
-				break;
-
-			case 6:
-				if (gbDrawCollisionFlg == true)
-				{
-					gbDrawCollisionFlg = false;
-				}
-				else
-				{
-					gbDrawCollisionFlg = true;
-				}
-				break;
-
-			case 7:
-				if (gbDrawDeleteBackGroundFlg == true)
-				{
-					gbDrawDeleteBackGroundFlg = false;
-				}
-				else
-				{
-					gbDrawDeleteBackGroundFlg = true;
-				}
-				break;
-
-			case 8:
-				if (gbUseMouseFlg == true)
-				{
-					gbUseMouseFlg = false;
-				}
-				else
-				{
-					gbUseMouseFlg = true;
-				}
-		}
+		*pDebugManu[this->iSelectNo] = bToggleFlg(*pDebugManu[this->iSelectNo]);
 	}
 
 	// 戻る
@@ -155,7 +64,7 @@ void SceneUi_Debug::Process()
 // 描画
 void SceneUi_Debug::Draw()
 {
-	DrawBox(700, 300, 1200, 300 + 16 * 9, GetColor(0, 0, 0), TRUE);
+	DrawBox(780, 300, 1200, 300 + 16 * 9, GetColor(0, 0, 0), TRUE);
 	DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
 	DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "データリストの描写");
 	DrawFormatString(800, 300 + 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
@@ -166,5 +75,14 @@ void SceneUi_Debug::Draw()
 	DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
 	DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
 
-	DrawFormatString(700, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
+	DrawFormatString(780, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
+}
+
+// trueとfalseの切り替え
+bool SceneUi_Debug::bToggleFlg(bool bFlg)
+{
+	// 引数
+	// bFlg	: 切り替えるフラグ
+
+	return !bFlg;
 }
