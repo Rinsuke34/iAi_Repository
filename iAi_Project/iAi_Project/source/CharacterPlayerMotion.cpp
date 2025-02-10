@@ -7,8 +7,8 @@
 void CharacterPlayer::Player_Motion_Transition()
 {
 	/* 現在のモーション番号を取得 */
-	int iMotionNo_Move = this->PlayerStatusList->iGetPlayerMotion_Move();
-	int iMotionNo_Attack = this->PlayerStatusList->iGetPlayerMotion_Attack();
+	int iMotionNo_Move		= this->PlayerStatusList->iGetPlayerMotion_Move();
+	int iMotionNo_Attack	= this->PlayerStatusList->iGetPlayerMotion_Attack();
 
 	/* 移動系モーション */
 	{
@@ -82,18 +82,22 @@ void CharacterPlayer::Player_Motion_Transition()
 		}
 
 		/* 現在のモーション再生時間を取得 */
-		float fNowMotionTime_Move = this->PlayerStatusList->fGetMotionTimer_Attack();
+		float fNowMotionTime_Attack = this->PlayerStatusList->fGetMotionTimer_Attack();
 
 		/* モーション時間を進める */
-		fNowMotionTime_Move += 1.f;
+		fNowMotionTime_Attack += 1.f;
 
 		/* 最大時間を超えているか */
-		if (fNowMotionTime_Move > this->PlayerStatusList->fGetMotionTimer_Attack_End())
+		if (fNowMotionTime_Attack > this->PlayerStatusList->fGetMotionTimer_Attack_End())
 		{
-			fNowMotionTime_Move = 0.f;
+			/* 再生時間を初期化 */
+			fNowMotionTime_Attack = 0.f;
+
+			/* モーション番号を変更後の値に設定 */
+			this->PlayerStatusList->SetPlayerMotion_Attack(this->PlayerMotionList[iMotionNo_Attack].iNextMotionID);
 		}
 
 		/* モーションの再生時間を設定 */
-		this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Move);
+		this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Attack);
 	}
 }

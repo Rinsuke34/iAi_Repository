@@ -81,6 +81,12 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 			this->PlayerMotionList[i].iNextMotionID		= MOTION_LIST[i].iNextMotionID;
 		}
 	}
+
+	/* モーションの初期設定 */
+	this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+	this->PlayerStatusList->SetPlayerMotion_Move_Old(-1);
+	this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+	this->PlayerStatusList->SetPlayerMotion_Attack_Old(-1);
 }
 
 // 初期化
@@ -112,9 +118,6 @@ void CharacterPlayer::Update()
 	{
 		/* 移動量をリセット */
 		this->vecMove = VGet(0, 0, 0);
-
-		/* ロックオン範囲コリジョン使用フラグを無効化 */
-		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 	}
 
 	///* プレイヤーのモーション状態を保存する */

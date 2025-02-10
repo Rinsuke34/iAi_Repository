@@ -64,18 +64,18 @@ void SceneUi_Debug::Process()
 // 描画
 void SceneUi_Debug::Draw()
 {
-	DrawBox(780, 300, 1200, 300 + 16 * 9, GetColor(0, 0, 0), TRUE);
-	DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
-	DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "データリストの描写");
-	DrawFormatString(800, 300 + 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
-	DrawFormatString(800, 300 + 16 * 3, GetColor(255, 255, 255), "ライトマップの描写");
-	DrawFormatString(800, 300 + 16 * 4, GetColor(255, 255, 255), "ライトマップ(縮小)の描写");
-	DrawFormatString(800, 300 + 16 * 5, GetColor(255, 255, 255), "ライトマップ(ぼかし)のハンドル");
-	DrawFormatString(800, 300 + 16 * 6, GetColor(255, 255, 255), "全オブジェクトのコリジョン描写");
-	DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
-	DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
+	DrawBox(0, 0, 0, 16 * pDebugManu.size(), GetColor(0, 0, 0), TRUE);
+	DrawFormatString(20, 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
+	DrawFormatString(20, 16 * 1, GetColor(255, 255, 255), "データリストの描写");
+	DrawFormatString(20, 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
+	DrawFormatString(20, 16 * 3, GetColor(255, 255, 255), "ライトマップの描写");
+	DrawFormatString(20, 16 * 4, GetColor(255, 255, 255), "ライトマップ(縮小)の描写");
+	DrawFormatString(20, 16 * 5, GetColor(255, 255, 255), "ライトマップ(ぼかし)のハンドル");
+	DrawFormatString(20, 16 * 6, GetColor(255, 255, 255), "全オブジェクトのコリジョン描写");
+	DrawFormatString(20, 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
+	DrawFormatString(20, 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
 
-	DrawFormatString(780, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
+	DrawFormatString(0, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
 }
 
 // trueとfalseの切り替え

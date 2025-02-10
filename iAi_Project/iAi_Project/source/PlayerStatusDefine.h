@@ -65,7 +65,9 @@ static const int	CAMERA_MODE_FREE						= 0;				// フリーモード(通常の三人称視点)
 static const int    CAMERA_MODE_LOCK						= 1;				// 固定
 static const int	CAMERA_MODE_AIM							= 2;				// 構え(ズーム)
 // 線形補間
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形保管用カウントの最大値
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60;				// カメラ座標の線形保管用カウントの最大値
+// 補正
+static const float	CAMERA_TARGET_CORRECTION_UP				= 20.f;				// カメラのターゲット位置の補正(プレイヤーの高さ)
 
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 開始 */
 /* プレイヤー移動状態 */

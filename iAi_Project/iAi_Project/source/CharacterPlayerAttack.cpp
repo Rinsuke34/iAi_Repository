@@ -438,8 +438,8 @@ void CharacterPlayer::Player_Charge_Attack()
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 
 				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
-				fMove += 500.f;
-				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
+				fMove += 1000.f;
+				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 1000.f));
 			}
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
@@ -470,7 +470,10 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
+
+				/* ロックオン範囲コリジョン使用フラグを無効化 */
+				this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 			}
 
 			/* 近接攻撃として扱う弾を作成 */

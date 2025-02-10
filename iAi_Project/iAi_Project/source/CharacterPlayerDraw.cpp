@@ -19,24 +19,24 @@ void CharacterPlayer::Draw()
 	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->PlayerStatusList->fGetMotionTimer_Attack());
 
 	/* モーションのブレンド率を設定 */
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), 0.5f);
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), 0.5f);
+	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), 0.3f);
+	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), 0.7f);
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
 
 
 	/* テスト用 */
-	DrawFormatString(200, 300 + 16 * 0, GetColor(255, 255, 255), "移動系");
-	DrawFormatString(200, 300 + 16 * 1, GetColor(255, 255, 255), "現在モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Move());
-	DrawFormatString(200, 300 + 16 * 2, GetColor(255, 255, 255), "変更前モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Move_Old());
-	DrawFormatString(200, 300 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Move());
-	DrawFormatString(200, 300 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Move_End());
-	DrawFormatString(200, 300 + 16 * 5, GetColor(255, 255, 255), "攻撃系");
-	DrawFormatString(200, 300 + 16 * 6, GetColor(255, 255, 255), "現在モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Attack());
-	DrawFormatString(200, 300 + 16 * 7, GetColor(255, 255, 255), "変更前モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Attack_Old());
-	DrawFormatString(200, 300 + 16 * 8, GetColor(255, 255, 255), "再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Attack());
-	DrawFormatString(200, 300 + 16 * 9, GetColor(255, 255, 255), "最終再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Attack_End());
+	DrawFormatString(200, 500 + 16 * 0, GetColor(255, 255, 255), "移動系");
+	DrawFormatString(200, 500 + 16 * 1, GetColor(255, 255, 255), "現在モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Move());
+	DrawFormatString(200, 500 + 16 * 2, GetColor(255, 255, 255), "変更前モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Move_Old());
+	DrawFormatString(200, 500 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Move());
+	DrawFormatString(200, 500 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Move_End());
+	DrawFormatString(200, 500 + 16 * 5, GetColor(255, 255, 255), "攻撃系");
+	DrawFormatString(200, 500 + 16 * 6, GetColor(255, 255, 255), "現在モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Attack());
+	DrawFormatString(200, 500 + 16 * 7, GetColor(255, 255, 255), "変更前モーション番号 : %f", this->PlayerStatusList->iGetPlayerMotion_Attack_Old());
+	DrawFormatString(200, 500 + 16 * 8, GetColor(255, 255, 255), "再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Attack());
+	DrawFormatString(200, 500 + 16 * 9, GetColor(255, 255, 255), "最終再生時間 : %f", this->PlayerStatusList->fGetMotionTimer_Attack_End());
 }
 
 // 当たり判定描写
