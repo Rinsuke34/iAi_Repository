@@ -190,6 +190,10 @@ void DataList_Object::UpdateBullet()
 void DataList_Object::UpdatePlatform()
 {
 	/* 稼働プラットフォームの更新を呼ぶ(予定) */
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		pPlatform->Update();
+	}
 }
 
 /* リスト内オブジェクト描写 */

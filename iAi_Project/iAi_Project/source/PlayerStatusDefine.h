@@ -3,6 +3,7 @@
 /* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
 /* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -34,6 +35,9 @@ static const float	PLAER_DASH_NOMAL_SPEED = 10.0f;			// プレイヤーの走り（通常）
 static const float	PLAER_DASH_MAX_SPEED = 20.0f;		// プレイヤーの走り（最大）の移動速度
 static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;			// プレイヤーの走りの通常→最大になるフレーム数
 static const float	STICK_TILT_PLAER_DASH				= 0.8f;			// プレイヤーが走り状態になるスティックの傾き（範囲：最大1）
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0?1.0）				/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_TURN_LIMIT_LEFT				= DX_PI_F * +2.0f;		// プレイヤーの回転角度制限(左)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_TURN_LIMIT_RIGHT				= DX_PI_F * -2.0f;		// プレイヤーの回転角度制限(右)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 
 // ジャンプ関係
 static const float	PLAYER_JUMP_SPEED					= 50.0f;		// プレイヤーのジャンプの速度

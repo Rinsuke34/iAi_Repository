@@ -12,10 +12,14 @@
 #include "EnemyGoalObject.h"
 #include "EnemyNormal.h"
 #include "EnemyMissile.h"
+#include "EnemyBeam.h"
 // プラットフォーム
 #include "PlatformBasic.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
+// ギミック
+#include "GimmickDisappear.h"
+#include "GimmickJump.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -173,7 +177,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(仮)の場合
 					/* "オブジェクト管理"にエネミー(仮)を追加 */
-					NormalEnemy* AddEnemy = new NormalEnemy();
+					BeamEnemy* AddEnemy = new BeamEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
 					/* 座標 */
@@ -202,6 +206,12 @@ void SceneStage::LoadMapData()
 
 			/* モデル */
 			pSkySqhere->SetModelHandle(this->ModelList->iGetModel("SkySqhere/skysphere"));
+		}
+		/*ギミック追加(仮)*/
+		{
+			GimmickJump* pGimmickDisappear = new GimmickJump();
+			ObjectList->SetPlatform(pGimmickDisappear);
+			pGimmickDisappear->SetPosition(VGet(22.f,160.f,22.f));
 		}
 	}
 

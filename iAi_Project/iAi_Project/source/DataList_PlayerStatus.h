@@ -2,6 +2,8 @@
 /* 2025.01.09 菊池雅道 移動関連の変数・関数追加 */
 /* 2025.01.22 菊池雅道 攻撃関連の変数・関数追加 */
 /* 2025.02.05 菊池雅道 ステータス関連の変数・関数修正 */
+/* 2025.02.10 菊池雅道 移動関連の変数・関数追加 */
+
 
 #pragma once
 #include <vector>
@@ -30,6 +32,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bGetPlayerLandingFlg()				{ return this->bPlayerLandingFlg; }					// プレイヤーが空中にいるかのフラグ取得
 		float	fGetPlayerNowMoveSpeed()			{ return this->fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度取得
 		float	fGetPlayerAngleX()					{ return this->fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
+		float	fGetPlayerTurnSpeed()				{ return this->fPlayerTurnSpeed; }					// プレイヤーの回転速度取得										/* 2025.02.10 菊池雅道 移動関連の関数追加 */
 		float	fGetPlayerNowFallSpeed()			{ return this->fPlayerNowFallSpeed; }				// プレイヤーの現在の落下速度取得
 		int		iGetPlayerNowJumpCount()			{ return this->iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)取得
 		int		iGetPlayerNowAttakChargeFlame()		{ return this->iPlayerNowAttakChargeFlame; }		// プレイヤーの現在の攻撃チャージフレーム数取得
@@ -101,6 +104,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerLanding(bool bPlayerLanding)								{ this->bPlayerLandingFlg				= bPlayerLanding; }						// プレイヤーが空中にいるかのフラグ設定
 		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)					{ this->fPlayerNowMoveSpeed				= fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度設定
 		void	SetPlayerAngleX(float fPlayerAngleX)								{ this->fPlayerAngleX					= fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
+		void	SetPlayerTurnSpeed(float fPlayerTurnSpeed)							{ this->fPlayerTurnSpeed				= fPlayerTurnSpeed; }					// プレイヤーの回転速度設定					/* 2025.02.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)					{ this->fPlayerNowFallSpeed				= fPlayerNowFallSpeed; }				// プレイヤーの現在の落下速度設定
 		void	SetPlayerNowJumpCount(int iPlayerNowJumpCount)						{ this->iPlayerNowJumpCount				= iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)設定
 		void	SetPlayerNormalDashFlameCount(int iPlayerNormalDashFlameCount)		{ this->iPlayerNormalDashFlameCount		= iPlayerNormalDashFlameCount; }		// 通常ダッシュ時経過フレーム数を設定
@@ -177,6 +181,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerLandingFlg;				// プレイヤーが着地しているかのフラグ
 		float	fPlayerNowMoveSpeed;			// プレイヤーの現在の移動速度
 		float	fPlayerAngleX;					// プレイヤーのX軸回転量(ラジアン)
+		float	fPlayerTurnSpeed;				// プレイヤーの方向転換の速度（範囲：0.0?1.0）								/* 2025.02.10 菊池雅道 移動関連の変数追加 */
 		float	fPlayerNowFallSpeed;			// プレイヤーの現在の落下速度
 		int		iPlayerNowJumpCount;			// プレイヤーのジャンプ回数(現在数)
 		float	fPlayerNowMotionCount;			// プレイヤーのモーションの現在のカウント
