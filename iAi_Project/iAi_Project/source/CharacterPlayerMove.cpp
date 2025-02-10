@@ -2,8 +2,8 @@
 /* 2025.01.09 菊池雅道	移動処理追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
-/* 2025.02.07 菊池雅道	エフェクト処理修正 */
-
+/* 2025.02.06 菊池雅道	エフェクト処理修正 */
+/* 2025.02.07 菊池雅道	衝突判定処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -88,7 +88,7 @@ void CharacterPlayer::Player_Move()
 	/* 2025.01.09 菊池雅道	移動処理追加	   開始 */
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始	*/
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
-	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 移動入力がされているか確認 */
 	if ((vecInput.x != 0 || vecInput.z != 0))
@@ -169,7 +169,7 @@ void CharacterPlayer::Player_Move()
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
-		/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
+		/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
 
 		/* 現在速度を更新 */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
@@ -378,7 +378,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 	
 
 	/* プレイヤーの移動状態を取得 */
@@ -493,7 +493,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.01.26 駒沢風助	コード修正 終了 */
 	/* 2025.01.27 菊池雅道　エフェクト処理追加 終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-	/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
 }
 
 // 移動処理(垂直方向)
@@ -665,6 +665,7 @@ void CharacterPlayer::Movement_Vertical()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
+/* 2025.02.07 菊池雅道	衝突判定処理修正　開始 */
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
 {
@@ -673,6 +674,16 @@ void CharacterPlayer::Movement_Horizontal()
 	vecNextPosition.x = this->vecPosition.x + this->vecMove.x;
 	vecNextPosition.y = this->vecPosition.y;
 	vecNextPosition.z = this->vecPosition.z + this->vecMove.z;
+
+	/* 1フレームでの移動量を分割して判定する回数 */
+	/* ※移動量に応じて分割を設定する */
+	int iMoveHitCheckCount = (int)VSize(VGet(this->vecMove.x,0,this->vecMove.z));
+	
+	/* 分割した移動量 */
+	VECTOR vecDevisionMove = VScale(this->vecMove, 1.0f / iMoveHitCheckCount);
+
+	/* 分割して移動した先の座標 */
+	VECTOR vecDevisionMovePosition = this->vecPosition;
 
 	/* 道中でオブジェクトに接触しているか判定 */
 	{
@@ -701,55 +712,69 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
-					/* 法線ベクトルの作成 */
-					VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
 
-					/* ポリゴンと接触した座標 */
-					VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
-
-					/* 接触したポリゴンから法線ベクトルを取得し加算する */
-					for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					/* 移動量を分割して衝突判定する */
+					for (int i = 0; i < iMoveHitCheckCount; i++)
 					{
-						/* 法線ベクトルを取得 */
-						// ※ 法線ベクトルが0であるならば、加算しない
-						if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+						/* 移動後座標に球体ポリゴンを作成 */
+						vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
+
+						/* 法線ベクトルの作成 */
+						VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
+
+						/* ポリゴンと接触した座標 */
+						VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
+
+						/* 接触したポリゴンから法線ベクトルを取得し加算する */
+						for (int j = 0; j < stHitPolyDim.HitNum; j++)
 						{
-							// 法線ベクトルが0でない場合
-							/* 法線ベクトルのY軸を初期化 */
-							stHitPolyDim.Dim[j].Normal.y = 0.f;
+							/* 法線ベクトルを取得 */
+							// ※ 法線ベクトルが0であるならば、加算しない
+							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+							{
+								// 法線ベクトルが0でない場合
+								/* 法線ベクトルのY軸を初期化 */
+								stHitPolyDim.Dim[j].Normal.y = 0.f;
 
-							/* 法線ベクトルを正規化 */
-							VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+								/* 法線ベクトルを正規化 */
+								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
 
-							/* 法線ベクトルを合計に加算 */
-							vecNormalSum = VAdd(vecNormalSum, vecNormal);
+								/* 法線ベクトルを合計に加算 */
+								vecNormalSum = VAdd(vecNormalSum, vecNormal);
+							}
+						}
+
+						/* 取得した法線ベクトルを正規化 */
+						// ※ 取得した法線ベクトルの平均を取得
+						vecNormalSum = VNorm(vecNormalSum);
+
+						/* 移動後座標に球体ポリゴンを作成 */
+						COLLISION_SQHERE stSphere;
+						stSphere.vecSqhere = vecDevisionMovePosition;
+						stSphere.fSqhereRadius = PLAYER_WIDE;
+
+						/* 法線の方向にプレイヤーを押し出す */
+						// ※ 対象のコリジョンと接触しなくなるまで押し出す
+						// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
+						bool bHitFlag = true;
+						while (bHitFlag)
+						{
+							/* 球体ポリゴンを法線ベクトルの方向へ移動 */
+							stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
+
+							/* 球体とポリゴンの接触判定 */
+							bHitFlag = platform->HitCheck(stSphere);
+						}
+
+						/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
+						vecNextPosition = stSphere.vecSqhere;
+
+						// 球体コリジョンと衝突があった場合、分割移動処理を終了する
+						if (stHitPolyDim.HitNum > 0)
+						{
+							break;
 						}
 					}
-
-					/* 取得した法線ベクトルを正規化 */
-					// ※ 取得した法線ベクトルの平均を取得
-					vecNormalSum = VNorm(vecNormalSum);
-
-					/* 移動後座標に球体ポリゴンを作成 */
-					COLLISION_SQHERE stSphere;
-					stSphere.vecSqhere = vecNextPosition;
-					stSphere.fSqhereRadius = PLAYER_WIDE;
-
-					/* 法線の方向にプレイヤーを押し出す */
-					// ※ 対象のコリジョンと接触しなくなるまで押し出す
-					// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
-					bool bHitFlag = true;
-					while (bHitFlag)
-					{
-						/* 球体ポリゴンを法線ベクトルの方向へ移動 */
-						stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
-
-						/* 球体とポリゴンの接触判定 */
-						bHitFlag = platform->HitCheck(stSphere);
-					}
-
-					/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
-					vecNextPosition = stSphere.vecSqhere;
 				}
 			}
 		}
@@ -763,3 +788,4 @@ void CharacterPlayer::Movement_Horizontal()
 		// ※移動量とかでモーションを変更する処理を追加
 	}
 }
+/* 2025.02.07 菊池雅道	衝突判定処理修正　終了 */

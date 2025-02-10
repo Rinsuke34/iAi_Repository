@@ -458,9 +458,6 @@
     <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\EffectSelfDelete.h">
-      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
-    </ClInclude>
     <ClInclude Include="source\EnemyBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
@@ -538,6 +535,9 @@
     </ClInclude>
     <ClInclude Include="source\EffectManualDelete_PlayerFollow.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectSelfDelete.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
