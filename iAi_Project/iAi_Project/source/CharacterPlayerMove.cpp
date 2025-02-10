@@ -4,6 +4,8 @@
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
 /* 2025.02.06 菊池雅道	エフェクト処理修正 */
 /* 2025.02.07 菊池雅道	衝突判定処理修正 */
+/* 2025.02.10 菊池雅道	振り向き処理修正 */
+/* 2025.02.10 菊池雅道	回避処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -185,14 +187,61 @@ void CharacterPlayer::Player_Move()
 		vecAddMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
+		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
+
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
 		{
 			// 合わせる場合
 			/* プレイヤーの向きを移動方向に合わせる */
-			float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-			fPlayerAngle = fAngleX - fPlayerAngle;			// カメラの向きと合成
-			this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+			/* 移動方向の角度(ラジアン)を取得 */
+			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
+			/* カメラの向きと合成 */
+			fMoveAngle = fAngleX - fMoveAngle;
+			/* プレイヤーの向きの角度(ラジアン)を取得 */
+			float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
+
+			/* 現在のプレイヤーの向きと移動方向の差を求める */
+			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
+
+			//プレイヤーを不必要に回転させないようにする処理
+			{
+				//プレイヤーの角度が一周(2π)を超えた場合、補正を行う
+				/* 左回りで一周したら */
+				if (fCurrentAngle > PLAYER_TURN_LIMIT_LEFT)
+				{
+					/* 角度を一周(2π)分補正する */ 
+					fCurrentAngle -= PLAYER_TURN_LIMIT_LEFT;  
+				}
+				/* 右回りで一周したら */
+				else if (fCurrentAngle < PLAYER_TURN_LIMIT_RIGHT)
+				{
+					/* 角度を一周(2π)分補正する */
+					fCurrentAngle -= PLAYER_TURN_LIMIT_RIGHT;
+				}
+				
+				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
+				/* 左回りで半周を超えたら */
+				if (fDifferrenceAngle > DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
+					fDifferrenceAngle -= 2 * DX_PI_F;  
+				}
+				/* 右回りで半周を超えたら */
+				else if (fDifferrenceAngle < -DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
+					fDifferrenceAngle += 2 * DX_PI_F;
+				}
+			}
+
+			/* 振り向き速度に応じて段階的に移動方向を向く */ 
+			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
+
+			/* プレイヤーの向きを更新 */
+			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
+
+			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
 	}
@@ -376,12 +425,12 @@ void CharacterPlayer::Player_Gravity()
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
-	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
+	/* 2025.01.09 菊池雅道	移動処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
-	
+	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -394,8 +443,10 @@ void CharacterPlayer::Player_Dodg()
 		if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
 		{
 			// 超えていない(回避状態を継続する)場合
-			/* 回避による移動方向を設定 */
-			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED);
+			
+			/* 回避による移動方向を設定し、移動する */
+			/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
+			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (1.0f - (float)this->PlayerStatusList->iGetPlayerNowDodgeFlame() / (float)PLAYER_DODGE_FLAME));
 
 			/* 回避の経過時間を進める */
 			this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
@@ -496,6 +547,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.01.27 菊池雅道　エフェクト処理追加 終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
+	/* 2025.02.10 菊池雅道	回避処理修正 終了 */
 }
 
 // 移動処理(垂直方向)

@@ -396,6 +396,12 @@
     <ClCompile Include="source\CharacterPlayerMotion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClCompile>
+    <ClCompile Include="source\GimmickJump.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickDisappear.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -556,6 +562,15 @@
     </ClInclude>
     <ClInclude Include="source\PlayerMotionDefine.h">
       <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDisappear.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickJump.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

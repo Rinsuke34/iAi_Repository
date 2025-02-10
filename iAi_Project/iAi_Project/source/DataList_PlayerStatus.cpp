@@ -1,6 +1,7 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
 /* 2025.01.10 菊池雅道 初期化処理追加  */
 /* 2025.01.22 菊池雅道 初期化処理追加  */
+/* 2025.02.10 菊池雅道 初期化処理追加 */
 #include "DataList_PlayerStatus.h"
 
 /* プレイヤーステータス管理クラスの定義 */
@@ -15,6 +16,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerLandingFlg					= false;						// プレイヤーが着地しているか
 	this->fPlayerNowMoveSpeed				= 0;							// プレイヤーの現在の移動速度
 	this->fPlayerAngleX						= 0;							// プレイヤーのX軸回転量(ラジアン)
+	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;			// プレイヤーの方向転換の速度	/* 2025.02.10 菊池雅道 初期化処理追加 */
 	this->fPlayerNowFallSpeed				= 0;							// プレイヤーの現在の落下速度
 	this->iPlayerNowJumpCount				= 0;							// プレイヤーのジャンプ回数(現在数)
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
