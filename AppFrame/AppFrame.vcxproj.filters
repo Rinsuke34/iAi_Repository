@@ -136,6 +136,18 @@
     <Filter Include="ソース ファイル\オブジェクト\ベース\スカイスフィア">
       <UniqueIdentifier>{a58b53ad-6f1f-473a-81d1-b5f4a9513898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム">
+      <UniqueIdentifier>{1da52179-82fe-4297-bfd5-c928f910f010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\アイテム">
+      <UniqueIdentifier>{25f0507f-6a84-4a24-89ed-67a181173500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし">
+      <UniqueIdentifier>{a914bd51-445d-4e70-b872-20cb2aaf9854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし">
+      <UniqueIdentifier>{f8c77f89-abe4-49c6-a898-a56acb2604f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -191,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="source\SkySqhereBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\スカイスフィア</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectItemBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="source\SkySqhereBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\スカイスフィア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItemBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

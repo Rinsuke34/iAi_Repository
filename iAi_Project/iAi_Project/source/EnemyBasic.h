@@ -6,12 +6,16 @@
 #include "EnemyDefine.h"
 
 /* データリスト */
-#include "DataList_Score.h"
 #include "DataList_Effect.h"
 #include "DataList_Object.h"
+#include "DataList_PlayerStatus.h"
+#include "DataList_GameResource.h"
 
 /* エフェクト */
 #include "EffectSelfDelete.h"
+
+/* オブジェクト */
+#include "EffectItem_Blood.h"
 
 /* 基本エネミークラスの宣言 */
 

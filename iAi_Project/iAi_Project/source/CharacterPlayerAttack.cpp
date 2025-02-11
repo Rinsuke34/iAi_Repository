@@ -470,7 +470,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
 			}
 
 			/* 近接攻撃として扱う弾を作成 */

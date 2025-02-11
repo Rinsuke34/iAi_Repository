@@ -7,6 +7,9 @@
 /* プログラム状態 */
 bool gbEndFlg	= false;	// プログラム終了フラグ
 
+/* フォント関連 */
+int	giFontHandle	= 0;	// フォントハンドル
+
 /* プレイヤーの入力情報 */
 Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド
 Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;				// キーボード＆マウス

@@ -44,6 +44,12 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 		/* コンボ */
 		gpSceneServer->AddSceneReservation(new SceneUi_Combo());
+
+		/* ブラッド */
+		gpSceneServer->AddSceneReservation(new SceneUi_Blood());
+
+		/* エディット */
+		gpSceneServer->AddSceneReservation(new SceneUi_Edit());
 	}
 
 	/* マップハンドル作成 */

@@ -54,7 +54,7 @@ static const int	LIGHTMAP_GAUSS_RATIO	= 100;		// ぼかしパラメータ(100につき約1ピ
 static const int DEBUG_MAP_HEIGHT	= 256;	// デバッグ描写の高さ
 static const int DEBUG_MAP_WIDTH	= 256;	// デバッグ描写の横幅
 
-// Effekseer関連
+/* Effekseer関連 */
 static const int EFFECT_MAX_PARTICLE	= 8000;		// エフェクトの最大パーティクル数
 
 /* ロックオン関係 */

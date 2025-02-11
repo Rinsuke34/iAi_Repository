@@ -4,13 +4,6 @@
 
 /* サウンド管理の構造体や定数の宣言を行う */
 
-///* 構造体 */
-//struct SE_NAME_TYPE
-//{
-//    std::string Name;
-//    int         iType;
-//};
-
 /* BGM関係 */
 // BGM番号
 const int	BGM_STAGE		= 0;	// ステージ

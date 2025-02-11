@@ -53,6 +53,9 @@ class DataList_PlayerStatus : public DataListBase
 		EnemyBasic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
 		int		iGetPlayerNowHp()					{ return this->iPlayerNowHp; }						// プレイヤーの現在のHPを取得
 		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
+		int		iGetPlayerComboNowCount()			{ return this->iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を取得
+		int		iGetPlayerComboMaxCount()			{ return this->iPlayerComboMaxCount; }				// プレイヤーの最大コンボ数を取得
+		int		iGetPlayerComboDuration()			{ return this->iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を取得
 
 		/* プレイヤーモーション関連 */
 		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
@@ -119,6 +122,9 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerLockOnEnemy(EnemyBasic* pLockOnEnemy)						{ this->pLockOnEnemy					= pLockOnEnemy; };						// ロックオン対象のエネミーを設定
 		void	SetPlayerNowHp(int iPlayerNowHp)									{ this->iPlayerNowHp					= iPlayerNowHp; }						// プレイヤーの現在のHPを設定
 		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)			{ this->iPlayerNowInvincibleTime		= iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を設定
+		void	SetPlayerComboNowCount(int iPlayerComboNowCount)					{ this->iPlayerComboNowCount			= iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を設定
+		void	SetPlayerComboMaxCount(int iPlayerComboMaxCount)					{ this->iPlayerComboMaxCount			= iPlayerComboMaxCount; }				// プレイヤーの最大コンボ数を設定
+		void	SetPlayerComboDuration(int iPlayerComboDuration)					{ this->iPlayerComboDuration			= iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を設定
 
 		/* プレイヤーモーション関連 */
 		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
@@ -200,6 +206,9 @@ class DataList_PlayerStatus : public DataListBase
 		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー
 		int		iPlayerNowHp;					// プレイヤーの現在のHP
 		int		iPlayerNowInvincibleTime;		// プレイヤーの現在の残り無敵時間
+		int		iPlayerComboNowCount;			// プレイヤーの現在のコンボ数
+		int		iPlayerComboMaxCount;			// プレイヤーの最大コンボ数
+		int		iPlayerComboDuration;			// プレイヤーのコンボの残り持続時間
 
 		/* プレイヤーモーション関連 */
 		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)
