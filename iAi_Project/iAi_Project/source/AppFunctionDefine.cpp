@@ -40,16 +40,28 @@ namespace PROJECT_INIT
 	// プロジェクト初期化処理
 	void	Init()
 	{
-		/* データリストサーバーに"プレイヤー入力管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Input());
+		/* データリスト作成 */
+		{
+			/* データリストサーバーに"プレイヤー入力管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Input());
 
-		/* データリストサーバーに"サウンド管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Sound());
+			/* データリストサーバーに"サウンド管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Sound());
+		}
+	
+		/* データリスト取得 */
+		{
+			/* 今追加した"プレイヤー入力管理"を取得 */
+			gpDataList_Input = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
 
-		/* 今追加した"プレイヤー入力管理"を取得 */
-		gpDataList_Input	= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+			/* 今追加した"サウンド管理"を取得 */
+			gpDataList_Sound = dynamic_cast<DataList_Sound*>(gpDataListServer->GetDataList("DataList_Sound"));
+		}
 
-		/* 今追加した"サウンド管理"を取得 */
-		gpDataList_Sound	= dynamic_cast<DataList_Sound*>(gpDataListServer->GetDataList("DataList_Sound"));
+		/* フォント設定 */
+		{
+			/* フォントハンドルを取得 */
+			giFontHandle = LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
+		}
 	}
 }

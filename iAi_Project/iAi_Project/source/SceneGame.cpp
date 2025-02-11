@@ -18,8 +18,8 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 		/* データリストサーバーに"エフェクトリソース管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_Effect());
 
-		/* データリストサーバーに"スコア関連管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Score());
+		/* データリストサーバーに"ゲームリソース管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_GameResource());
 	}
 
 	/* データリスト取得 */
@@ -47,8 +47,8 @@ SceneGame::~SceneGame()
 		/* エフェクトリソース管理 */
 		gpDataListServer->DeleteDataList("DataList_Effect");
 
-		/* スコア関連管理 */
-		gpDataListServer->DeleteDataList("DataList_Score");
+		/* ゲームリソース管理 */
+		gpDataListServer->DeleteDataList("DataList_GameResource");
 	}
 
 	/* Effkseerの使用を終了する */

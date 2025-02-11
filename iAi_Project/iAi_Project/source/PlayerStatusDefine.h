@@ -24,6 +24,7 @@ static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX = 3;			// プレイヤーのジャンプ回
 static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ロックオン範囲の半径
 static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// プレイヤーの最大HP
 static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// プレイヤーの最大無敵時間
+static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3;		// コンボの持続時間
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
 // 移動関係

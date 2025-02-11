@@ -29,6 +29,7 @@ class DataList_Object : public DataListBase
 		void	InitializationEffect();		// エフェクト初期化
 		void	InitializationBullet();		// 弾初期化
 		void	InitializationPlatform();	// プラットフォーム初期化
+		void	InitializationEffectItem();	// アイテム(実体なし)初期化
 
 		/* リスト内オブジェクト更新 */
 		void	UpdateAll();			// 全オブジェクト更新
@@ -38,6 +39,7 @@ class DataList_Object : public DataListBase
 		void	UpdateEffect();			// エフェクト更新
 		void	UpdateBullet();			// 弾更新
 		void	UpdatePlatform();		// プラットフォーム更新
+		void	UpdateEffectItem();		// アイテム(実体なし)更新
 
 		/* リスト内オブジェクト描写 */
 		void	DrawAll();				// 全オブジェクト描写(エフェクトを除く)
@@ -47,6 +49,7 @@ class DataList_Object : public DataListBase
 		void	DrawBullet();			// 弾描写
 		void	DrawPlatform();			// プラットフォーム描写
 		void	DrawEffect();			// エフェクト描写
+		void	DrawEffectItem();		// アイテム(実体なし)描写
 
 		/* リスト内オブジェクトコリジョン描写 */
 		void	DrawAll_Collision();		// 全オブジェクトコリジョン描写
@@ -55,6 +58,7 @@ class DataList_Object : public DataListBase
 		void	DrawEnemy_Collision();		// エネミーコリジョン描写
 		void	DrawBullet_Collision();		// 弾コリジョン描写
 		void	DrawPlatform_Collision();	// プラットフォームコリジョン描写
+		void	DrawEffectItem_Collision();	// アイテム(実体なし)コリジョン描写
 
 		/* リスト内オブジェクト発光描写 */
 		void	DrawAll_Bloom();		// 全オブジェクト発光描写
@@ -63,6 +67,7 @@ class DataList_Object : public DataListBase
 		void	DrawEnemy_Bloom();		// エネミー発光描写
 		void	DrawBullet_Bloom();		// 弾発光描写
 		void	DrawPlatform_Bloom();	// プラットフォーム発光描写
+		void	DrawEffectItem_Bloom();	// アイテム(実体なし)発光描写
 
 		/* オブジェクト削除 */
 		// ※単独のデータはデストラクタで開放されるため、リストで管理しているデータのみ対象とする。
@@ -71,6 +76,7 @@ class DataList_Object : public DataListBase
 		void	DeleteEffect();			// 削除フラグが有効なエフェクトを削除
 		void	DeleteBullet();			// 削除フラグが有効な弾を削除
 		void	DeletePlatform();		// 削除フラグが有効なプラットフォームを削除
+		void	DeleteEffectItem();		// 削除フラグが有効なアイテム(実体なし)を削除
 
 		/* データ取得 */
 		// 単独
@@ -82,6 +88,7 @@ class DataList_Object : public DataListBase
 		std::vector<EffectBase*>&		GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
 		std::vector<BulletBase*>&		GetBulletList()		{ return this->pBulletList; }		// 弾取得
 		std::vector<PlatformBase*>&		GetCollisionList()	{ return this->pPlatformList; }		// プラットフォーム
+		std::vector<EffectItemBase*>&	GetEffectItemList()	{ return this->pEffectItemList; }	// アイテム(実体なし)
 		
 		/* データ設定 */
 		// 単独
@@ -93,6 +100,7 @@ class DataList_Object : public DataListBase
 		void	SetEffect(EffectBase* pEffect)				{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
 		void	SetBullet(BulletBase* pBullet)				{ pBulletList.emplace_back(pBullet); };			// 弾追加
 		void	SetPlatform(PlatformBase* pPlatform)		{ pPlatformList.emplace_back(pPlatform); };		// プラットフォーム追加
+		void	SetEffectItem(EffectItemBase* pEffectItem)	{ pEffectItemList.emplace_back(pEffectItem); };	// アイテム(実体なし)追加
 
 	private:
 		/* 管理するデータ */
@@ -105,6 +113,7 @@ class DataList_Object : public DataListBase
 		std::vector<EffectBase*>		pEffectList;		// エフェクト
 		std::vector<BulletBase*>		pBulletList;		// 弾
 		std::vector<PlatformBase*>		pPlatformList;		// プラットフォーム
+		std::vector<EffectItemBase*>	pEffectItemList;	// アイテム(実体なし)
 
 	protected:
 };

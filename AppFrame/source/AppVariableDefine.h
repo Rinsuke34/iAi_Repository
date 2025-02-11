@@ -15,6 +15,9 @@
 /* プログラム状態 */
 extern bool gbEndFlg;	// プログラム終了フラグ
 
+/* フォント関連 */
+extern int giFontHandle;	// フォントハンドル
+
 /* プレイヤーの入力情報 */
 extern Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;			// ジョイパッド
 extern Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;		// キーボード＆マウス
