@@ -40,10 +40,14 @@ private:
 	int iDisappearTimeCount;
 
 	//ギミックテクスチャ変更カウント	
-	int iTextureChangeCount;
+	int iTextureFirstChangeCount;
+
+	int iTextureSecondChangeCount;
 
 	// テクスチャハンドルを追加
-	int textureHandle;
+	int textureRedHandle;
+
+	int textureOrangeHandle;
 
 protected:
 };

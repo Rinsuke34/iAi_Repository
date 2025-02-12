@@ -17,15 +17,24 @@ GimmickDisappear::GimmickDisappear() : PlatformBasic()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/cube");
 	}
+
+	//プレイヤーの情報を取得
 	this->pPlayer = ObjectList->GetCharacterPlayer();
 
 	//ギミックの消滅時間
 	this->iDisappearTime = GIMMICK_DISAPPEAR_TIME;
 
 	//ギミックテクスチャ変更カウント
-	this->iTextureChangeCount = GIMMICK_TEXTURE_CHANGE_COUNT;
+	this->iTextureFirstChangeCount = GIMMICK_TEXTURE_CHANGE_FIRST_COUNT;
 
-	this->textureHandle = LoadGraph("resource/ModelData/Gimmick/本家.mp4");
+	//ギミックテクスチャ変更カウント
+	this->iTextureSecondChangeCount = GIMMICK_TEXTURE_CHANGE_SECOND_COUNT;
+
+	// テクスチャの読み込み
+	this->textureOrangeHandle = LoadGraph("resource/ModelData/Gimmick/Orange.png");
+
+	// テクスチャの読み込み
+	this->textureRedHandle = LoadGraph("resource/ModelData/Gimmick/aka.png");
 }
 
 // デストラクタ
@@ -46,20 +55,39 @@ void GimmickDisappear::ProcessGimmick()
 		playerPos.z > this->vecPosition.z - 50 && playerPos.z < this->vecPosition.z + 50)
 	{
 		//プレイヤーがギミックの上に乗っている場合
-		//180フレーム後にギミックを消滅させる
-		iTextureChangeCount--;
-		if (iTextureChangeCount <= 0)
-		{
-			iDisappearTimeCount++;
-			PlayMovieToGraph(textureHandle); // 再生開始
 
-			// 新しいテクスチャを設定
-			MV1SetTextureGraphHandle(iModelHandle, 0, textureHandle, true);
+		//テクスチャの変更カウントを減らす
+		iTextureFirstChangeCount--;
+
+		//テクスチャの変更カウントが0以下になったか確認
+		if (iTextureFirstChangeCount <= 0)
+		{
+			//テクスチャの変更カウントが0以下になった場合
+			// 0番のテクスチャをオレンジテクスチャに変更
+			MV1SetTextureGraphHandle(iModelHandle, 0, textureOrangeHandle, true);
+
+			//セカンドテクスチャの変更カウントを減らす
+			iTextureSecondChangeCount--;
+
+			//セカンドテクスチャの変更カウントが0以下になったか確認
+			if (iTextureSecondChangeCount <= 0)
+		{
+				//セカンドテクスチャの変更カウントが0以下になった場合
+
+				//ギミックの消滅時間カウントを増やす
+			iDisappearTimeCount++;
+
+				// 0番のテクスチャを赤テクスチャに変更
+				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
 			
+				//PlayMovieToGraph(textureHandle); // 再生開始
+
+				//ギミックの消滅時間カウントが一定数になったか確認
 			if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
 			{
+				//ギミックの消滅時間カウントが一定数になった場合
 				//再生終了
-				PauseMovieToGraph(textureHandle);
+				//	PauseMovieToGraph(textureHandle);
 				
 				//ギミックを消滅させる
 				this->SetDeleteFlg(true);
@@ -67,9 +95,11 @@ void GimmickDisappear::ProcessGimmick()
 		}
 	}
 }
+}
 
 // 更新
 void GimmickDisappear::Update()
 {
+	//ギミックの処理
 	ProcessGimmick();
 }

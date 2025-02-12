@@ -209,9 +209,15 @@ void SceneStage::LoadMapData()
 		}
 		/*ギミック追加(仮)*/
 		{
-			GimmickJump* pGimmickDisappear = new GimmickJump();
+			GimmickJump* pGimmickJump = new GimmickJump();
+			ObjectList->SetPlatform(pGimmickJump);
+			pGimmickJump->SetPosition(VGet(22.f,160.f,22.f));
+		}
+		/*ギミック追加(仮)*/
+		{
+			GimmickDisappear* pGimmickDisappear = new GimmickDisappear();
 			ObjectList->SetPlatform(pGimmickDisappear);
-			pGimmickDisappear->SetPosition(VGet(22.f,160.f,22.f));
+			pGimmickDisappear->SetPosition(VGet(22.f, 160.f, 330.f));
 		}
 	}
 

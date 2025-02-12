@@ -4,7 +4,8 @@
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
-/* 2025.02.27 菊池雅道	エフェクト処理修正 */
+/* 2025.02.07 菊池雅道	エフェクト処理修正 */
+/* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -35,12 +36,28 @@ void CharacterPlayer::Player_Attack_Transition()
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
 		}
 		/* エイム(構え)入力がされているか確認 */
-		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_AIM) == true)
+		else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
+		{
+			/* エイム(構え)キャンセルフラグが解除されている場合 */
+			if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
 		{
 			// エイム(構え)入力がされている場合
 			/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 		}
+		}
+		// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
+		/* エイム(構え)キャンセルフラグが設定されている場合 */
+		else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
+		{
+			/* エイム(構え)ボタンを離したら */
+			if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+			{
+				/* エイム(構え)キャンセルフラグを解除 */
+				this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
+			}
+		}
+		
 		break;
 
 		/* 近接攻撃構え中 */
@@ -86,7 +103,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-	/* 2025.02.27 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -294,7 +311,7 @@ void CharacterPlayer::Player_Melee_Posture()
 }
 /* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.02.27 菊池雅道	エフェクト処理修正 終了 */
+/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -598,12 +615,55 @@ void CharacterPlayer::Player_Charge_Attack()
 	/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
 }
 
+/* 2025.02.12 菊池雅道	遠距離攻撃処理追加 開始 */
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()
 {
-	/* 未完成なのでとりあえず自由状態に戻す */
+	/* エイム(構え)入力がされているか確認 */
+	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
+	{
+		/* 攻撃入力がされた場合 */
+		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
+		{
+			/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
+		}
+		/* ジャンプ入力がされた場合 */
+		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+		{
+			// 遠距離攻撃構え状態をキャンセルする
+			/* 遠距離攻撃構え状態キャンセルフラグをたてる */
+			this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
+			
+			/* プレイヤー攻撃状態を"自由状態"に設定 */
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
+		}
+		/* ジャンプ中の場合 */
+		else if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+		{
+			/* スローモーション処理を行う(仮) */ 
+		}
+		/* 回避入力がされた場合 */
+		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
+		{
+			// 遠距離攻撃構え状態をキャンセルする
+			/* 遠距離攻撃構え状態キャンセルフラグをたてる */
+			this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
+			
+			/* プレイヤー攻撃状態を"自由状態"に設定 */
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+		}
+	}
+	/* エイム(構え)入力がされていない場合 */
+	else 
+	{
+		/* プレイヤー攻撃状態を"自由状態"に設定 */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }
+
+}
+/* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */
 
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
