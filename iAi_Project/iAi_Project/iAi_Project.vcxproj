@@ -190,6 +190,8 @@
     <ClCompile Include="source\Enemy_Explosion.cpp" />
     <ClCompile Include="source\GimmickDisappear.cpp" />
     <ClCompile Include="source\GimmickJump.cpp" />
+    <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
+    <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
@@ -228,6 +230,7 @@
     <ClInclude Include="source\DataList_Sound.h" />
     <ClInclude Include="source\EditDefine.h" />
     <ClInclude Include="source\EffectItem_Blood.h" />
+    <ClInclude Include="source\EffectItem_BloodDefine.h" />
     <ClInclude Include="source\EffectManualDelete.h" />
     <ClInclude Include="source\EffectManualDelete_PlayerFollow.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
@@ -245,8 +248,10 @@
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />
     <ClInclude Include="source\GimmickJump.h" />
+    <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h" />
     <ClInclude Include="source\include\SceneEditDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
+    <ClInclude Include="source\PickUpItem_ForcedJump.h" />
     <ClInclude Include="source\PlatformBasic.h" />
     <ClInclude Include="source\PlayerMotionDefine.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />

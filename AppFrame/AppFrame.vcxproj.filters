@@ -136,17 +136,23 @@
     <Filter Include="ソース ファイル\オブジェクト\ベース\スカイスフィア">
       <UniqueIdentifier>{a58b53ad-6f1f-473a-81d1-b5f4a9513898}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム">
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム">
       <UniqueIdentifier>{1da52179-82fe-4297-bfd5-c928f910f010}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\アイテム">
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体なし">
+      <UniqueIdentifier>{f8c77f89-abe4-49c6-a898-a56acb2604f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体あり">
+      <UniqueIdentifier>{92f57423-7cd8-486b-92bb-4173793d29f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム">
       <UniqueIdentifier>{25f0507f-6a84-4a24-89ed-67a181173500}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし">
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体なし">
       <UniqueIdentifier>{a914bd51-445d-4e70-b872-20cb2aaf9854}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし">
-      <UniqueIdentifier>{f8c77f89-abe4-49c6-a898-a56acb2604f8}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体あり">
+      <UniqueIdentifier>{acf48c47-1bb2-429b-8f64-c73a81ae6e69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -205,7 +211,10 @@
       <Filter>ソース ファイル\オブジェクト\ベース\スカイスフィア</Filter>
     </ClCompile>
     <ClCompile Include="source\EffectItemBase.cpp">
-      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
+      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体なし</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItemBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体あり</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -273,7 +282,10 @@
       <Filter>ヘッダー ファイル\オブジェクト\ベース\スカイスフィア</Filter>
     </ClInclude>
     <ClInclude Include="source\EffectItemBase.h">
-      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体なし</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItemBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\アイテム\実体あり</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

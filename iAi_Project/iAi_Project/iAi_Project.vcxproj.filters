@@ -259,6 +259,36 @@
     <Filter Include="ソース ファイル\データリスト\ゲームリソース管理">
       <UniqueIdentifier>{ce588e4f-4dd3-4727-ae0f-b5f71e740f0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{c5bcc995-2ef8-409c-bcc0-d489707f24b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{02ab4d8e-fc0b-4365-8371-7c06b4847fc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{7070f58d-783c-49b0-b990-e6390c028511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{822616c4-d9bb-469f-b707-77a47b229956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{893e4806-9fc2-4569-8737-88919d56d714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{f0cbce60-2056-4ebd-b29a-93e1dda8c75e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし\ブラッド%28ゲーム内通貨%29">
+      <UniqueIdentifier>{b187934f-1910-48bb-8616-0714543946ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体なし\ブラッド%28ゲーム内通貨%29">
+      <UniqueIdentifier>{1534eddb-fe48-445e-ad49-a2adf2bd7c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり\強制ジャンプ%28ギミック%29">
+      <UniqueIdentifier>{0a8a794f-0460-443b-a28f-d48d466c58a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体あり\強制ジャンプ%28ギミック%29">
+      <UniqueIdentifier>{80c048c0-9e8e-4617-b8ee-af0c4c2b7c02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -408,12 +438,6 @@
     <ClCompile Include="source\GimmickJump.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
     </ClCompile>
-    <ClCompile Include="source\GimmickDisappear.cpp">
-      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClCompile>
-    <ClCompile Include="source\EffectItem_Blood.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_GameResource.cpp">
       <Filter>ソース ファイル\データリスト\ゲームリソース管理</Filter>
     </ClCompile>
@@ -422,6 +446,18 @@
     </ClCompile>
     <ClCompile Include="source\SceneUi_Edit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickDisappear.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectItem_Blood.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体なし\ブラッド%28ゲーム内通貨%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItem_ForcedJump.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体あり\強制ジャンプ%28ギミック%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,14 +617,8 @@
     <ClInclude Include="source\GimmickDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
     </ClInclude>
-    <ClInclude Include="source\GimmickDisappear.h">
-      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClInclude>
     <ClInclude Include="source\GimmickJump.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClInclude>
-    <ClInclude Include="source\EffectItem_Blood.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
     </ClInclude>
     <ClInclude Include="source\DataList_GameResource.h">
       <Filter>ヘッダー ファイル\データリスト\ゲームリソース管理</Filter>
@@ -604,6 +634,21 @@
     </ClInclude>
     <ClInclude Include="source\include\SceneEditDefine.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDisappear.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItem_Blood.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし\ブラッド%28ゲーム内通貨%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItem_BloodDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし\ブラッド%28ゲーム内通貨%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItem_ForcedJump.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり\強制ジャンプ%28ギミック%29</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

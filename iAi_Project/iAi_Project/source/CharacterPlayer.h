@@ -47,7 +47,7 @@ class CharacterPlayer : public CharacterBase
 
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新
-		void	HitCheck();				// 当たり判定処理
+		void	PlayerHitCheck();				// 当たり判定処理
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ
