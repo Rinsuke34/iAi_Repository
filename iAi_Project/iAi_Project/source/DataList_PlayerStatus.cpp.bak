@@ -2,7 +2,6 @@
 /* 2025.01.10 菊池雅道 初期化処理追加  */
 /* 2025.01.22 菊池雅道 初期化処理追加  */
 /* 2025.02.10 菊池雅道 初期化処理追加 */
-/* 2025.02.11 菊池雅道 初期化処理追加 */
 #include "DataList_PlayerStatus.h"
 
 /* プレイヤーステータス管理クラスの定義 */
@@ -17,7 +16,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerLandingFlg					= false;						// プレイヤーが着地しているか
 	this->fPlayerNowMoveSpeed				= 0;							// プレイヤーの現在の移動速度
 	this->fPlayerAngleX						= 0;							// プレイヤーのX軸回転量(ラジアン)
-	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;			// プレイヤーの方向転換の速度	/* 2025.02.10 菊池雅道 初期化処理追加 */
+	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;			// プレイヤーの方向転換の速度		/* 2025.02.10 菊池雅道 初期化処理追加 */
 	this->fPlayerNowFallSpeed				= 0;							// プレイヤーの現在の落下速度
 	this->iPlayerNowJumpCount				= 0;							// プレイヤーのジャンプ回数(現在数)
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
@@ -40,7 +39,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->pLockOnEnemy						= nullptr;						// ロックオン対象のエネミー
 	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;		// プレイヤーの現在のHP
 	this->iPlayerNowInvincibleTime			= 0;							// プレイヤーの現在の残り無敵時間
-	this->bPlayerAimCancelledFlg			= false;						// 遠距離攻撃(構え)がキャンセルされたかのフラグ		/* 2025.02.11 菊池雅道 初期化処理追加 */
+
 	/* プレイヤーモーション関連 */
 	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// プレイヤーモーション(移動系)
 	this->iPlayerMotion_Move_Old			= -1;							// 変更前プレイヤーモーション(移動系)

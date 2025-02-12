@@ -232,10 +232,24 @@ void CharacterPlayer::Player_Move()
 					/* 角度を一周(2π)分補正する */
 					fDifferrenceAngle += 2 * DX_PI_F;
 				}
+				//プレイヤーの角度が一周(2π)を超えた場合、補正を行う
+				/* 左回りで一周したら */
+				if (fMoveAngle > PLAYER_TURN_LIMIT_LEFT
+				{
+					/* 角度を一周(2π)分補正する */
+					fMoveAngle -= PLAYER_TURN_LIMIT_LEFT;
+				}
+				/* 右回りで一周したら */
+				else if (fMoveAngle < PLAYER_TURN_LIMIT_RIGHT)
+				{
+					/* 角度を一周(2π)分補正する */
+					fMoveAngle -= PLAYER_TURN_LIMIT_RIGHT;
+				}
 			}
 
 			/* 振り向き速度に応じて段階的に移動方向を向く */ 
 			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
+
 			/* プレイヤーの向きを更新 */
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 

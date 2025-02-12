@@ -31,7 +31,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
-		
+		this->fTest		= 0.0f;
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};		// 垂直方向のコリジョン
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
