@@ -1,6 +1,7 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
 /* 2025.01.10 菊池雅道 初期化処理追加  */
 /* 2025.01.22 菊池雅道 初期化処理追加  */
+/* 2025.02.10 菊池雅道 初期化処理追加 */
 #include "DataList_PlayerStatus.h"
 
 /* プレイヤーステータス管理クラスの定義 */
@@ -10,34 +11,48 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 {
 	/* 初期化(仮) */
 	/* プレイヤー状態関連 */
-	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;		// プレイヤーの移動状態
-	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;		// プレイヤーの攻撃状態
-	this->iPlayerMotion						= PLAYER_MOTION_IDLE;			// プレイヤーのモーション
-	this->bPlayerLandingFlg					= false;						// プレイヤーが着地しているか
-	this->fPlayerNowMoveSpeed				= 0;							// プレイヤーの現在の移動速度
-	this->fPlayerAngleX						= 0;							// プレイヤーのX軸回転量(ラジアン)
-	this->fPlayerNowFallSpeed				= 0;							// プレイヤーの現在の落下速度
-	this->iPlayerNowJumpCount				= 0;							// プレイヤーのジャンプ回数(現在数)
+	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;			// プレイヤーの移動状態
+	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;			// プレイヤーの攻撃状態
+	this->bPlayerLandingFlg					= false;							// プレイヤーが着地しているか
+	this->fPlayerNowMoveSpeed				= 0;								// プレイヤーの現在の移動速度
+	this->fPlayerAngleX						= 0;								// プレイヤーのX軸回転量(ラジアン)
+	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;				// プレイヤーの方向転換の速度	/* 2025.02.10 菊池雅道 初期化処理追加 */
+	this->fPlayerNowFallSpeed				= 0;								// プレイヤーの現在の落下速度
+	this->iPlayerNowJumpCount				= 0;								// プレイヤーのジャンプ回数(現在数)
 	/* 2025.01.10 菊池雅道 初期化処理追加 開始 */
-	this->iPlayerNormalDashFlameCount		= 0;							//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
-	this->bPlayerJumpingFlag				= false;						//プレイヤーがジャンプ中かのフラグ
-	this->iPlayerJumpCount					= 0;							//プレイヤーの現在のジャンプ回数
-	this->fPlayerDodgeProgress				= 0.0f;							//プレイヤー回避モーション進行度
-	this->vecPlayerDodgeDirection			= { 0, 0, 0 };					//プレイヤー回避方向
-	this->iPlayerDodgeWhileJumpingCount		= 0;							//プレイヤージャンプ中の回避回数
-	this->fPlayerJumpSpeed					= 0;							//プレイヤージャンプ速度
-	this->iPlayerNowDodgeFlame				= 0;							// プレイヤーの現在の回避フレーム数
-	this->fPlayerDodgeSpeed					= 0;							//プレイヤー回避速度
-	this->bPlayerAfterDodgeFlag				= false;						//プレイヤーの回避後フラグ
+	this->iPlayerNormalDashFlameCount		= 0;								//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）
+	this->bPlayerJumpingFlag				= false;							//プレイヤーがジャンプ中かのフラグ
+	this->iPlayerJumpCount					= 0;								//プレイヤーの現在のジャンプ回数
+	this->fPlayerDodgeProgress				= 0.0f;								//プレイヤー回避モーション進行度
+	this->vecPlayerDodgeDirection			= { 0, 0, 0 };						//プレイヤー回避方向
+	this->iPlayerDodgeWhileJumpingCount		= 0;								//プレイヤージャンプ中の回避回数
+	this->fPlayerJumpSpeed					= 0;								//プレイヤージャンプ速度
+	this->iPlayerNowDodgeFlame				= 0;								// プレイヤーの現在の回避フレーム数
+	this->fPlayerDodgeSpeed					= 0;								//プレイヤー回避速度
+	this->bPlayerAfterDodgeFlag				= false;							//プレイヤーの回避後フラグ
 	/* 2025.01.10 菊池雅道 初期化処理追加 終了 */
 	/* 2025.01.22 菊池雅道 初期化処理追加 開始 */
-	this->iPlayerNowAttakChargeFlame		= 0;							//現在のプレイヤー溜め攻撃チャージフレーム数  2025.01.22 菊池雅道 初期化処理追加
-	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };					//プレイヤー溜め攻撃の目的地
+	this->iPlayerNowAttakChargeFlame		= 0;								//現在のプレイヤー溜め攻撃チャージフレーム数  2025.01.22 菊池雅道 初期化処理追加
+	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };						//プレイヤー溜め攻撃の目的地
 	/* 2025.01.22 菊池雅道 初期化処理追加 終了 */
-	this->iPlayerChargeAttackCount			= 0;							// 近接攻撃(強)のカウント
-	this->pLockOnEnemy						= nullptr;						// ロックオン対象のエネミー
-	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;		// プレイヤーの現在のHP
-	this->iPlayerNowInvincibleTime			= 0;							// プレイヤーの現在の残り無敵時間
+	this->iPlayerChargeAttackCount			= 0;								// 近接攻撃(強)のカウント
+	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
+	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;			// プレイヤーの現在のHP
+	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
+	this->iPlayerComboNowCount				= 0;								// プレイヤーの現在のコンボ数
+	this->iPlayerComboMaxCount				= 0;								// プレイヤーの最大コンボ数
+	this->iPlayerComboDuration				= 0;								// プレイヤーのコンボの残り持続時間
+
+	/* プレイヤーモーション関連 */
+	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)
+	this->iPlayerMotion_Move_Old			= -1;								// 変更前プレイヤーモーション(移動系)
+	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;			// プレイヤーモーション(攻撃系)
+	this->iPlayerMotion_Attack_Old			= -1;								// 変更前プレイヤーモーション(攻撃系)
+	
+	this->fMotionTimer_Move					= 0;								// モーションカウント(移動系)
+	this->fMotionTimer_Move_End				= 0;								// モーションカウント(移動系/終了時間)
+	this->fMotionTimer_Attack				= 0;								// モーションカウント(攻撃系)
+	this->fMotionTimer_Attack_End			= 0;								// モーションカウント(攻撃系/終了時間)
 
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;

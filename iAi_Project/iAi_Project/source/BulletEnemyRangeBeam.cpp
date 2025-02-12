@@ -12,7 +12,7 @@ BulletEnemyRangeBeam::BulletEnemyRangeBeam() : BulletBase()
 	this->pEffect = nullptr;
 
 	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;		// ビームの持続カウント
-	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// ビーム発射カウント
+	this->iBulletCount = ENEMY_BEAM_BULLET_COUNT;			// ビーム発射カウント
 
 	this->iEnemyBeamDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ビームの持続カウント
 	// エネミーの位置を初期化
@@ -42,7 +42,7 @@ void BulletEnemyRangeBeam::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet")));
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_beam")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -90,21 +90,13 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	// エネミーのリストを取得
 	auto& enemyList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
 
-	//カプセルコリジョンの開始地点を更新
-	this->stCollisionCapsule.vecCapsuleTop = this->vecPosition;
-
-	// エネミーの位置を終了地点に設定
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecEnemyPosition;
+	// ビームのコリジョン座標を更新
+	this->stCollisionCapsule.vecCapsuleTop = this->vecPosition; // 開始地点を更新
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecEnemyPosition; // 終了地点をエネミーの位置に固定
 
 	// ビームのエフェクト座標を更新
 	this->pEffect->SetPosition(this->vecPosition);
-}
 
-// コリジョン描写
-void BulletEnemyRangeBeam::CollisionDraw()
-{
-	// カプセル型の当たり判定を描写
-	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 12, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 }
 
 // 更新
@@ -127,4 +119,10 @@ void BulletEnemyRangeBeam::Update()
 
 	// ビームの移動処理
 	BulletEnemyRangeBeamMove();
+}
+
+// コリジョン描写
+void BulletEnemyRangeBeam::CollisionDraw()
+{
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 12, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 }

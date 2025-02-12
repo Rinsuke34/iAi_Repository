@@ -18,13 +18,19 @@ EnemyBasic::~EnemyBasic()
 	/* プレイヤーのコンボ数加算＆継続時間リセット */
 	{
 		/* データリスト取得 */
-		DataList_Score* ScoreList = dynamic_cast<DataList_Score*>(gpDataListServer->GetDataList("DataList_Score"));
+		DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+		/* データリストが存在しない(強制終了された)場合は処理を終了する */
+		if (PlayerStatusList == nullptr)
+		{
+			return;
+		}
 
 		/* プレイヤーのコンボ数加算 */
-		ScoreList->SetPlayerComboNowCount(ScoreList->iGetPlayerComboNowCount() + 1);
+		PlayerStatusList->SetPlayerComboNowCount(PlayerStatusList->iGetPlayerComboNowCount() + 1);
 
 		/* プレイヤーのコンボ継続時間リセット */
-		ScoreList->SetPlayerComboDuration(PLAYER_COMBO_DURATION);
+		PlayerStatusList->SetPlayerComboDuration(INIT_ATTRIBUTES_COMBO_DURATION);
 	}
 
 	/* 爆発エフェクト生成 */
@@ -53,6 +59,25 @@ EnemyBasic::~EnemyBasic()
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(AddEffect);
+		}
+	}
+
+	/* 仮処理 */
+	/* ブラッド(ゲーム内通貨)を作成 */
+	{
+		/* "オブジェクト管理"データリストを取得 */
+		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+		for (int i = 0; i < 10; i++)
+		{
+			/* 時間経過で削除されるアイテムを追加 */
+			EffectItemBase* AddItem = new EffectItem_Blood();
+
+			/* エフェクトの座標設定 */
+			AddItem->SetPosition(this->vecPosition);
+
+			/* エフェクトをリストに登録 */
+			ObjectListHandle->SetEffectItem(AddItem);
 		}
 	}
 }

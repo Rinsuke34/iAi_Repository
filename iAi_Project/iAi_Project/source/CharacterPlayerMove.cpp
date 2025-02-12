@@ -1,6 +1,11 @@
 /* 2025.02.04 菊池雅道	ファイル作成 */
 /* 2025.01.09 菊池雅道	移動処理追加 */
+/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
+/* 2025.02.06 菊池雅道	エフェクト処理修正 */
+/* 2025.02.07 菊池雅道	衝突判定処理修正 */
+/* 2025.02.10 菊池雅道	振り向き処理修正 */
+/* 2025.02.10 菊池雅道	回避処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -82,9 +87,10 @@ void CharacterPlayer::Player_Move()
 	}
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
-	/* 2025.01.09 菊池雅道	移動処理追加		開始	*/
+	/* 2025.01.09 菊池雅道	移動処理追加	   開始 */
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始	*/
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 移動入力がされているか確認 */
 	if ((vecInput.x != 0 || vecInput.z != 0))
@@ -101,8 +107,8 @@ void CharacterPlayer::Player_Move()
 		{
 			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
-			/* モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 		}
 
 		// スティックの倒し具合で速度を変化
@@ -114,7 +120,8 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
 			//一定フレームがたったら走り（最大）へ
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_LOW);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
@@ -122,7 +129,7 @@ void CharacterPlayer::Player_Move()
 				/* エフェクト追加 */
 				{
 					/* ダッシュエフェクトを生成 */
-					EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
 
 					/* ダッシュエフェクト読み込み */
 					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
@@ -130,32 +137,7 @@ void CharacterPlayer::Player_Move()
 					/* ダッシュエフェクトの時間設定 */
 					pAddEffect->SetDeleteCount(30);
 
-					/* エフェクトの生成方向の設定 */
-					// ※プレイヤーの前に出す
-					VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-					/* カメラの水平方向の向きを移動用の向きに設定 */
-					float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
-
-					/* エフェクトの座標を算出 */
-					VECTOR vecAdd;
-
-					// 方向
-					vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-					vecAdd.y = 0.f;
-					vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-					vecAdd = VNorm(vecAdd);
-
-					// 回避時の速度分離す
-					vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-
-					// 高さ
-					vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-					/* ダッシュエフェクトの座標設定 */
-					pAddEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-					/* ダッシュエフェクトの回転量設定 */
+					///* ダッシュエフェクトの回転量設定 */
 					pAddEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 					/* ダッシュエフェクトの初期化 */
@@ -174,7 +156,8 @@ void CharacterPlayer::Player_Move()
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 				/* 走行(高速)モーション設定 */
-				this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_RUN_HIGH);
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 			}
 		}
 		else
@@ -184,12 +167,13 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
 			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 
-			/* 歩行モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WALK);
+			/* モーション設定(歩行) */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 		}
 
-		/* 2025.01.09 菊池雅道	移動処理追加		終了	*/
+		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了	*/
+		/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
 
 		/* 現在速度を更新 */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
@@ -203,14 +187,61 @@ void CharacterPlayer::Player_Move()
 		vecAddMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
+		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
+
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
 		{
 			// 合わせる場合
 			/* プレイヤーの向きを移動方向に合わせる */
-			float fPlayerAngle = atan2f(vecInput.x, vecInput.z);	// 移動方向の角度(ラジアン)を取得
-			fPlayerAngle = fAngleX - fPlayerAngle;			// カメラの向きと合成
-			this->PlayerStatusList->SetPlayerAngleX(fPlayerAngle);	// プレイヤーの向きを設定
+			/* 移動方向の角度(ラジアン)を取得 */
+			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
+			/* カメラの向きと合成 */
+			fMoveAngle = fAngleX - fMoveAngle;
+			/* プレイヤーの向きの角度(ラジアン)を取得 */
+			float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
+
+			/* 現在のプレイヤーの向きと移動方向の差を求める */
+			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
+
+			//プレイヤーを不必要に回転させないようにする処理
+			{
+				//プレイヤーの角度が一周(2π)を超えた場合、補正を行う
+				/* 左回りで一周したら */
+				if (fCurrentAngle > PLAYER_TURN_LIMIT_LEFT)
+				{
+					/* 角度を一周(2π)分補正する */ 
+					fCurrentAngle -= PLAYER_TURN_LIMIT_LEFT;  
+				}
+				/* 右回りで一周したら */
+				else if (fCurrentAngle < PLAYER_TURN_LIMIT_RIGHT)
+				{
+					/* 角度を一周(2π)分補正する */
+					fCurrentAngle -= PLAYER_TURN_LIMIT_RIGHT;
+				}
+				
+				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
+				/* 左回りで半周を超えたら */
+				if (fDifferrenceAngle > DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
+					fDifferrenceAngle -= 2 * DX_PI_F;  
+				}
+				/* 右回りで半周を超えたら */
+				else if (fDifferrenceAngle < -DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
+					fDifferrenceAngle += 2 * DX_PI_F;
+				}
+			}
+
+			/* 振り向き速度に応じて段階的に移動方向を向く */ 
+			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
+
+			/* プレイヤーの向きを更新 */
+			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
+
+			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
 	}
@@ -223,13 +254,13 @@ void CharacterPlayer::Player_Move()
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
 
 		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
-		if (this->PlayerStatusList->iGetPlayerMotion() == PLAYER_MOTION_DRAW_SWORD_END)
+		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
 		}
 		else
 		{
 			/* 待機モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_IDLE);
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
 		}
 	}
 
@@ -394,9 +425,12 @@ void CharacterPlayer::Player_Gravity()
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
-	/* 2025.01.09 菊池雅道　移動処理追加	開始 */
+	/* 2025.01.09 菊池雅道	移動処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
+	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -409,8 +443,10 @@ void CharacterPlayer::Player_Dodg()
 		if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
 		{
 			// 超えていない(回避状態を継続する)場合
-			/* 回避による移動方向を設定 */
-			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED);
+			
+			/* 回避による移動方向を設定し、移動する */
+			/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
+			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (1.0f - (float)this->PlayerStatusList->iGetPlayerNowDodgeFlame() / (float)PLAYER_DODGE_FLAME));
 
 			/* 回避の経過時間を進める */
 			this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
@@ -485,13 +521,10 @@ void CharacterPlayer::Player_Dodg()
 				/* 回避エフェクト追加 */
 				{
 					/* 回避エフェクトを生成 */
-					this->pDodgeEffect = new EffectManualDelete;
+					this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
 
 					/* 回避エフェクトの読み込み */
 					this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
-
-					/* エフェクトの座標設定 */
-					this->pDodgeEffect->SetPosition(this->vecPosition);
 
 					/* エフェクトの回転量設定 */
 					this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
@@ -509,44 +542,12 @@ void CharacterPlayer::Player_Dodg()
 		}
 	}
 
-	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
+	/* 2025.01.09 菊池雅道	移動処理追加 終了 */
+	/* 2025.01.26 駒沢風助	コード修正 終了 */
+	/* 2025.01.27 菊池雅道　エフェクト処理追加 終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-
-	/* 回避エフェクトが存在している場合 */
-	if (pDodgeEffect != nullptr)
-	{
-		/* エフェクトの生成方向の設定 */
-		// ※プレイヤーの前に出す
-		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetPlayerAngleX();
-
-		/* エフェクトの座標を算出 */
-		VECTOR vecAdd;
-		
-		// 方向
-		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-		vecAdd.y = 0.f;
-		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-		vecAdd = VNorm(vecAdd);
-		
-		// 回避時の速度分離す
-		vecAdd = VScale(vecAdd, PLAYER_DODGE_SPEED);
-		
-		// 高さ
-		vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-		/* エフェクトの座標設定 */
-		this->pDodgeEffect->SetPosition(VAdd(this->vecPosition, vecAdd));
-
-		/* エフェクトの回転量設定 */
-		this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-	}
-
-	/* 2025.01.09 菊池雅道	移動処理追加		終了 */
-	/* 2025.01.26 駒沢風助	コード修正		終了*/
-	/* 2025.01.29 菊池雅道　	エフェクト処理追加	開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
+	/* 2025.02.10 菊池雅道	回避処理修正 終了 */
 }
 
 // 移動処理(垂直方向)
@@ -695,29 +696,30 @@ void CharacterPlayer::Movement_Vertical()
 				{
 					/* 強攻撃(近接)中でないか確認 */
 					if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
-			{
-				/* 上昇しているか確認 */
-				if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
-				{
-					// 上昇している場合
-					/* モーションを"ジャンプ(上昇)"に設定 */
-					PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_JUMP_UP);
-				}
-				else
-				{
-					// 下降している場合
-					/* モーションを"ジャンプ(下降)"に設定 */
-					PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_JUMP_DOWN);
-				}
+					{
+						/* 上昇しているか確認 */
+						if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
+						{
+							// 上昇している場合
+							/* モーションを"ジャンプ(上昇)"に設定 */
+							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+						}
+						else
+						{
+							// 下降している場合
+							/* モーションを"ジャンプ(下降)"に設定 */
+							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+						}
 
 					}
+				}
 			}
 		}
 	}
 }
-}
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
+/* 2025.02.07 菊池雅道	衝突判定処理修正　開始 */
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
 {
@@ -726,6 +728,16 @@ void CharacterPlayer::Movement_Horizontal()
 	vecNextPosition.x = this->vecPosition.x + this->vecMove.x;
 	vecNextPosition.y = this->vecPosition.y;
 	vecNextPosition.z = this->vecPosition.z + this->vecMove.z;
+
+	/* 1フレームでの移動量を分割して判定する回数 */
+	/* ※移動量に応じて分割を設定する */
+	int iMoveHitCheckCount = (int)VSize(VGet(this->vecMove.x,0,this->vecMove.z));
+	
+	/* 分割した移動量 */
+	VECTOR vecDevisionMove = VScale(this->vecMove, 1.0f / iMoveHitCheckCount);
+
+	/* 分割して移動した先の座標 */
+	VECTOR vecDevisionMovePosition = this->vecPosition;
 
 	/* 道中でオブジェクトに接触しているか判定 */
 	{
@@ -754,55 +766,69 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
-					/* 法線ベクトルの作成 */
-					VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
 
-					/* ポリゴンと接触した座標 */
-					VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
-
-					/* 接触したポリゴンから法線ベクトルを取得し加算する */
-					for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					/* 移動量を分割して衝突判定する */
+					for (int i = 0; i < iMoveHitCheckCount; i++)
 					{
-						/* 法線ベクトルを取得 */
-						// ※ 法線ベクトルが0であるならば、加算しない
-						if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+						/* 移動後座標に球体ポリゴンを作成 */
+						vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
+
+						/* 法線ベクトルの作成 */
+						VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
+
+						/* ポリゴンと接触した座標 */
+						VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
+
+						/* 接触したポリゴンから法線ベクトルを取得し加算する */
+						for (int j = 0; j < stHitPolyDim.HitNum; j++)
 						{
-							// 法線ベクトルが0でない場合
-							/* 法線ベクトルのY軸を初期化 */
-							stHitPolyDim.Dim[j].Normal.y = 0.f;
+							/* 法線ベクトルを取得 */
+							// ※ 法線ベクトルが0であるならば、加算しない
+							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+							{
+								// 法線ベクトルが0でない場合
+								/* 法線ベクトルのY軸を初期化 */
+								stHitPolyDim.Dim[j].Normal.y = 0.f;
 
-							/* 法線ベクトルを正規化 */
-							VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+								/* 法線ベクトルを正規化 */
+								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
 
-							/* 法線ベクトルを合計に加算 */
-							vecNormalSum = VAdd(vecNormalSum, vecNormal);
+								/* 法線ベクトルを合計に加算 */
+								vecNormalSum = VAdd(vecNormalSum, vecNormal);
+							}
+						}
+
+						/* 取得した法線ベクトルを正規化 */
+						// ※ 取得した法線ベクトルの平均を取得
+						vecNormalSum = VNorm(vecNormalSum);
+
+						/* 移動後座標に球体ポリゴンを作成 */
+						COLLISION_SQHERE stSphere;
+						stSphere.vecSqhere = vecDevisionMovePosition;
+						stSphere.fSqhereRadius = PLAYER_WIDE;
+
+						/* 法線の方向にプレイヤーを押し出す */
+						// ※ 対象のコリジョンと接触しなくなるまで押し出す
+						// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
+						bool bHitFlag = true;
+						while (bHitFlag)
+						{
+							/* 球体ポリゴンを法線ベクトルの方向へ移動 */
+							stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
+
+							/* 球体とポリゴンの接触判定 */
+							bHitFlag = platform->HitCheck(stSphere);
+						}
+
+						/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
+						vecNextPosition = stSphere.vecSqhere;
+
+						// 球体コリジョンと衝突があった場合、分割移動処理を終了する
+						if (stHitPolyDim.HitNum > 0)
+						{
+							break;
 						}
 					}
-
-					/* 取得した法線ベクトルを正規化 */
-					// ※ 取得した法線ベクトルの平均を取得
-					vecNormalSum = VNorm(vecNormalSum);
-
-					/* 移動後座標に球体ポリゴンを作成 */
-					COLLISION_SQHERE stSphere;
-					stSphere.vecSqhere = vecNextPosition;
-					stSphere.fSqhereRadius = PLAYER_WIDE;
-
-					/* 法線の方向にプレイヤーを押し出す */
-					// ※ 対象のコリジョンと接触しなくなるまで押し出す
-					// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
-					bool bHitFlag = true;
-					while (bHitFlag)
-					{
-						/* 球体ポリゴンを法線ベクトルの方向へ移動 */
-						stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
-
-						/* 球体とポリゴンの接触判定 */
-						bHitFlag = platform->HitCheck(stSphere);
-					}
-
-					/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
-					vecNextPosition = stSphere.vecSqhere;
 				}
 			}
 		}
@@ -816,3 +842,4 @@ void CharacterPlayer::Movement_Horizontal()
 		// ※移動量とかでモーションを変更する処理を追加
 	}
 }
+/* 2025.02.07 菊池雅道	衝突判定処理修正　終了 */

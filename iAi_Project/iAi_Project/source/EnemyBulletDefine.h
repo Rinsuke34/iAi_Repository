@@ -11,3 +11,6 @@ static const int	ENEMY_MISSILE_DURATION_COUNT = 350;					//ƒ~ƒTƒCƒ‹’e‚ÌŽ‘±ƒJƒEƒ
 static const int	ENEMY_MISSILE_BULLET_UP_COUNT = 345;				//ƒ~ƒTƒCƒ‹’e”­ŽËƒJƒEƒ“ƒg
 static const int	ENEMY_MISSILE_BULLET_DOWN_COUNT = 230;				//ƒ~ƒTƒCƒ‹’e‘Å‚¿‰º‚°ƒJƒEƒ“ƒg
 static const int	ENEMY_MISSILE_BULLET_GUIDANCE_COUNT = 190;			//ƒ~ƒTƒCƒ‹’e—U“±ƒJƒEƒ“ƒg
+static const int	ENEMY_BEAM_BULLET_COUNT = 130;					//ƒr[ƒ€”­ŽËƒJƒEƒ“ƒg
+static const int	ENEMY_BEAM_CHARGE_COUNT = 175;						//ƒr[ƒ€ƒ`ƒƒ[ƒWƒJƒEƒ“ƒg
+static const int	ENEMY_BEAM_DURATION_COUNT = 190;					//ƒr[ƒ€‚ÌŽ‘±ƒJƒEƒ“ƒg

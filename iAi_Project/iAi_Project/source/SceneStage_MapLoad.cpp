@@ -17,6 +17,9 @@
 #include "PlatformBasic.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
+// ギミック
+#include "GimmickDisappear.h"
+#include "GimmickJump.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -203,6 +206,18 @@ void SceneStage::LoadMapData()
 
 			/* モデル */
 			pSkySqhere->SetModelHandle(this->ModelList->iGetModel("SkySqhere/skysphere"));
+		}
+		/*ギミック追加(仮)*/
+		{
+			GimmickJump* pGimmickJump = new GimmickJump();
+			ObjectList->SetPlatform(pGimmickJump);
+			pGimmickJump->SetPosition(VGet(22.f,160.f,22.f));
+		}
+		/*ギミック追加(仮)*/
+		{
+			GimmickDisappear* pGimmickDisappear = new GimmickDisappear();
+			ObjectList->SetPlatform(pGimmickDisappear);
+			pGimmickDisappear->SetPosition(VGet(22.f, 160.f, 330.f));
 		}
 	}
 

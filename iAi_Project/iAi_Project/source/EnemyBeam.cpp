@@ -40,7 +40,10 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 	this->pPlayer = ObjectList->GetCharacterPlayer();
 	this->pEffect = nullptr;
 	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
-	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
+
+	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;	// ビームの持続カウント
+
+	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;		// ビームのチャージカウント
 }
 
 // デストラクタ
@@ -192,8 +195,6 @@ void BeamEnemy::Player_Range_Beam_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeBeam);
-
-
 
 }
 

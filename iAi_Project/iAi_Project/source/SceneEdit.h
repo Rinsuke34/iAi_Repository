@@ -3,9 +3,11 @@
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
+#include "SceneEditDefine.h"
 
 /* データリスト */
 #include "DataList_GameStatus.h"
+#include "DataList_GameResource.h"
 
 /* シーン"エディット"クラスの宣言 */
 
@@ -23,4 +25,5 @@ class SceneEdit : public SceneBase
 	private:
 		/* 使用するデータリスト */
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 };

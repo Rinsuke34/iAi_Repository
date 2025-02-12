@@ -63,6 +63,24 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 	}
+
+	/* モーションリストの設定 */
+	{
+		for (int i = 0; i < MOTION_ID_MAX; i++)
+		{
+			/* モーションIDを設定 */
+			this->PlayerMotionList[i].iMotionID			= MOTION_LIST[i].iMotionID;
+
+			/* モーション名を設定 */
+			this->PlayerMotionList[i].strMotionName		= MOTION_LIST[i].strMotionName;
+
+			/* モーションの総再生時間を取得＆設定 */
+			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, this->PlayerMotionList[i].iMotionID);
+
+			/* 次のモーションIDを設定 */
+			this->PlayerMotionList[i].iNextMotionID		= MOTION_LIST[i].iNextMotionID;
+		}
+	}
 }
 
 // 初期化
@@ -99,8 +117,9 @@ void CharacterPlayer::Update()
 		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 	}
 
-	/* プレイヤーのモーション状態を保存する */
-	iOldMotion = this->PlayerStatusList->iGetPlayerMotion();
+	///* プレイヤーのモーション状態を保存する */
+	//this->PlayerStatusList->SetPlayerMotion_Move_Old(this->PlayerStatusList->iGetPlayerMotion_Move());
+	//this->PlayerStatusList->SetPlayerMotion_Attack_Old(this->PlayerStatusList->iGetPlayerMotion_Attack());
 
 	/* 攻撃系アクション処理 */
 	{
@@ -252,122 +271,3 @@ void CharacterPlayer::HitCheck()
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-
-/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
-// プレイヤーのモーション遷移管理
-void CharacterPlayer::Player_Motion_Transition()
-{
-	/* アタッチしたアニメーションの総再生時間を取得する*/
-	this->fMotionTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMotionAttachIndex);
-
-	// 居合(強)(終了)モーションは１ループ再生する
-	if (iOldMotion == PLAYER_MOTION_DRAW_SWORD_END)
-	{	
-		// モーションの再生時間が総再生時間を超えていなければ ※総再生時間そのままだとスルーされるので-2しています
-		if (fMoionPlayTime <= this->fMotionTotalTime -2)
-		{
-			/* モーションの再生時間を進める */
-			this->fMoionPlayTime += 1.0f;
-		}
-		else
-		{
-			/* 居合(強)(終了)モーションをデタッチ */
-			MV1DetachAnim(this->iModelHandle, this->iMotionAttachIndex);
-			
-			/* 居合(強)(終了)モーションが終わったら、待機モーションをアタッチ */
-			this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
-		}
-	}
-	// それ以外は、モーションが変わっていなければ再生時間を進める
-	else  if (iOldMotion == this->PlayerStatusList->iGetPlayerMotion())
-	{
-		/* モーションの再生時間を進める */
-		this->fMoionPlayTime += 1.0f;
-	}
-	// モーションが変わった場合の処理
-	else
-	{
-		// モーションがアタッチされていたら 
-		if (this->iMotionAttachIndex != -1)
-		{
-			/* モーションをデタッチ */
-			MV1DetachAnim(this->iModelHandle, this->iMotionAttachIndex);
-		}
-
-		/* プレイヤーのモーション状態を取得 */
-		int iPlayerMotion = this->PlayerStatusList->iGetPlayerMotion();
-
-		// プレイヤーのモーション状態に応じて、モーションをアタッチする
-		switch (iPlayerMotion)
-		{
-			/* 待機 */
-			case PLAYER_MOTION_IDLE:
-				/* 待機モーションをアタッチ */
-				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
-				break;
-
-			/* 歩行 */
-			case PLAYER_MOTION_WALK:
-			/* 走行(低速) */
-			case PLAYER_MOTION_RUN_LOW:
-			/* 走行(高速) */
-			case PLAYER_MOTION_RUN_HIGH:
-			/* 走りモーションをアタッチ */
-				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_move_run"), -1, FALSE);
-				break;
-
-			/* 居合(溜め) */
-			case PLAYER_MOTION_DRAW_SWORD_CHARGE:
-				/* 居合（溜め）モーションをアタッチ */
-				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_loop"), -1, FALSE);
-				break;
-
-			/* 居合(弱) */
-			case PLAYER_MOTION_DRAW_SWORD_WEAK:
-				break;
-				/* 居合(強) */
-			case PLAYER_MOTION_DRAW_SWORD_STRONG:
-				/* 居合（溜め）モーションをアタッチ */
-				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_step"), -1, FALSE);
-				break;
-
-			/* 居合(強)(終了) */
-			case PLAYER_MOTION_DRAW_SWORD_END:
-				/* 居合(強)(終了)モーションをアタッチ */
-				this->iMotionAttachIndex = MV1AttachAnim(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, "mot_attack_charge_finish"), -1, FALSE);
-				break;
-
-			/* クナイ(構え) */
-			case PLAYER_MOTION_THROW_KUNAI_AIM:
-				break;
-
-			/* クナイ(投げ) */
-			case PLAYER_MOTION_THROW_KUNAI_THROW:
-				break;
-
-			/* 回避 */
-			case PLAYER_MOTION_DODGE:
-				break;
-
-			/* ジャンプ(上昇) */
-			case PLAYER_MOTION_JUMP_UP:
-				break;
-
-			/* ジャンプ(下降) */
-			case PLAYER_MOTION_JUMP_DOWN:
-				break;
-
-			return;
-		}
-
-		/* モーションの再生時間をリセットする */
-		this->fMoionPlayTime = 0.0f;
-	}
-
-	// モーションの再生時間が総再生時間を超えた場合
-	if (this->fMoionPlayTime > this->fMotionTotalTime)
-	{
-		/* モーションの再生時間をリセットする */
-		this->fMoionPlayTime = 0.0f;
-	}
-}

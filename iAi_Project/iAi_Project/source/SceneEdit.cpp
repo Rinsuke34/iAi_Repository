@@ -11,6 +11,9 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	{
 		/* "ゲーム状態管理"を取得 */
 		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+
+		/* "ゲーム内リソース管理"を取得 */
+		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 }
 

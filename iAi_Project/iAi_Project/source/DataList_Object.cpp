@@ -25,6 +25,9 @@ DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 
 	// プラットフォーム
 	this->pPlatformList.clear();
+
+	// エフェクトアイテム
+	this->pEffectItemList.clear();
 }
 
 // デストラクタ
@@ -60,6 +63,12 @@ DataList_Object::~DataList_Object()
 	{
 		delete pPlatform;
 	}
+
+	// アイテム(実体なし)
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		delete pEffectItem;
+	}
 }
 
 /* リスト内オブジェクト初期化 */
@@ -73,6 +82,7 @@ void DataList_Object::InitializationAll()
 	InitializationEffect();
 	InitializationBullet();
 	InitializationPlatform();
+	InitializationEffectItem();
 }
 
 // プレイヤー初期化
@@ -129,6 +139,16 @@ void DataList_Object::InitializationPlatform()
 	}
 }
 
+// アイテム(実体なし)初期化
+void DataList_Object::InitializationEffectItem()
+{
+	/* すべてのアイテム(実体なし)の初期化を呼ぶ */
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		pEffectItem->Initialization();
+	}
+}
+
 /* リスト内オブジェクト更新 */
 // 全オブジェクト更新
 void DataList_Object::UpdateAll()
@@ -140,6 +160,7 @@ void DataList_Object::UpdateAll()
 	UpdateEffect();
 	UpdateBullet();
 	UpdatePlatform();
+	UpdateEffectItem();
 }
 
 // プレイヤー更新
@@ -190,6 +211,20 @@ void DataList_Object::UpdateBullet()
 void DataList_Object::UpdatePlatform()
 {
 	/* 稼働プラットフォームの更新を呼ぶ(予定) */
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		pPlatform->Update();
+	}
+}
+
+// アイテム(実体なし)更新
+void DataList_Object::UpdateEffectItem()
+{
+	/* すべてのアイテム(実体なし)の更新を呼ぶ */
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		pEffectItem->Update();
+	}
 }
 
 /* リスト内オブジェクト描写 */
@@ -202,6 +237,7 @@ void DataList_Object::DrawAll()
 	DrawEnemy();
 	DrawBullet();
 	DrawPlatform();
+	DrawEffectItem();
 }
 
 // プレイヤー描写
@@ -263,6 +299,16 @@ void DataList_Object::DrawEffect()
 	}
 }
 
+// アイテム(実体なし)描写
+void DataList_Object::DrawEffectItem()
+{
+	/* すべてのアイテム(実体なし)の描写を呼ぶ */
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		pEffectItem->Draw();
+	}
+}
+
 /* リスト内オブジェクトコリジョン描写 */
 // 全オブジェクトコリジョン描写
 void DataList_Object::DrawAll_Collision()
@@ -273,6 +319,7 @@ void DataList_Object::DrawAll_Collision()
 	DrawEnemy_Collision();
 	DrawBullet_Collision();
 	DrawPlatform_Collision();
+	DrawEffectItem_Collision();
 }
 
 // プレイヤーコリジョン描写
@@ -320,6 +367,12 @@ void DataList_Object::DrawPlatform_Collision()
 	}
 }
 
+// アイテム(実体なし)コリジョン描写
+void DataList_Object::DrawEffectItem_Collision()
+{
+	// ※アイテム(実体なし)はコリジョンを持たないため、描写は行わない。
+}
+
 /* リスト内オブジェクト発光描写 */
 // 全オブジェクト発光描写
 void DataList_Object::DrawAll_Bloom()
@@ -330,6 +383,7 @@ void DataList_Object::DrawAll_Bloom()
 	DrawEnemy_Bloom();
 	DrawBullet_Bloom();
 	DrawPlatform_Bloom();
+	DrawEffectItem_Bloom();
 }
 
 // プレイヤー発光描写
@@ -381,6 +435,16 @@ void DataList_Object::DrawPlatform_Bloom()
 	}
 }
 
+// アイテム(実体なし)発光描写
+void DataList_Object::DrawEffectItem_Bloom()
+{
+	/* すべてのアイテム(実体なし)の発光描写を呼ぶ */
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		pEffectItem->BloomDraw();
+	}
+}
+
 /* リスト内オブジェクト削除 */
 // 削除フラグが有効な全オブジェクト削除
 // ※単独のデータはデストラクタで開放されるため、リストで管理しているデータのみ対象とする。
@@ -390,6 +454,7 @@ void DataList_Object::DeleteAll()
 	DeleteEffect();
 	DeleteBullet();
 	DeletePlatform();
+	DeleteEffectItem();
 }
 
 // 削除フラグが有効なエネミーを削除
@@ -477,4 +542,26 @@ void DataList_Object::DeletePlatform()
 			return false;
 		}
 	}), pPlatformList.end());
+}
+
+// 削除フラグが有効なアイテム(実体なし)を削除
+void DataList_Object::DeleteEffectItem()
+{
+	/* 削除フラグが有効なアイテム(実体なし)を削除 */
+	pEffectItemList.erase(std::remove_if(pEffectItemList.begin(), pEffectItemList.end(), [](EffectItemBase* pEffectItem)
+	{
+		/* 削除フラグが有効であるか確認　*/
+		if (pEffectItem->bGetDeleteFlg() == true)
+		{
+			// 有効である場合
+			/* メモリ解放 */
+			delete pEffectItem;
+			return true;
+		}
+		else
+		{
+			// 無効である場合
+			return false;
+		}
+	}), pEffectItemList.end());
 }

@@ -3,6 +3,7 @@
 /* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
 /* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -23,6 +24,7 @@ static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX = 3;			// プレイヤーのジャンプ回
 static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ロックオン範囲の半径
 static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// プレイヤーの最大HP
 static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// プレイヤーの最大無敵時間
+static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3;		// コンボの持続時間
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
 // 移動関係
@@ -34,6 +36,9 @@ static const float	PLAER_DASH_NOMAL_SPEED = 10.0f;			// プレイヤーの走り（通常）
 static const float	PLAER_DASH_MAX_SPEED = 20.0f;		// プレイヤーの走り（最大）の移動速度
 static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;			// プレイヤーの走りの通常→最大になるフレーム数
 static const float	STICK_TILT_PLAER_DASH				= 0.8f;			// プレイヤーが走り状態になるスティックの傾き（範囲：最大1）
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0?1.0）				/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_TURN_LIMIT_LEFT				= DX_PI_F * +2.0f;		// プレイヤーの回転角度制限(左)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_TURN_LIMIT_RIGHT				= DX_PI_F * -2.0f;		// プレイヤーの回転角度制限(右)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 
 // ジャンプ関係
 static const float	PLAYER_JUMP_SPEED					= 50.0f;		// プレイヤーのジャンプの速度
@@ -84,21 +89,6 @@ static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
-
-/* プレイヤーモーション */
-static const int	PLAYER_MOTION_IDLE					= 0;	// 待機
-static const int	PLAYER_MOTION_WALK					= 1;	// 歩行
-static const int	PLAYER_MOTION_RUN_LOW				= 2;	// 走行(低速)
-static const int	PLAYER_MOTION_RUN_HIGH				= 3;	// 走行(高速)
-static const int	PLAYER_MOTION_DRAW_SWORD_CHARGE		= 4;	// 居合(溜め)
-static const int	PLAYER_MOTION_DRAW_SWORD_WEAK		= 5;	// 居合(弱)
-static const int	PLAYER_MOTION_DRAW_SWORD_STRONG		= 6;	// 居合(強)
-static const int	PLAYER_MOTION_DRAW_SWORD_END		= 7;	// 居合(強)(終了)
-static const int	PLAYER_MOTION_THROW_KUNAI_AIM		= 8;	// クナイ(構え)
-static const int	PLAYER_MOTION_THROW_KUNAI_THROW		= 9;	// クナイ(投げ)
-static const int	PLAYER_MOTION_DODGE					= 10;	// 回避
-static const int	PLAYER_MOTION_JUMP_UP				= 11;	// ジャンプ(上昇)
-static const int	PLAYER_MOTION_JUMP_DOWN				= 12;	// ジャンプ(下降)
 
 /* プレイヤー処理用定数 */
 static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)

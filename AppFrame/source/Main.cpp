@@ -124,6 +124,9 @@ void Main::MainEnd()
 	/* データリストサーバーを削除する */
 	delete gpDataListServer;
 
+	/* フォントデータを削除する */
+	DeleteFontToHandle(giFontHandle);
+
 	/* DXライブラリの使用を終了する */
 	DxLib_End();
 }
