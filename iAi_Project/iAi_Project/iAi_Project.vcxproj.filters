@@ -259,6 +259,30 @@
     <Filter Include="ソース ファイル\データリスト\ゲームリソース管理">
       <UniqueIdentifier>{ce588e4f-4dd3-4727-ae0f-b5f71e740f0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\データリスト\画像管理">
+      <UniqueIdentifier>{7945200f-3a26-4ba5-8de4-7e0f28b8a76b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\画像管理">
+      <UniqueIdentifier>{39ca0152-b569-4bd3-a909-ce5e7af32e41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{d5be6361-8cd8-4dfe-ba3d-552985965112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{ed3e8fe2-29d6-4896-bdf4-677855c09859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{c5ba7085-d87c-4d73-a988-5442d5f02cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{bbe01ac4-d7ee-41d6-9650-41f9bee35d5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{09e3c1e0-6545-4500-b429-197170b734d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{294cdc1f-a067-4bb5-8688-f832bed72c59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -405,12 +429,6 @@
     <ClCompile Include="source\CharacterPlayerMotion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="source\GimmickJump.cpp">
-      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClCompile>
-    <ClCompile Include="source\GimmickDisappear.cpp">
-      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClCompile>
     <ClCompile Include="source\EffectItem_Blood.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
     </ClCompile>
@@ -422,6 +440,18 @@
     </ClCompile>
     <ClCompile Include="source\SceneUi_Edit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Image.cpp">
+      <Filter>ソース ファイル\データリスト\画像管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItem_ForcedJump.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickDisappear.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,12 +611,6 @@
     <ClInclude Include="source\GimmickDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
     </ClInclude>
-    <ClInclude Include="source\GimmickDisappear.h">
-      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClInclude>
-    <ClInclude Include="source\GimmickJump.h">
-      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
-    </ClInclude>
     <ClInclude Include="source\EffectItem_Blood.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
     </ClInclude>
@@ -604,6 +628,21 @@
     </ClInclude>
     <ClInclude Include="source\include\SceneEditDefine.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Image.h">
+      <Filter>ヘッダー ファイル\データリスト\画像管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItem_ForcedJump.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItem_BloodDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDisappear.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

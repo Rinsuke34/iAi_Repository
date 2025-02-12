@@ -8,6 +8,7 @@
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_GameStatus.h"
+#include "DataList_Image.h"
 
 /* UI(クロスヘア)クラスの宣言 */
 
@@ -30,5 +31,10 @@ class SceneUi_Crosshairs : public SceneBase
 		/* 関数 */
 		void	Draw_RockOn();		// 描写(ロックオンエネミー)
 		void	Draw_Move();		// 描写(溜め攻撃の移動後座標)
+
+		/* 変数 */
+		int*	ipCgHandle_Flont;			// 中心クロスヘア
+		int*	ipCgHandle_Target_Main;		// ロックオン対象(メイン)クロスヘア
+		int*	ipCgHandle_Target_Sub;		// ロックオン対象(サブ)クロスヘア
 };
 

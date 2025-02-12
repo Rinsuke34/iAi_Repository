@@ -148,6 +148,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし">
       <UniqueIdentifier>{f8c77f89-abe4-49c6-a898-a56acb2604f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{ca104b9f-5e7e-4683-819c-64d722876442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{b85591f1-11e3-4744-bc0c-9614c249aa37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -206,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="source\EffectItemBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItemBase.cpp">
+      <Filter>ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体あり</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="source\EffectItemBase.h">
       <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体なし</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItemBase.h">
+      <Filter>ヘッダー ファイル\オブジェクト\ベース\アクタ\アイテム\実体あり</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
