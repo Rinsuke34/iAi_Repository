@@ -20,6 +20,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"ゲームリソース管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_GameResource());
+
+		/* データリストサーバーに"画像リソース管理"を追加 */
+		gpDataListServer->AddDataList(new DataList_Image());
 	}
 
 	/* データリスト取得 */
@@ -49,6 +52,9 @@ SceneGame::~SceneGame()
 
 		/* ゲームリソース管理 */
 		gpDataListServer->DeleteDataList("DataList_GameResource");
+
+		/* 画像リソース管理 */
+		gpDataListServer->DeleteDataList("DataList_Image");
 	}
 
 	/* Effkseerの使用を終了する */
