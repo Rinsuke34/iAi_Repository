@@ -55,7 +55,30 @@ void GimmickDisappear::ProcessGimmick()
 		playerPos.z > this->vecPosition.z - 50 && playerPos.z < this->vecPosition.z + 50)
 	{
 		//プレイヤーがギミックの上に乗っている場合
+		/* エフェクト追加 */
 
+		/*爆発エフェクトを生成 */
+		this->pEffectSine = new EffectManualDelete();
+
+		/* エフェクトの読み込み */
+		this->pEffectSine->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_sine/FX_g_mine_sine")));
+
+		/* エフェクトの座標設定 */
+		this->pEffectSine->SetPosition(this->vecPosition);
+
+		/* エフェクトの回転量設定 */
+		this->pEffectSine->SetRotation(this->vecRotation);
+
+		/* エフェクトの初期化 */
+		this->pEffectSine->Initialization();
+
+		/* エフェクトをリストに登録 */
+		{
+			/* "オブジェクト管理"データリストを取得 */
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			/* エフェクトをリストに登録 */
+			ObjectListHandle->SetEffect(this->pEffectSine);
+		}
 		//テクスチャの変更カウントを減らす
 		iTextureFirstChangeCount--;
 
@@ -85,9 +108,9 @@ void GimmickDisappear::ProcessGimmick()
 				//ギミックの消滅時間カウントが一定数になったか確認
 				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
 				{
-				//ギミックの消滅時間カウントが一定数になった場合
-				//再生終了
-				//	PauseMovieToGraph(textureHandle);
+					//ギミックの消滅時間カウントが一定数になった場合
+					//再生終了
+					//	PauseMovieToGraph(textureHandle);
 
 					//ギミックを消滅させる
 					this->SetDeleteFlg(true);

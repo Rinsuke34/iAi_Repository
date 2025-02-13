@@ -25,10 +25,10 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 
 		/* エネミー足元モデルハンドル取得 */
-		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
+		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari");
 
 		// エネミー足元モデルのフレーム０番を非表示
 		MV1SetFrameVisible(iModelFootHandle, 0, FALSE);
@@ -149,12 +149,12 @@ void NormalEnemy::MoveEnemy()
 			MV1SetFrameVisible(iModelHandle, 2, TRUE);
 			// 発射カウントが0以下の場合
 		// ノーマル弾を発射する
-		Player_Range_Normal_Shot();
+			Player_Range_Normal_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+		}
 	}
-}
 
 
 }
@@ -166,7 +166,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
 	// ノーマル弾を生成
-	this-> pBulletRangeNormal = new BulletEnemyRangeNormal;
+	this->pBulletRangeNormal = new BulletEnemyRangeNormal;
 	/* 攻撃の生成方向の設定 */
 	/* 攻撃座標を算出 */
 
@@ -185,7 +185,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 
 	// 移動する弾の向きを設定
 	this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
-	
+
 	//初期化
 	this->pBulletRangeNormal->Initialization();
 
@@ -193,7 +193,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 	ObjectList->SetBullet(this->pBulletRangeNormal);
 
 
-	
+
 }
 
 // 更新

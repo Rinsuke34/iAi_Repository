@@ -10,6 +10,7 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 #include "DataList_GameStatus.h"
+#include "DataList_Image.h"
 
 /* ÉVÅ[Éì */
 #include "SceneEdit.h"

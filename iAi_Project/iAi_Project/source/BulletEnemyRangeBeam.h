@@ -36,13 +36,15 @@ private:
 
 	void BulletEnemyRangeBeamMove();	// ビームの移動処理
 
-	int iDurationCount;	// ビームの持続カウント
+	int iChargeCount;		// ビームのチャージカウント	
 
 	int iBulletCount;		// ビーム発射カウント
 
 	int iEnemyBeamDurationCount;		//ビームの持続カウント
 
 	VECTOR vecEnemyPosition; // エネミーの位置を保持するメンバ変数を追加
+
+	VECTOR vecPlayerDirection; // プレイヤーの方向を保持するメンバ変数を追加
 
 protected:
 

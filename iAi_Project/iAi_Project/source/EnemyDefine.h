@@ -15,3 +15,5 @@ static const int	ENEMY_Z_ESCAPE_DISTANCE	= 600;		// エネミーのZ軸の逃げる範囲
 static const int	ENEMY_ESCAPE_SPEED		= 5;		// エネミーの逃げる速度
 static const int	ENEMY_NORMAL_BULLET_INTERVAL			= 180;		//ノーマルエネミーの弾の発射間隔
 static const int	ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL	= 20;		//ノーマルエネミーの弾の誘導間隔
+static const int	ENEMY_BEAM_INTERVAL = 600;			//ビームの発射間隔
+static const int	ENEMY_MISSILE_INTERVAL = 100;		//ミサイルの発射間隔

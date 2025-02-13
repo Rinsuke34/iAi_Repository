@@ -39,7 +39,7 @@ void BulletEnemyRangeNormal::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet")));
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);

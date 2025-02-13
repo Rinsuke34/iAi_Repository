@@ -25,12 +25,14 @@ MissileEnemy::MissileEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari");
 	}
 
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();
 	this->pEffect = nullptr;
+
+	this->iFiringCount = ENEMY_MISSILE_INTERVAL;	// 発射カウント
 }
 
 // デストラクタ
@@ -76,8 +78,20 @@ void MissileEnemy::MoveEnemy()
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
+		// ミサイル発射カウントを減算
+		iFiringCount--;
+
+		//発射カウントが0以下か確認
+		if (iFiringCount <= 0)
+		{
+			// 発射カウントが0以下の場合
+
 		// ミサイルを発射する
-		Player_Range_Missile_Shot();
+			Player_Range_Missile_Shot();
+
+			// 発射カウントを初期化
+			this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+		}
 	}
 }
 

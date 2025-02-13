@@ -5,9 +5,6 @@
 // 描写
 void CharacterPlayer::Draw()
 {
-	/* モデル描写 */
-	MV1DrawModel(this->iModelHandle);
-
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
@@ -24,7 +21,6 @@ void CharacterPlayer::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
 
 	/* テスト用 */
 	float Draw;

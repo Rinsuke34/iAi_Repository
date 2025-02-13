@@ -19,7 +19,7 @@
 #include "SkySqhereBasic.h"
 // ギミック
 #include "GimmickDisappear.h"
-#include "Gimmick_ForcedJump_Spawn.h"
+#include "GimmickJump.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -177,7 +177,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(仮)の場合
 					/* "オブジェクト管理"にエネミー(仮)を追加 */
-					MissileEnemy* AddEnemy = new MissileEnemy();
+					BeamEnemy* AddEnemy = new BeamEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
 					/* 座標 */
@@ -209,9 +209,15 @@ void SceneStage::LoadMapData()
 		}
 		/*ギミック追加(仮)*/
 		{
-			PlatformBasic* pAddGimick = new Gimmick_ForcedJump_Spawn();
-			pAddGimick->SetPosition(VGet(22.f, 160.f, 22.f));
-			ObjectList->SetPlatform(pAddGimick);
+			GimmickJump* pGimmickJump = new GimmickJump();
+			ObjectList->SetPlatform(pGimmickJump);
+			pGimmickJump->SetPosition(VGet(22.f,160.f,22.f));
+		}
+		/*ギミック追加(仮)*/
+		{
+			GimmickDisappear* pGimmickDisappear = new GimmickDisappear();
+			ObjectList->SetPlatform(pGimmickDisappear);
+			pGimmickDisappear->SetPosition(VGet(22.f, 160.f, 330.f));
 		}
 	}
 
