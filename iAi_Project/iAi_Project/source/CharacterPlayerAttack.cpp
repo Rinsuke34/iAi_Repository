@@ -28,7 +28,6 @@ void CharacterPlayer::Player_Attack_Transition()
 	{
 		/* 自由状態 */
 	case PLAYER_ATTACKSTATUS_FREE:
-		
 		/* 攻撃入力がされているか確認 */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 		{
@@ -41,11 +40,11 @@ void CharacterPlayer::Player_Attack_Transition()
 		{
 			/* エイム(構え)キャンセルフラグが解除されている場合 */
 			if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
-			{
-				// エイム(構え)入力がされている場合
-				/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
-				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
-			}
+		{
+			// エイム(構え)入力がされている場合
+			/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
+			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
+		}
 		}
 		// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
 		/* エイム(構え)キャンセルフラグが設定されている場合 */
@@ -488,7 +487,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
 				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
 			}
 
 			/* 近接攻撃として扱う弾を作成 */
@@ -660,8 +659,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 	else 
 	{
 		/* プレイヤー攻撃状態を"自由状態"に設定 */
-		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
-	}
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+}
 
 }
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */

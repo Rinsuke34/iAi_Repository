@@ -219,6 +219,7 @@ void CharacterPlayer::Player_Move()
 					/* 角度を一周(2π)分補正する */
 					fCurrentAngle -= PLAYER_TURN_LIMIT_RIGHT;
 				}
+				
 				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
 				/* 左回りで半周を超えたら */
 				if (fDifferrenceAngle > DX_PI_F)
@@ -236,6 +237,7 @@ void CharacterPlayer::Player_Move()
 
 			/* 振り向き速度に応じて段階的に移動方向を向く */ 
 			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
+
 			/* プレイヤーの向きを更新 */
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
@@ -428,7 +430,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
-	/* 2025.02.10 菊池雅道	回避処理修正		開始 */
+	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();

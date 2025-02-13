@@ -31,7 +31,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
-		
+
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};		// 垂直方向のコリジョン
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
@@ -105,7 +105,7 @@ void CharacterPlayer::Update()
 	{
 		// ※攻撃やオブジェクトに対する当たり判定処理を行う
 		/* 当たり判定処理 */
-		HitCheck();
+		PlayerHitCheck();
 	}
 
 	/* 毎フレームの初期化処理 */
@@ -171,7 +171,7 @@ void CharacterPlayer::CollisionUpdate()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 当たり判定処理 */
-void CharacterPlayer::HitCheck()
+void CharacterPlayer::PlayerHitCheck()
 {
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();

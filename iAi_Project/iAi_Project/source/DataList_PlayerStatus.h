@@ -1,9 +1,9 @@
-﻿/* 2024.12.26 駒沢風助 ファイル作成 */
-/* 2025.01.09 菊池雅道 移動関連の変数・関数追加 */
-/* 2025.01.22 菊池雅道 攻撃関連の変数・関数追加 */
-/* 2025.02.05 菊池雅道 ステータス関連の変数・関数修正 */
-/* 2025.02.10 菊池雅道 移動関連の変数・関数追加 */
-/* 2025.02.11 菊池雅道 攻撃関連の変数・関数追加 */
+/* 2024.12.26 ��򕗏� �t�@�C���쐬 */
+/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��E�֐��ǉ� */
+/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��E�֐��ǉ� */
+/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̕ϐ��E�֐��C�� */
+/* 2025.02.10 �e�r�듹 �ړ��֘A�̕ϐ��E�֐��ǉ� */
+/* 2025.02.11 �e�r�듹 �U���֘A�̕ϐ��E�֐��ǉ� */
 
 
 #pragma once
@@ -13,238 +13,247 @@
 #include "PlayerStatusDefine.h"
 #include "PlayerMotionDefine.h"
 
-/* 前方参照 */
-// ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
+/* �O���Q�� */
+// ��AppFrame�Œ�`����Ă��Ȃ��N���X���g�p����ꍇ�A�z�Q�Ƒ΍�Ɏ��{����B
 class EnemyBasic;
 
-/* プレイヤー状態管理クラスの宣言 */
+/* �v���C���[��ԊǗ��N���X�̐錾 */
 
-// プレイヤー状態管理クラス
+// �v���C���[��ԊǗ��N���X
 class DataList_PlayerStatus : public DataListBase
 {
 	public:
-		DataList_PlayerStatus();			// コンストラクタ
-		virtual ~DataList_PlayerStatus();	// デストラクタ
+		DataList_PlayerStatus();			// �R���X�g���N�^
+		virtual ~DataList_PlayerStatus();	// �f�X�g���N�^
 
-		/* データ取得 */
-		// プレイヤー状態関連
-		int		iGetPlayerMoveState()				{ return this->iPlayerMoveState; }					// プレイヤーの移動状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		int		iGetPlayerAttackState()				{ return this->iPlayerAttackState; }				// プレイヤーの攻撃状態取得										/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		bool	bGetPlayerLandingFlg()				{ return this->bPlayerLandingFlg; }					// プレイヤーが空中にいるかのフラグ取得
-		float	fGetPlayerNowMoveSpeed()			{ return this->fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度取得
-		float	fGetPlayerAngleX()					{ return this->fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
-		float	fGetPlayerTurnSpeed()				{ return this->fPlayerTurnSpeed; }					// プレイヤーの回転速度取得										/* 2025.02.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerNowFallSpeed()			{ return this->fPlayerNowFallSpeed; }				// プレイヤーの現在の落下速度取得
-		int		iGetPlayerNowJumpCount()			{ return this->iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)取得
-		int		iGetPlayerNowAttakChargeFlame()		{ return this->iPlayerNowAttakChargeFlame; }		// プレイヤーの現在の攻撃チャージフレーム数取得
-		float	fGetPlayerNowMotionCount()			{ return this->fPlayerNowMotionCount; };			// プレイヤーのモーションの現在のカウント
-		int		iGetPlayerNormalDashFlameCount()	{ return this->iPlayerNormalDashFlameCount; }		// 通常ダッシュ時経過フレーム数を取得（高速ダッシュへの移行に使用）	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		int		iGetPlayerJumpCount()				{ return this->iPlayerJumpCount; }					// プレイヤーの現在のジャンプ回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		bool	bGetPlayerJumpingFlag()				{ return this->bPlayerJumpingFlag; }				// プレイヤーがジャンプ中かのフラグを取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerDodgeProgress()			{ return this->fPlayerDodgeProgress; }				// プレイヤー回避モーション進行率を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		VECTOR	vecGetPlayerDodgeDirection()		{ return this->vecPlayerDodgeDirection; }			// プレイヤー回避方向を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		int		iGetPlayerDodgeWhileJumpingCount()  { return this->iPlayerDodgeWhileJumpingCount; }		// プレイヤージャンプ中の回避回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		bool	bGetPlayerAfterDodgeFlag()			{ return this->bPlayerAfterDodgeFlag; }				// プレイヤーの回避後フラグを取得									/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerDodgeSpeed()				{ return this->fPlayerDodgeSpeed; }					// プレイヤー回避速度を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		int		iGetPlayerNowDodgeFlame()			{ return this->iPlayerNowDodgeFlame; }				// プレイヤーの現在の回避フレーム数を取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		VECTOR	vecGetPlayerChargeAttakTargetMove()	{ return this->vecPlayerChargeAttakTargetMove; }	// プレイヤー溜め攻撃の移動量を取得									/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
-		int		iGetPlayerChargeAttackCount()		{ return this->iPlayerChargeAttackCount; }			// プレイヤー溜め攻撃のカウントを取得
-		EnemyBasic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
-		int		iGetPlayerNowHp()					{ return this->iPlayerNowHp; }						// プレイヤーの現在のHPを取得
-		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
-		bool	bGetPlayerAimCancelledFlg()			{ return this->bPlayerAimCancelledFlg; }			// 遠距離攻撃(構え)がキャンセルされたかのフラグを取得				/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
+		/* �f�[�^�擾 */
+		// �v���C���[��Ԋ֘A
+		int		iGetPlayerMoveState()				{ return this->iPlayerMoveState; }					// �v���C���[�̈ړ���Ԏ擾										/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̊֐��C�� */
+		int		iGetPlayerAttackState()				{ return this->iPlayerAttackState; }				// �v���C���[�̍U����Ԏ擾										/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̊֐��C�� */
+		bool	bGetPlayerLandingFlg()				{ return this->bPlayerLandingFlg; }					// �v���C���[���󒆂ɂ��邩�̃t���O�擾
+		float	fGetPlayerNowMoveSpeed()			{ return this->fPlayerNowMoveSpeed; }				// �v���C���[�̌��݂̈ړ����x�擾
+		float	fGetPlayerAngleX()					{ return this->fPlayerAngleX; }						// �v���C���[��X����]��(���W�A��)�擾
+		float	fGetPlayerTurnSpeed()				{ return this->fPlayerTurnSpeed; }					// �v���C���[�̉�]���x�擾										/* 2025.02.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		float	fGetPlayerNowFallSpeed()			{ return this->fPlayerNowFallSpeed; }				// �v���C���[�̌��݂̗������x�擾
+		int		iGetPlayerNowJumpCount()			{ return this->iPlayerNowJumpCount; }				// �v���C���[�̃W�����v��(���ݐ�)�擾
+		int		iGetPlayerNowAttakChargeFlame()		{ return this->iPlayerNowAttakChargeFlame; }		// �v���C���[�̌��݂̍U���`���[�W�t���[�����擾
+		float	fGetPlayerNowMotionCount()			{ return this->fPlayerNowMotionCount; };			// �v���C���[�̃��[�V�����̌��݂̃J�E���g
+		int		iGetPlayerNormalDashFlameCount()	{ return this->iPlayerNormalDashFlameCount; }		// �ʏ�_�b�V�����o�߃t���[�������擾�i�����_�b�V���ւ̈ڍs�Ɏg�p�j	/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		int		iGetPlayerJumpCount()				{ return this->iPlayerJumpCount; }					// �v���C���[�̌��݂̃W�����v�񐔂��擾								/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		bool	bGetPlayerJumpingFlag()				{ return this->bPlayerJumpingFlag; }				// �v���C���[���W�����v�����̃t���O���擾							/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		float	fGetPlayerDodgeProgress()			{ return this->fPlayerDodgeProgress; }				// �v���C���[������[�V�����i�s�����擾								/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		VECTOR	vecGetPlayerDodgeDirection()		{ return this->vecPlayerDodgeDirection; }			// �v���C���[���������擾											/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		int		iGetPlayerDodgeWhileJumpingCount()  { return this->iPlayerDodgeWhileJumpingCount; }		// �v���C���[�W�����v���̉���񐔂��擾								/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		bool	bGetPlayerAfterDodgeFlag()			{ return this->bPlayerAfterDodgeFlag; }				// �v���C���[�̉����t���O���擾									/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		float	fGetPlayerDodgeSpeed()				{ return this->fPlayerDodgeSpeed; }					// �v���C���[��𑬓x���擾											/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		int		iGetPlayerNowDodgeFlame()			{ return this->iPlayerNowDodgeFlame; }				// �v���C���[�̌��݂̉���t���[�������擾							/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		VECTOR	vecGetPlayerChargeAttakTargetMove()	{ return this->vecPlayerChargeAttakTargetMove; }	// �v���C���[���ߍU���̈ړ��ʂ��擾									/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��ǉ� */	/* 2025.01.26 ��򕗏� �R�[�h�C�� */
+		int		iGetPlayerChargeAttackCount()		{ return this->iPlayerChargeAttackCount; }			// �v���C���[���ߍU���̃J�E���g���擾
+		EnemyBasic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ���b�N�I���Ώۂ̃G�l�~�[���擾
+		int		iGetPlayerNowHp()					{ return this->iPlayerNowHp; }						// �v���C���[�̌��݂�HP���擾
+		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// �v���C���[�̌��݂̎c�薳�G���Ԃ��擾
+		int		iGetPlayerComboNowCount()			{ return this->iPlayerComboNowCount; }				// �v���C���[�̌��݂̃R���{�����擾
+		int		iGetPlayerComboMaxCount()			{ return this->iPlayerComboMaxCount; }				// �v���C���[�̍ő�R���{�����擾
+		int		iGetPlayerComboDuration()			{ return this->iPlayerComboDuration; }				// �v���C���[�̃R���{�̎c�莝�����Ԃ��擾
+		bool	bGetPlayerAimCancelledFlg()			{ return this->bPlayerAimCancelledFlg; }			// �������U��(�\��)���L�����Z�����ꂽ���̃t���O���擾				/* 2025.02.11 �e�r�듹 �U���֘A�̊֐��ǉ� */
 
-		/* プレイヤーモーション関連 */
-		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
-		int		iGetPlayerMotion_Move_Old()				{ return this->iPlayerMotion_Move_Old; }			// 変更前プレイヤーモーション(移動系)を取得
-		int		iGetPlayerMotion_Attack()				{ return this->iPlayerMotion_Attack; }				// プレイヤーモーション(攻撃系)を取得
-		int		iGetPlayerMotion_Attack_Old()			{ return this->iPlayerMotion_Attack_Old; }			// 変更前プレイヤーモーション(攻撃系)を取得
-		float	fGetMotionTimer_Move()					{ return this->fMotionTimer_Move; }					// モーションカウント(移動系)を取得
-		float	fGetMotionTimer_Move_End()				{ return this->fMotionTimer_Move_End; }				// モーションカウント(移動系/終了時間)を取得
-		float	fGetMotionTimer_Attack()				{ return this->fMotionTimer_Attack; }				// モーションカウント(攻撃系)を取得
-		float	fGetMotionTimer_Attack_End()			{ return this->fMotionTimer_Attack_End; }			// モーションカウント(攻撃系/終了時間)を取得
-		int		iGetPlayerMotionAttachIndex_Move()		{ return this->iPlayerMotionAttachIndex_Move; }		// プレイヤーモーション(移動系)のアタッチ番号
-		int		iGetPlayerMotionAttachIndex_Attack()	{ return this->iPlayerMotionAttachIndex_Attack; }	// プレイヤーモーション(攻撃系)のアタッチ番号
+		/* �v���C���[���[�V�����֘A */
+		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// �v���C���[���[�V����(�ړ��n)���擾
+		int		iGetPlayerMotion_Move_Old()				{ return this->iPlayerMotion_Move_Old; }			// �ύX�O�v���C���[���[�V����(�ړ��n)���擾
+		int		iGetPlayerMotion_Attack()				{ return this->iPlayerMotion_Attack; }				// �v���C���[���[�V����(�U���n)���擾
+		int		iGetPlayerMotion_Attack_Old()			{ return this->iPlayerMotion_Attack_Old; }			// �ύX�O�v���C���[���[�V����(�U���n)���擾
+		float	fGetMotionTimer_Move()					{ return this->fMotionTimer_Move; }					// ���[�V�����J�E���g(�ړ��n)���擾
+		float	fGetMotionTimer_Move_End()				{ return this->fMotionTimer_Move_End; }				// ���[�V�����J�E���g(�ړ��n/�I������)���擾
+		float	fGetMotionTimer_Attack()				{ return this->fMotionTimer_Attack; }				// ���[�V�����J�E���g(�U���n)���擾
+		float	fGetMotionTimer_Attack_End()			{ return this->fMotionTimer_Attack_End; }			// ���[�V�����J�E���g(�U���n/�I������)���擾
+		int		iGetPlayerMotionAttachIndex_Move()		{ return this->iPlayerMotionAttachIndex_Move; }		// �v���C���[���[�V����(�ړ��n)�̃A�^�b�`�ԍ�
+		int		iGetPlayerMotionAttachIndex_Attack()	{ return this->iPlayerMotionAttachIndex_Attack; }	// �v���C���[���[�V����(�U���n)�̃A�^�b�`�ԍ�
 
-		/* 判定処理用コリジョン */
-		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
-		bool				bGetMeleeSearchCollisionUseFlg()	{ return this->bMeleeSearchCollisionUseFlg; };	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを取得
+		/* ���菈���p�R���W���� */
+		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// �ߐڍU��(��)�̃��b�N�I���͈̓R���W�������擾
+		bool				bGetMeleeSearchCollisionUseFlg()	{ return this->bMeleeSearchCollisionUseFlg; };	// �ߐڍU��(��)�̃��b�N�I���͈̓R���W�����g�p�t���O���擾
 
-		// 能力値関連※プレイヤーの装備等によって上下する可能性のあるステータス)
-		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
-		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// プレイヤーの最大移動速度取得
-		float	fGetPlayerFallAcceleration()	{ return this->fPlayerFallAcceleration; }	// プレイヤーの落下加速度取得
-		float	fGetPlayerMaxFallSpeed()		{ return this->fPlayerMaxFallSpeed; }		// プレイヤーの最大落下速度取得
-		int		iGetPlayerMaxJumpCount()		{ return this->iPlayerMaxJumpCount; }		// プレイヤーのジャンプ回数(最大数)取得
-		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ロックオン範囲の半径を設定
-		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// プレイヤーの最大HP取得
-		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// プレイヤーの最大無敵時間取得
+		// �\�͒l�֘A���v���C���[�̑������ɂ���ď㉺����\���̂���X�e�[�^�X)
+		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// �v���C���[�̈ړ������x�擾
+		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// �v���C���[�̍ő�ړ����x�擾
+		float	fGetPlayerFallAcceleration()	{ return this->fPlayerFallAcceleration; }	// �v���C���[�̗��������x�擾
+		float	fGetPlayerMaxFallSpeed()		{ return this->fPlayerMaxFallSpeed; }		// �v���C���[�̍ő嗎�����x�擾
+		int		iGetPlayerMaxJumpCount()		{ return this->iPlayerMaxJumpCount; }		// �v���C���[�̃W�����v��(�ő吔)�擾
+		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ���b�N�I���͈͂̔��a��ݒ�
+		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// �v���C���[�̍ő�HP�擾
+		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// �v���C���[�̍ő喳�G���Ԏ擾
 
-		// カメラ関連
-		int		iGetCameraMode()							{ return this->iCameraMode; }							// カメラモード取得
-		int		iGetCameraMode_Old()						{ return this->iCameraMode_Old; }						// カメラモード取得(変更前)
-		VECTOR	vecGetCameraUp()							{ return this->vecCameraUp; }							// カメラの上方向取得
-		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; }						// カメラの座標取得(現在地点)
-		VECTOR	vecGetCameraPosition_Start()				{ return this->vecCameraPosition_Start; }				// カメラの座標取得(移動前地点)
-		VECTOR	vecGetCameraPosition_Target()				{ return this->vecCameraPosition_Target; }				// カメラの座標取得(移動後地点)
-		int		iGetCameraPositionLeapCount()				{ return this->iCameraPositionLeapCount; }				// カメラ座標の線形保管用カウント取得
-		VECTOR	vecGetCameraTarget()						{ return this->vecCameraTarget; }						// カメラの注視点取得
-		float	fGetCameraRadius()							{ return this->fCameraRadius; }							// カメラの中心点からの距離取得
-		float	fGetCameraAngleX()							{ return this->fCameraAngleX; }							// カメラのX軸回転量(ラジアン)取得
-		float	fGetCameraAngleY()							{ return this->fCameraAngleY; }							// カメラのY軸回転量(ラジアン)取得
-		float	fGetCameraRotationalSpeed_Controller()		{ return this->fCameraRotationalSpeed_Controller; }		// カメラの回転速度(コントローラー)取得
-		float	fGetCameraRotationalSpeed_Mouse()			{ return this->fCameraRotationalSpeed_Mouse; }			// カメラの回転速度(マウス)取得
-		float	fGetCameraAngleLimitUp()					{ return this->fCameraAngleLimitUp; }					// カメラの回転角度制限取得(上)
-		float	fGetCameraAngleLimitDown()					{ return this->fCameraAngleLimitDown; }					// カメラの回転角度制限取得(下)
+		// �J�����֘A
+		int		iGetCameraMode()							{ return this->iCameraMode; }							// �J�������[�h�擾
+		int		iGetCameraMode_Old()						{ return this->iCameraMode_Old; }						// �J�������[�h�擾(�ύX�O)
+		VECTOR	vecGetCameraUp()							{ return this->vecCameraUp; }							// �J�����̏�����擾
+		VECTOR	vecGetCameraPosition()						{ return this->vecCameraPosition; }						// �J�����̍��W�擾(���ݒn�_)
+		VECTOR	vecGetCameraPosition_Start()				{ return this->vecCameraPosition_Start; }				// �J�����̍��W�擾(�ړ��O�n�_)
+		VECTOR	vecGetCameraPosition_Target()				{ return this->vecCameraPosition_Target; }				// �J�����̍��W�擾(�ړ���n�_)
+		int		iGetCameraPositionLeapCount()				{ return this->iCameraPositionLeapCount; }				// �J�������W�̐��`�ۊǗp�J�E���g�擾
+		VECTOR	vecGetCameraTarget()						{ return this->vecCameraTarget; }						// �J�����̒����_�擾
+		float	fGetCameraRadius()							{ return this->fCameraRadius; }							// �J�����̒��S�_����̋����擾
+		float	fGetCameraAngleX()							{ return this->fCameraAngleX; }							// �J������X����]��(���W�A��)�擾
+		float	fGetCameraAngleY()							{ return this->fCameraAngleY; }							// �J������Y����]��(���W�A��)�擾
+		float	fGetCameraRotationalSpeed_Controller()		{ return this->fCameraRotationalSpeed_Controller; }		// �J�����̉�]���x(�R���g���[���[)�擾
+		float	fGetCameraRotationalSpeed_Mouse()			{ return this->fCameraRotationalSpeed_Mouse; }			// �J�����̉�]���x(�}�E�X)�擾
+		float	fGetCameraAngleLimitUp()					{ return this->fCameraAngleLimitUp; }					// �J�����̉�]�p�x�����擾(��)
+		float	fGetCameraAngleLimitDown()					{ return this->fCameraAngleLimitDown; }					// �J�����̉�]�p�x�����擾(��)
 
-		/* データ設定 */
-		// プレイヤー状態関連
-		void	SetPlayerMoveState(int iPlayerMoveState)							{ this->iPlayerMoveState				= iPlayerMoveState; }					// プレイヤーの移動状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		void	SetPlayerAttackState(int iPlayerAttackState)						{ this->iPlayerAttackState				= iPlayerAttackState; }					// プレイヤーの攻撃状態設定					/* 2025.02.05 菊池雅道 ステータス関連の関数修正 */
-		void	SetPlayerLanding(bool bPlayerLanding)								{ this->bPlayerLandingFlg				= bPlayerLanding; }						// プレイヤーが空中にいるかのフラグ設定
-		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)					{ this->fPlayerNowMoveSpeed				= fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度設定
-		void	SetPlayerAngleX(float fPlayerAngleX)								{ this->fPlayerAngleX					= fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
-		void	SetPlayerTurnSpeed(float fPlayerTurnSpeed)							{ this->fPlayerTurnSpeed				= fPlayerTurnSpeed; }					// プレイヤーの回転速度設定					/* 2025.02.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)					{ this->fPlayerNowFallSpeed				= fPlayerNowFallSpeed; }				// プレイヤーの現在の落下速度設定
-		void	SetPlayerNowJumpCount(int iPlayerNowJumpCount)						{ this->iPlayerNowJumpCount				= iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)設定
-		void	SetPlayerNormalDashFlameCount(int iPlayerNormalDashFlameCount)		{ this->iPlayerNormalDashFlameCount		= iPlayerNormalDashFlameCount; }		// 通常ダッシュ時経過フレーム数を設定
-		void	SetPlayerNowAttakChargeFlame(int iPlayerNowAttakChargeFlame)		{ this->iPlayerNowAttakChargeFlame		= iPlayerNowAttakChargeFlame; }			// プレイヤーの現在の攻撃チャージフレーム数設定
-		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)				{ this->fPlayerNowMotionCount			= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
-		void	SetPlayerJumpCount(int iPlayerJumpCount)							{ this->iPlayerJumpCount				= iPlayerJumpCount; }					// プレイヤージャンプ回数を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag)						{ this->bPlayerJumpingFlag				= bPlayerJumpingFlag; }					// プレイヤーがジャンプ中かのフラグを設定	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeProgress(float fPlayerDodgeProgress)					{ this->fPlayerDodgeProgress			= fPlayerDodgeProgress; }				// プレイヤー回避モーション進行率を設定		/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeDirection(VECTOR vecPlayerDodgeDirection)				{ this->vecPlayerDodgeDirection			= vecPlayerDodgeDirection; }			// プレイヤー回避方向を設定					/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeWhileJumpingCount(int iPlayerDodgeWhileJumpingCount)  { this->iPlayerDodgeWhileJumpingCount	= iPlayerDodgeWhileJumpingCount; }		// プレイヤージャンプ中の回避回数を設定		/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerAfterDodgeFlag(bool bPlayerAfterDodgeFlag)					{ this->bPlayerAfterDodgeFlag			= bPlayerAfterDodgeFlag; }				// プレイヤーの回避後フラグを設定			/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerLockOnEnemy(EnemyBasic* pLockOnEnemy)						{ this->pLockOnEnemy					= pLockOnEnemy; };						// ロックオン対象のエネミーを設定
-		void	SetPlayerNowHp(int iPlayerNowHp)									{ this->iPlayerNowHp					= iPlayerNowHp; }						// プレイヤーの現在のHPを設定
-		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)			{ this->iPlayerNowInvincibleTime		= iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を設定
-		void	SetPlayerAimCancelledFlg(bool bPlayerAimCancelledFlg)				{ this->bPlayerAimCancelledFlg			= bPlayerAimCancelledFlg; }				// 遠距離攻撃(構え)がキャンセルされたかのフラグを設定	/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
+		/* �f�[�^�ݒ� */
+		// �v���C���[��Ԋ֘A
+		void	SetPlayerMoveState(int iPlayerMoveState)							{ this->iPlayerMoveState				= iPlayerMoveState; }					// �v���C���[�̈ړ���Ԑݒ�					/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̊֐��C�� */
+		void	SetPlayerAttackState(int iPlayerAttackState)						{ this->iPlayerAttackState				= iPlayerAttackState; }					// �v���C���[�̍U����Ԑݒ�					/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̊֐��C�� */
+		void	SetPlayerLanding(bool bPlayerLanding)								{ this->bPlayerLandingFlg				= bPlayerLanding; }						// �v���C���[���󒆂ɂ��邩�̃t���O�ݒ�
+		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)					{ this->fPlayerNowMoveSpeed				= fPlayerNowMoveSpeed; }				// �v���C���[�̌��݂̈ړ����x�ݒ�
+		void	SetPlayerAngleX(float fPlayerAngleX)								{ this->fPlayerAngleX					= fPlayerAngleX; }						// �v���C���[��X����]��(���W�A��)�擾
+		void	SetPlayerTurnSpeed(float fPlayerTurnSpeed)							{ this->fPlayerTurnSpeed				= fPlayerTurnSpeed; }					// �v���C���[�̉�]���x�ݒ�					/* 2025.02.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)					{ this->fPlayerNowFallSpeed				= fPlayerNowFallSpeed; }				// �v���C���[�̌��݂̗������x�ݒ�
+		void	SetPlayerNowJumpCount(int iPlayerNowJumpCount)						{ this->iPlayerNowJumpCount				= iPlayerNowJumpCount; }				// �v���C���[�̃W�����v��(���ݐ�)�ݒ�
+		void	SetPlayerNormalDashFlameCount(int iPlayerNormalDashFlameCount)		{ this->iPlayerNormalDashFlameCount		= iPlayerNormalDashFlameCount; }		// �ʏ�_�b�V�����o�߃t���[������ݒ�
+		void	SetPlayerNowAttakChargeFlame(int iPlayerNowAttakChargeFlame)		{ this->iPlayerNowAttakChargeFlame		= iPlayerNowAttakChargeFlame; }			// �v���C���[�̌��݂̍U���`���[�W�t���[�����ݒ�
+		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)				{ this->fPlayerNowMotionCount			= fPlayerNowMotionCount; };				// �v���C���[�̃��[�V�����̌��݂̃J�E���g
+		void	SetPlayerJumpCount(int iPlayerJumpCount)							{ this->iPlayerJumpCount				= iPlayerJumpCount; }					// �v���C���[�W�����v�񐔂�ݒ�				/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag)						{ this->bPlayerJumpingFlag				= bPlayerJumpingFlag; }					// �v���C���[���W�����v�����̃t���O��ݒ�	/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerDodgeProgress(float fPlayerDodgeProgress)					{ this->fPlayerDodgeProgress			= fPlayerDodgeProgress; }				// �v���C���[������[�V�����i�s����ݒ�		/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerDodgeDirection(VECTOR vecPlayerDodgeDirection)				{ this->vecPlayerDodgeDirection			= vecPlayerDodgeDirection; }			// �v���C���[��������ݒ�					/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerDodgeWhileJumpingCount(int iPlayerDodgeWhileJumpingCount)  { this->iPlayerDodgeWhileJumpingCount	= iPlayerDodgeWhileJumpingCount; }		// �v���C���[�W�����v���̉���񐔂�ݒ�		/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerAfterDodgeFlag(bool bPlayerAfterDodgeFlag)					{ this->bPlayerAfterDodgeFlag			= bPlayerAfterDodgeFlag; }				// �v���C���[�̉����t���O��ݒ�			/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerLockOnEnemy(EnemyBasic* pLockOnEnemy)						{ this->pLockOnEnemy					= pLockOnEnemy; };						// ���b�N�I���Ώۂ̃G�l�~�[��ݒ�
+		void	SetPlayerNowHp(int iPlayerNowHp)									{ this->iPlayerNowHp					= iPlayerNowHp; }						// �v���C���[�̌��݂�HP��ݒ�
+		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)			{ this->iPlayerNowInvincibleTime		= iPlayerNowInvincibleTime; }			// �v���C���[�̌��݂̎c�薳�G���Ԃ�ݒ�
+		void	SetPlayerComboNowCount(int iPlayerComboNowCount)					{ this->iPlayerComboNowCount			= iPlayerComboNowCount; }				// �v���C���[�̌��݂̃R���{����ݒ�
+		void	SetPlayerComboMaxCount(int iPlayerComboMaxCount)					{ this->iPlayerComboMaxCount			= iPlayerComboMaxCount; }				// �v���C���[�̍ő�R���{����ݒ�
+		void	SetPlayerComboDuration(int iPlayerComboDuration)					{ this->iPlayerComboDuration			= iPlayerComboDuration; }				// �v���C���[�̃R���{�̎c�莝�����Ԃ�ݒ�
+		void	SetPlayerAimCancelledFlg(bool bPlayerAimCancelledFlg)				{ this->bPlayerAimCancelledFlg			= bPlayerAimCancelledFlg; }				// �������U��(�\��)���L�����Z�����ꂽ���̃t���O��ݒ�	/* 2025.02.11 �e�r�듹 �U���֘A�̊֐��ǉ� */
 
-		/* プレイヤーモーション関連 */
-		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
-		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)					{ this->iPlayerMotion_Move_Old			= iPlayerMotion_Move_Old; };			// 変更前プレイヤーモーション(移動系)を設定
-		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)						{ this->iPlayerMotion_Attack			= iPlayerMotion_Attack; };				// プレイヤーモーション(攻撃系)を設定
-		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)				{ this->iPlayerMotion_Attack_Old		= iPlayerMotion_Attack_Old; };			// 変更前プレイヤーモーション(攻撃系)を設定
-		void	SetMotionCount_Move(float fMotionCount_Move)							{ this->fMotionTimer_Move				= fMotionCount_Move; };					// モーションカウント(移動系)
-		void	SetMotionCount_Move_End(float fMotionCount_Move_End)					{ this->fMotionTimer_Move_End			= fMotionCount_Move_End; };				// モーションカウント(移動系/終了時間)を設定
-		void	SetMotionCount_Attack(float fMotionCount_Attack)						{ this->fMotionTimer_Attack				= fMotionCount_Attack; };				// モーションカウント(攻撃系)を設定
-		void	SetMotionCount_Attack_End(float fMotionCount_Attack_End)				{ this->fMotionTimer_Attack_End			= fMotionCount_Attack_End; };			// モーションカウント(攻撃系/終了時間)を設定
-		void	SetPlayerMotionAttachIndex_Move(int iPlayerMotionAttachIndex_Move)		{ this->iPlayerMotionAttachIndex_Move	= iPlayerMotionAttachIndex_Move; }		// プレイヤーモーション(移動系)のアタッチ番号
-		void	SetPlayerMotionAttachIndex_Attack(int iPlayerMotionAttachIndex_Attack)	{ this->iPlayerMotionAttachIndex_Attack	= iPlayerMotionAttachIndex_Attack; }	// プレイヤーモーション(攻撃系)のアタッチ番号
+		/* �v���C���[���[�V�����֘A */
+		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// �v���C���[���[�V����(�ړ��n)��ݒ�
+		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)					{ this->iPlayerMotion_Move_Old			= iPlayerMotion_Move_Old; };			// �ύX�O�v���C���[���[�V����(�ړ��n)��ݒ�
+		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)						{ this->iPlayerMotion_Attack			= iPlayerMotion_Attack; };				// �v���C���[���[�V����(�U���n)��ݒ�
+		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)				{ this->iPlayerMotion_Attack_Old		= iPlayerMotion_Attack_Old; };			// �ύX�O�v���C���[���[�V����(�U���n)��ݒ�
+		void	SetMotionCount_Move(float fMotionCount_Move)							{ this->fMotionTimer_Move				= fMotionCount_Move; };					// ���[�V�����J�E���g(�ړ��n)
+		void	SetMotionCount_Move_End(float fMotionCount_Move_End)					{ this->fMotionTimer_Move_End			= fMotionCount_Move_End; };				// ���[�V�����J�E���g(�ړ��n/�I������)��ݒ�
+		void	SetMotionCount_Attack(float fMotionCount_Attack)						{ this->fMotionTimer_Attack				= fMotionCount_Attack; };				// ���[�V�����J�E���g(�U���n)��ݒ�
+		void	SetMotionCount_Attack_End(float fMotionCount_Attack_End)				{ this->fMotionTimer_Attack_End			= fMotionCount_Attack_End; };			// ���[�V�����J�E���g(�U���n/�I������)��ݒ�
+		void	SetPlayerMotionAttachIndex_Move(int iPlayerMotionAttachIndex_Move)		{ this->iPlayerMotionAttachIndex_Move	= iPlayerMotionAttachIndex_Move; }		// �v���C���[���[�V����(�ړ��n)�̃A�^�b�`�ԍ�
+		void	SetPlayerMotionAttachIndex_Attack(int iPlayerMotionAttachIndex_Attack)	{ this->iPlayerMotionAttachIndex_Attack	= iPlayerMotionAttachIndex_Attack; }	// �v���C���[���[�V����(�U���n)�̃A�^�b�`�ԍ�
 
-		/* 判定処理用コリジョン */
-		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// 近接攻撃(強)のロックオン範囲コリジョンを設定
-		void	SetMeleeSearchCollisionUseFlg(bool bMeleeSearchCollisionUseFlg)		{ this->bMeleeSearchCollisionUseFlg		= bMeleeSearchCollisionUseFlg; }		// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを設定
+		/* ���菈���p�R���W���� */
+		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// �ߐڍU��(��)�̃��b�N�I���͈̓R���W������ݒ�
+		void	SetMeleeSearchCollisionUseFlg(bool bMeleeSearchCollisionUseFlg)		{ this->bMeleeSearchCollisionUseFlg		= bMeleeSearchCollisionUseFlg; }		// �ߐڍU��(��)�̃��b�N�I���͈̓R���W�����g�p�t���O��ݒ�
 
-		// 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス)
-		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)				{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// プレイヤーの移動加速度設定
-		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)						{ this->fPlayerMaxMoveSpeed				= fPlayerMaxMoveSpeed;}				// プレイヤーの最大移動速度設定
-		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)				{ this->fPlayerFallAcceleration			= fPlayerFallAcceleration; }		// プレイヤーの落下加速度設定
-		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)						{ this->fPlayerMaxFallSpeed				= fPlayerMaxFallSpeed; }			// プレイヤーの最大落下速度設定
-		void	SetPlayerMaxJumpCount(int iPlayerMaxJumpCount)							{ this->iPlayerMaxJumpCount				= iPlayerMaxJumpCount; }			// プレイヤーのジャンプ回数(最大数)設定
-		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)							{ this->fPlayerDodgeSpeed				= fPlayerDodgeSpeed; }				// プレイヤー回避速度を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerNowDodgeFlame(int iPlayerNowDodgeFlame)						{ this->iPlayerNowDodgeFlame			= iPlayerNowDodgeFlame; }			// プレイヤー回避時間を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */		
-		void	SetPlayerChargeAttakTargetMove(VECTOR vecPlayerChargeAttakTargetMove)	{ this->vecPlayerChargeAttakTargetMove	= vecPlayerChargeAttakTargetMove; }	// プレイヤー溜め攻撃の移動量を設定		/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
-		void	SetPlayerChargeAttackCount(int iPlayerChargeAttackCount)				{ this->iPlayerChargeAttackCount		= iPlayerChargeAttackCount;}		// 近接攻撃(強)のカウントを設定
-		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)						{ this->fPlayerRockOnRadius				= fPlayerRockOnRadius; }			// ロックオン範囲の半径を設定
-		void	SetPlayerMaxHp(int iPlayerMaxHp)										{ this->iPlayerMaxHp					= iPlayerMaxHp; }					// プレイヤーの最大HP設定
-		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)				{ this->iPlayerMaxInvincibleTime		= iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
+		// �\�͒l�֘A(���v���C���[�̑������ɂ���ď㉺����\���̂���X�e�[�^�X)
+		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)				{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// �v���C���[�̈ړ������x�ݒ�
+		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)						{ this->fPlayerMaxMoveSpeed				= fPlayerMaxMoveSpeed;}				// �v���C���[�̍ő�ړ����x�ݒ�
+		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)				{ this->fPlayerFallAcceleration			= fPlayerFallAcceleration; }		// �v���C���[�̗��������x�ݒ�
+		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)						{ this->fPlayerMaxFallSpeed				= fPlayerMaxFallSpeed; }			// �v���C���[�̍ő嗎�����x�ݒ�
+		void	SetPlayerMaxJumpCount(int iPlayerMaxJumpCount)							{ this->iPlayerMaxJumpCount				= iPlayerMaxJumpCount; }			// �v���C���[�̃W�����v��(�ő吔)�ݒ�
+		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)							{ this->fPlayerDodgeSpeed				= fPlayerDodgeSpeed; }				// �v���C���[��𑬓x��ݒ�				/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */
+		void	SetPlayerNowDodgeFlame(int iPlayerNowDodgeFlame)						{ this->iPlayerNowDodgeFlame			= iPlayerNowDodgeFlame; }			// �v���C���[������Ԃ�ݒ�				/* 2025.01.10 �e�r�듹 �ړ��֘A�̊֐��ǉ� */		
+		void	SetPlayerChargeAttakTargetMove(VECTOR vecPlayerChargeAttakTargetMove)	{ this->vecPlayerChargeAttakTargetMove	= vecPlayerChargeAttakTargetMove; }	// �v���C���[���ߍU���̈ړ��ʂ�ݒ�		/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��ǉ� */	/* 2025.01.26 ��򕗏� �R�[�h�C�� */
+		void	SetPlayerChargeAttackCount(int iPlayerChargeAttackCount)				{ this->iPlayerChargeAttackCount		= iPlayerChargeAttackCount;}		// �ߐڍU��(��)�̃J�E���g��ݒ�
+		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)						{ this->fPlayerRockOnRadius				= fPlayerRockOnRadius; }			// ���b�N�I���͈͂̔��a��ݒ�
+		void	SetPlayerMaxHp(int iPlayerMaxHp)										{ this->iPlayerMaxHp					= iPlayerMaxHp; }					// �v���C���[�̍ő�HP�ݒ�
+		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)				{ this->iPlayerMaxInvincibleTime		= iPlayerMaxInvincibleTime; }		// �v���C���[�̍ő喳�G���Ԑݒ�
 
-		// カメラ関連
-		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; }				// カメラモード設定
-		void	SetCameraMode_Old(int iCameraMode_Old)								{ this->iCameraMode_Old						= iCameraMode_Old; }			// カメラモード(変更前)設定
-		void	SetCameraUp(VECTOR vecCameraUp)										{ this->vecCameraUp							= vecCameraUp; }				// カメラの上方向設定
-		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; }			// カメラの座標設定(現在地点)
-		void	SetCameraPosition_Start(VECTOR vecCameraPosition_Start)				{ this->vecCameraPosition_Start				= vecCameraPosition_Start; }	// カメラの座標設定(移動前地点)
-		void	SetCameraPosition_Target(VECTOR vecCameraPosition_Target)			{ this->vecCameraPosition_Target			= vecCameraPosition_Target; }	// カメラの座標設定(移動後地点)
-		void	SetCameraPositionLeapCount(int iCameraPositionLeapCount)			{ this->iCameraPositionLeapCount			= iCameraPositionLeapCount; }	// カメラ座標の線形保管用カウント設定
-		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; }			// カメラの注視点設定
-		void	SetCameraRadius(float fCameraRadius)								{ this->fCameraRadius						= fCameraRadius; }				// カメラの中心点からの距離設定
-		void	SetCameraAngleX(float fCameraAngleX)								{ this->fCameraAngleX						= fCameraAngleX; }				// カメラのX軸回転量(ラジアン)設定
-		void	SetCameraAngleY(float fCameraAngleY)								{ this->fCameraAngleY						= fCameraAngleY; }				// カメラのY軸回転量(ラジアン)設定
-		void	SetCameraRotationalSpeed_Controller(float fCameraRotationalSpeed)	{ this->fCameraRotationalSpeed_Controller	= fCameraRotationalSpeed; }		// カメラの回転速度(コントローラー)設定
-		void	SetCameraRotationalSpeed_Mouse(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed_Mouse		= fCameraRotationalSpeed; }		// カメラの回転速度(マウス)設定
-		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; }		// カメラの回転角度制限設定(上)
-		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; }		// カメラの回転角度制限設定(下)
+		// �J�����֘A
+		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; }				// �J�������[�h�ݒ�
+		void	SetCameraMode_Old(int iCameraMode_Old)								{ this->iCameraMode_Old						= iCameraMode_Old; }			// �J�������[�h(�ύX�O)�ݒ�
+		void	SetCameraUp(VECTOR vecCameraUp)										{ this->vecCameraUp							= vecCameraUp; }				// �J�����̏�����ݒ�
+		void	SetCameraPosition(VECTOR vecCameraPosition)							{ this->vecCameraPosition					= vecCameraPosition; }			// �J�����̍��W�ݒ�(���ݒn�_)
+		void	SetCameraPosition_Start(VECTOR vecCameraPosition_Start)				{ this->vecCameraPosition_Start				= vecCameraPosition_Start; }	// �J�����̍��W�ݒ�(�ړ��O�n�_)
+		void	SetCameraPosition_Target(VECTOR vecCameraPosition_Target)			{ this->vecCameraPosition_Target			= vecCameraPosition_Target; }	// �J�����̍��W�ݒ�(�ړ���n�_)
+		void	SetCameraPositionLeapCount(int iCameraPositionLeapCount)			{ this->iCameraPositionLeapCount			= iCameraPositionLeapCount; }	// �J�������W�̐��`�ۊǗp�J�E���g�ݒ�
+		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; }			// �J�����̒����_�ݒ�
+		void	SetCameraRadius(float fCameraRadius)								{ this->fCameraRadius						= fCameraRadius; }				// �J�����̒��S�_����̋����ݒ�
+		void	SetCameraAngleX(float fCameraAngleX)								{ this->fCameraAngleX						= fCameraAngleX; }				// �J������X����]��(���W�A��)�ݒ�
+		void	SetCameraAngleY(float fCameraAngleY)								{ this->fCameraAngleY						= fCameraAngleY; }				// �J������Y����]��(���W�A��)�ݒ�
+		void	SetCameraRotationalSpeed_Controller(float fCameraRotationalSpeed)	{ this->fCameraRotationalSpeed_Controller	= fCameraRotationalSpeed; }		// �J�����̉�]���x(�R���g���[���[)�ݒ�
+		void	SetCameraRotationalSpeed_Mouse(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed_Mouse		= fCameraRotationalSpeed; }		// �J�����̉�]���x(�}�E�X)�ݒ�
+		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; }		// �J�����̉�]�p�x�����ݒ�(��)
+		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; }		// �J�����̉�]�p�x�����ݒ�(��)
 
-		/* 2025.01.22 菊池雅道 攻撃関連の変数追加開始 */
-		//攻撃
-		VECTOR vecPlayerChargeAttakPoint;	//プレイヤー溜め攻撃の目的地
-		VECTOR vecPlayerChargeAttakVector;	//プレイヤー溜め攻撃の方向
-		int iPlayerNowAttakChargeFlame;		//現在のプレイヤー溜め攻撃チャージフレーム数
-		/* 2025.01.22 菊池雅道 攻撃関連の変数追加終了 */
+		/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��ǉ��J�n */
+		//�U��
+		VECTOR vecPlayerChargeAttakPoint;	//�v���C���[���ߍU���̖ړI�n
+		VECTOR vecPlayerChargeAttakVector;	//�v���C���[���ߍU���̕���
+		int iPlayerNowAttakChargeFlame;		//���݂̃v���C���[���ߍU���`���[�W�t���[����
+		/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��ǉ��I�� */
 
 	private:
-		/* プレイヤー状態関連 */
-		int		iPlayerMoveState;				// プレイヤーの移動状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
-		int		iPlayerAttackState;				// プレイヤーの攻撃状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
-		bool	bPlayerLandingFlg;				// プレイヤーが着地しているかのフラグ
-		float	fPlayerNowMoveSpeed;			// プレイヤーの現在の移動速度
-		float	fPlayerAngleX;					// プレイヤーのX軸回転量(ラジアン)
-		float	fPlayerTurnSpeed;				// プレイヤーの方向転換の速度（範囲：0.0〜1.0）								/* 2025.02.10 菊池雅道 移動関連の変数追加 */
-		float	fPlayerNowFallSpeed;			// プレイヤーの現在の落下速度
-		int		iPlayerNowJumpCount;			// プレイヤーのジャンプ回数(現在数)
-		float	fPlayerNowMotionCount;			// プレイヤーのモーションの現在のカウント
-		int		iPlayerNormalDashFlameCount;	// 通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）					/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		bool	bPlayerJumpingFlag;				// プレイヤーがジャンプ中かのフラグ												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		int		iPlayerJumpCount;				// プレイヤーの現在のジャンプ回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		int		iPlayerNowDodgeFlame;			// プレイヤーの現在の回避フレーム数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerDodgeProgress;			// プレイヤー回避モーション進行率 (範囲：0.0～1.0)								/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		VECTOR	vecPlayerDodgeDirection;		// プレイヤー回避方向															/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		int		iPlayerDodgeWhileJumpingCount;	// プレイヤージャンプ中の回避回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		bool	bPlayerAfterDodgeFlag;			// プレイヤーの回避後フラグ														/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		VECTOR	vecPlayerChargeAttakTargetMove;	// 近接攻撃(強)による移動量														/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
-		int		iPlayerChargeAttackCount;		// 近接攻撃(強)のカウント
-		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー
-		int		iPlayerNowHp;					// プレイヤーの現在のHP
-		int		iPlayerNowInvincibleTime;		// プレイヤーの現在の残り無敵時間
-		bool	bPlayerAimCancelledFlg;			// 遠距離攻撃(構え)がキャンセルされたかのフラグ									/* 2025.02.11 菊池雅道 攻撃関連の変数追加 */
+		/* �v���C���[��Ԋ֘A */
+		int		iPlayerMoveState;				// �v���C���[�̈ړ����(�A�N�V����)										/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̕ϐ��C�� */
+		int		iPlayerAttackState;				// �v���C���[�̍U�����(�A�N�V����)										/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̕ϐ��C�� */
+		bool	bPlayerLandingFlg;				// �v���C���[�����n���Ă��邩�̃t���O
+		float	fPlayerNowMoveSpeed;			// �v���C���[�̌��݂̈ړ����x
+		float	fPlayerAngleX;					// �v���C���[��X����]��(���W�A��)
+		float	fPlayerTurnSpeed;				// �v���C���[�̕����]���̑��x�i�͈́F0.0?1.0�j								/* 2025.02.10 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		float	fPlayerNowFallSpeed;			// �v���C���[�̌��݂̗������x
+		int		iPlayerNowJumpCount;			// �v���C���[�̃W�����v��(���ݐ�)
+		float	fPlayerNowMotionCount;			// �v���C���[�̃��[�V�����̌��݂̃J�E���g
+		int		iPlayerNormalDashFlameCount;	// �ʏ�_�b�V�����o�߃t���[�����i�����_�b�V���ւ̈ڍs�Ɏg�p�j					/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		bool	bPlayerJumpingFlag;				// �v���C���[���W�����v�����̃t���O												/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		int		iPlayerJumpCount;				// �v���C���[�̌��݂̃W�����v��												/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		int		iPlayerNowDodgeFlame;			// �v���C���[�̌��݂̉���t���[����												/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		float	fPlayerDodgeProgress;			// �v���C���[������[�V�����i�s�� (�͈́F0.0�`1.0)								/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		VECTOR	vecPlayerDodgeDirection;		// �v���C���[������															/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		int		iPlayerDodgeWhileJumpingCount;	// �v���C���[�W�����v���̉����												/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		bool	bPlayerAfterDodgeFlag;			// �v���C���[�̉����t���O														/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		VECTOR	vecPlayerChargeAttakTargetMove;	// �ߐڍU��(��)�ɂ��ړ���														/* 2025.01.22 �e�r�듹 �U���֘A�̕ϐ��ǉ� */	/* 2025.01.26 ��򕗏� �R�[�h�C�� */
+		int		iPlayerChargeAttackCount;		// �ߐڍU��(��)�̃J�E���g
+		EnemyBasic*	pLockOnEnemy;				// ���b�N�I���Ώۂ̃G�l�~�[
+		int		iPlayerNowHp;					// �v���C���[�̌��݂�HP
+		int		iPlayerNowInvincibleTime;		// �v���C���[�̌��݂̎c�薳�G����
+		int		iPlayerComboNowCount;			// �v���C���[�̌��݂̃R���{��
+		int		iPlayerComboMaxCount;			// �v���C���[�̍ő�R���{��
+		int		iPlayerComboDuration;			// �v���C���[�̃R���{�̎c�莝������
+		bool	bPlayerAimCancelledFlg;			// �������U��(�\��)���L�����Z�����ꂽ���̃t���O
 
-		/* プレイヤーモーション関連 */
-		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)
-		int		iPlayerMotion_Move_Old;				// 変更前プレイヤーモーション(移動系)
-		int		iPlayerMotion_Attack;				// プレイヤーモーション(攻撃系)
-		int		iPlayerMotion_Attack_Old;			// 変更前プレイヤーモーション(攻撃系)
-		float	fMotionTimer_Move;					// モーションタイマー(移動系)
-		float	fMotionTimer_Move_End;				// モーションタイマー(移動系/終了時間)
-		float	fMotionTimer_Attack;				// モーションタイマー(攻撃系)
-		float	fMotionTimer_Attack_End;			// モーションタイマー(攻撃系/終了時間)
-		int		iPlayerMotionAttachIndex_Move;		// プレイヤーモーション(移動系)のアタッチ番号
-		int		iPlayerMotionAttachIndex_Attack;	// プレイヤーモーション(攻撃系)のアタッチ番号
+		/* �v���C���[���[�V�����֘A */
+		int		iPlayerMotion_Move;					// �v���C���[���[�V����(�ړ��n)
+		int		iPlayerMotion_Move_Old;				// �ύX�O�v���C���[���[�V����(�ړ��n)
+		int		iPlayerMotion_Attack;				// �v���C���[���[�V����(�U���n)
+		int		iPlayerMotion_Attack_Old;			// �ύX�O�v���C���[���[�V����(�U���n)
+		float	fMotionTimer_Move;					// ���[�V�����^�C�}�[(�ړ��n)
+		float	fMotionTimer_Move_End;				// ���[�V�����^�C�}�[(�ړ��n/�I������)
+		float	fMotionTimer_Attack;				// ���[�V�����^�C�}�[(�U���n)
+		float	fMotionTimer_Attack_End;			// ���[�V�����^�C�}�[(�U���n/�I������)
+		int		iPlayerMotionAttachIndex_Move;		// �v���C���[���[�V����(�ړ��n)�̃A�^�b�`�ԍ�
+		int		iPlayerMotionAttachIndex_Attack;	// �v���C���[���[�V����(�U���n)�̃A�^�b�`�ԍ�
 
-		/* 判定処理用コリジョン */
-		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン
-		bool				bMeleeSearchCollisionUseFlg;	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグ
+		/* ���菈���p�R���W���� */
+		COLLISION_CAPSULE	stMeleeSearchCollision;			// �ߐڍU��(��)�̃��b�N�I���͈̓R���W����
+		bool				bMeleeSearchCollisionUseFlg;	// �ߐڍU��(��)�̃��b�N�I���͈̓R���W�����g�p�t���O
 		
-		/* 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス))*/
-		float	fPlayerMoveAcceleration;		// プレイヤーの移動加速度
-		float	fPlayerMaxMoveSpeed;			// プレイヤーの最大移動速度
-		float	fPlayerFallAcceleration;		// プレイヤーの落下加速度
-		float	fPlayerMaxFallSpeed;			// プレイヤーの最大落下速度
-		int		iPlayerMaxJumpCount;			// プレイヤーのジャンプ回数(最大数)
-		float	fPlayerJumpSpeed;				// プレイヤージャンプ速度				/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerDodgeSpeed;				// プレイヤー回避速度					/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerRockOnRadius;			// ロックオン範囲の半径
-		int		iPlayerMaxHp;					// プレイヤーの最大HP
-		int		iPlayerMaxInvincibleTime;		// プレイヤーの最大無敵時間
+		/* �\�͒l�֘A(���v���C���[�̑������ɂ���ď㉺����\���̂���X�e�[�^�X))*/
+		float	fPlayerMoveAcceleration;		// �v���C���[�̈ړ������x
+		float	fPlayerMaxMoveSpeed;			// �v���C���[�̍ő�ړ����x
+		float	fPlayerFallAcceleration;		// �v���C���[�̗��������x
+		float	fPlayerMaxFallSpeed;			// �v���C���[�̍ő嗎�����x
+		int		iPlayerMaxJumpCount;			// �v���C���[�̃W�����v��(�ő吔)
+		float	fPlayerJumpSpeed;				// �v���C���[�W�����v���x				/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		float	fPlayerDodgeSpeed;				// �v���C���[��𑬓x					/* 2025.01.09 �e�r�듹 �ړ��֘A�̕ϐ��ǉ� */
+		float	fPlayerRockOnRadius;			// ���b�N�I���͈͂̔��a
+		int		iPlayerMaxHp;					// �v���C���[�̍ő�HP
+		int		iPlayerMaxInvincibleTime;		// �v���C���[�̍ő喳�G����
 
-		/* カメラ関連 */
-		int		iCameraMode;						// カメラモード
-		int		iCameraMode_Old;					// カメラモード(変更前)
-		VECTOR	vecCameraUp;						// カメラの上方向
-		VECTOR	vecCameraPosition;					// カメラの座標(現在地点)
-		VECTOR	vecCameraPosition_Start;			// カメラの座標(移動前地点)
-		VECTOR	vecCameraPosition_Target;			// カメラの座標(移動後地点)
-		int		iCameraPositionLeapCount;			// カメラ座標の線形保管用カウント
-		VECTOR	vecCameraTarget;					// カメラの注視点
-		float	fCameraRadius;						// カメラの中心点からの距離(ズーム量)
-		float	fCameraAngleX;						// カメラのX軸回転量(ラジアン)
-		float	fCameraAngleY;						// カメラのY軸回転量(ラジアン)
-		float	fCameraRotationalSpeed_Controller;	// カメラの回転速度(コントローラー)
-		float	fCameraRotationalSpeed_Mouse;		// カメラの回転速度(マウス)
-		float	fCameraAngleLimitUp;				// カメラの回転角度制限(上)
-		float	fCameraAngleLimitDown;				// カメラの回転角度制限(下)
+		/* �J�����֘A */
+		int		iCameraMode;						// �J�������[�h
+		int		iCameraMode_Old;					// �J�������[�h(�ύX�O)
+		VECTOR	vecCameraUp;						// �J�����̏����
+		VECTOR	vecCameraPosition;					// �J�����̍��W(���ݒn�_)
+		VECTOR	vecCameraPosition_Start;			// �J�����̍��W(�ړ��O�n�_)
+		VECTOR	vecCameraPosition_Target;			// �J�����̍��W(�ړ���n�_)
+		int		iCameraPositionLeapCount;			// �J�������W�̐��`�ۊǗp�J�E���g
+		VECTOR	vecCameraTarget;					// �J�����̒����_
+		float	fCameraRadius;						// �J�����̒��S�_����̋���(�Y�[����)
+		float	fCameraAngleX;						// �J������X����]��(���W�A��)
+		float	fCameraAngleY;						// �J������Y����]��(���W�A��)
+		float	fCameraRotationalSpeed_Controller;	// �J�����̉�]���x(�R���g���[���[)
+		float	fCameraRotationalSpeed_Mouse;		// �J�����̉�]���x(�}�E�X)
+		float	fCameraAngleLimitUp;				// �J�����̉�]�p�x����(��)
+		float	fCameraAngleLimitDown;				// �J�����̉�]�p�x����(��)
 
 	protected:
 };

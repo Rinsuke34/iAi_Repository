@@ -1,89 +1,93 @@
-ï»¿/* 2024.12.26 é§’æ²¢é¢¨åŠ© ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
-/* 2025.01.10 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ   */
-/* 2025.01.22 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ   */
-/* 2025.02.10 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  */
-/* 2025.02.11 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  */
+/* 2024.12.26 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
+/* 2025.01.10 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á  */
+/* 2025.01.22 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á  */
+/* 2025.02.10 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á */
+/* 2025.02.11 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á */
 #include "DataList_PlayerStatus.h"
 
-/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ç®¡ç†ã‚¯ãƒ©ã‚¹ã®å®šç¾© */
+/* ƒvƒŒƒCƒ„[ƒXƒe[ƒ^ƒXŠÇ—ƒNƒ‰ƒX‚Ì’è‹` */
 
-// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerStatus")
 {
-	/* åˆæœŸåŒ–(ä»®) */
-	/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼çŠ¶æ…‹é–¢é€£ */
-	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•çŠ¶æ…‹
-	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ”»æ’ƒçŠ¶æ…‹
-	this->bPlayerLandingFlg					= false;						// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒç€åœ°ã—ã¦ã„ã‚‹ã‹
-	this->fPlayerNowMoveSpeed				= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®ç§»å‹•é€Ÿåº¦
-	this->fPlayerAngleX						= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®Xè»¸å›è»¢é‡(ãƒ©ã‚¸ã‚¢ãƒ³)
-	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘è»¢æ›ã®é€Ÿåº¦	/* 2025.02.10 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  */
-	this->fPlayerNowFallSpeed				= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®è½ä¸‹é€Ÿåº¦
-	this->iPlayerNowJumpCount				= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¸ãƒ£ãƒ³ãƒ—å›æ•°(ç¾åœ¨æ•°)
-	/* 2025.01.10 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  é–‹å§‹ */
-	this->iPlayerNormalDashFlameCount		= 0;							//é€šå¸¸ãƒ€ãƒƒã‚·ãƒ¥æ™‚çµŒéãƒ•ãƒ¬ãƒ¼ãƒ æ•°ï¼ˆé«˜é€Ÿãƒ€ãƒƒã‚·ãƒ¥ã¸ã®ç§»è¡Œã«ä½¿ç”¨ï¼‰
-	this->bPlayerJumpingFlag				= false;						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã‹ã®ãƒ•ãƒ©ã‚°
-	this->iPlayerJumpCount					= 0;							//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®ã‚¸ãƒ£ãƒ³ãƒ—å›æ•°
-	this->fPlayerDodgeProgress				= 0.0f;							//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å›é¿ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œåº¦
-	this->vecPlayerDodgeDirection			= { 0, 0, 0 };					//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å›é¿æ–¹å‘
-	this->iPlayerDodgeWhileJumpingCount		= 0;							//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã®å›é¿å›æ•°
-	this->fPlayerJumpSpeed					= 0;							//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¸ãƒ£ãƒ³ãƒ—é€Ÿåº¦
-	this->iPlayerNowDodgeFlame				= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®å›é¿ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
-	this->fPlayerDodgeSpeed					= 0;							//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å›é¿é€Ÿåº¦
-	this->bPlayerAfterDodgeFlag				= false;						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›é¿å¾Œãƒ•ãƒ©ã‚°
-	/* 2025.01.10 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  çµ‚äº† */
-	/* 2025.01.22 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  é–‹å§‹ */
-	this->iPlayerNowAttakChargeFlame		= 0;							//ç¾åœ¨ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æºœã‚æ”»æ’ƒãƒãƒ£ãƒ¼ã‚¸ãƒ•ãƒ¬ãƒ¼ãƒ æ•°  2025.01.22 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ 
-	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };					//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æºœã‚æ”»æ’ƒã®ç›®çš„åœ°
-	/* 2025.01.22 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  çµ‚äº† */
-	this->iPlayerChargeAttackCount			= 0;							// è¿‘æ¥æ”»æ’ƒ(å¼·)ã®ã‚«ã‚¦ãƒ³ãƒˆ
-	this->pLockOnEnemy						= nullptr;						// ãƒ­ãƒƒã‚¯ã‚ªãƒ³å¯¾è±¡ã®ã‚¨ãƒãƒŸãƒ¼
-	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®HP
-	this->iPlayerNowInvincibleTime			= 0;							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ã®æ®‹ã‚Šç„¡æ•µæ™‚é–“
-	this->bPlayerAimCancelledFlg			= false;						// é è·é›¢æ”»æ’ƒ(æ§‹ãˆ)ãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸã‹ã®ãƒ•ãƒ©ã‚°		/* 2025.02.11 èŠæ± é›…é“ åˆæœŸåŒ–å‡¦ç†è¿½åŠ  */
-	/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³é–¢é€£ */
-	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³(ç§»å‹•ç³»)
-	this->iPlayerMotion_Move_Old			= -1;							// å¤‰æ›´å‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³(ç§»å‹•ç³»)
-	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³(æ”»æ’ƒç³»)
-	this->iPlayerMotion_Attack_Old			= -1;							// å¤‰æ›´å‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³(æ”»æ’ƒç³»)
-	
-	this->fMotionTimer_Move					= 0;							// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆ(ç§»å‹•ç³»)
-	this->fMotionTimer_Move_End				= 0;							// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆ(ç§»å‹•ç³»/çµ‚äº†æ™‚é–“)
-	this->fMotionTimer_Attack				= 0;							// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆ(æ”»æ’ƒç³»)
-	this->fMotionTimer_Attack_End			= 0;							// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ãƒˆ(æ”»æ’ƒç³»/çµ‚äº†æ™‚é–“)
+	/* ‰Šú‰»(‰¼) */
+	/* ƒvƒŒƒCƒ„[ó‘ÔŠÖ˜A */
+	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;			// ƒvƒŒƒCƒ„[‚ÌˆÚ“®ó‘Ô
+	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;			// ƒvƒŒƒCƒ„[‚ÌUŒ‚ó‘Ô
+	this->bPlayerLandingFlg					= false;							// ƒvƒŒƒCƒ„[‚ª’…’n‚µ‚Ä‚¢‚é‚©
+	this->fPlayerNowMoveSpeed				= 0;								// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌˆÚ“®‘¬“x
+	this->fPlayerAngleX						= 0;								// ƒvƒŒƒCƒ„[‚ÌX²‰ñ“]—Ê(ƒ‰ƒWƒAƒ“)
+	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;				// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“x	/* 2025.02.10 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á */
+	this->fPlayerNowFallSpeed				= 0;								// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚Ì—‰º‘¬“x
+	this->iPlayerNowJumpCount				= 0;								// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Œ»İ”)
+	/* 2025.01.10 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á ŠJn */
+	this->iPlayerNormalDashFlameCount		= 0;								//’Êíƒ_ƒbƒVƒ…Œo‰ßƒtƒŒ[ƒ€”i‚‘¬ƒ_ƒbƒVƒ…‚Ö‚ÌˆÚs‚Ég—pj
+	this->bPlayerJumpingFlag				= false;							//ƒvƒŒƒCƒ„[‚ªƒWƒƒƒ“ƒv’†‚©‚Ìƒtƒ‰ƒO
+	this->iPlayerJumpCount					= 0;								//ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌƒWƒƒƒ“ƒv‰ñ”
+	this->fPlayerDodgeProgress				= 0.0f;								//ƒvƒŒƒCƒ„[‰ñ”ğƒ‚[ƒVƒ‡ƒ“is“x
+	this->vecPlayerDodgeDirection			= { 0, 0, 0 };						//ƒvƒŒƒCƒ„[‰ñ”ğ•ûŒü
+	this->iPlayerDodgeWhileJumpingCount		= 0;								//ƒvƒŒƒCƒ„[ƒWƒƒƒ“ƒv’†‚Ì‰ñ”ğ‰ñ”
+	this->fPlayerJumpSpeed					= 0;								//ƒvƒŒƒCƒ„[ƒWƒƒƒ“ƒv‘¬“x
+	this->iPlayerNowDodgeFlame				= 0;								// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚Ì‰ñ”ğƒtƒŒ[ƒ€”
+	this->fPlayerDodgeSpeed					= 0;								//ƒvƒŒƒCƒ„[‰ñ”ğ‘¬“x
+	this->bPlayerAfterDodgeFlag				= false;							//ƒvƒŒƒCƒ„[‚Ì‰ñ”ğŒãƒtƒ‰ƒO
+	/* 2025.01.10 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á I—¹ */
+	/* 2025.01.22 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á ŠJn */
+	this->iPlayerNowAttakChargeFlame		= 0;								//Œ»İ‚ÌƒvƒŒƒCƒ„[—­‚ßUŒ‚ƒ`ƒƒ[ƒWƒtƒŒ[ƒ€”  2025.01.22 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á
+	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };						//ƒvƒŒƒCƒ„[—­‚ßUŒ‚‚Ì–Ú“I’n
+	/* 2025.01.22 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á I—¹ */
+	this->iPlayerChargeAttackCount			= 0;								// ‹ßÚUŒ‚(‹­)‚ÌƒJƒEƒ“ƒg
+	this->pLockOnEnemy						= nullptr;							// ƒƒbƒNƒIƒ“‘ÎÛ‚ÌƒGƒlƒ~[
+	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;			// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌHP
+	this->iPlayerNowInvincibleTime			= 0;								// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚Ìc‚è–³“GŠÔ
+	this->iPlayerComboNowCount				= 0;								// ƒvƒŒƒCƒ„[‚ÌŒ»İ‚ÌƒRƒ“ƒ{”
+	this->iPlayerComboMaxCount				= 0;								// ƒvƒŒƒCƒ„[‚ÌÅ‘åƒRƒ“ƒ{”
+	this->iPlayerComboDuration				= 0;								// ƒvƒŒƒCƒ„[‚ÌƒRƒ“ƒ{‚Ìc‚è‘±ŠÔ
+	this->bPlayerAimCancelledFlg			= false;							// ‰“‹——£UŒ‚(\‚¦)‚ªƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½‚©‚Ìƒtƒ‰ƒO		/* 2025.02.11 ‹e’r‰ë“¹ ‰Šú‰»ˆ—’Ç‰Á */
 
-	/* åˆ¤å®šå‡¦ç†ç”¨ã‚³ãƒªã‚¸ãƒ§ãƒ³ */
+	/* ƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A */
+	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// ƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“(ˆÚ“®Œn)
+	this->iPlayerMotion_Move_Old			= -1;								// •ÏX‘OƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“(ˆÚ“®Œn)
+	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;			// ƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“(UŒ‚Œn)
+	this->iPlayerMotion_Attack_Old			= -1;								// •ÏX‘OƒvƒŒƒCƒ„[ƒ‚[ƒVƒ‡ƒ“(UŒ‚Œn)
+	
+	this->fMotionTimer_Move					= 0;								// ƒ‚[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg(ˆÚ“®Œn)
+	this->fMotionTimer_Move_End				= 0;								// ƒ‚[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg(ˆÚ“®Œn/I—¹ŠÔ)
+	this->fMotionTimer_Attack				= 0;								// ƒ‚[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg(UŒ‚Œn)
+	this->fMotionTimer_Attack_End			= 0;								// ƒ‚[ƒVƒ‡ƒ“ƒJƒEƒ“ƒg(UŒ‚Œn/I—¹ŠÔ)
+
+	/* ”»’èˆ——pƒRƒŠƒWƒ‡ƒ“ */
 	this->bMeleeSearchCollisionUseFlg		= false;
 	
-	/* èƒ½åŠ›å€¤é–¢é€£ */
-	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•åŠ é€Ÿåº¦
-	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¤§ç§»å‹•é€Ÿåº¦
-	this->fPlayerFallAcceleration	= INIT_ATTRIBUTES_FALL_ACCELERATION;	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è½ä¸‹åŠ é€Ÿåº¦
-	this->fPlayerMaxFallSpeed		= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¤§è½ä¸‹é€Ÿåº¦
-	this->iPlayerMaxJumpCount		= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¸ãƒ£ãƒ³ãƒ—å›æ•°(æœ€å¤§æ•°)
-	this->fPlayerRockOnRadius		= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ç¯„å›²ã®åŠå¾„
-	this->iPlayerMaxHp				= INIT_ATTRIBUTES_HP_MAX;				// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¤§HP
-	this->iPlayerMaxInvincibleTime	= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¤§ç„¡æ•µæ™‚é–“
+	/* ”\—Í’lŠÖ˜A */
+	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// ƒvƒŒƒCƒ„[‚ÌˆÚ“®‰Á‘¬“x
+	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// ƒvƒŒƒCƒ„[‚ÌÅ‘åˆÚ“®‘¬“x
+	this->fPlayerFallAcceleration	= INIT_ATTRIBUTES_FALL_ACCELERATION;	// ƒvƒŒƒCƒ„[‚Ì—‰º‰Á‘¬“x
+	this->fPlayerMaxFallSpeed		= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// ƒvƒŒƒCƒ„[‚ÌÅ‘å—‰º‘¬“x
+	this->iPlayerMaxJumpCount		= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Å‘å”)
+	this->fPlayerRockOnRadius		= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ƒƒbƒNƒIƒ“”ÍˆÍ‚Ì”¼Œa
+	this->iPlayerMaxHp				= INIT_ATTRIBUTES_HP_MAX;				// ƒvƒŒƒCƒ„[‚ÌÅ‘åHP
+	this->iPlayerMaxInvincibleTime	= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// ƒvƒŒƒCƒ„[‚ÌÅ‘å–³“GŠÔ
 
-	/* ã‚«ãƒ¡ãƒ©é–¢é€£ */
-	this->iCameraMode						= CAMERA_MODE_FREE;							// ã‚«ãƒ¡ãƒ©ãƒ¢ãƒ¼ãƒ‰
-	this->iCameraMode_Old					= CAMERA_MODE_FREE;							// ã‚«ãƒ¡ãƒ©ãƒ¢ãƒ¼ãƒ‰(å¤‰æ›´å‰)
-	this->vecCameraUp						= VGet(0, 1, 0);							// ã‚«ãƒ¡ãƒ©ã®ä¸Šæ–¹å‘(Y+æ–¹å‘ã§å›ºå®š)
-	this->vecCameraPosition					= VGet(0, 0, 0);							// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™(ç¾åœ¨åœ°ç‚¹)
-	this->vecCameraPosition_Start			= VGet(0, 0, 0);							// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™(å¤‰æ›´å‰åœ°ç‚¹)
-	this->vecCameraPosition_Target			= VGet(0, 0, 0);							// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™(å¤‰æ›´å¾Œåœ°ç‚¹)
-	this->iCameraPositionLeapCount			= CAMERA_POSITION_LEAP_COUNT_MAX;			// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®ç·šå½¢ä¿ç®¡ç”¨ã‚«ã‚¦ãƒ³ãƒˆ
-	this->vecCameraTarget					= VGet(0, 0, 0);							// ã‚«ãƒ¡ãƒ©ã®æ³¨è¦–ç‚¹
-	this->fCameraRadius						= INIT_CAMERA_RADIUS;						// ã‚«ãƒ¡ãƒ©ã®ä¸­å¿ƒç‚¹ã‹ã‚‰ã®è·é›¢
-	this->fCameraAngleX						= 0;										// ã‚«ãƒ¡ãƒ©ã®Xè»¸å›è»¢é‡
-	this->fCameraAngleY						= 0;										// ã‚«ãƒ¡ãƒ©ã®Yè»¸å›è»¢é‡
-	this->fCameraRotationalSpeed_Controller	= INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER;	// ã‚«ãƒ¡ãƒ©ã®å›è»¢é€Ÿåº¦(ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼)
-	this->fCameraRotationalSpeed_Mouse		= INIT_CAMERA_ROTATIONAL_SPEED_MOUSE;		// ã‚«ãƒ¡ãƒ©ã®å›è»¢é€Ÿåº¦(ãƒã‚¦ã‚¹)
-	this->fCameraAngleLimitUp				= INIT_CAMERA_ANGLE_LIMIT_UP;				// ã‚«ãƒ¡ãƒ©ã®å›è»¢è§’åº¦åˆ¶é™(ä¸Š)
-	this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// ã‚«ãƒ¡ãƒ©ã®å›è»¢è§’åº¦åˆ¶é™(ä¸‹)
+	/* ƒJƒƒ‰ŠÖ˜A */
+	this->iCameraMode						= CAMERA_MODE_FREE;							// ƒJƒƒ‰ƒ‚[ƒh
+	this->iCameraMode_Old					= CAMERA_MODE_FREE;							// ƒJƒƒ‰ƒ‚[ƒh(•ÏX‘O)
+	this->vecCameraUp						= VGet(0, 1, 0);							// ƒJƒƒ‰‚Ìã•ûŒü(Y+•ûŒü‚ÅŒÅ’è)
+	this->vecCameraPosition					= VGet(0, 0, 0);							// ƒJƒƒ‰‚ÌÀ•W(Œ»İ’n“_)
+	this->vecCameraPosition_Start			= VGet(0, 0, 0);							// ƒJƒƒ‰‚ÌÀ•W(•ÏX‘O’n“_)
+	this->vecCameraPosition_Target			= VGet(0, 0, 0);							// ƒJƒƒ‰‚ÌÀ•W(•ÏXŒã’n“_)
+	this->iCameraPositionLeapCount			= CAMERA_POSITION_LEAP_COUNT_MAX;			// ƒJƒƒ‰À•W‚ÌüŒ`•ÛŠÇ—pƒJƒEƒ“ƒg
+	this->vecCameraTarget					= VGet(0, 0, 0);							// ƒJƒƒ‰‚Ì’‹“_
+	this->fCameraRadius						= INIT_CAMERA_RADIUS;						// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
+	this->fCameraAngleX						= 0;										// ƒJƒƒ‰‚ÌX²‰ñ“]—Ê
+	this->fCameraAngleY						= 0;										// ƒJƒƒ‰‚ÌY²‰ñ“]—Ê
+	this->fCameraRotationalSpeed_Controller	= INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER;	// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒRƒ“ƒgƒ[ƒ‰[)
+	this->fCameraRotationalSpeed_Mouse		= INIT_CAMERA_ROTATIONAL_SPEED_MOUSE;		// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
+	this->fCameraAngleLimitUp				= INIT_CAMERA_ANGLE_LIMIT_UP;				// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)
+	this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)
 }
 
-// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+// ƒfƒXƒgƒ‰ƒNƒ^
 DataList_PlayerStatus::~DataList_PlayerStatus()
 {
 

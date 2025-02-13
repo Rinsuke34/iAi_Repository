@@ -33,3 +33,5 @@
 #include "BulletBase.h"
 #include "EnemyBase.h"
 #include "SkySqhereBase.h"
+#include "EffectItemBase.h"
+#include "PickUpItemBase.h"

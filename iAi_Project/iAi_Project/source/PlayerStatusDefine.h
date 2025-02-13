@@ -1,102 +1,103 @@
-﻿/* 2024.12.26 駒沢風助 ファイル作成 */
-/* 2025.01.09 菊池雅道 移動関連の定数追加 */
-/* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
-/* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
-/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
-/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+/* 2024.12.26 ��򕗏� �t�@�C���쐬 */
+/* 2025.01.09 �e�r�듹 �ړ��֘A�̒萔�ǉ� */
+/* 2025.01.22 �e�r�듹 �U���֘A�̒萔�ǉ� */
+/* 2025.02.03 �e�r�듹 �U���֘A�̒萔�ǉ� */
+/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̒萔�C�� */
+/* 2025.02.10 �e�r�듹 �ړ��֘A�̒萔�ǉ� */
 
 #pragma once
 #include <string>
 
-/* プレイヤー状態管理の構造体や定数の宣言を行う */
+/* �v���C���[��ԊǗ��̍\���̂�萔�̐錾���s�� */
 
-/* 初期化用の定数(仮) */
-// 今後Jsonから読み込めるようにする予定
-/* 能力値関連(最大値) */
-//static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// プレイヤーの移動加速度
-static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION = 1.f;			// プレイヤーの移動加速度
-//static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// プレイヤーの最大移動速度
-static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 30.f;			// プレイヤーの最大移動速度
-static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// プレイヤーの落下加速度
-static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// プレイヤーの最大落下速度
-//static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX		= 2;			// プレイヤーのジャンプ回数(最大数)
-static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX = 3;			// プレイヤーのジャンプ回数(最大数)
-static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ロックオン範囲の半径
-static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// プレイヤーの最大HP
-static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// プレイヤーの最大無敵時間
+/* �������p�̒萔(��) */
+// ����Json����ǂݍ��߂�悤�ɂ���\��
+/* �\�͒l�֘A(�ő�l) */
+//static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION	= 0.5f;			// �v���C���[�̈ړ������x
+static const float	INIT_ATTRIBUTES_MOVE_ACCELERATION = 1.f;			// �v���C���[�̈ړ������x
+//static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 10.f;			// �v���C���[�̍ő�ړ����x
+static const float	INIT_ATTRIBUTES_MOVE_SPEED_MAX		= 30.f;			// �v���C���[�̍ő�ړ����x
+static const float	INIT_ATTRIBUTES_FALL_ACCELERATION	= 0.5f;			// �v���C���[�̗��������x
+static const float	INIT_ATTRIBUTES_FALL_SPEED_MAX		= 10.f;			// �v���C���[�̍ő嗎�����x
+//static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX		= 2;			// �v���C���[�̃W�����v��(�ő吔)
+static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX = 3;			// �v���C���[�̃W�����v��(�ő吔)
+static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ���b�N�I���͈͂̔��a
+static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// �v���C���[�̍ő�HP
+static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// �v���C���[�̍ő喳�G����
+static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3;		// �R���{�̎�������
 
-/* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
-// 移動関係
-//static const float	PLAYER_WALK_MOVE_SPEED				= 1.0f;			// プレイヤーの歩きの移動速度
-static const float	PLAYER_WALK_MOVE_SPEED = 2.0f;			// プレイヤーの歩きの移動速度
-//static const float	PLAER_DASH_NOMAL_SPEED				= 5.0f;			// プレイヤーの走り（通常）の移動速度
-static const float	PLAER_DASH_NOMAL_SPEED = 10.0f;			// プレイヤーの走り（通常）の移動速度
-//static const float	PLAER_DASH_MAX_SPEED				= 10.0f;		// プレイヤーの走り（最大）の移動速度
-static const float	PLAER_DASH_MAX_SPEED = 20.0f;		// プレイヤーの走り（最大）の移動速度
-static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;					// プレイヤーの走りの通常→最大になるフレーム数
-static const float	STICK_TILT_PLAER_DASH				= 0.8f;					// プレイヤーが走り状態になるスティックの傾き（範囲：最大1）
-static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0〜1.0）				/* 2025.02.10 菊池雅道 移動関連の定数追加 */
-static const float	PLAYER_TURN_LIMIT_LEFT				= DX_PI_F * +2.0f;		// プレイヤーの回転角度制限(左)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
-static const float	PLAYER_TURN_LIMIT_RIGHT				= DX_PI_F * -2.0f;		// プレイヤーの回転角度制限(右)(ラジアン)					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+/* 2025.01.09 �e�r�듹 �ړ��֘A�̒萔�ǉ��J�n */
+// �ړ��֌W
+//static const float	PLAYER_WALK_MOVE_SPEED				= 1.0f;			// �v���C���[�̕����̈ړ����x
+static const float	PLAYER_WALK_MOVE_SPEED = 2.0f;			// �v���C���[�̕����̈ړ����x
+//static const float	PLAER_DASH_NOMAL_SPEED				= 5.0f;			// �v���C���[�̑���i�ʏ�j�̈ړ����x
+static const float	PLAER_DASH_NOMAL_SPEED = 10.0f;			// �v���C���[�̑���i�ʏ�j�̈ړ����x
+//static const float	PLAER_DASH_MAX_SPEED				= 10.0f;		// �v���C���[�̑���i�ő�j�̈ړ����x
+static const float	PLAER_DASH_MAX_SPEED = 20.0f;		// �v���C���[�̑���i�ő�j�̈ړ����x
+static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;			// �v���C���[�̑���̒ʏ큨�ő�ɂȂ�t���[����
+static const float	STICK_TILT_PLAER_DASH				= 0.8f;			// �v���C���[�������ԂɂȂ�X�e�B�b�N�̌X���i�͈́F�ő�1�j
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// �v���C���[�̕����]���̑��x�i�͈́F0.0?1.0�j				/* 2025.02.10 �e�r�듹 �ړ��֘A�̒萔�ǉ� */
+static const float	PLAYER_TURN_LIMIT_LEFT				= DX_PI_F * +2.0f;		// �v���C���[�̉�]�p�x����(��)(���W�A��)					/* 2025.02.10 �e�r�듹 �ړ��֘A�̒萔�ǉ� */
+static const float	PLAYER_TURN_LIMIT_RIGHT				= DX_PI_F * -2.0f;		// �v���C���[�̉�]�p�x����(�E)(���W�A��)					/* 2025.02.10 �e�r�듹 �ړ��֘A�̒萔�ǉ� */
 
-// ジャンプ関係
-static const float	PLAYER_JUMP_SPEED					= 50.0f;		// プレイヤーのジャンプの速度
-static const float	GRAVITY_SREED						= -9.8f;		// 重力の速度　Y軸の下方向なのでマイナスとする
-static const float	GRAVITY_BUFFER						= 0.1f;			// キャラクターにかかる重力調整　１より大きいと重くなる　１より小さいと軽くなる
-static const int	PLAYER_JUMPING_IN_AIR_LIMIT			= 1;			// プレイヤーが空中ジャンプできる回数
-// 回避関係
-static const float	PLAYER_DODGE_SPEED					= 100.0f;		// プレイヤーの回避速度
-static const int	PLAYER_DODGE_FLAME					= 10;			// プレイヤーの回避フレーム数
-//static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// プレイヤーが空中で回避できる回数
-static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// プレイヤーが空中で回避できる回数
-/* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
-
-
-// 攻撃関係
-static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// 近接攻撃中(強)の溜め完了フレーム数		/* 2025.01.29 菊池雅道 攻撃関連の定数追加 */
-static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// 近接攻撃中(強)後の索敵範囲			/* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
+// �W�����v�֌W
+static const float	PLAYER_JUMP_SPEED					= 50.0f;		// �v���C���[�̃W�����v�̑��x
+static const float	GRAVITY_SREED						= -9.8f;		// �d�͂̑��x�@Y���̉������Ȃ̂Ń}�C�i�X�Ƃ���
+static const float	GRAVITY_BUFFER						= 0.1f;			// �L�����N�^�[�ɂ�����d�͒����@�P���傫���Əd���Ȃ�@�P��菬�����ƌy���Ȃ�
+static const int	PLAYER_JUMPING_IN_AIR_LIMIT			= 1;			// �v���C���[���󒆃W�����v�ł����
+// ����֌W
+static const float	PLAYER_DODGE_SPEED					= 100.0f;		// �v���C���[�̉�𑬓x
+static const int	PLAYER_DODGE_FLAME					= 10;			// �v���C���[�̉���t���[����
+//static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// �v���C���[���󒆂ŉ���ł����
+static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// �v���C���[���󒆂ŉ���ł����
+/* 2025.01.09 �e�r�듹 �ړ��֘A�̒萔�ǉ��I�� */
 
 
-/* カメラ関連 */
-// 基本情報
-static const float	INIT_CAMERA_RADIUS						= 400;				// カメラの中心点からの距離
-static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// カメラの回転速度(コントローラー)
-static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// カメラの回転速度(マウス)
-static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// カメラの回転角度制限(上)(ラジアン)
-static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// カメラの回転角度制限(下)(ラジアン)
-// カメラ状態
-static const int	CAMERA_MODE_FREE						= 0;				// フリーモード(通常の三人称視点)
-static const int    CAMERA_MODE_LOCK						= 1;				// 固定
-static const int	CAMERA_MODE_AIM							= 2;				// 構え(ズーム)
-// 線形補間
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形保管用カウントの最大値
+// �U���֌W
+static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// �ߐڍU����(��)�̗��ߊ����t���[����		/* 2025.01.29 �e�r�듹 �U���֘A�̒萔�ǉ� */
+static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// �ߐڍU����(��)��̍��G�͈�			/* 2025.02.03 �e�r�듹 �U���֘A�̒萔�ǉ� */
 
-/* 2025.02.05 菊池雅道 ステータス関連の定数修正 開始 */
-/* プレイヤー移動状態 */
-// ※状態に応じて可能な行動が変わる
-static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)
-static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態
-static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中
 
-/* プレイヤー攻撃状態 */
-// ※状態に応じて可能な行動が変わる
-static const int	PLAYER_ATTACKSTATUS_EVENT				= 0;	// イベント状態(操作不可)
-static const int	PLAYER_ATTACKSTATUS_FREE				= 1;	// 自由状態
-static const int	PLAYER_ATTACKSTATUS_MELEE_POSTURE		= 2;	// 近接攻撃構え中
-static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)
-static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
-static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
-static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
-/* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
+/* �J�����֘A */
+// ��{���
+static const float	INIT_CAMERA_RADIUS						= 400;				// �J�����̒��S�_����̋���
+static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// �J�����̉�]���x(�R���g���[���[)
+static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// �J�����̉�]���x(�}�E�X)
+static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// �J�����̉�]�p�x����(��)(���W�A��)
+static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// �J�����̉�]�p�x����(��)(���W�A��)
+// �J�������
+static const int	CAMERA_MODE_FREE						= 0;				// �t���[���[�h(�ʏ�̎O�l�̎��_)
+static const int    CAMERA_MODE_LOCK						= 1;				// �Œ�
+static const int	CAMERA_MODE_AIM							= 2;				// �\��(�Y�[��)
+// ���`���
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// �J�������W�̐��`�ۊǗp�J�E���g�̍ő�l
 
-/* プレイヤー処理用定数 */
-static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
-static const float	PLAYER_WIDE							= 15.f;		// 幅(当たり判定)
-static const float	PLAYER_CLIMBED_HEIGHT				= 35.f;		// 歩きで登れる高さ
-//static const int	PLAYER_CHARGE_TO_STRONG_TIME		= 5;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
-static const int	PLAYER_CHARGE_TO_STRONG_TIME = 30;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
-static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// プレイヤーの移動用コリジョン上側
-static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// プレイヤーの移動用コリジョン下側
-static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// プレイヤーの移動用コリジョン数
-static const int	PLAYER_MELEE_STRONG_MOVESPEED		= 100;		// 近接攻撃(強)の移動速度
-static const int	PLAYER_MELEE_CHARGE_MAX				= 180;		// 近接攻撃の最大溜め時間
+/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̒萔�C�� �J�n */
+/* �v���C���[�ړ���� */
+// ����Ԃɉ����ĉ\�ȍs�����ς��
+static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// �C�x���g���(����s��)
+static const int	PLAYER_MOVESTATUS_FREE					= 1;	// ���R���
+static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// �����Ԓ�
+
+/* �v���C���[�U����� */
+// ����Ԃɉ����ĉ\�ȍs�����ς��
+static const int	PLAYER_ATTACKSTATUS_EVENT				= 0;	// �C�x���g���(����s��)
+static const int	PLAYER_ATTACKSTATUS_FREE				= 1;	// ���R���
+static const int	PLAYER_ATTACKSTATUS_MELEE_POSTURE		= 2;	// �ߐڍU���\����
+static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// �ߐڍU����(��)
+static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// �ߐڍU����(��)
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// �������U���\����
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// �������U����
+/* 2025.02.05 �e�r�듹 �X�e�[�^�X�֘A�̒萔�C�� �I�� */
+
+/* �v���C���[�����p�萔 */
+static const float	PLAYER_HEIGHT						= 160.f;	// ����(�����蔻��)
+static const float	PLAYER_WIDE							= 15.f;		// ��(�����蔻��)
+static const float	PLAYER_CLIMBED_HEIGHT				= 35.f;		// �����œo��鍂��
+//static const int	PLAYER_CHARGE_TO_STRONG_TIME		= 5;		// �ߐڍU�������U���ɐ؂�ւ��܂ł̃t���[����
+static const int	PLAYER_CHARGE_TO_STRONG_TIME = 30;		// �ߐڍU�������U���ɐ؂�ւ��܂ł̃t���[����
+static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// �v���C���[�̈ړ��p�R���W�����㑤
+static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// �v���C���[�̈ړ��p�R���W��������
+static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// �v���C���[�̈ړ��p�R���W������
+static const int	PLAYER_MELEE_STRONG_MOVESPEED		= 100;		// �ߐڍU��(��)�̈ړ����x
+static const int	PLAYER_MELEE_CHARGE_MAX				= 180;		// �ߐڍU���̍ő嗭�ߎ���

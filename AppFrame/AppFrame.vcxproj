@@ -28,8 +28,10 @@
     <ClCompile Include="source\EnemyBase.cpp" />
     <ClCompile Include="source\Fps.cpp" />
     <ClCompile Include="source\GimmickBase.cpp" />
+    <ClCompile Include="source\EffectItemBase.cpp" />
     <ClCompile Include="source\Main.cpp" />
     <ClCompile Include="source\ObjectBase.cpp" />
+    <ClCompile Include="source\PickUpItemBase.cpp" />
     <ClCompile Include="source\PlatformBase.cpp" />
     <ClCompile Include="source\PlayerInput.cpp" />
     <ClCompile Include="source\PublicProcess.cpp" />
@@ -53,6 +55,8 @@
     <ClInclude Include="source\GimmickBase.h" />
     <ClInclude Include="source\Main.h" />
     <ClInclude Include="source\ObjectBase.h" />
+    <ClInclude Include="source\EffectItemBase.h" />
+    <ClInclude Include="source\PickUpItemBase.h" />
     <ClInclude Include="source\PlatformBase.h" />
     <ClInclude Include="source\PlayerInput.h" />
     <ClInclude Include="source\SceneBase.h" />

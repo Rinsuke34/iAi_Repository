@@ -70,12 +70,6 @@
     <Filter Include="ソース ファイル\データリスト\入力">
       <UniqueIdentifier>{78ccf8b4-b98a-4dd6-a0eb-f984db635a66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\データリスト\スコア">
-      <UniqueIdentifier>{25f69921-58ad-47a4-9e2a-70c3f1295bc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\データリスト\スコア">
-      <UniqueIdentifier>{80b5e0a9-86a9-4245-a14f-af4553737b18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト">
       <UniqueIdentifier>{6fe53146-6920-4fc7-a229-ce2d592af7e0}</UniqueIdentifier>
     </Filter>
@@ -241,11 +235,53 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー">
       <UniqueIdentifier>{f2b2c71e-9df6-4443-9961-b41dfc8d8e73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\アクタ\NewFilter1">
-      <UniqueIdentifier>{b72c807e-38f6-4055-ab75-27bd1334964a}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\オブジェクト\スカイスフィア">
+      <UniqueIdentifier>{bf796828-cd10-4854-be15-88307cadbea5}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\スカイスフィア">
-      <UniqueIdentifier>{4501488b-19f3-4bcd-a7f1-fad1187f857d}</UniqueIdentifier>
+      <UniqueIdentifier>{89c85d66-4ab1-4035-aa7d-e7728dda34ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム">
+      <UniqueIdentifier>{6fe6e217-72fc-4da0-8e4f-dbf277457c3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体なし">
+      <UniqueIdentifier>{4e0c8214-2bfc-4610-9b1f-8354a882d40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム">
+      <UniqueIdentifier>{5f2f6ee4-4e2a-4842-8826-a24e2446d167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし">
+      <UniqueIdentifier>{ab7a8e3c-8a06-43b3-b7b5-86a875c0a74a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\ゲームリソース管理">
+      <UniqueIdentifier>{3ac54fa0-46b6-4bb2-95ba-3664b22e7da0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\ゲームリソース管理">
+      <UniqueIdentifier>{ce588e4f-4dd3-4727-ae0f-b5f71e740f0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\画像管理">
+      <UniqueIdentifier>{7945200f-3a26-4ba5-8de4-7e0f28b8a76b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\画像管理">
+      <UniqueIdentifier>{39ca0152-b569-4bd3-a909-ce5e7af32e41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{d5be6361-8cd8-4dfe-ba3d-552985965112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体あり">
+      <UniqueIdentifier>{ed3e8fe2-29d6-4896-bdf4-677855c09859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{c5ba7085-d87c-4d73-a988-5442d5f02cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{bbe01ac4-d7ee-41d6-9650-41f9bee35d5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{09e3c1e0-6545-4500-b429-197170b734d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
+      <UniqueIdentifier>{294cdc1f-a067-4bb5-8688-f832bed72c59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -330,9 +366,6 @@
     <ClCompile Include="source\DataList_Effect.cpp">
       <Filter>ソース ファイル\データリスト\エフェクトリソース管理</Filter>
     </ClCompile>
-    <ClCompile Include="source\DataList_Score.cpp">
-      <Filter>ソース ファイル\データリスト\スコア</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_Sound.cpp">
       <Filter>ソース ファイル\データリスト\サウンド管理</Filter>
     </ClCompile>
@@ -390,11 +423,35 @@
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
+    <ClCompile Include="source\SkySqhereBasic.cpp">
+      <Filter>ソース ファイル\オブジェクト\スカイスフィア</Filter>
+    </ClCompile>
     <ClCompile Include="source\CharacterPlayerMotion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="source\SkySqhereBasic.cpp">
-      <Filter>ソース ファイル\オブジェクト\アクタ\NewFilter1</Filter>
+    <ClCompile Include="source\EffectItem_Blood.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_GameResource.cpp">
+      <Filter>ソース ファイル\データリスト\ゲームリソース管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Blood.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Edit.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Image.cpp">
+      <Filter>ソース ファイル\データリスト\画像管理</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItem_ForcedJump.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickDisappear.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +527,9 @@
     <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
+    <ClInclude Include="source\EffectSelfDelete.h">
+      <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
     <ClInclude Include="source\EnemyBasic.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
@@ -490,12 +550,6 @@
     </ClInclude>
     <ClInclude Include="source\DataList_Effect.h">
       <Filter>ヘッダー ファイル\データリスト\エフェクトリソース管理</Filter>
-    </ClInclude>
-    <ClInclude Include="source\DataList_Score.h">
-      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
-    </ClInclude>
-    <ClInclude Include="source\ScoreDefine.h">
-      <Filter>ヘッダー ファイル\データリスト\スコア</Filter>
     </ClInclude>
     <ClInclude Include="source\DataList_Sound.h">
       <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
@@ -548,14 +602,47 @@
     <ClInclude Include="source\EffectManualDelete_PlayerFollow.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\EffectSelfDelete.h">
-      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
+    <ClInclude Include="source\SkySqhereBasic.h">
+      <Filter>ヘッダー ファイル\オブジェクト\スカイスフィア</Filter>
     </ClInclude>
     <ClInclude Include="source\PlayerMotionDefine.h">
       <Filter>ヘッダー ファイル\データリスト\プレイヤー状態</Filter>
     </ClInclude>
-    <ClInclude Include="source\SkySqhereBasic.h">
-      <Filter>ヘッダー ファイル\オブジェクト\スカイスフィア</Filter>
+    <ClInclude Include="source\GimmickDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItem_Blood.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_GameResource.h">
+      <Filter>ヘッダー ファイル\データリスト\ゲームリソース管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Blood.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Edit.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EditDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\ゲームリソース管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\SceneEditDefine.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\DataList_Image.h">
+      <Filter>ヘッダー ファイル\データリスト\画像管理</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItem_ForcedJump.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EffectItem_BloodDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体なし</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDisappear.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
