@@ -42,9 +42,11 @@ void PickUpItem_ForcedJump::Update()
 	if (this->pPlayer->HitCheck(this->stCollisionCapsule))
 	{
 		/* プレイヤーが接触している場合 */
-		/* プレイヤーのジャンプ回数を1に設定 */
-		this->PlayerStatusList->SetPlayerJumpCount(1);
+		//プレイヤーを吹き飛ばす
 		this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+
+		//プレイヤーのジャンプ回数を1に設定
+		this->PlayerStatusList->SetPlayerNowJumpCount(1);
 
 		/* このオブジェクトの削除フラグを有効にする */
 		this->bDeleteFlg = true;

@@ -62,7 +62,6 @@ void BulletEnemyRangeMissile::Initialization()
 		}
 	}
 }
-
 // ミサイル弾の移動処理
 void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 {
@@ -111,6 +110,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 	// ミサイルの座標を更新
 	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 70));
+
 	// ミサイルのコリジョン座標を更新
 	this->stCollisionSqhere.vecSqhere = this->vecPosition;
 
@@ -157,6 +157,8 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 void BulletEnemyRangeMissile::Update()
 {
 	/* 仮処理 */
+
+
 	// 本来はプレイヤー側で削除フラグを設定する予定
 
 	// 持続カウントが0より大きいか確認
@@ -174,6 +176,7 @@ void BulletEnemyRangeMissile::Update()
 		// 削除フラグを有効化
 		this->bDeleteFlg = true;
 	}
+
 	// ミサイルの移動処理
 	BulletEnemyRangeMissileMove();
 }

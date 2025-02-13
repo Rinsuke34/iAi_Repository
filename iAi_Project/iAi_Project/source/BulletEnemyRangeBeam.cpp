@@ -12,7 +12,7 @@ BulletEnemyRangeBeam::BulletEnemyRangeBeam() : BulletBase()
 	this->pEffect = nullptr;
 
 	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;		// ビームの持続カウント
-	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// ビーム発射カウント
+	this->iBulletCount = ENEMY_BEAM_BULLET_COUNT;			// ビーム発射カウント
 
 	this->iEnemyBeamDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ビームの持続カウント
 	// エネミーの位置を初期化

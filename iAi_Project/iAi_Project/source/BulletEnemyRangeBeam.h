@@ -40,7 +40,6 @@ private:
 
 	int iBulletCount;		// ビーム発射カウント
 
-
 	int iEnemyBeamDurationCount;		//ビームの持続カウント
 
 	VECTOR vecEnemyPosition; // エネミーの位置を保持するメンバ変数を追加

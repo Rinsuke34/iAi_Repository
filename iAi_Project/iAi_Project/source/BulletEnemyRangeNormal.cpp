@@ -86,6 +86,7 @@ void BulletEnemyRangeNormal::BulletEnemyRangeNormalMove()
 
 	// ノーマル弾のエフェクト座標を更新
 	this->pEffect->SetPosition(this->vecPosition);
+
 }
 
 // 更新

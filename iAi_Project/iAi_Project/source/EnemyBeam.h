@@ -41,7 +41,9 @@ private:
 
 	int		iFiringCount;	// 発射カウント
 
-	int		iGuidanceCount;	// 誘導カウント
+	int		iDurationCount;	// ビームの持続カウント
+
+	int		iChargeCount;	// ビームのチャージカウント
 
 	VECTOR vecWarning;
 

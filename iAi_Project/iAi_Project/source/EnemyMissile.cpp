@@ -25,7 +25,7 @@ MissileEnemy::MissileEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
 	}
 
 
@@ -86,6 +86,7 @@ void MissileEnemy::Player_Range_Missile_Shot()
 {
 	// ミサイルを生成
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
+
 	/* 攻撃の生成方向の設定 */
 	/* 攻撃座標を算出 */
 
@@ -114,6 +115,10 @@ void MissileEnemy::Player_Range_Missile_Shot()
 
 
 }
+
+
+
+
 
 // 更新
 void MissileEnemy::Update()
