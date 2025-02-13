@@ -58,7 +58,7 @@ void EffectItem_Blood::Update()
 			this->vecPosition = VAdd(this->vecPosition, VScale(VNorm(VSub(vecPlayerPos, this->vecPosition)), MOVE_SPEED_PLAYER));
 
 			/* プレイヤーの座標に到達した場合 */
-			if (VSize(VSub(vecPlayerPos, this->vecPosition)) < 10.f)
+			if (VSize(VSub(vecPlayerPos, this->vecPosition)) < MOVE_SPEED_PLAYER)
 			{
 				/* 削除フラグを有効化 */
 				this->bDeleteFlg = true;

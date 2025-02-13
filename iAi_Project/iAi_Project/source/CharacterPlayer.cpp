@@ -105,7 +105,7 @@ void CharacterPlayer::Update()
 	{
 		// ※攻撃やオブジェクトに対する当たり判定処理を行う
 		/* 当たり判定処理 */
-		HitCheck();
+		PlayerHitCheck();
 	}
 
 	/* 毎フレームの初期化処理 */
@@ -171,7 +171,7 @@ void CharacterPlayer::CollisionUpdate()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 当たり判定処理 */
-void CharacterPlayer::HitCheck()
+void CharacterPlayer::PlayerHitCheck()
 {
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();

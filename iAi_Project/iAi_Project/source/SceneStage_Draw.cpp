@@ -29,6 +29,9 @@ void SceneStage::Draw()
 
 	/* メイン画面を描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenHandle, FALSE);
+
+	/* カメラ設定 */
+	SetCamera();
 }
 
 // シャドウマップの設定

@@ -2,6 +2,7 @@
 /* 2025.01.10 菊池雅道 初期化処理追加  */
 /* 2025.01.22 菊池雅道 初期化処理追加  */
 /* 2025.02.10 菊池雅道 初期化処理追加 */
+/* 2025.02.11 菊池雅道 初期化処理追加 */
 #include "DataList_PlayerStatus.h"
 
 /* プレイヤーステータス管理クラスの定義 */
@@ -42,6 +43,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerComboNowCount				= 0;								// プレイヤーの現在のコンボ数
 	this->iPlayerComboMaxCount				= 0;								// プレイヤーの最大コンボ数
 	this->iPlayerComboDuration				= 0;								// プレイヤーのコンボの残り持続時間
+	this->bPlayerAimCancelledFlg			= false;							// 遠距離攻撃(構え)がキャンセルされたかのフラグ		/* 2025.02.11 菊池雅道 初期化処理追加 */
 
 	/* プレイヤーモーション関連 */
 	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)

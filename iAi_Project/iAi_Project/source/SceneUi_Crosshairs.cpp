@@ -18,6 +18,21 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 		/* "ゲーム状態管理"を取得 */
 		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
 	}
+
+	/* 画像リソース取得 */
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* 中心クロスヘア */
+		this->ipCgHandle_Flont			= ImageList->piGetImage("Test/Front");
+
+		/* ロックオン対象(メイン)クロスヘア */
+		this->ipCgHandle_Target_Main	= ImageList->piGetImage("Test/Target_Main");
+
+		/* ロックオン対象(サブ)クロスヘア */
+		this->ipCgHandle_Target_Sub		= ImageList->piGetImage("Test/Target_Sub");
+	}
 }
 
 // 計算
@@ -139,6 +154,9 @@ void SceneUi_Crosshairs::Draw()
 // 描写(ロックオンエネミー)
 void SceneUi_Crosshairs::Draw_RockOn()
 {
+	/* 画像サイズ取得用変数 */
+	int iCgSizeX, iCgSizeY;
+
 	/* エネミーリストを取得 */
 	auto& EnemyList = ObjectList->GetEnemyList();
 
@@ -165,10 +183,9 @@ void SceneUi_Crosshairs::Draw_RockOn()
 				/* コアの座標をスクリーン座標に変換 */
 				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
-				/* クロスヘアの代わりに十字架を描写 */
-				// ※仮処理
-				DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(100, 0, 0), TRUE);
-				DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(100, 0, 0), TRUE);
+				/* クロスヘア(ロックオン対象(サブ))を描写 */
+				GetGraphSize(*this->ipCgHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
+				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Sub, TRUE);
 				break;
 
 			case PLAYER_LOCKON_TARGET:
@@ -179,41 +196,43 @@ void SceneUi_Crosshairs::Draw_RockOn()
 				/* コアの座標をスクリーン座標に変換 */
 				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
-				/* クロスヘアの代わりに十字架を描写 */
-				// ※仮処理
-				DrawBox((int)vecCoreScreen.x - 20, (int)vecCoreScreen.y - 2, (int)vecCoreScreen.x + 20, (int)vecCoreScreen.y + 2, GetColor(255, 0, 0), TRUE);
-				DrawBox((int)vecCoreScreen.x - 2, (int)vecCoreScreen.y - 20, (int)vecCoreScreen.x + 2, (int)vecCoreScreen.y + 20, GetColor(255, 0, 0), TRUE);
-			break;
+				/* クロスヘア(ロックオン対象(サブ))を描写 */
+				GetGraphSize(*this->ipCgHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
+				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Sub, TRUE);
+
+				/* クロスヘア(ロックオン対象(メイン))を描写 */
+				GetGraphSize(*this->ipCgHandle_Target_Main, &iCgSizeX, &iCgSizeY);
+				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Main, TRUE);
+				break;
 		}
 	}
 
-	/* 画面中央にも十字架を作成 */
-	// ※仮処理
-	DrawBox((SCREEN_SIZE_WIDE / 2) - 20, (SCREEN_SIZE_HEIGHT / 2) - 2, (SCREEN_SIZE_WIDE / 2) + 20, (SCREEN_SIZE_HEIGHT / 2) + 2, GetColor(0, 100, 0), TRUE);
-	DrawBox((SCREEN_SIZE_WIDE / 2) - 2, (SCREEN_SIZE_HEIGHT / 2) - 20, (SCREEN_SIZE_WIDE / 2) + 2, (SCREEN_SIZE_HEIGHT / 2) + 20, GetColor(0, 100, 0), TRUE);
+	/* クロスヘア(中心)を描写 */
+	GetGraphSize(*this->ipCgHandle_Flont, &iCgSizeX, &iCgSizeY);
+	DrawGraph((SCREEN_SIZE_WIDE / 2) - (iCgSizeX / 2), (SCREEN_SIZE_HEIGHT / 2) - (iCgSizeY / 2), *this->ipCgHandle_Flont, TRUE);
 }
 
 // 描写(溜め攻撃の移動後座標)
 void SceneUi_Crosshairs::Draw_Move()
 {
-	/* プレイヤーの座標を取得 */
-	VECTOR vecPlayer = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+	///* プレイヤーの座標を取得 */
+	//VECTOR vecPlayer = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
-	/* 移動後の座標の座標を取得 */
-	VECTOR vecTarget = VAdd(this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove(), vecPlayer);
+	///* 移動後の座標の座標を取得 */
+	//VECTOR vecTarget = VAdd(this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove(), vecPlayer);
 
-	/* 現在の座標と移動後の座標間の四角形を描写 */
-	// ※仮作成(ポリゴンにする予定)
-	VECTOR Pos[4];
+	///* 現在の座標と移動後の座標間の四角形を描写 */
+	//// ※仮作成(ポリゴンにする予定)
+	//VECTOR Pos[4];
 
-	Pos[0] = VAdd(vecPlayer, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
-	Pos[1] = VAdd(vecPlayer, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
+	//Pos[0] = VAdd(vecPlayer, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
+	//Pos[1] = VAdd(vecPlayer, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
 
-	Pos[2] = VAdd(vecTarget, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
-	Pos[3] = VAdd(vecTarget, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
+	//Pos[2] = VAdd(vecTarget, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
+	//Pos[3] = VAdd(vecTarget, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
 
-	DrawTriangle3D(Pos[0], Pos[1], Pos[2], GetColor(255, 255, 255), TRUE);
-	DrawTriangle3D(Pos[3], Pos[2], Pos[1], GetColor(255, 255, 255), TRUE);
+	//DrawTriangle3D(Pos[0], Pos[1], Pos[2], GetColor(255, 255, 255), TRUE);
+	//DrawTriangle3D(Pos[3], Pos[2], Pos[1], GetColor(255, 255, 255), TRUE);
 
-	DrawLine3D(vecPlayer, vecTarget, GetColor(255, 255, 255));
+	//DrawLine3D(vecPlayer, vecTarget, GetColor(255, 255, 255));
 }

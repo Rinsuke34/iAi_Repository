@@ -3,6 +3,7 @@
 /* 2025.01.22 菊池雅道 攻撃関連の変数・関数追加 */
 /* 2025.02.05 菊池雅道 ステータス関連の変数・関数修正 */
 /* 2025.02.10 菊池雅道 移動関連の変数・関数追加 */
+/* 2025.02.11 菊池雅道 攻撃関連の変数・関数追加 */
 
 
 #pragma once
@@ -37,8 +38,6 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerNowJumpCount()			{ return this->iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)取得
 		int		iGetPlayerNowAttakChargeFlame()		{ return this->iPlayerNowAttakChargeFlame; }		// プレイヤーの現在の攻撃チャージフレーム数取得
 		float	fGetPlayerNowMotionCount()			{ return this->fPlayerNowMotionCount; };			// プレイヤーのモーションの現在のカウント
-		VECTOR	vecGetPlayerOldVector()				{ return this->vecPlayerOldVector; }				// プレイヤーの移動時のベクトルを取得（ジャンプ慣性等に使用）		/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerOldRadian()				{ return this->fPlayerOldRadian; }					// プレイヤーの移動時の角度を取得（方向転換時等に使用）				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerNormalDashFlameCount()	{ return this->iPlayerNormalDashFlameCount; }		// 通常ダッシュ時経過フレーム数を取得（高速ダッシュへの移行に使用）	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerJumpCount()				{ return this->iPlayerJumpCount; }					// プレイヤーの現在のジャンプ回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		bool	bGetPlayerJumpingFlag()				{ return this->bPlayerJumpingFlag; }				// プレイヤーがジャンプ中かのフラグを取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
@@ -56,6 +55,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerComboNowCount()			{ return this->iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を取得
 		int		iGetPlayerComboMaxCount()			{ return this->iPlayerComboMaxCount; }				// プレイヤーの最大コンボ数を取得
 		int		iGetPlayerComboDuration()			{ return this->iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を取得
+		bool	bGetPlayerAimCancelledFlg()			{ return this->bPlayerAimCancelledFlg; }			// 遠距離攻撃(構え)がキャンセルされたかのフラグを取得				/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
 
 		/* プレイヤーモーション関連 */
 		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
@@ -125,6 +125,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerComboNowCount(int iPlayerComboNowCount)					{ this->iPlayerComboNowCount			= iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を設定
 		void	SetPlayerComboMaxCount(int iPlayerComboMaxCount)					{ this->iPlayerComboMaxCount			= iPlayerComboMaxCount; }				// プレイヤーの最大コンボ数を設定
 		void	SetPlayerComboDuration(int iPlayerComboDuration)					{ this->iPlayerComboDuration			= iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を設定
+		void	SetPlayerAimCancelledFlg(bool bPlayerAimCancelledFlg)				{ this->bPlayerAimCancelledFlg			= bPlayerAimCancelledFlg; }				// 遠距離攻撃(構え)がキャンセルされたかのフラグを設定	/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
 
 		/* プレイヤーモーション関連 */
 		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
@@ -191,8 +192,6 @@ class DataList_PlayerStatus : public DataListBase
 		float	fPlayerNowFallSpeed;			// プレイヤーの現在の落下速度
 		int		iPlayerNowJumpCount;			// プレイヤーのジャンプ回数(現在数)
 		float	fPlayerNowMotionCount;			// プレイヤーのモーションの現在のカウント
-		VECTOR	vecPlayerOldVector;				// プレイヤーの移動時のベクトルを保存する（ジャンプ慣性等に使用）				/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerOldRadian;				// プレイヤーの移動時の角度を保持する※単位はラジアン（方向転換時等に使用）		/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerNormalDashFlameCount;	// 通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用）					/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		bool	bPlayerJumpingFlag;				// プレイヤーがジャンプ中かのフラグ												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerJumpCount;				// プレイヤーの現在のジャンプ回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
@@ -209,6 +208,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerComboNowCount;			// プレイヤーの現在のコンボ数
 		int		iPlayerComboMaxCount;			// プレイヤーの最大コンボ数
 		int		iPlayerComboDuration;			// プレイヤーのコンボの残り持続時間
+		bool	bPlayerAimCancelledFlg;			// 遠距離攻撃(構え)がキャンセルされたかのフラグ
 
 		/* プレイヤーモーション関連 */
 		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)
