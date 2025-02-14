@@ -219,8 +219,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 攻撃チャージフレームが強攻撃に派生しているか確認 */
 			if (iNowAttakChargeFlame >= PLAYER_CHARGE_TO_STRONG_TIME)
 			{
-				/* カメラモードを"構え(ズーム)"に変更 */
-				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM);
+				/* カメラモードを"構え(近接攻撃構え)"に変更 */
+				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
 
 				
 				/* ロックオン範囲のコリジョン作成 */
@@ -236,9 +236,6 @@ void CharacterPlayer::Player_Melee_Posture()
 
 					/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
 					stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
-					//// 臨時でプレイヤーの注視点に設定
-					//stMeleeSearchCollision.vecCapsuleBottom = this->PlayerStatusList->vecGetCameraTarget();
-					//stMeleeSearchCollision.vecCapsuleBottom.y = stMeleeSearchCollision.vecCapsuleTop.y;
 
 					/* ロックオン範囲のコリジョンを設定 */
 					this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);
@@ -455,8 +452,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 
 				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
-				fMove += 500.f;
-				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
+				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 1000.f));
 			}
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
@@ -529,19 +525,16 @@ void CharacterPlayer::Player_Charge_Attack()
 				pAddEffect->SetDeleteCount(30);
 
 				/* 居合(強)エフェクトの座標設定 */
-				pAddEffect->SetPosition(this->vecPosition);
+				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
 
 				/* 居合(強)エフェクトの回転量設定 */
-				pAddEffect->SetRotation(this->vecRotation);
+				pAddEffect->SetRotation(VGet(this->vecRotation.x, this->vecRotation.y, this->vecRotation.z * -1));
 
 				/*居合(強) エフェクトの初期化 */
 				pAddEffect->Initialization();
 
 				/* 居合(強)エフェクトをリストに登録 */
-				{
-					/* 居合(強)エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(pAddEffect);
-				}
+				this->ObjectList->SetEffect(pAddEffect);
 			}
 		}
 	}
@@ -622,6 +615,9 @@ void CharacterPlayer::Player_Projectile_Posture()
 	/* エイム(構え)入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
 	{
+		/* カメラモードを"構え(クナイ攻撃)"に変更 */
+		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
+
 		/* 攻撃入力がされた場合 */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 		{
@@ -659,9 +655,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 	else 
 	{
 		/* プレイヤー攻撃状態を"自由状態"に設定 */
-	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
-}
-
+		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+	}
 }
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */
 
