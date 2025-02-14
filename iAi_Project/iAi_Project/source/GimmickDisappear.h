@@ -49,5 +49,8 @@ private:
 
 	int textureOrangeHandle;
 
+	// エフェクト
+	EffectManualDelete* pEffectSine;	// 光るエフェクト
+
 protected:
 };

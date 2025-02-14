@@ -15,9 +15,6 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 	this->iBulletUPCount = ENEMY_MISSILE_BULLET_UP_COUNT;				// ミサイル弾打ち上げカウント
 	this->iBulletDownCount = ENEMY_MISSILE_BULLET_DOWN_COUNT;			// ミサイル弾打ち下げカウント
 	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;	// ミサイル誘導カウント
-
-	this->pPlayer = ObjectList->GetCharacterPlayer();					// プレイヤーの取得
-
 	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;	// ミサイル弾の持続カウント
 }
 
@@ -42,7 +39,7 @@ void BulletEnemyRangeMissile::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet")));
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -61,15 +58,44 @@ void BulletEnemyRangeMissile::Initialization()
 			ObjectListHandle->SetEffect(this->pEffect);
 		}
 	}
+		/* エフェクト追加 */
+	{
+		/* ミサイル誘導エフェクトを生成 */
+		this->pEffectGuidance = new EffectManualDelete();
+
+		/* エフェクトの読み込み */
+		this->pEffectGuidance->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_contrail/FX_e_missile_contrail")));
+
+		/* エフェクトの座標設定 */
+		this->pEffectGuidance->SetPosition(this->vecPosition);
+
+		/* エフェクトの回転量設定 */
+		this->pEffectGuidance->SetRotation(this->vecRotation);
+
+		/* エフェクトの初期化 */
+		this->pEffectGuidance->Initialization();
+
+		/* エフェクトをリストに登録 */
+		{
+			/* "オブジェクト管理"データリストを取得 */
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			/* エフェクトをリストに登録 */
+			ObjectListHandle->SetEffect(this->pEffectGuidance);
+		}
+	}
 }
 // ミサイル弾の移動処理
 void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 {
-	// プレイヤーの座標を取得
-	VECTOR playerPos = pPlayer->vecGetPosition();
+	/* プレイヤーの座標を取得 */
+	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	VECTOR playerPos = player->vecGetPosition();
+
+	iEnemyMissileDurationCount--;	// ミサイル弾の持続カウントを減算
+
 
 	// 持続カウントが打ち上げカウントを超えているか確認
-	if (ENEMY_MISSILE_DURATION_COUNT >= ENEMY_MISSILE_BULLET_UP_COUNT)
+	if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_UP_COUNT)
 	{
 		// 持続カウントが打ち上げカウントを超えている場合
 
@@ -83,18 +109,18 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
 	}
 	// 持続カウントが打ち下げカウントを超えているか確認
-	else if (ENEMY_MISSILE_DURATION_COUNT >= ENEMY_MISSILE_BULLET_DOWN_COUNT)
+	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_DOWN_COUNT)
 	{
 		// 持続カウントが打ち下げカウントを超えている場合
 
-		// ミサイルの移動方向を下方向に設定
+		// ミサイルの移動方向を上方向に設定
 		this->vecDirection = VGet(0, 1, 0);
 
 		// 再度ミサイルの移動速度を更新
 		//this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 30));
 	}
 	// 持続カウントが誘導カウントを超えているか確認
-	else if (ENEMY_MISSILE_DURATION_COUNT >= ENEMY_MISSILE_BULLET_GUIDANCE_COUNT)
+	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_GUIDANCE_COUNT)
 	{
 		// 持続カウントが誘導カウントを超えている場合
 
@@ -116,6 +142,14 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 	// ミサイルのエフェクト座標を更新
 	this->pEffect->SetPosition(this->vecPosition);
+
+	// ミサイルの誘導エフェクト座標をミサイルエフェクトの座標の少し後ろに設定
+	this->pEffectGuidance->SetPosition(VAdd(this->vecPosition, VScale(this->vecDirection, -700)));
+
+	// ミサイルの誘導エフェクトの向きを設定
+	VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
+
+	this->pEffectGuidance->SetRotation(rotation);
 
 	//ミサイルが床に当たったらか確認
 	if (this->vecPosition.y <= -1000)//ここのマジックナンバー件と床に当たった時の処理は、後で修正します

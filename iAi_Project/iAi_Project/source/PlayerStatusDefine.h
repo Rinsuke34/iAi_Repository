@@ -37,8 +37,7 @@ static const float	PLAER_DASH_MAX_SPEED = 20.0f;		// ƒvƒŒƒCƒ„[‚Ì‘–‚èiÅ‘åj‚Ìˆ
 static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;			// ƒvƒŒƒCƒ„[‚Ì‘–‚è‚Ì’Êí¨Å‘å‚É‚È‚éƒtƒŒ[ƒ€”
 static const float	STICK_TILT_PLAER_DASH				= 0.8f;			// ƒvƒŒƒCƒ„[‚ª‘–‚èó‘Ô‚É‚È‚éƒXƒeƒBƒbƒN‚ÌŒX‚«i”ÍˆÍFÅ‘å1j
 static const float	PLAYER_TURN_SPEED					= 0.2f;					// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“xi”ÍˆÍF0.0?1.0j				/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const float	PLAYER_TURN_LIMIT_LEFT				= DX_PI_F * +2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x§ŒÀ(¶)(ƒ‰ƒWƒAƒ“)					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const float	PLAYER_TURN_LIMIT_RIGHT				= DX_PI_F * -2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x§ŒÀ(‰E)(ƒ‰ƒWƒAƒ“)					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const float	PLAYER_TURN_LIMIT					= DX_PI_F * + 2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x§ŒÀ(ƒ‰ƒWƒAƒ“)					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */	/* 2025.02.13 ‹e’r‰ë“¹ ’è”C³ */
 
 // ƒWƒƒƒ“ƒvŠÖŒW
 static const float	PLAYER_JUMP_SPEED					= 50.0f;		// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‚Ì‘¬“x

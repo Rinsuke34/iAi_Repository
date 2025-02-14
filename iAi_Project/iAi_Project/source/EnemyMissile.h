@@ -37,4 +37,6 @@ protected:
 
 	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
 
+	int		iFiringCount;	// 発射カウント
+
 };

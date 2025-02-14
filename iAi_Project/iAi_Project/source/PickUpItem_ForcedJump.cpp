@@ -41,6 +41,32 @@ void PickUpItem_ForcedJump::Update()
 	/* プレイヤーとこのギミックが接触しているか確認 */
 	if (this->pPlayer->HitCheck(this->stCollisionCapsule))
 	{
+
+		/* エフェクト追加 */
+
+		/*爆発エフェクトを生成 */
+		this->pEffectExplosion = new EffectManualDelete();
+
+		/* エフェクトの読み込み */
+		this->pEffectExplosion->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_explosion/FX_g_mine_explosion")));
+
+		/* エフェクトの座標設定 */
+		this->pEffectExplosion->SetPosition(this->vecPosition);
+
+		/* エフェクトの回転量設定 */
+		this->pEffectExplosion->SetRotation(this->vecRotation);
+
+		/* エフェクトの初期化 */
+		this->pEffectExplosion->Initialization();
+
+		/* エフェクトをリストに登録 */
+		{
+			/* "オブジェクト管理"データリストを取得 */
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			/* エフェクトをリストに登録 */
+			ObjectListHandle->SetEffect(this->pEffectExplosion);
+		}
+
 		/* プレイヤーが接触している場合 */
 		//プレイヤーを吹き飛ばす
 		this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);

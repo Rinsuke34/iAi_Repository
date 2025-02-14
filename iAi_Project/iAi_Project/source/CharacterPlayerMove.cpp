@@ -6,6 +6,7 @@
 /* 2025.02.07 菊池雅道	衝突判定処理修正 */
 /* 2025.02.10 菊池雅道	振り向き処理修正 */
 /* 2025.02.10 菊池雅道	回避処理修正 */
+/* 2025.02.14 菊池雅道	振り向き処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -188,51 +189,48 @@ void CharacterPlayer::Player_Move()
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
 		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
-
+		/* 2025.02.14 菊池雅道	振り向き処理修正 開始 */
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
 		{
 			// 合わせる場合
 			/* プレイヤーの向きを移動方向に合わせる */
-			/* 移動方向の角度(ラジアン)を取得 */
+			/* 入力方向を取得 */
 			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
-			/* カメラの向きと合成 */
+			
+			/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
+			this->RadianLimitAdjustment(fAngleX);
+			
+			/* 補正したカメラ角度を設定 */
+			this->PlayerStatusList->SetCameraAngleX(fAngleX);
+
+			/* 入力方向とカメラの向きを合成し移動方向とする */
 			fMoveAngle = fAngleX - fMoveAngle;
-			/* プレイヤーの向きの角度(ラジアン)を取得 */
+
+			/* プレイヤーの移動方向(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
+			this->RadianLimitAdjustment(fMoveAngle);
+
+			/* プレイヤーの現在の向き(ラジアン)を取得 */
 			float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
+
+			/* プレイヤーの現在の向き(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
+			this->RadianLimitAdjustment(fCurrentAngle);
 
 			/* 現在のプレイヤーの向きと移動方向の差を求める */
 			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
 
-			//プレイヤーを不必要に回転させないようにする処理
-			{
-				//プレイヤーの角度が一周(2π)を超えた場合、補正を行う
-				/* 左回りで一周したら */
-				if (fCurrentAngle > PLAYER_TURN_LIMIT_LEFT)
-				{
-					/* 角度を一周(2π)分補正する */ 
-					fCurrentAngle -= PLAYER_TURN_LIMIT_LEFT;  
-				}
-				/* 右回りで一周したら */
-				else if (fCurrentAngle < PLAYER_TURN_LIMIT_RIGHT)
-				{
-					/* 角度を一周(2π)分補正する */
-					fCurrentAngle -= PLAYER_TURN_LIMIT_RIGHT;
-				}
-				
 				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
 				/* 左回りで半周を超えたら */
 				if (fDifferrenceAngle > DX_PI_F)
 				{
 					/* 角度を一周(2π)分補正する */
-					fDifferrenceAngle -= 2 * DX_PI_F;  
+				fDifferrenceAngle -= PLAYER_TURN_LIMIT;
 				}
 				/* 右回りで半周を超えたら */
 				else if (fDifferrenceAngle < -DX_PI_F)
 				{
 					/* 角度を一周(2π)分補正する */
-					fDifferrenceAngle += 2 * DX_PI_F;
-				}
+				fDifferrenceAngle += PLAYER_TURN_LIMIT;
 			}
 
 			/* 振り向き速度に応じて段階的に移動方向を向く */ 
@@ -242,6 +240,7 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
 			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
+			/* 2025.02.14 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
 	}

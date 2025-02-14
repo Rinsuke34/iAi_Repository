@@ -42,5 +42,8 @@ class PickUpItem_ForcedJump : public PickUpItemBase
 		CharacterPlayer*			pPlayer;					// プレイヤー
 		Gimmick_ForcedJump_Spawn*	pGimmick_ForcedJump_Spawn;	// 強制ジャンプギミックスポナー(自身の生成元)
 
+	//エフェクト
+	EffectManualDelete* pEffectExplosion;	// 爆発エフェクト
+
 };
 

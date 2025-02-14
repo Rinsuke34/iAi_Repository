@@ -2,6 +2,7 @@
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.01.30 菊池雅道	モーション処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
+/* 2025.02.14 菊池雅道	回転関連の関数追加 */
 
 #include "CharacterPlayer.h"
 
@@ -108,8 +109,14 @@ void CharacterPlayer::Update()
 		PlayerHitCheck();
 	}
 
+	/* 毎フレームの初期化処理 */
+	{
 	/* 移動量をリセット */
 	this->vecMove = VGet(0, 0, 0);
+
+		/* ロックオン範囲コリジョン使用フラグを無効化 */
+		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
+	}
 
 	///* プレイヤーのモーション状態を保存する */
 	//this->PlayerStatusList->SetPlayerMotion_Move_Old(this->PlayerStatusList->iGetPlayerMotion_Move());
@@ -122,18 +129,6 @@ void CharacterPlayer::Update()
 		Player_Attack_Transition();
 	}
 
-	/* 平行方向(X軸)移動処理 */
-	{
-		/* 移動処理 */
-		Player_Move();
-
-		/* 回避処理 */
-		Player_Dodg();
-
-		/* 移動処理(水平方向) */
-		Movement_Horizontal();
-	}
-
 	/* 上下方向(Y軸)移動処理 */
 	{
 		/* ジャンプ処理 */
@@ -144,6 +139,18 @@ void CharacterPlayer::Update()
 
 		/* 移動処理(垂直方向) */
 		Movement_Vertical();
+	}
+
+	/* 平行方向(X軸)移動処理 */
+	{
+		/* 移動処理 */
+		Player_Move();
+
+		/* 回避処理 */
+		Player_Dodg();
+
+		/* 移動処理(水平方向) */
+		Movement_Horizontal();
 	}
 
 	/* コリジョンを更新 */
@@ -265,3 +272,23 @@ void CharacterPlayer::PlayerHitCheck()
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+
+/* 2025.02.14 菊池雅道	回転関連の関数追加 開始 */
+// 角度(ラジアン)の制限と補正
+void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
+{
+	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
+	/* 2πを超えた場合 */
+	if (fRadian > PLAYER_TURN_LIMIT)
+	{
+		/* 角度を一周(2π)分補正する */
+		fRadian -= PLAYER_TURN_LIMIT;
+	}
+	/* 0を下回った場合 */
+	else if (fRadian < 0)
+	{
+		/* 角度を一周(2π)分補正する */
+		fRadian += PLAYER_TURN_LIMIT;
+	}
+}
+/* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
