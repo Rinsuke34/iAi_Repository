@@ -108,14 +108,8 @@ void CharacterPlayer::Update()
 		PlayerHitCheck();
 	}
 
-	/* 毎フレームの初期化処理 */
-	{
-		/* 移動量をリセット */
-		this->vecMove = VGet(0, 0, 0);
-
-		/* ロックオン範囲コリジョン使用フラグを無効化 */
-		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
-	}
+	/* 移動量をリセット */
+	this->vecMove = VGet(0, 0, 0);
 
 	///* プレイヤーのモーション状態を保存する */
 	//this->PlayerStatusList->SetPlayerMotion_Move_Old(this->PlayerStatusList->iGetPlayerMotion_Move());
@@ -128,18 +122,6 @@ void CharacterPlayer::Update()
 		Player_Attack_Transition();
 	}
 
-	/* 上下方向(Y軸)移動処理 */
-	{
-		/* ジャンプ処理 */
-		Player_Jump();
-
-		/* 重力処理 */
-		Player_Gravity();
-
-		/* 移動処理(垂直方向) */
-		Movement_Vertical();
-	}
-
 	/* 平行方向(X軸)移動処理 */
 	{
 		/* 移動処理 */
@@ -150,6 +132,18 @@ void CharacterPlayer::Update()
 
 		/* 移動処理(水平方向) */
 		Movement_Horizontal();
+	}
+
+	/* 上下方向(Y軸)移動処理 */
+	{
+		/* ジャンプ処理 */
+		Player_Jump();
+
+		/* 重力処理 */
+		Player_Gravity();
+
+		/* 移動処理(垂直方向) */
+		Movement_Vertical();
 	}
 
 	/* コリジョンを更新 */

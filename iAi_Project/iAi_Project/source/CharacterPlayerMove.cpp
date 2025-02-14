@@ -259,8 +259,13 @@ void CharacterPlayer::Player_Move()
 		}
 		else
 		{
-			/* 待機モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+			/* 現在のモーションが"着地"でないか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+			{
+				// "着地"以外である場合
+				/* 待機モーション設定 */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+			}
 		}
 	}
 
@@ -667,6 +672,9 @@ void CharacterPlayer::Movement_Vertical()
 					this->ObjectList->SetEffect(pAddEffect);
 				}
 			}
+
+			/* 着地モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_LAND);
 		}
 	}
 	/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
@@ -698,7 +706,7 @@ void CharacterPlayer::Movement_Vertical()
 					if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
 					{
 						/* 上昇しているか確認 */
-						if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
+						if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 						{
 							// 上昇している場合
 							/* モーションを"ジャンプ(上昇)"に設定 */

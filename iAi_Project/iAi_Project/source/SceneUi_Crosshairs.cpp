@@ -142,10 +142,10 @@ void SceneUi_Crosshairs::Draw()
 	/* エネミーのロックオン描写 */
 	Draw_RockOn();
 
-	/* カメラモードが構え"ズーム"であるか確認 */	
-	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM)
+	/* カメラモードが構え(近接攻撃構え)であるか確認 */	
+	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_MELEE)
 	{
-		// 構え"ズーム"である場合
+		// 構え(近接攻撃構え)である場合
 		/* 溜め攻撃による移動後座標を描写 */
 		Draw_Move();
 	}

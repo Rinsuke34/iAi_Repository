@@ -68,7 +68,8 @@ static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰
 // ƒJƒƒ‰ó‘Ô
 static const int	CAMERA_MODE_FREE						= 0;				// ƒtƒŠ[ƒ‚[ƒh(’Êí‚ÌOlÌ‹“_)
 static const int    CAMERA_MODE_LOCK						= 1;				// ŒÅ’è
-static const int	CAMERA_MODE_AIM							= 2;				// \‚¦(ƒY[ƒ€)
+static const int	CAMERA_MODE_AIM_MELEE					= 2;				// \‚¦(‹ßÚUŒ‚\‚¦)
+static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// \‚¦(ƒNƒiƒC\‚¦)
 // üŒ`•âŠÔ
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// ƒJƒƒ‰À•W‚ÌüŒ`•ÛŠÇ—pƒJƒEƒ“ƒg‚ÌÅ‘å’l
 
