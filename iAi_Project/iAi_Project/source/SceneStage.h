@@ -55,8 +55,8 @@ class SceneStage : public SceneBase
 		/* カメラモード関連 */
 		void	CameraRotateUpdata(float fRate);	// 入力によるカメラ回転量取得
 		void	SetCamera_Free();					// カメラ設定(フリー)
-		void	SetCamera_Lock();					// カメラ設定(固定)
-		void	SetCamera_Aim();					// カメラ設定(構え(ズーム))
+		void	SetCamera_Aim_Melee();				// カメラ設定(構え(近接攻撃構え))
+		void	SetCamera_Aim_Kunai();				// カメラ設定(構え(クナイ構え))
 		void	CameraSmoothing();					// カメラ補正
 
 		/* デバッグ関連 */

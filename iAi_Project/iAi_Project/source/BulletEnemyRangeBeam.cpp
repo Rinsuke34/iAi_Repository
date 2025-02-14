@@ -77,15 +77,15 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	iChargeCount--;	// チャージカウントを減算
 	if (iChargeCount <= 0)
 	{
-		// 持続カウントが発射カウントを超えているか確認
-		if (iEnemyBeamDurationCount >= ENEMY_NORMAL_BULLET_COUNT)
-		{
-			//持続カウントが発射カウントを超えている場合
-			// プレイヤーのy座標を取得
-			playerPos.y += PLAYER_HEIGHT / 2.f;
+	// 持続カウントが発射カウントを超えているか確認
+	if (iEnemyBeamDurationCount >= ENEMY_NORMAL_BULLET_COUNT)
+	{
+		//持続カウントが発射カウントを超えている場合
+		// プレイヤーのy座標を取得
+		playerPos.y += PLAYER_HEIGHT / 2.f;
 
-			// プレイヤーの方向を向くようにエネミーの向きを定義
-			this->vecDirection = VNorm(VSub(playerPos, this->vecPosition));
+		// プレイヤーの方向を向くようにエネミーの向きを定義
+		this->vecDirection = VNorm(VSub(playerPos, this->vecPosition));
 
 			//チャージカウントを初期化
 			iChargeCount = ENEMY_BEAM_CHARGE_COUNT;

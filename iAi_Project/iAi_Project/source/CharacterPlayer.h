@@ -3,6 +3,7 @@
 /* 2025.01.22 菊池雅道 攻撃関連の関数追加 */
 /* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
 /* 2025.02.06 菊池雅道 エフェクト関連修正 */
+/* 2025.02.14 菊池雅道 回転関連の関数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -48,6 +49,7 @@ class CharacterPlayer : public CharacterBase
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新
 		void	PlayerHitCheck();				// 当たり判定処理
+		void	RadianLimitAdjustment(float& fRadian);				// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ

@@ -87,7 +87,7 @@ void MissileEnemy::MoveEnemy()
 			// 発射カウントが0以下の場合
 
 		// ミサイルを発射する
-			Player_Range_Missile_Shot();
+		Player_Range_Missile_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_MISSILE_INTERVAL;

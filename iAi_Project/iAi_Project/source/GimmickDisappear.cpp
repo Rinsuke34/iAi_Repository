@@ -94,30 +94,30 @@ void GimmickDisappear::ProcessGimmick()
 
 			//セカンドテクスチャの変更カウントが0以下になったか確認
 			if (iTextureSecondChangeCount <= 0)
-			{
+		{
 				//セカンドテクスチャの変更カウントが0以下になった場合
 
 				//ギミックの消滅時間カウントを増やす
-				iDisappearTimeCount++;
+			iDisappearTimeCount++;
 
 				// 0番のテクスチャを赤テクスチャに変更
 				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
-
+			
 				//PlayMovieToGraph(textureHandle); // 再生開始
 
 				//ギミックの消滅時間カウントが一定数になったか確認
-				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
-				{
-					//ギミックの消滅時間カウントが一定数になった場合
-					//再生終了
-					//	PauseMovieToGraph(textureHandle);
-
-					//ギミックを消滅させる
-					this->SetDeleteFlg(true);
-				}
+			if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
+			{
+				//ギミックの消滅時間カウントが一定数になった場合
+				//再生終了
+				//	PauseMovieToGraph(textureHandle);
+				
+				//ギミックを消滅させる
+				this->SetDeleteFlg(true);
 			}
 		}
 	}
+}
 }
 
 // 更新

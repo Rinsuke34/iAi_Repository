@@ -12,12 +12,15 @@ void CharacterPlayer::Draw()
 	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* モーションの再生時間を設定 */
-	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), this->PlayerStatusList->fGetMotionTimer_Move());
-	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->PlayerStatusList->fGetMotionTimer_Attack());
+	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	this->PlayerStatusList->fGetMotionTimer_Move());
+	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	this->PlayerStatusList->fGetMotionTimer_Attack());
+
+	/* 現在の攻撃モーションのブレンド率を取得 */
+	float fAttackMotionBrendRate = MOTION_LIST[this->PlayerStatusList->iGetPlayerMotion_Attack()].fBlendRatio;
 
 	/* モーションのブレンド率を設定 */
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), 0.5f);
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), 0.5f);
+	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), 1.f - fAttackMotionBrendRate);
+	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), fAttackMotionBrendRate);
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
