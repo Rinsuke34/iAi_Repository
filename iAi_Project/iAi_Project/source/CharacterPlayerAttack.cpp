@@ -529,10 +529,10 @@ void CharacterPlayer::Player_Charge_Attack()
 				pAddEffect->SetDeleteCount(30);
 
 				/* 居合(強)エフェクトの座標設定 */
-				pAddEffect->SetPosition(this->vecPosition);
+				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
 
 				/* 居合(強)エフェクトの回転量設定 */
-				pAddEffect->SetRotation(this->vecRotation);
+				pAddEffect->SetRotation(VGet(this->vecRotation.x, this->vecRotation.y, this->vecRotation.z * -1));
 
 				/*居合(強) エフェクトの初期化 */
 				pAddEffect->Initialization();
