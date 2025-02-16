@@ -6,7 +6,6 @@
 
 /* データリスト */
 #include "DataList_GameStatus.h"
-#include "DataList_Model.h"
 #include "DataList_Effect.h"
 #include "DataList_GameResource.h"
 

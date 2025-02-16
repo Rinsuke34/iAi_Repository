@@ -25,13 +25,13 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 中心クロスヘア */
-		this->ipCgHandle_Flont			= ImageList->piGetImage("Test/Front");
+		this->piGrHandle_Flont			= ImageList->piGetImage("Test/Front");
 
 		/* ロックオン対象(メイン)クロスヘア */
-		this->ipCgHandle_Target_Main	= ImageList->piGetImage("Test/Target_Main");
+		this->piGrHandle_Target_Main	= ImageList->piGetImage("Test/Target_Main");
 
 		/* ロックオン対象(サブ)クロスヘア */
-		this->ipCgHandle_Target_Sub		= ImageList->piGetImage("Test/Target_Sub");
+		this->piGrHandle_Target_Sub		= ImageList->piGetImage("Test/Target_Sub");
 	}
 }
 
@@ -184,8 +184,8 @@ void SceneUi_Crosshairs::Draw_RockOn()
 				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
 				/* クロスヘア(ロックオン対象(サブ))を描写 */
-				GetGraphSize(*this->ipCgHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
-				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Sub, TRUE);
+				GetGraphSize(*this->piGrHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
+				DrawGraph((int)vecCoreScreen.x - (iCgSizeX / 2), (int)vecCoreScreen.y - (iCgSizeY / 2), *this->piGrHandle_Target_Sub, TRUE);
 				break;
 
 			case PLAYER_LOCKON_TARGET:
@@ -197,19 +197,19 @@ void SceneUi_Crosshairs::Draw_RockOn()
 				vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
 
 				/* クロスヘア(ロックオン対象(サブ))を描写 */
-				GetGraphSize(*this->ipCgHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
-				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Sub, TRUE);
+				GetGraphSize(*this->piGrHandle_Target_Sub, &iCgSizeX, &iCgSizeY);
+				DrawGraph((int)vecCoreScreen.x - (iCgSizeX / 2), (int)vecCoreScreen.y - (iCgSizeY / 2), *this->piGrHandle_Target_Sub, TRUE);
 
 				/* クロスヘア(ロックオン対象(メイン))を描写 */
-				GetGraphSize(*this->ipCgHandle_Target_Main, &iCgSizeX, &iCgSizeY);
-				DrawGraph(vecCoreScreen.x - (iCgSizeX / 2), vecCoreScreen.y - (iCgSizeY / 2), *this->ipCgHandle_Target_Main, TRUE);
+				GetGraphSize(*this->piGrHandle_Target_Main, &iCgSizeX, &iCgSizeY);
+				DrawGraph((int)vecCoreScreen.x - (iCgSizeX / 2), (int)vecCoreScreen.y - (iCgSizeY / 2), *this->piGrHandle_Target_Main, TRUE);
 				break;
 		}
 	}
 
 	/* クロスヘア(中心)を描写 */
-	GetGraphSize(*this->ipCgHandle_Flont, &iCgSizeX, &iCgSizeY);
-	DrawGraph((SCREEN_SIZE_WIDE / 2) - (iCgSizeX / 2), (SCREEN_SIZE_HEIGHT / 2) - (iCgSizeY / 2), *this->ipCgHandle_Flont, TRUE);
+	GetGraphSize(*this->piGrHandle_Flont, &iCgSizeX, &iCgSizeY);
+	DrawGraph((SCREEN_SIZE_WIDE / 2) - (iCgSizeX / 2), (SCREEN_SIZE_HEIGHT / 2) - (iCgSizeY / 2), *this->piGrHandle_Flont, TRUE);
 }
 
 // 描写(溜め攻撃の移動後座標)

@@ -18,39 +18,28 @@ SceneUi_Combo::SceneUi_Combo() : SceneBase("UI_Combo", 103, false)
 
 	/* 画像読み込み */
 	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
 		/* コンボフレーム */
-		this->iCgHandle_Combo_Frame			= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/UI_Player_ComboGrade_frame_fix.png");
+		this->piGrHandle_Combo_Frame	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/UI_Player_ComboGrade_frame_fix");
 
 		/* コンボタイマー */
-		this->iCgHandle_Combo_Timer			= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/UI_Player_ComboTimer.png");
+		this->piGrHandle_Combo_Timer	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/UI_Player_ComboTimer");
 
 		/* コンボアルファベット */
-		this->iCgHandle_Combo_Alphabet[0]	= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_D.png");
-		this->iCgHandle_Combo_Alphabet[1]	= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_C.png");
-		this->iCgHandle_Combo_Alphabet[2]	= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B.png");
-		this->iCgHandle_Combo_Alphabet[3]	= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_A.png");
-		this->iCgHandle_Combo_Alphabet[4]	= LoadGraph("resource/ImageData/UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_S.png");
+		this->piGrHandle_Combo_Alphabet[0]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_D");
+		this->piGrHandle_Combo_Alphabet[1]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_C");
+		this->piGrHandle_Combo_Alphabet[2]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
+		this->piGrHandle_Combo_Alphabet[3]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_A");
+		this->piGrHandle_Combo_Alphabet[4]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
 	}
 }
 
 // デストラクタ
 SceneUi_Combo::~SceneUi_Combo()
 {
-	/* 画像削除 */
-	{
-		/* コンボフレーム */
-		DeleteGraph(this->iCgHandle_Combo_Frame);
 
-		/* コンボタイマー */
-		DeleteGraph(this->iCgHandle_Combo_Timer);
-
-		/* コンボアルファベット */
-		DeleteGraph(this->iCgHandle_Combo_Alphabet[0]);
-		DeleteGraph(this->iCgHandle_Combo_Alphabet[1]);
-		DeleteGraph(this->iCgHandle_Combo_Alphabet[2]);
-		DeleteGraph(this->iCgHandle_Combo_Alphabet[3]);
-		DeleteGraph(this->iCgHandle_Combo_Alphabet[4]);
-	}
 }
 
 // 計算
@@ -91,11 +80,11 @@ void SceneUi_Combo::Process()
 void SceneUi_Combo::Draw()
 {
 	/* コンボフレーム描画(仮) */
-	DrawGraph(100, 360, this->iCgHandle_Combo_Frame, TRUE);
+	DrawGraph(100, 360, *this->piGrHandle_Combo_Frame, TRUE);
 
 	/* コンボタイマー描写(仮) */
 	double dComboTimerPercent = (static_cast<double>(this->PlayerStatusList->iGetPlayerComboDuration()) / INIT_ATTRIBUTES_COMBO_DURATION) * 100.0;
-	DrawCircleGauge(101 + (176 / 2), 360 + (176 / 2), dComboTimerPercent, this->iCgHandle_Combo_Timer);
+	DrawCircleGauge(101 + (176 / 2), 360 + (176 / 2), dComboTimerPercent, *this->piGrHandle_Combo_Timer);
 
 	/* 現在のコンボ数描写(仮) */
 	DrawFormatString(400, 360 + 16 * 0, GetColor(255, 255, 255), "現在のコンボ数 : %d", this->PlayerStatusList->iGetPlayerComboNowCount());

@@ -18,25 +18,15 @@ SceneUi_Kunai::SceneUi_Kunai() : SceneBase("UI_Kunai", 102, false)
 
 	/* 画像読み込み */
 	{
-		/* クナイアイコン */
-		this->iCgHandle_Kunai_Icon = LoadGraph("resource/ImageData/UI_Player_Kunai/UI_Player_Kunai.png");
-
-		/* クナイ所持数(仮) */
-		this->iCgHandle_Kunai_No[0] = LoadGraph("resource/ImageData/UI_Player_Kunai/UI_Player_Kunai_three.png");
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	}
 }
 
 // デストラクタ
 SceneUi_Kunai::~SceneUi_Kunai()
 {
-	/* 画像削除 */
-	{
-		/* クナイアイコン */
-		DeleteGraph(this->iCgHandle_Kunai_Icon);
 
-		/* クナイ所持数(仮) */
-		DeleteGraph(this->iCgHandle_Kunai_No[0]);
-	}
 }
 
 // 計算
@@ -54,6 +44,5 @@ void SceneUi_Kunai::Process()
 // 描画
 void SceneUi_Kunai::Draw()
 {
-	/* クナイアイコン描画(仮) */
-	DrawGraph(100, 620, this->iCgHandle_Kunai_Icon, TRUE);
+
 }

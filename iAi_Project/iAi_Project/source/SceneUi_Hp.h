@@ -6,6 +6,7 @@
 /* データリスト */
 #include "DataList_PlayerStatus.h"
 #include "DataList_GameStatus.h"
+#include "DataList_Image.h"
 
 /* UI(HP)クラスの宣言 */
 
@@ -25,7 +26,7 @@ class SceneUi_Hp : public SceneBase
 		DataList_GameStatus* GameStatusList;		// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
-		int iCgHandle_Hp_Frame;		// HPフレーム
-		int iCgHandle_Hp_Gauge;		// HPゲージ
+		int* piGrHandle_Hp_Frame;		// HPフレーム
+		int* piGrHandle_Hp_Gauge;		// HPゲージ
 };
 
