@@ -139,20 +139,28 @@ void SceneUi_Crosshairs::Process()
 // 描画
 void SceneUi_Crosshairs::Draw()
 {
-	/* エネミーのロックオン描写 */
-	Draw_RockOn();
-
 	/* カメラモードが構え(近接攻撃構え)であるか確認 */	
 	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_MELEE)
 	{
 		// 構え(近接攻撃構え)である場合
+		/* エネミーのロックオン描写 */
+		Draw_RockOn_Melee();
+
 		/* 溜め攻撃による移動後座標を描写 */
 		Draw_Move();
 	}
+
+	/* カメラモードが構え(クナイ構え)であるか確認 */
+	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI)
+	{
+		// 構え(クナイ構え)である場合
+		/* エネミーのロックオン描写 */
+		Draw_RockOn_Kunai();
+	}
 }
 
-// 描写(ロックオンエネミー)
-void SceneUi_Crosshairs::Draw_RockOn()
+// 描写(近接攻撃の溜め時のロックオンエネミー)
+void SceneUi_Crosshairs::Draw_RockOn_Melee()
 {
 	/* 画像サイズ取得用変数 */
 	int iCgSizeX, iCgSizeY;
@@ -235,4 +243,10 @@ void SceneUi_Crosshairs::Draw_Move()
 	//DrawTriangle3D(Pos[3], Pos[2], Pos[1], GetColor(255, 255, 255), TRUE);
 
 	//DrawLine3D(vecPlayer, vecTarget, GetColor(255, 255, 255));
+}
+
+// 描写(遠距離攻撃の溜め時のロックオンエネミー)
+void SceneUi_Crosshairs::Draw_RockOn_Kunai()
+{
+
 }

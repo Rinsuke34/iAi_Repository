@@ -30,7 +30,8 @@ class DataList_GameResource : public DataListBase
 
 		/* データ設定 */
 		// ブラッド(ゲーム内通過)関連
-		void	SetHaveBlood(int iBlood) { this->iHaveBlood = iBlood; }	// 所持ブラッド設定
+		void	SetHaveBlood(int iBlood)					{ this->iHaveBlood			= iBlood; }	// 所持ブラッド設定
+		void	SetClearEvaluation(int iClearEvaluation)	{ this->iClearEvaluation	= iClearEvaluation; }
 
 		// エディット関連
 		void	SetNowEditData(int iEditNum, int iEditEffect, int iEditRank);	// 現在のエディット情報設定
@@ -48,4 +49,5 @@ class DataList_GameResource : public DataListBase
 		EDIT_DATA	NowEditData[EDIT_MAX];				// 現在のエディット情報
 
 		/* スコア関連 */
+		int		iClearEvaluation;						// ステージクリア時の評価
 };

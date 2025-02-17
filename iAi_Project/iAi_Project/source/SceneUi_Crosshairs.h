@@ -29,8 +29,9 @@ class SceneUi_Crosshairs : public SceneBase
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 
 		/* 関数 */
-		void	Draw_RockOn();		// 描写(ロックオンエネミー)
-		void	Draw_Move();		// 描写(溜め攻撃の移動後座標)
+		void	Draw_RockOn_Melee();	// 描写(近接攻撃の溜め時のロックオンエネミー)
+		void	Draw_RockOn_Kunai();	// 描写(遠距離攻撃の溜め時のロックオンエネミー)
+		void	Draw_Move();			// 描写(溜め攻撃の移動後座標)
 
 		/* 変数 */
 		int*	piGrHandle_Flont;			// 中心クロスヘア
