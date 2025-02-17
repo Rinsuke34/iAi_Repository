@@ -34,8 +34,8 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	// 新規のエディット情報
 	for (int i = 0; i < EDIT_UPGRADE_MAX; i++)
 	{
-		this->NewEditData[i].iEditRank = EDIT_RANK_NONE;
-		this->NewEditData[i].iEditEffect = EDIT_EFFECT_NONE;
+		this->NewEditData[i].iEditRank		= EDIT_RANK_NONE;
+		this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
 	}
 
 	/* 初期化 */
@@ -51,17 +51,53 @@ SceneEdit::~SceneEdit()
 // 初期化
 void SceneEdit::Initialization()
 {
-	/* テスト用 */
-	this->NewEditData[0].iEditEffect	= EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
-	this->NewEditData[0].iEditRank		= EDIT_RANK_CUPPER;
-	this->NewEditData[1].iEditEffect	= EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
-	this->NewEditData[1].iEditRank		= EDIT_RANK_CUPPER;
-	this->NewEditData[2].iEditEffect	= EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
-	this->NewEditData[2].iEditRank		= EDIT_RANK_CUPPER;
-	this->NewEditData[3].iEditEffect	= EDIT_EFFECT_NORMAL_MELEE_CHARGE_REDUCTION;
-	this->NewEditData[3].iEditRank		= EDIT_RANK_CUPPER;
-	this->NewEditData[4].iEditEffect	= EDIT_EFFECT_NORMAL_JUMP_COUNT_UP;
-	this->NewEditData[4].iEditRank		= EDIT_RANK_CUPPER;
+	/* ステージクリア時の総合評価に応じて新規エディットを追加 */
+	{
+		/* ステージクリア時の総合評価取得 */
+		int	iClearEvaluation_Total =  this->GameResourceList->iGetClearEvaluation();
+
+		/* 総合評価に応じた取得 */
+		int		iNewEditNumber	= 0;		// エディット数
+		bool	bGoaldConfirmed	= false;	// 金枠確定
+
+		/* ランクに応じて設定する */
+		switch (iClearEvaluation_Total)
+		{
+			case RESULT_EVALUAtiON_S:
+				iNewEditNumber	= 5;
+				bGoaldConfirmed	= true;
+				break;
+
+			case RESULT_EVALUAtiON_A:
+				iNewEditNumber = 5;
+				break;
+
+			case RESULT_EVALUAtiON_B:
+				iNewEditNumber = 4;
+				break;
+
+			case RESULT_EVALUAtiON_C:
+			case RESULT_EVALUAtiON_D:
+				iNewEditNumber = 3;
+				break;
+		}
+
+		/* エディット数分ランダムなエディットを新規エディットに登録 */
+		for (int i = 0; i < iNewEditNumber; i++)
+		{
+			/* 仮作成 */
+			this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
+			this->NewEditData[i].iEditRank		= EDIT_RANK_CUPPER;
+		}
+
+		/* 金枠確定フラグが有効であるか */
+		if (bGoaldConfirmed == true)
+		{
+			// 有効である場合
+			/* NONE以外のランダムなエディットのランクを金にする */
+			this->NewEditData[GetRand(iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
+		}
+	}
 }
 
 // 計算
