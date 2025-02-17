@@ -52,14 +52,9 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 		}
 
 		// キープ中エディット情報初期化
-		for (int i = 0; i < EDIT_MAX; i++)
-		{
-			/* 初期状態ではすべて"効果なし"に設定 */
-			this->KeepEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
-
-			/* ランクは"なし"に設定 */
-			this->KeepEditData[i].iEditRank		= EDIT_RANK_NONE;
-		}
+		this->KeepEditData.iEditEffect	= EDIT_EFFECT_NONE;
+		this->KeepEditData.iEditRank	= EDIT_RANK_NONE;
+	
 
 		/* スコア関連 */
 		this->iClearTotalEvaluation = 0;
@@ -83,16 +78,4 @@ void DataList_GameResource::SetNowEditData(int iEditNum, int iEditEffect, int iE
 
 	this->NowEditData[iEditNum].iEditEffect	= iEditEffect;
 	this->NowEditData[iEditNum].iEditRank	= iEditRank;
-}
-
-// キープ中のエディット情報取得
-void DataList_GameResource::SetKeepEditData(int iEditNum, int iEditEffect, int iEditRank)
-{
-	// 引数
-	// iEditNum		<-	番号(最大数未満)
-	// iEditEffect	<-	エディット効果ID
-	// iEditRank	<-	エディットランクID
-
-	this->KeepEditData[iEditNum].iEditEffect	= iEditEffect;
-	this->KeepEditData[iEditNum].iEditRank		= iEditRank;
 }

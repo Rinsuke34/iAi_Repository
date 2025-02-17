@@ -27,7 +27,7 @@ class DataList_GameResource : public DataListBase
 		int*		piGetGrHandle_EditEffect(int iEditEffect)	{ return this->pGrHandle_EditEffectList[iEditEffect]; }		// エディット効果画像ハンドル取得
 		int*		piGetGrHandle_EditFrame(int iEditRank)		{ return this->pGrHandle_EditFrameList[iEditRank]; }		// エディットフレーム画像ハンドル取得
 		EDIT_DATA	pGetNowEditData(int iIndex)					{ return this->NowEditData[iIndex]; }						// 現在のエディット情報取得
-		EDIT_DATA	pGetKeepEditData(int iIndex)				{ return this->KeepEditData[iIndex]; }						// キープ中のエディット情報取得
+		EDIT_DATA	pGetKeepEditData()							{ return this->KeepEditData; }								// キープ中のエディット情報取得
 
 		// スコア関連
 		int		iGetClearEvaluation()	{ return this->iClearTotalEvaluation; }		// ステージクリア時の合計評価(D～Sの5段階*3種類)取得
@@ -37,8 +37,8 @@ class DataList_GameResource : public DataListBase
 		void	SetHaveBlood(int iBlood)	{ this->iHaveBlood	= iBlood; }			// 所持ブラッド設定
 
 		// エディット関連
-		void	SetNowEditData(int iEditNum, int iEditEffect, int iEditRank);		// 現在のエディット情報設定
-		void	SetKeepEditData(int iEditNum, int iEditEffect, int iEditRank);		// キープ中のエディット情報取得
+		void	SetNowEditData(int iEditNum, int iEditEffect, int iEditRank);								// 現在のエディット情報設定
+		void	SetKeepEditData(EDIT_DATA KeepEditData)			{ this->KeepEditData = KeepEditData; };		// キープ中のエディット情報取得
 
 		// スコア関連
 		void	SetClearEvaluation(int iClearTotalEvaluation)	{ this->iClearTotalEvaluation = iClearTotalEvaluation; }	// ステージクリア時の合計評価(D～Sの5段階*3種類)設定
@@ -54,7 +54,7 @@ class DataList_GameResource : public DataListBase
 
 		/* エディット関連 */
 		EDIT_DATA	NowEditData[EDIT_MAX];				// 現在のエディット情報
-		EDIT_DATA	KeepEditData[EDIT_UPGRADE_MAX];		// キープ中のエディット情報
+		EDIT_DATA	KeepEditData;		// キープ中のエディット情報
 
 		/* スコア関連 */
 		int		iClearTotalEvaluation;					// ステージクリア時の合計評価(D～Sの5段階*3種類)

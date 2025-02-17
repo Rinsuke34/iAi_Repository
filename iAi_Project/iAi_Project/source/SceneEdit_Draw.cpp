@@ -10,11 +10,13 @@ void SceneEdit::Draw()
 	/* 描写座標設定(仮) */
 	st2DPosition stSelectItemPos[SELECT_ITEM_MAX] =
 	{
+		{ 500 + (128 + 64) * 0, 1080 - 128 * 6 },
 		{ 500 + (128 + 64) * 1, 1080 - 128 * 6 },
 		{ 500 + (128 + 64) * 2, 1080 - 128 * 6 },
 		{ 500 + (128 + 64) * 3, 1080 - 128 * 6 },
 		{ 500 + (128 + 64) * 4, 1080 - 128 * 6 },
 		{ 500 + (128 + 64) * 5, 1080 - 128 * 6 },
+		{ 500 + (128 + 64) * 0, 1080 - 128 * 3 },
 		{ 500 + (128 + 64) * 1, 1080 - 128 * 3 },
 		{ 500 + (128 + 64) * 2, 1080 - 128 * 3 },
 		{ 500 + (128 + 64) * 3, 1080 - 128 * 3 },
@@ -27,7 +29,16 @@ void SceneEdit::Draw()
 	for (int i = 0; i < SELECT_ITEM_MAX; i++)
 	{
 		/* インデックスに応じて描写内容を変更 */
-		if (i < SELECT_ITEM_NEW_EDIT)
+		if (i <= SELECT_ITEM_KEEP)
+		{
+			// キープ中のエディット
+			/* エディットフレーム描写 */
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->pGetKeepEditData().iEditRank), TRUE);
+
+			/* エディット効果描写 */
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->pGetKeepEditData().iEditEffect), TRUE);
+		}
+		if (i <= SELECT_ITEM_NEW_EDIT)
 		{
 			// 新規のエディット
 			/* エディットフレーム描写 */
@@ -36,14 +47,23 @@ void SceneEdit::Draw()
 			/* エディット効果描写 */
 			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->NewEditData[i].iEditEffect), TRUE);
 		}
-		else if (i < SELECT_ITEM_NOW_EDIT)
+		else if (i < SELECT_ITEM_DELETE)
+		{
+			// 削除予定エディット
+			/* エディットフレーム描写 */
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditFrame(this->DeleteEditData.iEditRank), TRUE);
+
+			/* エディット効果描写 */
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->DeleteEditData.iEditEffect), TRUE);
+		}
+		else if (i <= SELECT_ITEM_NOW_EDIT)
 		{
 			// 現在のエディット
 			/* エディットフレーム描写 */
-			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->pGetNowEditData(i - SELECT_ITEM_NEW_EDIT).iEditRank), TRUE);
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->pGetNowEditData(i - 6).iEditRank), TRUE);
 
 			/* エディット効果描写 */
-			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->pGetNowEditData(i - SELECT_ITEM_NEW_EDIT).iEditEffect), TRUE);
+			DrawGraph(stSelectItemPos[i].ix, stSelectItemPos[i].iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->pGetNowEditData(i - 6).iEditEffect), TRUE);
 		}
 		else
 		{

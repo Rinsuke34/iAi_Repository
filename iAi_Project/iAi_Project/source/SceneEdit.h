@@ -42,4 +42,8 @@ class SceneEdit : public SceneBase
 		int			iUpgradeRate;					// アップグレードのレート(0～10)
 		int			iSelectItem;					// 選択中の項目の番号
 		EDIT_DATA	NewEditData[EDIT_UPGRADE_MAX];	// 新規のエディット情報
+		EDIT_DATA	DeleteEditData;					// 削除予定のエディット情報
+		int			iHoldSelectItem;				// ホールド中の選択項目
+		int			iHoldSelectItemType;			// ホールド中の選択項目の種類
+		EDIT_DATA	HoldEditData;					// ホールド中のエディット情報
 };
