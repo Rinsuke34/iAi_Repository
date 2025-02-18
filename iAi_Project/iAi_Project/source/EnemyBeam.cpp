@@ -37,8 +37,10 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 		MV1SetFrameVisible(iModelFootHandle, 2, FALSE);
 	}
 
-	this->pPlayer = ObjectList->GetCharacterPlayer();
-	this->pEffect = nullptr;
+	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
+
+	this->bEffectGenerated = false;	// 警告エフェクト生成フラグ
+
 	this->iFiringCount = ENEMY_BEAM_INTERVAL;	// 発射カウント
 }
 
@@ -120,7 +122,7 @@ void BeamEnemy::MoveEnemy()
 				this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 				/* エフェクトの座標設定 */
-				this->pEffectWarning->SetPosition(this->vecWarning);
+				this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
 
 				/* エフェクトの回転量設定 */
 				this->pEffectWarning->SetRotation(this->vecRotation);
@@ -221,6 +223,14 @@ void BeamEnemy::Update()
 	{
 		// 削除フラグを有効にする
 		this->SetDeleteFlg(true);
+
+		/* ビームを一度でも生成したかを確認 */
+		if (this->pBulletRangeBeam != nullptr)
+		{
+			// 一度でも生成した場合
+			//ビームの削除フラグを有効化
+			this->pBulletRangeBeam->SetDeleteFlg(true);
+		}
 	}
 
 	// エネミーを移動させる

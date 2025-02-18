@@ -513,6 +513,9 @@
     <ClCompile Include="source\SceneResult.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\リザルト</Filter>
     </ClCompile>
+    <ClCompile Include="source\BulletPlayerKunaiEffect.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -706,6 +709,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneResult.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\リザルト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerBulletDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerKunaiEffect.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

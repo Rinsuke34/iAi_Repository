@@ -6,6 +6,7 @@
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
 /* 2025.02.07 菊池雅道	エフェクト処理修正 */
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
+/* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -615,6 +616,9 @@ void CharacterPlayer::Player_Projectile_Posture()
 	/* エイム(構え)入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
 	{
+		/* プレイヤーの向きをカメラの向きに固定 */
+		this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+		
 		/* カメラモードを"構え(クナイ攻撃)"に変更 */
 		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 
@@ -660,9 +664,46 @@ void CharacterPlayer::Player_Projectile_Posture()
 }
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */
 
+/* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
-	/* 未完成なのでとりあえず自由状態に戻す */
-	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+	/* プレイヤーの向きをカメラの向きに固定 */
+	this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+
+	/* カメラモードを"構え(クナイ攻撃)"に変更 */
+	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
+	
+	/* クナイ(エフェクト)を作成 */
+	this->pBulletKunaiEffect = new BulletPlayerKunaiEffect;
+
+	/* クナイ(エフェクト)生成座標を設定 */
+	this->pBulletKunaiEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
+	
+	/* ロックオン中のエネミーを取得 */
+	EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+
+	/* ロックオン中のエネミーが存在するか */
+	if (pLockOnEnemy != nullptr)
+	{
+		// 存在する場合
+		/* クナイ(エフェクト)のターゲット座標をロックオン中のエネミーに設定 */
+		this->pBulletKunaiEffect->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
 }
+	else
+	{
+		// 存在しない場合
+		/* クナイ(エフェクト)のターゲット座標をカメラの注視点に設定 */
+		this->pBulletKunaiEffect->SetKunaiTargetPosition(this->PlayerStatusList->vecGetCameraTarget());
+	}
+
+	/* 初期化を行う */
+	this->pBulletKunaiEffect->Initialization();
+	
+	/* バレットリストに追加 */
+	ObjectList->SetBullet(this->pBulletKunaiEffect);
+
+	/* 遠距離攻撃構え状態に戻す */
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
+}
+/* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */

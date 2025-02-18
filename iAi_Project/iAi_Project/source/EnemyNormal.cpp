@@ -37,10 +37,12 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 		MV1SetFrameVisible(iModelFootHandle, 2, FALSE);
 	}
 
-	this->pPlayer = ObjectList->GetCharacterPlayer();
-	this->pEffect = nullptr;
+	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
+
 	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
 	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
+
+	this->pEffectWarning = nullptr;	// 警告エフェクト
 }
 
 // デストラクタ
@@ -73,8 +75,6 @@ void NormalEnemy::MoveEnemy()
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
-	//攻撃予告エフェクトの座標を設定
-	VECTOR vecWarning = VGet(vecPosition.x, vecPosition.y + vecPosition.y / 2, vecPosition.z);
 
 	//プレイヤーのZ座標がエネミーのZ座標より大きいか確認
 	if (vecPosition.z > playerPos.z)
@@ -121,7 +121,7 @@ void NormalEnemy::MoveEnemy()
 				this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 				/* エフェクトの座標設定 */
-				this->pEffectWarning->SetPosition(this->vecWarning);
+				this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
 
 				/* エフェクトの回転量設定 */
 				this->pEffectWarning->SetRotation(this->vecRotation);

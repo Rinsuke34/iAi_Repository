@@ -24,6 +24,13 @@ public:
 	virtual void	Update()			override;	// 更新
 	virtual void	CollisionDraw()		override;	// 当たり判定描写
 
+
+	/* 接触判定 */
+		// 簡易的な結果(接触しているかどうか)
+	bool	HitCheck(COLLISION_CAPSULE	stCapsule)		override;	// カプセル - カプセル
+	bool	HitCheck(COLLISION_SQHERE	stSqhere)		override;	// カプセル - 球体
+	bool	HitCheck(int iModelHandle, int iFrameIndex)	override;	// カプセル - モデル
+
 private:
 	/* オブジェクト(エフェクト)のハンドル */
 	EffectManualDelete* pEffect;
