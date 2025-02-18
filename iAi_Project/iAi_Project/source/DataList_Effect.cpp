@@ -7,7 +7,8 @@
 // コンストラクタ
 DataList_Effect::DataList_Effect() : DataListBase("DataList_Effect")
 {
-
+	/* mapをクリアする */
+	pEffectList.clear();
 }
 
 // デストラクタ

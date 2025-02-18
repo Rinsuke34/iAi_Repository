@@ -1572,7 +1572,7 @@ typedef struct tagPLANE_POINT_RESULT_D
 // コリジョン結果代入用ポリゴン
 typedef struct tagMV1_COLL_RESULT_POLY
 {
-	int						HitFlag ;						// ( MV1CollCheck_Line でのみ有効 )ヒットフラグ( 1:ヒットした  0:ヒットしなかった )
+	bool					HitFlag ;						// ( MV1CollCheck_Line でのみ有効 )ヒットフラグ( 1:ヒットした  0:ヒットしなかった )
 	VECTOR					HitPosition ;					// ( MV1CollCheck_Line でのみ有効 )ヒット座標
 
 	int						FrameIndex ;					// 当たったポリゴンが含まれるフレームの番号

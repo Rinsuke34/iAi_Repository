@@ -31,4 +31,3 @@ void SceneUi_Blood::Draw()
 	/* Œ»Ý‚Ìƒuƒ‰ƒbƒh‚ð•`ŽÊ(‰¼) */
 	DrawFormatString(1600, 800 + 16 * 0, GetColor(255, 255, 255), "Œ»Ý‚ÌBLOOD : %d", this->GameResourceList->iGetHaveBlood());
 }
-

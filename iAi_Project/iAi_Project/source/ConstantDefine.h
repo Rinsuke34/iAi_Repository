@@ -62,3 +62,11 @@ static const int EFFECT_MAX_PARTICLE	= 8000;		// エフェクトの最大パーティクル数
 static const int PLAYER_LOCKON_NONE     = 0;    // ロックオンされていない
 static const int PLAYER_LOCKON_RANGE    = 1;    // ロックオン範囲内である
 static const int PLAYER_LOCKON_TARGET   = 2;    // ロックオンされている
+
+/* 評価ランク */
+static const int	RESULT_EVALUAtiON_D = 0;	// D(最低ランク)
+static const int	RESULT_EVALUAtiON_C = 1;	// C
+static const int	RESULT_EVALUAtiON_B = 2;	// B
+static const int	RESULT_EVALUAtiON_A = 3;	// A
+static const int	RESULT_EVALUAtiON_S = 4;	// S(最高ランク)
+

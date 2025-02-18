@@ -6,6 +6,7 @@
 /* データリスト */
 #include "DataList_PlayerStatus.h"
 #include "DataList_GameStatus.h"
+#include "DataList_Image.h"
 
 /* UI(クナイ)クラスの宣言 */
 
@@ -23,8 +24,4 @@ class SceneUi_Kunai : public SceneBase
 		/* 使用するデータリスト */
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
-
-		/* 使用する画像のハンドル */
-		int iCgHandle_Kunai_Icon;		// クナイアイコン
-		int iCgHandle_Kunai_No[1];		// クナイ所持数(仮)
 };

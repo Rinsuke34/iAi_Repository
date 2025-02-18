@@ -161,6 +161,7 @@
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp" />
     <ClCompile Include="source\BulletEnemyRangeMissile.cpp" />
     <ClCompile Include="source\BulletEnemyRangeNormal.cpp" />
+    <ClCompile Include="source\BulletPlayerKunaiEffect.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
@@ -193,11 +194,13 @@
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
+    <ClCompile Include="source\SceneEdit_Draw.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
     <ClCompile Include="source\SceneInputConfig.cpp" />
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
+    <ClCompile Include="source\SceneResult.cpp" />
     <ClCompile Include="source\SceneStage_Camera.cpp" />
     <ClCompile Include="source\SceneStage_Draw.cpp" />
     <ClCompile Include="source\SceneTitle.cpp" />
@@ -218,6 +221,7 @@
     <ClInclude Include="source\BulletEnemyRangeBeam.h" />
     <ClInclude Include="source\BulletEnemyRangeMissile.h" />
     <ClInclude Include="source\BulletEnemyRangeNormal.h" />
+    <ClInclude Include="source\BulletPlayerKunaiEffect.h" />
     <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />
@@ -253,10 +257,12 @@
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PickUpItem_ForcedJump.h" />
     <ClInclude Include="source\PlatformBasic.h" />
+    <ClInclude Include="source\PlayerBulletDefine.h" />
     <ClInclude Include="source\PlayerMotionDefine.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
+    <ClInclude Include="source\SceneResult.h" />
     <ClInclude Include="source\SceneStage.h" />
     <ClInclude Include="source\SceneUi_Blood.h" />
     <ClInclude Include="source\SceneUi_Combo.h" />

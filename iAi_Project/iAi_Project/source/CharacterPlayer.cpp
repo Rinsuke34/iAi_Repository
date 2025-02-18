@@ -3,6 +3,7 @@
 /* 2025.01.30 菊池雅道	モーション処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
 /* 2025.02.14 菊池雅道	回転関連の関数追加 */
+/* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -14,6 +15,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	{
 		/* オブジェクトのハンドル */
 		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
+		this->pBulletKunaiEffect =	nullptr;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
 
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 		/* エフェクトのハンドル */

@@ -13,6 +13,7 @@
 #include "DataList_Image.h"
 
 /* シーン */
+#include "SceneResult.h"
 #include "SceneEdit.h"
 #include "SceneUi_Crosshairs.h"
 #include "SceneUi_Combo.h"
@@ -71,9 +72,5 @@ class SceneStage : public SceneBase
 		int iMainScreenEffectHandle;				// メイン画面(画面エフェクト用)のハンドル
 		// シャドウマップハンドル
 		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
-		// マスクハンドル
-		int iMotionBlurMaskHandle;					// モーションブラー用のマスクハンドル
-		// シェーダーハンドル
-		int iSpeedLineShaderHandle;					// 集中線用のシェーダーハンドル
 };
 

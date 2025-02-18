@@ -8,6 +8,14 @@ class EnemyBasic;
 
 /* プロジェクトで使用する構造体の宣言 */
 
+// 座標(2D上)
+// ※可読性向上のため、名称に数字を使用
+struct st2DPosition
+{
+	int ix;
+	int iy;
+};
+
 // 指定箇所とエネミーの距離判定用の構造体
 struct NearEnemy
 {

@@ -6,6 +6,7 @@
 /* データリスト */
 #include "DataList_PlayerStatus.h"
 #include "DataList_GameStatus.h"
+#include "DataList_Image.h"
 
 /* UI(コンボ)クラスの宣言 */
 
@@ -25,7 +26,7 @@ class SceneUi_Combo : public SceneBase
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
-		int iCgHandle_Combo_Frame;			// コンボフレーム
-		int iCgHandle_Combo_Timer;			// コンボタイマー
-		int iCgHandle_Combo_Alphabet[5];	// コンボアルファベット
+		int* piGrHandle_Combo_Frame;			// コンボフレーム
+		int* piGrHandle_Combo_Timer;			// コンボタイマー
+		int* piGrHandle_Combo_Alphabet[5];		// コンボアルファベット
 };

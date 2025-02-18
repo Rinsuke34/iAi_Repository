@@ -61,8 +61,6 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iMainScreenEffectHandle			= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	// シャドウマップハンドル
 	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
-	// マスクハンドル
-	this->iMotionBlurMaskHandle				= LoadMask("resource/ImageData/Mask/Mask_MotionBlur.png");
 
 	/* 初期化 */
 	Initialization();
@@ -84,10 +82,6 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iMainScreenEffectHandle);
 	// シャドウマップ
 	DeleteShadowMap(this->iShadowMapScreenHandle);
-	// マスクハンドル
-	DeleteMask(this->iMotionBlurMaskHandle);
-	// シェーダーハンドル
-	DeleteShader(this->iSpeedLineShaderHandle);
 }
 
 // 初期化
@@ -113,6 +107,21 @@ void SceneStage::Process()
 
 			/* 削除フラグが有効なオブジェクトの削除 */
 			ObjectList->DeleteAll();
+			break;
+
+		/* "リザルト"状態 */
+		case GAMESTATUS_RESULT:
+			/* エディット画面作成処理 */
+			{
+				/* カメラモードを"固定"に変更 */
+				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_LOCK);
+
+				/* シーン"リザルト画面"を作成 */
+				SceneBase* pAddScene = new SceneResult();
+
+				/* シーン"リザルト画面"をシーンサーバーに追加 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
 			break;
 
 		/* "エディット"状態 */

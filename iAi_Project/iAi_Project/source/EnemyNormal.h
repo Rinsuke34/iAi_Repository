@@ -26,26 +26,32 @@ public:
 	virtual void	Update()			override;		// 更新
 
 private:
-	EffectManualDelete* pEffect;
-	EffectManualDelete* pEffectWarning;
+	//EffectManualDelete* pEffect;
+
+	EffectManualDelete* pEffectWarning;					//警告エフェクト
+
+	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
 
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 
+	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
 	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
 
-	BulletEnemyRangeNormal* pBulletRangeNormal;	// ノーマル弾
 
+	//変数
 	int		iFiringCount;	// 発射カウント
 
 	int		iGuidanceCount;	// 誘導カウント
 
-	VECTOR vecWarning;
-
 	int		iModelFootHandle;	// エネミー足元モデルハンドル
+
+	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
+	
+
 protected:
 
 

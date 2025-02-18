@@ -45,8 +45,6 @@ private:
 	//エフェクト
 	EffectManualDelete* pEffectExplosion;	// 爆発エフェクト
 
-	//エフェクト
-	EffectManualDelete* pEffectExplosion;	// 爆発エフェクト
 
 };
 

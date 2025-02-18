@@ -18,25 +18,21 @@ SceneUi_Hp::SceneUi_Hp() : SceneBase("UI_Hp", 101, false)
 
 	/* 画像読み込み */
 	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList	= dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
 		/* HPフレーム */
-		this->iCgHandle_Hp_Frame	= LoadGraph("resource/ImageData/UI_Player_HP/UI_Player_HP_frame.png");
+		this->piGrHandle_Hp_Frame	= ImageList->piGetImage("UI_Player_HP/UI_Player_HP_frame");
 
 		/* HPゲージ */
-		this->iCgHandle_Hp_Gauge	= LoadGraph("resource/ImageData/UI_Player_HP/UI_Player_HP_gauge.png");
+		this->piGrHandle_Hp_Gauge	= ImageList->piGetImage("UI_Player_HP/UI_Player_HP_gauge");
 	}
 }
 
 // デストラクタ
 SceneUi_Hp::~SceneUi_Hp()
 {
-	/* 画像削除 */
-	{
-		/* HPフレーム */
-		DeleteGraph(this->iCgHandle_Hp_Frame);
 
-		/* HPゲージ */
-		DeleteGraph(this->iCgHandle_Hp_Gauge);
-	}
 }
 
 // 計算
@@ -55,7 +51,7 @@ void SceneUi_Hp::Process()
 void SceneUi_Hp::Draw()
 {
 	/* HPフレーム描画(仮) */
-	DrawGraph(100, 740, this->iCgHandle_Hp_Frame, TRUE);
+	DrawGraph(100, 740, *this->piGrHandle_Hp_Frame, TRUE);
 
 	/* 現在HP */
 	DrawFormatString(500, 700 + 16 * 0, GetColor(255, 255, 255), "現在HP : %d", this->PlayerStatusList->iGetPlayerNowHp());
