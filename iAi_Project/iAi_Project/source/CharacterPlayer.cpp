@@ -78,7 +78,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 			this->PlayerMotionList[i].strMotionName		= MOTION_LIST[i].strMotionName;
 
 			/* モーションの総再生時間を取得＆設定 */
-			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, this->PlayerMotionList[i].iMotionID);
+			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[i].strMotionName.c_str()));
 
 			/* 次のモーションIDを設定 */
 			this->PlayerMotionList[i].iNextMotionID		= MOTION_LIST[i].iNextMotionID;
@@ -131,18 +131,6 @@ void CharacterPlayer::Update()
 		Player_Attack_Transition();
 	}
 
-	/* 上下方向(Y軸)移動処理 */
-	{
-		/* ジャンプ処理 */
-		Player_Jump();
-
-		/* 重力処理 */
-		Player_Gravity();
-
-		/* 移動処理(垂直方向) */
-		Movement_Vertical();
-	}
-
 	/* 平行方向(X軸)移動処理 */
 	{
 		/* 移動処理 */
@@ -153,6 +141,18 @@ void CharacterPlayer::Update()
 
 		/* 移動処理(水平方向) */
 		Movement_Horizontal();
+	}
+
+	/* 上下方向(Y軸)移動処理 */
+	{
+		/* ジャンプ処理 */
+		Player_Jump();
+
+		/* 重力処理 */
+		Player_Gravity();
+
+		/* 移動処理(垂直方向) */
+		Movement_Vertical();
 	}
 
 	/* コリジョンを更新 */
