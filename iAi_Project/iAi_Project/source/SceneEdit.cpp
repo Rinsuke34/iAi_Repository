@@ -24,7 +24,14 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		/* 選択フレーム */
 		this->piGrHandle_SelectFrame	= ImageList->piGetImage("Test_Edit/Interface/SelectFrame");
 
+		/* "次へ"ボタン */
 		this->piGrHandle_SelectNext		= ImageList->piGetImage("Test_Edit/Interface/SelectNext");
+
+		/* 選択項目の状態フレーム */
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_SET]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleSet");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_UPGRADE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleUpgrade");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_INTERCHANGEABLE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Interchangeable");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Impossible");
 	}
 
 	/* 初期化 */
@@ -38,10 +45,12 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
 	}
 
-	this->iHoldSelectItem			= -1;
-	this->iHoldSelectItemType		= -1;
-	this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+	/* ホールド中のエディットの情報 */
+	/* ホールド中のエディット情報を初期化する */
 	this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
+	this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+	this->iHoldSelectItemType		= SELECT_TYPE_NONE;
+	this->iHoldSelectItemNo			= 0;
 
 	/* 初期化 */
 	Initialization();
@@ -103,6 +112,72 @@ void SceneEdit::Initialization()
 			this->NewEditData[GetRand(iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
 		}
 	}
+
+	/* 各項目の情報を選択項目に設定 */
+	{
+		int i = 0;
+		// キープ中のエディット情報登録
+		{
+			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_KEEP_EDIT;
+			this->astSelectItemList[i].pstEditData = this->GameResourceList->pstGetKeepEditData();
+			i++;
+		}
+		// 新規エディット情報登録
+		for (int j = 0; j < EDIT_UPGRADE_MAX; j++)
+		{
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NEW_EDIT;
+			this->astSelectItemList[i].pstEditData		= &this->NewEditData[j];
+			i++;
+		}
+		// 削除情報登録
+		{
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_DELETE_EDIT;
+			this->astSelectItemList[i].pstEditData		= &this->DeleteEditData;
+			i++;
+		}
+		// 現在のエディット情報登録
+		for (int j = 0; j < EDIT_MAX; j++)
+		{
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NOW_EDIT;
+			this->astSelectItemList[i].pstEditData		= this->GameResourceList->pstGetNowEditData(j);
+			i++;
+		}
+		// 次へ
+		{
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NEXT;
+		}
+
+		/* 描写座標一括登録 */
+		{
+			/* 描写座標設定(仮) */
+			st2DPosition stSelectItemPos[SELECT_ITEM_MAX] =
+			{
+				{ 500 + (128 + 64) * 0, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 1, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 2, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 3, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 4, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 5, 1080 - 128 * 6 },
+				{ 500 + (128 + 64) * 0, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 1, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 2, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 3, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 4, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 5, 1080 - 128 * 3 },
+				{ 500 + (128 + 64) * 6, 1080 - 128 * 3 },
+			};
+
+			/* 座標設定 */
+			for (int l = 0; l < SELECT_ITEM_MAX; l++)
+			{
+				/* 座標設定 */
+				this->astSelectItemList[l].stDrawPos		= stSelectItemPos[l];
+
+				/* 選択項目の状態を"状態無し"に設定(ついでで) */
+				this->astSelectItemList[i].iSelectStatus	= SELECT_STATUS_NONE;
+			}
+		}
+	}
 }
 
 // 計算
@@ -148,224 +223,95 @@ void SceneEdit::Process_Decid()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
-		/* 現在の選択項目が"次へ"であるか */
-		if (this->iSelectItem == SELECT_ITEM_NEXT - 1)
-		{
-			// "次へ"である場合
-			/* ゲーム状態を"次のステージへ遷移"に変更する */
-			this->GameStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
-
-			/* 決定時の処理を終了する */
-			return;
-		}
+		
 
 		/* エディットをホールド中であるか確認 */
-		if (this->iHoldSelectItem != -1)
+		if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
 		{
 			// ホールド中である場合
-			/* 現在の選択項目に応じて処理を変更する */
-			if (SELECT_ITEM_KEEP >= this->iSelectItem)
+			/* 対象の選択項目の状態に応じて処理を変更する */
+			switch (this->astSelectItemList[this->iSelectItem].iSelectStatus)
 			{
-				// "キープ中のエディットである場合
-				/* エディットが登録されているか確認 */
-				if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 現在ホールド中のエディットを保持 */
-					EDIT_DATA stNowHoldEditData;
-					stNowHoldEditData.iEditEffect	= this->HoldEditData.iEditEffect;
-					stNowHoldEditData.iEditRank		= this->HoldEditData.iEditRank;
+				/* 状態なし */
+				case SELECT_STATUS_NONE:
+					/* ホールド中は"状態なし"にならないはずなのでここを通ったらエラー */
+					break;
 
-					/* 設定されているエディットを保持中にする */
-					this->HoldEditData.iEditEffect	= this->GameResourceList->pGetKeepEditData().iEditEffect;
-					this->HoldEditData.iEditRank	= this->GameResourceList->pGetKeepEditData().iEditRank;
+				/* セット可能 */
+				case SELECT_STATUS_POSSIBLE_SET:
+					/* ホールド中のエディット情報を現在の選択項目に設定する */
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
 
-					/* 保持している現在ホールド中のエディットをキープ中のエディットに登録 */
-					this->GameResourceList->SetKeepEditData(stNowHoldEditData);
-				}
-				else
-				{
-					// 登録されていない場合
-					/* 保持している現在ホールド中のエディットをキープ中のエディットに登録 */
-					this->GameResourceList->SetKeepEditData(this->HoldEditData);
-				}
-			}
-			else if (SELECT_ITEM_NEW_EDIT >= this->iSelectItem)
-			{
-				// "新規のエディット"である場合
-				/* エディットが登録されているか確認 */
-				if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 現在ホールド中のエディットを保持 */
-					EDIT_DATA stNowHoldEditData;
-					stNowHoldEditData.iEditEffect = this->HoldEditData.iEditEffect;
-					stNowHoldEditData.iEditRank = this->HoldEditData.iEditRank;
+					/* ホールド中のエディット情報を初期化する */
+					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
+					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
+					break;
 
-					/* 設定されているエディットを保持中にする */
-					this->HoldEditData.iEditEffect = this->NewEditData[this->iSelectItem - 1].iEditEffect;
-					this->HoldEditData.iEditRank = this->NewEditData[this->iSelectItem - 1].iEditRank;
+				/* 強化可能 */
+				case SELECT_STATUS_POSSIBLE_UPGRADE:
+					/* 登録されているエディットのランクを上昇させる */
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank += 1;
 
-					/* 保持している現在ホールド中のエディットを新規のエディットに登録 */
-					this->NewEditData[this->iSelectItem - 1] = stNowHoldEditData;
-				}
-				else
-				{
-					// 登録されていない場合
-					/* 保持している現在ホールド中のエディットを新規のエディットに登録 */
-					this->NewEditData[this->iSelectItem - 1] = this->HoldEditData;
-				}
-			}
-			else if (SELECT_ITEM_DELETE >= this->iSelectItem)
-			{
-				// "削除"である場合
-				
-			}
-			else if (SELECT_ITEM_NOW_EDIT >= this->iSelectItem)
-			{
-				// 現在のエディット"である場合
-				
+					/* ホールド中のエディット情報を初期化する */
+					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
+					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
+					break;
+
+				/* 交換可能 */
+				case SELECT_STATUS_INTERCHANGEABLE:
+					{
+						/* 現在登録されているエディット情報を変数で保存 */
+						EDIT_DATA stEditData = *this->astSelectItemList[this->iSelectItem].pstEditData;
+
+						/* ホールド中のエディット情報を現在の選択項目に設定する */
+						this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
+						this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
+
+						/* 変数に保存したエディット情報をホールド中のエディット情報に設定する */
+						this->HoldEditData			= stEditData;
+						this->iHoldSelectItemType	= this->astSelectItemList[this->iSelectItem].iSelectItemType;
+					}
+					break;
+
+				/* 選択不可 */
+				case SELECT_STATUS_IMPOSSIBLE:
+					/* 処理を行わない(音を出す) */
+					break;
 			}
 		}
 		else
 		{
-			// ホールド中でない場合
-			/* 現在の選択項目に応じて処理を変更する */
-			if (SELECT_ITEM_KEEP >= this->iSelectItem)
+			// ホールド中ではない場合
+			/* 現在の選択項目が"次へ"であるか */
+			if (this->iSelectItem == SELECT_ITEM_NEXT)
 			{
-				// "キープ中のエディットである場合
-				/* エディットが登録されているか確認 */
-				if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 登録されているデータをホールド中のエディット情報に登録 */
-					this->HoldEditData.iEditEffect	= this->GameResourceList->pGetKeepEditData().iEditEffect;
-					this->HoldEditData.iEditRank	= this->GameResourceList->pGetKeepEditData().iEditRank;
+				// "次へ"である場合
+				/* ゲーム状態を"次のステージへ遷移"に変更する */
+				this->GameStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
 
-					/* キープ中のエディット情報を初期化 */
-					EDIT_DATA stSetData;
-					stSetData.iEditEffect	= EDIT_EFFECT_NONE;
-					stSetData.iEditRank		= EDIT_RANK_NONE;
-					this->GameResourceList->SetKeepEditData(stSetData);
-
-					/* ホールド中の選択項目を設定 */
-					this->iHoldSelectItem		= this->iSelectItem;
-					this->iHoldSelectItemType	= SELECT_ITEM_KEEP;
-				}
+				/* 決定時の処理を終了する */
+				return;
 			}
-			else if(SELECT_ITEM_NEW_EDIT >= this->iSelectItem)
+			else
 			{
-				// "新規のエディット"である場合
-				/* エディットが登録されているか確認 */
-				if (this->NewEditData[this->iSelectItem - 1].iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 登録されているデータをホールド中のエディット情報に登録 */
-					this->HoldEditData.iEditEffect = this->NewEditData[this->iSelectItem - 1].iEditEffect;
-					this->HoldEditData.iEditRank = this->NewEditData[this->iSelectItem - 1].iEditRank;
+				// "次へ"でない場合
+				/* 登録されているエディットの取得処理を実施 */
 
-					/* 新規のエディット情報を初期化 */
-					EDIT_DATA stSetData;
-					stSetData.iEditEffect	= EDIT_EFFECT_NONE;
-					stSetData.iEditRank		= EDIT_RANK_NONE;
-					this->NewEditData[this->iSelectItem - 1] = stSetData;
+				/* 選択項目に設定されたエディット情報をホールド中のエディットに代入する */
+				this->HoldEditData.iEditEffect	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect;
+				this->HoldEditData.iEditRank	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank;
 
-					/* ホールド中の選択項目を設定 */
-					this->iHoldSelectItem		= this->iSelectItem;
-					this->iHoldSelectItemType	= SELECT_ITEM_NEW_EDIT;
-				}
-			}
-			else if (SELECT_ITEM_DELETE >= this->iSelectItem)
-			{
-				// "削除"である場合
-				/* エディットが登録されているか確認 */
-				if (this->DeleteEditData.iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 登録されているデータをホールド中のエディット情報に登録 */
-					this->HoldEditData.iEditEffect	= this->DeleteEditData.iEditEffect;
-					this->HoldEditData.iEditRank	= this->DeleteEditData.iEditRank;
+				/* 選択項目の種類を設定する */
+				this->iHoldSelectItemType = this->astSelectItemList[this->iSelectItem].iSelectItemType;
 
-					/* 削除予定のエディット情報を初期化 */
-					EDIT_DATA stSetData;
-					stSetData.iEditEffect	= EDIT_EFFECT_NONE;
-					stSetData.iEditRank		= EDIT_RANK_NONE;
-					this->DeleteEditData	= stSetData;
-
-					/* ホールド中の選択項目を設定 */
-					this->iHoldSelectItem		= this->iSelectItem;
-					this->iHoldSelectItemType	= SELECT_ITEM_DELETE;
-				}
-			}
-			else if (SELECT_ITEM_NOW_EDIT >= this->iSelectItem)
-			{
-				// 現在のエディット"である場合
-				/* エディットが登録されているか確認 */
-				if (this->GameResourceList->pGetNowEditData(this->iSelectItem - 6).iEditEffect != EDIT_EFFECT_NONE)
-				{
-					// 登録されている場合
-					/* 登録されているデータをホールド中のエディット情報に登録 */
-					this->HoldEditData.iEditEffect	= this->GameResourceList->pGetNowEditData(this->iSelectItem - 6).iEditEffect;
-					this->HoldEditData.iEditRank	= this->GameResourceList->pGetNowEditData(this->iSelectItem - 6).iEditRank;
-
-					/* 現在のエディット情報を初期化 */
-					EDIT_DATA stSetData;
-					stSetData.iEditEffect	= EDIT_EFFECT_NONE;
-					stSetData.iEditRank		= EDIT_RANK_NONE;
-					this->GameResourceList->SetNowEditData(this->iSelectItem - 6, stSetData.iEditEffect, stSetData.iEditRank);
-
-					/* ホールド中の選択項目を設定 */
-					this->iHoldSelectItem		= this->iSelectItem;
-					this->iHoldSelectItemType	= SELECT_ITEM_NOW_EDIT;
-				}
+				/* エディット情報を回収した選択項目のエディット情報を初期化する */
+				this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= EDIT_EFFECT_NONE;
+				this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= EDIT_RANK_NONE;
 			}
 		}
-
-
-		///* 現在の選択項目が"新規のエディット"であるか */
-		//if (this->iSelectItem < SELECT_ITEM_NEW_EDIT)
-		//{
-		//	// "新規のエディット"である場合
-		//	/* 選択したエディットの項目を取得 */
-		//	EDIT_DATA stSetData;
-		//	stSetData.iEditEffect	= this->NewEditData[this->iSelectItem].iEditEffect;
-		//	stSetData.iEditRank		= this->NewEditData[this->iSelectItem].iEditRank;
-
-		//	/* 選択したエディット項目の効果が"NONE"であるか */
-		//	if (stSetData.iEditEffect == EDIT_EFFECT_NONE)
-		//	{
-		//		// "NONE"である場合
-		//		/* 決定時の処理を終了する */
-		//		return;
-		//	}
-
-		//	/* 選択したエディットを現在のエディットで登録されていない箇所に設定する */
-		//	bool bSetFlg = false;		// 登録成功フラグ
-		//	for (int i = 0; i < EDIT_MAX; i++)
-		//	{
-		//		/* エディットが登録済みであるか確認 */
-		//		if (this->GameResourceList->pGetNowEditData(i).iEditEffect == EDIT_EFFECT_NONE)
-		//		{
-		//			// 登録済みでない場合
-		//			/* 選択したエディットの情報を設定する */
-		//			this->GameResourceList->SetNowEditData(i, stSetData.iEditEffect, stSetData.iEditRank);
-
-		//			/* 登録成功フラグを有効にする */
-		//			bSetFlg = true;
-		//			break;
-		//		}
-		//	}
-
-		//	/* 登録が成功したか確認 */
-		//	if (bSetFlg == true)
-		//	{
-		//		// 成功した場合
-		//		/* 選択した新規エディット項目を初期化する */
-		//		this->NewEditData[this->iSelectItem].iEditEffect	= EDIT_EFFECT_NONE;
-		//		this->NewEditData[this->iSelectItem].iEditRank		= EDIT_RANK_NONE;
-		//	}
-
-		//}
 	}
 }
 
@@ -414,50 +360,192 @@ void SceneEdit::Process_Select()
 // 現在のエディット情報の更新
 void SceneEdit::Process_NowEditUpdate()
 {
-	/* 同一のエディットがある場合、合成処理を行う */
-	// ※合成を行うと片方が削除され、もう片方のランクが上がる
-	for (int i = 0; i < EDIT_MAX; i++)
+	/* エディットをホールド中であるか確認 */
+	if (this->iHoldSelectItemType != SELECT_TYPE_NONE)
 	{
-		/* エディット情報を取得 */
-		EDIT_DATA stNowData = this->GameResourceList->pGetNowEditData(i);
-
-		/* ランクが最大(金)であるなら処理は行わない */
-		if (stNowData.iEditRank == EDIT_RANK_GOLD)
+		// ホールド中である場合
+		/* 現在ホールド中の選択項目の種類に応じて処理を変更する */
+		switch (this->iHoldSelectItemType)
 		{
-			continue;
-		}
+			/* キープ中のエディット */
+			case SELECT_TYPE_KEEP_EDIT:
+			/* 新規のエディット */
+			case SELECT_TYPE_NEW_EDIT:
+				/* キープ中のエディットを入れ替え可能とする */
+				this->astSelectItemList[SELECT_TYPE_KEEP_EDIT].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
 
-		/* 効果がNONE(無し)であるなら処理は行わない */
-		if (stNowData.iEditEffect == EDIT_EFFECT_NONE)
-		{
-			continue;
-		}
+				/* 新規のエディットを入れ替え可能とする */
+				for (int i = SELECT_ITEM_NEW_EDIT_START; i <= SELECT_ITEM_NEW_EDIT_END; i++)
+				{
+					this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
+				}
 
-		/* 同一のエディット情報が存在するか */
-		for (int j = 0; j < EDIT_MAX; j++)
-		{
-			/* 確認対象と同じ項目であるなら処理は行わない */
-			if (i == j)
-			{
-				continue;
-			}
+				/* 削除を選択不可とする */
+				this->astSelectItemList[SELECT_ITEM_DELETE].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
 
-			/* エディット情報を取得 */
-			EDIT_DATA stCheckData = this->GameResourceList->pGetNowEditData(j);
+				/* 現在のエディットを条件付きセット可能、入れ替え可能、アップグレード可能とするとする */
+				for (int i = SELECT_ITEM_NOW_EDIT_START; i <= SELECT_ITEM_NOW_EDIT_END; i++)
+				{
+					/* 所持ブラッドが10(仮)未満であるなら選択不可に設定 */
+					if (this->GameResourceList->iGetHaveBlood() < 10)
+					{
+						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+						continue;
+					}
 
-			/* ランクと効果が合致しているか確認 */
-			if (stNowData.iEditEffect == stCheckData.iEditEffect && stNowData.iEditRank == stCheckData.iEditRank)
-			{
-				// 合致している場合
-				/* 元のエディットのランクを上げる */
-				this->GameResourceList->SetNowEditData(i, stNowData.iEditEffect, (stNowData.iEditRank + 1));
+					/* エディットが登録されていないならセット可能とする */
+					if (this->astSelectItemList[i].pstEditData->iEditEffect == EDIT_EFFECT_NONE)
+					{
+						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_POSSIBLE_SET;
+						continue;;
+					}
 
-				/* 重複しているエディットを初期化する */
-				this->GameResourceList->SetNowEditData(j, EDIT_EFFECT_NONE, EDIT_RANK_NONE);
+					/* 効果が同一であるか確認 */
+					if (this->astSelectItemList[i].pstEditData->iEditEffect == this->HoldEditData.iEditEffect)
+					{
+						// 効果が同一であるならば
+						/* ランクが同一であるか確認 */
+						if (this->astSelectItemList[i].pstEditData->iEditRank == this->HoldEditData.iEditRank)
+						{
+							// ランクが同一であるならば
+							/* ランクが金以外であるか */
+							if (this->astSelectItemList[i].pstEditData->iEditRank != EDIT_RANK_GOLD)
+							{
+								/* 強化可能に設定 */
+								this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_POSSIBLE_UPGRADE;
+							}
+							else
+							{
+								/* 交換可能に設定 */
+								this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
+							}
+						}
+					}
+					else
+					{
+						/* 交換可能に設定 */
+						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
+					}
+				}
 
-				continue;
-			}
+				/* 次へを選択不可とする */
+				this->astSelectItemList[SELECT_ITEM_NEXT].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				break;
+
+			/* 削除 */
+			case SELECT_TYPE_DELETE_EDIT:
+			/* 現在のエディット */
+			case SELECT_TYPE_NOW_EDIT:
+				/* キープ中のエディットを選択不可とする */
+				this->astSelectItemList[SELECT_TYPE_KEEP_EDIT].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+
+				/* 新規のエディットを選択不可とする */
+				for (int i = SELECT_ITEM_NEW_EDIT_START; i <= SELECT_ITEM_NEW_EDIT_END; i++)
+				{
+					this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				}
+
+				/* 削除をセット可能とする */
+				this->astSelectItemList[SELECT_ITEM_DELETE].iSelectStatus = SELECT_STATUS_POSSIBLE_SET;
+
+				/* 現在のエディットをセット可能、入れ替え可能、アップグレード可能とする */
+				for (int i = SELECT_ITEM_NOW_EDIT_START; i <= SELECT_ITEM_NOW_EDIT_END; i++)
+				{
+					/* エディットが登録されていないならセット可能とする */
+					if (this->astSelectItemList[i].pstEditData->iEditEffect == EDIT_EFFECT_NONE)
+					{
+						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_POSSIBLE_SET;
+						continue;;
+					}
+
+					/* 効果が同一であるか確認 */
+					if (this->astSelectItemList[i].pstEditData->iEditEffect == this->HoldEditData.iEditEffect)
+					{
+						// 効果が同一であるならば
+						/* ランクが同一であるか確認 */
+						if (this->astSelectItemList[i].pstEditData->iEditRank == this->HoldEditData.iEditRank)
+						{
+							// ランクが同一であるならば
+							/* ランクが金以外であるか */
+							if (this->astSelectItemList[i].pstEditData->iEditRank != EDIT_RANK_GOLD)
+							{
+								/* 強化可能に設定 */
+								this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_POSSIBLE_UPGRADE;
+							}
+							else
+							{
+								/* 交換可能に設定 */
+								this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
+							}
+						}
+					}
+					else
+					{
+						/* 交換可能に設定 */
+						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_INTERCHANGEABLE;
+					}
+				}
+
+				/* 次へを選択不可とする */
+				this->astSelectItemList[SELECT_ITEM_NEXT].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				break;
 		}
 	}
+	else
+	{
+		// ホールド中ではない場合
+		/* 全ての選択項目の状態を"選択項目なし"に設定 */
+		for (int i = 0; i < SELECT_ITEM_MAX; i++)
+		{
+			/* テスト処理 */
+			this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_NONE;
+		}
+	}
+
+	///* 同一のエディットがある場合、合成処理を行う */
+	//// ※合成を行うと片方が削除され、もう片方のランクが上がる
+	//for (int i = 0; i < EDIT_MAX; i++)
+	//{
+	//	/* エディット情報を取得 */
+	//	EDIT_DATA stNowData = this->GameResourceList->stGetNowEditData(i);
+
+	//	/* ランクが最大(金)であるなら処理は行わない */
+	//	if (stNowData.iEditRank == EDIT_RANK_GOLD)
+	//	{
+	//		continue;
+	//	}
+
+	//	/* 効果がNONE(無し)であるなら処理は行わない */
+	//	if (stNowData.iEditEffect == EDIT_EFFECT_NONE)
+	//	{
+	//		continue;
+	//	}
+
+	//	/* 同一のエディット情報が存在するか */
+	//	for (int j = 0; j < EDIT_MAX; j++)
+	//	{
+	//		/* 確認対象と同じ項目であるなら処理は行わない */
+	//		if (i == j)
+	//		{
+	//			continue;
+	//		}
+
+	//		/* エディット情報を取得 */
+	//		EDIT_DATA stCheckData = this->GameResourceList->stGetNowEditData(j);
+
+	//		/* ランクと効果が合致しているか確認 */
+	//		if (stNowData.iEditEffect == stCheckData.iEditEffect && stNowData.iEditRank == stCheckData.iEditRank)
+	//		{
+	//			// 合致している場合
+	//			/* 元のエディットのランクを上げる */
+	//			this->GameResourceList->SetNowEditData(i, stNowData.iEditEffect, (stNowData.iEditRank + 1));
+
+	//			/* 重複しているエディットを初期化する */
+	//			this->GameResourceList->SetNowEditData(j, EDIT_EFFECT_NONE, EDIT_RANK_NONE);
+
+	//			continue;
+	//		}
+	//	}
+	//}
 }
 

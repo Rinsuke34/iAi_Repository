@@ -41,9 +41,9 @@ void SceneUi_Edit::Draw()
 	for (int i = 0; i < EDIT_MAX; i++)
 	{
 		/* エディットフレーム描写 */
-		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->pGetNowEditData(i).iEditRank), TRUE);
+		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->stGetNowEditData(i).iEditRank), TRUE);
 
 		/* エディット効果描写 */
-		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->pGetNowEditData(i).iEditEffect), TRUE);
+		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->stGetNowEditData(i).iEditEffect), TRUE);
 	}
 }

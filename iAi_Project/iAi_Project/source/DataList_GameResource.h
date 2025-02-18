@@ -15,19 +15,21 @@
 // ゲーム内リソース管理クラス
 class DataList_GameResource : public DataListBase
 {
-	public:
-		DataList_GameResource();			// コンストラクタ
-		virtual ~DataList_GameResource();	// デストラクタ
+public:
+	DataList_GameResource();			// コンストラクタ
+	virtual ~DataList_GameResource();	// デストラクタ
 
-		/* データ取得 */
-		// ブラッド(ゲーム内通過)関連
-		int		iGetHaveBlood() { return this->iHaveBlood; }		// 所持ブラッド取得
+	/* データ取得 */
+	// ブラッド(ゲーム内通過)関連
+	int		iGetHaveBlood() { return this->iHaveBlood; }		// 所持ブラッド取得
 
-		// エディット関連
-		int*		piGetGrHandle_EditEffect(int iEditEffect)	{ return this->pGrHandle_EditEffectList[iEditEffect]; }		// エディット効果画像ハンドル取得
-		int*		piGetGrHandle_EditFrame(int iEditRank)		{ return this->pGrHandle_EditFrameList[iEditRank]; }		// エディットフレーム画像ハンドル取得
-		EDIT_DATA	pGetNowEditData(int iIndex)					{ return this->NowEditData[iIndex]; }						// 現在のエディット情報取得
-		EDIT_DATA	pGetKeepEditData()							{ return this->KeepEditData; }								// キープ中のエディット情報取得
+	// エディット関連
+	int* piGetGrHandle_EditEffect(int iEditEffect)	{ return this->pGrHandle_EditEffectList[iEditEffect]; }		// エディット効果画像ハンドル取得
+	int* piGetGrHandle_EditFrame(int iEditRank)		{ return this->pGrHandle_EditFrameList[iEditRank]; }		// エディットフレーム画像ハンドル取得
+	EDIT_DATA	stGetNowEditData(int iIndex)		{ return this->NowEditData[iIndex]; }						// 現在のエディット情報取得
+	EDIT_DATA	stGetKeepEditData()					{ return this->KeepEditData; }								// キープ中のエディット情報取得
+	EDIT_DATA*	pstGetNowEditData(int iIndex)		{ return &this->NowEditData[iIndex]; }						// 現在のエディット情報のポインタ取得
+	EDIT_DATA*	pstGetKeepEditData()				{ return &this->KeepEditData; }								// キープ中のエディット情報のポインタ取得
 
 		// スコア関連
 		int		iGetClearEvaluation()	{ return this->iClearTotalEvaluation; }		// ステージクリア時の合計評価(D～Sの5段階*3種類)取得

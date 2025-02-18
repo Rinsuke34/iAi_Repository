@@ -29,8 +29,9 @@ class SceneEdit : public SceneBase
 		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
 
 		/* 使用する画像のハンドル */
-		int* piGrHandle_SelectFrame;		// 選択フレーム
-		int* piGrHandle_SelectNext;			// 次ステージ遷移ボタン
+		int* piGrHandle_SelectFrame;						// 選択フレーム
+		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
+		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム
 
 		/* 関数 */
 		void	Process_Main();				// メイン処理
@@ -39,11 +40,12 @@ class SceneEdit : public SceneBase
 		void	Process_NowEditUpdate();	// 現在のエディット情報の更新
 
 		/* 変数 */
-		int			iUpgradeRate;					// アップグレードのレート(0～10)
-		int			iSelectItem;					// 選択中の項目の番号
-		EDIT_DATA	NewEditData[EDIT_UPGRADE_MAX];	// 新規のエディット情報
-		EDIT_DATA	DeleteEditData;					// 削除予定のエディット情報
-		int			iHoldSelectItem;				// ホールド中の選択項目
-		int			iHoldSelectItemType;			// ホールド中の選択項目の種類
-		EDIT_DATA	HoldEditData;					// ホールド中のエディット情報
+		EDIT_SELECT_ITEM	astSelectItemList[SELECT_ITEM_MAX];		// 選択項目一覧
+		int					iUpgradeRate;							// アップグレードのレート(0～10)
+		int					iSelectItem;							// 選択中の項目の番号
+		int					iHoldSelectItemNo;						// ホールド中の選択項目の番号
+		int					iHoldSelectItemType;					// ホールド中の選択項目の種類
+		EDIT_DATA			HoldEditData;							// ホールド中のエディット情報
+		EDIT_DATA			NewEditData[EDIT_UPGRADE_MAX];			// 新規のエディット情報
+		EDIT_DATA			DeleteEditData;							// 削除予定のエディット情報
 };
