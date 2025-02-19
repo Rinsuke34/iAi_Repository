@@ -25,16 +25,7 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
-
-		/* エネミー足元モデルハンドル取得 */
-		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
-
-		// エネミー足元モデルのフレーム０番を非表示
-		MV1SetFrameVisible(iModelFootHandle, 0, FALSE);
-
-		// エネミー足元モデルのフレーム２番を非表示
-		MV1SetFrameVisible(iModelFootHandle, 2, FALSE);
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
 	}
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー

@@ -27,6 +27,9 @@ public:
 
 private:
 	EffectManualDelete* pEffect;
+
+	EffectManualDelete* pEffectHit;					//警告エフェクト
+
 protected:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
