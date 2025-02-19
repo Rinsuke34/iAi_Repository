@@ -618,7 +618,6 @@ void CharacterPlayer::Player_Projectile_Posture()
 	{
 		/* プレイヤーの向きをカメラの向きに固定 */
 		this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
-		
 		/* カメラモードを"構え(クナイ攻撃)"に変更 */
 		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 
@@ -703,7 +702,7 @@ void CharacterPlayer::Player_Projectile()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
-	/* 遠距離攻撃構え状態に戻す */
+	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 }
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */

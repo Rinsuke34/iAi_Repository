@@ -6,6 +6,7 @@
 /* ゲームの状態管理の構造体や定数の宣言を行う */
 
 /* ゲーム状態 */
-const int	GAMESTATUS_PLAY_GAME	= 0;	// ゲーム実行
-const int	GAMESTATUS_EDIT			= 1;	// エディット実行
-const int	GAMESTATUS_NEXTSTAGE	= 2;	// 次のステージへ遷移
+static const int	GAMESTATUS_PLAY_GAME	= 0;	// ゲーム実行
+static const int	GAMESTATUS_RESULT		= 1;	// リザルト実行
+static const int	GAMESTATUS_EDIT			= 2;	// エディット実行
+static const int	GAMESTATUS_NEXTSTAGE	= 3;	// 次のステージへ遷移

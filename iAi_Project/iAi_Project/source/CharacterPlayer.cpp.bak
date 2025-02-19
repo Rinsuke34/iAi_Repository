@@ -2,6 +2,7 @@
 /* 2025.01.27 菊池雅道	エフェクト処理追加 */
 /* 2025.01.30 菊池雅道	モーション処理追加 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
+/* 2025.02.14 菊池雅道	回転関連の関数追加 */
 
 #include "CharacterPlayer.h"
 
@@ -31,7 +32,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
-		this->fTest		= 0.0f;
+
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};		// 垂直方向のコリジョン
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
@@ -105,13 +106,13 @@ void CharacterPlayer::Update()
 	{
 		// ※攻撃やオブジェクトに対する当たり判定処理を行う
 		/* 当たり判定処理 */
-		HitCheck();
+		PlayerHitCheck();
 	}
 
 	/* 毎フレームの初期化処理 */
 	{
-		/* 移動量をリセット */
-		this->vecMove = VGet(0, 0, 0);
+	/* 移動量をリセット */
+	this->vecMove = VGet(0, 0, 0);
 
 		/* ロックオン範囲コリジョン使用フラグを無効化 */
 		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
@@ -171,7 +172,7 @@ void CharacterPlayer::CollisionUpdate()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 当たり判定処理 */
-void CharacterPlayer::HitCheck()
+void CharacterPlayer::PlayerHitCheck()
 {
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -271,3 +272,23 @@ void CharacterPlayer::HitCheck()
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+
+/* 2025.02.14 菊池雅道	回転関連の関数追加 開始 */
+// 角度(ラジアン)の制限と補正
+void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
+{
+	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
+	/* 2πを超えた場合 */
+	if (fRadian > PLAYER_TURN_LIMIT)
+	{
+		/* 角度を一周(2π)分補正する */
+		fRadian -= PLAYER_TURN_LIMIT;
+	}
+	/* 0を下回った場合 */
+	else if (fRadian < 0)
+	{
+		/* 角度を一周(2π)分補正する */
+		fRadian += PLAYER_TURN_LIMIT;
+	}
+}
+/* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */

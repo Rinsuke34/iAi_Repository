@@ -36,6 +36,8 @@ private:
 
 	EffectManualDelete* pEffectExplosion;//ミサイル弾着弾エフェクト
 
+	EffectManualDelete* pEffectGuidance;//ミサイル誘導エフェクト
+
 
 	void BulletEnemyRangeMissileMove();	// ミサイル弾の移動処理
 

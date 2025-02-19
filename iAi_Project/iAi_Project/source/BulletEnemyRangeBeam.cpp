@@ -11,10 +11,11 @@ BulletEnemyRangeBeam::BulletEnemyRangeBeam() : BulletBase()
 	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(エネミー)"に設定
 	this->pEffect = nullptr;
 
-	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;		// ビームの持続カウント
-	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// ビーム発射カウント
+	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;		// ビームチャージカウント
 
-	this->iEnemyBeamDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ビームの持続カウント
+	this->iBulletCount = ENEMY_BEAM_BULLET_COUNT;			// ビーム発射カウント
+
+	this->iEnemyBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;	//ビームの持続カウント
 	// エネミーの位置を初期化
 	this->vecEnemyPosition = VGet(0, 0, 0);
 }
@@ -42,7 +43,7 @@ void BulletEnemyRangeBeam::Initialization()
 		this->pEffect = new EffectManualDelete();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_beam")));
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_beam/FX_e_beam")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -73,6 +74,9 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
+	iChargeCount--;	// チャージカウントを減算
+	if (iChargeCount <= 0)
+	{
 	// 持続カウントが発射カウントを超えているか確認
 	if (iEnemyBeamDurationCount >= ENEMY_NORMAL_BULLET_COUNT)
 	{
@@ -82,10 +86,14 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 
 		// プレイヤーの方向を向くようにエネミーの向きを定義
 		this->vecDirection = VNorm(VSub(playerPos, this->vecPosition));
+
+			//チャージカウントを初期化
+			iChargeCount = ENEMY_BEAM_CHARGE_COUNT;
+		}
 	}
 
 	// ビームの移動座標と向きと速度を更新
-	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 35));
 
 	// エネミーのリストを取得
 	auto& enemyList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
@@ -94,9 +102,9 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	this->stCollisionCapsule.vecCapsuleTop = this->vecPosition; // 開始地点を更新
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecEnemyPosition; // 終了地点をエネミーの位置に固定
 
-	// ビームのエフェクト座標を更新
-	this->pEffect->SetPosition(this->vecPosition);
-
+	// ビームのエフェクトの向きを設定
+	VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
+	this->pEffect->SetRotation(rotation);
 }
 
 // 更新

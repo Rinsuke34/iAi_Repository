@@ -98,7 +98,7 @@ void CharacterPlayer::Player_Move()
 	{
 		/* 移動処理を行う状態か確認 */
 		if (bPlayerMoveFlg = true)
-		{
+	{
 		// 移動入力がされている場合
 		/* 現在の移動速度取得 */
 		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
@@ -188,7 +188,7 @@ void CharacterPlayer::Player_Move()
 		vecAddMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
-		/* 2025.02.10 菊池雅道	振り向き処理修正 開始 */
+		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
 		/* 2025.02.14 菊池雅道	振り向き処理修正 開始 */
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
@@ -219,23 +219,23 @@ void CharacterPlayer::Player_Move()
 			/* 現在のプレイヤーの向きと移動方向の差を求める */
 			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
 
-			//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
-			/* 左回りで半周を超えたら */
-			if (fDifferrenceAngle > DX_PI_F)
-			{
-				/* 角度を一周(2π)分補正する */
+				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
+				/* 左回りで半周を超えたら */
+				if (fDifferrenceAngle > DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
 				fDifferrenceAngle -= PLAYER_TURN_LIMIT;
-			}
-			/* 右回りで半周を超えたら */
-			else if (fDifferrenceAngle < -DX_PI_F)
-			{
-				/* 角度を一周(2π)分補正する */
+				}
+				/* 右回りで半周を超えたら */
+				else if (fDifferrenceAngle < -DX_PI_F)
+				{
+					/* 角度を一周(2π)分補正する */
 				fDifferrenceAngle += PLAYER_TURN_LIMIT;
 			}
 
-			/* 振り向き速度に応じて段階的に移動方向を向く */
+			/* 振り向き速度に応じて段階的に移動方向を向く */ 
 			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
-			
+
 			/* プレイヤーの向きを更新 */
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
@@ -258,8 +258,13 @@ void CharacterPlayer::Player_Move()
 		}
 		else
 		{
-			/* 待機モーション設定 */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+			/* 現在のモーションが"着地"でないか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+			{
+				// "着地"以外である場合
+				/* 待機モーション設定 */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+			}
 		}
 	}
 
@@ -666,6 +671,9 @@ void CharacterPlayer::Movement_Vertical()
 					this->ObjectList->SetEffect(pAddEffect);
 				}
 			}
+
+			/* 着地モーション設定 */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_LAND);
 		}
 	}
 	/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
@@ -697,7 +705,7 @@ void CharacterPlayer::Movement_Vertical()
 					if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
 					{
 						/* 上昇しているか確認 */
-						if (this->PlayerStatusList->fGetPlayerFallAcceleration() < 0)
+						if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 						{
 							// 上昇している場合
 							/* モーションを"ジャンプ(上昇)"に設定 */

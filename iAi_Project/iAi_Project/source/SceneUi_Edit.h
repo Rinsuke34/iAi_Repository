@@ -4,6 +4,7 @@
 #include "AppFrame.h"
 
 /* データリスト */
+#include "DataList_GameStatus.h"
 #include "DataList_GameResource.h"
 
 /* UI(エディット)クラスの宣言 */
@@ -20,11 +21,13 @@ class SceneUi_Edit : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
+		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 
 		/* 現在のエディットデータ */
 		EDIT_INFORMATION NowEditData[EDIT_MAX];		// 現在のエディットデータ
 
 		/* 使用する画像のハンドル */
-
+		int* piGrHandle_Edit_Frame[EDIT_RANK_MAX];			// エディットフレーム
+		int* piGrHandle_Edit_Effect[EDIT_EFFECT_MAX];		// エディット効果
 };

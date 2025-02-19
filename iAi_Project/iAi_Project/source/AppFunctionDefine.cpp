@@ -10,6 +10,8 @@
 /* データリスト */
 #include "DataList_Input.h"
 #include "DataList_Sound.h"
+#include "DataList_Model.h"
+#include "DataList_Image.h"
 
 /* AppFrameで使用する関数の定義 */
 
@@ -47,6 +49,12 @@ namespace PROJECT_INIT
 
 			/* データリストサーバーに"サウンド管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_Sound());
+
+			/* データリストサーバーに"3Dモデル管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Model());
+
+			/* データリストサーバーに"画像リソース管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Image());
 		}
 	
 		/* データリスト取得 */

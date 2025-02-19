@@ -39,7 +39,7 @@ EnemyBasic::~EnemyBasic()
 		EffectSelfDelete* AddEffect = new EffectSelfDelete();
 
 		/* エフェクト読み込み */
-		AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die03")));
+		AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
 
 		/* エフェクトの座標設定 */
 		AddEffect->SetPosition(this->vecPosition);

@@ -36,17 +36,26 @@ void SceneStage::SetCamera()
 
 		/* 固定 */
 		case CAMERA_MODE_LOCK:
-			/* カメラ設定 */
-			SetCamera_Lock();
+			/* カメラ回転倍率を変更 */
+			fChangeCameraRatio = 0.f;
 			break;
 
 		/* 構え(ズーム) */
-		case CAMERA_MODE_AIM:
+		case CAMERA_MODE_AIM_MELEE:
 			/* カメラ回転倍率を変更 */
 			fChangeCameraRatio = 0.5f;
 
 			/* カメラ設定 */
-			SetCamera_Aim();
+			SetCamera_Aim_Melee();
+			break;
+
+		/* 構え(クナイ構え) */
+		case CAMERA_MODE_AIM_KUNAI:
+			/* カメラ回転倍率を変更 */
+			fChangeCameraRatio = 0.5f;
+
+			/* カメラ設定 */
+			SetCamera_Aim_Kunai();
 			break;
 	}
 
@@ -120,17 +129,10 @@ void SceneStage::SetCamera_Free()
 	float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
 	this->PlayerStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
-	//this->PlayerStatusList->SetCameraPosition(VGet(fCameraX, fCameraY, fCameraZ));
 }
 
-// カメラ設定(固定モード)
-void SceneStage::SetCamera_Lock()
-{
-	/* 変更は行わない */
-}
-
-// カメラ設定(構え(ズーム))
-void SceneStage::SetCamera_Aim()
+// カメラ設定(構え(近接攻撃構え))
+void SceneStage::SetCamera_Aim_Melee()
 {
 	/* 現在の回転量等を取得 */
 	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
@@ -153,6 +155,28 @@ void SceneStage::SetCamera_Aim()
 	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
 	this->PlayerStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+}
+
+// カメラ設定(構え(クナイ構え))
+void SceneStage::SetCamera_Aim_Kunai()
+{
+	/* 現在の回転量等を取得 */
+	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();		// X軸回転量
+	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();		// Y軸回転量
+
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* カメラ注視点設定 */
+	float fRadius	= 1000;				// 注視点からの距離
+	float fCameraX	= fRadius * +sinf(fCameraAngleX) + vecPlayerPos.x;	// X座標
+	float fCameraY	= fRadius * +sinf(fCameraAngleY) + vecPlayerPos.y;	// Y座標
+	float fCameraZ	= fRadius * -cosf(fCameraAngleX) + vecPlayerPos.z;	// Z座標
+
+	this->PlayerStatusList->SetCameraTarget(VGet(fCameraX, fCameraY, fCameraZ));
+
+	/* カメラ座標設定 */
+	this->PlayerStatusList->SetCameraPosition_Target(VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0)));
 }
 
 // カメラ補正

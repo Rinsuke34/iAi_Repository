@@ -9,9 +9,6 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 {
 	/* データリスト作成 */
 	{
-		/* データリストサーバーに"3Dモデル管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Model());
-
 		/* データリストサーバーに"ゲーム状態管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_GameStatus());
 
@@ -20,9 +17,6 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 		/* データリストサーバーに"ゲームリソース管理"を追加 */
 		gpDataListServer->AddDataList(new DataList_GameResource());
-
-		/* データリストサーバーに"画像リソース管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Image());
 	}
 
 	/* データリスト取得 */
@@ -41,9 +35,6 @@ SceneGame::~SceneGame()
 {
 	/* データリスト削除 */
 	{
-		/* 3Dモデル管理 */
-		gpDataListServer->DeleteDataList("DataList_Model");
-
 		/* ゲーム状態管理 */
 		gpDataListServer->DeleteDataList("DataList_GameStatus");
 
@@ -52,9 +43,6 @@ SceneGame::~SceneGame()
 
 		/* ゲームリソース管理 */
 		gpDataListServer->DeleteDataList("DataList_GameResource");
-
-		/* 画像リソース管理 */
-		gpDataListServer->DeleteDataList("DataList_Image");
 	}
 
 	/* Effkseerの使用を終了する */

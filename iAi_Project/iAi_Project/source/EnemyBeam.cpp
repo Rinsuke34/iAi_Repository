@@ -25,10 +25,10 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 
 		/* エネミー足元モデルハンドル取得 */
-		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari_0127");
+		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari");
 
 		// エネミー足元モデルのフレーム０番を非表示
 		MV1SetFrameVisible(iModelFootHandle, 0, FALSE);
@@ -39,8 +39,7 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();
 	this->pEffect = nullptr;
-	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
-	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
+	this->iFiringCount = ENEMY_BEAM_INTERVAL;	// 発射カウント
 }
 
 // デストラクタ
@@ -152,7 +151,7 @@ void BeamEnemy::MoveEnemy()
 			Player_Range_Beam_Shot();
 
 			// 発射カウントを初期化
-			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+			this->iFiringCount = ENEMY_BEAM_INTERVAL;
 		}
 	}
 
@@ -192,8 +191,6 @@ void BeamEnemy::Player_Range_Beam_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeBeam);
-
-
 
 }
 

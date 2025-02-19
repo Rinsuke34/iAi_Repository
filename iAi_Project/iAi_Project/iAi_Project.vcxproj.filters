@@ -283,6 +283,60 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
       <UniqueIdentifier>{294cdc1f-a067-4bb5-8688-f832bed72c59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ブラッド%28ゲーム内通貨%29">
+      <UniqueIdentifier>{4fe83b28-f667-43e6-a138-f48eff84aa00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\コンボ">
+      <UniqueIdentifier>{973771e9-b526-48b3-9c4b-a8a5e98fc248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クロスヘア">
+      <UniqueIdentifier>{d8a86c94-6601-44c0-b41b-ef1c8107669f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ">
+      <UniqueIdentifier>{04d694d3-a3ec-47e4-8950-399a0554acbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\エディット%28描写%29">
+      <UniqueIdentifier>{51cb7bcf-7f17-4586-8c54-f03e028d6969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\HP">
+      <UniqueIdentifier>{b36c3257-4d22-46e5-888f-888f9725c97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クナイ関連">
+      <UniqueIdentifier>{9c0d7876-8139-48d9-ba8b-e3aa825d1bab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ブラッド%28ゲーム内通貨%29">
+      <UniqueIdentifier>{53e8fd2a-7fd5-48fd-9d5d-bc91d7ee0e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\コンボ">
+      <UniqueIdentifier>{e4de2c56-2a2f-4ce1-b9ad-a5e65ad13cdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クロスヘア">
+      <UniqueIdentifier>{9726380a-80ad-41b2-b768-6064a04307e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ">
+      <UniqueIdentifier>{84e74936-46f0-4a8d-8063-50bfd8da803f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\エディット%28描写%29">
+      <UniqueIdentifier>{578d252d-fdef-430f-9e9a-33af2e05cebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\HP">
+      <UniqueIdentifier>{3175e4cd-005b-4f84-b48f-b6474d1c3313}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クナイ関連">
+      <UniqueIdentifier>{e81cb358-8bfc-42b9-8161-ff17c2759099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\エディット\終了確認画面">
+      <UniqueIdentifier>{714935a6-4531-4b5d-8b61-82661505af2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\エディット\終了確認画面">
+      <UniqueIdentifier>{9c4a05f7-f839-479f-ad4d-ebe635132a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\リザルト">
+      <UniqueIdentifier>{7216cb09-6638-44bb-aa4d-ec65f22a5724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\リザルト">
+      <UniqueIdentifier>{bc1e711b-129c-4ca6-8ad2-93d852e448a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -351,18 +405,6 @@
     <ClCompile Include="source\EnemyGoalObject.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClCompile>
-    <ClCompile Include="source\SceneUi_Crosshairs.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneUi_Combo.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneUi_Hp.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneUi_Kunai.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_Effect.cpp">
       <Filter>ソース ファイル\データリスト\エフェクトリソース管理</Filter>
     </ClCompile>
@@ -389,9 +431,6 @@
     </ClCompile>
     <ClCompile Include="source\EnemyEscape.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneUi_Debug.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneStage_Camera.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
@@ -435,12 +474,6 @@
     <ClCompile Include="source\DataList_GameResource.cpp">
       <Filter>ソース ファイル\データリスト\ゲームリソース管理</Filter>
     </ClCompile>
-    <ClCompile Include="source\SceneUi_Blood.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneUi_Edit.cpp">
-      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClCompile>
     <ClCompile Include="source\DataList_Image.cpp">
       <Filter>ソース ファイル\データリスト\画像管理</Filter>
     </ClCompile>
@@ -452,6 +485,36 @@
     </ClCompile>
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Blood.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ブラッド%28ゲーム内通貨%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Combo.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\コンボ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Crosshairs.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クロスヘア</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Debug.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Edit.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\エディット%28描写%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Hp.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Kunai.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クナイ関連</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneEdit_Draw.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneResult.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\リザルト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BulletPlayerKunaiEffect.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -536,18 +599,6 @@
     <ClInclude Include="source\EnemyGoalObject.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\SceneUi_Crosshairs.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneUi_Combo.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneUi_Hp.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneUi_Kunai.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
     <ClInclude Include="source\DataList_Effect.h">
       <Filter>ヘッダー ファイル\データリスト\エフェクトリソース管理</Filter>
     </ClInclude>
@@ -565,9 +616,6 @@
     </ClInclude>
     <ClInclude Include="source\EnemyNormal.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneUi_Debug.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
     </ClInclude>
     <ClInclude Include="source\Enemy_Explosion.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\自爆</Filter>
@@ -617,12 +665,6 @@
     <ClInclude Include="source\DataList_GameResource.h">
       <Filter>ヘッダー ファイル\データリスト\ゲームリソース管理</Filter>
     </ClInclude>
-    <ClInclude Include="source\SceneUi_Blood.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneUi_Edit.h">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス</Filter>
-    </ClInclude>
     <ClInclude Include="source\EditDefine.h">
       <Filter>ヘッダー ファイル\データリスト\ゲームリソース管理</Filter>
     </ClInclude>
@@ -643,6 +685,36 @@
     </ClInclude>
     <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Blood.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ブラッド%28ゲーム内通貨%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Combo.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\コンボ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Crosshairs.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クロスヘア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Debug.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Edit.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\エディット%28描写%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Hp.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\HP</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Kunai.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クナイ関連</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneResult.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\リザルト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BulletPlayerKunaiEffect.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlayerBulletDefine.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

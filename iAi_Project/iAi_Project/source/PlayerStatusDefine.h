@@ -4,7 +4,6 @@
 /* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.02.05 ‹e’r‰ë“¹ ƒXƒe[ƒ^ƒXŠÖ˜A‚Ì’è”C³ */
 /* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
-/* 2025.02.13 ‹e’r‰ë“¹ ’è”C³ */
 
 #pragma once
 #include <string>
@@ -57,7 +56,6 @@ static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚«‚
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 
-
 /* ƒJƒƒ‰ŠÖ˜A */
 // Šî–{î•ñ
 static const float	INIT_CAMERA_RADIUS						= 400;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
@@ -68,7 +66,8 @@ static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰
 // ƒJƒƒ‰ó‘Ô
 static const int	CAMERA_MODE_FREE						= 0;				// ƒtƒŠ[ƒ‚[ƒh(’Êí‚ÌŽOlÌŽ‹“_)
 static const int    CAMERA_MODE_LOCK						= 1;				// ŒÅ’è
-static const int	CAMERA_MODE_AIM							= 2;				// \‚¦(ƒY[ƒ€)
+static const int	CAMERA_MODE_AIM_MELEE					= 2;				// \‚¦(‹ßÚUŒ‚\‚¦)
+static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// \‚¦(ƒNƒiƒC\‚¦)
 // üŒ`•âŠÔ
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// ƒJƒƒ‰À•W‚ÌüŒ`•ÛŠÇ—pƒJƒEƒ“ƒg‚ÌÅ‘å’l
 

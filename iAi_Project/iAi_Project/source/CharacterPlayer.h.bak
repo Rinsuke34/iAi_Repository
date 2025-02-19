@@ -4,7 +4,6 @@
 /* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */
 /* 2025.02.06 菊池雅道 エフェクト関連修正 */
 /* 2025.02.14 菊池雅道 回転関連の関数追加 */
-/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -20,7 +19,6 @@
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
-#include "BulletPlayerKunaiEffect.h"
 #include "EffectSelfDelete.h"
 #include "EffectSelfDelete_PlayerFollow.h"
 #include "EffectManualDelete_PlayerFollow.h"
@@ -74,8 +72,7 @@ class CharacterPlayer : public CharacterBase
 
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
-		BulletPlayerMeleeWeak* pBulletMeleeWeak;		// 近接攻撃(弱)の弾
-		BulletPlayerKunaiEffect* pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
+		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 
 		/* エフェクトのハンドル */
 		EffectManualDelete_PlayerFollow* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */

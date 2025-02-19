@@ -23,6 +23,7 @@ class EnemyGoalObject : public EnemyBasic
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
+		virtual void	BloomDraw()			override;		// 発光描写
 
 		bool	bGetStageChangeFlg()	{ return this->bStageChangeFlg; };		// 次のステージに遷移するかのフラグを取得
 
