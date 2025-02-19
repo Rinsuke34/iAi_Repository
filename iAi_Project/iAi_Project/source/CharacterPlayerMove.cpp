@@ -110,6 +110,14 @@ void CharacterPlayer::Player_Move()
 
 			/* モーション設定(歩行) */
 			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+
+			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+			if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			{
+				// 強攻撃(終了)であるなら
+				/* プレイヤーの攻撃側モーションを"無し"に設定 */
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+			}
 		}
 
 		// スティックの倒し具合で速度を変化
@@ -123,6 +131,14 @@ void CharacterPlayer::Player_Move()
 			//一定フレームがたったら走り（最大）へ
 			/* モーション設定(歩行) */
 			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+
+			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			{
+				// 強攻撃(終了)であるなら
+				/* プレイヤーの攻撃側モーションを"無し"に設定 */
+				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+			}
 
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
@@ -690,36 +706,22 @@ void CharacterPlayer::Movement_Vertical()
 
 	/* モーションを更新 */
 	{
-		/* 空中にいる(着地していない)か確認 */
-		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+		/* 着地フラグが無効である(空中にいる)か確認 */
+		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 		{
-			/* 攻撃を構えていない状態であるか確認 */
-			// ※構えている最中は落下モーションに遷移させない
-			/* 近接攻撃構え中でないか確認 */
-			if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_POSTURE)
+			// 無効である(空中にいる)場合
+			/* 上昇しているか確認 */
+			if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 			{
-				/* 遠距離攻撃構え中でないか確認 */
-				if (iPlayerAttackState != PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
-				{
-					/* 強攻撃(近接)中でないか確認 */
-					if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
-					{
-						/* 上昇しているか確認 */
-						if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
-						{
-							// 上昇している場合
-							/* モーションを"ジャンプ(上昇)"に設定 */
-							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
-						}
-						else
-						{
-							// 下降している場合
-							/* モーションを"ジャンプ(下降)"に設定 */
-							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
-						}
-
-					}
-				}
+				// 上昇している場合
+				/* モーションを"ジャンプ(上昇)"に設定 */
+				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+			}
+			else
+			{
+				// 下降している場合
+				/* モーションを"ジャンプ(下降)"に設定 */
+				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
 			}
 		}
 	}
@@ -843,10 +845,5 @@ void CharacterPlayer::Movement_Horizontal()
 
 	/* プレイヤーの座標を移動させる */
 	this->vecPosition = vecNextPosition;
-
-	/* モーションを更新 */
-	{
-		// ※移動量とかでモーションを変更する処理を追加
-	}
 }
 /* 2025.02.07 菊池雅道	衝突判定処理修正　終了 */

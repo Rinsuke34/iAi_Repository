@@ -23,7 +23,8 @@ void CharacterPlayer::Player_Motion_Transition()
 			int iMotionIndex = MV1GetAnimIndex(this->iModelHandle, PlayerMotionList[iMotionNo_Move].strMotionName.c_str());
 
 			/* モーションをアタッチする */
-			this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
+			int iReturn = MV1AttachAnim(this->iModelHandle, iMotionIndex, -1);
+			this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(iReturn);
 
 			/* 現在のモーションを更新する */
 			this->PlayerStatusList->SetPlayerMotion_Move_Old(iMotionNo_Move);
@@ -69,7 +70,8 @@ void CharacterPlayer::Player_Motion_Transition()
 			int iMotionIndex = MV1GetAnimIndex(this->iModelHandle, PlayerMotionList[iMotionNo_Attack].strMotionName.c_str());
 
 			/* モーションをアタッチする */
-			this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
+			int iReturn = MV1AttachAnim(this->iModelHandle, iMotionIndex, -1);
+			this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(iReturn);
 
 			/* 現在のモーションを更新する */
 			this->PlayerStatusList->SetPlayerMotion_Attack_Old(iMotionNo_Attack);
@@ -90,7 +92,12 @@ void CharacterPlayer::Player_Motion_Transition()
 		/* 最大時間を超えているか */
 		if (fNowMotionTime_Move > this->PlayerStatusList->fGetMotionTimer_Attack_End())
 		{
+			// 超えている場合
+			/* 再生時間を初期化 */
 			fNowMotionTime_Move = 0.f;
+
+			/* モーション番号を変更後の値に設定 */
+			this->PlayerStatusList->SetPlayerMotion_Attack(this->PlayerMotionList[iMotionNo_Attack].iNextMotionID);
 		}
 
 		/* モーションの再生時間を設定 */

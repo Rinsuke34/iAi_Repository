@@ -12,15 +12,32 @@ void CharacterPlayer::Draw()
 	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* モーションの再生時間を設定 */
-	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	this->PlayerStatusList->fGetMotionTimer_Move());
-	MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	this->PlayerStatusList->fGetMotionTimer_Attack());
+	{
+		MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), this->PlayerStatusList->fGetMotionTimer_Move());
+
+		/* 攻撃モーションIDが"無し"以外であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
+		{
+			// "無し"以外である場合
+			MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->PlayerStatusList->fGetMotionTimer_Attack());
+		}
+	}
 
 	/* 現在の攻撃モーションのブレンド率を取得 */
-	float fAttackMotionBrendRate = MOTION_LIST[this->PlayerStatusList->iGetPlayerMotion_Attack()].fBlendRatio;
+	float fAttackMotionBrendRate	= MOTION_LIST[this->PlayerStatusList->iGetPlayerMotion_Attack()].fBlendRatio;
+	float fMoveMotionBrendRate		= 1.f - fAttackMotionBrendRate;
 
 	/* モーションのブレンド率を設定 */
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), 1.f - fAttackMotionBrendRate);
-	MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), fAttackMotionBrendRate);
+	{
+		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), fMoveMotionBrendRate);
+
+		/* 攻撃モーションIDが"無し"以外であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
+		{
+			// "無し"以外である場合
+			MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), fAttackMotionBrendRate);
+		}
+	}
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
@@ -36,15 +53,17 @@ void CharacterPlayer::Draw()
 	DrawFormatString(600, 200 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", Draw);
 	Draw = this->PlayerStatusList->fGetMotionTimer_Move_End();
 	DrawFormatString(600, 200 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
-	DrawFormatString(600, 200 + 16 * 5, GetColor(255, 255, 255), "攻撃系");
+	DrawFormatString(600, 200 + 16 * 5, GetColor(255, 255, 255), "ブレンド割合 : %f", 1.f - fAttackMotionBrendRate);
+	DrawFormatString(600, 200 + 16 * 6, GetColor(255, 255, 255), "攻撃系");
 	Draw = this->PlayerStatusList->iGetPlayerMotion_Attack();
-	DrawFormatString(600, 200 + 16 * 6, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
+	DrawFormatString(600, 200 + 16 * 7, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
 	Draw = this->PlayerStatusList->iGetPlayerMotion_Attack_Old();
-	DrawFormatString(600, 200 + 16 * 7, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
+	DrawFormatString(600, 200 + 16 * 8, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
 	Draw = this->PlayerStatusList->fGetMotionTimer_Attack();
-	DrawFormatString(600, 200 + 16 * 8, GetColor(255, 255, 255), "再生時間 : %f", Draw);
+	DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "再生時間 : %f", Draw);
 	Draw = this->PlayerStatusList->fGetMotionTimer_Attack_End();
-	DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
+	DrawFormatString(600, 200 + 16 * 10, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
+	DrawFormatString(600, 200 + 16 * 11, GetColor(255, 255, 255), "ブレンド割合 : %f", fAttackMotionBrendRate);
 }
 
 // 当たり判定描写
