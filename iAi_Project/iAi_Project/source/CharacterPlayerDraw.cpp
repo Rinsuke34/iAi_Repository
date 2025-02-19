@@ -5,38 +5,73 @@
 // 描写
 void CharacterPlayer::Draw()
 {
+	/* 攻撃モーションを使用するか(攻撃モーションが"無し"以外であるか)確認 */
+	bool	bUseAttackMotionFlg = false;	// 攻撃モーション使用フラグ
+	if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
+	{
+		// 攻撃モーションを使用する場合
+		/* 攻撃モーション使用フラグを有効にする */
+		bUseAttackMotionFlg = true;
+	}
+
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
 	/* モデル回転 */
 	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
-	/* モーションの再生時間を設定 */
+	/* モーションの再生時間設定 */
 	{
+		/* 移動系モーションの再生時間設定 */
 		MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), this->PlayerStatusList->fGetMotionTimer_Move());
 
-		/* 攻撃モーションIDが"無し"以外であるか確認 */
-		if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
+		/* 攻撃系モーションの再生時間設定 */
+		/* 攻撃モーション使用フラグが有効であるか確認 */
+		if (bUseAttackMotionFlg == true)
 		{
-			// "無し"以外である場合
+			// 有効である場合
+			/* 攻撃系モーションの再生時間設定 */
 			MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->PlayerStatusList->fGetMotionTimer_Attack());
 		}
 	}
 
-	/* 現在の攻撃モーションのブレンド率を取得 */
-	float fAttackMotionBrendRate	= MOTION_LIST[this->PlayerStatusList->iGetPlayerMotion_Attack()].fBlendRatio;
-	float fMoveMotionBrendRate		= 1.f - fAttackMotionBrendRate;
-
 	/* モーションのブレンド率を設定 */
 	{
-		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), fMoveMotionBrendRate);
+		/* 全身のモーションブレンド率 */
+		float	fWholeMoveBlendrate		= 1.f;		// 移動モーション
+		float	fWholeAttackBlendrate	= 0.f;		// 攻撃モーション
 
-		/* 攻撃モーションIDが"無し"以外であるか確認 */
-		if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
+		/* 上半身のモーションブレンド率 */
+		float	fUpperMoveBlendRate		= 1.f;		// 移動モーション
+		float	fUpperAttackBlendRate	= 0.f;		// 攻撃モーション
+
+		/* 攻撃モーション使用フラグが有効であるか確認 */
+		if (bUseAttackMotionFlg == true)
 		{
-			// "無し"以外である場合
-			MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), fAttackMotionBrendRate);
+			// 有効である場合
+			/* 攻撃モーションが"強攻撃(終了)"であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			{
+				// "強攻撃(終了)"である場合
+				/* 全身のモーションブレンド率を設定 */
+				// ※攻撃モーションを100パーセントに設定
+				fWholeMoveBlendrate		= 0.f;
+				fWholeAttackBlendrate	= 1.f;
+			}
+			
+			/* 上半身のモーションブレンド率を設定 */
+			// ※攻撃モーションを100パーセントに設定
+			fUpperMoveBlendRate		= 0.f;
+			fUpperAttackBlendRate	= 1.f;
 		}
+
+		/* 全身のブレンド率を設定 */
+		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	fWholeMoveBlendrate);	// 移動モーション
+		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	fWholeAttackBlendrate);	// 攻撃モーション
+
+		/* 上半身のブレンド率を設定 */
+		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	63, fUpperMoveBlendRate,	TRUE);
+		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	63, fUpperAttackBlendRate,	TRUE);
 	}
 
 	/* モデル描写 */
@@ -53,7 +88,6 @@ void CharacterPlayer::Draw()
 	DrawFormatString(600, 200 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", Draw);
 	Draw = this->PlayerStatusList->fGetMotionTimer_Move_End();
 	DrawFormatString(600, 200 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
-	DrawFormatString(600, 200 + 16 * 5, GetColor(255, 255, 255), "ブレンド割合 : %f", 1.f - fAttackMotionBrendRate);
 	DrawFormatString(600, 200 + 16 * 6, GetColor(255, 255, 255), "攻撃系");
 	Draw = this->PlayerStatusList->iGetPlayerMotion_Attack();
 	DrawFormatString(600, 200 + 16 * 7, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
@@ -63,7 +97,6 @@ void CharacterPlayer::Draw()
 	DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "再生時間 : %f", Draw);
 	Draw = this->PlayerStatusList->fGetMotionTimer_Attack_End();
 	DrawFormatString(600, 200 + 16 * 10, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
-	DrawFormatString(600, 200 + 16 * 11, GetColor(255, 255, 255), "ブレンド割合 : %f", fAttackMotionBrendRate);
 }
 
 // 当たり判定描写

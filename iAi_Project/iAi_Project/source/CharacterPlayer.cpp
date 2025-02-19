@@ -66,24 +66,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 	}
-
-	/* モーションリストの設定 */
-	{
-		for (int i = 0; i < MOTION_ID_MAX; i++)
-		{
-			/* モーションIDを設定 */
-			this->PlayerMotionList[i].iMotionID			= MOTION_LIST[i].iMotionID;
-
-			/* モーション名を設定 */
-			this->PlayerMotionList[i].strMotionName		= MOTION_LIST[i].strMotionName;
-
-			/* モーションの総再生時間を取得＆設定 */
-			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[i].strMotionName.c_str()));
-
-			/* 次のモーションIDを設定 */
-			this->PlayerMotionList[i].iNextMotionID		= MOTION_LIST[i].iNextMotionID;
-		}
-	}
 }
 
 // 初期化
@@ -119,10 +101,6 @@ void CharacterPlayer::Update()
 		/* ロックオン範囲コリジョン使用フラグを無効化 */
 		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 	}
-
-	///* プレイヤーのモーション状態を保存する */
-	//this->PlayerStatusList->SetPlayerMotion_Move_Old(this->PlayerStatusList->iGetPlayerMotion_Move());
-	//this->PlayerStatusList->SetPlayerMotion_Attack_Old(this->PlayerStatusList->iGetPlayerMotion_Attack());
 
 	/* 攻撃系アクション処理 */
 	{

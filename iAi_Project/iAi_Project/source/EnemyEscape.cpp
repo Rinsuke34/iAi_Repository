@@ -28,7 +28,7 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹Žæ“¾ */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 	}
 }
 

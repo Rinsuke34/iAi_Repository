@@ -27,8 +27,7 @@ class PickUpItem_ForcedJump : public PickUpItemBase
 		virtual ~PickUpItem_ForcedJump();	// デストラクタ
 
 		virtual void	Update()			override;		// 更新
-		virtual void	Draw()				override;		// 描写
-		virtual void	BloomDraw()			override {};		// 発光描写
+		virtual void	BloomDraw()			override {};	// 発光描写
 
 		/* データ設定 */
 		void SetGimmick_ForcedJump_Spawn(Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定

@@ -28,7 +28,7 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 
 		/* エネミー足元モデルハンドル取得 */
-		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari");
+		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 
 		// エネミー足元モデルのフレーム０番を非表示
 		MV1SetFrameVisible(iModelFootHandle, 0, FALSE);
