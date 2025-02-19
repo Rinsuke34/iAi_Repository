@@ -56,6 +56,7 @@ static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚«‚
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 
+
 /* ƒJƒƒ‰ŠÖ˜A */
 // Šî–{î•ñ
 static const float	INIT_CAMERA_RADIUS						= 400;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£

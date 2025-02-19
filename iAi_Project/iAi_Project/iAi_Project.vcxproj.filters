@@ -710,10 +710,10 @@
     <ClInclude Include="source\SceneResult.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\リザルト</Filter>
     </ClInclude>
-    <ClInclude Include="source\BulletPlayerKunaiEffect.h">
+    <ClInclude Include="source\PlayerBulletDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
-    <ClInclude Include="source\PlayerBulletDefine.h">
+    <ClInclude Include="source\BulletPlayerKunaiEffect.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
   </ItemGroup>

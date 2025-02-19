@@ -318,78 +318,46 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 
-	/* 攻撃モーションを確認 */
-	// ※現在のモーションが近接攻撃(弱)であるか確認
-	// if
+	// 近接攻撃(弱)でない場合
+	/* プレイヤーのモーションを近接攻撃(弱)に設定 */
+	this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_WEAK);
+
+	/* 近接攻撃として扱う弾を作成 */
+	// ※現在のプレイヤーの向きに弾を作成
+	this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
+
+	/* 生成座標を取得 */
 	{
-		// 近接攻撃(弱)である場合
-		/* プレイヤーモーションの現在のカウントを進める */
+		/* 攻撃の生成方向の設定 */
+		// ※プレイヤーの向きではなくカメラの向きとする
+		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+		
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
 
-		/* 現在のモーションの総時間を取得 */
+		/* 攻撃座標を算出 */
+		VECTOR vecAdd;
+		// 方向
+		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		vecAdd = VScale(vecAdd, PLAYER_WIDE);
+		// 高さ
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
 
-		/* 現在のモーションの総時間を超えているか */
-		// if
-		{
-			// 超えている場合
-			/* プレイヤー状態を"自由状態"に変更 */
-			//this->PlayerStatusList->SetPlayerState(PLAYER_STATUS_FREE);
-
-			/* プレイヤーのモーションを"待機"に設定 */
-			//this->PlayerStatusList->SetPlayerMotion(PLAYER_MOTION_WAIT);
-
-			/* プレイヤーのモーションの現在のカウントを初期化 */
-
-			/* バレットクラス"近接攻撃(弱)"の削除フラグを有効 */
-			//this->pAddBullet->SetDeleteFlag(true);
-
-			/* このクラスで所持するバレットクラス"近接攻撃(弱)"のハンドルを初期化 */
-			//this->pBulletMeleeWeak = nullptr;
-		}
+		/* 攻撃生成座標を設定 */
+		this->pBulletMeleeWeak->SetPosition(VAdd(this->vecPosition, vecAdd));
 	}
-	// else
-	{
-		// 近接攻撃(弱)でない場合
-		/* プレイヤーのモーションを近接攻撃(弱)に設定 */
 
-		/* プレイヤーのモーションの現在のカウントを初期化 */
+	/* 攻撃の向きを設定 */
+	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetCameraAngleX()), 0.0f));
 
-		/* 近接攻撃として扱う弾を作成 */
-		// ※現在のプレイヤーの向きに弾を作成
-		this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
+	/* 初期化を行う */
+	this->pBulletMeleeWeak->Initialization();
 
-		/* 生成座標を取得 */
-		{
-			/* 攻撃の生成方向の設定 */
-			// ※プレイヤーの向きではなくカメラの向きとする
-			VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-
-			/* カメラの水平方向の向きを移動用の向きに設定 */
-			float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-			/* 攻撃座標を算出 */
-			VECTOR vecAdd;
-			// 方向
-			vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-			vecAdd.y = 0.f;
-			vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-			vecAdd = VNorm(vecAdd);
-			vecAdd = VScale(vecAdd, PLAYER_WIDE);
-			// 高さ
-			vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-			/* 攻撃生成座標を設定 */
-			this->pBulletMeleeWeak->SetPosition(VAdd(this->vecPosition, vecAdd));
-		}
-
-		/* 攻撃の向きを設定 */
-		this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetCameraAngleX()), 0.0f));
-
-		/* 初期化を行う */
-		this->pBulletMeleeWeak->Initialization();
-
-		/* バレットリストに追加 */
-		ObjectList->SetBullet(this->pBulletMeleeWeak);
-	}
+	/* バレットリストに追加 */
+	ObjectList->SetBullet(this->pBulletMeleeWeak);
 
 	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */
@@ -689,7 +657,7 @@ void CharacterPlayer::Player_Projectile()
 		// 存在する場合
 		/* クナイ(エフェクト)のターゲット座標をロックオン中のエネミーに設定 */
 		this->pBulletKunaiEffect->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
-	}
+}
 	else
 	{
 		// 存在しない場合

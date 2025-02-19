@@ -4,6 +4,7 @@
 /* 2025.02.05 菊池雅道	ステータス関連修正 */
 /* 2025.02.14 菊池雅道	回転関連の関数追加 */
 /* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
+/* 2025.02.19 菊池雅道	エフェクト処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -78,7 +79,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 			this->PlayerMotionList[i].strMotionName		= MOTION_LIST[i].strMotionName;
 
 			/* モーションの総再生時間を取得＆設定 */
-			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, this->PlayerMotionList[i].iMotionID);
+			this->PlayerMotionList[i].fMotion_MaxTime	= MV1GetAnimTotalTime(this->iModelHandle, MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[i].strMotionName.c_str()));
 
 			/* 次のモーションIDを設定 */
 			this->PlayerMotionList[i].iNextMotionID		= MOTION_LIST[i].iNextMotionID;
@@ -131,18 +132,6 @@ void CharacterPlayer::Update()
 		Player_Attack_Transition();
 	}
 
-	/* 上下方向(Y軸)移動処理 */
-	{
-		/* ジャンプ処理 */
-		Player_Jump();
-
-		/* 重力処理 */
-		Player_Gravity();
-
-		/* 移動処理(垂直方向) */
-		Movement_Vertical();
-	}
-
 	/* 平行方向(X軸)移動処理 */
 	{
 		/* 移動処理 */
@@ -153,6 +142,18 @@ void CharacterPlayer::Update()
 
 		/* 移動処理(水平方向) */
 		Movement_Horizontal();
+	}
+
+	/* 上下方向(Y軸)移動処理 */
+	{
+		/* ジャンプ処理 */
+		Player_Jump();
+
+		/* 重力処理 */
+		Player_Gravity();
+
+		/* 移動処理(垂直方向) */
+		Movement_Vertical();
 	}
 
 	/* コリジョンを更新 */
@@ -173,6 +174,7 @@ void CharacterPlayer::CollisionUpdate()
 }
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+/* 2025.02.19 菊池雅道	エフェクト処理追加 開始 */
 /* 当たり判定処理 */
 void CharacterPlayer::PlayerHitCheck()
 {
@@ -267,6 +269,24 @@ void CharacterPlayer::PlayerHitCheck()
 
 								/* 被ダメージのSEを再生 */
 								gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+								/* 感電完了エフェクトを生成 */
+								EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+
+								/* 感電完了エフェクトの読み込み */
+								pShockEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_eshock/FX_eshock")));
+
+								/* 感電完了エフェクトの初期化 */
+								pShockEffect->Initialization();
+
+								/* 感電完了エフェクトの時間を設定 */
+								pShockEffect->SetDeleteCount(20);
+
+								/* 感電完了エフェクトをリストに登録 */
+								{
+									/* 感電完了エフェクトをリストに登録 */
+									this->ObjectList->SetEffect(pShockEffect);
+								}
 							}
 						}
 					}
@@ -274,6 +294,7 @@ void CharacterPlayer::PlayerHitCheck()
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.02.19 菊池雅道	エフェクト処理追加 終了 */
 
 /* 2025.02.14 菊池雅道	回転関連の関数追加 開始 */
 // 角度(ラジアン)の制限と補正

@@ -28,6 +28,9 @@ private:
 	/* エフェクト */
 	EffectManualDelete* pEffect;
 
+	//起爆エフェクト
+	EffectManualDelete* pEffectDetonation;
+
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 
@@ -45,7 +48,7 @@ private:
 
 	int iDetonationRange;	//起爆範囲内
 
-	int iLastTime;			//起爆タイマー
+	bool bEffectGenerated;	// 起爆予告エフェクト生成フラグ
 
 protected:
 };

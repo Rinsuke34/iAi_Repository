@@ -8,6 +8,7 @@
 
 /* オブジェクト */
 #include "PlayerBulletDefine.h"
+#include "DataList_Object.h"
 
 /* 定数 */
 #include "PublicInclude.h"
@@ -40,6 +41,9 @@ private:
 	float	fKunaiAngleY;					// クナイのY軸回転角度
 	int		iKunaiDeleteCount;				// クナイの削除カウント
 	bool	bKunaiAttackFlg;				// クナイの攻撃フラグ
+
+	/* 使用するデータリスト */
+	DataList_Object* ObjectList;			// オブジェクト管理
 
 protected:
 };

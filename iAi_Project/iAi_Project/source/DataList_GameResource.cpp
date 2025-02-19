@@ -50,6 +50,14 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 			/* ランクは"なし"に設定 */
 			this->NowEditData[i].iEditRank		= EDIT_RANK_NONE;
 		}
+
+		// キープ中エディット情報初期化
+		this->KeepEditData.iEditEffect	= EDIT_EFFECT_NONE;
+		this->KeepEditData.iEditRank	= EDIT_RANK_NONE;
+	
+
+		/* スコア関連 */
+		this->iClearTotalEvaluation = 0;
 	}
 }
 

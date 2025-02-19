@@ -17,9 +17,9 @@ class BulletPlayerMeleeStrong : public BulletBase
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)
-		bool	HitCheck(COLLISION_CAPSULE	stCapsule)		override;	// 球体 - カプセル
-		bool	HitCheck(COLLISION_SQHERE	stSqhere)		override;	// 球体 - 球体
-		bool	HitCheck(int iModelHandle, int iFrameIndex)	override;	// 球体 - モデル
+		bool	HitCheck(COLLISION_CAPSULE	stCapsule)		override;	// カプセル - カプセル
+		bool	HitCheck(COLLISION_SQHERE	stSqhere)		override;	// カプセル - 球体
+		bool	HitCheck(int iModelHandle, int iFrameIndex)	override;	// カプセル - モデル
 
 		COLLISION_CAPSULE	stGetCollision_Capsule()	{ return this->stCollisionCapsule; };	// コリジョン(カプセル)を取得
 

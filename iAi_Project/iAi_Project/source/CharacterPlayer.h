@@ -74,7 +74,7 @@ class CharacterPlayer : public CharacterBase
 
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
-		BulletPlayerMeleeWeak* pBulletMeleeWeak;		// 近接攻撃(弱)の弾
+		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 		BulletPlayerKunaiEffect* pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
