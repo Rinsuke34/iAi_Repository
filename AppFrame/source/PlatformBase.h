@@ -21,10 +21,8 @@ class PlatformBase : public ObjectBase
 		virtual void	CollisionDraw();					// 当たり判定描写
 
 		int		iGetModelHandle()		{ return this->iModelHandle; };			// モデルハンドルを取得
-		VECTOR	vecGetScale()			{ return this->vecScale; };				// 拡大率を取得
 
 		void	SetModelHandle(int iModelHandle)			{ this->iModelHandle		= iModelHandle; };			// モデルハンドルを設定
-		void	SetScale(VECTOR vecScale)					{ this->vecScale			= vecScale; };				// 拡大率を設定
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)
@@ -44,7 +42,6 @@ class PlatformBase : public ObjectBase
 
 		/* 変数 */
 		int						iModelHandle;			// モデルハンドル
-		VECTOR					vecScale;				// 拡大率(x,y,z方向それぞれの拡大倍率)
 		std::vector<int>		aiLightFrameNo;			// 発光フレーム番号
 		int						iCollisionFrameNo;		// コリジョンフレーム番号(※モデルにつき1つだけ)
 };

@@ -7,6 +7,7 @@
 /* 2025.02.07 菊池雅道	エフェクト処理修正 */
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
+/* 2025.02.19 菊池雅道	エフェクト処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -21,75 +22,80 @@ void CharacterPlayer::Player_Attack_Transition()
 	//           |                                   |
 	//           --> 構え(遠距離) ---> 攻撃(遠距離) --
 
-	/* プレイヤーの状態を取得 */
+	/* プレイヤーの攻撃状態を取得 */
 	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
-	/* プレイヤー状態に応じて処理を変更 */
+	/* プレイヤーの攻撃状態に応じて処理を変更 */
 	switch (iPlayerAttackState)
 	{
 		/* 自由状態 */
-	case PLAYER_ATTACKSTATUS_FREE:
-		/* 攻撃入力がされているか確認 */
-		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
-		{
-			// 攻撃入力がされている場合
-			/* プレイヤー状態を"近接攻撃構え中"に設定 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
-		}
-		/* エイム(構え)入力がされているか確認 */
-		else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
-		{
-			/* エイム(構え)キャンセルフラグが解除されている場合 */
-			if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
-		{
-			// エイム(構え)入力がされている場合
-			/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
-		}
-		}
-		// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
-		/* エイム(構え)キャンセルフラグが設定されている場合 */
-		else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
-		{
-			/* エイム(構え)ボタンを離したら */
-			if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+		case PLAYER_ATTACKSTATUS_FREE:
+			/* 攻撃入力がされているか確認 */
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 			{
-				/* エイム(構え)キャンセルフラグを解除 */
-				this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
+				// 攻撃入力がされている場合
+				/* プレイヤー状態を"近接攻撃構え中"に設定 */
+				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
 			}
-		}
-		
-		break;
+			/* エイム(構え)入力がされているか確認 */
+			else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
+			{
+				/* エイム(構え)キャンセルフラグが解除されている場合 */
+				if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
+				{
+					// エイム(構え)入力がされている場合
+					/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
+					this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
+				}
+			}
+			// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
+			/* エイム(構え)キャンセルフラグが設定されている場合 */
+			else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
+			{
+				/* エイム(構え)ボタンを離したら */
+				if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+				{
+					/* エイム(構え)キャンセルフラグを解除 */
+					this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
+				}
+			}
+			break;
 
 		/* 近接攻撃構え中 */
-	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:
-		/* 近接攻撃(構え) */
-		Player_Melee_Posture();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_POSTURE:
+			/* 近接攻撃(構え) */
+			Player_Melee_Posture();
+			break;
 
 		/* 近接攻撃中(弱) */
-	case PLAYER_ATTACKSTATUS_MELEE_WEEK:
-		/* 近接攻撃(弱) */
-		Player_Melee_Weak();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_WEEK:
+			/* 近接攻撃(弱) */
+			Player_Melee_Weak();
+			break;
 
 		/* 近接攻撃中(強) */
-	case PLAYER_ATTACKSTATUS_MELEE_STRONG:
-		/* 近距離攻撃(強) */
-		Player_Charge_Attack();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_STRONG:
+			/* 近距離攻撃(強) */
+			Player_Charge_Attack();
+			break;
 
 		/* 遠距離攻撃構え中 */
-	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:
-		/* 遠距離攻撃(構え) */
-		Player_Projectile_Posture();
-		break;
+		case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:
+			/* 遠距離攻撃(構え) */
+			Player_Projectile_Posture();
+			break;
 
 		/* 遠距離攻撃中 */
-	case PLAYER_ATTACKSTATUS_PROJECTILE:
-		/* 遠距離攻撃 */
-		Player_Projectile();
-		break;
+		case PLAYER_ATTACKSTATUS_PROJECTILE:
+			/* 遠距離攻撃 */
+			Player_Projectile();
+			break;
+
+		/* 死亡状態(操作不可) */
+		case PLAYER_ATTACKSTATUS_DEAD:
+			/* 処理を行わない */
+			break;
+
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
@@ -105,6 +111,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -115,8 +122,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
-			/* 溜めのエフェクトを生成 */
-			this->pChargeEffect = new EffectManualDelete_PlayerFollow(true);
+			/* 溜めのエフェクトを刀の位置に生成 */
+			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
 
 			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
@@ -155,9 +162,10 @@ void CharacterPlayer::Player_Melee_Posture()
 
 					/* 溜めエフェクトは削除 */
 					this->pChargeEffect->SetDeleteFlg(true);
+					this->pChargeEffect = nullptr;
 
 					/* 溜め完了エフェクトを生成 */
-					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
+					EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
 
 					/* 溜め完了エフェクトの読み込み */
 					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
@@ -178,7 +186,7 @@ void CharacterPlayer::Player_Melee_Posture()
 					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
 					/* 溜め完了後エフェクトを生成 */
-					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow(true);
+					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
 					
 					/* 溜め完了後エフェクトの読み込み */
 					this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
@@ -200,9 +208,6 @@ void CharacterPlayer::Player_Melee_Posture()
 				}
 			}
 		
-			/* プレイヤーの向きをカメラの向きに固定 */
-			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
-
 			/* 移動量算出 */
 			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
 			// 臨時でちょっと長めにする
@@ -223,6 +228,8 @@ void CharacterPlayer::Player_Melee_Posture()
 				/* カメラモードを"構え(近接攻撃構え)"に変更 */
 				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
 
+				/* プレイヤーの向きをカメラの向きに固定 */
+				this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 				
 				/* ロックオン範囲のコリジョン作成 */
 				{
@@ -310,6 +317,7 @@ void CharacterPlayer::Player_Melee_Posture()
 /* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
+/* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -326,32 +334,8 @@ void CharacterPlayer::Player_Melee_Weak()
 	// ※現在のプレイヤーの向きに弾を作成
 	this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
 
-	/* 生成座標を取得 */
-	{
-		/* 攻撃の生成方向の設定 */
-		// ※プレイヤーの向きではなくカメラの向きとする
-		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
-		
-		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-		/* 攻撃座標を算出 */
-		VECTOR vecAdd;
-		// 方向
-		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-		vecAdd.y = 0.f;
-		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-		vecAdd = VNorm(vecAdd);
-		vecAdd = VScale(vecAdd, PLAYER_WIDE);
-		// 高さ
-		vecAdd.y = PLAYER_HEIGHT / 2.f;
-
-		/* 攻撃生成座標を設定 */
-		this->pBulletMeleeWeak->SetPosition(VAdd(this->vecPosition, vecAdd));
-	}
-
 	/* 攻撃の向きを設定 */
-	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetCameraAngleX()), 0.0f));
+	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* 初期化を行う */
 	this->pBulletMeleeWeak->Initialization();
@@ -393,11 +377,6 @@ void CharacterPlayer::Player_Charge_Attack()
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
 	}
-	//else if(iChargeAttackCount <= 20)
-	//{
-	//	// 20以下である場合
-	//	/* モーションの初期動作中?なのでこの状態では攻撃しない */
-	//}
 	else
 	{
 		// 21以上である場合

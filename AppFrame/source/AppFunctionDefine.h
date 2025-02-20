@@ -27,4 +27,5 @@ namespace PUBLIC_PROCESS
 	float	fAnalogStickNorm(short sMouseMove);																						// アナログスティックの入力を正規化(±1)
 	bool	bCheckInputDeadzone(float fInput, float fDeadzone);																		// 入力値がデッドゾーンの範囲内であるか確認		/* 2025.01.21 菊池雅道 デッドゾーン処理追加 */
 	VECTOR	vecGetLineCrossPoint(VECTOR vecLineAStart, VECTOR vecLineADirection, VECTOR vecLineBStart, VECTOR vecLineBDirection);	// 2つの線分の交点を取得
+	COLOR_F	stAddCollorF(COLOR_F vecColorF_A, COLOR_F vecColorF_B);																	// 2つの色(COLOR_F型)を合成
 }

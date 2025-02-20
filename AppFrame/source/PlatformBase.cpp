@@ -10,7 +10,6 @@ PlatformBase::PlatformBase() : ObjectBase()
 	/* 初期化 */
 	this->iModelHandle		= 0;					// モデルハンドル
 	this->vecRotation		= VGet(0.f, 0.f, 0.f);	// 回転量
-	this->vecScale			= VGet(1.f, 1.f, 1.f);	// 拡大率
 	this->iCollisionFrameNo = -1;					// コリジョンフレーム番号
 }
 

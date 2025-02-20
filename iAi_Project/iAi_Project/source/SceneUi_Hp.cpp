@@ -54,6 +54,10 @@ void SceneUi_Hp::Draw()
 	DrawGraph(100, 740, *this->piGrHandle_Hp_Frame, TRUE);
 
 	/* HPÉQÅ[ÉWï`é  */
+	for (int i = 0; i < this->PlayerStatusList->iGetPlayerNowHp(); i++)
+	{
+		DrawGraph(100 + 185 + (25 * i), 740 + 40, *this->piGrHandle_Hp_Gauge, TRUE);
+	}
 
 	/* åªç›HP */
 	DrawFormatString(500, 700 + 16 * 0, GetColor(255, 255, 255), "åªç›HP : %d", this->PlayerStatusList->iGetPlayerNowHp());

@@ -54,8 +54,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ScreenFlip();
 
 		/* フレームレート調整 */
-		gpFps->FpsUpdate();
-		gpFps->FpsWait();
+		gpFps->FpsAdjustment();
+
+		/* 処理を停止(ヒットストップ) */
+		gpFps->FpsStop();
 	}
 
 	/* 終了処理 */

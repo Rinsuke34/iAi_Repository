@@ -106,11 +106,7 @@ void SceneStage::Process()
 	{
 		/* "ゲーム実行"状態 */
 		case GAMESTATUS_PLAY_GAME:
-			/* すべてのオブジェクトの更新 */
-			ObjectList->UpdateAll();
-
-			/* 削除フラグが有効なオブジェクトの削除 */
-			ObjectList->DeleteAll();
+			Process_Main();
 			break;
 
 		/* "リザルト"状態 */
@@ -152,11 +148,35 @@ void SceneStage::Process()
 			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 	}
+}
 
-	// デバッグメニューを出す(エンターキー)
-	if (CheckHitKey(KEY_INPUT_RETURN) == TRUE)
+// 計算(メインの処理)
+void SceneStage::Process_Main()
+{
+	/* すべてのオブジェクトの更新 */
+	ObjectList->UpdateAll();
+
+	/* 削除フラグが有効なオブジェクトの削除 */
+	ObjectList->DeleteAll();
+
+	/* プレイヤーが存在していて、死亡フラグが有効であるか確認 */
+	if ((this->ObjectList->GetCharacterPlayer() != nullptr) && (this->PlayerStatusList->bGetPlayerDeadFlg() == true))
 	{
-		gpSceneServer->AddSceneReservation(new SceneUi_Debug());
+		//// プレイヤーが存在かつ死亡フラグが有効ならば
+		///* シーン"ゲームオーバー"を作成 */
+		//SceneBase* pAddScene = new SceneGameOver();
+
+		///* シーン"ゲームオーバー"をシーンサーバーに登録 */
+		//gpSceneServer->AddSceneReservation(pAddScene);
+	}
+
+	/* デバッグ処理 */
+	{
+		/* エンターキーを入力されたか確認 */
+		if (CheckHitKey(KEY_INPUT_RETURN) == TRUE)
+		{
+			gpSceneServer->AddSceneReservation(new SceneUi_Debug());
+		}
 	}
 }
 
