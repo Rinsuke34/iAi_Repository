@@ -98,8 +98,14 @@ void DataList_Object::InitializationAll()
 // プレイヤー初期化
 void DataList_Object::InitializationPlayer()
 {
-	/* プレイヤーの初期化を呼ぶ */
-	this->pCharacterPlayer->Initialization();
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーの初期化を呼ぶ */
+		this->pCharacterPlayer->Initialization();
+	}
 }
 
 // スカイスフィア初期化
@@ -187,8 +193,14 @@ void DataList_Object::UpdateAll()
 // プレイヤー更新
 void DataList_Object::UpdatePlayer()
 {
-	/* プレイヤーの更新を呼ぶ */
-	this->pCharacterPlayer->Update();
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーの更新を呼ぶ */
+		this->pCharacterPlayer->Update();
+	}
 }
 
 // スカイスフィア更新
@@ -275,8 +287,14 @@ void DataList_Object::DrawAll()
 // プレイヤー描写
 void DataList_Object::DrawPlayer()
 {
-	/* プレイヤーの描写を呼ぶ */
-	this->pCharacterPlayer->Draw();
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーの描写を呼ぶ */
+		this->pCharacterPlayer->Draw();
+	}
 }
 
 // スカイスフィア描写
@@ -368,8 +386,14 @@ void DataList_Object::DrawAll_Collision()
 // プレイヤーコリジョン描写
 void DataList_Object::DrawPlayer_Collision()
 {
-	/* プレイヤーコリジョン描写を呼ぶ */
-	this->pCharacterPlayer->CollisionDraw();
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーコリジョン描写を呼ぶ */
+		this->pCharacterPlayer->CollisionDraw();
+	}
 }
 
 // スカイスフィアコリジョン描写
@@ -443,8 +467,14 @@ void DataList_Object::DrawAll_Bloom()
 // プレイヤー発光描写
 void DataList_Object::DrawPlayer_Bloom()
 {
-	/* プレイヤーの発光描写を呼ぶ */
-	this->pCharacterPlayer->BloomDraw();
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーの発光描写を呼ぶ */
+		this->pCharacterPlayer->BloomDraw();
+	}
 }
 
 // スカイスフィア発光描写

@@ -52,22 +52,22 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMotion_Attack_Old			= -1;								// 変更前プレイヤーモーション(攻撃系)
 	
 	this->fMotionTimer_Move					= 0;								// モーションカウント(移動系)
-	this->fMotionTimer_Move_End				= 0;								// モーションカウント(移動系/終了時間)
+	this->fMotionTimer_Move_End				= 1;								// モーションカウント(移動系/終了時間)(※初期化時の不具合防止のため1に設定)
 	this->fMotionTimer_Attack				= 0;								// モーションカウント(攻撃系)
-	this->fMotionTimer_Attack_End			= 0;								// モーションカウント(攻撃系/終了時間)
+	this->fMotionTimer_Attack_End			= 1;								// モーションカウント(攻撃系/終了時間)(※初期化時の不具合防止のため1に設定)
 
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;
 	
 	/* 能力値関連 */
-	this->fPlayerMoveAcceleration	= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
-	this->fPlayerMaxMoveSpeed		= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
-	this->fPlayerFallAcceleration	= INIT_ATTRIBUTES_FALL_ACCELERATION;	// プレイヤーの落下加速度
-	this->fPlayerMaxFallSpeed		= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// プレイヤーの最大落下速度
-	this->iPlayerMaxJumpCount		= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// プレイヤーのジャンプ回数(最大数)
-	this->fPlayerRockOnRadius		= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ロックオン範囲の半径
-	this->iPlayerMaxHp				= INIT_ATTRIBUTES_HP_MAX;				// プレイヤーの最大HP
-	this->iPlayerMaxInvincibleTime	= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// プレイヤーの最大無敵時間
+	this->fPlayerMoveAcceleration			= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
+	this->fPlayerMaxMoveSpeed				= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
+	this->fPlayerFallAcceleration			= INIT_ATTRIBUTES_FALL_ACCELERATION;	// プレイヤーの落下加速度
+	this->fPlayerMaxFallSpeed				= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// プレイヤーの最大落下速度
+	this->iPlayerMaxJumpCount				= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// プレイヤーのジャンプ回数(最大数)
+	this->fPlayerRockOnRadius				= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ロックオン範囲の半径
+	this->iPlayerMaxHp						= INIT_ATTRIBUTES_HP_MAX;				// プレイヤーの最大HP
+	this->iPlayerMaxInvincibleTime			= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// プレイヤーの最大無敵時間
 
 	/* カメラ関連 */
 	this->iCameraMode						= CAMERA_MODE_FREE;							// カメラモード

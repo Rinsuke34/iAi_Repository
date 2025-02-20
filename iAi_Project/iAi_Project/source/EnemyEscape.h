@@ -41,5 +41,6 @@ class EscapeEnemy : public EnemyBasic
 
 	float fEscapespeed;			// 移動速度
 
+	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:
 };

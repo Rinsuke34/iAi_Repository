@@ -22,29 +22,28 @@ class CharacterPlayer;
 // 強制ジャンプアイテム(ギミック)クラス
 class PickUpItem_ForcedJump : public PickUpItemBase
 {
-public:
-	PickUpItem_ForcedJump();			// コンストラクタ
-	virtual ~PickUpItem_ForcedJump();	// デストラクタ
+	public:
+		PickUpItem_ForcedJump();			// コンストラクタ
+		virtual ~PickUpItem_ForcedJump();	// デストラクタ
 
-	virtual void	Update()			override;		// 更新
-	virtual void	Draw()				override;		// 描写
-	virtual void	BloomDraw()			override {};		// 発光描写
+		virtual void	Initialization()	override;		// 初期化
+		virtual void	Update()			override;		// 更新
+		virtual void	BloomDraw()			override {};	// 発光描写
 
-	/* データ設定 */
-	void SetGimmick_ForcedJump_Spawn(Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定
+		/* データ設定 */
+		void SetGimmick_ForcedJump_Spawn(Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定
 
-private:
-	/* データリスト */
-	DataList_Object* ObjectList;				// オブジェクト管理
-	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
+	private:
+		/* データリスト */
+		DataList_Object* ObjectList;				// オブジェクト管理
+		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
 
-	/* 変数 */
-	CharacterPlayer* pPlayer;					// プレイヤー
-	Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn;	// 強制ジャンプギミックスポナー(自身の生成元)
+		/* 変数 */
+		CharacterPlayer*			pPlayer;					// プレイヤー
+		Gimmick_ForcedJump_Spawn*	pGimmick_ForcedJump_Spawn;	// 強制ジャンプギミックスポナー(自身の生成元)
 
 	//エフェクト
 	EffectManualDelete* pEffectExplosion;	// 爆発エフェクト
-
 
 };
 

@@ -28,8 +28,7 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari_0127");
-
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
 		this->pEffect = nullptr;
 	}
 }
@@ -61,6 +60,8 @@ void EscapeEnemy::MoveEnemy()
 	//エネミーの向きを初期化する
 	VECTOR VRot = VGet(0, 0, 0);
 
+
+
 	////プレイヤーの方向を向くようにエネミーの向きを定義
 	//VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
@@ -74,28 +75,28 @@ void EscapeEnemy::MoveEnemy()
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
 	{
-		//// 逃走エフェクトを生成
-		//this->pEffect = new EffectManualDelete();
+		// 逃走エフェクトを生成
+		this->pEffect = new EffectManualDelete();
 
-		//// エフェクトの読み込み
-		//this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_glitter/FX_e_glitter")));
+		// エフェクトの読み込み
+		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_glitter/FX_e_glitter")));
 
-		//// エフェクトの座標設定
-		//this->pEffect->SetPosition(this->vecPosition);
+		// エフェクトの座標設定
+		this->pEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
 
-		//// エフェクトの回転量設定
-		//this->pEffect->SetRotation(this->vecRotation);
+		// エフェクトの回転量設定
+		this->pEffect->SetRotation(this->vecRotation);
 
-		//// エフェクトの初期化
-		//this->pEffect->Initialization();
+		// エフェクトの初期化
+		this->pEffect->Initialization();
 
-		//// エフェクトをリストに登録
-		//{
-		//	// "オブジェクト管理"データリストを取得
-		//	DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-		//	// エフェクトをリストに登録
-		//	ObjectListHandle->SetEffect(pEffect);
-		//}
+		// エフェクトをリストに登録
+		{
+			// "オブジェクト管理"データリストを取得
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			// エフェクトをリストに登録
+			ObjectListHandle->SetEffect(pEffect);
+		}
 		// プレイヤーが探知範囲内にいる場合
 		// プレイヤーから逃げる
 		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
