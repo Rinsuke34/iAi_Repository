@@ -21,13 +21,6 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 		this->pPlayer = dynamic_cast<CharacterPlayer*>(ObjectList->GetCharacterPlayer());
 	}
 
-	/* コリジョン設定 */
-	{
-		this->stCollisionCapsule.fCapsuleRadius		= 50.0f;
-		this->stCollisionCapsule.vecCapsuleTop		= VGet(0.0f, 50.0f, 0.0f);
-		this->stCollisionCapsule.vecCapsuleBottom	= VGet(0.0f, -50.0f, 0.0f);
-	}
-
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
@@ -42,7 +35,18 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 // デストラクタ
 PickUpItem_ForcedJump::~PickUpItem_ForcedJump()
 {
+	
+}
 
+// 初期化
+void PickUpItem_ForcedJump::Initialization()
+{
+	/* コリジョン設定 */
+	{
+		this->stCollisionCapsule.fCapsuleRadius		= 50.0f;
+		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 50.0f, 0.0f));
+		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, -50.0f, 0.0f));
+	}
 }
 
 // 更新

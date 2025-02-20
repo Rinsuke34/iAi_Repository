@@ -53,6 +53,8 @@ void SceneUi_Hp::Draw()
 	/* HPƒtƒŒ[ƒ€•`‰æ(‰¼) */
 	DrawGraph(100, 740, *this->piGrHandle_Hp_Frame, TRUE);
 
+	/* HPƒQ[ƒW•`ŽÊ */
+
 	/* Œ»ÝHP */
 	DrawFormatString(500, 700 + 16 * 0, GetColor(255, 255, 255), "Œ»ÝHP : %d", this->PlayerStatusList->iGetPlayerNowHp());
 
