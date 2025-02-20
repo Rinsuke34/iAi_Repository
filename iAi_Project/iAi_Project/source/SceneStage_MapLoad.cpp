@@ -13,6 +13,7 @@
 #include "EnemyNormal.h"
 #include "EnemyMissile.h"
 #include "EnemyBeam.h"
+#include "Enemy_Explosion.h"
 // プラットフォーム
 #include "PlatformBasic.h"
 // スカイスフィア
@@ -115,7 +116,7 @@ void SceneStage::LoadMapData()
 				data.at("objectName").get_to(name);
 
 				/* マーカータイプ確認 */
-				if (name == "S_Marker_StartPoint")
+				if (name == "Marker_Player_Start")
 				{
 					// プレイヤースタート地点の場合
 					/* "オブジェクト管理"にプレイヤーを追加 */
@@ -134,10 +135,22 @@ void SceneStage::LoadMapData()
 					pPlayer->SetPosition(vecPos);
 
 					/* 回転量 */
-					// 後ほど追加
-
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					pPlayer->SetRotation(vecRot);
 				}
-				else if (name == "S_Marker_Goal")
+				else if (name == "Marker_Goal_Object")
 				{
 					// ゴール地点の場合
 					/* "オブジェクト管理"にゴールオブジェクトを追加 */
@@ -154,29 +167,129 @@ void SceneStage::LoadMapData()
 					vecPos.z *= -1;
 					// 設定
 					pGoal->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					pGoal->SetRotation(vecRot);
 				}
-			}
-		}
-
-		/* エネミー読み込み */
-		{
-			/* Jsonファイルから読み込み */
-			std::string Type = "/Enemy";
-			std::string GetName = MapName + Type;
-			nlohmann::json stage = json.at(GetName);
-
-			for (auto& data : stage)
-			{
-				/* エネミー名取得 */
-				std::string	name;
-				data.at("objectName").get_to(name);
-
-				/* エネミータイプ確認 */
-				if (name == "Substance2" ||
-					name == "Substance")
+				else if (name == "Marker_Spawn_Enemy_Beam")
 				{
-					// エネミー(仮)の場合
-					/* "オブジェクト管理"にエネミー(仮)を追加 */
+					// エネミー(ビーム)の場合
+					/* "オブジェクト管理"にエネミー(ビーム)を追加 */
+					BeamEnemy* AddEnemy = new BeamEnemy();
+					ObjectList->SetEnemy(AddEnemy);
+
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					AddEnemy->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					AddEnemy->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Spawn_Enemy_Escape")
+				{
+					// エネミー(逃走)の場合
+					/* "オブジェクト管理"にエネミー(逃走)を追加 */
+					EscapeEnemy* AddEnemy = new EscapeEnemy();
+					ObjectList->SetEnemy(AddEnemy);
+
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					AddEnemy->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					AddEnemy->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Spawn_Enemy_Explosion")
+				{
+					// エネミー(自爆)の場合
+					/* "オブジェクト管理"にエネミー(自爆)を追加 */
+					ExplosionEnemy* AddEnemy = new ExplosionEnemy();
+					ObjectList->SetEnemy(AddEnemy);
+
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					AddEnemy->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					AddEnemy->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Spawn_Enemy_Missile")
+				{
+					// エネミー(ミサイル)の場合
+					/* "オブジェクト管理"にエネミー(ミサイル)を追加 */
 					MissileEnemy* AddEnemy = new MissileEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
@@ -192,7 +305,87 @@ void SceneStage::LoadMapData()
 					AddEnemy->SetPosition(vecPos);
 
 					/* 回転量 */
-					// 後ほど追加
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					AddEnemy->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Spawn_Enemy_Normal")
+				{
+					// エネミー(通常)の場合
+					/* "オブジェクト管理"にエネミー(通常)を追加 */
+					NormalEnemy* AddEnemy = new NormalEnemy();
+					ObjectList->SetEnemy(AddEnemy);
+
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					AddEnemy->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					AddEnemy->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Spawn_Gimmick_Jump")
+				{
+					// ギミック(強制ジャンプ)の場合
+					PlatformBasic* pAddGimick = new Gimmick_ForcedJump_Spawn();
+					ObjectList->SetPlatform(pAddGimick);
+
+					/* 座標 */
+					VECTOR vecPos;
+					// 読み込み
+					data.at("translate").at("x").get_to(vecPos.x);
+					data.at("translate").at("z").get_to(vecPos.y);
+					data.at("translate").at("y").get_to(vecPos.z);
+					// Z座標反転
+					vecPos.z *= -1;
+					// 設定
+					pAddGimick->SetPosition(vecPos);
+
+					/* 回転量 */
+					VECTOR vecRot;
+					// 読み込み
+					data.at("rotate").at("x").get_to(vecRot.x);
+					data.at("rotate").at("z").get_to(vecRot.y);
+					data.at("rotate").at("y").get_to(vecRot.z);
+					// degree -> radian変換
+					vecRot.x = DEG2RAD(vecRot.x);
+					vecRot.y = DEG2RAD(vecRot.y);
+					vecRot.z = DEG2RAD(vecRot.z);
+					// X軸の回転方向を反転
+					// ※正しいか不明な処理
+					vecRot.x *= -1;
+					// 設定
+					pAddGimick->SetRotation(vecRot);
 				}
 			}
 		}
@@ -206,12 +399,6 @@ void SceneStage::LoadMapData()
 
 			/* モデル */
 			pSkySqhere->SetModelHandle(this->ModelList->iGetModel("SkySqhere/skysphere"));
-		}
-		/*ギミック追加(仮)*/
-		{
-			PlatformBasic* pAddGimick = new Gimmick_ForcedJump_Spawn();
-			pAddGimick->SetPosition(VGet(22.f, 160.f, 22.f));
-			ObjectList->SetPlatform(pAddGimick);
 		}
 	}
 

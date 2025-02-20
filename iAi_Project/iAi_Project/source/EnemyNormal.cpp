@@ -26,15 +26,6 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Kari");
-
-		/* エネミー足元モデルハンドル取得 */
-		this->iModelFootHandle = ModelListHandle->iGetModel("Enemy_Kari");
-
-		// エネミー足元モデルのフレーム０番を非表示
-		MV1SetFrameVisible(iModelFootHandle, 0, FALSE);
-
-		// エネミー足元モデルのフレーム２番を非表示
-		MV1SetFrameVisible(iModelFootHandle, 2, FALSE);
 	}
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
@@ -89,6 +80,12 @@ void NormalEnemy::MoveEnemy()
 		//プレイヤーのZ座標がエネミーのZ座標より小さい場合
 		//エネミーの縦向きを設定
 		VRot.x = atan2f(playerPos.y - this->vecPosition.y, playerPos.z - this->vecPosition.z);
+	}
+
+	//エネミーが真上を向かないように限界値を設定
+	if (VRot.x > 0.8f)
+	{
+		VRot.x = 0.8f;
 	}
 
 	//エネミーの向きを設定
@@ -148,7 +145,7 @@ void NormalEnemy::MoveEnemy()
 			// モデルのフレーム２番を表示
 			MV1SetFrameVisible(iModelHandle, 2, TRUE);
 			// 発射カウントが0以下の場合
-		// ノーマル弾を発射する
+			// ノーマル弾を発射する
 			Player_Range_Normal_Shot();
 
 			// 発射カウントを初期化
@@ -185,7 +182,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 
 	// 移動する弾の向きを設定
 	this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
-
+	
 	//初期化
 	this->pBulletRangeNormal->Initialization();
 
@@ -193,7 +190,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 	ObjectList->SetBullet(this->pBulletRangeNormal);
 
 
-
+	
 }
 
 // 更新

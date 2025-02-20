@@ -31,14 +31,26 @@ void Gimmick_ForcedJump_Spawn::Update()
 	if (this->bSpawnObjectFlg == true && this->iSpawnCoolTime <= 0)
 	{
 		// 有効かつクールタイムが終了しているならば
-		/* アイテム"強制ジャンプ(ギミック)"を生成 */
-		PickUpItemBase* AddItem = new PickUpItem_ForcedJump();
+		/* アイテム"強制ジャンプ(ギミック)"生成処理" */
+		{
+			/* アイテム"強制ジャンプ(ギミック)"を作成 */
+			PickUpItemBase* AddItem = new PickUpItem_ForcedJump();
 
-		/* 生成したアイテムの生成元にこのオブジェクトを追加*/
-		dynamic_cast<PickUpItem_ForcedJump*>(AddItem)->SetGimmick_ForcedJump_Spawn(this);
+			/* 生成したアイテムをリストに追加 */
+			this->ObjectList->SetPickUpItem(AddItem);
 
-		/* 生成したアイテムをリストに追加 */
-		this->ObjectList->SetPickUpItem(AddItem);
+			/* 生成したアイテムの生成元にこのオブジェクトを追加*/
+			dynamic_cast<PickUpItem_ForcedJump*>(AddItem)->SetGimmick_ForcedJump_Spawn(this);
+
+			/* 生成したアイテムの座標を設定 */
+			AddItem->SetPosition(this->vecPosition);
+
+			/* 生成したアイテムの回転量を設定 */
+			AddItem->SetRotation(this->vecRotation);
+
+			/* 生成したアイテムの初期化処理 */
+			AddItem->Initialization();
+		}
 
 		/* オブジェクトのスポーンフラグを無効に設定 */
 		this->bSpawnObjectFlg = false;

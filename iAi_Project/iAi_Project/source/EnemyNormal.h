@@ -47,8 +47,6 @@ private:
 
 	int		iGuidanceCount;	// 誘導カウント
 
-	int		iModelFootHandle;	// エネミー足元モデルハンドル
-
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	
 

@@ -60,7 +60,11 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iMainScreenEffectHandle			= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	// シャドウマップハンドル
-	this->iShadowMapScreenHandle			= MakeShadowMap(SHADOWMAP_SIZE, SHADOWMAP_SIZE);
+	this->iShadowMapScreenHandle_Platform			= MakeShadowMap(1028 * 2, 1028 * 2);
+
+	//int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
+	//int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
+	//int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
 
 	/* 初期化 */
 	Initialization();
@@ -81,7 +85,7 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iMainScreenHandle);
 	DeleteGraph(this->iMainScreenEffectHandle);
 	// シャドウマップ
-	DeleteShadowMap(this->iShadowMapScreenHandle);
+	DeleteShadowMap(this->iShadowMapScreenHandle_Platform);
 }
 
 // 初期化
@@ -164,7 +168,7 @@ void SceneStage::DrawDebug()
 	/* シャドウマップ描写 */
 	if (gbDrawShadowMapFlg == true)
 	{
-		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
+		TestDrawShadowMap(iShadowMapScreenHandle_Platform, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
 		iDrawCount++;
 	}
 

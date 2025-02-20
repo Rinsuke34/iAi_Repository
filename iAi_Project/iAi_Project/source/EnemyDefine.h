@@ -5,8 +5,8 @@
 /* エネミーで使用する定数の宣言を行う */
 
 /* エネミー自爆型 */
-static const int	ENEMY_X_DISTANCE		= 1000;		// エネミーのX軸の探知範囲
-static const int	ENEMY_Z_DISTANCE		= 1000;		// エネミーのZ軸の探知範囲
+static const int	ENEMY_X_DISTANCE		= 2000;		// エネミーのX軸の探知範囲
+static const int	ENEMY_Z_DISTANCE		= 2000;		// エネミーのZ軸の探知範囲
 static const int	ENEMY_DETONATION_RANGE	= 50;		// エネミーの起爆範囲
 static const int	ENEMY_SPEED				= 5;		// エネミーの起爆時間
 static const int	ENEMY_X_ESCAPE_DISTANCE	= 600;		// エネミーのX軸の逃げる範囲

@@ -49,8 +49,6 @@ private:
 
 	int		iChargeCount;	// ビームのチャージカウント
 
-	int		iModelFootHandle;	// エネミー足元モデルハンドル
-
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 protected:
 
