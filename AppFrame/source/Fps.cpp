@@ -16,8 +16,18 @@ Fps::Fps()
 	this->iCount		= 0;	// カウンタ
 }
 
+// フレームレート調整処理
+void Fps::FpsAdjustment()
+{
+	/* 時刻計算 */
+	FpsUpdate();
+
+	/* フレームレート調整のため待機 */
+	FpsWait();
+}
+
 // 時刻計算
-bool Fps::FpsUpdate()
+void Fps::FpsUpdate()
 {
 	/* カウンタの確認 */
 	if (this->iCount == 0)
@@ -43,7 +53,7 @@ bool Fps::FpsUpdate()
 	/* カウンタの加算 */
 	this->iCount++;
 
-	return true;
+	return;
 }
 
 // フレームレート調整のため待機
@@ -53,10 +63,32 @@ void Fps::FpsWait()
 	int iTookTime = GetNowCount() - this->iStartTime;
 
 	/* 待機する時間を算出 */
-	int iWaitTime = this->iCount * 1000 / FPS_RATE - iTookTime;
+	int iWaitTime	= this->iCount * 1000 / FPS_RATE - iTookTime;
+
+	/* 待機が必要であるか確認 */
 	if (iWaitTime > 0)
 	{
-		/* 必要であるならば待機を行う */
+		// 待機が必要である場合
+		/* フレームレート調整のため、待機を行う */
 		Sleep(iWaitTime);
+	}
+}
+
+// 処理を停止(ヒットストップ等で使用)
+void Fps::FpsStop()
+{
+	/* 処理を停止するフレーム数が設定されているか確認 */
+	if (giStopFrame > 0)
+	{
+		// 設定されている場合
+		/* 指定のフレーム時間分待機 */
+		for (int i = 0; i < giStopFrame; i++)
+		{
+			/* フレームレート調整 */
+			FpsAdjustment();
+		}
+
+		/* 停止時間を初期化する */
+		giStopFrame = 0;
 	}
 }

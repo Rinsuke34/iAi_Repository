@@ -134,3 +134,27 @@ VECTOR PUBLIC_PROCESS::vecGetLineCrossPoint(VECTOR vecLineAStart, VECTOR vecLine
 	// 直線1上の交点を計算
 	return VAdd(vecLineAStart, VScale(vecLineADirection, t1));
 }
+
+// 2つの色(COLOR_F型)を合成
+COLOR_F	PUBLIC_PROCESS::stAddCollorF(COLOR_F vecColorF_A, COLOR_F vecColorF_B)
+{
+	// 引数
+	// vecColorF_A		<- 1つ目の色
+	// vecColorF_B		<- 2つ目の色
+
+	COLOR_F stReturn;
+
+	/* 各要素を加算 */
+	stReturn.a	=	vecColorF_A.a + vecColorF_B.a;
+	stReturn.b	=	vecColorF_A.b + vecColorF_B.b;
+	stReturn.g	=	vecColorF_A.g + vecColorF_B.g;
+	stReturn.r	=	vecColorF_A.r + vecColorF_B.r;
+
+	/* 各要素が最大値(1.f)を超えないように調整 */
+	if (stReturn.a > 1.f)	{ stReturn.a = 1.f; }
+	if (stReturn.b > 1.f)	{ stReturn.b = 1.f; }
+	if (stReturn.g > 1.f)	{ stReturn.g = 1.f; }
+	if (stReturn.r > 1.f)	{ stReturn.r = 1.f; }
+
+	return stReturn;
+}

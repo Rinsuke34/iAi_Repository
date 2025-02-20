@@ -13,6 +13,7 @@
 #include "DataList_Image.h"
 
 /* シーン */
+#include "SceneGameOver.h"
 #include "SceneResult.h"
 #include "SceneEdit.h"
 #include "SceneUi_Crosshairs.h"
@@ -46,6 +47,7 @@ class SceneStage : public SceneBase
 		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
 
 		/* 関数 */
+		void	Process_Main();					// 計算(メインの処理)
 		void	SetupShadowMap();				// シャドウマップの設定
 		void	SetupLightMap();				// ライトマップの設定
 		void	SetupMainScreen();				// メインの描写処理

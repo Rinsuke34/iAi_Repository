@@ -16,75 +16,83 @@ void CharacterPlayer::Player_Move()
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 
 	/* プレイヤー移動量取得 */
-	float fStickTiltMagnitude = this->InputList->fGetGameInputMove();				// スティックを倒した強さ
-	VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();	// 移動方向
-	VECTOR vecAddMove = VGet(0, 0, 0);									// 移動量(加算用)
+	float fStickTiltMagnitude	= this->InputList->fGetGameInputMove();				// スティックを倒した強さ
+	VECTOR vecInput				= this->InputList->vecGetGameInputMoveDirection();	// 移動方向
+	VECTOR vecAddMove			= VGet(0, 0, 0);									// 移動量(加算用)
 
-	/* プレイヤーの移動状態を取得 */
+	/* プレイヤーの状態を取得 */
 	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
-	/* プレイヤーの攻撃状態を取得 */
 	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
-	float	fMoveSpeedRatio = 1.f;		// 移動速度(倍率)
-	bool	bPlayerAngleSetFlg = true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
-	bool	bPlayerMoveFlg = true;			// プレイヤーの移動を行うかのフラグ	
+	float	fMoveSpeedRatio		= 1.f;		// 移動速度(倍率)
+	bool	bPlayerAngleSetFlg	= true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
+	bool	bPlayerMoveFlg		= true;		// プレイヤーの移動を行うかのフラグ	
 	
+	/* プレイヤーの移動状態が移動処理を行う状態であるか確認 */
 	switch (iPlayerMoveState)
 	{
 		/* 移動処理を通常通りに行う状態 */
-	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+		case PLAYER_MOVESTATUS_FREE:				// 自由状態
 
-		/* 移動処理を行う */
-		bPlayerMoveFlg = true;
+			/* 移動処理を行う */
+			bPlayerMoveFlg = true;
 		
-		/* 移動速度補正無しにする */
-		fMoveSpeedRatio = 1.f;
+			/* 移動速度補正無しにする */
+			fMoveSpeedRatio = 1.f;
 
-		/* プレイヤーの向きを移動方向に合わせる */
-		bPlayerAngleSetFlg = true;
+			/* プレイヤーの向きを移動方向に合わせる */
+			bPlayerAngleSetFlg = true;
 		
-		break;
-
-	/* 移動処理を行わない状態 */
-	case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
-	
-		// 移動処理を行わない
-		bPlayerMoveFlg = false;
-		
-		break;
-	}
-
-	switch (iPlayerAttackState)
-	{
-	
-	/* 移動処理を通常通りに行う状態 */
-	case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
-		
-		/* 移動速度補正無しにする */
-		fMoveSpeedRatio = 1.f;
-
-		/* プレイヤーの向きを移動方向に合わせる */
-		bPlayerAngleSetFlg = true;
-		break;
-
-		/* 移動処理を速度を抑えて行う状態 */
-	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
-	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-		
-		/* 移動速度補正0.5倍にする */
-		// ※仮の値
-		fMoveSpeedRatio = 0.5f;
-
-		/* プレイヤーの向きを移動方向に合わせない */
-		bPlayerAngleSetFlg = false;
-		break;
+			break;
 
 		/* 移動処理を行わない状態 */
-	case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
-	case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
-	case PLAYER_ATTACKSTATUS_PROJECTILE:		// 遠距離攻撃中
-		break;	
+		case PLAYER_MOVESTATUS_EVENT:				// イベント状態(操作不可)
+		case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+		case PLYAER_MOVESTATUS_DEAD:				// 死亡状態(操作不可)
+	
+			// 移動処理を行わない
+			bPlayerMoveFlg = false;
+		
+			break;
+	}
+
+	/* プレイヤーの移動状態が移動処理を行う場合であるか確認 */
+	if (bPlayerMoveFlg == true)
+	{
+		// 移動処理を行う場合
+		/* プレイヤーの攻撃状態が移動処理を行う状態であるか確認 */
+		switch (iPlayerAttackState)
+		{
+
+			/* 移動処理を通常通りに行う状態 */
+			case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
+
+				/* 移動速度補正無しにする */
+				fMoveSpeedRatio = 1.f;
+
+				/* プレイヤーの向きを移動方向に合わせる */
+				bPlayerAngleSetFlg = true;
+				break;
+
+			/* 移動処理を速度を抑えて行う状態 */
+			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+			case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+
+				/* 移動速度補正0.5倍にする */
+				// ※仮の値
+				fMoveSpeedRatio = 0.5f;
+
+				/* プレイヤーの向きを移動方向に合わせない */
+				bPlayerAngleSetFlg = false;
+				break;
+
+			/* 移動処理を行わない状態 */
+			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
+			case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
+			case PLAYER_ATTACKSTATUS_PROJECTILE:		// 遠距離攻撃中
+				break;
+		}
 	}
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
@@ -93,11 +101,8 @@ void CharacterPlayer::Player_Move()
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 
-	/* 移動入力がされているか確認 */
-	if ((vecInput.x != 0 || vecInput.z != 0))
-	{
-		/* 移動処理を行う状態か確認 */
-		if (bPlayerMoveFlg = true)
+	/* 移動処理を行える状態かつ、入力がされているか確認 */
+	if ((vecInput.x != 0 || vecInput.z != 0) && (bPlayerMoveFlg == true))
 	{
 		// 移動入力がされている場合
 		/* 現在の移動速度取得 */
@@ -108,15 +113,20 @@ void CharacterPlayer::Player_Move()
 		{
 			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
-			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
-
-			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
-			if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
 			{
-				// 強攻撃(終了)であるなら
-				/* プレイヤーの攻撃側モーションを"無し"に設定 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+
+				/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+				{
+					// 強攻撃(終了)であるなら
+					/* プレイヤーの攻撃側モーションを"無し"に設定 */
+					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				}
 			}
 		}
 
@@ -129,17 +139,22 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
 			//一定フレームがたったら走り（最大）へ
-			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
-
-			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
-			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
 			{
-				// 強攻撃(終了)であるなら
-				/* プレイヤーの攻撃側モーションを"無し"に設定 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
-			}
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
 
+				/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+				{
+					// 強攻撃(終了)であるなら
+					/* プレイヤーの攻撃側モーションを"無し"に設定 */
+					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				}
+
+			}
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
 			if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() == FLAME_COUNT_TO_MAX_SPEED)
 			{
@@ -173,8 +188,13 @@ void CharacterPlayer::Player_Move()
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 				/* 走行(高速)モーション設定 */
-				/* モーション設定(歩行) */
-				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+				/* モーションが"ジャンプ(開始)"以外であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				{
+					// ジャンプ(開始)以外であるなら
+					/* モーション設定(走行) */
+					this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+				}
 			}
 		}
 		else
@@ -185,7 +205,13 @@ void CharacterPlayer::Player_Move()
 			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 
 			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+			{
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(走行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+			}
 		}
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
@@ -235,17 +261,17 @@ void CharacterPlayer::Player_Move()
 			/* 現在のプレイヤーの向きと移動方向の差を求める */
 			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
 
-				//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
-				/* 左回りで半周を超えたら */
-				if (fDifferrenceAngle > DX_PI_F)
-				{
-					/* 角度を一周(2π)分補正する */
+			//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
+			/* 左回りで半周を超えたら */
+			if (fDifferrenceAngle > DX_PI_F)
+			{
+				/* 角度を一周(2π)分補正する */
 				fDifferrenceAngle -= PLAYER_TURN_LIMIT;
-				}
-				/* 右回りで半周を超えたら */
-				else if (fDifferrenceAngle < -DX_PI_F)
-				{
-					/* 角度を一周(2π)分補正する */
+			}
+			/* 右回りで半周を超えたら */
+			else if (fDifferrenceAngle < -DX_PI_F)
+			{
+				/* 角度を一周(2π)分補正する */
 				fDifferrenceAngle += PLAYER_TURN_LIMIT;
 			}
 
@@ -259,7 +285,6 @@ void CharacterPlayer::Player_Move()
 			/* 2025.02.14 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
-	}
 	else
 	{
 		// 移動入力がされていない場合
@@ -271,15 +296,25 @@ void CharacterPlayer::Player_Move()
 		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
 		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
+
 		}
 		else
 		{
-			/* 現在のモーションが"着地"でないか確認 */
-			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+			/* 現在のモーションが"着地"、あるいは"死亡"でないか確認 */
+			int iMotionMove = this->PlayerStatusList->iGetPlayerMotion_Move();
+			if ((iMotionMove != MOTION_ID_MOVE_LAND) && (iMotionMove != MOTION_ID_MOVE_DIE))
 			{
-				// "着地"以外である場合
-				/* 待機モーション設定 */
-				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+				// "着地","死亡"以外である場合
+				/* モーションが"ジャンプ(開始)"以外であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				{
+					/* 現在のモーションが"着地"でないか確認 */
+					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+					{
+						/* 待機モーション設定 */
+						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+					}
+				}
 			}
 		}
 	}
@@ -292,60 +327,64 @@ void CharacterPlayer::Player_Move()
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
-	/* プレイヤーの移動状態を取得 */
-	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
-	/* プレイヤーの攻撃状態を取得 */
-	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+	/* プレイヤーの移動を取得 */
+	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
+	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
 	/* ジャンプ処理を行うかのフラグ */
 	bool bJumpFlag = true;
 
 	/* プレイヤーの移動状態がジャンプ可能であるか確認 */
-	// ※要相談
 	switch (iPlayerMoveState)
 	{
 		/* ジャンプ可能な状態 */
-	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+		case PLAYER_MOVESTATUS_FREE:				// 自由状態
 		
-		/* ジャンプ処理を行う */
-		bJumpFlag = true;
+			/* ジャンプ処理を行う */
+			bJumpFlag = true;
 	
-		break;
+			break;
 
-	/* ジャンプ不可能な状態 */
-	case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+		/* ジャンプ不可能な状態 */
+		case PLAYER_MOVESTATUS_EVENT:				// イベント状態(操作不可)
+		case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+		case PLYAER_MOVESTATUS_DEAD:				// 死亡状態(操作不可)
 		
-		/* ジャンプ処理を行う */
-		bJumpFlag = false;
+			/* ジャンプ処理を行う */
+			bJumpFlag = false;
 		
-		break;
+			break;
 	}
 
-	/* プレイヤーの攻撃状態がジャンプ可能であるか確認 */
-	// ※要相談
-	switch (iPlayerAttackState)
-	{
-	/* ジャンプ可能な状態 */
-	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
-	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-	case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
-		
-		/* ジャンプ処理を行う */
-		bJumpFlag = true;
-		break;
-	
-	/* ジャンプ不可能な状態 */
-	case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
-	case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
-		
-		/* ジャンプ処理を行わない */
-		bJumpFlag = false;
-		break;
-	}
-
-		/* プレイヤーのジャンプ処理 */
-	/* 移動処理を行う状態か確認 */
+	/* プレイヤーの移動状態がジャンプ可能であったか確認 */	
 	if (bJumpFlag == true)
 	{
+		// ジャンプ可能である場合
+		/* プレイヤーの攻撃状態がジャンプ可能であるか確認 */
+		switch (iPlayerAttackState)
+		{
+			/* ジャンプ可能な状態 */
+			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+			case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+			case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+
+				/* ジャンプ処理を行う */
+				bJumpFlag = true;
+				break;
+
+			/* ジャンプ不可能な状態 */
+			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
+			case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
+			case PLAYER_ATTACKSTATUS_DEAD:				// 死亡状態(操作不可)
+				/* ジャンプ処理を行わない */
+				bJumpFlag = false;
+				break;
+		}
+	}
+
+	/* ジャンプ処理を行う状態か確認 */
+	if (bJumpFlag == true)
+	{
+		// ジャンプ処理を行う場合
 		/* ジャンプ回数が最大数を超えていないか確認 */
 		int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
 		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount();
@@ -367,6 +406,44 @@ void CharacterPlayer::Player_Jump()
 
 				/* ジャンプのSEを再生 */
 				gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+
+				//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
+
+				/* 地面にいない事を確認 */
+				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+				{
+					/*空中ジャンプエフェクト追加 */
+					{
+						/* 空中ジャンプエフェクトを生成 */
+						EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
+
+						/* 空中ジャンプエフェクトの読み込み */
+						pAirJumpEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_airjump/FX_airjump")));
+
+						/* 空中ジャンプエフェクトの時間を設定 */
+						pAirJumpEffect->SetDeleteCount(30);
+
+						/* 空中ジャンプエフェクトの座標設定 */
+						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
+
+						/* 空中ジャンプエフェクトの回転量設定 */
+						pAirJumpEffect->SetRotation(this->vecRotation);
+
+						/* 空中ジャンプエフェクトの初期化 */
+						pAirJumpEffect->Initialization();
+
+						/* 空中ジャンプエフェクトをリストに登録 */
+						{
+							/* 空中ジャンプエフェクトをリストに登録 */
+							this->ObjectList->SetEffect(pAirJumpEffect);
+						}
+					}
+
+				}
+
+				/* モーションを"ジャンプ(開始)"に設定 */
+				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
 			}
 		}
 	}
@@ -385,43 +462,49 @@ void CharacterPlayer::Player_Gravity()
 	bool bGravityFlag = true;
 
 	/* プレイヤーが重力処理を行う移動状態であるか確認 */
-	// ※要相談
 	switch (iPlayerMoveState)
 	{
 		/* 重力処理を行う状態 */
-	case PLAYER_MOVESTATUS_FREE:				// 自由状態
+		case PLAYER_MOVESTATUS_FREE:			// 自由状態
+		case PLYAER_MOVESTATUS_DEAD:			// 死亡状態(操作不可)
 
-		/* 重力処理を行う */
-		bGravityFlag = true;
-		break;
+			/* 重力処理を行う */
+			bGravityFlag = true;
+			break;
 
 		/* 重力処理を行わない状態 */
-	case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
+		case PLAYER_MOVESTATUS_EVENT:			// イベント状態(操作不可)
+		case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
 
-		/* 重力処理を行わない(重力処理を終了) */
-		bGravityFlag = false;
-		break;
+			/* 重力処理を行わない(重力処理を終了) */
+			bGravityFlag = false;
+			break;
 	}
 
-	/* プレイヤーが重力処理を行う攻撃状態であるか確認 */
-	// ※要相談
-	switch (iPlayerAttackState)
+	/* プレイヤーの移動状態が重力処理を行う状態であったか確認 */
+	if (bGravityFlag == true)
 	{
-		/* 重力処理を行う状態 */
-	case PLAYER_ATTACKSTATUS_FREE:					// 自由状態		
-	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中		
-	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-		/* 重力処理を行う */
-		bGravityFlag = true;
-		break;
+		// 重力処理を行う場合
+		/* プレイヤーが重力処理を行う攻撃状態であるか確認 */
+		switch (iPlayerAttackState)
+		{
+			/* 重力処理を行う状態 */
+			case PLAYER_ATTACKSTATUS_FREE:					// 自由状態
+			case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)
+			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+			case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+			case PLAYER_ATTACKSTATUS_DEAD:					// 死亡状態(操作不可)
+				/* 重力処理を行う */
+				bGravityFlag = true;
+				break;
 
-		/* 重力処理を行わない状態 */
-	case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)
-	case PLAYER_ATTACKSTATUS_MELEE_STRONG:			// 近接攻撃中(強)
-	case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
-		/* 重力処理を行わない(重力処理を終了) */
-		bGravityFlag = false;
-		break;
+			/* 重力処理を行わない状態 */
+			case PLAYER_ATTACKSTATUS_MELEE_STRONG:			// 近接攻撃中(強)
+			case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+				/* 重力処理を行わない(重力処理を終了) */
+				bGravityFlag = false;
+				break;
+		}
 	}
 
 	/* 重力処理実行フラグの確認 */
@@ -455,107 +538,135 @@ void CharacterPlayer::Player_Dodg()
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
 
-	/* プレイヤー場外が"回避状態中"であるか確認 */
-	if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
+	/* プレイヤーの回避処理を行うかのフラグ */
+	bool bDodgeFlag = true;
+
+	/* プレイヤーが回避処理を行う移動状態であるか確認 */
+	// ※攻撃状態は考慮しない
+	switch (iPlayerMoveState)
 	{
-		// 回避中である場合
-		/* 回避状態が維持される時間を超えていないか確認 */
-		if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
+		/* 回避処理を行う状態 */
+		case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
+		case PLAYER_MOVESTATUS_FREE:			// 自由状態
+			/* 回避処理を行う */
+			bDodgeFlag = true;
+			break;
+
+		/* 回避処理を行わない状態 */
+		case PLAYER_MOVESTATUS_EVENT:			// イベント状態(操作不可)
+		case PLYAER_MOVESTATUS_DEAD:			// 死亡状態(操作不可)
+
+			/* 回避処理を行わない(回避処理を終了) */
+			bDodgeFlag = false;
+			break;
+	}
+
+	/* 回避処理を行うか確認 */
+	if (bDodgeFlag == true)
+	{
+		// 回避処理を行う場合
+		/* プレイヤー場外が"回避状態中"であるか確認 */
+		if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
 		{
-			// 超えていない(回避状態を継続する)場合
-			
-			/* 回避による移動方向を設定し、移動する */
-			/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
-			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (1.0f - (float)this->PlayerStatusList->iGetPlayerNowDodgeFlame() / (float)PLAYER_DODGE_FLAME));
+			// 回避中である場合
+			/* 回避状態が維持される時間を超えていないか確認 */
+			if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
+			{
+				// 超えていない(回避状態を継続する)場合
 
-			/* 回避の経過時間を進める */
-			this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
+				/* 回避による移動方向を設定し、移動する */
+				/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
+				this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (1.0f - (float)this->PlayerStatusList->iGetPlayerNowDodgeFlame() / (float)PLAYER_DODGE_FLAME));
 
+				/* 回避の経過時間を進める */
+				this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
+
+			}
+			else
+			{
+				// 超えている(回避状態を終了する)場合
+				/* 回避完了直後フラグを有効にする */
+				this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
+
+				/* プレイヤー状態を"自由状態"に設定 */
+				this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
+
+				/* 回避エフェクトを削除 */
+				this->pDodgeEffect->SetDeleteFlg(true);
+				/* 回避エフェクトのポインタを削除 */
+				this->pDodgeEffect = nullptr;
+			}
 		}
 		else
 		{
-			// 超えている(回避状態を終了する)場合
-			/* 回避完了直後フラグを有効にする */
-			this->PlayerStatusList->SetPlayerAfterDodgeFlag(true);
-
-			/* プレイヤー状態を"自由状態"に設定 */
-			this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
-
-			/* 回避エフェクトを削除 */
-			this->pDodgeEffect->SetDeleteFlg(true);
-			/* 回避エフェクトのポインタを削除 */
-			this->pDodgeEffect = nullptr;
-		}
-	}
-	else
-	{
-		// 回避中でない場合
-		/* 回避が入力されているか確認 */
-		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
-		{
-			// 回避が入力されている場合
-			/* 空中での回避回数制限を超えていないか */
-			if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
+			// 回避中でない場合
+			/* 回避が入力されているか確認 */
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
 			{
-				/* 回避開始時の時間をリセット */
-				this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
-
-				/* 回避方向設定 */
+				// 回避が入力されている場合
+				/* 空中での回避回数制限を超えていないか */
+				if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
 				{
-					/* 入力による移動量を取得 */
-					VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+					/* 回避開始時の時間をリセット */
+					this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
 
-					/* カメラの水平方向の向きを移動用の向きに設定 */
-					float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
-
-					/* 移動量を算出 */
-					VECTOR vecMove;
-					vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-					vecMove.y = 0.0f;
-					vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-
-					/* 回避の移動方向を現在の移動用の向きに設定 */
-					this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
-				}
-
-				/* 回避状態の進行率をリセット */
-				this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
-
-				/* 落下の加速度を初期化 */
-				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
-
-				/* プレイヤー状態を"回避状態中"に設定 */
-				this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
-
-				/* プレイヤーが着地していないかを確認 */
-				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-				{
-					// 着地していない場合
-					/* 空中での回避回数のカウントを進める */
-					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
-				}
-
-				/* 回避のSEを再生 */
-				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
-
-				/* 回避エフェクト追加 */
-				{
-					/* 回避エフェクトを生成 */
-					this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
-
-					/* 回避エフェクトの読み込み */
-					this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
-
-					/* エフェクトの回転量設定 */
-					this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-
-					/* 回避エフェクトの初期化 */
-					this->pDodgeEffect->Initialization();
-
-					/* 回避エフェクトをリストに登録 */
+					/* 回避方向設定 */
 					{
+						/* 入力による移動量を取得 */
+						VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+						/* カメラの水平方向の向きを移動用の向きに設定 */
+						float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+						/* 移動量を算出 */
+						VECTOR vecMove;
+						vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+						vecMove.y = 0.0f;
+						vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+
+						/* 回避の移動方向を現在の移動用の向きに設定 */
+						this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
+					}
+
+					/* 回避状態の進行率をリセット */
+					this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
+
+					/* 落下の加速度を初期化 */
+					this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
+					/* プレイヤー状態を"回避状態中"に設定 */
+					this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
+
+					/* プレイヤーが着地していないかを確認 */
+					if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+					{
+						// 着地していない場合
+						/* 空中での回避回数のカウントを進める */
+						this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
+					}
+
+					/* 回避のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
+
+					/* 回避エフェクト追加 */
+					{
+						/* 回避エフェクトを生成 */
+						this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
+
+						/* 回避エフェクトの読み込み */
+						this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
+
+						/* エフェクトの回転量設定 */
+						this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+
+						/* 回避エフェクトの初期化 */
+						this->pDodgeEffect->Initialization();
+
 						/* 回避エフェクトをリストに登録 */
-						this->ObjectList->SetEffect(this->pDodgeEffect);
+						{
+							/* 回避エフェクトをリストに登録 */
+							this->ObjectList->SetEffect(this->pDodgeEffect);
+						}
 					}
 				}
 			}
@@ -714,8 +825,12 @@ void CharacterPlayer::Movement_Vertical()
 			if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 			{
 				// 上昇している場合
+				/* モーションが"ジャンプ(開始)"でないことを確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				{
 				/* モーションを"ジャンプ(上昇)"に設定 */
 				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+				}
 			}
 			else
 			{

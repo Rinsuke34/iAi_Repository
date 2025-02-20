@@ -5,20 +5,16 @@
 // 描写
 void CharacterPlayer::Draw()
 {
+	/* 攻撃モーション使用フラグ */
+	bool	bUseAttackMotionFlg = false;
+
 	/* 攻撃モーションを使用するか(攻撃モーションが"無し"以外であるか)確認 */
-	bool	bUseAttackMotionFlg = false;	// 攻撃モーション使用フラグ
 	if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
 	{
 		// 攻撃モーションを使用する場合
 		/* 攻撃モーション使用フラグを有効にする */
 		bUseAttackMotionFlg = true;
 	}
-
-	/* 座標設定 */
-	MV1SetPosition(this->iModelHandle, this->vecPosition);
-
-	/* モデル回転 */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* モーションの再生時間設定 */
 	{

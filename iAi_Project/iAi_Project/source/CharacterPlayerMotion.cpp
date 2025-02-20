@@ -11,8 +11,6 @@ void CharacterPlayer::Player_Motion_Transition()
 	int iMotionNo_Attack	= this->PlayerStatusList->iGetPlayerMotion_Attack();
 
 	/* 現在のモーションの総時間を取得 */
-
-
 	/* 移動系モーション */
 	{
 		/* モーションが変更されているか確認 */
@@ -49,8 +47,22 @@ void CharacterPlayer::Player_Motion_Transition()
 		if (fNowMotionTime_Move > this->PlayerStatusList->fGetMotionTimer_Move_End())
 		{
 			// 最大時間を超えている場合
-			/* 再生時間を初期化 */
-			fNowMotionTime_Move = 0.f;
+			/* プレイヤーモーションが"死亡"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_DIE)
+			{
+				// "死亡"以外である場合
+				/* 再生時間を初期化 */
+				fNowMotionTime_Move = 0.f;
+			}
+			else
+			{
+				// "死亡"である場合
+				/* 再生時間を最後の時間で停止 */
+				fNowMotionTime_Move -= 1.f;
+
+				/* 死亡フラグを有効にする */
+				this->PlayerStatusList->SetPlayerDeadFlg(true);
+			}
 
 			/* モーション番号を変更後の値に設定 */
 			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_LIST[iMotionNo_Move].iNextMotionID);

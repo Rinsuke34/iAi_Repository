@@ -78,6 +78,7 @@ static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形
 static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)
 static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態
 static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中
+static const int	PLYAER_MOVESTATUS_DEAD					= 3;	// 死亡状態(操作不可)
 
 /* プレイヤー攻撃状態 */
 // ※状態に応じて可能な行動が変わる
@@ -88,6 +89,7 @@ static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)
 static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
+static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// 死亡状態(操作不可)
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
 
 /* プレイヤー処理用定数 */
