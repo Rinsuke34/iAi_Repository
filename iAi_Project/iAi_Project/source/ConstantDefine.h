@@ -44,7 +44,8 @@ static const std::string STAGE_NAME[STAGE_MAX] =
 };
 
 /* 描写関連 */
-static const int	SHADOWMAP_SIZE			= 2048;		// シャドウマップのサイズ
+static const int	SHADOWMAP_SIZE_PLATFORM     = 2048;		// シャドウマップのサイズ
+
 static const float	SHADOWMAP_RANGE			= 1024;		// シャドウマップの描写範囲
 static const int	LIGHTMAP_DOWNSCALE		= 8;		// ライトマップの縮小倍率
 static const int	LIGHTMAP_GAUSS_WIDTH	= 16;		// ぼかしの強さ(8, 16, 32のいずれか)

@@ -21,18 +21,32 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 		this->pPlayer = dynamic_cast<CharacterPlayer*>(ObjectList->GetCharacterPlayer());
 	}
 
-	/* コリジョン設定 */
+	/* モデル取得 */
 	{
-		this->stCollisionCapsule.fCapsuleRadius		= 50.0f;
-		this->stCollisionCapsule.vecCapsuleTop		= VGet(0.0f, 50.0f, 0.0f);
-		this->stCollisionCapsule.vecCapsuleBottom	= VGet(0.0f, -50.0f, 0.0f);
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/gimmick_jump");
 	}
 }
 
 // デストラクタ
 PickUpItem_ForcedJump::~PickUpItem_ForcedJump()
 {
+	
+}
 
+// 初期化
+void PickUpItem_ForcedJump::Initialization()
+{
+	/* コリジョン設定 */
+	{
+		this->stCollisionCapsule.fCapsuleRadius		= 50.0f;
+		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 50.0f, 0.0f));
+		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, -50.0f, 0.0f));
+	}
 }
 
 // 更新
@@ -41,7 +55,6 @@ void PickUpItem_ForcedJump::Update()
 	/* プレイヤーとこのギミックが接触しているか確認 */
 	if (this->pPlayer->HitCheck(this->stCollisionCapsule))
 	{
-
 		/* エフェクト追加 */
 
 		/*爆発エフェクトを生成 */
@@ -80,12 +93,4 @@ void PickUpItem_ForcedJump::Update()
 		/* 生成元のスポーンフラグを有効にする */
 		this->pGimmick_ForcedJump_Spawn->SetSpawnObjectFlg(true);
 	}
-}
-
-// 描写
-void PickUpItem_ForcedJump::Draw()
-{
-	/* 仮描写(本番ではモデル) */
-	int iColor = GetColor(255, 255, 0);
-	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 16, iColor, iColor, FALSE);
 }

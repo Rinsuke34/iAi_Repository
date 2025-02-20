@@ -7,7 +7,6 @@
 /* 2025.02.07 菊池雅道	エフェクト処理修正 */
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
-/* 2025.02.19 菊池雅道	エフェクト処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -106,7 +105,6 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
-	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -117,8 +115,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
-			/* 溜めのエフェクトを刀の位置に生成 */
-			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
+			/* 溜めのエフェクトを生成 */
+			this->pChargeEffect = new EffectManualDelete_PlayerFollow(true);
 
 			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
@@ -157,10 +155,9 @@ void CharacterPlayer::Player_Melee_Posture()
 
 					/* 溜めエフェクトは削除 */
 					this->pChargeEffect->SetDeleteFlg(true);
-					this->pChargeEffect = nullptr;
 
 					/* 溜め完了エフェクトを生成 */
-					EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
 
 					/* 溜め完了エフェクトの読み込み */
 					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
@@ -181,7 +178,7 @@ void CharacterPlayer::Player_Melee_Posture()
 					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
 					/* 溜め完了後エフェクトを生成 */
-					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
+					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow(true);
 					
 					/* 溜め完了後エフェクトの読み込み */
 					this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
@@ -203,6 +200,9 @@ void CharacterPlayer::Player_Melee_Posture()
 				}
 			}
 		
+			/* プレイヤーの向きをカメラの向きに固定 */
+			this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+
 			/* 移動量算出 */
 			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
 			// 臨時でちょっと長めにする
@@ -223,8 +223,6 @@ void CharacterPlayer::Player_Melee_Posture()
 				/* カメラモードを"構え(近接攻撃構え)"に変更 */
 				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
 
-				/* プレイヤーの向きをカメラの向きに固定 */
-				this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
 				
 				/* ロックオン範囲のコリジョン作成 */
 				{
@@ -312,7 +310,6 @@ void CharacterPlayer::Player_Melee_Posture()
 /* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
-/* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -329,8 +326,32 @@ void CharacterPlayer::Player_Melee_Weak()
 	// ※現在のプレイヤーの向きに弾を作成
 	this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
 
+	/* 生成座標を取得 */
+	{
+		/* 攻撃の生成方向の設定 */
+		// ※プレイヤーの向きではなくカメラの向きとする
+		VECTOR vecInput = VGet(0.f, 0.f, 1.f);
+		
+		/* カメラの水平方向の向きを移動用の向きに設定 */
+		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+
+		/* 攻撃座標を算出 */
+		VECTOR vecAdd;
+		// 方向
+		vecAdd.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+		vecAdd.y = 0.f;
+		vecAdd.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+		vecAdd = VNorm(vecAdd);
+		vecAdd = VScale(vecAdd, PLAYER_WIDE);
+		// 高さ
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
+
+		/* 攻撃生成座標を設定 */
+		this->pBulletMeleeWeak->SetPosition(VAdd(this->vecPosition, vecAdd));
+	}
+
 	/* 攻撃の向きを設定 */
-	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetCameraAngleX()), 0.0f));
 
 	/* 初期化を行う */
 	this->pBulletMeleeWeak->Initialization();

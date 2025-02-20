@@ -5,7 +5,6 @@
 /* 2025.02.06 菊池雅道 エフェクト関連修正 */
 /* 2025.02.14 菊池雅道 回転関連の関数追加 */
 /* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
-/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -25,8 +24,6 @@
 #include "EffectSelfDelete.h"
 #include "EffectSelfDelete_PlayerFollow.h"
 #include "EffectManualDelete_PlayerFollow.h"
-#include "EffectManualDelete_PlayerFollow_Frame.h"
-#include "EffectSelfDelete_PlayerFollow_Frame.h"
 
 /* プレイヤークラスの宣言 */
 
@@ -81,12 +78,9 @@ class CharacterPlayer : public CharacterBase
 		BulletPlayerKunaiEffect* pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
-		EffectManualDelete_PlayerFollow_Frame* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-		EffectManualDelete_PlayerFollow_Frame* pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow* pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 		EffectManualDelete_PlayerFollow*	pDodgeEffect;		//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-
-		/* フレームのハンドル */
-		int		iKatanaFrameNo;			// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 
 		int		iMotionAttachIndex;		// アタッチされるモーションのインデックス		/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
 		int		iOldMotion;				// 以前にアタッチされたモーション				/* 2025.01.30 菊池雅道 モーション関連の変数追加 */

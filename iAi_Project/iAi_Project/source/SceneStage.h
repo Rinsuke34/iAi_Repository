@@ -71,6 +71,8 @@ class SceneStage : public SceneBase
 		int iMainScreenHandle;						// メイン画面のハンドル
 		int iMainScreenEffectHandle;				// メイン画面(画面エフェクト用)のハンドル
 		// シャドウマップハンドル
-		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
+		int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
+		int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
+		int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
 };
 

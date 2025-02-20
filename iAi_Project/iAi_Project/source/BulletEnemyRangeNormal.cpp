@@ -79,7 +79,7 @@ void BulletEnemyRangeNormal::BulletEnemyRangeNormalMove()
 	}
 
 	// ノーマル弾の移動座標と向きと速度を更新
-	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 35));
 
 	// ノーマル弾のコリジョン座標を更新
 	this->stCollisionSqhere.vecSqhere = this->vecPosition;
