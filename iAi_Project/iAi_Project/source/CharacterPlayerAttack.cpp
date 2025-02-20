@@ -7,6 +7,7 @@
 /* 2025.02.07 菊池雅道	エフェクト処理修正 */
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
+/* 2025.02.19 菊池雅道	エフェクト処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -105,6 +106,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
+	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -115,8 +117,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
-			/* 溜めのエフェクトを生成 */
-			this->pChargeEffect = new EffectManualDelete_PlayerFollow(true);
+			/* 溜めのエフェクトを刀の位置に生成 */
+			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
 
 			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge/FX_charge")));
@@ -155,9 +157,10 @@ void CharacterPlayer::Player_Melee_Posture()
 
 					/* 溜めエフェクトは削除 */
 					this->pChargeEffect->SetDeleteFlg(true);
+					this->pChargeEffect = nullptr;
 
 					/* 溜め完了エフェクトを生成 */
-					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
+					EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
 
 					/* 溜め完了エフェクトの読み込み */
 					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_finish/FX_charge_finish")));
@@ -178,7 +181,7 @@ void CharacterPlayer::Player_Melee_Posture()
 					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 
 					/* 溜め完了後エフェクトを生成 */
-					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow(true);
+					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
 					
 					/* 溜め完了後エフェクトの読み込み */
 					this->pChargeHoldEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_charge_hold/FX_charge_hold")));
@@ -310,6 +313,7 @@ void CharacterPlayer::Player_Melee_Posture()
 /* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
+/* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()

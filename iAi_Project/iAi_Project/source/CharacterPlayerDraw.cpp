@@ -5,12 +5,6 @@
 // •`ŽÊ
 void CharacterPlayer::Draw()
 {
-	/* À•WÝ’è */
-	MV1SetPosition(this->iModelHandle, this->vecPosition);
-
-	/* ƒ‚ƒfƒ‹‰ñ“] */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-
 	/* ƒ‚[ƒVƒ‡ƒ“‚ÌÄ¶ŽžŠÔ‚ðÝ’è */
 	{
 		MV1SetAttachAnimTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), this->PlayerStatusList->fGetMotionTimer_Move());

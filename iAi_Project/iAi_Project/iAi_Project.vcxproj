@@ -181,8 +181,10 @@
     <ClCompile Include="source\EffectItem_Blood.cpp" />
     <ClCompile Include="source\EffectManualDelete.cpp" />
     <ClCompile Include="source\EffectManualDelete_PlayerFollow.cpp" />
+    <ClCompile Include="source\EffectManualDelete_PlayerFollow_Frame.cpp" />
     <ClCompile Include="source\EffectSelfDelete.cpp" />
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow.cpp" />
+    <ClCompile Include="source\EffectSelfDelete_PlayerFollow_Frame.cpp" />
     <ClCompile Include="source\EnemyBasic.cpp" />
     <ClCompile Include="source\EnemyBeam.cpp" />
     <ClCompile Include="source\EnemyEscape.cpp" />
@@ -238,8 +240,10 @@
     <ClInclude Include="source\EffectItem_BloodDefine.h" />
     <ClInclude Include="source\EffectManualDelete.h" />
     <ClInclude Include="source\EffectManualDelete_PlayerFollow.h" />
+    <ClInclude Include="source\EffectManualDelete_PlayerFollow_Frame.h" />
     <ClInclude Include="source\EffectSelfDelete.h" />
     <ClInclude Include="source\EffectSelfDelete_PlayerFollow.h" />
+    <ClInclude Include="source\EffectSelfDelete_PlayerFollow_Frame.h" />
     <ClInclude Include="source\EnemyBasic.h" />
     <ClInclude Include="source\EnemyBeam.h" />
     <ClInclude Include="source\EnemyBulletDefine.h" />

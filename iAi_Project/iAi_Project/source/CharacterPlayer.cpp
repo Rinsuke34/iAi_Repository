@@ -66,6 +66,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
+
+		/* コリジョンフレーム番号取得 */
+		this->iKatanaFrameNo = MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
 	}
 
 	/* モーションリストの設定 */
@@ -159,9 +162,14 @@ void CharacterPlayer::Update()
 	/* コリジョンを更新 */
 	CollisionUpdate();
 
-	
 	/* モーション遷移管理 */
 	Player_Motion_Transition();
+
+	/* 座標設定 */
+	MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+	/* モデル回転 */
+	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 }
 
 // コリジョン更新
@@ -280,7 +288,7 @@ void CharacterPlayer::PlayerHitCheck()
 								pShockEffect->Initialization();
 
 								/* 感電完了エフェクトの時間を設定 */
-								pShockEffect->SetDeleteCount(20);
+								pShockEffect->SetDeleteCount(60);
 
 								/* 感電完了エフェクトをリストに登録 */
 								{

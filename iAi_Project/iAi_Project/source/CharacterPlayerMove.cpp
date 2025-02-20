@@ -108,15 +108,20 @@ void CharacterPlayer::Player_Move()
 		{
 			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
-			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
-
-			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
-			if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
 			{
-				// 強攻撃(終了)であるなら
-				/* プレイヤーの攻撃側モーションを"無し"に設定 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+
+				/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+				{
+					// 強攻撃(終了)であるなら
+					/* プレイヤーの攻撃側モーションを"無し"に設定 */
+					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				}
 			}
 		}
 
@@ -129,15 +134,20 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
 
 			//一定フレームがたったら走り（最大）へ
-			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
-
-			/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
-			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
 			{
-				// 強攻撃(終了)であるなら
-				/* プレイヤーの攻撃側モーションを"無し"に設定 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(歩行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+
+				/* プレイヤーの攻撃側モーションが強攻撃(終了)であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+				{
+					// 強攻撃(終了)であるなら
+					/* プレイヤーの攻撃側モーションを"無し"に設定 */
+					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+				}
 			}
 
 			//一定フレームに達した時、ダッシュエフェクトを出現させる
@@ -173,8 +183,13 @@ void CharacterPlayer::Player_Move()
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 				/* 走行(高速)モーション設定 */
-				/* モーション設定(歩行) */
-				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+				/* モーションが"ジャンプ(開始)"以外であるか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				{
+					// ジャンプ(開始)以外であるなら
+					/* モーション設定(走行) */
+					this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+				}
 			}
 		}
 		else
@@ -185,7 +200,13 @@ void CharacterPlayer::Player_Move()
 			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 
 			/* モーション設定(歩行) */
-			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+			{
+				// ジャンプ(開始)以外であるなら
+				/* モーション設定(走行) */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WALK);
+			}
 		}
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
@@ -271,16 +292,21 @@ void CharacterPlayer::Player_Move()
 		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
 		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
+
 		}
 		else
 		{
-			/* 現在のモーションが"着地"でないか確認 */
-			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+			// 待機モーションに遷移
+			/* モーションが"ジャンプ(開始)"以外であるか確認 */
+			if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
 			{
-				// "着地"以外である場合
-				/* 待機モーション設定 */
-				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
-			}
+				/* 現在のモーションが"着地"でないか確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
+				{
+					/* 待機モーション設定 */
+					this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+				}
+			}		
 		}
 	}
 
@@ -367,6 +393,44 @@ void CharacterPlayer::Player_Jump()
 
 				/* ジャンプのSEを再生 */
 				gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+
+				//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
+
+				/* 地面にいない事を確認 */
+				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+				{
+					/*空中ジャンプエフェクト追加 */
+					{
+						/* 空中ジャンプエフェクトを生成 */
+						EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
+
+						/* 空中ジャンプエフェクトの読み込み */
+						pAirJumpEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_airjump/FX_airjump")));
+
+						/* 空中ジャンプエフェクトの時間を設定 */
+						pAirJumpEffect->SetDeleteCount(30);
+
+						/* 空中ジャンプエフェクトの座標設定 */
+						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT/2 , this->vecPosition.z));
+
+						/* 空中ジャンプエフェクトの回転量設定 */
+						pAirJumpEffect->SetRotation(this->vecRotation);
+
+						/* 空中ジャンプエフェクトの初期化 */
+						pAirJumpEffect->Initialization();
+
+						/* 空中ジャンプエフェクトをリストに登録 */
+						{
+							/* 空中ジャンプエフェクトをリストに登録 */
+							this->ObjectList->SetEffect(pAirJumpEffect);
+						}
+					}
+
+				}
+
+				/* モーションを"ジャンプ(開始)"に設定 */
+				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
 			}
 		}
 	}
@@ -483,8 +547,6 @@ void CharacterPlayer::Player_Dodg()
 
 			/* 回避エフェクトを削除 */
 			this->pDodgeEffect->SetDeleteFlg(true);
-			/* 回避エフェクトのポインタを削除 */
-			this->pDodgeEffect = nullptr;
 		}
 	}
 	else
@@ -714,8 +776,12 @@ void CharacterPlayer::Movement_Vertical()
 			if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 			{
 				// 上昇している場合
-				/* モーションを"ジャンプ(上昇)"に設定 */
-				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+				/* モーションが"ジャンプ(開始)"でないことを確認 */
+				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				{
+					/* モーションを"ジャンプ(上昇)"に設定 */
+					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+				}
 			}
 			else
 			{
