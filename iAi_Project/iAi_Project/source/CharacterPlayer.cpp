@@ -288,7 +288,7 @@ void CharacterPlayer::PlayerHitCheck()
 								pShockEffect->Initialization();
 
 								/* 感電完了エフェクトの時間を設定 */
-								pShockEffect->SetDeleteCount(60);
+								pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 
 								/* 感電完了エフェクトをリストに登録 */
 								{

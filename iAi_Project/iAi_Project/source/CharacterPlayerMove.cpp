@@ -411,7 +411,7 @@ void CharacterPlayer::Player_Jump()
 						pAirJumpEffect->SetDeleteCount(30);
 
 						/* 空中ジャンプエフェクトの座標設定 */
-						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT/2 , this->vecPosition.z));
+						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
 
 						/* 空中ジャンプエフェクトの回転量設定 */
 						pAirJumpEffect->SetRotation(this->vecRotation);
