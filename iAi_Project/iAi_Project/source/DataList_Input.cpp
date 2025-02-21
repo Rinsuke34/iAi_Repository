@@ -386,7 +386,7 @@ VECTOR DataList_Input::vecGetGameInputMoveDirection()
 	}
 
 	/* ˆÚ“®•ûŒü‚ª‚ ‚éê‡ */
-	if (vecReturn.x != -0 || vecReturn.z != -0)
+	if (vecReturn.x != 0.f || vecReturn.z != 0.f)
 	{
 		/* ˆÚ“®•ûŒü‚ğ³‹K‰» */
 		vecReturn = VNorm(vecReturn);

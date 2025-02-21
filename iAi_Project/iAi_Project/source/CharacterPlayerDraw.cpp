@@ -93,6 +93,9 @@ void CharacterPlayer::Draw()
 	//DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "Ä¶ŠÔ : %f", Draw);
 	//Draw = this->PlayerStatusList->fGetMotionTimer_Attack_End();
 	//DrawFormatString(600, 200 + 16 * 10, GetColor(255, 255, 255), "ÅIÄ¶ŠÔ : %f", Draw);
+
+	/* ˆÚ“®—Ê•`Ê */
+	DrawFormatString(600, 200 + 16 * 0, GetColor(255, 255, 255), "ˆÚ“®—Ê X:%f, Y:%f, Z:%f", vecMoveSize.x, vecMoveSize.y, vecMoveSize.z);
 }
 
 // “–‚½‚è”»’è•`Ê

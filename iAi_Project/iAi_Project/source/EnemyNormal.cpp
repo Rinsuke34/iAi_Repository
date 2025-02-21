@@ -66,28 +66,6 @@ void NormalEnemy::MoveEnemy()
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
-
-	//プレイヤーのZ座標がエネミーのZ座標より大きいか確認
-	if (vecPosition.z > playerPos.z)
-	{
-		//プレイヤーのZ座標がエネミーのZ座標より大きい場合
-		//エネミーの縦向きを設定
-		VRot.x = atan2f(this->vecPosition.y - playerPos.y, this->vecPosition.z - playerPos.z) * -1;
-	}
-	//プレイヤーのZ座標がエネミーのZ座標より小さいか確認
-	if (vecPosition.z < playerPos.z)
-	{
-		//プレイヤーのZ座標がエネミーのZ座標より小さい場合
-		//エネミーの縦向きを設定
-		VRot.x = atan2f(playerPos.y - this->vecPosition.y, playerPos.z - this->vecPosition.z);
-	}
-
-	//エネミーが真上を向かないように限界値を設定
-	if (VRot.x > 0.8f)
-	{
-		VRot.x = 0.8f;
-	}
-
 	//エネミーの向きを設定
 	this->vecRotation = VRot;
 
