@@ -68,21 +68,6 @@ void BeamEnemy::MoveEnemy()
 	//攻撃予告エフェクトの座標を設定
 	VECTOR vecWarning = VGet(vecPosition.x, vecPosition.y + vecPosition.y / 2, vecPosition.z);
 
-	//プレイヤーのZ座標がエネミーのZ座標より大きいか確認
-	if (vecPosition.z > playerPos.z)
-	{
-		//プレイヤーのZ座標がエネミーのZ座標より大きい場合
-		//エネミーの縦向きを設定
-		VRot.x = atan2f(this->vecPosition.y - playerPos.y, this->vecPosition.z - playerPos.z) * -1;
-	}
-	//プレイヤーのZ座標がエネミーのZ座標より小さいか確認
-	if (vecPosition.z < playerPos.z)
-	{
-		//プレイヤーのZ座標がエネミーのZ座標より小さい場合
-		//エネミーの縦向きを設定
-		VRot.x = atan2f(playerPos.y - this->vecPosition.y, playerPos.z - this->vecPosition.z);
-	}
-
 	//エネミーの向きを設定
 	this->vecRotation = VRot;
 

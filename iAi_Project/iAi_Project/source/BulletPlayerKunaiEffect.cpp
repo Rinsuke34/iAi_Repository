@@ -32,6 +32,9 @@ BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
 	{
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* "プレイヤー状態"を取得 */
@@ -71,20 +74,14 @@ void BulletPlayerKunaiEffect::Initialization()
 	// 射線上にプラットフォームが存在するか確認する
 	for (auto* platform : PlatformList)
 	{
-		/* プラットフォームと接触しているか確認 */
-		MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
-
-		/* 接触している場合 */
-		if (stHitPoly.HitFlag == true)
+		/* プラットフォームの接触判定 */
+		for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
 		{
-			/* クナイ発射地点から接触地点のベクトルを設定 */
-			VECTOR vecDirection = VSub(stHitPoly.HitPosition, this->PlayerStatusList->vecGetCameraPosition());
-				
-			/* クナイ発射地点から接触地点の距離を設定 */
-			float fDistance = VSize(vecDirection);
-				
-			/* クナイの射線上の最小距離を確認 */
-			if (fMinDistance >= fDistance)
+			/* プラットフォームと接触しているか確認 */
+			MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
+
+			/* 接触している場合 */
+			if (stHitPoly.HitFlag == true)
 			{
 				/* 接触した座標をターゲット座標に設定 */
 				vecKunaiTargetPosition = stHitPoly.HitPosition;

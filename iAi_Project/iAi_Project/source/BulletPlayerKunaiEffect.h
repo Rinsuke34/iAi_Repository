@@ -43,7 +43,7 @@ private:
 	bool	bKunaiAttackFlg;				// クナイの攻撃フラグ
 
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
+	DataList_Object* ObjectList;			// オブジェクト管理
 	DataList_PlayerStatus* PlayerStatusList;			// プレイヤー状態
 
 protected:
