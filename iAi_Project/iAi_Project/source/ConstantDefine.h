@@ -70,4 +70,3 @@ static const int	RESULT_EVALUAtiON_C = 1;	// C
 static const int	RESULT_EVALUAtiON_B = 2;	// B
 static const int	RESULT_EVALUAtiON_A = 3;	// A
 static const int	RESULT_EVALUAtiON_S = 4;	// S(ç≈çÇÉâÉìÉN)
-

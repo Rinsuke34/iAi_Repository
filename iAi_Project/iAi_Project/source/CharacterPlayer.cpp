@@ -99,6 +99,14 @@ void CharacterPlayer::Update()
 	/* 当たり判定処理 */
 	PlayerHitCheck();
 
+	/* プレイヤーが落下したか */
+	if (this->vecPosition.y <= 0)
+	{
+		// 落下した場合
+		/* プレイヤーのHPを0にする */
+		this->PlayerStatusList->SetPlayerNowHp(0);
+	}
+
 	/* プレイヤーの現在HPが0以下(死亡状態)であるか確認 */
 	if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
 	{

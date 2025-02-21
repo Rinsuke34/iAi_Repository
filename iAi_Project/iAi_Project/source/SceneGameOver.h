@@ -8,6 +8,9 @@
 #include "DataList_GameStatus.h"
 #include "DataList_Image.h"
 
+/* シーン */
+#include "SceneHome.h"
+
 /* シーン"ゲームオーバー"クラスの宣言 */
 
 // シーン"ゲームオーバー"

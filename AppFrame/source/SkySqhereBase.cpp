@@ -17,6 +17,19 @@ SkySqhereBase::~SkySqhereBase()
 	MV1DeleteModel(this->iModelHandle);
 }
 
+// ‰Šú‰»
+void SkySqhereBase::Initialization()
+{
+	/* À•WÝ’è */
+	MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+	/* ƒ‚ƒfƒ‹‰ñ“] */
+	MV1SetRotationXYZ(this->iModelHandle, this->vecRotation);
+
+	/* ƒ‚ƒfƒ‹Šg‘å */
+	MV1SetScale(this->iModelHandle, this->vecScale);
+}
+
 // •`ŽÊ
 void SkySqhereBase::Draw()
 {

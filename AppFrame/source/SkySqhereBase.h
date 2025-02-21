@@ -12,6 +12,7 @@ class SkySqhereBase : public ObjectBase
 		SkySqhereBase();				// コンストラクタ
 		virtual ~SkySqhereBase();	// デストラクタ
 
+		virtual void	Initialization()	override;	// 初期化
 		virtual void	Draw()				override;	// 描写
 
 		int		iGetModelHandle()					{ return this->iModelHandle; };				// モデルハンドルを取得

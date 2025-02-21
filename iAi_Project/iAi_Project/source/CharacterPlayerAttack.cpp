@@ -211,7 +211,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* ˆÚ“®—ÊŽZo */
 			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
 			// —ÕŽž‚Å‚¿‚å‚Á‚Æ’·‚ß‚É‚·‚é
-			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
+			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
+			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f * 3.f;
 
 			/* ˆÚ“®•ûŒüŽZo */
 			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
