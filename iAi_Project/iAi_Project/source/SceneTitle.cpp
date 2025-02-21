@@ -36,9 +36,10 @@ void SceneTitle::Process()
 {
 	/* いずれかのボタンが入力されたらホームを追加 */
 	// 仮作成
-	/* 決定が入力されたら */
+	/* "決定"が入力されたか確認 */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
+		// "決定"が入力されたならば
 		/* ロードシーン追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);
 

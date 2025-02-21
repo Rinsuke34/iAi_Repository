@@ -5,7 +5,7 @@
 /* シーン"ゲームオーバー"クラスの定義 */
 
 // コンストラクタ
-SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, false)
+SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 {
 	/* データリスト取得 */
 	{
@@ -35,23 +35,6 @@ SceneGameOver::~SceneGameOver()
 // 計算
 void SceneGameOver::Process()
 {
-	/* 描写ブレンドモードを"アルファブレンド"に設定 */
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, this->iBlendAlpha);
-
-	/* "ゲームオーバー"を描写 */
-	DrawGraph(0, 0, this->iBlendAlpha, TRUE);
-
-	/* アルファブレンド値が最大値に到達しているか確認 */
-	if (this->iBlendAlpha >= 255)
-	{
-		// 最大値を超えている場合
-		/* 下位レイヤーの計算停止フラグを有効にする */
-		this->bLowerLayerStopFlg = true;
-	}
-
-	/* 描写ブレンドモードを"ノーブレンド"に設定 */
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
 	/* アルファブレンド値を加算 */
 	this->iBlendAlpha += 3;
 
@@ -61,12 +44,35 @@ void SceneGameOver::Process()
 		// 最大値を超えている場合
 		/* 最大値を超えないように補正を行う */
 		this->iBlendAlpha = 255;
+
+		/* "決定"が入力されたか確認 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		{
+			// "決定"が入力されたならば
+			/* ロードシーン追加フラグを有効化 */
+			gpSceneServer->SetAddLoadSceneFlg(true);
+
+			/* 現行シーン削除フラグを有効化 */
+			gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+			/* シーン"ホーム"を追加 */
+			gpSceneServer->AddSceneReservation(new SceneHome());
+			return;
+		}
 	}
 }
 
 // 描画
 void SceneGameOver::Draw()
 {
+	/* 描写ブレンドモードを"アルファブレンド"に設定 */
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, this->iBlendAlpha);
+
+	/* "ゲームオーバー"を描写 */
+	DrawGraph(0, 0, *this->piGrHandle_GameOver, TRUE);
+
+	/* 描写ブレンドモードを"ノーブレンド"に設定 */
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 }
 

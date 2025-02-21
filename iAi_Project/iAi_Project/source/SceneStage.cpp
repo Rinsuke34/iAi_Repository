@@ -147,6 +147,15 @@ void SceneStage::Process()
 			/* ゲーム状態を"ゲーム実行"に変更する */
 			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
+
+		/* "ゲームオーバー"状態 */
+		case GAMESTATUS_GAMEOVER:
+			/* シーン"ゲームオーバー"を作成 */
+			SceneBase* pAddScene = new SceneGameOver();
+
+			/* シーン"ゲームオーバー"をシーンサーバーに登録 */
+			gpSceneServer->AddSceneReservation(pAddScene);
+			break;
 	}
 }
 
@@ -162,12 +171,10 @@ void SceneStage::Process_Main()
 	/* プレイヤーが存在していて、死亡フラグが有効であるか確認 */
 	if ((this->ObjectList->GetCharacterPlayer() != nullptr) && (this->PlayerStatusList->bGetPlayerDeadFlg() == true))
 	{
-		//// プレイヤーが存在かつ死亡フラグが有効ならば
-		///* シーン"ゲームオーバー"を作成 */
-		//SceneBase* pAddScene = new SceneGameOver();
-
-		///* シーン"ゲームオーバー"をシーンサーバーに登録 */
-		//gpSceneServer->AddSceneReservation(pAddScene);
+		// プレイヤーが存在かつ死亡フラグが有効ならば
+		
+		/* ゲーム状態を"ゲームオーバー"に変更する */
+		this->GameStatusList->SetGameStatus(GAMESTATUS_GAMEOVER);
 	}
 
 	/* デバッグ処理 */

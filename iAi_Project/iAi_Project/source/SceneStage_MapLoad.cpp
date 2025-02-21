@@ -399,6 +399,9 @@ void SceneStage::LoadMapData()
 
 			/* モデル */
 			pSkySqhere->SetModelHandle(this->ModelList->iGetModel("SkySqhere/skysphere"));
+
+			/* サイズ */
+			pSkySqhere->SetScale(VGet(5.f, 5.f, 5.f));
 		}
 	}
 

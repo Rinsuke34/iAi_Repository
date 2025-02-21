@@ -20,6 +20,8 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 	{
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* モデル取得 */
@@ -125,6 +127,9 @@ void ExplosionEnemy::MoveEnemy()
                 // エフェクトが再生終了している場合
 				//エネミーの削除フラグを有効にする
 				this->bDeleteFlg = true;
+
+				//プレイヤーを吹き飛ばす
+				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
 			}
 		}
 	}
@@ -157,6 +162,13 @@ void ExplosionEnemy::Update()
 	{
 		// 削除フラグを有効にする
 		this->bDeleteFlg = true;
+		/* 爆発予告エフェクトを一度でも生成したかを確認 */
+		if (this->pEffectDetonation != nullptr)
+		{
+			// 一度でも生成した場合
+			//爆発予告エフェクトの削除フラグを有効化
+			this->pEffectDetonation->SetDeleteFlg(true);
+		}
 	}
 
 	// エネミーを移動させる
