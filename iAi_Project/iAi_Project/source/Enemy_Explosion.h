@@ -35,6 +35,7 @@ private:
 	DataList_Object* ObjectList;			// オブジェクト管理
 
 
+	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
 	/*関数*/
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
 

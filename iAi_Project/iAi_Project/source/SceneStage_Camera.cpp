@@ -11,6 +11,19 @@ void SceneStage::SetCamera()
 	// ※デフォルトの黒色だと暗すぎるので赤色に変更
 	SetGlobalAmbientLight(GetColorF(1.0f, 0.0f, 0.0f, 0.0f));
 
+	/* カメラの手前と奥のクリップ距離を設定 */
+	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
+	SetCameraNearFar(100.0f, 30000.f);
+
+	///* フォグを有効化 */
+	//SetFogEnable(TRUE);
+
+	///* フォグの色を紫色にする */
+	//SetFogColor(126, 0, 126);
+
+	///* フォグの距離を設定 */
+	//SetFogStartEnd(15000.f, 20000.f);
+
 	/* カメラモードが変更されているか確認 */
 	if (this->PlayerStatusList->iGetCameraMode() != this->PlayerStatusList->iGetCameraMode_Old())
 	{

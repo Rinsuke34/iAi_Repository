@@ -9,8 +9,8 @@
 CharacterBase::CharacterBase() : ActorBase()
 {
 	/* 初期化 */
-	this->stCollisionCapsule	= {};					// コリジョン(カプセル)
-	this->iInvincibilityTime	= {};					// 無敵時間
+	this->stCollisionCapsule	= {};		// コリジョン(カプセル)
+	this->iInvincibilityTime	= {};		// 無敵時間
 }
 
 // 初期化
@@ -45,7 +45,7 @@ void CharacterBase::BloomDraw()
 		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end())
 		{
 			// 発光フレームである場合
-			/* 変更を行わない */
+			/* 色は変更しない */
 		}
 		else
 		{

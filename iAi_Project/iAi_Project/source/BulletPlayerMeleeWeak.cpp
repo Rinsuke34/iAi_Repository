@@ -7,7 +7,7 @@
 
 // コンストラクタ
 BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
-{	
+{
 	/* "プレイヤー状態"を取得 */
 	this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
@@ -15,13 +15,12 @@ BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 
 	/* 初期化 */
-	this->iObjectType = OBJECT_TYPE_BULLET_PLAYER;		// オブジェクトの種類を"弾(プレイヤー)"に設定
+	this->iObjectType	= OBJECT_TYPE_BULLET_PLAYER;	// オブジェクトの種類を"弾(プレイヤー)"に設定
 	this->pMeleeWeakEffect = nullptr;						// 近接攻撃(弱)エフェクトのハンドル
 	ArrengementPositionPlayerFront();						// 座標設定(プレイヤーの前方に設定)
 
 	/* 仮追加 */
 	iDeleteCount = 30;
-
 }
 
 // デストラクタ

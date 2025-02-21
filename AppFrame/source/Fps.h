@@ -8,19 +8,20 @@
 // フレームレート固定クラス
 class Fps
 {
-	// どこでも使用可能
 	public:
-		// コンストラクタ(クラスが使用可能になったタイミングで実行する)
-		Fps();
+		Fps();				// コンストラクタ
+		virtual ~Fps() {};	// デストラクタ
 
-		bool FpsUpdate();				// 時刻計算
+		void FpsAdjustment();			// フレームレート調整処理
+		void FpsStop();					// 処理を停止(ヒットストップ等で使用)
+
+	private:
+		/* 関数 */
+		void FpsUpdate();				// 時刻計算
 		void FpsWait();					// フレームレート調整のため待機
 
-	// Fpsクラス内のみで使用可能
-	private:
+		/* 変数 */
 		int iStartTime;					// 測定開始時刻
 		int iCount;						// カウンタ
 
-	// Fpsクラスとその子クラスのみで使用可能
-	protected:
 };

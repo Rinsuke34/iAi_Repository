@@ -198,6 +198,7 @@
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
+    <ClCompile Include="source\SceneGameOver.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
     <ClCompile Include="source\SceneInputConfig.cpp" />
     <ClCompile Include="source\SceneLoad.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
+    <ClInclude Include="source\SceneGameOver.h" />
     <ClInclude Include="source\SceneResult.h" />
     <ClInclude Include="source\SceneStage.h" />
     <ClInclude Include="source\SceneUi_Blood.h" />

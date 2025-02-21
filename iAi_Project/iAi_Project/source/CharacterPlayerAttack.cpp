@@ -22,75 +22,80 @@ void CharacterPlayer::Player_Attack_Transition()
 	//           |                                   |
 	//           --> 構え(遠距離) ---> 攻撃(遠距離) --
 
-	/* プレイヤーの状態を取得 */
+	/* プレイヤーの攻撃状態を取得 */
 	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
-	/* プレイヤー状態に応じて処理を変更 */
+	/* プレイヤーの攻撃状態に応じて処理を変更 */
 	switch (iPlayerAttackState)
 	{
 		/* 自由状態 */
-	case PLAYER_ATTACKSTATUS_FREE:
-		/* 攻撃入力がされているか確認 */
-		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
-		{
-			// 攻撃入力がされている場合
-			/* プレイヤー状態を"近接攻撃構え中"に設定 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
-		}
-		/* エイム(構え)入力がされているか確認 */
-		else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
-		{
-			/* エイム(構え)キャンセルフラグが解除されている場合 */
-			if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
-		{
-			// エイム(構え)入力がされている場合
-			/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
-		}
-		}
-		// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
-		/* エイム(構え)キャンセルフラグが設定されている場合 */
-		else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
-		{
-			/* エイム(構え)ボタンを離したら */
-			if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+		case PLAYER_ATTACKSTATUS_FREE:
+			/* 攻撃入力がされているか確認 */
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 			{
-				/* エイム(構え)キャンセルフラグを解除 */
-				this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
+				// 攻撃入力がされている場合
+				/* プレイヤー状態を"近接攻撃構え中"に設定 */
+				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
 			}
-		}
-		
-		break;
+			/* エイム(構え)入力がされているか確認 */
+			else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
+			{
+				/* エイム(構え)キャンセルフラグが解除されている場合 */
+				if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
+				{
+					// エイム(構え)入力がされている場合
+					/* プレイヤー状態を"遠距離攻撃構え中"に設定 */
+					this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
+				}
+			}
+			// エイム(構え)がキャンセルされた後、ボタン押しっぱなしで再発動させないための処理
+			/* エイム(構え)キャンセルフラグが設定されている場合 */
+			else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
+			{
+				/* エイム(構え)ボタンを離したら */
+				if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+				{
+					/* エイム(構え)キャンセルフラグを解除 */
+					this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
+				}
+			}
+			break;
 
 		/* 近接攻撃構え中 */
-	case PLAYER_ATTACKSTATUS_MELEE_POSTURE:
-		/* 近接攻撃(構え) */
-		Player_Melee_Posture();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_POSTURE:
+			/* 近接攻撃(構え) */
+			Player_Melee_Posture();
+			break;
 
 		/* 近接攻撃中(弱) */
-	case PLAYER_ATTACKSTATUS_MELEE_WEEK:
-		/* 近接攻撃(弱) */
-		Player_Melee_Weak();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_WEEK:
+			/* 近接攻撃(弱) */
+			Player_Melee_Weak();
+			break;
 
 		/* 近接攻撃中(強) */
-	case PLAYER_ATTACKSTATUS_MELEE_STRONG:
-		/* 近距離攻撃(強) */
-		Player_Charge_Attack();
-		break;
+		case PLAYER_ATTACKSTATUS_MELEE_STRONG:
+			/* 近距離攻撃(強) */
+			Player_Charge_Attack();
+			break;
 
 		/* 遠距離攻撃構え中 */
-	case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:
-		/* 遠距離攻撃(構え) */
-		Player_Projectile_Posture();
-		break;
+		case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:
+			/* 遠距離攻撃(構え) */
+			Player_Projectile_Posture();
+			break;
 
 		/* 遠距離攻撃中 */
-	case PLAYER_ATTACKSTATUS_PROJECTILE:
-		/* 遠距離攻撃 */
-		Player_Projectile();
-		break;
+		case PLAYER_ATTACKSTATUS_PROJECTILE:
+			/* 遠距離攻撃 */
+			Player_Projectile();
+			break;
+
+		/* 死亡状態(操作不可) */
+		case PLAYER_ATTACKSTATUS_DEAD:
+			/* 処理を行わない */
+			break;
+
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
@@ -206,7 +211,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 移動量算出 */
 			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
 			// 臨時でちょっと長めにする
-			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
+			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
+			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f * 3.f;
 
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
@@ -372,11 +378,6 @@ void CharacterPlayer::Player_Charge_Attack()
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
 	}
-	//else if(iChargeAttackCount <= 20)
-	//{
-	//	// 20以下である場合
-	//	/* モーションの初期動作中?なのでこの状態では攻撃しない */
-	//}
 	else
 	{
 		// 21以上である場合

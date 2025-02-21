@@ -152,10 +152,7 @@ void BulletPlayerKunaiEffect::Attack()
 			EffectSelfDelete* AddEffect = new EffectSelfDelete();
 
 			/* エフェクト読み込み */
-			AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_explosion/FX_e_missile_explosion")));
-			
-			/* エフェクトのスケール設定(大きさは仮) */
-			SetScalePlayingEffekseer3DEffect(AddEffect->iGetEffectHandle(), 12.0f, 12.0f, 12.0f);
+			AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_kunai_explosion/FX_e_missile_explosion")));
 
 			/* エフェクトの座標設定 */
 			AddEffect->SetPosition(this->vecPosition);
@@ -165,6 +162,9 @@ void BulletPlayerKunaiEffect::Attack()
 
 			/* エフェクトの削除されるまでの時間を設定 */
 			AddEffect->SetDeleteCount(iKunaiDeleteCount);
+			
+			/* エフェクトのスケール設定(大きさは仮) */
+			AddEffect->SetScale(VGet(12.0f,12.0f,12.0f));
 
 			/* エフェクトの初期化 */
 			AddEffect->Initialization();

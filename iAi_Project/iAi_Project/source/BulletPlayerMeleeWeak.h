@@ -18,11 +18,11 @@
 class BulletPlayerMeleeWeak : public BulletBase
 {
 	public:
-		BulletPlayerMeleeWeak();							// コンストラクタ
-		virtual ~BulletPlayerMeleeWeak();					// デストラクタ
+		BulletPlayerMeleeWeak();				// コンストラクタ
+		virtual ~BulletPlayerMeleeWeak();		// デストラクタ
 
-		virtual void	Initialization()	override;		// 初期化
-		virtual void	Update()			override;		// 更新
+		virtual void	Initialization()	override;	// 初期化
+		virtual void	Update()			override;	// 更新
 		void			ArrengementPositionPlayerFront();	// 座標設定						/* 2025.02.20 菊池雅道 関数追加 */
 
 	private:

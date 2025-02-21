@@ -26,13 +26,13 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 中心クロスヘア */
-		this->piGrHandle_Flont			= ImageList->piGetImage("Test/Front");
+		this->piGrHandle_Flont			= ImageList->piGetImage("UI_Crosshairs/UI_Reticle_Dot/UI_Reticle_Dot");
 
 		/* ロックオン対象(メイン)クロスヘア */
-		this->piGrHandle_Target_Main	= ImageList->piGetImage("Test/Target_Main");
+		this->piGrHandle_Target_Main	= ImageList->piGetImage("UI_Crosshairs/UI_Reticle_EnemyOUT/UI_Reticle_EnemyOUT");
 
 		/* ロックオン対象(サブ)クロスヘア */
-		this->piGrHandle_Target_Sub		= ImageList->piGetImage("Test/Target_Sub");
+		this->piGrHandle_Target_Sub		= ImageList->piGetImage("UI_Crosshairs/UI_Reticle_EnemyIN_LRed/UI_Reticle_EnemyIN_LRed");
 	}
 }
 

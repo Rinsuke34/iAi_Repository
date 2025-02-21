@@ -23,7 +23,8 @@ SceneServer*	gpSceneServer		= nullptr;	// シーンサーバークラス
 DataListServer* gpDataListServer	= nullptr;	// データリストサーバークラス
 
 /* フレームレート関連 */
-int giNowFps	= 0;							// 現在のフレームレート
+int	giNowFps	= 0;							// 現在のフレームレート
+int	giStopFrame	= 0;							// 処理を停止する時間(ヒットストップで使用)
 
 /* ローディング関連 */
 std::vector<std::future<void>>	gstLoadingFutures;			// ローディング処理のスレッド追跡用future

@@ -79,31 +79,45 @@ void CharacterPlayer::Initialization()
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
-
-	/* カメラモードを"フリーモード"に変更 */
-	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
 }
 
 // 更新
 void CharacterPlayer::Update()
 {
-	/* カメラモードを"フリーモード"に変更 */
-	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
-
-	/* 接触確認 */
+	/* 毎フレーム実施する初期化処理 */
 	{
-		// ※攻撃やオブジェクトに対する当たり判定処理を行う
-		/* 当たり判定処理 */
-		PlayerHitCheck();
-	}
-
-	/* 毎フレームの初期化処理 */
-	{
-	/* 移動量をリセット */
-	this->vecMove = VGet(0, 0, 0);
+		/* 移動量をリセット */
+		this->vecMove = VGet(0, 0, 0);
 
 		/* ロックオン範囲コリジョン使用フラグを無効化 */
 		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
+
+		/* カメラモードを"フリーモード"に変更 */
+		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
+	}
+
+	/* 当たり判定処理 */
+	PlayerHitCheck();
+
+	/* プレイヤーが落下したか */
+	if (this->vecPosition.y <= 0)
+	{
+		// 落下した場合
+		/* プレイヤーのHPを0にする */
+		this->PlayerStatusList->SetPlayerNowHp(0);
+	}
+
+	/* プレイヤーの現在HPが0以下(死亡状態)であるか確認 */
+	if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
+	{
+		// HPが0以下(死亡状態)である場合
+		/* プレイヤーの状態を"死亡"にする */
+		this->PlayerStatusList->SetPlayerMoveState(PLYAER_MOVESTATUS_DEAD);
+		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_DEAD);
+
+		/* プレイヤーのモーションを"死亡"に設定 */
+		this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DIE);
+		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
 	}
 
 	/* 攻撃系アクション処理 */
@@ -140,7 +154,6 @@ void CharacterPlayer::Update()
 	/* コリジョンを更新 */
 	CollisionUpdate();
 
-	
 	/* モーション遷移管理 */
 	Player_Motion_Transition();
 
@@ -165,99 +178,98 @@ void CharacterPlayer::CollisionUpdate()
 /* 当たり判定処理 */
 void CharacterPlayer::PlayerHitCheck()
 {
-	/* プレイヤーの移動状態を取得 */
-	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
-	/* プレイヤーの攻撃状態を取得 */
-	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+	/* プレイヤーの状態を取得 */
+	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
+
 	/* プレイヤーが被弾処理を行うか(無敵か)判定するフラグ */
 	bool bHiteFlag = true;
 
-
-		/* 無敵時間中であるか確認 */
-		if (this->PlayerStatusList->iGetPlayerNowInvincibleTime() > 0)
-		{
-			// 無敵時間中である場合
-			/* 無敵時間を減少 */
-			this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerNowInvincibleTime() - 1);
-		}
-		else
-		{
-			// 無敵時間中でない場合
+	/* 無敵時間中であるか確認 */
+	if (this->PlayerStatusList->iGetPlayerNowInvincibleTime() > 0)
+	{
+		// 無敵時間中である場合
+		/* 無敵時間を減少 */
+		this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerNowInvincibleTime() - 1);
+	}
+	else
+	{
+		// 無敵時間中でない場合
 		/* プレイヤーの移動状態が被弾処理を受ける状態か確認 */
+		// ※攻撃状態は考慮しない
 		switch (iPlayerMoveState)
-			{
-				/* 被弾処理を行う状態 */
-		case PLAYER_MOVESTATUS_FREE:			// 自由状態
-				
-			/* 被弾処理を行う状態 */
-			bHiteFlag = true;
-					
-			break;
-
-		/* 被弾処理を行わない状態(無敵状態) */
-		case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
-				
-			/* 被弾処理を行わない(無敵状態) */
-			bHiteFlag = true;
-					
-			break;
-		}
-		
-		/* 被弾処理を受けるプレイヤーの攻撃状態か確認 */
-		switch (iPlayerAttackState)
 		{
 			/* 被弾処理を行う状態 */
-		case PLAYER_ATTACKSTATUS_FREE:				// 自由状態
-		case PLAYER_ATTACKSTATUS_MELEE_POSTURE:		// 近接攻撃構え中
-		case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
-		case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
-		case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
-				
-			/* 被弾処理を行う */
-			bHiteFlag = true;
-
-			break;
+			case PLAYER_MOVESTATUS_FREE:			// 自由状態	
+				/* 被弾処理を行う状態 */
+				bHiteFlag = true;	
+				break;
 
 			/* 被弾処理を行わない状態(無敵状態) */
-		case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)
-				
-			/* 被弾処理を行わない(無敵状態) */
-			bHiteFlag = false;
+			case PLAYER_MOVESTATUS_EVENT:				// イベント状態(操作不可)
+			case PLAYER_MOVESTATUS_DODGING:				// 回避状態中
+			case PLYAER_MOVESTATUS_DEAD:				// 死亡状態(操作不可)
 
-			break;
+				/* 被弾処理を行わない(無敵状態) */
+				bHiteFlag = false;
+					
+				break;
 		}
 	
-				/* 被弾処理 */
+		/* 被弾処理 */
 		/* 被弾処理を行う状態か確認する */
 		if(bHiteFlag == true)
+		{
+			/* バレットリストを取得 */
+			auto& BulletList = ObjectList->GetBulletList();
+
+			/* 弾との当たり判定 */
+			for (auto* bullet : BulletList)
+			{
+				/* オブジェクトタイプが弾丸(敵)であるなら判定を行う */
+				if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_ENEMY)
 				{
-					/* バレットリストを取得 */
-					auto& BulletList = ObjectList->GetBulletList();
-
-					/* 弾との当たり判定 */
-					for (auto* bullet : BulletList)
+					// 弾丸(敵)である場合
+					/* 弾丸との当たり判定 */
+					if (bullet->HitCheck(this->stCollisionCapsule))
 					{
-						/* オブジェクトタイプが弾丸(敵)であるなら判定を行う */
-						if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_ENEMY)
+						// 当たっている場合
+						/* プレイヤーのHPを減少 */
+						this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+
+						/* プレイヤーの無敵時間を設定 */
+						this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+
+						/* 弾の削除フラグを有効にする */
+						bullet->SetDeleteFlg(true);
+
+						/* 被ダメージのSEを再生 */
+						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+						/* 被ダメージのエフェクトを生成 */
 						{
-							// 弾丸(敵)である場合
-							/* 弾丸との当たり判定 */
-							if (bullet->HitCheck(this->stCollisionCapsule))
-							{
-								// 当たっている場合
-								/* プレイヤーのHPを減少 */
-								this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+							/* 被ダメージの瞬間に発生するエフェクトを追加 */
+							EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
 
-								/* プレイヤーの無敵時間を設定 */
-								this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+							/* 座標を設定 */
+							pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
 
-								/* 弾の削除フラグを有効にする */
-								bullet->SetDeleteFlg(true);
+							/* エフェクトを取得 */
+							pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
 
-								/* 被ダメージのSEを再生 */
-								gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+							/* 拡大率を設定 */
+							pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
-								/* 感電エフェクトを生成 */
+							/* 削除カウントを設定 */
+							// ※仮で1秒間
+							pDamageEffect->SetDeleteCount(60);
+
+							/* エフェクト初期化処理 */
+							pDamageEffect->Initialization();
+
+							/* オブジェクトリストに登録 */
+							this->ObjectList->SetEffect(pDamageEffect);
+							
+							/* 感電エフェクトを生成 */
 								EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
 
 								/* 感電エフェクトの読み込み */
@@ -274,10 +286,11 @@ void CharacterPlayer::PlayerHitCheck()
 									/* 感電エフェクトをリストに登録 */
 									this->ObjectList->SetEffect(pShockEffect);
 								}
-							}
 						}
 					}
 				}
+			}
+		}
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */

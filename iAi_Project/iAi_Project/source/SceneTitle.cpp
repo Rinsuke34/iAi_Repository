@@ -8,6 +8,12 @@
 // コンストラクタ
 SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
 {
+
+	iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
+
+	iTitleBackGroundHandle = LoadGraph("resource/ImageData/Test/skysphere1.png");
+
+
 	/* 初期化 */
 	Initialization();
 }
@@ -30,9 +36,10 @@ void SceneTitle::Process()
 {
 	/* いずれかのボタンが入力されたらホームを追加 */
 	// 仮作成
-	/* 決定が入力されたら */
+	/* "決定"が入力されたか確認 */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
+		// "決定"が入力されたならば
 		/* ロードシーン追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);
 
@@ -49,4 +56,26 @@ void SceneTitle::Process()
 void SceneTitle::Draw()
 {
 	
+	// タイトル背景を描画
+	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, iTitleBackGroundHandle, FALSE);
+	/* タイトルロゴを描画 */
+	PlayMovieToGraph(iTitleLogoHandle);
+	// ムービー映像を画面いっぱいに描画します
+	DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, FALSE);
+
+
+	//再生が終了しているか確認
+	if (GetMovieStateToGraph(iTitleLogoHandle) == FALSE)
+	{
+		//再生が終了している場合
+		//ムービーを削除
+		//DeleteGraph(iTitleLogoHandle);
+
+		iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
+		/* タイトルロゴを描画 */
+		PlayMovieToGraph(iTitleLogoHandle);
+		// ムービー映像を画面いっぱいに描画します
+		DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, FALSE);
+	}
+
 }

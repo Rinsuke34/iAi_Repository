@@ -24,7 +24,7 @@ static const int	INIT_ATTRIBUTES_JUMP_COUNT_MAX = 3;			// プレイヤーのジャンプ回
 static const float	INIT_ATTRIBUTES_ROCK_ON_RADIUS		= 200.f;		// ロックオン範囲の半径
 static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// プレイヤーの最大HP
 static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// プレイヤーの最大無敵時間
-static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3;		// コンボの持続時間
+static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3 * 2;		// コンボの持続時間
 
 /* 2025.01.09 菊池雅道 移動関連の定数追加開始 */
 // 移動関係
@@ -78,6 +78,7 @@ static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// カメラ座標の線形
 static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)
 static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態
 static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中
+static const int	PLYAER_MOVESTATUS_DEAD					= 3;	// 死亡状態(操作不可)
 
 /* プレイヤー攻撃状態 */
 // ※状態に応じて可能な行動が変わる
@@ -88,6 +89,7 @@ static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)
 static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
 static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
+static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// 死亡状態(操作不可)
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
 
 /* プレイヤー処理用定数 */

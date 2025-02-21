@@ -19,5 +19,10 @@ class SceneTitle : public SceneBase
 
 	private:
 
+	//変数
+
+	int iTitleLogoHandle;					// タイトルロゴハンドル
+
+	int iTitleBackGroundHandle;				// タイトル背景ハンドル
 	protected:
 };

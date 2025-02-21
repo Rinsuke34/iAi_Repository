@@ -21,11 +21,8 @@ EffectBase::~EffectBase()
 // 初期化
 void EffectBase::Initialization()
 {
-	/* エフェクト座標更新 */
-	Effect_PosUpdate();
-
-	/* エフェクト回転量更新 */
-	Effect_RotationUpdate();
+	/* エフェクト拡大率更新 */
+	Effect_ScaleUpdate();
 }
 
 // 更新
@@ -58,4 +55,11 @@ void EffectBase::Effect_RotationUpdate()
 {
 	/* エフェクトの回転量を現在のvecRotationに設定 */
 	SetRotationPlayingEffekseer3DEffect(this->iEffectHandle, this->vecRotation.x, this->vecRotation.y, this->vecRotation.z);
+}
+
+// エフェクト拡大率更新
+void EffectBase::Effect_ScaleUpdate()
+{
+	/* エフェクトの拡大率を現在のvecScaleに設定 */
+	SetScalePlayingEffekseer3DEffect(this->iEffectHandle, this->vecScale.x, this->vecScale.y, this->vecScale.z);
 }

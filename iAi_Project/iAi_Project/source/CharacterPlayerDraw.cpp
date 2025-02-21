@@ -5,20 +5,16 @@
 // 描写
 void CharacterPlayer::Draw()
 {
+	/* 攻撃モーション使用フラグ */
+	bool	bUseAttackMotionFlg = false;
+
 	/* 攻撃モーションを使用するか(攻撃モーションが"無し"以外であるか)確認 */
-	bool	bUseAttackMotionFlg = false;	// 攻撃モーション使用フラグ
 	if (this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_NONE)
 	{
 		// 攻撃モーションを使用する場合
 		/* 攻撃モーション使用フラグを有効にする */
 		bUseAttackMotionFlg = true;
 	}
-
-	/* 座標設定 */
-	MV1SetPosition(this->iModelHandle, this->vecPosition);
-
-	/* モデル回転 */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 
 	/* モーションの再生時間設定 */
 	{
@@ -78,25 +74,25 @@ void CharacterPlayer::Draw()
 	MV1DrawModel(this->iModelHandle);
 
 	/* テスト用 */
-	float Draw;
-	DrawFormatString(600, 200 + 16 * 0, GetColor(255, 255, 255), "移動系");
-	Draw = this->PlayerStatusList->iGetPlayerMotion_Move();
-	DrawFormatString(600, 200 + 16 * 1, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
-	Draw = this->PlayerStatusList->iGetPlayerMotion_Move_Old();
-	DrawFormatString(600, 200 + 16 * 2, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
-	Draw = this->PlayerStatusList->fGetMotionTimer_Move();
-	DrawFormatString(600, 200 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", Draw);
-	Draw = this->PlayerStatusList->fGetMotionTimer_Move_End();
-	DrawFormatString(600, 200 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
-	DrawFormatString(600, 200 + 16 * 6, GetColor(255, 255, 255), "攻撃系");
-	Draw = this->PlayerStatusList->iGetPlayerMotion_Attack();
-	DrawFormatString(600, 200 + 16 * 7, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
-	Draw = this->PlayerStatusList->iGetPlayerMotion_Attack_Old();
-	DrawFormatString(600, 200 + 16 * 8, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
-	Draw = this->PlayerStatusList->fGetMotionTimer_Attack();
-	DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "再生時間 : %f", Draw);
-	Draw = this->PlayerStatusList->fGetMotionTimer_Attack_End();
-	DrawFormatString(600, 200 + 16 * 10, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
+	//float Draw;
+	//DrawFormatString(600, 200 + 16 * 0, GetColor(255, 255, 255), "移動系");
+	//Draw = this->PlayerStatusList->iGetPlayerMotion_Move();
+	//DrawFormatString(600, 200 + 16 * 1, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
+	//Draw = this->PlayerStatusList->iGetPlayerMotion_Move_Old();
+	//DrawFormatString(600, 200 + 16 * 2, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
+	//Draw = this->PlayerStatusList->fGetMotionTimer_Move();
+	//DrawFormatString(600, 200 + 16 * 3, GetColor(255, 255, 255), "再生時間 : %f", Draw);
+	//Draw = this->PlayerStatusList->fGetMotionTimer_Move_End();
+	//DrawFormatString(600, 200 + 16 * 4, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
+	//DrawFormatString(600, 200 + 16 * 6, GetColor(255, 255, 255), "攻撃系");
+	//Draw = this->PlayerStatusList->iGetPlayerMotion_Attack();
+	//DrawFormatString(600, 200 + 16 * 7, GetColor(255, 255, 255), "現在モーション番号 : %f", Draw);
+	//Draw = this->PlayerStatusList->iGetPlayerMotion_Attack_Old();
+	//DrawFormatString(600, 200 + 16 * 8, GetColor(255, 255, 255), "変更前モーション番号 : %f", Draw);
+	//Draw = this->PlayerStatusList->fGetMotionTimer_Attack();
+	//DrawFormatString(600, 200 + 16 * 9, GetColor(255, 255, 255), "再生時間 : %f", Draw);
+	//Draw = this->PlayerStatusList->fGetMotionTimer_Attack_End();
+	//DrawFormatString(600, 200 + 16 * 10, GetColor(255, 255, 255), "最終再生時間 : %f", Draw);
 }
 
 // 当たり判定描写

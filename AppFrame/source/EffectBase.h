@@ -21,11 +21,11 @@ class EffectBase : public ObjectBase
 
 		void	SetEffectHandle(int iEffectHandle)	{ this->iEffectHandle = iEffectHandle; }	// エフェクトハンドル設定
 
-		void Effect_PosUpdate();						// エフェクト位置更新(現在座標に移動)
-		void Effect_RotationUpdate();					// エフェクト回転量更新(現在回転に設定)
+		void Effect_PosUpdate();						// エフェクト位置更新
+		void Effect_RotationUpdate();					// エフェクト回転量更新
+		void Effect_ScaleUpdate();						// エフェクト拡大率更新
 
 	private:
-	protected:
 		/* 関数 */
 
 		/* 変数 */
