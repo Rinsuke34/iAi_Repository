@@ -37,10 +37,11 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
 
 		/* 変数(デバッグ用) */
-		this->stVerticalCollision								= {};		// 垂直方向のコリジョン
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};		// 水平方向コリジョン(上側)
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};		// 水平方向コリジョン(下側)
-		this->stMeleeStrongMoveCollsion							= {};		// 近接攻撃(強)のコリジョン(移動後の座標)
+		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};				// 水平方向コリジョン(上側)
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};				// 水平方向コリジョン(下側)
+		this->stMeleeStrongMoveCollsion							= {};				// 近接攻撃(強)のコリジョン(移動後の座標)
+		this->vecMoveSize										= VGet(0, 0, 0);	// 移動量
 	}
 
 	/* データリスト取得 */

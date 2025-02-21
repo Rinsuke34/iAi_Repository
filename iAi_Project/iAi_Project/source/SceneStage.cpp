@@ -18,6 +18,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 	/* データリスト取得 */
 	{
+		/* "プレイヤー入力管理"を取得 */
+		this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
@@ -219,4 +222,38 @@ void SceneStage::DrawDebug()
 		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
 		iDrawCount++;
 	}
+
+	/* プレイヤー入力内容の描写 */
+	if (gbDrawPlayerInputFlg == true)
+	{
+		if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_FORWARD))
+		{
+			DrawString(200, 200 + 16 * iDrawCount, "前進", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		
+		if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_BACK))
+		{
+			DrawString(200, 200 + 16 * iDrawCount, "後退", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_LEFT))
+		{
+			DrawString(200, 200 + 16 * iDrawCount, "左", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_RIGHT))
+		{
+			DrawString(200, 200 + 16 * iDrawCount, "右", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		VECTOR Move = this->InputList->vecGetGameInputMoveDirection();
+		DrawFormatString(200, 200 + 16 * iDrawCount, GetColor(255, 255, 255), "X:%f, Y:%f, Z:%f", Move.x, Move.y, Move.z);
+		
+	}
+
+
 }

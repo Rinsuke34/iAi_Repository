@@ -380,7 +380,7 @@ void CharacterPlayer::Player_Charge_Attack()
 	}
 	else
 	{
-		// 21以上である場合
+		// 1以上である場合
 		/* 攻撃＆移動処理 */
 		// ※ロックオン中のエネミーが存在するかで処理を分岐させる
 		{

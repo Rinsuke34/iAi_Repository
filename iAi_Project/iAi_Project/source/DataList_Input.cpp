@@ -275,10 +275,10 @@ float DataList_Input::fGetGameInputMove()
 	float	fReturn = 0;
 
 	/* キーボードで移動入力がされているか確認 */
-	if (bGetGameInputAction(INPUT_HOLD, GAME_FORWARD) ||
-		bGetGameInputAction(INPUT_HOLD, GAME_BACK)	||
-		bGetGameInputAction(INPUT_HOLD, GAME_RIGHT)	||
-		bGetGameInputAction(INPUT_HOLD, GAME_LEFT)	)
+	if ((bGetGameInputAction(INPUT_HOLD, GAME_FORWARD)	== true) ||
+		(bGetGameInputAction(INPUT_HOLD, GAME_BACK)		== true) ||
+		(bGetGameInputAction(INPUT_HOLD, GAME_RIGHT)	== true) ||
+		(bGetGameInputAction(INPUT_HOLD, GAME_LEFT)		== true))
 	{
 		// 入力されている場合
 		/* 入力の強さを1(最大)で返す */
@@ -386,7 +386,7 @@ VECTOR DataList_Input::vecGetGameInputMoveDirection()
 	}
 
 	/* 移動方向がある場合 */
-	if (vecReturn.x != -0 || vecReturn.z != -0)
+	if (vecReturn.x != 0.f || vecReturn.z != 0.f)
 	{
 		/* 移動方向を正規化 */
 		vecReturn = VNorm(vecReturn);

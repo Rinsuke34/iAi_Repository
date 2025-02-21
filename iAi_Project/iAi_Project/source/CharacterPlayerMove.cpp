@@ -290,6 +290,7 @@ void CharacterPlayer::Player_Move()
 		// 移動入力がされていない場合
 		/* 移動速度を0にする */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
+		this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
 		//回避後フラグをリセット
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
 
@@ -321,6 +322,9 @@ void CharacterPlayer::Player_Move()
 
 	/* 移動量を加算 */
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
+
+	/* デバッグ描写用の移動量を設定 */
+	this->vecMoveSize = vecAddMove;
 }
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
@@ -864,6 +868,7 @@ void CharacterPlayer::Movement_Horizontal()
 	VECTOR vecDevisionMovePosition = this->vecPosition;
 
 	/* 道中でオブジェクトに接触しているか判定 */
+	
 	{
 		/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
 		// ※ 元の位置から移動後の位置へ向けたカプセルコリジョンを作成
@@ -890,7 +895,7 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
-
+					/* 水平方向の当たり判定ヒットフラグを有効にする */
 					/* 移動量を分割して衝突判定する */
 					for (int i = 0; i < iMoveHitCheckCount; i++)
 					{

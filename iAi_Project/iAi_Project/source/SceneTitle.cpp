@@ -8,7 +8,6 @@
 // コンストラクタ
 SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
 {
-
 	iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
 
 	iTitleBackGroundHandle = LoadGraph("resource/ImageData/Test/skysphere1.png");
@@ -55,13 +54,16 @@ void SceneTitle::Process()
 // 描画
 void SceneTitle::Draw()
 {
+	/* 描画ブレンドモードを加算にする */
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 	
 	// タイトル背景を描画
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, iTitleBackGroundHandle, FALSE);
 	/* タイトルロゴを描画 */
 	PlayMovieToGraph(iTitleLogoHandle);
 	// ムービー映像を画面いっぱいに描画します
-	DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, FALSE);
+//	DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, TRUE);
+	DrawGraph(100, -100, iTitleLogoHandle, TRUE);
 
 
 	//再生が終了しているか確認
@@ -75,7 +77,12 @@ void SceneTitle::Draw()
 		/* タイトルロゴを描画 */
 		PlayMovieToGraph(iTitleLogoHandle);
 		// ムービー映像を画面いっぱいに描画します
-		DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, FALSE);
+		DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, TRUE);
 	}
 
+	/* 描画ブレンドモードをブレンド無しに戻す */
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+	/* 描画モードを二アレストに戻す */
+	SetDrawMode(DX_DRAWMODE_NEAREST);
 }
