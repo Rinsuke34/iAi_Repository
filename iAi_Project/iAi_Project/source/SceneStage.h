@@ -6,7 +6,6 @@
 #include <fstream>
 
 /* データリスト */
-#include "DataList_Input.h"
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
@@ -42,7 +41,6 @@ class SceneStage : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Input*			InputList;			// プレイヤー入力リスト
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 		DataList_Model*			ModelList;			// 3Dモデル管理

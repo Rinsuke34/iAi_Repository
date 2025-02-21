@@ -10,6 +10,7 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 	this->iZdistance = ENEMY_Z_DISTANCE;		// Z軸の距離
 	this->fSpeed = ENEMY_SPEED;				// 移動速度
 	this->iDetonationRange = ENEMY_DETONATION_RANGE;	//起爆範囲内
+	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
 
 	// HPを設定
 	this->iMaxHp = 1;
@@ -64,6 +65,10 @@ void ExplosionEnemy::MoveEnemy()
 
 	//エネミーの向きを初期化する
 	VECTOR VRot = VGet(0, 0, 0);
+
+	// 重力処理
+	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+	this->vecPosition.y += this->vecMove.y;
 
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
@@ -135,6 +140,67 @@ void ExplosionEnemy::MoveEnemy()
 	}
 }
 
+void ExplosionEnemy::Enemy_Gravity()
+{
+	// 移動後の座標を取得(垂直方向)
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x;
+	vecNextPosition.y = this->vecPosition.y + this->vecMove.y;
+	vecNextPosition.z = this->vecPosition.z;
+
+	// 主人公の上部分の当たり判定から下方向へ向けた線分を作成
+	this->stVerticalCollision.vecLineStart = this->vecPosition;
+	this->stVerticalCollision.vecLineStart.y += PLAYER_HEIGHT;
+	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
+	this->stVerticalCollision.vecLineEnd.y -= 9999;
+
+	// 足場を取得
+	auto& PlatformList = ObjectList->GetCollisionList();
+
+	// 着地する座標
+	// 初期値を移動後の座標に設定
+	float fStandPosY = vecNextPosition.y;
+
+	// 足場と接触するか確認
+	for (auto* platform : PlatformList)
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
+
+		// 接触しているか確認
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+
+			// ヒットした座標が現在の着地座標より高い位置であるか確認
+			if (stHitPolyDim.HitPosition.y >= fStandPosY)
+			{
+				// エネミーのy座標を減算
+				this->vecPosition.y = stHitPolyDim.HitPosition.y;
+				this->vecMove.y = 0; // 落下速度をリセット
+
+				// ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認
+				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
+				{
+					// 着地座標がプレイヤーの現在位置より低い場合
+					// 地面に着地したと判定する
+					// 着地座標を着地した座標に更新
+					fStandPosY = stHitPolyDim.HitPosition.y;
+				}
+				else
+				{
+					// 着地座標がプレイヤーの現在位置より高い場合
+					// 着地座標をプレイヤーが天井にめり込まない高さに更新
+					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
+
+					// ループを抜ける
+					break;
+				}
+			}
+		}
+
+	}
+}
+
 // 更新
 void ExplosionEnemy::Update()
 {
@@ -173,6 +239,8 @@ void ExplosionEnemy::Update()
 
 	// エネミーを移動させる
 	MoveEnemy();
+
+	Enemy_Gravity();
 
 	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;

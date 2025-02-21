@@ -111,6 +111,7 @@ void CharacterPlayer::Player_Move()
 		// 回避後フラグがtrueなら最大ダッシュ状態になる
 		if (this->PlayerStatusList->bGetPlayerAfterDodgeFlag() == true)
 		{
+			/* 移動速度を走り(最大)に設定 */
 			fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 			/* モーションが"ジャンプ(開始)"以外であるか確認 */
@@ -133,7 +134,7 @@ void CharacterPlayer::Player_Move()
 		// スティックの倒し具合で速度を変化
 		else if (fStickTiltMagnitude > STICK_TILT_PLAER_DASH)
 		{
-			//走り（通常）
+			/* 移動速度をダッシュ(通常)に設定 */
 			fSpeed = PLAER_DASH_NOMAL_SPEED * fMoveSpeedRatio;
 			//フレーム数をカウント
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(PlayerStatusList->iGetPlayerNormalDashFlameCount() + 1);
@@ -185,6 +186,7 @@ void CharacterPlayer::Player_Move()
 			//一定フレーム以上になったら走り（最大）へ
 			else if (this->PlayerStatusList->iGetPlayerNormalDashFlameCount() >= FLAME_COUNT_TO_MAX_SPEED)
 			{
+				/* 移動速度をダッシュ(最大)に設定 */
 				fSpeed = PLAER_DASH_MAX_SPEED * fMoveSpeedRatio;
 
 				/* 走行(高速)モーション設定 */
@@ -201,7 +203,11 @@ void CharacterPlayer::Player_Move()
 		{
 			//歩き
 			this->PlayerStatusList->SetPlayerNowMoveSpeed(PLAYER_WALK_MOVE_SPEED);
+
+			/* 走り(最大)フレーム数カウントをリセット */
 			this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
+
+			/* 移動速度を歩行に設定 */
 			fSpeed = PLAYER_WALK_MOVE_SPEED * fMoveSpeedRatio;
 
 			/* モーション設定(歩行) */
@@ -290,6 +296,8 @@ void CharacterPlayer::Player_Move()
 		// 移動入力がされていない場合
 		/* 移動速度を0にする */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(0);
+
+		/* 走り(最大)フレーム数カウントをリセット */
 		this->PlayerStatusList->SetPlayerNormalDashFlameCount(0);
 		//回避後フラグをリセット
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
@@ -895,7 +903,7 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
-					/* 水平方向の当たり判定ヒットフラグを有効にする */
+
 					/* 移動量を分割して衝突判定する */
 					for (int i = 0; i < iMoveHitCheckCount; i++)
 					{

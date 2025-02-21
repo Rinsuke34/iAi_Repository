@@ -38,6 +38,7 @@ private:
 	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
 	/*関数*/
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
+	void Enemy_Gravity(); // 重力処理メソッドを追加
 
 
 	/*変数*/
@@ -51,5 +52,10 @@ private:
 
 	bool bEffectGenerated;	// 起爆予告エフェクト生成フラグ
 
+	float fGravity;				// 重力
+
 protected:
+	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
+
+	VECTOR				vecMove;				// 移動量
 };

@@ -18,4 +18,3 @@ bool gbDrawLightMapDownScaleFlg		= false;		// ライトマップ(縮小)の描写
 bool gbDrawLightMapGaussFlg			= false;		// ライトマップ(ぼかし)のハンドル
 bool gbDrawCollisionFlg				= false;		// 全オブジェクトのコリジョン描写
 bool gbDrawDeleteBackGroundFlg		= false;		// バックグランドオブジェクトの非表示
-bool gbDrawPlayerInputFlg			= true;			// プレイヤー入力内容の描写

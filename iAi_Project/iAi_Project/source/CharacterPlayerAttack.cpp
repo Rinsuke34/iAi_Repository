@@ -8,6 +8,7 @@
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.19 菊池雅道	エフェクト処理修正 */
+/* 2025.02.21 菊池雅道	遠距離攻撃修正 */
 
 #include "CharacterPlayer.h"
 
@@ -613,6 +614,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */
 
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
+/* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -641,8 +643,22 @@ void CharacterPlayer::Player_Projectile()
 	else
 	{
 		// 存在しない場合
-		/* クナイ(エフェクト)のターゲット座標をカメラの注視点に設定 */
-		this->pBulletKunaiEffect->SetKunaiTargetPosition(this->PlayerStatusList->vecGetCameraTarget());
+		// クナイ(エフェクト)のターゲット座標をカメラの注視点の先に設定
+
+		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
+		VECTOR vecKunaiTarget = VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition());
+		
+		/* ベクトルを正規化 */
+		vecKunaiTarget = VNorm(vecKunaiTarget);
+
+		/* ベクトルを射程距離までスケーリング */
+		vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
+
+		/* ターゲット座標の座標ベクトルを取得 */
+		vecKunaiTarget = VAdd(this->PlayerStatusList->vecGetCameraPosition(), vecKunaiTarget);
+
+		// クナイ(エフェクト)にターゲット座標を設定
+		this->pBulletKunaiEffect->SetKunaiTargetPosition(vecKunaiTarget);
 	}
 
 	/* 初期化を行う */
@@ -655,3 +671,4 @@ void CharacterPlayer::Player_Projectile()
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 }
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */
+/* 2025.02.21 菊池雅道	遠距離攻撃修正 終了 */

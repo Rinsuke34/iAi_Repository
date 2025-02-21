@@ -8,6 +8,7 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 	this->iXescapedistance = ENEMY_X_ESCAPE_DISTANCE;		// X軸の距離
 	this->iZescapedistance = ENEMY_Z_ESCAPE_DISTANCE;		// Z軸の距離
 	this->fEscapespeed = ENEMY_ESCAPE_SPEED;			// 移動速度
+	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
 
 
 	// HPを設定
@@ -60,13 +61,9 @@ void EscapeEnemy::MoveEnemy()
 	//エネミーの向きを初期化する
 	VECTOR VRot = VGet(0, 0, 0);
 
-
-
-	////プレイヤーの方向を向くようにエネミーの向きを定義
-	//VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
-
-	////エネミーの向きを設定
-	//this->vecRotation = VRot;
+	// 重力処理
+	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+	this->vecPosition.y += this->vecMove.y;
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
@@ -105,15 +102,80 @@ void EscapeEnemy::MoveEnemy()
 		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, ENEMY_ESCAPE_SPEED));
 
 		// エネミーの向きを初期化する
-		VECTOR VRot = VGet(0, 0, 0);
+		VRot = VGet(0, 0, 0);
 
 		// プレイヤーの方向を向くようにエネミーの向きを定義
 		VRot.y = atan2f(playerPos.x - this->vecPosition.x, playerPos.z - this->vecPosition.z);
 
 		// エネミーの向きを設定
 		this->vecRotation = VRot;
-
 	}
+}
+
+void EscapeEnemy::Enemy_Gravity()
+{
+	// 移動後の座標を取得(垂直方向)
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x;
+	vecNextPosition.y = this->vecPosition.y + this->vecMove.y;
+	vecNextPosition.z = this->vecPosition.z;
+
+	// 主人公の上部分の当たり判定から下方向へ向けた線分を作成
+	this->stVerticalCollision.vecLineStart = this->vecPosition;
+	this->stVerticalCollision.vecLineStart.y += PLAYER_HEIGHT;
+	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
+	this->stVerticalCollision.vecLineEnd.y -= 9999;
+
+	// 足場を取得
+	auto& PlatformList = ObjectList->GetCollisionList();
+
+	// 着地する座標
+	// 初期値を移動後の座標に設定
+	float fStandPosY = vecNextPosition.y;
+
+	// 足場と接触するか確認
+	for (auto* platform : PlatformList)
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
+
+		// 接触しているか確認
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+
+			// ヒットした座標が現在の着地座標より高い位置であるか確認
+			if (stHitPolyDim.HitPosition.y >= fStandPosY)
+			{
+				// エネミーのy座標を減算
+				this->vecPosition.y = stHitPolyDim.HitPosition.y;
+				this->vecMove.y = 0; // 落下速度をリセット
+
+				// ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認
+				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
+				{
+					// 着地座標がプレイヤーの現在位置より低い場合
+					// 地面に着地したと判定する
+					// 着地座標を着地した座標に更新
+					fStandPosY = stHitPolyDim.HitPosition.y;
+				}
+				else
+				{
+					// 着地座標がプレイヤーの現在位置より高い場合
+					// 着地座標をプレイヤーが天井にめり込まない高さに更新
+					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
+
+					// ループを抜ける
+					break;
+				}
+			}
+		}
+	}
+}
+
+//コリジョン描写
+void EscapeEnemy::CollisionDraw()
+{
+	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
 }
 
 // 更新
@@ -149,6 +211,8 @@ void EscapeEnemy::Update()
 	}
 
 	MoveEnemy();
+
+	Enemy_Gravity();
 
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));

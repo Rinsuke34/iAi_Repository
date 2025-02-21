@@ -44,6 +44,7 @@ private:
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
+	DataList_PlayerStatus* PlayerStatusList;			// プレイヤー状態
 
 protected:
 };

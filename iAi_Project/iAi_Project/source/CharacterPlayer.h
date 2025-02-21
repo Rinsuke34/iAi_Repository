@@ -27,7 +27,7 @@
 #include "EffectManualDelete_PlayerFollow.h"
 #include "EffectManualDelete_PlayerFollow_Frame.h"
 #include "EffectSelfDelete_PlayerFollow_Frame.h"
-
+#include "PlayerBulletDefine.h"
 /* プレイヤークラスの宣言 */
 
 // プレイヤークラス

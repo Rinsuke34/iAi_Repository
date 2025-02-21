@@ -275,10 +275,10 @@ float DataList_Input::fGetGameInputMove()
 	float	fReturn = 0;
 
 	/* キーボードで移動入力がされているか確認 */
-	if ((bGetGameInputAction(INPUT_HOLD, GAME_FORWARD)	== true) ||
-		(bGetGameInputAction(INPUT_HOLD, GAME_BACK)		== true) ||
-		(bGetGameInputAction(INPUT_HOLD, GAME_RIGHT)	== true) ||
-		(bGetGameInputAction(INPUT_HOLD, GAME_LEFT)		== true))
+	if (bGetGameInputAction(INPUT_HOLD, GAME_FORWARD) ||
+		bGetGameInputAction(INPUT_HOLD, GAME_BACK)	||
+		bGetGameInputAction(INPUT_HOLD, GAME_RIGHT)	||
+		bGetGameInputAction(INPUT_HOLD, GAME_LEFT)	)
 	{
 		// 入力されている場合
 		/* 入力の強さを1(最大)で返す */

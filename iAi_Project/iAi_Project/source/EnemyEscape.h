@@ -23,24 +23,31 @@ class EscapeEnemy : public EnemyBasic
 	
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
-	
+	virtual void	CollisionDraw()		override;	// 当たり判定描写
 	private:
 	/* エフェクト */
 	EffectManualDelete* pEffect;
 
-		/* 使用するデータリスト */
-		DataList_Object* ObjectList;			// オブジェクト管理
+	/* 使用するデータリスト */
+	DataList_Object* ObjectList;			// オブジェクト管理
 
 	/* 関数 */
-		void MoveEnemy(); // 敵を移動させるメソッドを追加
+	void MoveEnemy(); // 敵を移動させるメソッドを追加
+	void Enemy_Gravity(); // 重力処理メソッドを追加
 
 	/* 変数 */
 	int iXescapedistance;			// X軸の距離
 
 	int iZescapedistance;			// Z軸の距離
 
+	float fGravity;				// 重力
+
 	float fEscapespeed;			// 移動速度
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:
+	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
+
+	VECTOR				vecMove;				// 移動量
+
 };
