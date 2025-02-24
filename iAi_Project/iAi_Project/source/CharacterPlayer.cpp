@@ -57,6 +57,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* "エフェクトリソース管理"を取得 */
 		this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+
+		/* "ゲーム状態管理"を取得 */
+		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));;
 	}
 
 	/* モデル取得 */
@@ -248,29 +251,34 @@ void CharacterPlayer::PlayerHitCheck()
 
 						/* 被ダメージのエフェクトを生成 */
 						{
-							/* 被ダメージの瞬間に発生するエフェクトを追加 */
-							EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+							/* ダメージ発生時エフェクト */
+							{
+								/* 被ダメージの瞬間に発生するエフェクトを追加 */
+								EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
 
-							/* 座標を設定 */
-							pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
+								/* 座標を設定 */
+								pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
 
-							/* エフェクトを取得 */
-							pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+								/* エフェクトを取得 */
+								pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
 
-							/* 拡大率を設定 */
-							pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+								/* 拡大率を設定 */
+								pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
-							/* 削除カウントを設定 */
-							// ※仮で1秒間
-							pDamageEffect->SetDeleteCount(60);
+								/* 削除カウントを設定 */
+								// ※仮で1秒間
+								pDamageEffect->SetDeleteCount(60);
 
-							/* エフェクト初期化処理 */
-							pDamageEffect->Initialization();
+								/* エフェクト初期化処理 */
+								pDamageEffect->Initialization();
 
-							/* オブジェクトリストに登録 */
-							this->ObjectList->SetEffect(pDamageEffect);
+								/* オブジェクトリストに登録 */
+								this->ObjectList->SetEffect(pDamageEffect);
+							}
 							
-							/* 感電エフェクトを生成 */
+							/* 感電エフェクト */
+							{
+								/* 感電エフェクトを生成 */
 								EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
 
 								/* 感電エフェクトの読み込み */
@@ -283,10 +291,17 @@ void CharacterPlayer::PlayerHitCheck()
 								pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 
 								/* 感電エフェクトをリストに登録 */
-								{
-									/* 感電エフェクトをリストに登録 */
-									this->ObjectList->SetEffect(pShockEffect);
-								}
+								this->ObjectList->SetEffect(pShockEffect);
+							}
+							
+							/* 画面エフェクト */
+							{
+								/* 画面エフェクトを生成 */
+								ScreenEffect_Base* pScreenEffect = new ScreenEffect_Damage();
+
+								/* 画面エフェクトをリストに登録 */
+								this->GameStatusList->SetScreenEffect(pScreenEffect);
+							}
 						}
 					}
 				}

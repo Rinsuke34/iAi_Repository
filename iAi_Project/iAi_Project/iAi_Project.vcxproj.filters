@@ -343,6 +343,24 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ゲームオーバー">
       <UniqueIdentifier>{62238b3f-25a9-4b99-93bd-1a13d2685416}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト">
+      <UniqueIdentifier>{2980588c-d43c-4ab2-b3d3-789d3af4dd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト">
+      <UniqueIdentifier>{26439899-672d-4708-ab20-cd3ea9fb1e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\ベース">
+      <UniqueIdentifier>{0c2beafe-0628-4472-9557-743d5fc0066d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース">
+      <UniqueIdentifier>{7162cbde-b7df-4efa-8a21-1ca1937e7d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース\非ダメージ">
+      <UniqueIdentifier>{5437bfbc-e56d-46c1-b7ff-25a9c756d781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\ベース\被ダメージ">
+      <UniqueIdentifier>{59185a37-feef-4bf4-9b1b-603f604856aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -530,6 +548,12 @@
     </ClCompile>
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow_Frame.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_Base.cpp">
+      <Filter>ソース ファイル\画面エフェクト\ベース</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_Damage.cpp">
+      <Filter>ソース ファイル\画面エフェクト\ベース\被ダメージ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -739,6 +763,15 @@
     </ClInclude>
     <ClInclude Include="source\EffectSelfDelete_PlayerFollow_Frame.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_Base.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\ベース</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_Damage.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffectDefine.h">
+      <Filter>ヘッダー ファイル\画面エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

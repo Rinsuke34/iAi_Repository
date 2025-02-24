@@ -58,7 +58,6 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
-	this->iMainScreenEffectHandle			= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	// シャドウマップハンドル
 	this->iShadowMapScreenHandle_Platform			= MakeShadowMap(1028 * 2, 1028 * 2);
 
@@ -83,7 +82,6 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iLightMapScreenHandle_DownScale);
 	DeleteGraph(this->iLightMapScreenHandle_Gauss);
 	DeleteGraph(this->iMainScreenHandle);
-	DeleteGraph(this->iMainScreenEffectHandle);
 	// シャドウマップ
 	DeleteShadowMap(this->iShadowMapScreenHandle_Platform);
 }

@@ -197,6 +197,7 @@
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
+    <ClCompile Include="source\ScreenEffect_Damage.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneGameOver.cpp" />
     <ClCompile Include="source\SceneHome.cpp" />
@@ -216,6 +217,7 @@
     <ClCompile Include="source\SceneUi_Edit.cpp" />
     <ClCompile Include="source\SceneUi_Hp.cpp" />
     <ClCompile Include="source\SceneUi_Kunai.cpp" />
+    <ClCompile Include="source\ScreenEffect_Base.cpp" />
     <ClCompile Include="source\SkySqhereBasic.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
     <ClCompile Include="source\PlatformBasic.cpp" />
@@ -267,6 +269,8 @@
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
+    <ClInclude Include="source\ScreenEffectDefine.h" />
+    <ClInclude Include="source\ScreenEffect_Damage.h" />
     <ClInclude Include="source\SceneGameOver.h" />
     <ClInclude Include="source\SceneResult.h" />
     <ClInclude Include="source\SceneStage.h" />
@@ -277,6 +281,7 @@
     <ClInclude Include="source\SceneUi_Edit.h" />
     <ClInclude Include="source\SceneUi_Hp.h" />
     <ClInclude Include="source\SceneUi_Kunai.h" />
+    <ClInclude Include="source\ScreenEffect_Base.h" />
     <ClInclude Include="source\SkySqhereBasic.h" />
     <ClInclude Include="source\SoundDefine.h" />
     <ClInclude Include="source\StructDefine.h" />

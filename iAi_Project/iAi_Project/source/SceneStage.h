@@ -24,6 +24,9 @@
 #include "SceneUi_Blood.h"
 #include "SceneUi_Edit.h"
 
+/* 画面エフェクト */
+#include "ScreenEffect_Damage.h"
+
 /* ステージクラスの宣言 */
 
 // ステージベース
@@ -71,7 +74,6 @@ class SceneStage : public SceneBase
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
 		int iMainScreenHandle;						// メイン画面のハンドル
-		int iMainScreenEffectHandle;				// メイン画面(画面エフェクト用)のハンドル
 		// シャドウマップハンドル
 		int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
 		int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル

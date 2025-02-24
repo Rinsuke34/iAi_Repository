@@ -30,6 +30,9 @@ void SceneStage::Draw()
 	/* メイン画面を描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenHandle, FALSE);
 
+	/* 画面エフェクトを描写 */
+	SetupScreenEffects();
+
 	/* カメラ設定 */
 	SetCamera();
 }
@@ -185,13 +188,28 @@ void SceneStage::SetupEffectScreen()
 // 画面エフェクト
 void SceneStage::SetupScreenEffects()
 {
-	/* メイン画面(画面エフェクト用)への描写を開始 */
-	SetDrawScreen(this->iMainScreenEffectHandle);
+	/* 画面エフェクト描写 */
+	for (auto& pScreenEffectDraw : this->GameStatusList->GetScreenEffectList())
+	{
+		/* 画面エフェクト更新処理 */
+		pScreenEffectDraw->Update(this->iMainScreenHandle);
+	}
 
-	/* 画面クリア */
-	ClearDrawScreen();
-
-	/* メイン画面(画面エフェクト用)への描写を終了 */
-	SetDrawScreen(DX_SCREEN_BACK);
+	/* 削除フラグが有効な画面エフェクトを削除 */
+	this->GameStatusList->GetScreenEffectList().erase(std::remove_if(this->GameStatusList->GetScreenEffectList().begin(), this->GameStatusList->GetScreenEffectList().end(), [](ScreenEffect_Base* pScreenEffect)
+		{
+			/* 削除フラグが有効であるか確認　*/
+			if (pScreenEffect->bGetDeleteFlg() == true)
+			{
+				// 有効である場合
+				delete pScreenEffect;
+				return true;
+			}
+			else
+			{
+				// 無効である場合
+				return false;
+			}
+		}), this->GameStatusList->GetScreenEffectList().end());
 }
 
