@@ -46,7 +46,7 @@ void SceneStage::SetupShadowMap()
 	/* シャドウマップの描写範囲設定 */
 	{
 		/* カメラのターゲット座標を取得 */
-		VECTOR vecTargetPos = this->PlayerStatusList->vecGetCameraTarget();
+		VECTOR vecTargetPos = this->StageStatusList->vecGetCameraTarget();
 
 		/* シャドウマップ範囲設定 */
 		// ※カメラのターゲット座標を中心に描写
@@ -189,14 +189,14 @@ void SceneStage::SetupEffectScreen()
 void SceneStage::SetupScreenEffects()
 {
 	/* 画面エフェクト描写 */
-	for (auto& pScreenEffectDraw : this->GameStatusList->GetScreenEffectList())
+	for (auto& pScreenEffectDraw : this->StageStatusList->GetScreenEffectList())
 	{
 		/* 画面エフェクト更新処理 */
 		pScreenEffectDraw->Update(this->iMainScreenHandle);
 	}
 
 	/* 削除フラグが有効な画面エフェクトを削除 */
-	this->GameStatusList->GetScreenEffectList().erase(std::remove_if(this->GameStatusList->GetScreenEffectList().begin(), this->GameStatusList->GetScreenEffectList().end(), [](ScreenEffect_Base* pScreenEffect)
+	this->StageStatusList->GetScreenEffectList().erase(std::remove_if(this->StageStatusList->GetScreenEffectList().begin(), this->StageStatusList->GetScreenEffectList().end(), [](ScreenEffect_Base* pScreenEffect)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pScreenEffect->bGetDeleteFlg() == true)
@@ -210,6 +210,6 @@ void SceneStage::SetupScreenEffects()
 				// 無効である場合
 				return false;
 			}
-		}), this->GameStatusList->GetScreenEffectList().end());
+		}), this->StageStatusList->GetScreenEffectList().end());
 }
 

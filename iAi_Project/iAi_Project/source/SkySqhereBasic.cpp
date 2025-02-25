@@ -8,8 +8,8 @@ SkySqhereBasic::SkySqhereBasic() : SkySqhereBase()
 {
 	/* データリスト取得 */
 	{
-		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 }
 
@@ -22,7 +22,6 @@ SkySqhereBasic::~SkySqhereBasic()
 // 更新
 void SkySqhereBasic::Update()
 {
-	/* プレイヤーの座標に移動させる */
-	// ※おいて枯れないようにするため毎フレーム実行
-	this->vecPosition = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+	/* カメラの注視点に移動させる */
+	this->vecPosition = this->StageStatusList->vecGetCameraTarget();
 }

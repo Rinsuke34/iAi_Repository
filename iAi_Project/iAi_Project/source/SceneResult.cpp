@@ -10,7 +10,7 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
@@ -91,7 +91,7 @@ void SceneResult::Initialization()
 void SceneResult::Process()
 {
 	/* ゲーム状態を確認 */
-	int iGameStatus = this->GameStatusList->iGetGameStatus();
+	int iGameStatus = this->StageStatusList->iGetGameStatus();
 
 	/* ゲーム状態に応じて処理を変更 */
 	switch (iGameStatus)
@@ -131,7 +131,7 @@ void SceneResult::Process_Decid()
 	{
 		// 入力されている場合
 		/* ゲーム状態を"エディット"に変更する */
-		this->GameStatusList->SetGameStatus(GAMESTATUS_EDIT);
+		this->StageStatusList->SetGameStatus(GAMESTATUS_EDIT);
 
 		/* 各評価の総合値をゲーム内リソースサーバーに登録 */
 		this->GameResourceList->SetClearEvaluation(this->iClearEvaluation_Total);

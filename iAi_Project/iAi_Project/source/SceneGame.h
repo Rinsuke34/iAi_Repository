@@ -5,7 +5,7 @@
 #include "PublicInclude.h"
 
 /* データリスト */
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_Effect.h"
 #include "DataList_GameResource.h"
 
@@ -28,7 +28,7 @@ class SceneGame : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameStatus*	GameStatusList;	// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
 
 	protected:
 };

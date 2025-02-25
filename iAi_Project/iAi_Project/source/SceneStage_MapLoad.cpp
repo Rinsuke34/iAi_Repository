@@ -28,7 +28,7 @@
 void SceneStage::LoadMapData()
 {
 	/* 現在のステージ番号を取得 */
-	int iStageNo = this->GameStatusList->iGetNowStageNo();
+	int iStageNo = this->StageStatusList->iGetNowStageNo();
 
 	/* マップ名を取得 */
 	std::string MapName = STAGE_NAME[iStageNo];

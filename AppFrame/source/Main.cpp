@@ -109,6 +109,15 @@ void Main::MainInit()
 
 	/* Z深度設定 */
 	SetZBufferBitDepth(SCREEN_Z_BUFFER_BIT_DEPTH);
+
+	/* Effekseer初期化処理 */
+	if (Effekseer_Init(EFFECT_MAX_PARTICLE) == -1)
+	{
+		// エラーが起きたら直ちに終了
+		DxLib_End();
+		gbEndFlg = true;
+		return;
+	}
 }
 
 // 終了処理
@@ -128,6 +137,9 @@ void Main::MainEnd()
 
 	/* フォントデータを削除する */
 	DeleteFontToHandle(giFontHandle);
+
+	/* Effkseerの使用を終了する */
+	Effkseer_End();
 
 	/* DXライブラリの使用を終了する */
 	DxLib_End();

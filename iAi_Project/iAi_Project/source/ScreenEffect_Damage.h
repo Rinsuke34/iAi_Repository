@@ -16,6 +16,10 @@ class ScreenEffect_Damage : public ScreenEffect_Base
 
 		void	ScreenEffectDraw(int iGrHandle_Screen)	override;	// 画面エフェクト描写
 
+	private:
+		/* 変数 */
+		int				iEffectShiftChangeCount;	// エフェクトのシフト量変更カウント
+		st2DPosition	stEffectShift;				// エフェクトのシフト量
 };
 
 #endif

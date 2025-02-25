@@ -216,7 +216,7 @@ void CharacterPlayer::Player_Melee_Posture()
 			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f * 3.f;
 
 			/* 移動方向算出 */
-			VECTOR vecMoveDirection = VNorm(VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition()));
+			VECTOR vecMoveDirection = VNorm(VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition()));
 
 			/* 縦方向には移動しないように設定 */
 			vecMoveDirection.y = 0;
@@ -228,10 +228,10 @@ void CharacterPlayer::Player_Melee_Posture()
 			if (iNowAttakChargeFlame >= PLAYER_CHARGE_TO_STRONG_TIME)
 			{
 				/* カメラモードを"構え(近接攻撃構え)"に変更 */
-				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
+				this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
 
 				/* プレイヤーの向きをカメラの向きに固定 */
-				this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+				this->PlayerStatusList->SetPlayerAngleX(this->StageStatusList->fGetCameraAngleX());
 				
 				/* ロックオン範囲のコリジョン作成 */
 				{
@@ -545,7 +545,7 @@ void CharacterPlayer::Player_Charge_Attack()
 			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
 
 			/* プレイヤーの向きにカメラの向きを固定 */
-			this->PlayerStatusList->SetCameraAngleX(this->PlayerStatusList->fGetPlayerAngleX());
+			this->StageStatusList->SetCameraAngleX(this->PlayerStatusList->fGetPlayerAngleX());
 		}
 
 	}
@@ -566,10 +566,10 @@ void CharacterPlayer::Player_Projectile_Posture()
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
 	{
 		/* プレイヤーの向きをカメラの向きに固定 */
-		this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+		this->PlayerStatusList->SetPlayerAngleX(this->StageStatusList->fGetCameraAngleX());
 		
 		/* カメラモードを"構え(クナイ攻撃)"に変更 */
-		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 
 		/* 攻撃入力がされた場合 */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
@@ -619,10 +619,10 @@ void CharacterPlayer::Player_Projectile_Posture()
 void CharacterPlayer::Player_Projectile()
 {
 	/* プレイヤーの向きをカメラの向きに固定 */
-	this->PlayerStatusList->SetPlayerAngleX(this->PlayerStatusList->fGetCameraAngleX());
+	this->PlayerStatusList->SetPlayerAngleX(this->StageStatusList->fGetCameraAngleX());
 
 	/* カメラモードを"構え(クナイ攻撃)"に変更 */
-	this->PlayerStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 	
 	/* クナイ(エフェクト)を作成 */
 	this->pBulletKunaiEffect = new BulletPlayerKunaiEffect;
@@ -646,7 +646,7 @@ void CharacterPlayer::Player_Projectile()
 		// クナイ(エフェクト)のターゲット座標をカメラの注視点の先に設定
 
 		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
-		VECTOR vecKunaiTarget = VSub(this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraPosition());
+		VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
 		
 		/* ベクトルを正規化 */
 		vecKunaiTarget = VNorm(vecKunaiTarget);
@@ -655,7 +655,7 @@ void CharacterPlayer::Player_Projectile()
 		vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
 
 		/* ターゲット座標の座標ベクトルを取得 */
-		vecKunaiTarget = VAdd(this->PlayerStatusList->vecGetCameraPosition(), vecKunaiTarget);
+		vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
 
 		// クナイ(エフェクト)にターゲット座標を設定
 		this->pBulletKunaiEffect->SetKunaiTargetPosition(vecKunaiTarget);

@@ -25,21 +25,21 @@ void SceneStage::SetCamera()
 	//SetFogStartEnd(15000.f, 20000.f);
 
 	/* カメラモードが変更されているか確認 */
-	if (this->PlayerStatusList->iGetCameraMode() != this->PlayerStatusList->iGetCameraMode_Old())
+	if (this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old())
 	{
 		// 変更されている場合
 		/* カメラ座標の線形保管用カウントを初期化する */
-		this->PlayerStatusList->SetCameraPositionLeapCount(0);
+		this->StageStatusList->SetCameraPositionLeapCount(0);
 
 		/* 現在のカメラの座標を移動前座標として設定する */
-		this->PlayerStatusList->SetCameraPosition_Start(this->PlayerStatusList->vecGetCameraPosition());
+		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition());
 	}
 
 	/* カメラ設定で使用する変数の定義 */
 	float fChangeCameraRatio = 1.f;	// 入力によるカメラ回転倍率
 
 	/* カメラモードに応じて処理を変更 */
-	switch (this->PlayerStatusList->iGetCameraMode())
+	switch (this->StageStatusList->iGetCameraMode())
 	{
 		/* フリー */
 		case CAMERA_MODE_FREE:
@@ -70,6 +70,12 @@ void SceneStage::SetCamera()
 			/* カメラ設定 */
 			SetCamera_Aim_Kunai();
 			break;
+
+		/* タイトル */
+		case CAMERA_MODE_TITLE:
+			/* カメラ設定 */
+			SetCamera_Aim_Title();
+			break;
 	}
 
 	/* 入力によるカメラ回転の取得処理を実施 */
@@ -80,10 +86,10 @@ void SceneStage::SetCamera()
 	CameraSmoothing();
 
 	/* カメラ設定 */
-	SetCameraPositionAndTargetAndUpVec(this->PlayerStatusList->vecGetCameraPosition(), this->PlayerStatusList->vecGetCameraTarget(), this->PlayerStatusList->vecGetCameraUp());
+	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
 
 	/* 現時点でのカメラモードを保存 */
-	this->PlayerStatusList->SetCameraMode_Old(this->PlayerStatusList->iGetCameraMode());
+	this->StageStatusList->SetCameraMode_Old(this->StageStatusList->iGetCameraMode());
 }
 
 // 入力によるカメラ回転量取得
@@ -93,10 +99,10 @@ void SceneStage::CameraRotateUpdata(float fRate)
 	// fRate	:	回転量倍率(オプション設定による倍率とは別物)
 
 	/* 現在の回転量等を取得 */
-	float fCameraAngleX						= this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY						= this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
-	float fCameraRotationalSpeed_Controller	= this->PlayerStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
-	float fCameraRotationalSpeed_Mouse		= this->PlayerStatusList->fGetCameraRotationalSpeed_Mouse();		// 回転速度(マウス)
+	float fCameraAngleX						= this->StageStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY						= this->StageStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraRotationalSpeed_Controller	= this->StageStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
+	float fCameraRotationalSpeed_Mouse		= this->StageStatusList->fGetCameraRotationalSpeed_Mouse();			// 回転速度(マウス)
 
 	/* 入力からカメラ回転量を取得 */
 	/* マウス */
@@ -108,74 +114,74 @@ void SceneStage::CameraRotateUpdata(float fRate)
 	fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]) * fRate;
 
 	/* Y軸の回転角度制限 */
-	float fAngleLimitUp		= this->PlayerStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
-	float fAngleLimitDown	= this->PlayerStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
+	float fAngleLimitUp		= this->StageStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
+	float fAngleLimitDown	= this->StageStatusList->fGetCameraAngleLimitDown();	// 下方向の制限角度
 
 	if (fCameraAngleY > fAngleLimitUp)		{ fCameraAngleY = fAngleLimitUp; }		// 上方向の制限角度を超えたら制限角度に設定
 	if (fCameraAngleY < fAngleLimitDown)	{ fCameraAngleY = fAngleLimitDown; }	// 下方向の制限角度を超えたら制限角度に設定
 
 	/* 回転量を更新 */
-	this->PlayerStatusList->SetCameraAngleX(fCameraAngleX);
-	this->PlayerStatusList->SetCameraAngleY(fCameraAngleY);
+	this->StageStatusList->SetCameraAngleX(fCameraAngleX);
+	this->StageStatusList->SetCameraAngleY(fCameraAngleY);
 }
 
 // カメラ設定(フリーモード)
 void SceneStage::SetCamera_Free()
 {
 	/* 現在の回転量等を取得 */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraAngleX = this->StageStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY = this->StageStatusList->fGetCameraAngleY();						// Y軸回転量
 
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
-	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+	this->StageStatusList->SetCameraTarget(vecCameraTarget);
 
 	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
-	float fRadius	= this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
+	float fRadius	= this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
 	float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
 	float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
 	float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
-	this->PlayerStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
 }
 
 // カメラ設定(構え(近接攻撃構え))
 void SceneStage::SetCamera_Aim_Melee()
 {
 	/* 現在の回転量等を取得 */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();						// X軸回転量
-	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();						// Y軸回転量
+	float fCameraAngleX = this->StageStatusList->fGetCameraAngleX();						// X軸回転量
+	float fCameraAngleY = this->StageStatusList->fGetCameraAngleY();						// Y軸回転量
 
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
-	this->PlayerStatusList->SetCameraTarget(vecCameraTarget);
+	this->StageStatusList->SetCameraTarget(vecCameraTarget);
 
 	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
-	//float fRadius = this->PlayerStatusList->fGetCameraRadius();			// 注視点からの距離
+	//float fRadius = this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
 	float fRadius = 200.f;			// 注視点からの距離
 	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
 	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
 	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
-	this->PlayerStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
 }
 
 // カメラ設定(構え(クナイ構え))
 void SceneStage::SetCamera_Aim_Kunai()
 {
 	/* 現在の回転量等を取得 */
-	float fCameraAngleX = this->PlayerStatusList->fGetCameraAngleX();		// X軸回転量
-	float fCameraAngleY = this->PlayerStatusList->fGetCameraAngleY();		// Y軸回転量
+	float fCameraAngleX = this->StageStatusList->fGetCameraAngleX();		// X軸回転量
+	float fCameraAngleY = this->StageStatusList->fGetCameraAngleY();		// Y軸回転量
 
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
@@ -186,17 +192,26 @@ void SceneStage::SetCamera_Aim_Kunai()
 	float fCameraY	= fRadius * +sinf(fCameraAngleY) + vecPlayerPos.y;	// Y座標
 	float fCameraZ	= fRadius * -cosf(fCameraAngleX) + vecPlayerPos.z;	// Z座標
 
-	this->PlayerStatusList->SetCameraTarget(VGet(fCameraX, fCameraY, fCameraZ));
+	this->StageStatusList->SetCameraTarget(VGet(fCameraX, fCameraY, fCameraZ));
 
 	/* カメラ座標設定 */
-	this->PlayerStatusList->SetCameraPosition_Target(VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0)));
+	this->StageStatusList->SetCameraPosition_Target(VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0)));
+}
+
+// カメラ設定(タイトル)
+void SceneStage::SetCamera_Aim_Title()
+{
+	/* カメラ注視点設定 */
+	this->StageStatusList->SetCameraTarget(VGet(0.f, 0.f, 0.f));
+
+	this->StageStatusList->SetCameraPosition_Target(VGet(10.f, 500.f, 0.f));
 }
 
 // カメラ補正
 void SceneStage::CameraSmoothing()
 {
 	/* カメラ線形補間用カウントを取得 */
-	int iCameraPositionLeapCount = this->PlayerStatusList->iGetCameraPositionLeapCount();
+	int iCameraPositionLeapCount = this->StageStatusList->iGetCameraPositionLeapCount();
 
 	/* カメラ線形補完用カウントが最大値に達しているか */
 	if (iCameraPositionLeapCount < CAMERA_POSITION_LEAP_COUNT_MAX)
@@ -206,25 +221,25 @@ void SceneStage::CameraSmoothing()
 		float fLeapRatio = ((float)iCameraPositionLeapCount / (float)CAMERA_POSITION_LEAP_COUNT_MAX);
 
 		/* カメラの座標(線形補間後)を算出 */
-		VECTOR vecStart		= this->PlayerStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
-		VECTOR vecTarget	= this->PlayerStatusList->vecGetCameraPosition_Target();	// 線形補完の移動後座標
+		VECTOR vecStart		= this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
+		VECTOR vecTarget	= this->StageStatusList->vecGetCameraPosition_Target();	// 線形補完の移動後座標
 		VECTOR vecCameraPosition;
 		vecCameraPosition.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
 		vecCameraPosition.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;
 		vecCameraPosition.z = vecStart.z + (vecTarget.z - vecStart.z) * fLeapRatio;
 
 		/* カメラの座標(線形補間後)を現在のカメラ座標に設定 */
-		this->PlayerStatusList->SetCameraPosition(vecCameraPosition);
+		this->StageStatusList->SetCameraPosition(vecCameraPosition);
 
 		/* カウントを加算して設定する */
-		this->PlayerStatusList->SetCameraPositionLeapCount(iCameraPositionLeapCount + 1);
+		this->StageStatusList->SetCameraPositionLeapCount(iCameraPositionLeapCount + 1);
 	}
 	else
 	{
 		// 最大値に達している場合
 		/* カメラの座標(移動後)を現在のカメラ座標に設定 */
-		this->PlayerStatusList->SetCameraPosition(this->PlayerStatusList->vecGetCameraPosition_Target());
+		this->StageStatusList->SetCameraPosition(this->StageStatusList->vecGetCameraPosition_Target());
 
-		this->PlayerStatusList->SetCameraPosition_Start(this->PlayerStatusList->vecGetCameraPosition_Target());
+		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition_Target());
 	}
 }

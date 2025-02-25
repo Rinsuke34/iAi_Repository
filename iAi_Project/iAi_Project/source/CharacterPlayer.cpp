@@ -58,8 +58,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* "エフェクトリソース管理"を取得 */
 		this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
 
-		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));;
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
 	}
 
 	/* モデル取得 */
@@ -97,7 +97,7 @@ void CharacterPlayer::Update()
 		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 
 		/* カメラモードを"フリーモード"に変更 */
-		this->PlayerStatusList->SetCameraMode(CAMERA_MODE_FREE);
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_FREE);
 	}
 
 	/* 当たり判定処理 */
@@ -300,7 +300,7 @@ void CharacterPlayer::PlayerHitCheck()
 								ScreenEffect_Base* pScreenEffect = new ScreenEffect_Damage();
 
 								/* 画面エフェクトをリストに登録 */
-								this->GameStatusList->SetScreenEffect(pScreenEffect);
+								this->StageStatusList->SetScreenEffect(pScreenEffect);
 							}
 						}
 					}

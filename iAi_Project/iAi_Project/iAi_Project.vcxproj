@@ -171,7 +171,7 @@
     <ClCompile Include="source\CharacterPlayerMove.cpp" />
     <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameResource.cpp" />
-    <ClCompile Include="source\DataList_GameStatus.cpp" />
+    <ClCompile Include="source\DataList_StageStatus.cpp" />
     <ClCompile Include="source\DataList_Image.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
     <ClCompile Include="source\DataList_Model.cpp" />
@@ -233,7 +233,7 @@
     <ClInclude Include="source\ConstantDefine.h" />
     <ClInclude Include="source\DataList_Effect.h" />
     <ClInclude Include="source\DataList_GameResource.h" />
-    <ClInclude Include="source\DataList_GameStatus.h" />
+    <ClInclude Include="source\DataList_StageStatus.h" />
     <ClInclude Include="source\DataList_Image.h" />
     <ClInclude Include="source\DataList_Model.h" />
     <ClInclude Include="source\DataList_PlayerStatus.h" />
@@ -256,7 +256,7 @@
     <ClInclude Include="source\EnemyMissile.h" />
     <ClInclude Include="source\EnemyNormal.h" />
     <ClInclude Include="source\Enemy_Explosion.h" />
-    <ClInclude Include="source\GameStatusDefine.h" />
+    <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />
     <ClInclude Include="source\Gimmick_ForcedJump_Spawn.h" />
@@ -269,7 +269,6 @@
     <ClInclude Include="source\PlayerStatusDefine.h" />
     <ClInclude Include="source\PublicInclude.h" />
     <ClInclude Include="source\SceneEdit.h" />
-    <ClInclude Include="source\ScreenEffectDefine.h" />
     <ClInclude Include="source\ScreenEffect_Damage.h" />
     <ClInclude Include="source\SceneGameOver.h" />
     <ClInclude Include="source\SceneResult.h" />

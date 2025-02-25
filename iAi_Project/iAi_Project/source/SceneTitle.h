@@ -4,6 +4,12 @@
 #include "AppFrame.h"
 #include "PublicInclude.h"
 
+/* シーン */
+#include "SceneStage.h"
+
+/* データリスト */
+#include "DataList_StageStatus.h"
+
 /* シーン「タイトル」の宣言 */
 
 // シーン "タイトル画面"
@@ -18,11 +24,10 @@ class SceneTitle : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
+		/* 使用するデータリスト */
+		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
 
-	//変数
-
-	int iTitleLogoHandle;					// タイトルロゴハンドル
-
-	int iTitleBackGroundHandle;				// タイトル背景ハンドル
-	protected:
+		//変数
+		int iTitleLogoHandle;					// タイトルロゴハンドル
+		int iTitleBackGroundHandle;				// タイトル背景ハンドル
 };

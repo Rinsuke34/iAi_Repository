@@ -19,6 +19,7 @@ SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 	pDebugManu.push_back(&gbDrawLightMapGaussFlg);		// ライトマップ(ぼかし)のハンドル
 	pDebugManu.push_back(&gbDrawCollisionFlg);			// 全オブジェクトのコリジョン描写
 	pDebugManu.push_back(&gbDrawDeleteBackGroundFlg);	// バックグランドオブジェクトの非表示
+	pDebugManu.push_back(&gbUseMouseFlg);				// マウス使用フラグの有効・無効の切り替え
 }
 
 // 計算

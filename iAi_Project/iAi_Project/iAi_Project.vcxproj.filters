@@ -157,12 +157,6 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\エディット">
       <UniqueIdentifier>{0dbfbb9a-6d4b-4e85-b17d-eae4a3346160}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\データリスト\ゲーム状態管理">
-      <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\データリスト\ゲーム状態管理">
-      <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト\アクタ\バレット">
       <UniqueIdentifier>{10bf6242-2663-4da7-9e4c-eba1e4648fd8}</UniqueIdentifier>
     </Filter>
@@ -361,6 +355,12 @@
     <Filter Include="ソース ファイル\画面エフェクト\ベース\被ダメージ">
       <UniqueIdentifier>{59185a37-feef-4bf4-9b1b-603f604856aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\ステージ状態管理">
+      <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\ステージ状態管理">
+      <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -414,8 +414,8 @@
     <ClCompile Include="source\SceneEdit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClCompile>
-    <ClCompile Include="source\DataList_GameStatus.cpp">
-      <Filter>ソース ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClCompile Include="source\DataList_StageStatus.cpp">
+      <Filter>ソース ファイル\データリスト\ステージ状態管理</Filter>
     </ClCompile>
     <ClCompile Include="source\EffectManualDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
@@ -620,11 +620,11 @@
     <ClInclude Include="source\SceneEdit.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClInclude>
-    <ClInclude Include="source\DataList_GameStatus.h">
-      <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClInclude Include="source\DataList_StageStatus.h">
+      <Filter>ヘッダー ファイル\データリスト\ステージ状態管理</Filter>
     </ClInclude>
-    <ClInclude Include="source\GameStatusDefine.h">
-      <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClInclude Include="source\StageStatusDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\ステージ状態管理</Filter>
     </ClInclude>
     <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
@@ -769,9 +769,6 @@
     </ClInclude>
     <ClInclude Include="source\ScreenEffect_Damage.h">
       <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
-    </ClInclude>
-    <ClInclude Include="source\ScreenEffectDefine.h">
-      <Filter>ヘッダー ファイル\画面エフェクト</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

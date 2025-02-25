@@ -17,7 +17,7 @@
 #include "DataList_Object.h"
 #include "DataList_Model.h"
 #include "DataList_Effect.h"
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
@@ -58,7 +58,7 @@ class CharacterPlayer : public CharacterBase
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_Effect*		EffectList;			// エフェクトリソース管理
-		DataList_GameStatus*	GameStatusList;		// ゲーム状態リスト
+		DataList_StageStatus*	StageStatusList;	// ステージ状態リスト
 
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新

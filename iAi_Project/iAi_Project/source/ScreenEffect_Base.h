@@ -2,7 +2,7 @@
 
 #pragma once
 #include "Appframe.h"
-#include "ScreenEffectDefine.h"
+#include "PublicInclude.h"
 
 /* すべての画面エフェクトのベースとなるクラスの宣言 */
 

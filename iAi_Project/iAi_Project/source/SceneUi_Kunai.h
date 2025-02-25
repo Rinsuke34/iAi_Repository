@@ -5,7 +5,7 @@
 
 /* データリスト */
 #include "DataList_PlayerStatus.h"
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_Image.h"
 
 /* UI(クナイ)クラスの宣言 */
@@ -23,5 +23,5 @@ class SceneUi_Kunai : public SceneBase
 	private:
 		/* 使用するデータリスト */
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
-		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
 };

@@ -39,3 +39,6 @@ static const int OBJECT_TYPE_PLAYER			= 0;	// プレイヤー
 static const int OBJECT_TYPE_ENEMY			= 1;	// エネミー
 static const int OBJECT_TYPE_BULLET_PLAYER	= 2;	// 弾丸(プレイヤー)
 static const int OBJECT_TYPE_BULLET_ENEMY	= 3;	// 弾丸(エネミー)
+
+/* Effekseer関連 */
+static const int EFFECT_MAX_PARTICLE		= 8000;		// エフェクトの最大パーティクル数

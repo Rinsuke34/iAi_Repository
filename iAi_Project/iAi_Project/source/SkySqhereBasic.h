@@ -4,7 +4,7 @@
 #include "Appframe.h"
 
 /* データリスト */
-#include "DataList_Object.h"
+#include "DataList_StageStatus.h"
 
 /* 基本スカイスフィアクラスの宣言 */
 
@@ -15,11 +15,11 @@ class SkySqhereBasic : public SkySqhereBase
 		SkySqhereBasic();				// コンストラクタ
 		virtual ~SkySqhereBasic();		// デストラクタ
 
-		void Update() override;					// 更新
+		void Update() override;			// 更新
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Object* ObjectList;			// オブジェクト管理
+		DataList_StageStatus* StageStatusList;	// ステージ状態管理
 
 	protected:
 

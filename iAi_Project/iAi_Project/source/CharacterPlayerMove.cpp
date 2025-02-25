@@ -228,7 +228,7 @@ void CharacterPlayer::Player_Move()
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
 
 		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+		float fAngleX = this->StageStatusList->fGetCameraAngleX();
 
 		/* 移動量を算出 */
 		vecAddMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
@@ -250,7 +250,7 @@ void CharacterPlayer::Player_Move()
 			this->RadianLimitAdjustment(fAngleX);
 			
 			/* 補正したカメラ角度を設定 */
-			this->PlayerStatusList->SetCameraAngleX(fAngleX);
+			this->StageStatusList->SetCameraAngleX(fAngleX);
 
 			/* 入力方向とカメラの向きを合成し移動方向とする */
 			fMoveAngle = fAngleX - fMoveAngle;
@@ -628,7 +628,7 @@ void CharacterPlayer::Player_Dodg()
 						VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
 
 						/* カメラの水平方向の向きを移動用の向きに設定 */
-						float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+						float fAngleX = this->StageStatusList->fGetCameraAngleX();
 
 						/* 移動量を算出 */
 						VECTOR vecMove;

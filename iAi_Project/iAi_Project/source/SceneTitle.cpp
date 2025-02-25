@@ -6,12 +6,17 @@
 /* シーン「タイトル」の定義 */
 
 // コンストラクタ
-SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
+SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 {
 	iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
 
-	iTitleBackGroundHandle = LoadGraph("resource/ImageData/Test/skysphere1.png");
+	//iTitleBackGroundHandle = LoadGraph("resource/ImageData/Test/skysphere1.png");
 
+	/* データリスト取得 */
+	{
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+	}
 
 	/* 初期化 */
 	Initialization();
@@ -20,7 +25,7 @@ SceneTitle::SceneTitle() : SceneBase("Title", 0, false)
 // デストラクタ
 SceneTitle::~SceneTitle()
 {
-
+	
 }
 
 // 初期化
@@ -28,6 +33,28 @@ void SceneTitle::Initialization()
 {
 	/* BGMを設定 */
 	gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
+
+	/* 最初のステージ番号を"タイトル/ホーム"に設定 */
+	this->StageStatusList->SetNowStageNo(STAGE_NO_TITLE);
+
+	/* カメラモードを"タイトル"に設定 */
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_TITLE);
+
+	/* UI追加フラグを無効化 */
+	this->StageStatusList->SetAddUiFlg(false);
+
+	/* "タイトル"のステージを読み込む */
+	/* シーン"タイトル"を作成 */
+	SceneBase* pAddScene = new SceneStage();
+
+	/* シーン"ステージ"をシーンサーバーに追加 */
+	gpSceneServer->AddSceneReservation(pAddScene);
+
+	/* ステージの読み込みを開始 */
+	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+
+	/* 初期化処理 */
+	pAddScene->Initialization();
 }
 
 // 計算
@@ -58,7 +85,7 @@ void SceneTitle::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 	
 	// タイトル背景を描画
-	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, iTitleBackGroundHandle, FALSE);
+	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, iTitleBackGroundHandle, FALSE);
 	/* タイトルロゴを描画 */
 	PlayMovieToGraph(iTitleLogoHandle);
 	// ムービー映像を画面いっぱいに描画します
