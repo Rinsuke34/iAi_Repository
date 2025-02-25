@@ -7,6 +7,7 @@
 /* 2025.02.10 菊池雅道	振り向き処理修正 */
 /* 2025.02.10 菊池雅道	回避処理修正 */
 /* 2025.02.14 菊池雅道	振り向き処理修正 */
+/* 2025.02.22 菊池雅道	壁キック処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -165,7 +166,7 @@ void CharacterPlayer::Player_Move()
 					EffectSelfDelete_PlayerFollow* pAddEffect = new EffectSelfDelete_PlayerFollow(true);
 
 					/* ダッシュエフェクト読み込み */
-					pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
+					pAddEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
 
 					/* ダッシュエフェクトの時間設定 */
 					pAddEffect->SetDeleteCount(30);
@@ -327,6 +328,41 @@ void CharacterPlayer::Player_Move()
 			}
 		}
 	}
+	/* 2025.02.22 菊池雅道	壁キック処理追加 開始*/
+	// 壁キックの横移動処理
+	/* 壁キックフラグが有効か確認 */
+	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+	{
+		// 壁キックフラグが有効な場合
+		/* 壁キックしてからの経過フレーム数を取得 */
+		int iNowAfterKickWallCount = this->PlayerStatusList->iGetPlayerAfterKickWallCount();
+
+		/* 経過フレーム数を確認 */
+		if (iNowAfterKickWallCount <= PLAYER_WALL_KICK_MOVE_FLAME)
+		{
+			// 経過フレーム数が設定フレーム数を超えていない場合
+
+			/* 壁キックの横移動速度を設定 */
+			/* 経過フレーム数に応じて、速度が減衰する(1.0fを最大として減衰していく) */
+			float fWallKickSpeed = PLAYER_WALL_KICK_HORIZONTAL_SPEED * (1.0f - (float)(iNowAfterKickWallCount / PLAYER_WALL_KICK_MOVE_FLAME));
+			
+			/* 壁の法線方向(水平成分のみ)へ移動する */
+			this->vecMove.x += vecNormalSum.x * fWallKickSpeed;
+			this->vecMove.z += vecNormalSum.z * fWallKickSpeed;
+
+		}
+		else
+		{
+			// 経過フレーム数が設定フレーム数を超えた場合
+
+			/* 経過フレーム数をリセット */
+			this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
+
+			/* 壁キックフラグを無効にする */
+			this->PlayerStatusList->SetPlayerKickWallFlg(false);
+		}
+	}
+	/* 2025.02.22 菊池雅道	壁キック処理追加 終了 */
 
 	/* 移動量を加算 */
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
@@ -335,7 +371,8 @@ void CharacterPlayer::Player_Move()
 	this->vecMoveSize = vecAddMove;
 }
 
-/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+/* 2025.02.05 菊池雅道	ステータス関連修正	開始 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	開始*/
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
@@ -392,7 +429,31 @@ void CharacterPlayer::Player_Jump()
 				break;
 		}
 	}
+	// 壁キックの上方向処理(壁キック可能時はジャンプより壁キックを優先するため、ジャンプよりも先に処理する)
+	/* 壁キックフラグが有効か確認 */
+	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+	{
+		/* 壁キック後の経過フレーム数が0の場合 */
+		if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
+		{
+			/*上方向に移動 */
+			this->PlayerStatusList->SetPlayerNowFallSpeed(PLAYER_WALL_KICK_VERTICAL_SPEED);
+			
+			/* SEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+			
+			/* モーションを"ジャンプ(開始)"に設定 */
+			PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 
+			/* 壁キック後のフラグを有効にする */
+			this->PlayerStatusList->SetPlayerAfterKickWallFlg(true);
+		}
+
+		/* 壁キック後の経過フレーム数を進める */
+		this->PlayerStatusList->SetPlayerAfterKickWallCount(this->PlayerStatusList->iGetPlayerAfterKickWallCount() + 1);
+
+	}
+	// ジャンプ処理
 	/* ジャンプ処理を行う状態か確認 */
 	if (bJumpFlag == true)
 	{
@@ -406,61 +467,77 @@ void CharacterPlayer::Player_Jump()
 			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
 			{
 				// ジャンプ入力がされている場合
-				/* ジャンプ処理 */
-				// 仮で落下速度を-にする処理を行う
-				//this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
-				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+				// 壁キックを行った後かを確認(壁キックとジャンプの重複防止のため)
+				if (this->PlayerStatusList->bGetPlayerAfterKickWallFlg() == false)
+				{ 
+					// 壁キック後のフラグが有効ではない場合
+					/* ジャンプ処理 */
+					// 仮で落下速度を-にする処理を行う
+					//this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
+					this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
 
-				/* ジャンプ回数を更新 */
-				this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
+					/* ジャンプ回数を更新 */
+					this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
 
-				this->PlayerStatusList->SetPlayerJumpingFlag(true);
+					this->PlayerStatusList->SetPlayerJumpingFlag(true);
 
-				/* ジャンプのSEを再生 */
-				gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+					/* ジャンプのSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
 
-				//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
+					//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
 
-				/* 地面にいない事を確認 */
-				if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-				{
-					/*空中ジャンプエフェクト追加 */
+					/* 地面にいない事を確認 */
+					if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 					{
-						/* 空中ジャンプエフェクトを生成 */
-						EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
-
-						/* 空中ジャンプエフェクトの読み込み */
-						pAirJumpEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_airjump/FX_airjump")));
-
-						/* 空中ジャンプエフェクトの時間を設定 */
-						pAirJumpEffect->SetDeleteCount(30);
-
-						/* 空中ジャンプエフェクトの座標設定 */
-						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
-
-						/* 空中ジャンプエフェクトの回転量設定 */
-						pAirJumpEffect->SetRotation(this->vecRotation);
-
-						/* 空中ジャンプエフェクトの初期化 */
-						pAirJumpEffect->Initialization();
-
-						/* 空中ジャンプエフェクトをリストに登録 */
+						/*空中ジャンプエフェクト追加 */
 						{
+							/* 空中ジャンプエフェクトを生成 */
+							EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
+
+							/* 空中ジャンプエフェクトの読み込み */
+							pAirJumpEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_airjump/FX_airjump"));
+
+							/* 空中ジャンプエフェクトの時間を設定 */
+							pAirJumpEffect->SetDeleteCount(30);
+
+							/* 空中ジャンプエフェクトの座標設定 */
+							pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed() + PLAYER_HEIGHT, this->vecPosition.z));
+
+							/* 空中ジャンプエフェクトの回転量設定 */
+							pAirJumpEffect->SetRotation(this->vecRotation);
+
+							/* 空中ジャンプエフェクトの初期化 */
+							pAirJumpEffect->Initialization();
+
 							/* 空中ジャンプエフェクトをリストに登録 */
-							this->ObjectList->SetEffect(pAirJumpEffect);
+							{
+								/* 空中ジャンプエフェクトをリストに登録 */
+								this->ObjectList->SetEffect(pAirJumpEffect);
+							}
 						}
+
 					}
 
+					/* モーションを"ジャンプ(開始)"に設定 */
+					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 				}
+				else
+				{ 
+					// 壁キック後のフラグが有効な場合
 
-				/* モーションを"ジャンプ(開始)"に設定 */
-				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
-
+					// ジャンプ入力がされている場合
+					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_JUMP) == false)
+					{
+						/* 壁キック後のフラグを解除 */
+						this->PlayerStatusList->SetPlayerAfterKickWallFlg(false);
+					}
+				}		
 			}
 		}
 	}
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正	終了 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // 重力処理
@@ -560,6 +637,7 @@ void CharacterPlayer::Player_Dodg()
 		/* 回避処理を行う状態 */
 		case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
 		case PLAYER_MOVESTATUS_FREE:			// 自由状態
+
 			/* 回避処理を行う */
 			bDodgeFlag = true;
 			break;
@@ -605,6 +683,7 @@ void CharacterPlayer::Player_Dodg()
 
 				/* 回避エフェクトを削除 */
 				this->pDodgeEffect->SetDeleteFlg(true);
+				
 				/* 回避エフェクトのポインタを削除 */
 				this->pDodgeEffect = nullptr;
 			}
@@ -666,7 +745,7 @@ void CharacterPlayer::Player_Dodg()
 						this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
 
 						/* 回避エフェクトの読み込み */
-						this->pDodgeEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_dash/FX_dash")));
+						this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
 
 						/* エフェクトの回転量設定 */
 						this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
@@ -790,7 +869,7 @@ void CharacterPlayer::Movement_Vertical()
 				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
 
 				/* 着地エフェクトの読み込み */
-				pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_land/FX_land")));
+				pAddEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_land/FX_land"));
 
 				/* 着地エフェクトの時間を設定 */
 				pAddEffect->SetDeleteCount(30);
@@ -855,7 +934,9 @@ void CharacterPlayer::Movement_Vertical()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
-/* 2025.02.07 菊池雅道	衝突判定処理修正　開始 */
+/* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
+
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
 {
@@ -910,9 +991,6 @@ void CharacterPlayer::Movement_Horizontal()
 						/* 移動後座標に球体ポリゴンを作成 */
 						vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
 
-						/* 法線ベクトルの作成 */
-						VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
-
 						/* ポリゴンと接触した座標 */
 						VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
 
@@ -966,6 +1044,14 @@ void CharacterPlayer::Movement_Horizontal()
 							break;
 						}
 					}
+
+					//壁キック処理
+					/* オブジェクトと接触している状態でジャンプボタンを押した場合 */
+					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+					{
+						/* 壁キックフラグを有効にする */
+						this->PlayerStatusList->SetPlayerKickWallFlg(true);
+					}
 				}
 			}
 		}
@@ -974,4 +1060,5 @@ void CharacterPlayer::Movement_Horizontal()
 	/* プレイヤーの座標を移動させる */
 	this->vecPosition = vecNextPosition;
 }
-/* 2025.02.07 菊池雅道	衝突判定処理修正　終了 */
+/* 2025.02.07 菊池雅道	衝突判定処理修正	終了 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	開始 */

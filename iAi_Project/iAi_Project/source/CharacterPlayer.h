@@ -6,6 +6,7 @@
 /* 2025.02.14 菊池雅道 回転関連の関数追加 */
 /* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 /* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
+/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -95,6 +96,7 @@ class CharacterPlayer : public CharacterBase
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
+		VECTOR				vecNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計			/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 
 		/* 変数(デバッグ用) */
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
