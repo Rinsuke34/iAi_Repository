@@ -132,6 +132,6 @@ void CharacterPlayer::CollisionDraw()
 
 	/* ƒJƒƒ‰’Ž‹“_ */
 	iColor = GetColor(0, 255, 255);
-	DrawLine3D(VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(+50, 0, 0)), VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(-50, 0, 0)), iColor);
-	DrawLine3D(VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(0, 0, +50)), VAdd(this->PlayerStatusList->vecGetCameraTarget(), VGet(0, 0, -50)), iColor);
+	DrawLine3D(VAdd(this->StageStatusList->vecGetCameraTarget(), VGet(+50, 0, 0)), VAdd(this->StageStatusList->vecGetCameraTarget(), VGet(-50, 0, 0)), iColor);
+	DrawLine3D(VAdd(this->StageStatusList->vecGetCameraTarget(), VGet(0, 0, +50)), VAdd(this->StageStatusList->vecGetCameraTarget(), VGet(0, 0, -50)), iColor);
 }

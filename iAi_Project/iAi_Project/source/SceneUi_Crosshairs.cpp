@@ -16,8 +16,8 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 		/* "プレイヤー状態"を取得 */
 		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
-		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像リソース取得 */
@@ -40,7 +40,7 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 void SceneUi_Crosshairs::Process()
 {
 	/* ゲーム状態が"ゲーム実行"以外であるならシーンを削除 */
-	if (this->GameStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
+	if (this->StageStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
 	{
 		/* シーンの削除フラグを有効にする */
 		this->bDeleteFlg = true;
@@ -117,7 +117,7 @@ void SceneUi_Crosshairs::Process()
 		}
 	}
 	/* カメラモードが構え(クナイ構え)か確認 */
-	else if ((this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI))
+	else if ((this->StageStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI))
 	{
 		/* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 開始 */
 		
@@ -211,7 +211,7 @@ void SceneUi_Crosshairs::Process()
 void SceneUi_Crosshairs::Draw()
 {
 	/* カメラモードが構え(近接攻撃構え)であるか確認 */	
-	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_MELEE)
+	if (this->StageStatusList->iGetCameraMode() == CAMERA_MODE_AIM_MELEE)
 	{
 		// 構え(近接攻撃構え)である場合
 		/* エネミーのロックオン描写 */
@@ -222,7 +222,7 @@ void SceneUi_Crosshairs::Draw()
 	}
 
 	/* カメラモードが構え(クナイ構え)であるか確認 */
-	if (this->PlayerStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI)
+	if (this->StageStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI)
 	{
 		// 構え(クナイ構え)である場合
 		/* エネミーのロックオン描写 */

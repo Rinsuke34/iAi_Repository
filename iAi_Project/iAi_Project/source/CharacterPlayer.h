@@ -18,6 +18,7 @@
 #include "DataList_Object.h"
 #include "DataList_Model.h"
 #include "DataList_Effect.h"
+#include "DataList_StageStatus.h"
 
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
@@ -29,6 +30,13 @@
 #include "EffectManualDelete_PlayerFollow_Frame.h"
 #include "EffectSelfDelete_PlayerFollow_Frame.h"
 #include "PlayerBulletDefine.h"
+
+/* 画像エフェクト */
+#include "ScreenEffect_Damage.h"
+
+/* 循環参照対策 */
+class ScreenEffect_Damage;
+
 /* プレイヤークラスの宣言 */
 
 // プレイヤークラス
@@ -51,6 +59,7 @@ class CharacterPlayer : public CharacterBase
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_Effect*		EffectList;			// エフェクトリソース管理
+		DataList_StageStatus*	StageStatusList;	// ステージ状態リスト
 
 		/* 関数 */
 		void	CollisionUpdate();		// コリジョン更新

@@ -5,6 +5,7 @@
 
 /* データリスト */
 #include "DataList_GameResource.h"
+#include "DataList_StageStatus.h"
 
 /* UI(ブラッド(ゲーム内通貨))クラスの宣言 */
 
@@ -20,7 +21,8 @@ class SceneUi_Blood : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
+		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 
 		/* 使用する画像のハンドル */
 

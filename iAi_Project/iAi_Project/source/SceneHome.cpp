@@ -7,7 +7,7 @@
 /* シーン"ホーム画面"の定義 */
 
 // コンストラクタ
-SceneHome::SceneHome() : SceneBase("Home", 0, false)
+SceneHome::SceneHome() : SceneBase("Home", 0, true)
 {
 	/* 初期化 */
 	Initialization();

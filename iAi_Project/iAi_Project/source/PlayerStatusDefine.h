@@ -34,7 +34,7 @@ static const float	PLAER_DASH_NOMAL_SPEED				= 10.0f;				// ƒvƒŒƒCƒ„[‚Ì‘–‚èi’Ê
 static const float	PLAER_DASH_MAX_SPEED				= 20.0f;				// ƒvƒŒƒCƒ„[‚Ì‘–‚èiÅ‘åj‚ÌˆÚ“®‘¬“x							/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;					// ƒvƒŒƒCƒ„[‚Ì‘–‚è‚Ì’Êí¨Å‘å‚É‚È‚éƒtƒŒ[ƒ€”					/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	STICK_TILT_PLAER_DASH				= 0.8f;					// ƒvƒŒƒCƒ„[‚ª‘–‚èó‘Ô‚É‚È‚éƒXƒeƒBƒbƒN‚ÌŒX‚«i”ÍˆÍFÅ‘å1j	/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const float	PLAYER_TURN_SPEED					= 0.2f;					// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“xi”ÍˆÍF0.0?1.0j					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“xi”ÍˆÍF0.0?1.0j				/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_TURN_LIMIT					= DX_PI_F * 2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x§ŒÀ(ƒ‰ƒWƒAƒ“)							/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */	/* 2025.02.13 ‹e’r‰ë“¹ ’è”C³ */
 static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 20.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚ÌˆÚ“®ƒtƒŒ[ƒ€”							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 30.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì‘¬“x(…•½¬•ª)							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
@@ -56,22 +56,6 @@ static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// ƒvƒŒƒCƒ„[‚ª‹ó’†‚Å‰ñ”ð‚Å‚«‚
 // UŒ‚ŠÖŒW
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-
-
-/* ƒJƒƒ‰ŠÖ˜A */
-// Šî–{î•ñ
-static const float	INIT_CAMERA_RADIUS						= 400;				// ƒJƒƒ‰‚Ì’†S“_‚©‚ç‚Ì‹——£
-static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒRƒ“ƒgƒ[ƒ‰[)
-static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
-static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
-static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
-// ƒJƒƒ‰ó‘Ô
-static const int	CAMERA_MODE_FREE						= 0;				// ƒtƒŠ[ƒ‚[ƒh(’Êí‚ÌŽOlÌŽ‹“_)
-static const int    CAMERA_MODE_LOCK						= 1;				// ŒÅ’è
-static const int	CAMERA_MODE_AIM_MELEE					= 2;				// \‚¦(‹ßÚUŒ‚\‚¦)
-static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// \‚¦(ƒNƒiƒC\‚¦)
-// üŒ`•âŠÔ
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;		// ƒJƒƒ‰À•W‚ÌüŒ`•ÛŠÇ—pƒJƒEƒ“ƒg‚ÌÅ‘å’l
 
 /* 2025.02.05 ‹e’r‰ë“¹ ƒXƒe[ƒ^ƒXŠÖ˜A‚Ì’è”C³ ŠJŽn */
 /* ƒvƒŒƒCƒ„[ˆÚ“®ó‘Ô */

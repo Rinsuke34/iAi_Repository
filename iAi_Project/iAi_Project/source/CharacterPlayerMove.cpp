@@ -229,7 +229,7 @@ void CharacterPlayer::Player_Move()
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
 
 		/* カメラの水平方向の向きを移動用の向きに設定 */
-		float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+		float fAngleX = this->StageStatusList->fGetCameraAngleX();
 
 		/* 移動量を算出 */
 		vecAddMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
@@ -251,7 +251,7 @@ void CharacterPlayer::Player_Move()
 			this->RadianLimitAdjustment(fAngleX);
 			
 			/* 補正したカメラ角度を設定 */
-			this->PlayerStatusList->SetCameraAngleX(fAngleX);
+			this->StageStatusList->SetCameraAngleX(fAngleX);
 
 			/* 入力方向とカメラの向きを合成し移動方向とする */
 			fMoveAngle = fAngleX - fMoveAngle;
@@ -371,8 +371,7 @@ void CharacterPlayer::Player_Move()
 	this->vecMoveSize = vecAddMove;
 }
 
-/* 2025.02.05 菊池雅道	ステータス関連修正	開始 */
-/* 2025.02.22 菊池雅道	壁キック処理追加	開始*/
+/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
@@ -429,31 +428,7 @@ void CharacterPlayer::Player_Jump()
 				break;
 		}
 	}
-	// 壁キックの上方向処理(壁キック可能時はジャンプより壁キックを優先するため、ジャンプよりも先に処理する)
-	/* 壁キックフラグが有効か確認 */
-	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
-	{
-		/* 壁キック後の経過フレーム数が0の場合 */
-		if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
-		{
-			/*上方向に移動 */
-			this->PlayerStatusList->SetPlayerNowFallSpeed(PLAYER_WALL_KICK_VERTICAL_SPEED);
-			
-			/* SEを再生 */
-			gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
-			
-			/* モーションを"ジャンプ(開始)"に設定 */
-			PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 
-			/* 壁キック後のフラグを有効にする */
-			this->PlayerStatusList->SetPlayerAfterKickWallFlg(true);
-		}
-
-		/* 壁キック後の経過フレーム数を進める */
-		this->PlayerStatusList->SetPlayerAfterKickWallCount(this->PlayerStatusList->iGetPlayerAfterKickWallCount() + 1);
-
-	}
-	// ジャンプ処理
 	/* ジャンプ処理を行う状態か確認 */
 	if (bJumpFlag == true)
 	{
@@ -500,8 +475,8 @@ void CharacterPlayer::Player_Jump()
 							/* 空中ジャンプエフェクトの時間を設定 */
 							pAirJumpEffect->SetDeleteCount(30);
 
-							/* 空中ジャンプエフェクトの座標設定 */
-							pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed() + PLAYER_HEIGHT, this->vecPosition.z));
+						/* 空中ジャンプエフェクトの座標設定 */
+						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
 
 							/* 空中ジャンプエフェクトの回転量設定 */
 							pAirJumpEffect->SetRotation(this->vecRotation);
@@ -509,35 +484,23 @@ void CharacterPlayer::Player_Jump()
 							/* 空中ジャンプエフェクトの初期化 */
 							pAirJumpEffect->Initialization();
 
+						/* 空中ジャンプエフェクトをリストに登録 */
+						{
 							/* 空中ジャンプエフェクトをリストに登録 */
-							{
-								/* 空中ジャンプエフェクトをリストに登録 */
-								this->ObjectList->SetEffect(pAirJumpEffect);
-							}
+							this->ObjectList->SetEffect(pAirJumpEffect);
 						}
-
 					}
 
-					/* モーションを"ジャンプ(開始)"に設定 */
-					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 				}
-				else
-				{ 
-					// 壁キック後のフラグが有効な場合
 
-					// ジャンプ入力がされている場合
-					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_JUMP) == false)
-					{
-						/* 壁キック後のフラグを解除 */
-						this->PlayerStatusList->SetPlayerAfterKickWallFlg(false);
-					}
-				}		
+				/* モーションを"ジャンプ(開始)"に設定 */
+				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
 			}
 		}
 	}
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正	終了 */
-/* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
+/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // 重力処理
@@ -707,7 +670,7 @@ void CharacterPlayer::Player_Dodg()
 						VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
 
 						/* カメラの水平方向の向きを移動用の向きに設定 */
-						float fAngleX = this->PlayerStatusList->fGetCameraAngleX();
+						float fAngleX = this->StageStatusList->fGetCameraAngleX();
 
 						/* 移動量を算出 */
 						VECTOR vecMove;
@@ -1043,6 +1006,14 @@ void CharacterPlayer::Movement_Horizontal()
 						{
 							break;
 						}
+					}
+
+					//壁キック処理
+					/* オブジェクトと接触している状態でジャンプボタンを押した場合 */
+					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+					{
+						/* 壁キックフラグを有効にする */
+						this->PlayerStatusList->SetPlayerKickWallFlg(true);
 					}
 
 					//壁キック処理

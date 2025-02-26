@@ -27,47 +27,22 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		/* "3Dモデル管理"を取得 */
 		this->ModelList			= dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
-		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList	= dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
-	}
-
-	/* UI追加 */
-	{
-		/* クロスヘア */
-		gpSceneServer->AddSceneReservation(new SceneUi_Crosshairs());
-
-		/* HP */
-		gpSceneServer->AddSceneReservation(new SceneUi_Hp());
-
-		/* クナイ */
-		gpSceneServer->AddSceneReservation(new SceneUi_Kunai());
-
-		/* コンボ */
-		gpSceneServer->AddSceneReservation(new SceneUi_Combo());
-
-		/* ブラッド */
-		gpSceneServer->AddSceneReservation(new SceneUi_Blood());
-
-		/* エディット */
-		gpSceneServer->AddSceneReservation(new SceneUi_Edit());
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* マップハンドル作成 */
 	// 画像ハンドル
+	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle				= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
-	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
-	this->iMainScreenEffectHandle			= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
 	// シャドウマップハンドル
-	this->iShadowMapScreenHandle_Platform			= MakeShadowMap(1028 * 2, 1028 * 2);
+	this->iShadowMapScreenHandle_Platform	= MakeShadowMap(1028 * 2, 1028 * 2);
 
 	//int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
 	//int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
 	//int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
-
-	/* 初期化 */
-	Initialization();
 }
 
 // デストラクタ
@@ -83,7 +58,6 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iLightMapScreenHandle_DownScale);
 	DeleteGraph(this->iLightMapScreenHandle_Gauss);
 	DeleteGraph(this->iMainScreenHandle);
-	DeleteGraph(this->iMainScreenEffectHandle);
 	// シャドウマップ
 	DeleteShadowMap(this->iShadowMapScreenHandle_Platform);
 }
@@ -92,14 +66,40 @@ SceneStage::~SceneStage()
 void SceneStage::Initialization()
 {
 	/* ゲーム状態を"ゲーム実行"に変更 */
-	this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+	this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+
+	/* UIを追加するか確認*/
+	if (this->StageStatusList->bGetAddUiFlg() == true)
+	{
+		// 追加する場合
+		/* UI追加 */
+		{
+			/* クロスヘア */
+			gpSceneServer->AddSceneReservation(new SceneUi_Crosshairs());
+
+			/* HP */
+			gpSceneServer->AddSceneReservation(new SceneUi_Hp());
+
+			/* クナイ */
+			gpSceneServer->AddSceneReservation(new SceneUi_Kunai());
+
+			/* コンボ */
+			gpSceneServer->AddSceneReservation(new SceneUi_Combo());
+
+			/* ブラッド */
+			gpSceneServer->AddSceneReservation(new SceneUi_Blood());
+
+			/* エディット */
+			gpSceneServer->AddSceneReservation(new SceneUi_Edit());
+		}
+	}
 }
 
 // 計算
 void SceneStage::Process()
 {
 	/* ゲーム状態を確認 */
-	int iGameStatus = this->GameStatusList->iGetGameStatus();
+	int iGameStatus = this->StageStatusList->iGetGameStatus();
 
 	/* ゲーム状態に応じて処理を変更 */
 	switch (iGameStatus)
@@ -114,7 +114,7 @@ void SceneStage::Process()
 			/* エディット画面作成処理 */
 			{
 				/* カメラモードを"固定"に変更 */
-				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_LOCK);
+				this->StageStatusList->SetCameraMode(CAMERA_MODE_LOCK);
 
 				/* シーン"リザルト画面"を作成 */
 				SceneBase* pAddScene = new SceneResult();
@@ -129,7 +129,7 @@ void SceneStage::Process()
 			/* エディット画面作成処理 */
 			{
 				/* カメラモードを"固定"に変更 */
-				this->PlayerStatusList->SetCameraMode(CAMERA_MODE_LOCK);
+				this->StageStatusList->SetCameraMode(CAMERA_MODE_LOCK);
 
 				/* シーン"エディット画面"を作成 */
 				SceneBase* pAddScene = new SceneEdit();
@@ -145,7 +145,7 @@ void SceneStage::Process()
 			this->bDeleteFlg = true;
 
 			/* ゲーム状態を"ゲーム実行"に変更する */
-			this->GameStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
 		/* "ゲームオーバー"状態 */
@@ -174,7 +174,7 @@ void SceneStage::Process_Main()
 		// プレイヤーが存在かつ死亡フラグが有効ならば
 		
 		/* ゲーム状態を"ゲームオーバー"に変更する */
-		this->GameStatusList->SetGameStatus(GAMESTATUS_GAMEOVER);
+		this->StageStatusList->SetGameStatus(GAMESTATUS_GAMEOVER);
 	}
 
 	/* デバッグ処理 */

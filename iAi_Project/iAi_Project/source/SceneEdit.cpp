@@ -10,7 +10,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
@@ -184,7 +184,7 @@ void SceneEdit::Initialization()
 void SceneEdit::Process()
 {
 	/* ゲーム状態を確認 */
-	int iGameStatus = this->GameStatusList->iGetGameStatus();
+	int iGameStatus = this->StageStatusList->iGetGameStatus();
 
 	/* ゲーム状態に応じて処理を変更 */
 	switch (iGameStatus)
@@ -290,7 +290,7 @@ void SceneEdit::Process_Decid()
 			{
 				// "次へ"である場合
 				/* ゲーム状態を"次のステージへ遷移"に変更する */
-				this->GameStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
+				this->StageStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
 
 				/* 決定時の処理を終了する */
 				return;

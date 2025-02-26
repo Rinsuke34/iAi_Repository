@@ -10,7 +10,7 @@ SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像読み込み */
