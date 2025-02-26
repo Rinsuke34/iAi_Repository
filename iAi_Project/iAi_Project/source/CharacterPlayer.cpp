@@ -5,6 +5,7 @@
 /* 2025.02.14 菊池雅道	回転関連の関数追加 */
 /* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
 /* 2025.02.19 菊池雅道	エフェクト処理追加 */
+/* 2025.02.22 菊池雅道	壁キック処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -34,6 +35,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->vecNormalSum	= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
 
 		/* 変数(デバッグ用) */

@@ -11,7 +11,7 @@ SceneUi_Blood::SceneUi_Blood() : SceneBase("UI_Blood", 104, false)
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList	= dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 
-		/* "ゲーム状態管理"を取得 */
+		/* "ステージ状態管理"を取得 */
 		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 }

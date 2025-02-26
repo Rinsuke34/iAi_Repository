@@ -33,7 +33,7 @@ class EnemyGoalObject : public EnemyBasic
 	protected:
 		/* 使用するデータリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
-		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
 
 		/* 変数 */
 		bool	bStageChangeFlg;	/* 次のステージに遷移するかのフラグ */

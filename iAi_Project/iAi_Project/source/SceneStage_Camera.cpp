@@ -1,4 +1,5 @@
 /* 2025.02.02 ファイル作成 駒沢風助 */
+/* 2025.02.23 菊池雅道	カメラ制御処理修正 */
 
 #include "SceneStage.h"
 
@@ -176,6 +177,7 @@ void SceneStage::SetCamera_Aim_Melee()
 	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
 }
 
+/* 2025.02.23 菊池雅道	カメラ制御処理修正 開始 */
 // カメラ設定(構え(クナイ構え))
 void SceneStage::SetCamera_Aim_Kunai()
 {
@@ -194,9 +196,40 @@ void SceneStage::SetCamera_Aim_Kunai()
 
 	this->StageStatusList->SetCameraTarget(VGet(fCameraX, fCameraY, fCameraZ));
 
+	
+	// プレイヤーの右斜め後ろにカメラを配置する
+
+	/* カメラの基本の高さ */ 
+	float fHeightOffset = PLAYER_HEIGHT; 
+	
+	// プレイヤーが見切れないように角度に応じて高さを変化させる
+	/* 上下角度に応じた補正 */ 
+	float fHeightCorrection = fHeightOffset + 100.0f * -sinf(fCameraAngleY);
+
+	// プレイヤーの向きに応じてカメラの位置を設定する
+	/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
+	/* カメラの位置ベクトル */
+	VECTOR vecCameraPos = { 0,0,-1 };
+	
+	/* プレイヤーの角度からY軸の回転行列を求める */
+	MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
+
+	/* カメラ位置の水平方向の平行移動行列 */
+	MATRIX matHorizontalOffset = MGetTranslate(VGet(-100.0f, 0, 150.0f));
+
+	/* 行列を乗算しカメラ位置の行列を求める */
+	MATRIX matCameraPos = MMult(matHorizontalOffset, matPlayerRotation);
+
+	/* 行列をベクトルに変換 */
+	vecCameraPos = VTransform(vecCameraPos, matCameraPos);
+
+	/* カメラの高さを設定 */
+	vecCameraPos.y = fHeightCorrection;
+
 	/* カメラ座標設定 */
-	this->StageStatusList->SetCameraPosition_Target(VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0)));
+	this->StageStatusList->SetCameraPosition_Target(VAdd(vecPlayerPos, vecCameraPos));
 }
+/* 2025.02.23 菊池雅道	カメラ制御処理修正 終了 */
 
 // カメラ設定(タイトル)
 void SceneStage::SetCamera_Aim_Title()
