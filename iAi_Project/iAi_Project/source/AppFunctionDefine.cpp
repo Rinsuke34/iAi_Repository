@@ -12,6 +12,8 @@
 #include "DataList_Sound.h"
 #include "DataList_Model.h"
 #include "DataList_Image.h"
+#include "DataList_Effect.h"
+#include "DataList_StageStatus.h"
 
 /* AppFrameで使用する関数の定義 */
 
@@ -55,6 +57,12 @@ namespace PROJECT_INIT
 
 			/* データリストサーバーに"画像リソース管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_Image());
+
+			/* データリストサーバーに"エフェクトリソース管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Effect());
+
+			/* データリストサーバーに"ステージ状態管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_StageStatus());
 		}
 	
 		/* データリスト取得 */

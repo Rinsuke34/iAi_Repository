@@ -30,6 +30,9 @@ void SceneStage::Draw()
 	/* メイン画面を描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, this->iMainScreenHandle, FALSE);
 
+	/* 画面エフェクトを描写 */
+	SetupScreenEffects();
+
 	/* カメラ設定 */
 	SetCamera();
 }
@@ -43,7 +46,7 @@ void SceneStage::SetupShadowMap()
 	/* シャドウマップの描写範囲設定 */
 	{
 		/* カメラのターゲット座標を取得 */
-		VECTOR vecTargetPos = this->PlayerStatusList->vecGetCameraTarget();
+		VECTOR vecTargetPos = this->StageStatusList->vecGetCameraTarget();
 
 		/* シャドウマップ範囲設定 */
 		// ※カメラのターゲット座標を中心に描写
@@ -185,13 +188,28 @@ void SceneStage::SetupEffectScreen()
 // 画面エフェクト
 void SceneStage::SetupScreenEffects()
 {
-	/* メイン画面(画面エフェクト用)への描写を開始 */
-	SetDrawScreen(this->iMainScreenEffectHandle);
+	/* 画面エフェクト描写 */
+	for (auto& pScreenEffectDraw : this->StageStatusList->GetScreenEffectList())
+	{
+		/* 画面エフェクト更新処理 */
+		pScreenEffectDraw->Update(this->iMainScreenHandle);
+	}
 
-	/* 画面クリア */
-	ClearDrawScreen();
-
-	/* メイン画面(画面エフェクト用)への描写を終了 */
-	SetDrawScreen(DX_SCREEN_BACK);
+	/* 削除フラグが有効な画面エフェクトを削除 */
+	this->StageStatusList->GetScreenEffectList().erase(std::remove_if(this->StageStatusList->GetScreenEffectList().begin(), this->StageStatusList->GetScreenEffectList().end(), [](ScreenEffect_Base* pScreenEffect)
+		{
+			/* 削除フラグが有効であるか確認　*/
+			if (pScreenEffect->bGetDeleteFlg() == true)
+			{
+				// 有効である場合
+				delete pScreenEffect;
+				return true;
+			}
+			else
+			{
+				// 無効である場合
+				return false;
+			}
+		}), this->StageStatusList->GetScreenEffectList().end());
 }
 

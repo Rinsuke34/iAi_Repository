@@ -6,7 +6,7 @@
 #include "SceneEditDefine.h"
 
 /* データリスト */
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_GameResource.h"
 #include "DataList_Image.h"
 
@@ -25,7 +25,7 @@ class SceneEdit : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameStatus* GameStatusList;		// ゲーム状態管理
+		DataList_StageStatus* StageStatusList;		// ゲーム状態管理
 		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
 
 		/* 使用する画像のハンドル */

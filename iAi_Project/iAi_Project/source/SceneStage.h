@@ -9,7 +9,7 @@
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_Image.h"
 
 /* シーン */
@@ -23,6 +23,9 @@
 #include "SceneUi_Debug.h"
 #include "SceneUi_Blood.h"
 #include "SceneUi_Edit.h"
+
+/* 画面エフェクト */
+#include "ScreenEffect_Damage.h"
 
 /* ステージクラスの宣言 */
 
@@ -44,7 +47,7 @@ class SceneStage : public SceneBase
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 		DataList_Model*			ModelList;			// 3Dモデル管理
-		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 
 		/* 関数 */
 		void	Process_Main();					// 計算(メインの処理)
@@ -60,6 +63,7 @@ class SceneStage : public SceneBase
 		void	SetCamera_Free();					// カメラ設定(フリー)
 		void	SetCamera_Aim_Melee();				// カメラ設定(構え(近接攻撃構え))
 		void	SetCamera_Aim_Kunai();				// カメラ設定(構え(クナイ構え))
+		void	SetCamera_Aim_Title();				// カメラ設定(タイトル)
 		void	CameraSmoothing();					// カメラ補正
 
 		/* デバッグ関連 */
@@ -71,7 +75,6 @@ class SceneStage : public SceneBase
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
 		int iMainScreenHandle;						// メイン画面のハンドル
-		int iMainScreenEffectHandle;				// メイン画面(画面エフェクト用)のハンドル
 		// シャドウマップハンドル
 		int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
 		int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル

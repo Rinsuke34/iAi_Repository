@@ -157,12 +157,6 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\エディット">
       <UniqueIdentifier>{0dbfbb9a-6d4b-4e85-b17d-eae4a3346160}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\データリスト\ゲーム状態管理">
-      <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\データリスト\ゲーム状態管理">
-      <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト\アクタ\バレット">
       <UniqueIdentifier>{10bf6242-2663-4da7-9e4c-eba1e4648fd8}</UniqueIdentifier>
     </Filter>
@@ -343,6 +337,30 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ゲームオーバー">
       <UniqueIdentifier>{62238b3f-25a9-4b99-93bd-1a13d2685416}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト">
+      <UniqueIdentifier>{2980588c-d43c-4ab2-b3d3-789d3af4dd0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト">
+      <UniqueIdentifier>{26439899-672d-4708-ab20-cd3ea9fb1e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\ベース">
+      <UniqueIdentifier>{0c2beafe-0628-4472-9557-743d5fc0066d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース">
+      <UniqueIdentifier>{7162cbde-b7df-4efa-8a21-1ca1937e7d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース\非ダメージ">
+      <UniqueIdentifier>{5437bfbc-e56d-46c1-b7ff-25a9c756d781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\ベース\被ダメージ">
+      <UniqueIdentifier>{59185a37-feef-4bf4-9b1b-603f604856aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\データリスト\ステージ状態管理">
+      <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\データリスト\ステージ状態管理">
+      <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -396,8 +414,8 @@
     <ClCompile Include="source\SceneEdit.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClCompile>
-    <ClCompile Include="source\DataList_GameStatus.cpp">
-      <Filter>ソース ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClCompile Include="source\DataList_StageStatus.cpp">
+      <Filter>ソース ファイル\データリスト\ステージ状態管理</Filter>
     </ClCompile>
     <ClCompile Include="source\EffectManualDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
@@ -531,6 +549,12 @@
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow_Frame.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
+    <ClCompile Include="source\ScreenEffect_Base.cpp">
+      <Filter>ソース ファイル\画面エフェクト\ベース</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_Damage.cpp">
+      <Filter>ソース ファイル\画面エフェクト\ベース\被ダメージ</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -596,11 +620,11 @@
     <ClInclude Include="source\SceneEdit.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\エディット</Filter>
     </ClInclude>
-    <ClInclude Include="source\DataList_GameStatus.h">
-      <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClInclude Include="source\DataList_StageStatus.h">
+      <Filter>ヘッダー ファイル\データリスト\ステージ状態管理</Filter>
     </ClInclude>
-    <ClInclude Include="source\GameStatusDefine.h">
-      <Filter>ヘッダー ファイル\データリスト\ゲーム状態管理</Filter>
+    <ClInclude Include="source\StageStatusDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\ステージ状態管理</Filter>
     </ClInclude>
     <ClInclude Include="source\EffectManualDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
@@ -739,6 +763,12 @@
     </ClInclude>
     <ClInclude Include="source\EffectSelfDelete_PlayerFollow_Frame.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_Base.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\ベース</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_Damage.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,7 @@
 
 #pragma once
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
 
 /* プログラムのメインループで使用する関数の宣言 */
 

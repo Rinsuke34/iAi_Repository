@@ -9,7 +9,7 @@ SceneUi_Edit::SceneUi_Edit() : SceneBase("UI_Edit", 105, false)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
@@ -26,7 +26,7 @@ SceneUi_Edit::~SceneUi_Edit()
 void SceneUi_Edit::Process()
 {
 	/* ゲーム状態が"ゲーム実行"以外であるならシーンを削除 */
-	if (this->GameStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
+	if (this->StageStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
 	{
 		/* シーンの削除フラグを有効にする */
 		this->bDeleteFlg = true;

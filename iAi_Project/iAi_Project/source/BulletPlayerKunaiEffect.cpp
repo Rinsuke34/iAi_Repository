@@ -33,8 +33,11 @@ BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 		
-		/* "プレイヤー状態"を取得 */
+		/* "プレイヤー状態管理"を取得 */
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+		/* "ステージ状態管理"を管理 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 }
 
@@ -54,13 +57,13 @@ void BulletPlayerKunaiEffect::Initialization()
 	COLLISION_LINE stCollisionLine;
 	
 	/* 射線の開始点を設定 */ 
-	stCollisionLine.vecLineStart = this->PlayerStatusList->vecGetCameraPosition();
+	stCollisionLine.vecLineStart = this->StageStatusList->vecGetCameraPosition();
 	
 	/* 射線の終了点を設定 */
 	stCollisionLine.vecLineEnd = this->vecKunaiTargetPosition;
 
 	/* クナイ発射地点からターゲットの最小ベクトルを保持する */
-	VECTOR vecMinDirection = VSub(this->vecKunaiTargetPosition, this->PlayerStatusList->vecGetCameraPosition());
+	VECTOR vecMinDirection = VSub(this->vecKunaiTargetPosition, this->StageStatusList->vecGetCameraPosition());
 
 	/* クナイ発射地点からターゲットの最小距離を保持する */
 	float fMinDistance = VSize(vecMinDirection);
@@ -78,7 +81,7 @@ void BulletPlayerKunaiEffect::Initialization()
 			if (stHitPoly.HitFlag == true)
 			{
 			/* クナイ発射地点から接触地点のベクトルを設定 */
-			VECTOR vecDirection = VSub(stHitPoly.HitPosition, this->PlayerStatusList->vecGetCameraPosition());
+			VECTOR vecDirection = VSub(stHitPoly.HitPosition, this->StageStatusList->vecGetCameraPosition());
 				
 			/* クナイ発射地点から接触地点の距離を設定 */
 			float fDistance = VSize(vecDirection);

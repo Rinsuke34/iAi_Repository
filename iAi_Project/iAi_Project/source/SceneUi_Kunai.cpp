@@ -13,7 +13,7 @@ SceneUi_Kunai::SceneUi_Kunai() : SceneBase("UI_Kunai", 102, false)
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像読み込み */
@@ -33,7 +33,7 @@ SceneUi_Kunai::~SceneUi_Kunai()
 void SceneUi_Kunai::Process()
 {
 	/* ゲーム状態が"ゲーム実行"以外であるならシーンを削除 */
-	if (this->GameStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
+	if (this->StageStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
 	{
 		/* シーンの削除フラグを有効にする */
 		this->bDeleteFlg = true;

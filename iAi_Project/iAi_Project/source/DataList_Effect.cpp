@@ -17,8 +17,8 @@ DataList_Effect::~DataList_Effect()
 	/* リスト内のエフェクトハンドルを削除 */
 	for (const auto& pair : pEffectList)
 	{
-		/* モデルを削除 */
-		MV1DeleteModel(pair.second);
+		/* エフェクトを削除 */
+		DeleteEffekseerEffect(pair.second);
 	}
 
 	/* mapをクリアする */

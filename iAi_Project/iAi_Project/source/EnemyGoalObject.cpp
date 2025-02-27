@@ -19,7 +19,7 @@ EnemyGoalObject::EnemyGoalObject() : EnemyBasic()
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "ゲーム状態管理"を取得 */
-		this->GameStatusList = dynamic_cast<DataList_GameStatus*>(gpDataListServer->GetDataList("DataList_GameStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* モデル取得 */
@@ -81,7 +81,7 @@ void EnemyGoalObject::Update()
 	{
 		// HPが0以下の場合
 		/* ゲーム状態を"リザルト"に変更する */
-		this->GameStatusList->SetGameStatus(GAMESTATUS_RESULT);
+		this->StageStatusList->SetGameStatus(GAMESTATUS_RESULT);
 	}
 }
 

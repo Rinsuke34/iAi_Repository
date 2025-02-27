@@ -7,7 +7,7 @@
 /* データリスト */
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_Image.h"
 
 /* UI(クロスヘア)クラスの宣言 */
@@ -26,7 +26,7 @@ class SceneUi_Crosshairs : public SceneBase
 		/* 使用するデータリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
-		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;		// ステージ状態管理
 
 		/* 関数 */
 		void	Draw_RockOn_Melee();	// 描写(近接攻撃の溜め時のロックオンエネミー)

@@ -4,7 +4,7 @@
 #include "AppFrame.h"
 
 /* データリスト */
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_GameResource.h"
 
 /* UI(エディット)クラスの宣言 */
@@ -21,7 +21,7 @@ class SceneUi_Edit : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameStatus*	GameStatusList;		// ゲーム状態管理
+		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
 		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 
 		/* 現在のエディットデータ */

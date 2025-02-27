@@ -5,7 +5,7 @@
 #include "PublicInclude.h"
 
 /* データリスト */
-#include "DataList_GameStatus.h"
+#include "DataList_StageStatus.h"
 #include "DataList_Image.h"
 
 /* シーン */
@@ -25,7 +25,7 @@ class SceneGameOver : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_GameStatus* GameStatusList;	// ゲーム状態管理
+		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_GameOver;				// 選択フレーム
