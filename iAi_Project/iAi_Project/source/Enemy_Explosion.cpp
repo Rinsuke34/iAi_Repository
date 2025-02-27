@@ -8,7 +8,7 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 
 	this->iXdistance = ENEMY_X_DISTANCE;		// X軸の距離
 	this->iZdistance = ENEMY_Z_DISTANCE;		// Z軸の距離
-	this->fSpeed = ENEMY_SPEED;				// 移動速度
+	this->fSpeed = ENEMY_CHASE_SPEED;				// 移動速度
 	this->iDetonationRange = ENEMY_DETONATION_RANGE;	//起爆範囲内
 	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
 
@@ -34,9 +34,13 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
 	}
-
+	this->iStopCount = 0;
 	this->pEffect = nullptr;
     this->bEffectGenerated = false;
+	this->bFallFlg = true;
+	this->bStopFlg = true;
+	this->bCountFlg = false;
+	this->bBlastFlg = false;
 }
 
 // デストラクタ
@@ -63,11 +67,31 @@ void ExplosionEnemy::MoveEnemy()
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
+	//エネミーが落下しているか確認
+	if (this->bFallFlg == false)
+	{
+		//エネミーが落下している場合
+		//エネミーが移動していた方向の逆方向に10f移動
+		fSpeed = 40;
+		this->vecPosition = VAdd(this->vecPosition, VScale(VNorm(VSub(this->vecPosition, playerPos)), fSpeed));
+		fSpeed = 0;
+		this->bCountFlg = true;
+	}
+	if (this->bCountFlg = true)
+	{
+		iStopCount++;
+	}
+	if (iStopCount > 180)
+	{
+		this->bStopFlg = true;
+		iStopCount = 0;
+		this->fSpeed = ENEMY_CHASE_SPEED;
+	}
 	//エネミーの向きを初期化する
 	VECTOR VRot = VGet(0, 0, 0);
 
 	// 重力処理
-	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+	this->vecMove.y -= fGravity;
 	this->vecPosition.y += this->vecMove.y;
 
 	//プレイヤーの方向を向くようにエネミーの向きを定義
@@ -81,7 +105,7 @@ void ExplosionEnemy::MoveEnemy()
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
 	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
+	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE && this->bStopFlg == true)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
         // 探知範囲内にいるエネミーのみ処理を行う
@@ -91,11 +115,20 @@ void ExplosionEnemy::MoveEnemy()
 			VECTOR direction = VNorm(VSub(playerPos, this->vecPosition));
 
 			// プレイヤーに向かう方向と速度を取得
-			this->vecPosition = VAdd(this->vecPosition, VScale(direction, ENEMY_SPEED));
+			this->vecPosition = VAdd(this->vecPosition, VScale(direction, fSpeed));
 
 			// プレイヤーがエネミーの起爆範囲内に入ったかどうかを確認
 			if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_DETONATION_RANGE)
 			{
+				this->bBlastFlg = true;
+				
+			}
+		}
+	}
+	if (!bEffectGenerated)
+	{
+		if (this->bBlastFlg == true)
+		{
 				// プレイヤーがエネミーの起爆範囲内に入った場合
                 // 起爆予告エフェクトを生成
                 this->pEffectDetonation = new EffectManualDelete();
@@ -137,7 +170,7 @@ void ExplosionEnemy::MoveEnemy()
 				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
 			}
 		}
-	}
+	
 }
 
 void ExplosionEnemy::Enemy_Gravity()
@@ -157,11 +190,12 @@ void ExplosionEnemy::Enemy_Gravity()
 	// 足場を取得
 	auto& PlatformList = ObjectList->GetCollisionList();
 
-	// 着地する座標
-	// 初期値を移動後の座標に設定
-	float fStandPosY = vecNextPosition.y;
 
-	// 足場と接触するか確認
+
+
+
+	//// 足場と接触するか確認
+	bool bHitFlg = false;
 	for (auto* platform : PlatformList)
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
@@ -170,35 +204,24 @@ void ExplosionEnemy::Enemy_Gravity()
 		if (stHitPolyDim.HitFlag == 1)
 		{
 			// 接触している場合
-
-			// ヒットした座標が現在の着地座標より高い位置であるか確認
-			if (stHitPolyDim.HitPosition.y >= fStandPosY)
-			{
-				// エネミーのy座標を減算
 				this->vecPosition.y = stHitPolyDim.HitPosition.y;
 				this->vecMove.y = 0; // 落下速度をリセット
-
-				// ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認
-				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
-				{
-					// 着地座標がプレイヤーの現在位置より低い場合
-					// 地面に着地したと判定する
-					// 着地座標を着地した座標に更新
-					fStandPosY = stHitPolyDim.HitPosition.y;
-				}
-				else
-				{
-					// 着地座標がプレイヤーの現在位置より高い場合
-					// 着地座標をプレイヤーが天井にめり込まない高さに更新
-					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
-
-					// ループを抜ける
+			this->bFallFlg = true;
+			this->bStopFlg = true;
+			bHitFlg = true;//接触フラグを有効にする
 					break;
 				}
+		//接触フラグが無効か確認
+		if (!bHitFlg)
+		{
+			//接触フラグが無効の場合
+			////接触フラグが無効の場合
+			this->fGravity = 0;
+			this->vecMove.y = 0;
+			this->bFallFlg = false;
+			this->bStopFlg = false;
 			}
 		}
-
-	}
 }
 
 // 更新

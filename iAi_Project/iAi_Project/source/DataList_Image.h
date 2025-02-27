@@ -14,7 +14,8 @@ class DataList_Image : public DataListBase
 		virtual ~DataList_Image();		// デストラクタ
 
 		/* 画像リソース取得 */
-		int*	piGetImage(std::string imageName);		// 画像取得(ポインタで返す)
+		int*	piGetImage(std::string imageName);			// 画像取得(ポインタで返す)
+		int*	piGetImage_Movie(std::string imageName);	// 画像取得(mp4型ムービー用)(ポインタで返す)
 
 	private:
 		/* 管理するデータ */

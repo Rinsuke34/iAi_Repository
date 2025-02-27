@@ -16,29 +16,16 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
-	/* 初期化処理 */
-	Initialization();
-}
-
-// デストラクタ
-SceneResult::~SceneResult()
-{
-
-}
-
-// 初期化
-void SceneResult::Initialization()
-{
 	/* 各評価を取得(仮) */
 	{
 		/* 最大コンボ */
-		this->iClearEvaluation_Combo	= RESULT_EVALUAtiON_S;	// 評価(最大コンボ)
+		this->iClearEvaluation_Combo = RESULT_EVALUAtiON_S;	// 評価(最大コンボ)
 
 		/* クリアタイム */
-		this->iClearEvaluation_Time		= RESULT_EVALUAtiON_S;	// 評価(クリアタイム)
+		this->iClearEvaluation_Time = RESULT_EVALUAtiON_S;	// 評価(クリアタイム)
 
 		/* 被ダメージ */
-		this->iClearEvaluation_Damage	= RESULT_EVALUAtiON_S;	// 評価(被ダメージ)
+		this->iClearEvaluation_Damage = RESULT_EVALUAtiON_S;	// 評価(被ダメージ)
 	}
 
 	/* 総合評価を実施 */
@@ -84,7 +71,18 @@ void SceneResult::Initialization()
 			this->iClearEvaluation_Total = RESULT_EVALUAtiON_D;
 		}
 	}
-	
+}
+
+// デストラクタ
+SceneResult::~SceneResult()
+{
+
+}
+
+// 初期化
+void SceneResult::Initialization()
+{
+
 }
 
 // 計算

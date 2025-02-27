@@ -7,7 +7,7 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 
 	this->iXescapedistance = ENEMY_X_ESCAPE_DISTANCE;		// X軸の距離
 	this->iZescapedistance = ENEMY_Z_ESCAPE_DISTANCE;		// Z軸の距離
-	this->fEscapespeed = ENEMY_ESCAPE_SPEED;			// 移動速度
+	this->iEscapespeed = ENEMY_ESCAPE_SPEED;			// 移動速度
 	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
 
 
@@ -99,7 +99,7 @@ void EscapeEnemy::MoveEnemy()
 		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
 
 		// プレイヤーから逃げる方向と速度を設定
-		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, ENEMY_ESCAPE_SPEED));
+		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, iEscapespeed));
 
 		// エネミーの向きを初期化する
 		VRot = VGet(0, 0, 0);

@@ -361,6 +361,12 @@
     <Filter Include="ソース ファイル\データリスト\ステージ状態管理">
       <UniqueIdentifier>{b77f5419-83c9-4a67-8ae6-dd9f2fdeb769}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\セットアップ">
+      <UniqueIdentifier>{aeb9a0b4-90da-4f83-bd89-1a359c5e4829}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\セットアップ">
+      <UniqueIdentifier>{47799b86-4f70-4f07-9071-fab387dd79a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -554,6 +560,9 @@
     </ClCompile>
     <ClCompile Include="source\ScreenEffect_Damage.cpp">
       <Filter>ソース ファイル\画面エフェクト\ベース\被ダメージ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneAddStageSetup.cpp">
+      <Filter>ソース ファイル\シーン\セットアップ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -769,6 +778,9 @@
     </ClInclude>
     <ClInclude Include="source\ScreenEffect_Damage.h">
       <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneAddStageSetup.h">
+      <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

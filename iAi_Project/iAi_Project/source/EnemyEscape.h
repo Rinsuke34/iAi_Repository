@@ -39,10 +39,9 @@ class EscapeEnemy : public EnemyBasic
 	int iXescapedistance;			// X軸の距離
 
 	int iZescapedistance;			// Z軸の距離
-
+	int iEscapespeed;			// 移動速度
 	float fGravity;				// 重力
 
-	float fEscapespeed;			// 移動速度
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:

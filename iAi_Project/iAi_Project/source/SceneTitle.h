@@ -6,6 +6,7 @@
 
 /* シーン */
 #include "SceneStage.h"
+#include "SceneAddStageSetup.h"
 
 /* データリスト */
 #include "DataList_StageStatus.h"
@@ -27,7 +28,6 @@ class SceneTitle : public SceneBase
 		/* 使用するデータリスト */
 		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
 
-		//変数
-		int iTitleLogoHandle;					// タイトルロゴハンドル
-		int iTitleBackGroundHandle;				// タイトル背景ハンドル
+		/* 使用する画像のハンドル */
+		int* piGrHandle_TitleLogo;		// タイトルロゴ
 };

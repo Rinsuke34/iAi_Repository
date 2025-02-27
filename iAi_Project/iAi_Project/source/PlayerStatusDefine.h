@@ -29,6 +29,7 @@ static const int	INIT_ATTRIBUTES_HP_MAX				= 10;			// ƒvƒŒƒCƒ„[‚ÌÅ‘åHP
 static const int	INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX	= 60;			// ƒvƒŒƒCƒ„[‚ÌÅ‘å–³“GŽžŠÔ
 static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3 * 2;		// ƒRƒ“ƒ{‚ÌŽ‘±ŽžŠÔ
 
+
 // ˆÚ“®ŠÖŒW
 static const float	PLAYER_WALK_MOVE_SPEED				= 2.0f;					// ƒvƒŒƒCƒ„[‚Ì•à‚«‚ÌˆÚ“®‘¬“x									/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAER_DASH_NOMAL_SPEED				= 10.0f;				// ƒvƒŒƒCƒ„[‚Ì‘–‚èi’Êíj‚ÌˆÚ“®‘¬“x							/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
@@ -49,8 +50,8 @@ static const int	PLAYER_DODGE_COOLTIME				= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒN[ƒ‹ƒ
 
 
 // UŒ‚ŠÖŒW
-static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”								/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ										/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_STRONG_MELEE_AIR_MAX			= 1;			// ‹ó’†‚Å‚Ì‹ßÚUŒ‚(‹­)‚ÌÅ‘å‰ñ”(¦“G‚ðUŒ‚‚µ‚Ä‚¢‚È‚¢ê‡)			/* 2025.02.26 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_MELEE_WEAK_COLLTIME			= 60;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€										/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// ‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
