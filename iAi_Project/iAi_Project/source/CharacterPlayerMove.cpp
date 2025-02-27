@@ -8,6 +8,8 @@
 /* 2025.02.10 菊池雅道	回避処理修正 */
 /* 2025.02.14 菊池雅道	振り向き処理修正 */
 /* 2025.02.22 菊池雅道	壁キック処理追加 */
+/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -303,7 +305,7 @@ void CharacterPlayer::Player_Move()
 		//回避後フラグをリセット
 		this->PlayerStatusList->SetPlayerAfterDodgeFlag(false);
 
-		// 居合(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
+		// 近距離攻撃(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
 		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
 
@@ -372,6 +374,7 @@ void CharacterPlayer::Player_Move()
 }
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	開始*/
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
@@ -428,7 +431,31 @@ void CharacterPlayer::Player_Jump()
 				break;
 		}
 	}
+	// 壁キックの上方向処理(壁キック可能時はジャンプより壁キックを優先するため、ジャンプよりも先に処理する)
+	/* 壁キックフラグが有効か確認 */
+	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+	{
+		/* 壁キック後の経過フレーム数が0の場合 */
+		if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
+		{
+			/*上方向に移動 */
+			this->PlayerStatusList->SetPlayerNowFallSpeed(PLAYER_WALL_KICK_VERTICAL_SPEED);
+			
+			/* SEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+			
+			/* モーションを"ジャンプ(開始)"に設定 */
+			PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 
+			/* 壁キック後のフラグを有効にする */
+			this->PlayerStatusList->SetPlayerAfterKickWallFlg(true);
+		}
+
+		/* 壁キック後の経過フレーム数を進める */
+		this->PlayerStatusList->SetPlayerAfterKickWallCount(this->PlayerStatusList->iGetPlayerAfterKickWallCount() + 1);
+
+	}
+	// ジャンプ処理
 	/* ジャンプ処理を行う状態か確認 */
 	if (bJumpFlag == true)
 	{
@@ -475,8 +502,8 @@ void CharacterPlayer::Player_Jump()
 							/* 空中ジャンプエフェクトの時間を設定 */
 							pAirJumpEffect->SetDeleteCount(30);
 
-						/* 空中ジャンプエフェクトの座標設定 */
-						pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
+							/* 空中ジャンプエフェクトの座標設定 */
+							pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
 
 							/* 空中ジャンプエフェクトの回転量設定 */
 							pAirJumpEffect->SetRotation(this->vecRotation);
@@ -484,23 +511,33 @@ void CharacterPlayer::Player_Jump()
 							/* 空中ジャンプエフェクトの初期化 */
 							pAirJumpEffect->Initialization();
 
-						/* 空中ジャンプエフェクトをリストに登録 */
-						{
 							/* 空中ジャンプエフェクトをリストに登録 */
-							this->ObjectList->SetEffect(pAirJumpEffect);
+							{
+								/* 空中ジャンプエフェクトをリストに登録 */
+								this->ObjectList->SetEffect(pAirJumpEffect);
+							}
 						}
 					}
 
+					/* モーションを"ジャンプ(開始)"に設定 */
+					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 				}
-
-				/* モーションを"ジャンプ(開始)"に設定 */
-				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
-
+				else
+				{ 
+					// 壁キック後のフラグが有効な場合
+					// ジャンプ入力がされている場合
+					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_JUMP) == false)
+					{
+						/* 壁キック後のフラグを解除 */
+						this->PlayerStatusList->SetPlayerAfterKickWallFlg(false);
+					}
+				}		
 			}
 		}
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 // 重力処理
@@ -586,6 +623,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
+	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -600,7 +638,6 @@ void CharacterPlayer::Player_Dodg()
 		/* 回避処理を行う状態 */
 		case PLAYER_MOVESTATUS_DODGING:			// 回避状態中
 		case PLAYER_MOVESTATUS_FREE:			// 自由状態
-
 			/* 回避処理を行う */
 			bDodgeFlag = true;
 			break;
@@ -617,6 +654,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 回避処理を行うか確認 */
 	if (bDodgeFlag == true)
 	{
+		
 		// 回避処理を行う場合
 		/* プレイヤー場外が"回避状態中"であるか確認 */
 		if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
@@ -646,7 +684,6 @@ void CharacterPlayer::Player_Dodg()
 
 				/* 回避エフェクトを削除 */
 				this->pDodgeEffect->SetDeleteFlg(true);
-				
 				/* 回避エフェクトのポインタを削除 */
 				this->pDodgeEffect = nullptr;
 			}
@@ -661,6 +698,14 @@ void CharacterPlayer::Player_Dodg()
 				/* 空中での回避回数制限を超えていないか */
 				if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
 				{
+					/* 回避のクールタイムが残っているか確認 */
+					if (this->iDodgeCoolTime > 0)
+					{
+						// クールタイムが残っている場合
+						/* 回避を行わない */
+						return;
+					}
+
 					/* 回避開始時の時間をリセット */
 					this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
 
@@ -722,18 +767,26 @@ void CharacterPlayer::Player_Dodg()
 							this->ObjectList->SetEffect(this->pDodgeEffect);
 						}
 					}
+
+					/* 回避クールタイムを設定 */
+					this->iDodgeCoolTime = PLAYER_DODGE_COOLTIME;
 				}
 			}
 		}
 	}
-
-	/* 2025.01.09 菊池雅道	移動処理追加 終了 */
-	/* 2025.01.26 駒沢風助	コード修正 終了 */
-	/* 2025.01.27 菊池雅道　エフェクト処理追加 終了 */
-	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-	/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
-	/* 2025.02.10 菊池雅道	回避処理修正 終了 */
 }
+/* 2025.01.09 菊池雅道	移動処理追加			終了 */
+/* 2025.01.26 駒沢風助	コード修正				終了 */
+/* 2025.01.27 菊池雅道　エフェクト処理追加		終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正		終了 */
+/* 2025.02.06 菊池雅道	エフェクト処理修正		終了 */
+/* 2025.02.10 菊池雅道	回避処理修正			終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
+
+/* 2025.01.09 菊池雅道　移動処理追加					追加 */
+/* 2025.01.27 菊池雅道	エフェクト処理追加				開始 */
+/* 2025.02.05 菊池雅道	ステータス関連修正				開始 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	開始 */
 
 // 移動処理(垂直方向)
 void CharacterPlayer::Movement_Vertical()
@@ -794,14 +847,14 @@ void CharacterPlayer::Movement_Vertical()
 					/* プレイヤーの着地フラグを有効にする */
 					this->PlayerStatusList->SetPlayerLanding(true);
 
-					/* 2025.01.09 菊池雅道　移動処理追加 追加 */
-
-					//ジャンプ中のフラグをリセット
+					/* ジャンプ中のフラグをリセット */
 					this->PlayerStatusList->SetPlayerJumpingFlag(false);
 
-					//ジャンプ中の回避回数をリセット
+					/* ジャンプ中の回避回数をリセット */
 					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
-					/* 2025.01.09 菊池雅道　移動処理追加 終了 */
+
+					/* 空中での近距離攻撃(強)回数をリセット */
+					this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 				}
 				else
 				{
@@ -816,7 +869,6 @@ void CharacterPlayer::Movement_Vertical()
 		}
 	}
 
-	/* 2025.01.27 菊池雅道	エフェクト処理追加	開始*/
 	/* 着地フラグが無効→有効になったか確認 */
 	if (bjumppingFlg == true && this->PlayerStatusList->bGetPlayerJumpingFlag() == false)
 	{
@@ -857,7 +909,6 @@ void CharacterPlayer::Movement_Vertical()
 			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_LAND);
 		}
 	}
-	/* 2025.01.27 菊池雅道	エフェクト処理追加	終了*/
 
 	/* 着地座標を更新 */
 	vecNextPosition.y = fStandPosY;
@@ -865,7 +916,6 @@ void CharacterPlayer::Movement_Vertical()
 	/* プレイヤー座標を更新 */
 	this->vecPosition = vecNextPosition;
 
-	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 現在のプレイヤー状態を取得 */
 	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
@@ -895,11 +945,13 @@ void CharacterPlayer::Movement_Vertical()
 		}
 	}
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.01.09 菊池雅道　移動処理追加					終了 */
+/* 2025.01.27 菊池雅道	エフェクト処理追加				終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正				終了 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	終了 */
 
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
-
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
 {
@@ -1006,14 +1058,6 @@ void CharacterPlayer::Movement_Horizontal()
 						{
 							break;
 						}
-					}
-
-					//壁キック処理
-					/* オブジェクトと接触している状態でジャンプボタンを押した場合 */
-					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
-					{
-						/* 壁キックフラグを有効にする */
-						this->PlayerStatusList->SetPlayerKickWallFlg(true);
 					}
 
 					//壁キック処理

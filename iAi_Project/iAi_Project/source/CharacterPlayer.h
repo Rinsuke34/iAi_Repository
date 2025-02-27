@@ -7,6 +7,7 @@
 /* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 /* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 /* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
+/* 2025.02.26 菊池雅道 クールタイム関連の関数・変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -62,9 +63,10 @@ class CharacterPlayer : public CharacterBase
 		DataList_StageStatus*	StageStatusList;	// ステージ状態リスト
 
 		/* 関数 */
-		void	CollisionUpdate();		// コリジョン更新
-		void	PlayerHitCheck();				// 当たり判定処理
+		void	CollisionUpdate();									// コリジョン更新
+		void	PlayerHitCheck();									// 当たり判定処理
 		void	RadianLimitAdjustment(float& fRadian);				// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
+		void	UpdateCooldownTime();								// クールタイムの更新			/* 2025.02.26 菊池雅道 クールタイム関連の関数追加 */
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ
@@ -98,11 +100,6 @@ class CharacterPlayer : public CharacterBase
 		/* フレームのハンドル */
 		int		iKatanaFrameNo;			// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 
-		int		iMotionAttachIndex;		// アタッチされるモーションのインデックス		/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
-		int		iOldMotion;				// 以前にアタッチされたモーション				/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
-		float	fMotionTotalTime;		// モーションの総時間							/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
-		float	fMoionPlayTime;			// モーションの再生時間							/* 2025.01.30 菊池雅道 モーション関連の変数追加 */
-
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
 		VECTOR				vecNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計			/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
@@ -112,4 +109,9 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
 		VECTOR				vecMoveSize;					// 移動量(デバッグ用)		<- ※この変数がないとパッケージ化する際にキーボードでの移動の不具合が発生する(駒沢)
+
+		/* クールタイム関連 */
+		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iProjectileCoolTime;	// 遠距離攻撃クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iDodgeCoolTime;			// 回避クールタイム				/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 };
