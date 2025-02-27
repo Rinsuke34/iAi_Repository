@@ -9,6 +9,9 @@
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 */
 /* 2025.02.19 菊池雅道	エフェクト処理修正 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正 */
+
 
 #include "CharacterPlayer.h"
 
@@ -101,18 +104,22 @@ void CharacterPlayer::Player_Attack_Transition()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 
-// 近接攻撃(構え)
-void CharacterPlayer::Player_Melee_Posture()
-{
-	/* プレイヤーの現在の攻撃チャージフレームの取得 */
-	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
-
 	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.07 菊池雅道	エフェクト処理修正 開始 */
 	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	開始 */
+
+// 近接攻撃(構え)
+void CharacterPlayer::Player_Melee_Posture()
+{
+	/* プレイヤーの現在の攻撃チャージフレームの取得 */
+	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
+
+	/* プレイヤーの空中での近接攻撃(強)の回数を取得 */
+	int iNowMeleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -120,6 +127,14 @@ void CharacterPlayer::Player_Melee_Posture()
 		// 攻撃チャージフレームが強攻撃の切り替わりに達したら
 		if (iNowAttakChargeFlame == PLAYER_CHARGE_TO_STRONG_TIME)
 		{
+			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
+			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
+			{
+				// 超えている場合
+				/* 近接攻撃(強)の処理を行わない */
+				return;
+			}
+
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
@@ -263,9 +278,6 @@ void CharacterPlayer::Player_Melee_Posture()
 				this->stMeleeStrongMoveCollsion.fCapsuleRadius = PLAYER_WIDE;
 			}
 		}
-
-		/* 2025.01.24 菊池雅道	攻撃処理追加		終了*/
-		/* 2025.01.26 駒沢風助	コード修正		終了*/
 	}
 	else
 	{
@@ -280,11 +292,19 @@ void CharacterPlayer::Player_Melee_Posture()
 		else
 		{
 			// 強攻撃になる場合
+			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
+			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
+			{
+				// 超えている場合
+				/*近接攻撃(強)の処理を行わない */
+				return;
+			}
+
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_STRONG);
 
 			/* プレイヤーのため攻撃用のカウントを初期化 */
-			this->PlayerStatusList->SetPlayerChargeAttackCount(0);
+			this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(0);
 
 			/* 落下の加速度を初期化 */
 			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
@@ -316,10 +336,13 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 	}
 }
+/* 2025.01.24 菊池雅道	攻撃処理追加			終了*/
+/* 2025.01.26 駒沢風助	コード修正				終了*/
 /* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
 /* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -327,6 +350,14 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
+
+	// クールタイムが残っている場合攻撃しない
+	/* 近接攻撃(弱)のクールタイムを確認 */
+	if (this->iMeleeWeakCoolTime > 0)
+	{
+		return;
+	}
 
 	// 近接攻撃(弱)でない場合
 	/* プレイヤーのモーションを近接攻撃(弱)に設定 */
@@ -345,31 +376,33 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletMeleeWeak);
 
-	/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
-	/* 2025.01.26 駒沢風助	コード修正		終了 */
-
 	/* 近接攻撃(弱)のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
+
+	/* 近接攻撃(弱)のクールタイム設定 */
+	this->iMeleeWeakCoolTime = PLAYER_MELEE_WEAK_COLLTIME;
 
 	/* 未完成なのでとりあえず自由状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }
+/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
+/* 2025.01.26 駒沢風助	コード修正		終了 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加 終了 */
 
-
+/* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
+/* 2025.01.26 駒沢風助	コード修正		開始 */
+/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	開始 */
+/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		開始 */
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	/* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始 */
-	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	開始 */
-	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-
-	/* 溜め攻撃用のカウントを取得 */
-	int iChargeAttackCount = this->PlayerStatusList->iGetPlayerChargeAttackCount();
+	/* 近距離攻撃(強)状態でのチャージフレーム数を取得 */
+	int iMeleeStrongChargeCount = this->PlayerStatusList->iGetPlayerMeleeStrongChargeCount();
 
 	/* カウントを確認 */
-	if (iChargeAttackCount == 0)
+	if (iMeleeStrongChargeCount == 0)
 	{
 		// 0である場合
 		// ※モーション遷移直後である場合
@@ -378,6 +411,13 @@ void CharacterPlayer::Player_Charge_Attack()
 
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
+
+		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+		{
+			int iNowMelleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
+
+			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(iNowMelleeStrongAirCount + 1);
+		}
 	}
 	else
 	{
@@ -397,6 +437,8 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* ロックオン中のエネミーが存在するか */
 			if (pLockOnEnemy != nullptr)
 			{
+
+				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 				// 存在する場合
 				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
@@ -407,7 +449,7 @@ void CharacterPlayer::Player_Charge_Attack()
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
 			//int iCount	= iChargeAttackCount - 20;
-			int iCount = iChargeAttackCount;
+			int iCount = iMeleeStrongChargeCount;
 
 			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
 			int	iMoveCount = (int)(fMove / PLAYER_MELEE_STRONG_MOVESPEED);
@@ -432,8 +474,11 @@ void CharacterPlayer::Player_Charge_Attack()
 				/* プレイヤーの状態を"自由状態"に遷移 */
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
-				/* プレイヤーのモーションを"居合(強)(終了)"に変更 */
+				/* プレイヤーのモーションを"近距離攻撃(強)(終了)"に変更 */
 				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
+
+				/* ロックオン範囲コリジョン使用フラグを無効化 */
+				this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 			}
 
 			/* 近接攻撃として扱う弾を作成 */
@@ -465,32 +510,32 @@ void CharacterPlayer::Player_Charge_Attack()
 
 			/* エフェクト追加 */
 			{
-				/* 居合(強)のエフェクトを生成 */
+				/* 近距離攻撃(強)のエフェクトを生成 */
 				EffectSelfDelete* pAddEffect = new EffectSelfDelete();
 
-				/* 居合(強)エフェクトの読み込み */
+				/* 近距離攻撃(強)エフェクトの読み込み */
 				pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_iai_dash/FX_iai_dash")));
 
-				/* 居合(強)エフェクトの再生時間を設定 */
+				/* 近距離攻撃(強)エフェクトの再生時間を設定 */
 				pAddEffect->SetDeleteCount(30);
 
-				/* 居合(強)エフェクトの座標設定 */
+				/* 近距離攻撃(強)エフェクトの座標設定 */
 				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
 
-				/* 居合(強)エフェクトの回転量設定 */
+				/* 近距離攻撃(強)エフェクトの回転量設定 */
 				pAddEffect->SetRotation(VGet(this->vecRotation.x, this->vecRotation.y, this->vecRotation.z * -1));
 
-				/*居合(強) エフェクトの初期化 */
+				/*近距離攻撃(強) エフェクトの初期化 */
 				pAddEffect->Initialization();
 
-				/* 居合(強)エフェクトをリストに登録 */
+				/* 近距離攻撃(強)エフェクトをリストに登録 */
 				this->ObjectList->SetEffect(pAddEffect);
 			}
 		}
 	}
 
 	// 溜め攻撃後、次の敵を探す処理
-	// 仮でプレイヤーのモーションが"居合(強)(終了)"になったタイミングとする
+	// 仮でプレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする
 	if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 	{
 		/* 索敵範囲を設定※値は仮 */
@@ -549,16 +594,18 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 
 	}
-	/* 溜め攻撃用のカウントを+1する */
-	this->PlayerStatusList->SetPlayerChargeAttackCount(iChargeAttackCount + 1);
-
+	/* 溜め攻撃のチャージフレーム数を+1する */
+	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(iMeleeStrongChargeCount + 1);
+}
 	/* 2025.01.22 菊池雅道	攻撃処理追加				終了 */
 	/* 2025.01.26 駒沢風助	コード修正		終了 */
 	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	終了 */
 	/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
-}
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		開始 */
+
 
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 開始 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()
 {
@@ -574,8 +621,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 		/* 攻撃入力がされた場合 */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 		{
+			/* 遠距離攻撃のクールタイムを確認 */
+			if (this->iProjectileCoolTime == 0)
+			{
+				// クールタイムが0の場合
 			/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
+		}
 		}
 		/* ジャンプ入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
@@ -612,9 +664,11 @@ void CharacterPlayer::Player_Projectile_Posture()
 	}
 }
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加 終了 */
 
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -667,8 +721,12 @@ void CharacterPlayer::Player_Projectile()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
+	/* 遠距離攻撃のクールタイムを設定 */
+	this->iProjectileCoolTime = PLAYER_PROJECTILE_COLLTIME;
+
 	/* 遠距離攻撃構え状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 }
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */
-/* 2025.02.21 菊池雅道	遠距離攻撃修正 終了 */
+/* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */

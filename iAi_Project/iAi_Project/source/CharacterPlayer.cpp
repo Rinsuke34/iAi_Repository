@@ -6,6 +6,7 @@
 /* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
 /* 2025.02.19 菊池雅道	エフェクト処理追加 */
 /* 2025.02.22 菊池雅道	壁キック処理追加 */
+/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -19,24 +20,20 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
 		this->pBulletKunaiEffect =	nullptr;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
 
-		/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
-		/* エフェクトのハンドル */
-		this->pChargeEffect			=	nullptr;		//溜めエフェクト
-		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト
-		this->pDodgeEffect			=	nullptr;		//回避エフェクト
-		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
-		/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
-		this->iMotionAttachIndex	=	-1;		// アタッチするモーションのインデックス(何もアタッチしない)
-		this->iOldMotion			=	-1;		// 以前にアタッチされたモーション(何もアタッチしない)
-		this->fMotionTotalTime		=	0;		// モーションの総時間
-		this->fMoionPlayTime		=	0;		// モーションの再生時間
-		/* 2025.01.30 菊池雅道	モーション処理追加 終了 */
+		/* エフェクトのハンドル */
+		this->pChargeEffect			=	nullptr;		//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		this->pDodgeEffect			=	nullptr;		//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
 		/* 変数 */
 		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->vecNormalSum	= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
 		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
+		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -94,9 +91,6 @@ void CharacterPlayer::Update()
 	{
 		/* 移動量をリセット */
 		this->vecMove = VGet(0, 0, 0);
-
-		/* ロックオン範囲コリジョン使用フラグを無効化 */
-		this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(false);
 
 		/* カメラモードを"フリーモード"に変更 */
 		this->StageStatusList->SetCameraMode(CAMERA_MODE_FREE);
@@ -168,6 +162,9 @@ void CharacterPlayer::Update()
 
 	/* モデル回転 */
 	MV1SetRotationXYZ(this->iModelHandle, VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+
+	/* クールタイムの更新 */
+	UpdateCooldownTime();
 }
 
 // コリジョン更新
@@ -284,7 +281,7 @@ void CharacterPlayer::PlayerHitCheck()
 								EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
 
 								/* 感電エフェクトの読み込み */
-								pShockEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_eshock/FX_eshock")));
+								pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
 
 								/* 感電エフェクトの初期化 */
 								pShockEffect->Initialization();
@@ -333,3 +330,28 @@ void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 	}
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
+
+/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+//クールタイムの更新
+void CharacterPlayer::UpdateCooldownTime()
+{
+	/* クールタイムを更新する共通関数 */ 
+	auto UpdateCooldownTime = [](int& iCooldownTime) 
+	{
+		/* クールタイムが残っているか確認 */ 
+		if (iCooldownTime > 0)
+		{
+			// クールタイムが残っている場合
+			/* クールタイムを減少 */
+			iCooldownTime--;
+		}
+	};
+
+	/* 近接攻撃(弱)のクールタイム更新 */
+	UpdateCooldownTime(this->iMeleeWeakCoolTime);
+	/* 遠距離攻撃のクールタイム更新 */
+	UpdateCooldownTime(this->iProjectileCoolTime);
+	/* 回避のクールタイム更新 */
+	UpdateCooldownTime(this->iDodgeCoolTime);
+}
+/* 2025.02.26 菊池雅道	クールタイムの処理追加 */

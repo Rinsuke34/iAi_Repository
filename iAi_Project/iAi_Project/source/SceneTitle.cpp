@@ -1,36 +1,27 @@
 /* 2024.12.XX YYYY ZZZZ */
 
 #include "SceneTitle.h"
-#include "SceneHome.h"
+
 
 /* シーン「タイトル」の定義 */
 
 // コンストラクタ
 SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 {
-	iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
-
-	//iTitleBackGroundHandle = LoadGraph("resource/ImageData/Test/skysphere1.png");
-
 	/* データリスト取得 */
 	{
 		/* "ステージ状態管理"を取得 */
 		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
-	/* 初期化 */
-	Initialization();
-}
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
-// デストラクタ
-SceneTitle::~SceneTitle()
-{
-	
-}
+		/* タイトルロゴ */
+		this->piGrHandle_TitleLogo = ImageList->piGetImage_Movie("Test/TitleLogo");
+	}
 
-// 初期化
-void SceneTitle::Initialization()
-{
 	/* BGMを設定 */
 	gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
 
@@ -57,23 +48,52 @@ void SceneTitle::Initialization()
 	pAddScene->Initialization();
 }
 
+// デストラクタ
+SceneTitle::~SceneTitle()
+{
+	
+}
+
+// 初期化
+void SceneTitle::Initialization()
+{
+	
+}
+
 // 計算
 void SceneTitle::Process()
 {
-	/* いずれかのボタンが入力されたらホームを追加 */
-	// 仮作成
-	/* "決定"が入力されたか確認 */
+	/* いずれかのボタンが入力されたらシーンを削除 */
+	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
-		// "決定"が入力されたならば
-		/* ロードシーン追加フラグを有効化 */
+		/* チュートリアルフラグを有効化 */
+		gbTutorialFlg = true;
+
+		/* ロード画面追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);
 
 		/* 現行シーン削除フラグを有効化 */
 		gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
-		/* シーン"ホーム"を追加 */
-		gpSceneServer->AddSceneReservation(new SceneHome());
+		/* シーン"ゲーム"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneAddStageSetup());
+		return;
+	}
+	/* キャンセルが入力されたら */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+	{
+		/* チュートリアルフラグを無効化 */
+		gbTutorialFlg = false;
+
+		/* ロード画面追加フラグを有効化 */
+		gpSceneServer->SetAddLoadSceneFlg(true);
+
+		/* 現行シーン削除フラグを有効化 */
+		gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+		/* シーン"ゲーム"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneAddStageSetup());
 		return;
 	}
 }
@@ -83,28 +103,19 @@ void SceneTitle::Draw()
 {
 	/* 描画ブレンドモードを加算にする */
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-	
-	// タイトル背景を描画
-	//DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, iTitleBackGroundHandle, FALSE);
+
 	/* タイトルロゴを描画 */
-	PlayMovieToGraph(iTitleLogoHandle);
-	// ムービー映像を画面いっぱいに描画します
-//	DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, TRUE);
-	DrawGraph(100, -100, iTitleLogoHandle, TRUE);
+	PlayMovieToGraph(*this->piGrHandle_TitleLogo);
 
+	/* ムービー映像を画面いっぱいに描画します */
+	DrawGraph(100, -100, *this->piGrHandle_TitleLogo, TRUE);
 
-	//再生が終了しているか確認
-	if (GetMovieStateToGraph(iTitleLogoHandle) == FALSE)
+	/* 再生が終了しているか */
+	if (GetMovieStateToGraph(*this->piGrHandle_TitleLogo) == FALSE)
 	{
-		//再生が終了している場合
-		//ムービーを削除
-		//DeleteGraph(iTitleLogoHandle);
-
-		iTitleLogoHandle = LoadGraph("resource/ImageData/Test/TitleLogo.mp4");
-		/* タイトルロゴを描画 */
-		PlayMovieToGraph(iTitleLogoHandle);
-		// ムービー映像を画面いっぱいに描画します
-		DrawExtendGraph(100, 100, 1000, 600, iTitleLogoHandle, TRUE);
+		// 再生が終了している場合
+		/* ムービーの再生時間を初期化する */
+		SeekMovieToGraph(*this->piGrHandle_TitleLogo, 0);
 	}
 
 	/* 描画ブレンドモードをブレンド無しに戻す */
@@ -112,4 +123,7 @@ void SceneTitle::Draw()
 
 	/* 描画モードを二アレストに戻す */
 	SetDrawMode(DX_DRAWMODE_NEAREST);
+
+	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "決定			：ステージ0_1(チュートリアル)へ");
+	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "キャンセル	：ステージ1_1へ");
 }

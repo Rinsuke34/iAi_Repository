@@ -1,4 +1,4 @@
-/* 2024.12.15 駒沢風助 ファイル作成 */
+/* 2024.12.15 石川智也 ファイル作成 */
 
 #pragma once
 #include "Appframe.h"
@@ -11,6 +11,7 @@
 #include "EnemyBasic.h"
 #include "EnemyDefine.h"
 #include "EffectManualDelete.h"
+#include "CharacterPlayer.h"
 
 /* テスト用敵クラス */
 
@@ -39,21 +40,27 @@ private:
 	/*関数*/
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
 	void Enemy_Gravity(); // 重力処理メソッドを追加
+	void CliffFallCheck();	// 崖に落ちるかどうかの判定メソッドを追加
 
 
 	/*変数*/
 	int iXdistance;			// X軸の距離
 
 	int iZdistance;			// Z軸の距離
-
+	int iStopCount;			// 停止カウント
 	float fSpeed;			// 移動速度
 
 	int iDetonationRange;	//起爆範囲内
 
 	bool bEffectGenerated;	// 起爆予告エフェクト生成フラグ
-
+	bool bFallFlg;			// 落下フラグ
+	bool bStopFlg;			// 停止フラグ
+	bool bCountFlg;			//カウントフラグ
+	bool bBlastFlg;			//爆発フラグ
 	float fGravity;				// 重力
 
+
+	VECTOR vecLastRotation;	// 最後の回転量
 protected:
 	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 
