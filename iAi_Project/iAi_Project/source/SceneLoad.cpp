@@ -20,13 +20,13 @@ SceneLoad::~SceneLoad()
 // 初期化
 void SceneLoad::Initialization()
 {
-	/* SceneBaseの初期化を実施(リソース競合対策) */
-	SceneBase::Initialization();
+
 }
 
 // 計算
 void SceneLoad::Process()
 {
+	/* スレッドは作成していないので後ほど修正 */
 	/* ロードスレッドが建っているか確認 */
 	if (gstLoadingFutures.empty())
 	{

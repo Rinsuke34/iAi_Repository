@@ -19,24 +19,6 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
-	/* ローディング情報の作成 */
-	//gstLoadingFutures.push_back(std::async(std::launch::async, &SceneGame::Initialization, this));
-	Initialization();
-}
-
-// デストラクタ
-SceneGame::~SceneGame()
-{
-	/* データリスト削除 */
-	{
-		/* ゲームリソース管理 */
-		gpDataListServer->DeleteDataList("DataList_StageResource");
-	}
-}
-
-// 初期化
-void SceneGame::Initialization()
-{
 	/* BGMを設定 */
 	gpDataList_Sound->BGM_SetHandle(BGM_STAGE);
 
@@ -83,6 +65,22 @@ void SceneGame::Initialization()
 	pAddScene->Initialization();
 }
 
+// デストラクタ
+SceneGame::~SceneGame()
+{
+	/* データリスト削除 */
+	{
+		/* ゲームリソース管理 */
+		gpDataListServer->DeleteDataList("DataList_StageResource");
+	}
+}
+
+// 初期化
+void SceneGame::Initialization()
+{
+	
+}
+
 // 計算
 void SceneGame::Process()
 {
@@ -104,6 +102,9 @@ void SceneGame::Process()
 
 		/* シーン"ステージ"を作成 */
 		SceneBase* pAddScene = new SceneStage();
+
+		/* 初期化処理を実施 */
+		pAddScene->Initialization();
 
 		/* シーン"ステージ"をシーンサーバーに追加 */
 		gpSceneServer->AddSceneReservation(pAddScene);

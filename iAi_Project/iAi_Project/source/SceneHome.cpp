@@ -9,8 +9,8 @@
 // コンストラクタ
 SceneHome::SceneHome() : SceneBase("Home", 0, true)
 {
-	/* 初期化 */
-	Initialization();
+	/* BGMを設定 */
+	gpDataList_Sound->BGM_SetHandle(BGM_HOME);
 }
 
 // デストラクタ
@@ -22,8 +22,7 @@ SceneHome::~SceneHome()
 // 初期化
 void SceneHome::Initialization()
 {
-	/* BGMを設定 */
-	gpDataList_Sound->BGM_SetHandle(BGM_HOME);
+	
 }
 
 // 計算

@@ -4,6 +4,7 @@
 /* 2025.02.10 菊池雅道 初期化処理追加 */
 /* 2025.02.11 菊池雅道 初期化処理追加 */
 /* 2025.02.22 菊池雅道 初期化処理追加 */
+/* 2025.02.26 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
 
@@ -37,7 +38,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerAfterKickWallFlg			= false;							//プレイヤーが壁を蹴った後のフラグ									/* 2025.02.22 菊池雅道 初期化処理追加 */
 	this->iPlayerNowAttakChargeFlame		= 0;								//現在のプレイヤー溜め攻撃チャージフレーム数						/* 2025.01.22 菊池雅道 初期化処理追加 */
 	this->vecPlayerChargeAttakTargetMove	= { 0, 0, 0 };						//プレイヤー溜め攻撃の目的地										/* 2025.01.22 菊池雅道 初期化処理追加 */
-	this->iPlayerChargeAttackCount			= 0;								// 近接攻撃(強)のカウント
+	this->iPlayerMeleeStrongChargeCount		= 0;								// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数
+	this->iPlayerMeleeStrongAirCount		= 0;								// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
 	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;			// プレイヤーの現在のHP
 	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
@@ -70,6 +72,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerRockOnRadius				= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ロックオン範囲の半径
 	this->iPlayerMaxHp						= INIT_ATTRIBUTES_HP_MAX;				// プレイヤーの最大HP
 	this->iPlayerMaxInvincibleTime			= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// プレイヤーの最大無敵時間
+	this->iPlayerMeleeStrongAirMaxCount		= PLAYER_STRONG_MELEE_AIR_MAX;			// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.11 菊池雅道 初期化処理追加 */
 }
 
 // デストラクタ

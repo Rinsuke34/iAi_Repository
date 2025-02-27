@@ -62,6 +62,45 @@ int* DataList_Image::piGetImage(std::string imageName)
 	return piReturn;
 }
 
+// 画像取得(mp4型ムービー用)(ポインタで返す)
+int* DataList_Image::piGetImage_Movie(std::string imageName)
+{
+	// 引数
+	// imageName	: 画像名(mp4)
+	// 戻り値
+	// int*			: 画像ハンドル(ポインタ)
+
+	int* piReturn = nullptr;
+
+	/* 対象の画像を取得する */
+	// ※すでにあるならポインタを返し、ないなら読み込み
+	/* 対象の画像が存在するか確認 */
+	if (bCheckImage(imageName) == false)
+	{
+		// 存在しない場合
+		/* 画像のファイルパスを取得 */
+		std::string FileName = "resource/ImageData/" + imageName + ".mp4";
+
+		/* 画像を読み込み */
+		int iHandle = LoadGraph(FileName.c_str());
+
+		/* 画像をリストに追加 */
+		this->pImageList[imageName] = iHandle;
+
+		/* 読み込んだ画像をポインタで返す */
+		piReturn = &this->pImageList[imageName];
+	}
+	else
+	{
+		// 存在している場合
+		/* 対処の画像をポインタで返す */
+		piReturn = &this->pImageList[imageName];
+	}
+
+	/* 画像ハンドルを返す */
+	return piReturn;
+}
+
 // 画像リソース存在確認
 bool DataList_Image::bCheckImage(std::string imageName)
 {

@@ -5,6 +5,8 @@
 /* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
 /* 2025.02.10 菊池雅道 移動関連の定数追加 */
 /* 2025.02.22 菊池雅道 移動関連の定数追加 */
+/* 2025.02.26 菊池雅道 クールタイム関連の定数追加 */
+/* 2025.02.26 菊池雅道 攻撃関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -40,42 +42,37 @@ static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 20.0f;				// プレイヤーの壁キ
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 30.0f;				// プレイヤーの壁キックの速度(水平成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_WALL_KICK_VERTICAL_SPEED		= -30.0f;				// プレイヤーの壁キックの速度(垂直成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 
-// ジャンプ関係
-static const float	PLAYER_JUMP_SPEED					= 50.0f;		// プレイヤーのジャンプの速度
-static const float	GRAVITY_SREED						= -9.8f;		// 重力の速度　Y軸の下方向なのでマイナスとする
-static const float	GRAVITY_BUFFER						= 0.1f;			// キャラクターにかかる重力調整　１より大きいと重くなる　１より小さいと軽くなる
-static const int	PLAYER_JUMPING_IN_AIR_LIMIT			= 1;			// プレイヤーが空中ジャンプできる回数
 // 回避関係
-static const float	PLAYER_DODGE_SPEED					= 100.0f;		// プレイヤーの回避速度
-static const int	PLAYER_DODGE_FLAME					= 10;			// プレイヤーの回避フレーム数
-//static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 1;			// プレイヤーが空中で回避できる回数
-static const int	PLAYER_DODGE_IN_AIR_LIMIT = 2;			// プレイヤーが空中で回避できる回数
-/* 2025.01.09 菊池雅道 移動関連の定数追加終了 */
+static const float	PLAYER_DODGE_SPEED					= 100.0f;				// プレイヤーの回避速度											/* 2025.01.09 菊池雅道 移動関連の定数追加 */
+static const int	PLAYER_DODGE_IN_AIR_LIMIT			= 2;					// プレイヤーが空中で回避できる回数								/* 2025.01.09 菊池雅道 移動関連の定数追加 */
+static const int	PLAYER_DODGE_FLAME					= 30;					// プレイヤーの回避のフレーム数									/* 2025.01.09 菊池雅道 移動関連の定数追加 */
+static const int	PLAYER_DODGE_COOLTIME				= 30;					// プレイヤーの回避のクールタイム								/* 2025.02.26 菊池雅道 クールタイム関連の定数追加 */
 
 
 // 攻撃関係
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// 近接攻撃中(強)の溜め完了フレーム数		/* 2025.01.29 菊池雅道 攻撃関連の定数追加 */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// 近接攻撃中(強)後の索敵範囲			/* 2025.02.03 菊池雅道 攻撃関連の定数追加 */
+static const int	PLAYER_STRONG_MELEE_AIR_MAX			= 1;			// 空中での近接攻撃(強)の最大回数(※敵を攻撃していない場合)			/* 2025.02.26 菊池雅道 攻撃関連の定数追加 */
+static const int	PLAYER_MELEE_WEAK_COLLTIME			= 60;			// 近接攻撃(弱)のクールタイム										/* 2025.02.26 菊池雅道 クールタイム関連の定数追加 */
+static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// 遠距離攻撃のクールタイム											/* 2025.02.26 菊池雅道 クールタイム関連の定数追加 */
 
-/* 2025.02.05 菊池雅道 ステータス関連の定数修正 開始 */
 /* プレイヤー移動状態 */
 // ※状態に応じて可能な行動が変わる
-static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)
-static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態
-static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中
+static const int	PLAYER_MOVESTATUS_EVENT					= 0;	// イベント状態(操作不可)			/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_MOVESTATUS_FREE					= 1;	// 自由状態							/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_MOVESTATUS_DODGING				= 2;	// 回避状態中						/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
 static const int	PLYAER_MOVESTATUS_DEAD					= 3;	// 死亡状態(操作不可)
 
 /* プレイヤー攻撃状態 */
 // ※状態に応じて可能な行動が変わる
-static const int	PLAYER_ATTACKSTATUS_EVENT				= 0;	// イベント状態(操作不可)
-static const int	PLAYER_ATTACKSTATUS_FREE				= 1;	// 自由状態
-static const int	PLAYER_ATTACKSTATUS_MELEE_POSTURE		= 2;	// 近接攻撃構え中
-static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)
-static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)
-static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中
-static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中
+static const int	PLAYER_ATTACKSTATUS_EVENT				= 0;	// イベント状態(操作不可)			/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_FREE				= 1;	// 自由状態							/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_MELEE_POSTURE		= 2;	// 近接攻撃構え中					/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_MELEE_WEEK			= 3;	// 近接攻撃中(弱)					/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_MELEE_STRONG		= 4;	// 近接攻撃中(強)					/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE	= 5;	// 遠距離攻撃構え中					/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
+static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中						/* 2025.02.05 菊池雅道 ステータス関連の定数修正 */
 static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// 死亡状態(操作不可)
-/* 2025.02.05 菊池雅道 ステータス関連の定数修正 終了 */
 
 /* プレイヤー処理用定数 */
 static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)

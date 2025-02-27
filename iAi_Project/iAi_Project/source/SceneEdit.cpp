@@ -52,56 +52,43 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 	this->iHoldSelectItemNo			= 0;
 
-	/* 初期化 */
-	Initialization();
-}
-
-// デストラクタ
-SceneEdit::~SceneEdit()
-{
-
-}
-
-// 初期化
-void SceneEdit::Initialization()
-{
 	/* ステージクリア時の総合評価に応じて新規エディットを追加 */
 	{
 		/* ステージクリア時の総合評価取得 */
-		int	iClearEvaluation_Total =  this->GameResourceList->iGetClearEvaluation();
+		int	iClearEvaluation_Total = this->GameResourceList->iGetClearEvaluation();
 
 		/* 総合評価に応じた取得 */
-		int		iNewEditNumber	= 0;		// エディット数
-		bool	bGoaldConfirmed	= false;	// 金枠確定
+		int		iNewEditNumber = 0;		// エディット数
+		bool	bGoaldConfirmed = false;	// 金枠確定
 
 		/* ランクに応じて設定する */
 		switch (iClearEvaluation_Total)
 		{
-			case RESULT_EVALUAtiON_S:
-				iNewEditNumber	= 5;
-				bGoaldConfirmed	= true;
-				break;
+		case RESULT_EVALUAtiON_S:
+			iNewEditNumber = 5;
+			bGoaldConfirmed = true;
+			break;
 
-			case RESULT_EVALUAtiON_A:
-				iNewEditNumber = 5;
-				break;
+		case RESULT_EVALUAtiON_A:
+			iNewEditNumber = 5;
+			break;
 
-			case RESULT_EVALUAtiON_B:
-				iNewEditNumber = 4;
-				break;
+		case RESULT_EVALUAtiON_B:
+			iNewEditNumber = 4;
+			break;
 
-			case RESULT_EVALUAtiON_C:
-			case RESULT_EVALUAtiON_D:
-				iNewEditNumber = 3;
-				break;
+		case RESULT_EVALUAtiON_C:
+		case RESULT_EVALUAtiON_D:
+			iNewEditNumber = 3;
+			break;
 		}
 
 		/* エディット数分ランダムなエディットを新規エディットに登録 */
 		for (int i = 0; i < iNewEditNumber; i++)
 		{
 			/* 仮作成 */
-			this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
-			this->NewEditData[i].iEditRank		= EDIT_RANK_CUPPER;
+			this->NewEditData[i].iEditEffect = EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
+			this->NewEditData[i].iEditRank = EDIT_RANK_CUPPER;
 		}
 
 		/* 金枠確定フラグが有効であるか */
@@ -125,26 +112,26 @@ void SceneEdit::Initialization()
 		// 新規エディット情報登録
 		for (int j = 0; j < EDIT_UPGRADE_MAX; j++)
 		{
-			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NEW_EDIT;
-			this->astSelectItemList[i].pstEditData		= &this->NewEditData[j];
+			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_NEW_EDIT;
+			this->astSelectItemList[i].pstEditData = &this->NewEditData[j];
 			i++;
 		}
 		// 削除情報登録
 		{
-			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_DELETE_EDIT;
-			this->astSelectItemList[i].pstEditData		= &this->DeleteEditData;
+			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_DELETE_EDIT;
+			this->astSelectItemList[i].pstEditData = &this->DeleteEditData;
 			i++;
 		}
 		// 現在のエディット情報登録
 		for (int j = 0; j < EDIT_MAX; j++)
 		{
-			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NOW_EDIT;
-			this->astSelectItemList[i].pstEditData		= this->GameResourceList->pstGetNowEditData(j);
+			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_NOW_EDIT;
+			this->astSelectItemList[i].pstEditData = this->GameResourceList->pstGetNowEditData(j);
 			i++;
 		}
 		// 次へ
 		{
-			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NEXT;
+			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_NEXT;
 		}
 
 		/* 描写座標一括登録 */
@@ -171,13 +158,25 @@ void SceneEdit::Initialization()
 			for (int l = 0; l < SELECT_ITEM_MAX; l++)
 			{
 				/* 座標設定 */
-				this->astSelectItemList[l].stDrawPos		= stSelectItemPos[l];
+				this->astSelectItemList[l].stDrawPos = stSelectItemPos[l];
 
 				/* 選択項目の状態を"状態無し"に設定(ついでで) */
-				this->astSelectItemList[i].iSelectStatus	= SELECT_STATUS_NONE;
+				this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_NONE;
 			}
 		}
 	}
+}
+
+// デストラクタ
+SceneEdit::~SceneEdit()
+{
+
+}
+
+// 初期化
+void SceneEdit::Initialization()
+{
+	
 }
 
 // 計算

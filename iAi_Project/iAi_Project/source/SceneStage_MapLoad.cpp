@@ -115,6 +115,29 @@ void SceneStage::LoadMapData()
 				std::string	name;
 				data.at("objectName").get_to(name);
 
+				/* 座標を取得 */
+				VECTOR vecPos;
+				// 読み込み
+				data.at("translate").at("x").get_to(vecPos.x);
+				data.at("translate").at("z").get_to(vecPos.y);
+				data.at("translate").at("y").get_to(vecPos.z);
+				// Z座標反転
+				vecPos.z *= -1;
+
+				/* 回転量を取得 */
+				VECTOR vecRot;
+				// 読み込み
+				data.at("rotate").at("x").get_to(vecRot.x);
+				data.at("rotate").at("z").get_to(vecRot.y);
+				data.at("rotate").at("y").get_to(vecRot.z);
+				// degree -> radian変換
+				vecRot.x = DEG2RAD(vecRot.x);
+				vecRot.y = DEG2RAD(vecRot.y);
+				vecRot.z = DEG2RAD(vecRot.z);
+				// X軸の回転方向を反転
+				// ※正しいか不明な処理
+				vecRot.x *= -1;
+
 				/* マーカータイプ確認 */
 				if (name == "Marker_Player_Start")
 				{
@@ -123,31 +146,10 @@ void SceneStage::LoadMapData()
 					CharacterPlayer* pPlayer = new CharacterPlayer();
 					ObjectList->SetCharacterPlayer(pPlayer);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					pPlayer->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					pPlayer->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Goal_Object")
@@ -157,31 +159,10 @@ void SceneStage::LoadMapData()
 					EnemyBasic* pGoal = new EnemyGoalObject();
 					ObjectList->SetEnemy(pGoal);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					pGoal->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					pGoal->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Enemy_Beam")
@@ -191,31 +172,10 @@ void SceneStage::LoadMapData()
 					BeamEnemy* AddEnemy = new BeamEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					AddEnemy->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Enemy_Escape")
@@ -225,31 +185,10 @@ void SceneStage::LoadMapData()
 					EscapeEnemy* AddEnemy = new EscapeEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					AddEnemy->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Enemy_Explosion")
@@ -259,31 +198,10 @@ void SceneStage::LoadMapData()
 					ExplosionEnemy* AddEnemy = new ExplosionEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					AddEnemy->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Enemy_Missile")
@@ -293,31 +211,10 @@ void SceneStage::LoadMapData()
 					MissileEnemy* AddEnemy = new MissileEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					AddEnemy->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Enemy_Normal")
@@ -327,31 +224,10 @@ void SceneStage::LoadMapData()
 					NormalEnemy* AddEnemy = new NormalEnemy();
 					ObjectList->SetEnemy(AddEnemy);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					AddEnemy->SetRotation(vecRot);
 				}
 				else if (name == "Marker_Spawn_Gimmick_Jump")
@@ -360,32 +236,33 @@ void SceneStage::LoadMapData()
 					PlatformBasic* pAddGimick = new Gimmick_ForcedJump_Spawn();
 					ObjectList->SetPlatform(pAddGimick);
 
-					/* 座標 */
-					VECTOR vecPos;
-					// 読み込み
-					data.at("translate").at("x").get_to(vecPos.x);
-					data.at("translate").at("z").get_to(vecPos.y);
-					data.at("translate").at("y").get_to(vecPos.z);
-					// Z座標反転
-					vecPos.z *= -1;
-					// 設定
+					/* 座標設定 */
 					pAddGimick->SetPosition(vecPos);
 
-					/* 回転量 */
-					VECTOR vecRot;
-					// 読み込み
-					data.at("rotate").at("x").get_to(vecRot.x);
-					data.at("rotate").at("z").get_to(vecRot.y);
-					data.at("rotate").at("y").get_to(vecRot.z);
-					// degree -> radian変換
-					vecRot.x = DEG2RAD(vecRot.x);
-					vecRot.y = DEG2RAD(vecRot.y);
-					vecRot.z = DEG2RAD(vecRot.z);
-					// X軸の回転方向を反転
-					// ※正しいか不明な処理
-					vecRot.x *= -1;
-					// 設定
+					/* 回転量設定 */
 					pAddGimick->SetRotation(vecRot);
+				}
+				else if (name == "Marker_Camera_Position_Start")
+				{
+					// カメラ位置(スタート)の場合
+					/* 座標設定(カメラ座標) */
+					StageStatusList->SetCameraPosition(vecPos);				// カメラの座標設定(現在地点)
+					StageStatusList->SetCameraPosition_Start(vecPos);		// カメラの座標設定(移動前地点)
+					StageStatusList->SetCameraPosition_Target(vecPos);		// カメラの座標設定(移動後地点)
+				}
+				else if (name == "Marker_Camera_Position_PosA")
+				{
+					// カメラ位置(ポジションA)の場合
+				}
+				else if (name == "Marker_Camera_Target_Start")
+				{
+					// カメラ注視点(スタート)の場合
+					/* 座標設定(カメラ注視点) */
+					StageStatusList->SetCameraTarget(vecPos);				// カメラの注視点設定(現在地点)
+				}
+				else if (name == "Marker_Camera_Target_PosA")
+				{
+					// カメラ注視点(ポジションA)の場合
 				}
 			}
 		}

@@ -234,10 +234,7 @@ void SceneStage::SetCamera_Aim_Kunai()
 // カメラ設定(タイトル)
 void SceneStage::SetCamera_Aim_Title()
 {
-	/* カメラ注視点設定 */
-	this->StageStatusList->SetCameraTarget(VGet(0.f, 0.f, 0.f));
 
-	this->StageStatusList->SetCameraPosition_Target(VGet(10.f, 500.f, 0.f));
 }
 
 // カメラ補正
