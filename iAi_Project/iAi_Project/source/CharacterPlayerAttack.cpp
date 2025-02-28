@@ -356,6 +356,8 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 近接攻撃(弱)のクールタイムを確認 */
 	if (this->iMeleeWeakCoolTime > 0)
 	{
+		// クールタイムが残っている場合
+		/* 近距離攻撃(弱)処理を行わない */
 		return;
 	}
 
@@ -412,10 +414,14 @@ void CharacterPlayer::Player_Charge_Attack()
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
 
+		/* プレイヤーの着地フラグを確認 */
 		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 		{
+			// 着地していない場合
+			/* 現在の空中での近距離攻撃(強)回数を取得 */
 			int iNowMelleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
 
+			/* 空中での近距離攻撃(強)回数を加算 */
 			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(iNowMelleeStrongAirCount + 1);
 		}
 	}
@@ -437,9 +443,10 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* ロックオン中のエネミーが存在するか */
 			if (pLockOnEnemy != nullptr)
 			{
-
+				// 存在する場合(敵に攻撃する場合)
+				/* 空中での近接攻撃(強)の回数をリセット */
 				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
-				// 存在する場合
+				
 				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 

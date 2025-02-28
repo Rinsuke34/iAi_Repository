@@ -1,5 +1,6 @@
 /* 2025.01.27 ファイル作成 駒沢風助 */
 /* 2025.02.17 遠距離攻撃関連の処理追加 菊池雅道 */
+/* 2025.02.28 遠距離攻撃関連の処理追加 菊池雅道 */
 
 #include "SceneUi_Crosshairs.h"
 
@@ -120,10 +121,14 @@ void SceneUi_Crosshairs::Process()
 	else if ((this->StageStatusList->iGetCameraMode() == CAMERA_MODE_AIM_KUNAI))
 	{
 		/* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 開始 */
+		/* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 開始 */
 		
 		// 構え(クナイ構え)の場合
 		/* エネミーリストを取得 */
 		auto& EnemyList = ObjectList->GetEnemyList();
+
+		/* プレイヤーを取得 */
+		CharacterBase* pPlayer = (ObjectList->GetCharacterPlayer());
 
 		/* スクリーンのロックオン範囲内のエネミーのうち最もレティクル(画面の中心的)に近いエネミーをロックオン対象に設定 */
 		for (auto* enemy : EnemyList)
@@ -133,44 +138,61 @@ void SceneUi_Crosshairs::Process()
 
 			/* コアの座標をスクリーン座標に変換 */
 			VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+	
+			/* プレイヤーからエネミーへのベクトルを取得 */
+			VECTOR vecDistance = VSub(vecCoreWord, pPlayer->vecGetPosition());
+
+			/* プレイヤーとエネミーの距離を取得 */
+			float fDistance = VSize(vecDistance);
 
 			/* スクリーンのロックオン範囲に接触しているか確認 */
 			/* ※範囲は仮設定 */
 			if (vecCoreScreen.x >= SCREEN_SIZE_WIDE / 2.f - 200 && vecCoreScreen.x <= SCREEN_SIZE_WIDE / 2.f + 200 && vecCoreScreen.y >= SCREEN_SIZE_HEIGHT / 2.f -200 && vecCoreScreen.y<= SCREEN_SIZE_HEIGHT / 2.f + 200)
 			{
 				// 接触している場合
-				/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
-				enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);	
-
-				/* スクリーン座標が有効であるか確認 */
-				// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
-				if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
+				/* プレイヤーとエネミーの距離が射程範囲内であるか確認 */
+				if (fDistance < 5000.0f)
 				{
-					// 有効である場合
-					/* 画面の中心との差を求める */
-					float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
-					float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
-					float fDistance = (fx * fx) + (fy * fy);
+					// 射程範囲内である場合
+					/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
+					enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
 
-					/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
-					if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+					/* スクリーン座標が有効であるか確認 */
+					// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
+					if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
 					{
-						// 近い場合
-						/* 最も画面の中心点から近いエネミーを更新 */
-						stNearEnemy.pEnemy = enemy;
-						stNearEnemy.fDistance = fDistance;
+						// 有効である場合
+						/* 画面の中心との差を求める */
+						float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
+						float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
+						float fDistance = (fx * fx) + (fy * fy);
+
+						/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
+						if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+						{
+							// 近い場合
+							/* 最も画面の中心点から近いエネミーを更新 */
+							stNearEnemy.pEnemy = enemy;
+							stNearEnemy.fDistance = fDistance;
+						}
+					}
+					else
+					{
+						// 無効である場合
+						/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+						enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 					}
 				}
 				else
 				{
-					// 無効である場合
+					// 接触していない場合
 					/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
 					enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 				}
 			}
 			else
 			{
-				// 接触していない場合
+				// 射程範囲でない場合
 				/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
 				enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 			}
@@ -182,9 +204,6 @@ void SceneUi_Crosshairs::Process()
 			/* プレイヤー視点でのロックオン状態を"ロックオンされている"に設定 */
 			stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);
 		}
-
-		/* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 終了 */
-
 	}
 	else
 	{
@@ -206,6 +225,8 @@ void SceneUi_Crosshairs::Process()
 	/* ロックオン対象のエネミーをデータリストに設定する */
 	this->PlayerStatusList->SetPlayerLockOnEnemy(stNearEnemy.pEnemy);
 }
+/* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 終了 */
+/* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 終了 */
 
 // 描画
 void SceneUi_Crosshairs::Draw()
