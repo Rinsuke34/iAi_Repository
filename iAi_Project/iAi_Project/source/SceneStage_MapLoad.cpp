@@ -249,20 +249,90 @@ void SceneStage::LoadMapData()
 					StageStatusList->SetCameraPosition(vecPos);				// カメラの座標設定(現在地点)
 					StageStatusList->SetCameraPosition_Start(vecPos);		// カメラの座標設定(移動前地点)
 					StageStatusList->SetCameraPosition_Target(vecPos);		// カメラの座標設定(移動後地点)
+
+					/* 座標設定(固定座標(開始地点)) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_START].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_START].vecPosition	= vecPos;
 				}
 				else if (name == "Marker_Camera_Position_PosA")
 				{
 					// カメラ位置(ポジションA)の場合
+					/* 座標設定(ポジションA) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_A].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_A].vecPosition	= vecPos;
+				}
+				else if (name == "Marker_Camera_Position_PosB")
+				{
+					// カメラ位置(ポジションB)の場合
+					/* 座標設定(ポジションB) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_B].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_B].vecPosition	= vecPos;
+				}
+				else if (name == "Marker_Camera_Position_PosC")
+				{
+					// カメラ位置(ポジションC)の場合
+					/* 座標設定(ポジションC) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_C].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_C].vecPosition	= vecPos;
+				}
+				else if (name == "Marker_Camera_Position_PosD")
+				{
+					// カメラ位置(ポジションD)の場合
+					/* 座標設定(ポジションD) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_D].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_D].vecPosition	= vecPos;
+				}
+				else if (name == "Marker_Camera_Position_PosE")
+				{
+					// カメラ位置(ポジションE)の場合
+					/* 座標設定(ポジションE) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].bUseFlg		= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].vecPosition	= vecPos;
 				}
 				else if (name == "Marker_Camera_Target_Start")
 				{
 					// カメラ注視点(スタート)の場合
 					/* 座標設定(カメラ注視点) */
 					StageStatusList->SetCameraTarget(vecPos);				// カメラの注視点設定(現在地点)
+
+					/* 座標設定(固定座標(開始地点)) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_START].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_START].vecTarget	= vecPos;
 				}
 				else if (name == "Marker_Camera_Target_PosA")
 				{
 					// カメラ注視点(ポジションA)の場合
+					/* 座標設定(ポジションA) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_A].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_A].vecTarget	= vecPos;
+				}
+				else if (name == "Marker_Camera_Target_PosB")
+				{
+					// カメラ注視点(ポジションB)の場合
+					/* 座標設定(ポジションB) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_B].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_B].vecTarget	= vecPos;
+				}
+				else if (name == "Marker_Camera_Target_PosC")
+				{
+					// カメラ注視点(ポジションC)の場合
+					/* 座標設定(ポジションC) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_C].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_C].vecTarget	= vecPos;
+				}
+				else if (name == "Marker_Camera_Target_PosD")
+				{
+					// カメラ注視点(ポジションD)の場合
+					/* 座標設定(ポジションD) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_D].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_D].vecTarget	= vecPos;
+				}
+				else if (name == "Marker_Camera_Target_PosE")
+				{
+					// カメラ注視点(ポジションE)の場合
+					/* 座標設定(ポジションE) */
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].bUseFlg	= true;
+					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].vecTarget	= vecPos;
 				}
 			}
 		}
@@ -284,4 +354,28 @@ void SceneStage::LoadMapData()
 
 	/* すべてのオブジェクトの初期化を行う */
 	ObjectList->InitializationAll();
+
+	/* カメラ固定座標の総数を取得 */
+	{
+		/* 総数を初期化する */
+		this->iMaxCameraFixedPositionNo = 0;
+
+		/* カメラ固定座標の総数を取得する */
+		for (int i = 0; i < CAMERA_FIXED_POSITION_MAX; ++i)
+		{
+			/* 使用状態が有効であるか確認 */
+			if (this->vecCameraPositionInfo[i].bUseFlg == true)
+			{
+				// 有効である場合
+				/* 総数を加算する */
+				this->iMaxCameraFixedPositionNo += 1;
+			}
+			else
+			{
+				// 無効である場合
+				/* ループを抜ける */
+				break;
+			}
+		}
+	}
 }

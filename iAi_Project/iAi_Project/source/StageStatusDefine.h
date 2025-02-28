@@ -27,3 +27,20 @@ static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// 構え(クナイ構え)
 static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;			// カメラ座標の線形保管用カウントの最大値
+// カメラ固定座標
+static const int	CAMERA_FIXED_POSITION_START				= 0;				// カメラ固定座標(開始地点)
+static const int	CAMERA_FIXED_POSITION_A					= 1;				// カメラ固定座標(A地点)
+static const int	CAMERA_FIXED_POSITION_B					= 2;				// カメラ固定座標(B地点)
+static const int	CAMERA_FIXED_POSITION_C					= 3;				// カメラ固定座標(C地点)
+static const int	CAMERA_FIXED_POSITION_D					= 4;				// カメラ固定座標(D地点)
+static const int	CAMERA_FIXED_POSITION_E					= 5;				// カメラ固定座標(E地点)
+static const int	CAMERA_FIXED_POSITION_MAX				= 6;				// カメラ固定座標の最大数
+
+/* カメラ固定座標情報 */
+struct CAMERA_FIXED_POSITION_INFO
+{
+	int		iNo;			// カメラ固定座標番号
+	bool	bUseFlg;		// 使用するか
+	VECTOR	vecPosition;	// カメラ固定座標
+	VECTOR	vecTarget;		// カメラ固定注視点
+};

@@ -17,6 +17,16 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 	this->iBulletDownCount = ENEMY_MISSILE_BULLET_DOWN_COUNT;			// ミサイル弾打ち下げカウント
 	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;	// ミサイル誘導カウント
 	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;	// ミサイル弾の持続カウント
+
+	this->iTextureHandle = LoadGraph("resource/ImageData/Test/a.png");
+
+	this->bPredictedLandingFlg = false;
+
+	/* データリスト取得 */
+	{
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	}
 }
 
 // デストラクタ
@@ -159,13 +169,37 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 	this->pEffectGuidance->SetRotation(rotation);
 
-	//ミサイルが床に当たったらか確認
-	if (this->vecPosition.y <= -1000)//ここのマジックナンバー件と床に当たった時の処理は、後で修正します
+	// 移動後の座標を取得(垂直方向)
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x;
+	vecNextPosition.y = this->vecPosition.y;
+	vecNextPosition.z = this->vecPosition.z;
+
+	// 主人公の上部分の当たり判定から下方向へ向けた線分を作成
+	this->stVerticalCollision.vecLineStart = this->vecPosition;
+	this->stVerticalCollision.vecLineStart.y += 25;
+	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
+	this->stVerticalCollision.vecLineEnd.y -= 60;
+
+	// 足場を取得
+	auto& PlatformList = ObjectList->GetCollisionList();
+
+
+
+
+
+	// 足場と接触するか確認
+	for (auto* platform : PlatformList)
 	{
-		// ミサイルが床に当たった場合
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
+
+		// 接触しているか確認
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
 		// ミサイルの削除フラグを有効化
 		this->bDeleteFlg = true;
-
+			this->bPredictedLandingFlg = false;
 
 		/* エフェクト追加 */
 
@@ -191,8 +225,15 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}
-
+			break;
+		}
 	}
+	}
+
+//コリジョン描写
+void BulletEnemyRangeMissile::CollisionDraw()
+{
+	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
 }
 
 // 更新

@@ -23,6 +23,7 @@ public:
 
 	virtual void	Initialization()	override;	// 初期化
 	virtual void	Update()			override;	// 更新
+	virtual void	CollisionDraw()		override;	// 当たり判定描写
 
 private:
 
@@ -51,6 +52,11 @@ private:
 
 
 	int iEnemyMissileDurationCount;	//ミサイル弾の持続カウント
+	int iTextureHandle;				// テクスチャハンドル
+
+	bool bPredictedLandingFlg;		//着弾予測フラグ
 
 protected:
+
+	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 };
