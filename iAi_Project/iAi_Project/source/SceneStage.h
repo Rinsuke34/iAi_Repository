@@ -42,6 +42,13 @@ class SceneStage : public SceneBase
 
 		virtual void	LoadMapData();			// マップデータのロード
 
+		/* 固定カメラ番号の設定 */
+		void SetNowCameraFixedPositionNo(int iNowCameraFixedPositionNo)	{ this->iNowCameraFixedPositionNo = iNowCameraFixedPositionNo; }	// 現在のカメラ固定番号の設定
+
+		/* 固定カメラ番号の取得 */
+		int	iGetNowCameraFixedPositionNo()	{ return this->iNowCameraFixedPositionNo; };		// 現在のカメラ固定座標番号
+		int	iGetMaxCameraFixedPositionNo()	{ return this->iMaxCameraFixedPositionNo; };		// カメラ固定座標番号総数
+
 	private:
 		/* 使用するデータリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
@@ -69,6 +76,7 @@ class SceneStage : public SceneBase
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写
 
+		/* 変数 */
 		/* 描写画面関連 */
 		// 画像ハンドル
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
@@ -79,5 +87,10 @@ class SceneStage : public SceneBase
 		int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
 		int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
 		int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
+
+		/* カメラ関連 */
+		CAMERA_FIXED_POSITION_INFO	vecCameraPositionInfo[CAMERA_FIXED_POSITION_MAX];	// カメラ固定座標情報
+		int							iNowCameraFixedPositionNo;							// 現在のカメラ固定座標番号
+		int							iMaxCameraFixedPositionNo;							// カメラ固定座標番号総数
 };
 

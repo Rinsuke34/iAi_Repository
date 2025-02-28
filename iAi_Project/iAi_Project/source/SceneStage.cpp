@@ -43,6 +43,18 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	//int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
 	//int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
 	//int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
+
+	/* 初期化 */
+	/* カメラ固定座標の初期化 */
+	for (int i = 0; i < CAMERA_FIXED_POSITION_MAX; ++i)
+	{
+		vecCameraPositionInfo[i].iNo			= i;
+		vecCameraPositionInfo[i].bUseFlg		= false;
+		vecCameraPositionInfo[i].vecPosition	= VGet(0, 0, 0);
+		vecCameraPositionInfo[i].vecTarget		= VGet(0, 0, 0);
+	}
+	this->iNowCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
+	this->iMaxCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
 }
 
 // デストラクタ
