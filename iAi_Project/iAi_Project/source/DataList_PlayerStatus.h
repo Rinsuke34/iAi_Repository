@@ -154,13 +154,6 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerMaxHp(int iPlayerMaxHp)										{ this->iPlayerMaxHp					= iPlayerMaxHp; }					// プレイヤーの最大HP設定
 		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)				{ this->iPlayerMaxInvincibleTime		= iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
 
-		/* 2025.01.22 菊池雅道 攻撃関連の変数追加開始 */
-		//攻撃
-		VECTOR vecPlayerChargeAttakPoint;	//プレイヤー溜め攻撃の目的地
-		VECTOR vecPlayerChargeAttakVector;	//プレイヤー溜め攻撃の方向
-		int iPlayerNowAttakChargeFlame;		//現在のプレイヤー溜め攻撃チャージフレーム数
-		/* 2025.01.22 菊池雅道 攻撃関連の変数追加終了 */
-
 	private:
 		/* プレイヤー状態関連 */
 		int		iPlayerMoveState;				// プレイヤーの移動状態(アクション)										/* 2025.02.05 菊池雅道 ステータス関連の変数修正 */
@@ -184,6 +177,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerAfterKickWallCount;		// プレイヤーが壁を蹴ってからの経過フレーム数									/* 2025.02.22 菊池雅道 移動関連の変数追加 */
 		bool	bPlayerAfterKickWallFlg;		// プレイヤーが壁を蹴った後の状態かのフラグ										/* 2025.02.22 菊池雅道 移動関連の変数追加 */
 		VECTOR	vecPlayerChargeAttakTargetMove;	// 近接攻撃(強)による移動量														/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
+		int		iPlayerNowAttakChargeFlame;		//現在のプレイヤー溜め攻撃チャージフレーム数									/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerMeleeStrongChargeCount;	// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数
 		int		iPlayerMeleeStrongAirCount;		// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
 		EnemyBasic*	pLockOnEnemy;				// ロックオン対象のエネミー

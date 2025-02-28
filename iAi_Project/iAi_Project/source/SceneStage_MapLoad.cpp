@@ -21,6 +21,8 @@
 // ギミック
 #include "GimmickDisappear.h"
 #include "Gimmick_ForcedJump_Spawn.h"
+//スクリーン
+#include "Screen.h"
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -349,6 +351,13 @@ void SceneStage::LoadMapData()
 
 			/* サイズ */
 			pSkySqhere->SetScale(VGet(5.f, 5.f, 5.f));
+		}
+		/*スクリーン(仮)*/
+		{/* "オブジェクト管理"にスクリーンを追加 */
+			Screen* pScreen = new Screen();
+			ObjectList->SetPlatform(pScreen);
+			/* モデル */
+			pScreen->SetModelHandle(this->ModelList->iGetModel("Object/SignBoard/SignBoard"));
 		}
 	}
 

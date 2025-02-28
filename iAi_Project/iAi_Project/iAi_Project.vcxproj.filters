@@ -367,6 +367,12 @@
     <Filter Include="ヘッダー ファイル\シーン\セットアップ">
       <UniqueIdentifier>{47799b86-4f70-4f07-9071-fab387dd79a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面">
+      <UniqueIdentifier>{b6308c93-9eb3-4cf1-b4a7-4414c92a1c1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面">
+      <UniqueIdentifier>{a7730c46-2d88-4447-9747-c0949f977243}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -563,6 +569,9 @@
     </ClCompile>
     <ClCompile Include="source\SceneAddStageSetup.cpp">
       <Filter>ソース ファイル\シーン\セットアップ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Screen.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -781,6 +790,9 @@
     </ClInclude>
     <ClInclude Include="source\SceneAddStageSetup.h">
       <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Screen.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

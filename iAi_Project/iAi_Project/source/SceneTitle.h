@@ -28,6 +28,9 @@ class SceneTitle : public SceneBase
 		/* 使用するデータリスト */
 		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
 
+		/* シーン"ステージ"のポインタ */
+		SceneStage* pSceneStage;
+
 		/* 使用する画像のハンドル */
 		int* piGrHandle_TitleLogo;		// タイトルロゴ
 };

@@ -198,6 +198,7 @@
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
     <ClCompile Include="source\SceneAddStageSetup.cpp" />
+    <ClCompile Include="source\Screen.cpp" />
     <ClCompile Include="source\ScreenEffect_Damage.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneGameOver.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="source\EnemyNormal.h" />
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\SceneAddStageSetup.h" />
+    <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />

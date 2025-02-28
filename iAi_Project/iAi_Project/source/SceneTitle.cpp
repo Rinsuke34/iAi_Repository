@@ -36,16 +36,16 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 
 	/* "タイトル"のステージを読み込む */
 	/* シーン"タイトル"を作成 */
-	SceneBase* pAddScene = new SceneStage();
+	this->pSceneStage = new SceneStage();
 
 	/* シーン"ステージ"をシーンサーバーに追加 */
-	gpSceneServer->AddSceneReservation(pAddScene);
+	gpSceneServer->AddSceneReservation(this->pSceneStage);
 
 	/* ステージの読み込みを開始 */
-	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+	dynamic_cast<SceneStage*>(this->pSceneStage)->LoadMapData();
 
 	/* 初期化処理 */
-	pAddScene->Initialization();
+	this->pSceneStage->Initialization();
 }
 
 // デストラクタ
@@ -63,6 +63,9 @@ void SceneTitle::Initialization()
 // 計算
 void SceneTitle::Process()
 {
+	pSceneStage->iGetNowCameraFixedPositionNo();
+	pSceneStage->SetNowCameraFixedPositionNo(1);
+
 	/* いずれかのボタンが入力されたらシーンを削除 */
 	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
