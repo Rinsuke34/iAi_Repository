@@ -35,6 +35,18 @@ void SceneStage::Draw()
 
 	/* カメラ設定 */
 	SetCamera();
+
+	/* フェードイン処理 */
+	{
+		/* 描写ブレンドモードを"アルファブレンド"に設定 */
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, this->iBlendAlpha_StageClear_Fadein);
+
+		/* 画面全体を白色で描写 */
+		DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(255, 255, 255), TRUE);
+
+		/* 描写ブレンドモードを"ノーブレンド"に設定 */
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 }
 
 // シャドウマップの設定

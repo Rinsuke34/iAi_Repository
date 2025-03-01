@@ -36,14 +36,14 @@ SceneGameOver::~SceneGameOver()
 void SceneGameOver::Process()
 {
 	/* アルファブレンド値を加算 */
-	this->iBlendAlpha += 3;
+	this->iBlendAlpha += FADE_ALPHA_CHANGE_SPEED;
 
 	/* アルファブレンド値が最大値(255)を超えているか確認 */
-	if (this->iBlendAlpha > 255)
+	if (this->iBlendAlpha > ALPHA_MAX)
 	{
 		// 最大値を超えている場合
 		/* 最大値を超えないように補正を行う */
-		this->iBlendAlpha = 255;
+		this->iBlendAlpha = ALPHA_MAX;
 
 		/* "決定"が入力されたか確認 */
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))

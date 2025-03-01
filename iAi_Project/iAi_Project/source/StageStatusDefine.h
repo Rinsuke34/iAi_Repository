@@ -7,10 +7,11 @@
 
 /* ゲーム状態 */
 static const int	GAMESTATUS_PLAY_GAME	= 0;	// ゲーム実行
-static const int	GAMESTATUS_RESULT		= 1;	// リザルト実行
-static const int	GAMESTATUS_EDIT			= 2;	// エディット実行
-static const int	GAMESTATUS_NEXTSTAGE	= 3;	// 次のステージへ遷移
-static const int	GAMESTATUS_GAMEOVER		= 4;	// ゲームオーバー
+static const int	GAMESTATUS_STAGE_CLEAR	= 1;	// ステージクリア
+static const int	GAMESTATUS_RESULT		= 2;	// リザルト実行
+static const int	GAMESTATUS_EDIT			= 3;	// エディット実行
+static const int	GAMESTATUS_NEXTSTAGE	= 4;	// 次のステージへ遷移
+static const int	GAMESTATUS_GAMEOVER		= 5;	// ゲームオーバー
 
 /* カメラ関連 */
 // 基本情報

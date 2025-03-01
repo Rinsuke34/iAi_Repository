@@ -12,6 +12,8 @@ EnemyGoalObject::EnemyGoalObject() : EnemyBasic()
 	this->iNowHp			= 1;
 	this->iObjectType		= OBJECT_TYPE_ENEMY;	// オブジェクトの種類
 	this->bStageChangeFlg	= false;
+	this->pEffect_Glory		= nullptr;		// 発光エフェクト
+	this->pEffect_Clear		= nullptr;		// 撃破時エフェクト
 
 	/* データリスト取得 */
 	{
@@ -36,7 +38,11 @@ EnemyGoalObject::EnemyGoalObject() : EnemyBasic()
 // デストラクタ
 EnemyGoalObject::~EnemyGoalObject()
 {
-
+	/* エフェクトを削除する */
+	{
+		if (this->pEffect_Glory != nullptr)	{ this->pEffect_Glory->SetDeleteFlg(true); }
+		if (this->pEffect_Clear != nullptr) { this->pEffect_Clear->SetDeleteFlg(true); }
+	}
 }
 
 // 初期化
@@ -46,11 +52,35 @@ void EnemyGoalObject::Initialization()
 
 	/* コリジョンセット */
 	this->stCollisionCapsule.vecCapsuleBottom	= this->vecPosition;
-	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.f, 100.f, 0.f));
+	this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.f, ENEMY_GOAL_OBJECT_HEIGHT, 0.f));
 	this->stCollisionCapsule.fCapsuleRadius		= 100.0f;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	/* エフェクト(発光)生成 */
+	{
+		/* エフェクト(発光)を生成 */
+		this->pEffect_Glory = new EffectManualDelete();
+
+		/* エフェクトの読み込み */
+		this->pEffect_Glory->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_o_goal/FX_o_goal")));
+
+		/* エフェクトの座標設定 */
+		this->pEffect_Glory->SetPosition(VAdd(this->vecPosition, VGet(0.f, ENEMY_GOAL_OBJECT_HEIGHT / 2.f, 0.f)));
+
+		// エフェクトの初期化
+		this->pEffect_Glory->Initialization();
+
+		/* エフェクトをリストに登録 */
+		{
+			/* "オブジェクト管理"データリストを取得 */
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+			/* エフェクトをリストに登録 */
+			ObjectListHandle->SetEffect(pEffect_Glory);
+		}
+	}
 }
 
 // 更新
@@ -80,8 +110,32 @@ void EnemyGoalObject::Update()
 	if (this->iGetNowHP() <= 0)
 	{
 		// HPが0以下の場合
-		/* ゲーム状態を"リザルト"に変更する */
-		this->StageStatusList->SetGameStatus(GAMESTATUS_RESULT);
+		/* ゲーム状態を"ステージクリア"に変更する */
+		this->StageStatusList->SetGameStatus(GAMESTATUS_STAGE_CLEAR);
+
+		/* エフェクト(撃破時)生成 */
+		{
+			/* エフェクト(撃破時)を生成 */
+			this->pEffect_Clear = new EffectManualDelete();
+
+			/* エフェクトの読み込み */
+			this->pEffect_Clear->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
+
+			/* エフェクトの座標設定 */
+			this->pEffect_Clear->SetPosition(VAdd(this->vecPosition, VGet(0.f, ENEMY_GOAL_OBJECT_HEIGHT / 2.f, 0.f)));
+
+			// エフェクトの初期化
+			this->pEffect_Clear->Initialization();
+
+			/* エフェクトをリストに登録 */
+			{
+				/* "オブジェクト管理"データリストを取得 */
+				DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+				/* エフェクトをリストに登録 */
+				ObjectListHandle->SetEffect(pEffect_Clear);
+			}
+		}
 	}
 }
 

@@ -336,6 +336,19 @@ void SceneStage::LoadMapData()
 					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].bUseFlg	= true;
 					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_E].vecTarget	= vecPos;
 				}
+				else if (name == "SignBoard")
+				{
+					// スクリーンの場合
+					/* "オブジェクト管理"にスクリーンを追加 */
+					Screen* pScreen = new Screen();
+					ObjectList->SetPlatform(pScreen);
+
+					/* 座標設定 */
+					pScreen->SetPosition(vecPos);
+
+					/* 回転量設定 */
+					pScreen->SetRotation(vecRot);
+				}
 			}
 		}
 
@@ -351,13 +364,6 @@ void SceneStage::LoadMapData()
 
 			/* サイズ */
 			pSkySqhere->SetScale(VGet(5.f, 5.f, 5.f));
-		}
-		/*スクリーン(仮)*/
-		{/* "オブジェクト管理"にスクリーンを追加 */
-			Screen* pScreen = new Screen();
-			ObjectList->SetPlatform(pScreen);
-			/* モデル */
-			pScreen->SetModelHandle(this->ModelList->iGetModel("Object/SignBoard/SignBoard"));
 		}
 	}
 

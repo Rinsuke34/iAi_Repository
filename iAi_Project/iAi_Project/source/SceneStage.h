@@ -58,6 +58,7 @@ class SceneStage : public SceneBase
 
 		/* 関数 */
 		void	Process_Main();					// 計算(メインの処理)
+		void	Process_StageClear();			// 計算(ステージクリア時の処理)
 		void	SetupShadowMap();				// シャドウマップの設定
 		void	SetupLightMap();				// ライトマップの設定
 		void	SetupMainScreen();				// メインの描写処理
@@ -92,5 +93,6 @@ class SceneStage : public SceneBase
 		CAMERA_FIXED_POSITION_INFO	vecCameraPositionInfo[CAMERA_FIXED_POSITION_MAX];	// カメラ固定座標情報
 		int							iNowCameraFixedPositionNo;							// 現在のカメラ固定座標番号
 		int							iMaxCameraFixedPositionNo;							// カメラ固定座標番号総数
+		int							iBlendAlpha_StageClear_Fadein;						// ステージクリア時のフェードインのアルファ値(0～255)
 };
 

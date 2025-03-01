@@ -28,18 +28,48 @@ Screen::Screen() : PlatformBasic()
 	/*this->SetModelHandle(this->iModelHandle);
 	MV1SetTextureGraphHandle(this->iModelHandle, 0, textureTitleHandle, true);*/
 
+	/* スクリーンを発光フレームとして登録 */
+	{
+		/* モデルハンドルからフレーム数を取得 */
+		int iFrameNum = MV1GetFrameNum(this->iModelHandle);
+
+		/* 発光するフレーム番号を取得する */
+		for (int i = 0; i < iFrameNum; i++)
+		{
+			/* フレーム名取得 */
+			const char* cFrameName = MV1GetFrameName(this->iModelHandle, i);
+
+			/* 最初の6文字が"Screen"であるか確認 */
+			if (strncmp(cFrameName, "Screen", 5) == 0)
+			{
+				/* 発光フレーム番号を取得 */
+				this->aiLightFrameNo.push_back(i);
+
+				/* 発光フレームの親フレーム番号を取得 */
+				int parentFrame = MV1GetFrameParent(this->iModelHandle, i);
+
+				/* 発光フレームの親フレームが存在するならば */
+				while (parentFrame >= 0)
+				{
+					// 親フレームが存在する場合
+					/* 親フレーム番号を追加 */
+					this->aiLightFrameNo.push_back(parentFrame);
+
+					/* 親フレーム番号の親フレームを取得 */
+					parentFrame = MV1GetFrameParent(this->iModelHandle, parentFrame);
+				}
+
+				/* ループを抜ける */
+				break;
+			}
+		}
+	}
 }
 
 // デストラクタ
 Screen::~Screen()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
-}
-
-
-void Screen::Initialization()
-{
-    
 }
 
 // スクリーン描画

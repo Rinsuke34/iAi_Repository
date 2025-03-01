@@ -53,8 +53,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		vecCameraPositionInfo[i].vecPosition	= VGet(0, 0, 0);
 		vecCameraPositionInfo[i].vecTarget		= VGet(0, 0, 0);
 	}
-	this->iNowCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
-	this->iMaxCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
+	this->iNowCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
+	this->iMaxCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
+	this->iBlendAlpha_StageClear_Fadein	= 0;							// ステージクリア時のフェードインのアルファ値
 }
 
 // デストラクタ
@@ -119,6 +120,11 @@ void SceneStage::Process()
 		/* "ゲーム実行"状態 */
 		case GAMESTATUS_PLAY_GAME:
 			Process_Main();
+			break;
+
+		/* "ステージクリア"状態 */
+		case GAMESTATUS_STAGE_CLEAR:
+			Process_StageClear();
 			break;
 
 		/* "リザルト"状態 */
@@ -196,6 +202,21 @@ void SceneStage::Process_Main()
 		{
 			gpSceneServer->AddSceneReservation(new SceneUi_Debug());
 		}
+	}
+}
+
+// 計算(ステージクリア時の処理)
+void SceneStage::Process_StageClear()
+{
+	/* フェードインのαブレンド値を加算 */
+	this->iBlendAlpha_StageClear_Fadein += FADE_ALPHA_CHANGE_SPEED;
+
+	/* アルファブレンド値が最大値(255)を超えているか確認 */
+	if (this->iBlendAlpha_StageClear_Fadein > ALPHA_MAX)
+	{
+		// 最大値を超えている場合
+		/* ゲーム状態を"リザルト"に変更 */
+		StageStatusList->SetGameStatus(GAMESTATUS_RESULT);
 	}
 }
 
