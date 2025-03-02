@@ -22,8 +22,7 @@ public:
 	Screen();				// コンストラクタ
 	virtual ~Screen();		// デストラクタ
 
-	void			Initialization()	override;		// 初期化
-	virtual void	Update()			override;		// 更新
+	void	Update()			override;		// 更新
 
 	void			ScreenDraw();						// 描画
 private:

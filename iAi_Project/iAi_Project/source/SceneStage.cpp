@@ -31,6 +31,15 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
+	/* 画像読み込み */
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* 画像取得 */
+		this->piGrHandle_ResultFrame = ImageList->piGetImage("Result/UI_Result_Frame");
+	}
+
 	/* マップハンドル作成 */
 	// 画像ハンドル
 	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
@@ -38,11 +47,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	// シャドウマップハンドル
-	this->iShadowMapScreenHandle_Platform	= MakeShadowMap(1028 * 2, 1028 * 2);
-
-	//int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
-	//int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
-	//int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
+	this->iShadowMapScreenHandle			= MakeShadowMap(1028 * 2, 1028 * 2);
 
 	/* 初期化 */
 	/* カメラ固定座標の初期化 */
@@ -53,8 +58,10 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		vecCameraPositionInfo[i].vecPosition	= VGet(0, 0, 0);
 		vecCameraPositionInfo[i].vecTarget		= VGet(0, 0, 0);
 	}
-	this->iNowCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
-	this->iMaxCameraFixedPositionNo	= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
+	this->iNowCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
+	this->iMaxCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
+	this->iBlendAlpha_StageClear_Fadein	= 0;							// ステージクリア時のフェードインのアルファ値
+	this->iStageClear_Count				= 0;							// ステージクリア時の処理で使用するカウント
 }
 
 // デストラクタ
@@ -71,7 +78,7 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iLightMapScreenHandle_Gauss);
 	DeleteGraph(this->iMainScreenHandle);
 	// シャドウマップ
-	DeleteShadowMap(this->iShadowMapScreenHandle_Platform);
+	DeleteShadowMap(this->iShadowMapScreenHandle);
 }
 
 // 初期化
@@ -105,6 +112,9 @@ void SceneStage::Initialization()
 			gpSceneServer->AddSceneReservation(new SceneUi_Edit());
 		}
 	}
+
+	/* ステージ開始時の時間を設定 */
+	this->StageStatusList->SetStartTime(GetNowCount());
 }
 
 // 計算
@@ -121,13 +131,25 @@ void SceneStage::Process()
 			Process_Main();
 			break;
 
+		/* "ステージクリア準備"状態 */
+		case GAMESTATUS_STAGE_CLEAR_SETUP:
+			Process_StageClear();
+			break;
+
+		/* "ステージクリア"状態 */
+		case GAMESTATUS_STAGE_CLEAR:
+			{
+				/* シーン"ステージクリア画面"を作成 */
+				SceneBase* pAddScene = new SceneGameClear();
+
+				/* シーン"ステージクリア画面"をシーンサーバーに追加 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
+			break;
+
 		/* "リザルト"状態 */
 		case GAMESTATUS_RESULT:
-			/* エディット画面作成処理 */
 			{
-				/* カメラモードを"固定"に変更 */
-				this->StageStatusList->SetCameraMode(CAMERA_MODE_LOCK);
-
 				/* シーン"リザルト画面"を作成 */
 				SceneBase* pAddScene = new SceneResult();
 
@@ -138,12 +160,8 @@ void SceneStage::Process()
 
 		/* "エディット"状態 */
 		case GAMESTATUS_EDIT:
-			/* エディット画面作成処理 */
+			/* シーン"エディット画面"を作成 */
 			{
-				/* カメラモードを"固定"に変更 */
-				this->StageStatusList->SetCameraMode(CAMERA_MODE_LOCK);
-
-				/* シーン"エディット画面"を作成 */
 				SceneBase* pAddScene = new SceneEdit();
 
 				/* シーン"エディット画面"をシーンサーバーに追加 */
@@ -162,11 +180,13 @@ void SceneStage::Process()
 
 		/* "ゲームオーバー"状態 */
 		case GAMESTATUS_GAMEOVER:
-			/* シーン"ゲームオーバー"を作成 */
-			SceneBase* pAddScene = new SceneGameOver();
+			{
+				/* シーン"ゲームオーバー"を作成 */
+				SceneBase* pAddScene = new SceneGameOver();
 
-			/* シーン"ゲームオーバー"をシーンサーバーに登録 */
-			gpSceneServer->AddSceneReservation(pAddScene);
+				/* シーン"ゲームオーバー"をシーンサーバーに登録 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
 			break;
 	}
 }
@@ -199,6 +219,40 @@ void SceneStage::Process_Main()
 	}
 }
 
+// 計算(ステージクリア時の処理)
+void SceneStage::Process_StageClear()
+{
+	/* カメラモードを"ステージクリア"に設定 */
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_STAGECLEAR);
+
+	/* クリア時カウントが開始時の状態であるか */
+	if (this->iStageClear_Count == STAGECLEAR_COUNT_START)
+	{
+		// 開始時の状態である場合
+		/* ステージクリア時の時間を設定する */
+		this->StageStatusList->SetClearTime(GetNowCount());
+	}
+
+	/* クリア時カウントがフェードイン開始に達しているか確認 */
+	if (this->iStageClear_Count >= STAGECLEAR_COUNT_START_FADEIN)
+	{
+		// 達している場合
+		/* フェードインのアルファブレンド値を加算 */
+		this->iBlendAlpha_StageClear_Fadein += FADE_ALPHA_CHANGE_SPEED;
+	}
+
+	/* クリア時カウントがリザルト開始に達しているか確認 */
+	if (this->iStageClear_Count >= STAGECLEAR_COUNT_START_RESULT)
+	{
+		// 達している場合
+		/* ゲーム状態を"ステージクリア"に変更 */
+		StageStatusList->SetGameStatus(GAMESTATUS_STAGE_CLEAR);
+	}
+
+	/* ステージクリアのカウントを加算 */
+	this->iStageClear_Count += 1;
+}
+
 // デバッグ描写
 void SceneStage::DrawDebug()
 {
@@ -207,7 +261,7 @@ void SceneStage::DrawDebug()
 	/* シャドウマップ描写 */
 	if (gbDrawShadowMapFlg == true)
 	{
-		TestDrawShadowMap(iShadowMapScreenHandle_Platform, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
+		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
 		iDrawCount++;
 	}
 

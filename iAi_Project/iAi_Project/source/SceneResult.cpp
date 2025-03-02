@@ -1,6 +1,8 @@
 /* 2025.02.16 ファイル作成 駒沢風助 */
 
 #include "SceneResult.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* シーン"リザルト"クラスの定義 */
 
@@ -14,63 +16,16 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+
+		/* "プレイヤー状態管理"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
-	/* 各評価を取得(仮) */
-	{
-		/* 最大コンボ */
-		this->iClearEvaluation_Combo = RESULT_EVALUAtiON_S;	// 評価(最大コンボ)
+	/* 各評価基準を取得 */
+	ResultCalculation_JsonLoad();
 
-		/* クリアタイム */
-		this->iClearEvaluation_Time = RESULT_EVALUAtiON_S;	// 評価(クリアタイム)
-
-		/* 被ダメージ */
-		this->iClearEvaluation_Damage = RESULT_EVALUAtiON_S;	// 評価(被ダメージ)
-	}
-
-	/* 総合評価を実施 */
-	{
-		/* 各評価を合算 */
-		int iEvaluationTotal = 0;
-		iEvaluationTotal += this->iClearEvaluation_Combo;
-		iEvaluationTotal += this->iClearEvaluation_Time;
-		iEvaluationTotal += this->iClearEvaluation_Damage;
-
-		/* 総合値に応じて設定 */
-		// ※ 総合評価は下記の通り
-		//	合算値,	 評価
-		//	12		: S
-		//	11 ～ 9	: A
-		//	8  ～ 4 : B
-		//	3  ～ 2 : C
-		//  1  ～ 0 : D
-
-		if (iEvaluationTotal >= 12)
-		{
-			// S
-			this->iClearEvaluation_Total = RESULT_EVALUAtiON_S;
-		}
-		else if (iEvaluationTotal >= 9)
-		{
-			// A
-			this->iClearEvaluation_Total = RESULT_EVALUAtiON_A;
-		}
-		else if (iEvaluationTotal >= 4)
-		{
-			// B
-			this->iClearEvaluation_Total = RESULT_EVALUAtiON_B;
-		}
-		else if (iEvaluationTotal >= 2)
-		{
-			// C
-			this->iClearEvaluation_Total = RESULT_EVALUAtiON_C;
-		}
-		else
-		{
-			// D
-			this->iClearEvaluation_Total = RESULT_EVALUAtiON_D;
-		}
-	}
+	/* 各評価点を算出 */
+	ClearEvaluation();
 }
 
 // デストラクタ
@@ -112,17 +67,22 @@ void SceneResult::Process()
 void SceneResult::Draw()
 {
 	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：エディット画面へ");
+
+	/* 評価描写(仮) */
+	DrawFormatStringToHandle(500, 32 * 2, GetColor(255, 255, 255),	giFontHandle, "クリアタイム");
+	DrawFormatStringToHandle(500, 32 * 3, GetColor(255, 255, 255), giFontHandle, "記録：%d", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
+	DrawFormatStringToHandle(500, 32 * 4, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Time);
+	DrawFormatStringToHandle(500, 32 * 5, GetColor(255, 255, 255),	giFontHandle, "最大コンボ");
+	DrawFormatStringToHandle(500, 32 * 6, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerComboMaxCount());
+	DrawFormatStringToHandle(500, 32 * 7, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Combo);
+	DrawFormatStringToHandle(500, 32 * 8, GetColor(255, 255, 255),	giFontHandle, "被ダメージ");
+	DrawFormatStringToHandle(500, 32 * 9, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerDamageCount());
+	DrawFormatStringToHandle(500, 32 * 10, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Damage);
+	DrawFormatStringToHandle(500, 32 * 11, GetColor(255, 255, 255), giFontHandle, "総合評価：%d", this->iClearEvaluation_Total);
 }
 
 // メイン処理
 void SceneResult::Process_Main()
-{
-	/* 決定入力時の処理 */
-	Process_Decid();
-}
-
-// 決定入力時の処理
-void SceneResult::Process_Decid()
 {
 	/* "決定"が入力されているか */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
@@ -136,3 +96,178 @@ void SceneResult::Process_Decid()
 	}
 }
 
+// 評価基準取得
+void SceneResult::ResultCalculation_JsonLoad()
+{
+	/* Jsonファイルの読み込み */
+	// jsonファイルから各評価の基準点を取得
+
+	/* パスとファイル名の設定 */
+	std::string FilePath		= "resource/SetupData/";		// 保存場所
+	std::string jsonFileName	= "CalculationStandard.json";	// ファイル名
+
+	/* ファイル展開 */
+	std::ifstream inputFile(FilePath + jsonFileName);
+
+	/* ファイルの展開が成功したか確認 */
+	if (inputFile.is_open())
+	{
+		// ファイルが存在する場合
+		/* 現在のステージ名を取得 */
+		std::string StageName = STAGE_NAME[StageStatusList->iGetNowStageNo()];
+
+		/* 現在のステージの各評価の基準値を取得する */
+		nlohmann::json	json;
+		inputFile >> json;
+
+		/* 評価基準(コンボ数)取得 */
+		{
+			/* jsonファイルから読み込み */
+			std::string GetName = "Combo";
+			nlohmann::json Data = json.at(StageName).at(GetName);
+			
+			/* 読み込んだ値を配列に代入 */
+			for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+			{
+				this->Calculation_Combo[i] = Data.at(i);
+			}			
+		}
+		
+		/* 評価基準(クリアタイム)取得 */
+		{
+			/* jsonファイルから読み込み */
+			std::string GetName = "Time";
+			nlohmann::json Data = json.at(StageName).at(GetName);
+
+			/* 読み込んだ値を配列に代入 */
+			for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+			{
+				this->Calculation_Time[i] = Data.at(i);
+			}
+		}
+
+		/* 評価基準(被ダメージ数)取得 */
+		{
+			/* jsonファイルから読み込み */
+			std::string GetName = "Damage";
+			nlohmann::json Data = json.at(StageName).at(GetName);
+			/* 読み込んだ値を配列に代入 */
+			for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+			{
+				this->Calculation_Damage[i] = Data.at(i);
+			}
+		}
+	}
+}
+
+// 評価算出
+void SceneResult::ClearEvaluation()
+{
+	/* 最大コンボ数の評価算出 */
+	{
+		/* 最大コンボ数を取得 */
+		int iMaxCombo = PlayerStatusList->iGetPlayerComboMaxCount();
+
+		/* 初期状態では評価を最低に設定しておく */
+		this->iClearEvaluation_Combo = RESULT_EVALUATION_D;
+
+		/* 評価算出 */
+		for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+		{
+			/* 評価基準を超えているか確認 */
+			if (iMaxCombo >= this->Calculation_Combo[i])
+			{
+				// 該当の評価基準を超えている場合
+				this->iClearEvaluation_Combo = i;
+				break;
+			}
+		}
+	}
+
+	/* クリアタイムの評価算出 */
+	{
+		/* クリアタイムを取得 */
+		// ※評価時は小数点以下切り捨て
+		int iClearTime = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000;
+
+		/* 初期状態では評価を最低に設定しておく */
+		this->iClearEvaluation_Time = RESULT_EVALUATION_D;
+
+		/* 評価算出 */
+		for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+		{
+			/* 評価基準以下の値であるか確認 */
+			if (iClearTime <= this->Calculation_Time[i])
+			{
+				// 該当の評価基準を超えている場合
+				this->iClearEvaluation_Time = i;
+				break;
+			}
+		}
+	}
+
+	/* 被ダメージ数の評価算出 */
+	{
+		/* 被ダメージ数を取得 */
+		int iDamage = PlayerStatusList->iGetPlayerDamageCount();
+
+		/* 初期状態では評価を最低に設定しておく */
+		this->iClearEvaluation_Damage = RESULT_EVALUATION_D;
+
+		/* 評価算出 */
+		for (int i = 0; i < RESULT_EVALUATION_MAX; i++)
+		{
+			/* 評価基準を超えているか確認 */
+			if (iDamage <= this->Calculation_Damage[i])
+			{
+				// 該当の評価基準を超えている場合
+				this->iClearEvaluation_Damage = i;
+				break;
+			}
+		}
+	}
+
+	/* 総合評価の算出 */
+	{
+		/* 各評価を合算 */
+		int iEvaluationTotal = 0;
+		iEvaluationTotal += this->iClearEvaluation_Combo;
+		iEvaluationTotal += this->iClearEvaluation_Time;
+		iEvaluationTotal += this->iClearEvaluation_Damage;
+
+		/* 総合値に応じて設定 */
+		// ※ 総合評価は下記の通り
+		//	合算値,	 評価
+		//	～  0 : S
+		//	～  3 : A
+		//	～  6 : B
+		//	～  9 : C
+		//  10 ～ : D
+
+		if (iEvaluationTotal <= 0)
+		{
+			// S
+			this->iClearEvaluation_Total = RESULT_EVALUATION_S;
+		}
+		else if (iEvaluationTotal <= 3)
+		{
+			// A
+			this->iClearEvaluation_Total = RESULT_EVALUATION_A;
+		}
+		else if (iEvaluationTotal >= 6)
+		{
+			// B
+			this->iClearEvaluation_Total = RESULT_EVALUATION_B;
+		}
+		else if (iEvaluationTotal >= 9)
+		{
+			// C
+			this->iClearEvaluation_Total = RESULT_EVALUATION_C;
+		}
+		else
+		{
+			// D
+			this->iClearEvaluation_Total = RESULT_EVALUATION_D;
+		}
+	}
+}

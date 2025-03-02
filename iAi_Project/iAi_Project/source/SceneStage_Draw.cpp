@@ -35,13 +35,39 @@ void SceneStage::Draw()
 
 	/* カメラ設定 */
 	SetCamera();
+
+	/* ゲーム状態が"ステージクリア"である場合 */
+	// ※ステージクリア処理用のカウントが1以上であるなら"ステージクリア"判定
+	if (this->iStageClear_Count > 0)
+	{
+		// ステージクリアである場合
+		/* フェードイン処理 */
+		{
+			/* 描写ブレンドモードを"アルファブレンド"に設定 */
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, this->iBlendAlpha_StageClear_Fadein);
+
+			/* 画面全体を白色で描写 */
+			DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(255, 255, 255), TRUE);
+
+			/* 描写ブレンドモードを"ノーブレンド"に設定 */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+			/* シーン"リザルト"を作成したか確認 */
+			if (this->iStageClear_Count >= STAGECLEAR_COUNT_START_RESULT)
+			{
+				// 作成している場合
+				/* リザルト用のフレームを描写 */
+				DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
+			}
+		}
+	}	
 }
 
 // シャドウマップの設定
 void SceneStage::SetupShadowMap()
 {
 	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle_Platform, VNorm(VGet(0.f, -1.f, 0.f)));
+	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VNorm(VGet(0.f, -1.f, 0.f)));
 
 	/* シャドウマップの描写範囲設定 */
 	{
@@ -50,11 +76,11 @@ void SceneStage::SetupShadowMap()
 
 		/* シャドウマップ範囲設定 */
 		// ※カメラのターゲット座標を中心に描写
-		SetShadowMapDrawArea(this->iShadowMapScreenHandle_Platform, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE, -SHADOWMAP_RANGE, -SHADOWMAP_RANGE)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE, SHADOWMAP_RANGE, SHADOWMAP_RANGE)));
+		SetShadowMapDrawArea(this->iShadowMapScreenHandle, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE, -SHADOWMAP_RANGE, -SHADOWMAP_RANGE)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE, SHADOWMAP_RANGE, SHADOWMAP_RANGE)));
 	}
 
 	/* シャドウマップへの描写を開始 */
-	ShadowMap_DrawSetup(this->iShadowMapScreenHandle_Platform);
+	ShadowMap_DrawSetup(this->iShadowMapScreenHandle);
 
 	/* すべてのオブジェクトの描写 */
 	ObjectList->DrawAll();
@@ -110,7 +136,7 @@ void SceneStage::SetupMainScreen()
 	SetCamera();
 
 	/* 描写に使用するシャドウマップの設定 */
-	SetUseShadowMap(0, this->iShadowMapScreenHandle_Platform);
+	SetUseShadowMap(0, this->iShadowMapScreenHandle);
 
 	/* 半透明部分を描写しないよう設定 */
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
@@ -119,7 +145,7 @@ void SceneStage::SetupMainScreen()
 	ObjectList->DrawAll();
 
 	/* 描写に使用するシャドウマップの設定を解除 */
-	SetUseShadowMap(this->iShadowMapScreenHandle_Platform, -1);
+	SetUseShadowMap(this->iShadowMapScreenHandle, -1);
 
 	/* 半透明部分のみ描写するように設定 */
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);

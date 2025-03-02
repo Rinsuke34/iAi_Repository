@@ -63,7 +63,8 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerComboMaxCount()			{ return this->iPlayerComboMaxCount; }				// プレイヤーの最大コンボ数を取得
 		int		iGetPlayerComboDuration()			{ return this->iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を取得
 		bool	bGetPlayerAimCancelledFlg()			{ return this->bPlayerAimCancelledFlg; }			// 遠距離攻撃(構え)がキャンセルされたかのフラグを取得				/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
-		bool	bGetPlayerDeadFlg()					{ return this->bPlayerDeadFlg; }					// プレイヤー死亡フラグ
+		bool	bGetPlayerDeadFlg()					{ return this->bPlayerDeadFlg; }					// プレイヤー死亡フラグを取得
+		int		iGetPlayerDamageCount()				{ return this->iPlayerDamageCount; }				// プレイヤーの被ダメージ数を取得
 
 		/* プレイヤーモーション関連 */
 		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
@@ -122,6 +123,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerComboDuration(int iPlayerComboDuration)					{ this->iPlayerComboDuration			= iPlayerComboDuration; }				// プレイヤーのコンボの残り持続時間を設定
 		void	SetPlayerAimCancelledFlg(bool bPlayerAimCancelledFlg)				{ this->bPlayerAimCancelledFlg			= bPlayerAimCancelledFlg; }				// 遠距離攻撃(構え)がキャンセルされたかのフラグを設定	/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerDeadFlg(bool bPlayerDeadFlg)								{ this->bPlayerDeadFlg					= bPlayerDeadFlg; }						// プレイヤー死亡フラグ
+		void	SetPlayerDamageCount(int iPlayerDamageCount)						{ this->iPlayerDamageCount				= iPlayerDamageCount; }					// プレイヤーの被ダメージ数を設定
 
 		/* プレイヤーモーション関連 */
 		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
@@ -188,6 +190,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerComboDuration;			// プレイヤーのコンボの残り持続時間
 		bool	bPlayerAimCancelledFlg;			// 遠距離攻撃(構え)がキャンセルされたかのフラグ
 		bool	bPlayerDeadFlg;					// プレイヤー死亡フラグ
+		int		iPlayerDamageCount;				// 被ダメージ回数
 
 		/* プレイヤーモーション関連 */
 		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)

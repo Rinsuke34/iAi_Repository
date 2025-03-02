@@ -9,7 +9,7 @@
 #include "DataList_Image.h"
 
 /* シーン */
-#include "SceneHome.h"
+#include "SceneTitle.h"
 
 /* シーン"ゲームオーバー"クラスの宣言 */
 
@@ -28,7 +28,7 @@ class SceneGameOver : public SceneBase
 		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
-		int* piGrHandle_GameOver;				// 選択フレーム
+		int* piGrHandle_GameOver;				// ゲームオーバー
 
 		/* 関数 */
 		void	Process_Main();					// メイン処理

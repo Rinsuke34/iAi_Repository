@@ -239,6 +239,9 @@ void CharacterPlayer::PlayerHitCheck()
 						/* プレイヤーのHPを減少 */
 						this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
 
+						/* 被ダメージカウントを加算する */
+						this->PlayerStatusList->SetPlayerDamageCount(this->PlayerStatusList->iGetPlayerDamageCount() + 1);
+
 						/* プレイヤーの無敵時間を設定 */
 						this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 

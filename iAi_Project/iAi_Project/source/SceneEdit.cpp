@@ -1,6 +1,8 @@
 /* 2025.01.19 ファイル作成 駒沢風助 */
 
 #include "SceneEdit.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* シーン"エディット"クラスの定義 */
 
@@ -43,12 +45,14 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	{
 		this->NewEditData[i].iEditRank		= EDIT_RANK_NONE;
 		this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
+		this->NewEditData[i].iEditCost		= 0;
 	}
 
 	/* ホールド中のエディットの情報 */
 	/* ホールド中のエディット情報を初期化する */
 	this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 	this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+	this->HoldEditData.iEditCost	= 0;
 	this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 	this->iHoldSelectItemNo			= 0;
 
@@ -64,31 +68,90 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		/* ランクに応じて設定する */
 		switch (iClearEvaluation_Total)
 		{
-		case RESULT_EVALUAtiON_S:
-			iNewEditNumber = 5;
-			bGoaldConfirmed = true;
-			break;
+			case RESULT_EVALUATION_S:
+				iNewEditNumber	= NEW_EDIT_NO_RANK_S;
+				bGoaldConfirmed	= true;
+				break;
 
-		case RESULT_EVALUAtiON_A:
-			iNewEditNumber = 5;
-			break;
+			case RESULT_EVALUATION_A:
+				iNewEditNumber = NEW_EDIT_NO_RANK_A;
+				break;
 
-		case RESULT_EVALUAtiON_B:
-			iNewEditNumber = 4;
-			break;
+			case RESULT_EVALUATION_B:
+				iNewEditNumber = NEW_EDIT_NO_RANK_B;
+				break;
 
-		case RESULT_EVALUAtiON_C:
-		case RESULT_EVALUAtiON_D:
-			iNewEditNumber = 3;
-			break;
+			case RESULT_EVALUATION_C:
+				iNewEditNumber = NEW_EDIT_NO_RANK_C;
+				break;
+
+			case RESULT_EVALUATION_D:
+				iNewEditNumber = NEW_EDIT_NO_RANK_D;
+				break;
 		}
 
-		/* エディット数分ランダムなエディットを新規エディットに登録 */
-		for (int i = 0; i < iNewEditNumber; i++)
+		/* Jsonファイルからエディット情報を読み込んで新規エディットに登録 */
 		{
-			/* 仮作成 */
-			this->NewEditData[i].iEditEffect = EDIT_EFFECT_NORMAL_MOVE_SPEED_UP;
-			this->NewEditData[i].iEditRank = EDIT_RANK_CUPPER;
+			/* 取得した情報を保存する配列の宣言 */
+			std::vector<EDIT_LOTTERY> aEditLotteryList;
+
+			/* パスとファイル名の設定 */
+			std::string FilePath = "resource/SetupData/";	// 保存場所
+			std::string jsonFileName = "EditDataBase.json";		// ファイル名
+
+			/* ファイル展開 */
+			std::ifstream inputFile(FilePath + jsonFileName);
+
+			/* ファイルの展開が成功したか確認 */
+			if (inputFile.is_open())
+			{
+				// ファイルが存在する場合
+				/* 現在のステージの各評価の基準値を取得する */
+				nlohmann::json	json;
+				inputFile >> json;
+
+				/* すべての要素を読み込む */
+				for (auto& data : json)
+				{
+					/* エディット情報を取得 */
+					EDIT_LOTTERY stEditLottery;
+					data.at("Effect").get_to(stEditLottery.iEffect);
+					data.at("Rank").get_to(stEditLottery.iRank);
+					data.at("Rarity").get_to(stEditLottery.iRarity);
+					data.at("Cost").get_to(stEditLottery.iCost);
+
+					/* 配列に追加 */
+					aEditLotteryList.push_back(stEditLottery);
+				}
+			}
+
+			/* エディット数分ランダムなエディットを選択 */
+			for (int i = 0; i < iNewEditNumber; i++)
+			{
+				/* 全要素のレアリティ合計値を取得 */
+				int iTotalRarity = 0;
+				for (auto& edit : aEditLotteryList)
+				{
+					iTotalRarity += edit.iRarity;
+				}
+
+				/* レアリティに基づくランダム選出 */
+				int iRandomValue = GetRand(iTotalRarity - 1);
+				int iCurrentSum = 0;
+
+				for (auto& edit : aEditLotteryList)
+				{
+					iCurrentSum += edit.iRarity;
+					if (iRandomValue < iCurrentSum)
+					{
+						/* 選択したエディットを新規エディットに登録 */
+						this->NewEditData[i].iEditEffect	= edit.iEffect;
+						this->NewEditData[i].iEditRank		= edit.iRank;
+						this->NewEditData[i].iEditCost		= edit.iCost;
+						break;
+					}
+				}
+			}
 		}
 
 		/* 金枠確定フラグが有効であるか */
@@ -96,6 +159,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		{
 			// 有効である場合
 			/* NONE以外のランダムなエディットのランクを金にする */
+			// ※最低1枠であるため、金枠のエディットが抽選対象となっても仕様上は問題ない
 			this->NewEditData[GetRand(iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
 		}
 	}
@@ -105,28 +169,28 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		int i = 0;
 		// キープ中のエディット情報登録
 		{
-			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_KEEP_EDIT;
-			this->astSelectItemList[i].pstEditData = this->GameResourceList->pstGetKeepEditData();
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_KEEP_EDIT;
+			this->astSelectItemList[i].pstEditData		= this->GameResourceList->pstGetKeepEditData();
 			i++;
 		}
 		// 新規エディット情報登録
 		for (int j = 0; j < EDIT_UPGRADE_MAX; j++)
 		{
-			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_NEW_EDIT;
-			this->astSelectItemList[i].pstEditData = &this->NewEditData[j];
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NEW_EDIT;
+			this->astSelectItemList[i].pstEditData		= &this->NewEditData[j];
 			i++;
 		}
 		// 削除情報登録
 		{
-			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_DELETE_EDIT;
-			this->astSelectItemList[i].pstEditData = &this->DeleteEditData;
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_DELETE_EDIT;
+			this->astSelectItemList[i].pstEditData		= &this->DeleteEditData;
 			i++;
 		}
 		// 現在のエディット情報登録
 		for (int j = 0; j < EDIT_MAX; j++)
 		{
-			this->astSelectItemList[i].iSelectItemType = SELECT_TYPE_NOW_EDIT;
-			this->astSelectItemList[i].pstEditData = this->GameResourceList->pstGetNowEditData(j);
+			this->astSelectItemList[i].iSelectItemType	= SELECT_TYPE_NOW_EDIT;
+			this->astSelectItemList[i].pstEditData		= this->GameResourceList->pstGetNowEditData(j);
 			i++;
 		}
 		// 次へ
@@ -222,8 +286,6 @@ void SceneEdit::Process_Decid()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
-		
-
 		/* エディットをホールド中であるか確認 */
 		if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
 		{
@@ -238,24 +300,43 @@ void SceneEdit::Process_Decid()
 
 				/* セット可能 */
 				case SELECT_STATUS_POSSIBLE_SET:
+					/* ホールド中のエディットが"キープ中のエディット"あるいは"新規のエディット"であるか確認 */
+					if ((this->iHoldSelectItemType == SELECT_TYPE_KEEP_EDIT) || (this->iHoldSelectItemType == SELECT_TYPE_NEW_EDIT))
+					{
+						// "キープ中のエディット"あるいは"新規のエディット"である場合
+						/* ホールド中のエディットのコスト分所持ブラッド(ゲーム内通貨)を減少 */
+						this->GameResourceList->SetHaveBlood(this->GameResourceList->iGetHaveBlood() - this->HoldEditData.iEditCost);
+					}
+
 					/* ホールド中のエディット情報を現在の選択項目に設定する */
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= this->HoldEditData.iEditCost;
 
 					/* ホールド中のエディット情報を初期化する */
 					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+					this->HoldEditData.iEditCost	= 0;
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 					break;
 
 				/* 強化可能 */
 				case SELECT_STATUS_POSSIBLE_UPGRADE:
+					/* ホールド中のエディットが"キープ中のエディット"あるいは"新規のエディット"であるか確認 */
+					if ((this->iHoldSelectItemType == SELECT_TYPE_KEEP_EDIT) || (this->iHoldSelectItemType == SELECT_TYPE_NEW_EDIT))
+					{
+						// "キープ中のエディット"あるいは"新規のエディット"である場合
+						/* ホールド中のエディットのコスト分所持ブラッド(ゲーム内通貨)を減少 */
+						this->GameResourceList->SetHaveBlood(this->GameResourceList->iGetHaveBlood() - this->HoldEditData.iEditCost);
+					}
+
 					/* 登録されているエディットのランクを上昇させる */
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank += 1;
 
 					/* ホールド中のエディット情報を初期化する */
 					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
+					this->HoldEditData.iEditCost	= 0;
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 					break;
 
@@ -268,6 +349,7 @@ void SceneEdit::Process_Decid()
 						/* ホールド中のエディット情報を現在の選択項目に設定する */
 						this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
 						this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
+						this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= this->HoldEditData.iEditCost;
 
 						/* 変数に保存したエディット情報をホールド中のエディット情報に設定する */
 						this->HoldEditData			= stEditData;
@@ -299,16 +381,23 @@ void SceneEdit::Process_Decid()
 				// "次へ"でない場合
 				/* 登録されているエディットの取得処理を実施 */
 
-				/* 選択項目に設定されたエディット情報をホールド中のエディットに代入する */
-				this->HoldEditData.iEditEffect	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect;
-				this->HoldEditData.iEditRank	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank;
+				/* 対象のエディットが存在するか確認 */
+				if (this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect != EDIT_EFFECT_NONE)
+				{
+					// 存在する場合
+					/* 選択項目に設定されたエディット情報をホールド中のエディットに代入する */
+					this->HoldEditData.iEditEffect	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect;
+					this->HoldEditData.iEditRank	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank;
+					this->HoldEditData.iEditCost	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost;
 
-				/* 選択項目の種類を設定する */
-				this->iHoldSelectItemType = this->astSelectItemList[this->iSelectItem].iSelectItemType;
+					/* 選択項目の種類を設定する */
+					this->iHoldSelectItemType = this->astSelectItemList[this->iSelectItem].iSelectItemType;
 
-				/* エディット情報を回収した選択項目のエディット情報を初期化する */
-				this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= EDIT_EFFECT_NONE;
-				this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= EDIT_RANK_NONE;
+					/* エディット情報を回収した選択項目のエディット情報を初期化する */
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= EDIT_EFFECT_NONE;
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= EDIT_RANK_NONE;
+					this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= 0;
+				}
 			}
 		}
 	}
@@ -385,8 +474,8 @@ void SceneEdit::Process_NowEditUpdate()
 				/* 現在のエディットを条件付きセット可能、入れ替え可能、アップグレード可能とするとする */
 				for (int i = SELECT_ITEM_NOW_EDIT_START; i <= SELECT_ITEM_NOW_EDIT_END; i++)
 				{
-					/* 所持ブラッドが10(仮)未満であるなら選択不可に設定 */
-					if (this->GameResourceList->iGetHaveBlood() < 10)
+					/* 所持ブラッドがホールド中のエディットのコスト未満であるなら選択不可に設定 */
+					if (this->GameResourceList->iGetHaveBlood() < this->HoldEditData.iEditCost)
 					{
 						this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
 						continue;
@@ -500,51 +589,5 @@ void SceneEdit::Process_NowEditUpdate()
 			this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_NONE;
 		}
 	}
-
-	///* 同一のエディットがある場合、合成処理を行う */
-	//// ※合成を行うと片方が削除され、もう片方のランクが上がる
-	//for (int i = 0; i < EDIT_MAX; i++)
-	//{
-	//	/* エディット情報を取得 */
-	//	EDIT_DATA stNowData = this->GameResourceList->stGetNowEditData(i);
-
-	//	/* ランクが最大(金)であるなら処理は行わない */
-	//	if (stNowData.iEditRank == EDIT_RANK_GOLD)
-	//	{
-	//		continue;
-	//	}
-
-	//	/* 効果がNONE(無し)であるなら処理は行わない */
-	//	if (stNowData.iEditEffect == EDIT_EFFECT_NONE)
-	//	{
-	//		continue;
-	//	}
-
-	//	/* 同一のエディット情報が存在するか */
-	//	for (int j = 0; j < EDIT_MAX; j++)
-	//	{
-	//		/* 確認対象と同じ項目であるなら処理は行わない */
-	//		if (i == j)
-	//		{
-	//			continue;
-	//		}
-
-	//		/* エディット情報を取得 */
-	//		EDIT_DATA stCheckData = this->GameResourceList->stGetNowEditData(j);
-
-	//		/* ランクと効果が合致しているか確認 */
-	//		if (stNowData.iEditEffect == stCheckData.iEditEffect && stNowData.iEditRank == stCheckData.iEditRank)
-	//		{
-	//			// 合致している場合
-	//			/* 元のエディットのランクを上げる */
-	//			this->GameResourceList->SetNowEditData(i, stNowData.iEditEffect, (stNowData.iEditRank + 1));
-
-	//			/* 重複しているエディットを初期化する */
-	//			this->GameResourceList->SetNowEditData(j, EDIT_EFFECT_NONE, EDIT_RANK_NONE);
-
-	//			continue;
-	//		}
-	//	}
-	//}
 }
 

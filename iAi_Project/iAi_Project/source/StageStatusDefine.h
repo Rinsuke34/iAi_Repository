@@ -6,11 +6,21 @@
 /* ゲームの状態管理の構造体や定数の宣言を行う */
 
 /* ゲーム状態 */
-static const int	GAMESTATUS_PLAY_GAME	= 0;	// ゲーム実行
-static const int	GAMESTATUS_RESULT		= 1;	// リザルト実行
-static const int	GAMESTATUS_EDIT			= 2;	// エディット実行
-static const int	GAMESTATUS_NEXTSTAGE	= 3;	// 次のステージへ遷移
-static const int	GAMESTATUS_GAMEOVER		= 4;	// ゲームオーバー
+static const int	GAMESTATUS_PLAY_GAME			= 0;	// ゲーム実行
+static const int	GAMESTATUS_STAGE_CLEAR_SETUP	= 1;	// ステージクリア準備
+static const int	GAMESTATUS_STAGE_CLEAR			= 2;	// ステージクリア
+static const int	GAMESTATUS_RESULT				= 3;	// リザルト実行
+static const int	GAMESTATUS_EDIT					= 4;	// エディット実行
+static const int	GAMESTATUS_NEXTSTAGE			= 5;	// 次のステージへ遷移
+static const int	GAMESTATUS_GAMEOVER				= 6;	// ゲームオーバー
+
+/* ゲームクリア時のカウントに応じた処理 */
+static const int	STAGECLEAR_COUNT_START				= 0;	// ステージクリア処理開始
+static const int	STAGECLEAR_COUNT_CAMERA_STOP		= 30;	// カメラ停止
+static const int	STAGECLEAR_COUNT_CAMERA_TRUN_FAST	= 60;	// カメラ回転
+static const int	STAGECLEAR_COUNT_CAMERA_TRUN_LAST	= 90;	// カメラ回転
+static const int	STAGECLEAR_COUNT_START_FADEIN		= 120;	// フェードイン開始
+static const int	STAGECLEAR_COUNT_START_RESULT		= 240;	// リザルト開始
 
 /* カメラ関連 */
 // 基本情報
@@ -25,6 +35,7 @@ static const int    CAMERA_MODE_LOCK						= 1;				// 固定
 static const int	CAMERA_MODE_AIM_MELEE					= 2;				// 構え(近接攻撃構え)
 static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// 構え(クナイ構え)
 static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
+static const int	CAMERA_MODE_STAGECLEAR					= 5;				// ステージクリア
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;			// カメラ座標の線形保管用カウントの最大値
 // カメラ固定座標

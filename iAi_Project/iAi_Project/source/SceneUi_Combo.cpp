@@ -32,7 +32,7 @@ SceneUi_Combo::SceneUi_Combo() : SceneBase("UI_Combo", 103, false)
 		this->piGrHandle_Combo_Alphabet[1]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_C");
 		this->piGrHandle_Combo_Alphabet[2]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
 		this->piGrHandle_Combo_Alphabet[3]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_A");
-		this->piGrHandle_Combo_Alphabet[4]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
+		this->piGrHandle_Combo_Alphabet[4]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_S");
 	}
 }
 

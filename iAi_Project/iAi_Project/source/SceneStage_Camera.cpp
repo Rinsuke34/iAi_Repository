@@ -16,15 +16,6 @@ void SceneStage::SetCamera()
 	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
 	SetCameraNearFar(100.0f, 30000.f);
 
-	///* フォグを有効化 */
-	//SetFogEnable(TRUE);
-
-	///* フォグの色を紫色にする */
-	//SetFogColor(126, 0, 126);
-
-	///* フォグの距離を設定 */
-	//SetFogStartEnd(15000.f, 20000.f);
-
 	/* カメラモードが変更されているか確認 */
 	if (this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old())
 	{
@@ -37,7 +28,7 @@ void SceneStage::SetCamera()
 	}
 
 	/* カメラ設定で使用する変数の定義 */
-	float fChangeCameraRatio = 1.f;	// 入力によるカメラ回転倍率
+	float fChangeCameraRatio = 1.f;	// 入力によるカメラ回転倍率(0ならプレイヤー操作で回転できなくなる)
 
 	/* カメラモードに応じて処理を変更 */
 	switch (this->StageStatusList->iGetCameraMode())
@@ -74,8 +65,20 @@ void SceneStage::SetCamera()
 
 		/* タイトル */
 		case CAMERA_MODE_TITLE:
+			/* カメラ回転倍率を変更 */
+			fChangeCameraRatio = 0.f;
+
 			/* カメラ設定 */
-			SetCamera_Aim_Title();
+			SetCamera_Title();
+			break;
+
+		/* ステージクリア */
+		case CAMERA_MODE_STAGECLEAR:
+			/* カメラ回転倍率を変更 */
+			fChangeCameraRatio = 0.f;
+
+			/* カメラ設定 */
+			SetCamera_StageClear();
 			break;
 	}
 
@@ -232,14 +235,43 @@ void SceneStage::SetCamera_Aim_Kunai()
 /* 2025.02.23 菊池雅道	カメラ制御処理修正 終了 */
 
 // カメラ設定(タイトル)
-void SceneStage::SetCamera_Aim_Title()
+void SceneStage::SetCamera_Title()
 {
-	/* 以下、仮処理 */
 	/* カメラの注視点設定 */
 	this->StageStatusList->SetCameraTarget(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
 
 	/* カメラの座標設定 */
 	this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecPosition);
+}
+
+// カメラ設定(ステージクリア)
+void SceneStage::SetCamera_StageClear()
+{
+	/* クリア時カウントが"カメラ回転"に設定されたカウントであるか確認 */
+	if ((this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_FAST) || (this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_LAST))
+	{
+		/* 現在のカメラ座標を取得 */
+		VECTOR vecCameraPosition = this->StageStatusList->vecGetCameraPosition();
+		VECTOR vecCameraTarget = this->StageStatusList->vecGetCameraTarget();
+
+		/* 現在の回転量等を取得 */
+		float fCameraAngleX = this->StageStatusList->fGetCameraAngleX();						// X軸回転量
+		float fCameraAngleY = this->StageStatusList->fGetCameraAngleY();						// Y軸回転量
+
+		fCameraAngleX += 120.f;
+
+		/* 更新したカメラアングルを設定 */
+		this->StageStatusList->SetCameraAngleX(fCameraAngleX);
+
+		/* カメラ座標設定 */
+		float fRadius = this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
+		float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+		float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+		float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+
+		this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+
+	}
 }
 
 // カメラ補正
