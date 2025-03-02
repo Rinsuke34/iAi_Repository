@@ -111,7 +111,7 @@ void EnemyGoalObject::Update()
 	{
 		// HPが0以下の場合
 		/* ゲーム状態を"ステージクリア"に変更する */
-		this->StageStatusList->SetGameStatus(GAMESTATUS_STAGE_CLEAR);
+		this->StageStatusList->SetGameStatus(GAMESTATUS_STAGE_CLEAR_SETUP);
 
 		/* エフェクト(撃破時)生成 */
 		{

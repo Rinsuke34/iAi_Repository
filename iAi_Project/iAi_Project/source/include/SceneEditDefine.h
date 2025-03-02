@@ -33,6 +33,14 @@ static const int	SELECT_STATUS_INTERCHANGEABLE	= 2;	// 交換可能
 static const int	SELECT_STATUS_IMPOSSIBLE		= 3;	// 選択不可
 static const int	SELECT_STATUS_MAX				= 4;	// 選択項目の状態の総数
 
+/* ランクに応じた新規エディット数 */
+static const int	NEW_EDIT_NO_RANK_S				= 5;	// 新規エディット数(Sランク時)
+static const int	NEW_EDIT_NO_RANK_A				= 5;	// 新規エディット数(Aランク時)
+static const int	NEW_EDIT_NO_RANK_B				= 4;	// 新規エディット数(Bランク時)
+static const int	NEW_EDIT_NO_RANK_C				= 3;	// 新規エディット数(Cランク時)
+static const int	NEW_EDIT_NO_RANK_D				= 3;	// 新規エディット数(Dランク時)
+
+
 /* 選択項目の管理用構造体 */
 struct EDIT_SELECT_ITEM
 {
@@ -40,4 +48,13 @@ struct EDIT_SELECT_ITEM
 	int				iSelectItemType;	// 選択項目の種類
 	st2DPosition	stDrawPos;			// 描写座標
 	int				iSelectStatus;		// 選択状態
+};
+
+/* エディット抽選用の構造体 */
+struct EDIT_LOTTERY
+{
+	int		iEffect;	// エディットの効果
+	int		iRank;		// エディットのランク
+	int		iRarity;	// レアリティ
+	int		iCost;		// 価格
 };

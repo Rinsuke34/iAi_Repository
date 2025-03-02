@@ -11,6 +11,9 @@
 /* データリスト */
 #include "DataList_StageStatus.h"
 
+/* 循環参照対策 */
+class SceneStage;
+
 /* シーン「タイトル」の宣言 */
 
 // シーン "タイトル画面"

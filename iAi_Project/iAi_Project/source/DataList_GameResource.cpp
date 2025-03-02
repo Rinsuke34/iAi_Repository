@@ -39,21 +39,13 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 			/* 現在のエディット情報初期化 */
 			this->NowEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
 			this->NowEditData[i].iEditRank		= EDIT_RANK_NONE;
-		}
-
-		// 現在のエディット情報初期化
-		for (int i = 0; i < EDIT_MAX; i++)
-		{
-			/* 初期状態ではすべて"効果なし"に設定 */
-			this->NowEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
-
-			/* ランクは"なし"に設定 */
-			this->NowEditData[i].iEditRank		= EDIT_RANK_NONE;
+			this->NowEditData[i].iEditCost		= 0;
 		}
 
 		// キープ中エディット情報初期化
 		this->KeepEditData.iEditEffect	= EDIT_EFFECT_NONE;
 		this->KeepEditData.iEditRank	= EDIT_RANK_NONE;
+		this->KeepEditData.iEditCost	= 0;
 	
 
 		/* スコア関連 */

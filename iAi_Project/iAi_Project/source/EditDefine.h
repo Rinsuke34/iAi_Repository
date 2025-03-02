@@ -41,51 +41,49 @@ static const int	EDIT_EFFECT_CURCE_LIMIT_MELEE_CHARGE_CHANCEL	= 13;	// ‹‡ƒLƒƒƒ
 // ‚»‚Ì‘¼
 static const int	EDIT_EFFECT_MAX									= 14;	// ƒGƒfƒBƒbƒgŒø‰Ê‚ÌÅ‘å”
 
-/* ƒAƒbƒvƒOƒŒ[ƒhƒtƒ‰ƒO */
-static const bool	EDIT_UPGRADE_FLAG_NONE	= false;	// ƒAƒbƒvƒOƒŒ[ƒh‚È‚µ
-static const bool	EDIT_UPGRADE_FLAG_TRUE	= true;		// ƒAƒbƒvƒOƒŒ[ƒh‚ ‚è
-
 /* ƒGƒfƒBƒbƒgî•ñ—p‚Ì\‘¢‘Ì */
 struct EDIT_DATA
 {
 	int			iEditRank;				// ƒGƒfƒBƒbƒg‚Ìƒ‰ƒ“ƒN
 	int			iEditEffect;			// ƒGƒfƒBƒbƒg‚ÌŒø‰Ê
+	int			iEditCost;				// ƒGƒfƒBƒbƒg‚Ì‰¿Ši(V‹KAƒz[ƒ‹ƒh’†‚ÌƒGƒfƒBƒbƒg‚Åg—p)
 };
 
 /* –¼ÌŠÇ——p\‘¢‘Ì */
 struct EDIT_NAME
 {
 	std::string	strName;		// –¼Ì(“ú–{Œê)
+	std::string strEngName;		// –¼Ì(‰pŒê)
 	std::string	strGrName;		// ‰æ‘œ–¼
 };
 
 /* ƒGƒfƒBƒbƒgƒ‰ƒ“ƒN(ƒtƒŒ[ƒ€)–¼Ì */
 static const std::array<EDIT_NAME, EDIT_RANK_MAX> EDIT_RANK_NAME =
 { {
-	// –¼Ì(“ú–{Œê),	‰æ‘œ–¼
-	{ "‚È‚µ",			"Test_Edit/Frame/EditFrame_None" },
-	{ "“º",				"Test_Edit/Frame/EditFrame_Cupper" },
-	{ "‹â",				"Test_Edit/Frame/EditFrame_Silver" },
-	{ "‹à",				"Test_Edit/Frame/EditFrame_Gold" }
+	// –¼Ì(“ú–{Œê),	–¼Ì(‰pŒê),	‰æ‘œ–¼
+	{ "‚È‚µ",			"None",		"Test_Edit/Frame/EditFrame_None" },
+	{ "“º",				"Cupper",	"Test_Edit/Frame/EditFrame_Cupper" },
+	{ "‹â",				"Silver",	"Test_Edit/Frame/EditFrame_Silver" },
+	{ "‹à",				"Gold",		"Test_Edit/Frame/EditFrame_Gold" }
 } };
 
 static const std::array<EDIT_NAME, EDIT_EFFECT_MAX> EDIT_EFFECT_NAME =
 { {
-	// –¼Ì(“ú–{Œê),				‰æ‘œ–¼
-	{ "‚È‚µ",						"Test_Edit/Effect/NoImage" },
-	{ "ˆÚ“®‘¬“xƒAƒbƒv",				"Test_Edit/Effect/Edit_SpeedUp" },
-	{ "ƒuƒ‰ƒbƒhæ“¾—ÊƒAƒbƒv",		"Test_Edit/Effect/Edit_BloodUp" },
-	{ "ƒRƒ“ƒ{Œp‘±ŠÔƒAƒbƒv",		"Test_Edit/Effect/Edit_ComboUp" },
-	{ "‹ßÚUŒ‚‚½‚ßŠÔŒ¸­",		"Test_Edit/Effect/Edit_ChargeSpeedUp" },
-	{ "ƒWƒƒƒ“ƒv‰ñ”ƒAƒbƒv",			"Test_Edit/Effect/Edit_JumpAdd" },
-	{ "‹ó’†‹‡UŒ‚‰ñ”ƒAƒbƒv",		"Test_Edit/Effect/Edit_KunaiKeep" },
-	{ "ƒNƒiƒCæ“¾—ÊƒAƒbƒv",			"Test_Edit/Effect/Edit_KunaiAdd" },
-	{ "ƒoƒŠƒA‰ñ”ƒAƒbƒv",			"Test_Edit/Effect/Edit_BarrierAdd" },
-	{ "ŠŠ‹óƒAƒNƒVƒ‡ƒ“’Ç‰Á",			"Test_Edit/Effect/NoImage" },
-	{ "ƒJƒEƒ“ƒ^[ƒAƒNƒVƒ‡ƒ“’Ç‰Á",	"Test_Edit/Effect/NoImage" },
-	{ "ƒ_ƒbƒVƒ…A‰ñ”ğ§ŒÀ",			"Test_Edit/Effect/NoImage" },
-	{ "HP1§ŒÀ",					"Test_Edit/Effect/NoImage" },
-	{ "‹‡ƒLƒƒƒ“ƒZƒ‹§ŒÀ",			"Test_Edit/Effect/NoImage" }
+	// –¼Ì(“ú–{Œê),				–¼Ì(‰pŒê),					‰æ‘œ–¼
+	{ "‚È‚µ",						"None",						"Test_Edit/Effect/NoImage" },
+	{ "ˆÚ“®‘¬“xƒAƒbƒv",				"MoveSpeedUp",				"Test_Edit/Effect/Edit_SpeedUp" },
+	{ "ƒuƒ‰ƒbƒhæ“¾—ÊƒAƒbƒv",		"GetBloodUp",				"Test_Edit/Effect/Edit_BloodUp" },
+	{ "ƒRƒ“ƒ{Œp‘±ŠÔƒAƒbƒv",		"ComboDurationUp",			"Test_Edit/Effect/Edit_ComboUp" },
+	{ "‹ßÚUŒ‚‚½‚ßŠÔŒ¸­",		"MeleeChargeReduction",		"Test_Edit/Effect/Edit_ChargeSpeedUp" },
+	{ "ƒWƒƒƒ“ƒv‰ñ”ƒAƒbƒv",			"JumpCountUp",				"Test_Edit/Effect/Edit_JumpAdd" },
+	{ "‹ó’†‹‡UŒ‚‰ñ”ƒAƒbƒv",		"AirMeleeCountUp",			"Test_Edit/Effect/Edit_KunaiKeep" },
+	{ "ƒNƒiƒCæ“¾—ÊƒAƒbƒv",			"GetKunaiUp",				"Test_Edit/Effect/Edit_KunaiAdd" },
+	{ "ƒoƒŠƒA‰ñ”ƒAƒbƒv",			"BarierCountUp",			"Test_Edit/Effect/Edit_BarrierAdd" },
+	{ "ŠŠ‹óƒAƒNƒVƒ‡ƒ“’Ç‰Á",			"Gliding",					"Test_Edit/Effect/NoImage" },
+	{ "ƒJƒEƒ“ƒ^[ƒAƒNƒVƒ‡ƒ“’Ç‰Á",	"Counter",					"Test_Edit/Effect/NoImage" },
+	{ "ƒ_ƒbƒVƒ…A‰ñ”ğ§ŒÀ",			"LimitDashDodge",			"Test_Edit/Effect/NoImage" },
+	{ "HP1§ŒÀ",					"LimitHpOne",				"Test_Edit/Effect/NoImage" },
+	{ "‹‡ƒLƒƒƒ“ƒZƒ‹§ŒÀ",			"LimitMeleeChargeChancel",	"Test_Edit/Effect/NoImage" }
 } };
 
 /* ƒGƒfƒBƒbƒgŠÇ——p‚Ì\‘¢‘Ì */

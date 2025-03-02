@@ -26,6 +26,8 @@ class DataList_StageStatus : public DataListBase
 		int		iGetEndStageNo()	{ return this->iEndStageNo; };	// 最終ステージ番号を取得
 		bool	bGetGameSlowFlg()	{ return this->bGameSlowFlg; };	// スローモーションフラグを取得		/*2025.02.05 菊池雅道 スローモーションに関する関数追加 */
 		bool	bGetAddUiFlg()		{ return this->bAddUiFlg; };	// UI追加フラグを取得
+		int		iGetStartTime()		{ return this->iStartTime; };	// 開始時の時間を取得
+		int		iGetClearTime()		{ return this->iClearTime; };	// クリア時の時間を取得
 		// カメラ関連
 		int		iGetCameraMode()						{ return this->iCameraMode; }							// カメラモード取得
 		int		iGetCameraMode_Old()					{ return this->iCameraMode_Old; }						// カメラモード取得(変更前)
@@ -53,6 +55,8 @@ class DataList_StageStatus : public DataListBase
 		void	SetEndStageNo(int iEndStageNo)		{ this->iEndStageNo		= iEndStageNo; };	// 最終ステージ番号を設定
 		void	SetGameSlowFlg(bool bGameSlowFlg)	{ this->bGameSlowFlg	= bGameSlowFlg; };	// スローモーションフラグを設定		/*2025.02.05 スローモーションに関する菊池雅道 関数追加 */
 		void	SetAddUiFlg(bool bAddUiFlg)			{ this->bAddUiFlg		= bAddUiFlg; };		// UI追加フラグ設定
+		void	SetStartTime(int iStartTime)		{ this->iStartTime		= iStartTime; };	// 開始時時間の設定
+		void	SetClearTime(int iClearTime)		{ this->iClearTime		= iClearTime; };	// クリア時時間の設定
 		// カメラ関連
 		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; }				// カメラモード設定
 		void	SetCameraMode_Old(int iCameraMode_Old)								{ this->iCameraMode_Old						= iCameraMode_Old; }			// カメラモード(変更前)設定
@@ -80,6 +84,8 @@ class DataList_StageStatus : public DataListBase
 		int		iEndStageNo;	// 最終ステージ番号
 		bool	bGameSlowFlg;	// スローモーションフラグ		/*2025.02.05 菊池雅道 変数追加 */
 		bool	bAddUiFlg;		// UI追加フラグ
+		int		iStartTime;		// 開始時の時間
+		int		iClearTime;		// クリア時の時間
 
 		/* カメラ関連 */
 		int		iCameraMode;						// カメラモード

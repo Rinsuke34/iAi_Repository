@@ -12,9 +12,6 @@
 extern DataList_Input*	gpDataList_Input;	// プレイヤー入力管理クラス
 extern DataList_Sound*	gpDataList_Sound;	// サウンド管理クラス
 
-/* ステージ関連 */
-extern bool gbTutorialFlg;					// チュートリアルフラグ
-
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawShadowMapFlg;				// シャドウマップの描写
 extern bool gbDrawLightMapFlg;				// ライトマップの描写

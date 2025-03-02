@@ -23,27 +23,11 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	gpDataList_Sound->BGM_SetHandle(BGM_STAGE);
 
 	/* 初期化 */
-	// ※チュートリアルフラグに応じて初期ステージを変更
+	/* 最初のステージ番号を設定 */
+	this->StageStatusList->SetNowStageNo(STAGE_START);
 
-	/* チュートリアルフラグが有効であるか確認 */
-	if (gbTutorialFlg == true)
-	{
-		// チュートリアルフラグが有効
-		/* 最初のステージ番号を"チュートリアル開始"に設定 */
-		this->StageStatusList->SetNowStageNo(STAGE_NO_TUTORIAL_START);
-
-		/* 最終ステージ番号を"チュートリアル終了"に設定 */
-		this->StageStatusList->SetEndStageNo(STAGE_NO_TUTORIAL_END);
-	}
-	else
-	{
-		// チュートリアルフラグが無効
-		/* 最初のステージ番号を"実践開始"に設定 */
-		this->StageStatusList->SetNowStageNo(STAGE_NO_PRACTICE_START);
-
-		/* 最終ステージ番号を"実践終了"に設定 */
-		this->StageStatusList->SetEndStageNo(STAGE_NO_PRACTICE_END);
-	}
+	/* 最終ステージ番号を設定 */
+	this->StageStatusList->SetEndStageNo(STAGE_END);
 
 	/* カメラモードを"フリー"に設定 */
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_FREE);
@@ -124,8 +108,8 @@ void SceneGame::Process()
 		/* 現行シーン削除フラグを有効化 */
 		gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
-		/* シーン"ホーム画面"を追加 */
-		gpSceneServer->AddSceneReservation(new SceneHome());
+		/* シーン"タイトル画面"を追加 */
+		gpSceneServer->AddSceneReservation(new SceneTitle());
 	}
 }
 

@@ -10,8 +10,8 @@
 #include "DataList_GameResource.h"
 
 /* シーン */
-#include "SceneHome.h"
 #include "SceneStage.h"
+#include "SceneTitle.h"
 
 /* シーン「ゲーム」の宣言 */
 

@@ -70,25 +70,6 @@ void SceneTitle::Process()
 	/* 決定が入力されたら */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
-		/* チュートリアルフラグを有効化 */
-		gbTutorialFlg = true;
-
-		/* ロード画面追加フラグを有効化 */
-		gpSceneServer->SetAddLoadSceneFlg(true);
-
-		/* 現行シーン削除フラグを有効化 */
-		gpSceneServer->SetDeleteCurrentSceneFlg(true);
-
-		/* シーン"ゲーム"を追加 */
-		gpSceneServer->AddSceneReservation(new SceneAddStageSetup());
-		return;
-	}
-	/* キャンセルが入力されたら */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-	{
-		/* チュートリアルフラグを無効化 */
-		gbTutorialFlg = false;
-
 		/* ロード画面追加フラグを有効化 */
 		gpSceneServer->SetAddLoadSceneFlg(true);
 
@@ -107,13 +88,13 @@ void SceneTitle::Draw()
 	/* 描画ブレンドモードを加算にする */
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
-	/* タイトルロゴを描画 */
+	/* タイトルロゴを再生 */
 	PlayMovieToGraph(*this->piGrHandle_TitleLogo);
 
-	/* ムービー映像を画面いっぱいに描画します */
+	/* ムービーを描写 */
 	DrawGraph(100, -100, *this->piGrHandle_TitleLogo, TRUE);
 
-	/* 再生が終了しているか */
+	/* 再生が終了しているか確認 */
 	if (GetMovieStateToGraph(*this->piGrHandle_TitleLogo) == FALSE)
 	{
 		// 再生が終了している場合
@@ -127,6 +108,5 @@ void SceneTitle::Draw()
 	/* 描画モードを二アレストに戻す */
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 
-	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "決定			：ステージ0_1(チュートリアル)へ");
-	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "キャンセル	：ステージ1_1へ");
+	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "決定			：ステージ1_1へ");
 }

@@ -14,6 +14,7 @@
 
 /* シーン */
 #include "SceneGameOver.h"
+#include "SceneStageClear.h"
 #include "SceneResult.h"
 #include "SceneEdit.h"
 #include "SceneUi_Crosshairs.h"
@@ -71,7 +72,8 @@ class SceneStage : public SceneBase
 		void	SetCamera_Free();					// カメラ設定(フリー)
 		void	SetCamera_Aim_Melee();				// カメラ設定(構え(近接攻撃構え))
 		void	SetCamera_Aim_Kunai();				// カメラ設定(構え(クナイ構え))
-		void	SetCamera_Aim_Title();				// カメラ設定(タイトル)
+		void	SetCamera_Title();					// カメラ設定(タイトル)
+		void	SetCamera_StageClear();				// カメラ設定(ステージクリア)
 		void	CameraSmoothing();					// カメラ補正
 
 		/* デバッグ関連 */
@@ -79,20 +81,24 @@ class SceneStage : public SceneBase
 
 		/* 変数 */
 		/* 描写画面関連 */
-		// 画像ハンドル
+		// ライトマップ用画像ハンドル
 		int	iLightMapScreenHandle;					// ライトマップのハンドル
 		int iLightMapScreenHandle_DownScale;		// ライトマップ(1/8縮小)のハンドル
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
 		int iMainScreenHandle;						// メイン画面のハンドル
 		// シャドウマップハンドル
-		int	iShadowMapScreenHandle_Platform;			// シャドウマップ(固定の足場)のハンドル
-		int	iShadowMapScreenHandle_Actor_Nearby_Player;	// シャドウマップ(プレイヤー付近のアクタ)のハンドル
-		int	iShadowMapScreenHandle_Actor_Wide;			// シャドウマップ(広範囲のアクタ)
+		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
 
 		/* カメラ関連 */
 		CAMERA_FIXED_POSITION_INFO	vecCameraPositionInfo[CAMERA_FIXED_POSITION_MAX];	// カメラ固定座標情報
 		int							iNowCameraFixedPositionNo;							// 現在のカメラ固定座標番号
 		int							iMaxCameraFixedPositionNo;							// カメラ固定座標番号総数
+
+		/* 使用する画像のハンドル */
+		int*						piGrHandle_ResultFrame;								// リザルト画面のフレーム
+
+		/* その他 */
+		int							iStageClear_Count;									// ステージクリア時の処理で使用するカウント
 		int							iBlendAlpha_StageClear_Fadein;						// ステージクリア時のフェードインのアルファ値(0～255)
 };
 

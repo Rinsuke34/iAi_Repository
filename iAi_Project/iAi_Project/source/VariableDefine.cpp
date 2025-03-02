@@ -8,9 +8,6 @@
 DataList_Input*	gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
 DataList_Sound*	gpDataList_Sound	= nullptr;	// サウンド管理クラス
 
-/* ステージ関連 */
-bool gbTutorialFlg					= false;	// チュートリアルフラグ
-
 /* デバッグ用描写管理フラグ */
 bool gbDrawShadowMapFlg				= false;		// シャドウマップの描写
 bool gbDrawLightMapFlg				= false;		// ライトマップの描写

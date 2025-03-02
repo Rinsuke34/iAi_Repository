@@ -25,12 +25,6 @@
     <Filter Include="ヘッダー ファイル\シーン\タイトル">
       <UniqueIdentifier>{adfe8500-7bb7-4d99-9dbe-cbd82c16a8d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\シーン\ホーム">
-      <UniqueIdentifier>{8e6f71e5-f810-4ead-947c-8b7ed93b2f14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\シーン\ホーム">
-      <UniqueIdentifier>{b2ef87c9-28eb-452a-ad6f-0f3080444d12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\シーン\タイトル">
       <UniqueIdentifier>{f1da4fff-aa2f-42eb-80e4-3b085915a7ec}</UniqueIdentifier>
     </Filter>
@@ -373,6 +367,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面">
       <UniqueIdentifier>{a7730c46-2d88-4447-9747-c0949f977243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ステージクリア">
+      <UniqueIdentifier>{4e841ad2-d9ce-4b05-9eb9-e852cc8fc3b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ステージクリア">
+      <UniqueIdentifier>{cbf291f0-2fd9-43ae-8c83-855eb6727210}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -389,9 +389,6 @@
     </ClCompile>
     <ClCompile Include="source\SceneTitle.cpp">
       <Filter>ソース ファイル\シーン\タイトル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneHome.cpp">
-      <Filter>ソース ファイル\シーン\ホーム</Filter>
     </ClCompile>
     <ClCompile Include="source\CharacterPlayer.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
@@ -573,6 +570,9 @@
     <ClCompile Include="source\Screen.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClCompile>
+    <ClCompile Include="source\SceneStageClear.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ステージクリア</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -583,9 +583,6 @@
     </ClInclude>
     <ClInclude Include="source\SceneGame.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneHome.h">
-      <Filter>ヘッダー ファイル\シーン\ホーム</Filter>
     </ClInclude>
     <ClInclude Include="source\SceneTitle.h">
       <Filter>ヘッダー ファイル\シーン\タイトル</Filter>
@@ -793,6 +790,9 @@
     </ClInclude>
     <ClInclude Include="source\Screen.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneStageClear.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージクリア</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

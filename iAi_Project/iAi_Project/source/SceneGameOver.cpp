@@ -19,7 +19,7 @@ SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 		DataList_Image* ImageList	= dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 画像取得 */
-		this->piGrHandle_GameOver	= ImageList->piGetImage("GameOver/gameover_kari");
+		this->piGrHandle_GameOver	= ImageList->piGetImage_Movie("GameOver/UI_GameOver");
 	}
 
 	/* 初期化 */
@@ -56,7 +56,7 @@ void SceneGameOver::Process()
 			gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 			/* シーン"ホーム"を追加 */
-			gpSceneServer->AddSceneReservation(new SceneHome());
+			gpSceneServer->AddSceneReservation(new SceneTitle());
 			return;
 		}
 	}
@@ -68,12 +68,31 @@ void SceneGameOver::Draw()
 	/* 描写ブレンドモードを"アルファブレンド"に設定 */
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, this->iBlendAlpha);
 
-	/* "ゲームオーバー"を描写 */
-	DrawGraph(0, 0, *this->piGrHandle_GameOver, TRUE);
+	/* 画面全体を黒色で描写 */
+	DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(0, 0, 0), TRUE);
 
 	/* 描写ブレンドモードを"ノーブレンド"に設定 */
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	/* アルファブレンド値が最大値(255)を超えているか確認 */
+	if (this->iBlendAlpha >= ALPHA_MAX)
+	{
+		// 最大値を超えている場合
+		/* ゲームオーバー画面を再生 */
+		PlayMovieToGraph(*this->piGrHandle_GameOver);
+
+		/* "ゲームオーバー"を描写 */
+		DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_GameOver, TRUE);
+
+		/* 再生が終了しているか確認 */
+		if (GetMovieStateToGraph(*this->piGrHandle_GameOver) == FALSE)
+		{
+			// 再生が終了している場合
+			/* ムービーの再生時間を初期化する */
+			SeekMovieToGraph(*this->piGrHandle_GameOver, 0);
+		}
+
+	}
 }
 
 // メイン処理
