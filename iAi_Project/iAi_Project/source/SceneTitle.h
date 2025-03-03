@@ -7,9 +7,14 @@
 /* シーン */
 #include "SceneStage.h"
 #include "SceneAddStageSetup.h"
+#include "Screen.h"
+
 
 /* データリスト */
 #include "DataList_StageStatus.h"
+#include "DataList_Input.h"
+#include "DataList_Model.h"
+#include "DataList_Object.h"
 
 /* 循環参照対策 */
 class SceneStage;
@@ -30,10 +35,17 @@ class SceneTitle : public SceneBase
 	private:
 		/* 使用するデータリスト */
 		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
+		DataList_Input* InputList;			// 入力管理/* 使用するデータリスト */
+		DataList_Object* ObjectList;			// オブジェクト管理
+		DataList_Model* ModelList;			// 3Dモデル管理
 
 		/* シーン"ステージ"のポインタ */
 		SceneStage* pSceneStage;
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_TitleLogo;		// タイトルロゴ
+		int UICount;	//UIのカウント
+		int textureTitleHandle;
+		int textureHomeHandle;
+
 };

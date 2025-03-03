@@ -33,7 +33,7 @@ class SceneUi_Crosshairs : public SceneBase
 		void	Draw_RockOn_Kunai();	// 描写(遠距離攻撃の溜め時のロックオンエネミー)
 		void	Draw_Move();			// 描写(溜め攻撃の移動後座標)
 
-		/* 変数 */
+		/* 使用する画像のハンドル */
 		int*	piGrHandle_Flont;			// 中心クロスヘア
 		int*	piGrHandle_Target_Main;		// ロックオン対象(メイン)クロスヘア
 		int*	piGrHandle_Target_Sub;		// ロックオン対象(サブ)クロスヘア

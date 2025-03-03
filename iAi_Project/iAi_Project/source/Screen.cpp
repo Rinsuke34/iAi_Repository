@@ -23,10 +23,15 @@ Screen::Screen() : PlatformBasic()
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* タイトルロゴ */
+		//this->textureTitleHandle = ImageList->piGetImage_Movie("Object/SignBoard/ScreenTexture");
         this->textureTitleHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");
 	}
-	/*this->SetModelHandle(this->iModelHandle);
-	MV1SetTextureGraphHandle(this->iModelHandle, 0, textureTitleHandle, true);*/
+
+	// テクスチャの読み込み
+	MV1SetTextureGraphHandle(iModelHandle, 0, this->textureTitleHandle, true);
+
+	//pScreen->iGetNowCameraFixedPositionNo();
+
 
 	/* スクリーンを発光フレームとして登録 */
 	{
@@ -72,19 +77,18 @@ Screen::~Screen()
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
-// スクリーン描画
-void Screen::ScreenDraw()
-{
-	/* 描画ブレンドモードを加算にする */
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
-	/* タイトルロゴを描画 */
+// 更新
+void Screen::Update()
+{
+
+	/* タイトルロゴを再生 */
 	PlayMovieToGraph(this->textureTitleHandle);
 
-	/* ムービー映像を画面いっぱいに描画します */
+	/* ムービーを描写 */
 	DrawGraph(100, -100, this->textureTitleHandle, TRUE);
 
-	/* 再生が終了しているか */
+	/* 再生が終了しているか確認 */
 	if (GetMovieStateToGraph(this->textureTitleHandle) == FALSE)
 	{
 		// 再生が終了している場合
@@ -92,15 +96,4 @@ void Screen::ScreenDraw()
 		SeekMovieToGraph(this->textureTitleHandle, 0);
 	}
 
-	/* 描画ブレンドモードをブレンド無しに戻す */
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-	/* 描画モードを二アレストに戻す */
-	SetDrawMode(DX_DRAWMODE_NEAREST);
-}
-
-// 更新
-void Screen::Update()
-{
-	//ScreenDraw();
 }

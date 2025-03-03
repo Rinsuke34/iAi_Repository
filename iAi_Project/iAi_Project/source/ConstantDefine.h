@@ -1,5 +1,5 @@
 /* 2024.01.06 駒沢風助 ファイル作成 */
-
+/* 2025.03.03 菊池雅道 ロックオン関連の定数追加 */
 #pragma once
 
 #include "StructDefine.h"
@@ -60,6 +60,8 @@ static const int DEBUG_MAP_WIDTH	= 256;	// デバッグ描写の横幅
 static const int PLAYER_LOCKON_NONE     = 0;    // ロックオンされていない
 static const int PLAYER_LOCKON_RANGE    = 1;    // ロックオン範囲内である
 static const int PLAYER_LOCKON_TARGET   = 2;    // ロックオンされている
+// ロックオン関連の設定値
+static const float PLAYER_LOCKON_RADIUS = 5000.0f;    // ロックオン範囲の半径       /* 2025.03.03 菊池雅道 ロックオン関連の定数追加 */
 
 /* 評価ランク */
 static const int	RESULT_EVALUATION_S     = 0;	// S(最高ランク)

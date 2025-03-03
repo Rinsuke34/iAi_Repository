@@ -99,6 +99,30 @@ void SceneServer::AddSceneReservation(SceneBase* NewScene)
 	this->pstAddSceneList.push_back(NewScene);
 }
 
+// シーン取得
+SceneBase* SceneServer::GetScene(const std::string& cName)
+{
+	// 引数
+	// cName		<-	取得したいシーンの名称
+
+	/* シーン一覧からシーンを取得する */
+	for (auto& Scene : pstSceneList)
+	{
+		/* シーンの名称が一致するか確認する */
+		if (Scene->stGetSceneName() == cName)
+		{
+			// シーンの名称が一致するならば
+			/* シーンのインスタンスを返す */
+			return Scene;
+		}
+	}
+
+	// シーンが見つからなかった場合
+	/* nullptrを戻り値として返す */
+	return nullptr;
+}
+
+
 // シーンリストへのシーン追加
 void SceneServer::AddScene()
 {

@@ -88,7 +88,6 @@ void SceneStage::LoadMapData()
 				vecRot.y = DEG2RAD(vecRot.y);
 				vecRot.z = DEG2RAD(vecRot.z);
 				// X軸の回転方向を反転
-				// ※正しいか不明な処理
 				vecRot.x *= -1;
 				// 設定
 				pPlatform->SetRotation(vecRot);
@@ -137,8 +136,14 @@ void SceneStage::LoadMapData()
 				vecRot.y = DEG2RAD(vecRot.y);
 				vecRot.z = DEG2RAD(vecRot.z);
 				// X軸の回転方向を反転
-				// ※正しいか不明な処理
 				vecRot.x *= -1;
+
+				/* 拡大率 */
+				VECTOR vecScale;
+				// 読み込み
+				data.at("scale").at("x").get_to(vecScale.x);
+				data.at("scale").at("z").get_to(vecScale.y);
+				data.at("scale").at("y").get_to(vecScale.z);
 
 				/* マーカータイプ確認 */
 				if (name == "Marker_Player_Start")
@@ -348,6 +353,37 @@ void SceneStage::LoadMapData()
 
 					/* 回転量設定 */
 					pScreen->SetRotation(vecRot);
+				}
+				else if (name == "FallJudgment")
+				{
+					// 落下判定の場合
+					/* 落下判定用オブジェクトの四方の座標の保存場所作成 */
+					VECTOR vecFourDirections[4];
+
+					/* 落下判定用のオブジェクトの基準サイズの設定 */
+					VECTOR localVertices[4] =
+					{
+						VGet( -1000.0f,	0.0f, -1000.0f ),  // 左奥
+						VGet( +1000.0f,	0.0f, -1000.0f ),  // 右奥
+						VGet( -1000.0f,	0.0f, +1000.0f ),  // 左手前
+						VGet( +1000.0f,	0.0f, +1000.0f )   // 右手前
+					};
+
+					/* 行列の作成 (スケール → 回転 → 平行移動) */
+					MATRIX matScale	= MGetScale(vecScale);
+					MATRIX matRotX	= MGetRotX(vecRot.x);
+					MATRIX matRotY	= MGetRotY(vecRot.y);
+					MATRIX matRotZ	= MGetRotZ(vecRot.z);
+					MATRIX matTrans	= MGetTranslate(vecPos);
+
+					/* 最終変換行列の計算 */
+					MATRIX matTransform = MMult(matScale, MMult(MMult(matRotX, matRotY), MMult(matRotZ, matTrans)));
+
+					/* 各頂点に行列を適用してワールド座標を計算 */
+					for (int i = 0; i < 4; i++)
+					{
+						vecFourDirections[i] = VTransform(localVertices[i], matTransform);
+					}
 				}
 			}
 		}

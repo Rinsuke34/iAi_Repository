@@ -66,6 +66,7 @@ class SceneStage : public SceneBase
 		void	SetupEffectScreen();	// エフェクトの描写処理
 		void	SetupScreenEffects();	// 画面エフェクト
 		void	SetCamera();			// カメラ設定
+		void	SetCmaera_Setup();		// カメラ設定(セットアップ用)
 
 		/* カメラモード関連 */
 		void	CameraRotateUpdata(float fRate);	// 入力によるカメラ回転量取得

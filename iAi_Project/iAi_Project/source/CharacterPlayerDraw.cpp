@@ -96,6 +96,8 @@ void CharacterPlayer::Draw()
 
 	/* ˆÚ“®—Ê•`ŽÊ */
 	DrawFormatString(600, 200 + 16 * 0, GetColor(255, 255, 255), "ˆÚ“®—Ê X:%f, Y:%f, Z:%f", vecMoveSize.x, vecMoveSize.y, vecMoveSize.z);
+
+	DrawFormatString(600, 200 + 16 * 1, GetColor(255, 255, 255), "ƒJƒEƒ“ƒg X:%d", this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount());
 }
 
 // “–‚½‚è”»’è•`ŽÊ

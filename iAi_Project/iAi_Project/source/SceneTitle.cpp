@@ -12,6 +12,9 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	{
 		/* "ステージ状態管理"を取得 */
 		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+
+		/* "入力管理"を取得 */
+		this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
 	}
 
 	{
@@ -46,6 +49,11 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 
 	/* 初期化処理 */
 	this->pSceneStage->Initialization();
+
+	this->UICount = 0;
+
+	pSceneStage->iGetNowCameraFixedPositionNo();
+	pSceneStage->SetNowCameraFixedPositionNo(0);
 }
 
 // デストラクタ
@@ -63,8 +71,34 @@ void SceneTitle::Initialization()
 // 計算
 void SceneTitle::Process()
 {
+	
+	
+	/* キーボードから移動方向を取得 */
+	/* 前進 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+	{
+		UICount++;
+		if (UICount >= CAMERA_FIXED_POSITION_MAX)
+		{
+			UICount = 1;
+		}
 	pSceneStage->iGetNowCameraFixedPositionNo();
-	pSceneStage->SetNowCameraFixedPositionNo(1);
+		pSceneStage->SetNowCameraFixedPositionNo(UICount);
+	}
+
+	/* 後退 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+	{
+		UICount--;
+		if (UICount < 0)
+		{
+			UICount = CAMERA_FIXED_POSITION_E;
+
+		}
+		pSceneStage->iGetNowCameraFixedPositionNo();
+		pSceneStage->SetNowCameraFixedPositionNo(UICount);
+	}
+	
 
 	/* いずれかのボタンが入力されたらシーンを削除 */
 	/* 決定が入力されたら */

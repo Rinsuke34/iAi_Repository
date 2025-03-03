@@ -7,6 +7,7 @@
 /* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.02.26 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+/* 2025.03.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -53,6 +54,7 @@ static const int	PLAYER_DODGE_COOLTIME				= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒN[ƒ‹ƒ
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_STRONG_MELEE_AIR_MAX			= 1;			// ‹ó’†‚Å‚Ì‹ßÚUŒ‚(‹­)‚ÌÅ‘å‰ñ”(¦“G‚ðUŒ‚‚µ‚Ä‚¢‚È‚¢ê‡)			/* 2025.02.26 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_STRONG_MELEE_AFTER_COUNT_MAX = 300;			// ‹ßÚUŒ‚(‹­)Œã‚Å“G‚ð“|‚µ‚½Œã‚ÌƒJƒEƒ“ƒg‚ÌÅ‘å’l					/* 2025.03.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_MELEE_WEAK_COLLTIME			= 60;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€										/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// ‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 

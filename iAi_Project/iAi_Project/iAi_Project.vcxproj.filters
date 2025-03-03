@@ -373,6 +373,12 @@
     <Filter Include="ソース ファイル\シーン\ゲームメイン\ステージクリア">
       <UniqueIdentifier>{cbf291f0-2fd9-43ae-8c83-855eb6727210}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
+      <UniqueIdentifier>{d81edc86-b2e0-4bd0-994d-66011c56f1d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
+      <UniqueIdentifier>{a28b15d3-1e64-4016-b0a0-6650822ae566}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -572,6 +578,9 @@
     </ClCompile>
     <ClCompile Include="source\SceneStageClear.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージクリア</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FallFog.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -793,6 +802,9 @@
     </ClInclude>
     <ClInclude Include="source\SceneStageClear.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージクリア</Filter>
+    </ClInclude>
+    <ClInclude Include="source\FallFog.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,6 +15,9 @@ void SceneStage::Draw()
 		return;
 	}
 
+	/* カメラ設定 */
+	SetCamera();
+
 	/* 透明度に関係なく描写するよう設定　*/
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
 
@@ -33,8 +36,8 @@ void SceneStage::Draw()
 	/* 画面エフェクトを描写 */
 	SetupScreenEffects();
 
-	/* カメラ設定 */
-	SetCamera();
+	/* カメラ設定(セットアップ用) */
+	SetCmaera_Setup();
 
 	/* ゲーム状態が"ステージクリア"である場合 */
 	// ※ステージクリア処理用のカウントが1以上であるなら"ステージクリア"判定
@@ -103,8 +106,8 @@ void SceneStage::SetupLightMap()
 		/* 画面クリア */
 		ClearDrawScreen();
 
-		/* カメラの設定 */
-		SetCamera();
+		/* カメラ設定(セットアップ用) */
+		SetCmaera_Setup();
 
 		/* すべてのオブジェクトの発光部分の描写 */
 		ObjectList->DrawAll_Bloom();
@@ -132,8 +135,8 @@ void SceneStage::SetupMainScreen()
 	/* 画面クリア */
 	ClearDrawScreen();
 
-	/* カメラの設定 */
-	SetCamera();
+	/* カメラ設定(セットアップ用) */
+	SetCmaera_Setup();
 
 	/* 描写に使用するシャドウマップの設定 */
 	SetUseShadowMap(0, this->iShadowMapScreenHandle);
@@ -145,7 +148,7 @@ void SceneStage::SetupMainScreen()
 	ObjectList->DrawAll();
 
 	/* 描写に使用するシャドウマップの設定を解除 */
-	SetUseShadowMap(this->iShadowMapScreenHandle, -1);
+	SetUseShadowMap(0, -1);
 
 	/* 半透明部分のみ描写するように設定 */
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);

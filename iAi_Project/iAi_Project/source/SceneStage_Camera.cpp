@@ -8,14 +8,6 @@
 // カメラ設定
 void SceneStage::SetCamera()
 {
-	/* グローバルアンビエントライトカラーを赤色に設定 */
-	// ※デフォルトの黒色だと暗すぎるので赤色に変更
-	SetGlobalAmbientLight(GetColorF(1.0f, 0.0f, 0.0f, 0.0f));
-
-	/* カメラの手前と奥のクリップ距離を設定 */
-	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
-	SetCameraNearFar(100.0f, 30000.f);
-
 	/* カメラモードが変更されているか確認 */
 	if (this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old())
 	{
@@ -90,11 +82,23 @@ void SceneStage::SetCamera()
 	// ※一瞬で切り替わると違和感があるため、カメラ座標に補間処理を行う
 	CameraSmoothing();
 
-	/* カメラ設定 */
-	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
-
 	/* 現時点でのカメラモードを保存 */
 	this->StageStatusList->SetCameraMode_Old(this->StageStatusList->iGetCameraMode());
+}
+
+// カメラ設定(セットアップ用)
+void SceneStage::SetCmaera_Setup()
+{
+	/* グローバルアンビエントライトカラーを赤色に設定 */
+	// ※デフォルトの黒色だと暗すぎるので赤色に変更
+	SetGlobalAmbientLight(GetColorF(1.0f, 0.0f, 0.0f, 0.0f));
+
+	/* カメラの手前と奥のクリップ距離を設定 */
+	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
+	SetCameraNearFar(100.0f, 30000.f);
+
+	/* カメラ設定 */
+	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
 }
 
 // 入力によるカメラ回転量取得

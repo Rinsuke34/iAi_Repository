@@ -76,12 +76,12 @@ void NormalEnemy::MoveEnemy()
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
-	iFiringCount--;
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
+		iFiringCount--;	// 発射カウントを減少
 
 		//誘導カウントが発射カウントより大きいか確認
 		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)

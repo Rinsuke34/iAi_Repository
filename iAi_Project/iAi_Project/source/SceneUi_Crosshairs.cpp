@@ -151,7 +151,7 @@ void SceneUi_Crosshairs::Process()
 			{
 				// 接触している場合
 				/* プレイヤーとエネミーの距離が射程範囲内であるか確認 */
-				if (fDistance < 5000.0f)
+				if (fDistance < PLAYER_LOCKON_RADIUS)
 				{
 					// 射程範囲内である場合
 					// 敵との間に障害物が存在するか確認する

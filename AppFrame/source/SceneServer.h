@@ -18,12 +18,13 @@ class SceneServer
 		void	SceneDraw();		// シーン描画処理
 		void	DrawSceneList();	// データリスト描画(デバッグ用)
 
-		// シーン追加予約
-		void	AddSceneReservation(SceneBase* NewScene);
+		
+		void		AddSceneReservation(SceneBase* NewScene);	// シーン追加予約
+		SceneBase*	GetScene(const std::string& cName);			// シーン取得
 
-		// シーン追加時設定
 		void	SetDeleteCurrentSceneFlg(bool bDeleteCurrentSceneFlg)	{ this->bDeleteCurrentSceneFlg	= bDeleteCurrentSceneFlg; };	// シーン追加時、現行シーンを削除する
 		void	SetAddLoadSceneFlg(bool bAddLoadSceneFlg)				{ this->bAddLoadSceneFlg		= bAddLoadSceneFlg; };			// シーン追加時、ロードシーンを追加する
+		
 
 	private:
 		// シーンリスト
