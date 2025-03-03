@@ -53,8 +53,8 @@ struct EDIT_SELECT_ITEM
 /* エディット抽選用の構造体 */
 struct EDIT_LOTTERY
 {
-	int		iEffect;	// エディットの効果
-	int		iRank;		// エディットのランク
-	int		iRarity;	// レアリティ
-	int		iCost;		// 価格
+	int		iEffect;		// エディットの効果
+	int		iRank;			// エディットのランク
+	int		iIncidenceRate;	// 出現率
+	int		iCost;			// 価格
 };

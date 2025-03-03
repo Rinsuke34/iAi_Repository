@@ -117,7 +117,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 					EDIT_LOTTERY stEditLottery;
 					data.at("Effect").get_to(stEditLottery.iEffect);
 					data.at("Rank").get_to(stEditLottery.iRank);
-					data.at("Rarity").get_to(stEditLottery.iRarity);
+					data.at("IncidenceRate").get_to(stEditLottery.iIncidenceRate);
 					data.at("Cost").get_to(stEditLottery.iCost);
 
 					/* 配列に追加 */
@@ -126,29 +126,38 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			}
 
 			/* エディット数分ランダムなエディットを選択 */
-			for (int i = 0; i < iNewEditNumber; i++)
 			{
-				/* 全要素のレアリティ合計値を取得 */
-				int iTotalRarity = 0;
+				/* 全要素の出現率合計値を取得 */
+				int iTotalRarity	= 0;
 				for (auto& edit : aEditLotteryList)
 				{
-					iTotalRarity += edit.iRarity;
+					/* 合計値に加算 */
+					iTotalRarity += edit.iIncidenceRate;
 				}
 
-				/* レアリティに基づくランダム選出 */
-				int iRandomValue = GetRand(iTotalRarity - 1);
-				int iCurrentSum = 0;
-
-				for (auto& edit : aEditLotteryList)
+				/* 出現率に基づき、ランダムなエディットを選出 */
+				for (int i = 0; i < iNewEditNumber; i++)
 				{
-					iCurrentSum += edit.iRarity;
-					if (iRandomValue < iCurrentSum)
+					/* ランダムな値を取得する */
+					int iRandomValue	= GetRand(iTotalRarity - 1);
+					int iCurrentSum		= 0;
+
+					/* ランダム値に応じたエディットを取得する */
+					for (auto& edit : aEditLotteryList)
 					{
-						/* 選択したエディットを新規エディットに登録 */
-						this->NewEditData[i].iEditEffect	= edit.iEffect;
-						this->NewEditData[i].iEditRank		= edit.iRank;
-						this->NewEditData[i].iEditCost		= edit.iCost;
-						break;
+						/* 出現率に応じた値分加算 */
+						iCurrentSum += edit.iIncidenceRate;
+
+						/* ランダム値を加算値が超えているか確認 */
+						if (iRandomValue < iCurrentSum)
+						{
+							// 超えている場合
+							/* 選択したエディットを新規エディットに登録 */
+							this->NewEditData[i].iEditEffect	= edit.iEffect;
+							this->NewEditData[i].iEditRank		= edit.iRank;
+							this->NewEditData[i].iEditCost		= edit.iCost;
+							break;
+						}
 					}
 				}
 			}
@@ -449,7 +458,7 @@ void SceneEdit::Process_Select()
 void SceneEdit::Process_NowEditUpdate()
 {
 	/* エディットをホールド中であるか確認 */
-	if (this->iHoldSelectItemType != SELECT_TYPE_NONE)
+	if (this->HoldEditData.iEditEffect != EDIT_EFFECT_NONE)
 	{
 		// ホールド中である場合
 		/* 現在ホールド中の選択項目の種類に応じて処理を変更する */

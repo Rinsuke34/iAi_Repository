@@ -2,6 +2,7 @@
 
 #pragma once
 #include "AppFrame.h"
+#include "PublicInclude.h"
 
 /* データリスト */
 #include "DataList_PlayerStatus.h"
@@ -29,4 +30,7 @@ class SceneUi_Combo : public SceneBase
 		int* piGrHandle_Combo_Frame;			// コンボフレーム
 		int* piGrHandle_Combo_Timer;			// コンボタイマー
 		int* piGrHandle_Combo_Alphabet[5];		// コンボアルファベット
+
+		/* 変数 */
+		int iPlayerComboRank;					// 現在のコンボランク
 };

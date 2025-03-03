@@ -82,6 +82,7 @@ void SceneStage::SetCamera()
 			break;
 	}
 
+	// ”½‰f‚·‚éê‡
 	/* “ü—Í‚É‚æ‚éƒJƒƒ‰‰ñ“]‚Ìæ“¾ˆ—‚ğÀ{ */
 	CameraRotateUpdata(fChangeCameraRatio);
 

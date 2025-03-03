@@ -437,8 +437,8 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* ロックオン中のエネミーが存在するか */
 			if (pLockOnEnemy != nullptr)
 			{
-
 				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
+
 				// 存在する場合
 				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
@@ -448,7 +448,6 @@ void CharacterPlayer::Player_Charge_Attack()
 			}
 
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
-			//int iCount	= iChargeAttackCount - 20;
 			int iCount = iMeleeStrongChargeCount;
 
 			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
@@ -597,10 +596,10 @@ void CharacterPlayer::Player_Charge_Attack()
 	/* 溜め攻撃のチャージフレーム数を+1する */
 	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(iMeleeStrongChargeCount + 1);
 }
-	/* 2025.01.22 菊池雅道	攻撃処理追加				終了 */
-	/* 2025.01.26 駒沢風助	コード修正		終了 */
-	/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	終了 */
-	/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
+/* 2025.01.22 菊池雅道	攻撃処理追加				終了 */
+/* 2025.01.26 駒沢風助	コード修正		終了 */
+/* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		開始 */
 
 
@@ -625,9 +624,9 @@ void CharacterPlayer::Player_Projectile_Posture()
 			if (this->iProjectileCoolTime == 0)
 			{
 				// クールタイムが0の場合
-			/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
-		}
+				/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
+				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
+			}
 		}
 		/* ジャンプ入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
@@ -643,7 +642,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 		/* ジャンプ中の場合 */
 		else if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
-			/* スローモーション処理を行う(仮) */ 
+			/* スローモーションフラグを有効化 */ 
+			this->StageStatusList->SetGameSlowFlg(true);
 		}
 		/* 回避入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
@@ -661,6 +661,9 @@ void CharacterPlayer::Player_Projectile_Posture()
 	{
 		/* プレイヤー攻撃状態を"自由状態"に設定 */
 		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
+		/* スローモーションフラグを無効化 */
+		this->StageStatusList->SetGameSlowFlg(false);
 	}
 }
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 終了 */

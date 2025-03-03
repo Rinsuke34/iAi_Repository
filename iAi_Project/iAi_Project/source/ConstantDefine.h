@@ -75,3 +75,18 @@ static const int	DAMAGE_EFFECT_TIME          = 30;	// ダメージエフェクトの持続時
 static const int    DAMAGE_EFFECT_SHIFT_CHANGE  = 10;	// ダメージエフェクトのシフト量変更カウント
 static const int	DAMAGE_EFFECT_ALPHA         = 50;	// ダメージエフェクトのアルファ値(0～100)
 static const int	DAMAGE_EFFECT_SHIFT         = 50;	// ダメージエフェクトの最初のシフト量(ピクセル数)
+
+/* コンボ関連 */
+// コンボランク
+static const int    COMBO_RANK_S        = 0;    // Sランク
+static const int    COMBO_RANK_A        = 1;    // Aランク
+static const int    COMBO_RANK_B        = 2;    // Bランク
+static const int    COMBO_RANK_C        = 3;    // Cランク
+static const int    COMBO_RANK_D        = 4;    // Dランク
+static const int    COMBO_RANK_NONE     = -1;   // 無し
+// ボーダーライン
+// ※コンボ数がこの値を超えていればそのコンボランク
+static const int    COMBO_RANK_BORDER_S = 21;   // Sランク
+static const int    COMBO_RANK_BORDER_A = 11;   // Aランク
+static const int    COMBO_RANK_BORDER_B = 5;    // Bランク
+static const int    COMBO_RANK_BORDER_C = 2;    // Cランク

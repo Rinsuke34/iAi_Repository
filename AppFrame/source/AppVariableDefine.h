@@ -32,7 +32,6 @@ extern DataListServer* gpDataListServer;		// データリストサーバークラス
 
 /* フレームレート関連 */
 extern int giNowFps;							// 現在のフレームレート
-extern int giStopFrame;							// 処理を停止する時間(ヒットストップで使用)
 
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawSceneListFlg;					// シーンリストの描写

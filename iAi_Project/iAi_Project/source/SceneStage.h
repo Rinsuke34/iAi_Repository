@@ -58,14 +58,14 @@ class SceneStage : public SceneBase
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 
 		/* 関数 */
-		void	Process_Main();					// 計算(メインの処理)
-		void	Process_StageClear();			// 計算(ステージクリア時の処理)
-		void	SetupShadowMap();				// シャドウマップの設定
-		void	SetupLightMap();				// ライトマップの設定
-		void	SetupMainScreen();				// メインの描写処理
-		void	SetupEffectScreen();			// エフェクトの描写処理
-		void	SetupScreenEffects();			// 画面エフェクト
-		void	SetCamera();					// カメラ設定
+		void	Process_Main();			// 計算(メインの処理)
+		void	Process_StageClear();	// 計算(ステージクリア時の処理)
+		void	SetupShadowMap();		// シャドウマップの設定
+		void	SetupLightMap();		// ライトマップの設定
+		void	SetupMainScreen();		// メインの描写処理
+		void	SetupEffectScreen();	// エフェクトの描写処理
+		void	SetupScreenEffects();	// 画面エフェクト
+		void	SetCamera();			// カメラ設定
 
 		/* カメラモード関連 */
 		void	CameraRotateUpdata(float fRate);	// 入力によるカメラ回転量取得

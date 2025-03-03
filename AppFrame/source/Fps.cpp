@@ -21,9 +21,6 @@ void Fps::FpsAdjustment()
 {
 	/* 時刻計算 */
 	FpsUpdate();
-
-	/* フレームレート調整のため待機 */
-	FpsWait();
 }
 
 // 時刻計算
@@ -71,24 +68,5 @@ void Fps::FpsWait()
 		// 待機が必要である場合
 		/* フレームレート調整のため、待機を行う */
 		Sleep(iWaitTime);
-	}
-}
-
-// 処理を停止(ヒットストップ等で使用)
-void Fps::FpsStop()
-{
-	/* 処理を停止するフレーム数が設定されているか確認 */
-	if (giStopFrame > 0)
-	{
-		// 設定されている場合
-		/* 指定のフレーム時間分待機 */
-		for (int i = 0; i < giStopFrame; i++)
-		{
-			/* フレームレート調整 */
-			FpsAdjustment();
-		}
-
-		/* 停止時間を初期化する */
-		giStopFrame = 0;
 	}
 }

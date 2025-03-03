@@ -25,6 +25,7 @@ class DataList_StageStatus : public DataListBase
 		int		iGetNowStageNo()	{ return this->iNowStageNo; };	// 現在のステージ番号を取得
 		int		iGetEndStageNo()	{ return this->iEndStageNo; };	// 最終ステージ番号を取得
 		bool	bGetGameSlowFlg()	{ return this->bGameSlowFlg; };	// スローモーションフラグを取得		/*2025.02.05 菊池雅道 スローモーションに関する関数追加 */
+		int		iGetSlowCount()		{ return this->iSlowCount; };	// スローモーションのカウント
 		bool	bGetAddUiFlg()		{ return this->bAddUiFlg; };	// UI追加フラグを取得
 		int		iGetStartTime()		{ return this->iStartTime; };	// 開始時の時間を取得
 		int		iGetClearTime()		{ return this->iClearTime; };	// クリア時の時間を取得
@@ -54,6 +55,7 @@ class DataList_StageStatus : public DataListBase
 		void	SetNowStageNo(int iNowStageNo)		{ this->iNowStageNo		= iNowStageNo; };	// ゲーム状態を設定
 		void	SetEndStageNo(int iEndStageNo)		{ this->iEndStageNo		= iEndStageNo; };	// 最終ステージ番号を設定
 		void	SetGameSlowFlg(bool bGameSlowFlg)	{ this->bGameSlowFlg	= bGameSlowFlg; };	// スローモーションフラグを設定		/*2025.02.05 スローモーションに関する菊池雅道 関数追加 */
+		void	SetSlowCount(int iSlowCount)		{ this->iSlowCount		= iSlowCount; };	// スローモーションのカウント
 		void	SetAddUiFlg(bool bAddUiFlg)			{ this->bAddUiFlg		= bAddUiFlg; };		// UI追加フラグ設定
 		void	SetStartTime(int iStartTime)		{ this->iStartTime		= iStartTime; };	// 開始時時間の設定
 		void	SetClearTime(int iClearTime)		{ this->iClearTime		= iClearTime; };	// クリア時時間の設定
@@ -83,6 +85,7 @@ class DataList_StageStatus : public DataListBase
 		int		iNowStageNo;	// 現在のステージ番号
 		int		iEndStageNo;	// 最終ステージ番号
 		bool	bGameSlowFlg;	// スローモーションフラグ		/*2025.02.05 菊池雅道 変数追加 */
+		int		iSlowCount;		// スローモーションのカウント
 		bool	bAddUiFlg;		// UI追加フラグ
 		int		iStartTime;		// 開始時の時間
 		int		iClearTime;		// クリア時の時間

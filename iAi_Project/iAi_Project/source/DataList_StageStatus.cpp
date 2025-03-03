@@ -9,10 +9,14 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 {
 	/* 初期化 */
 	{
-		this->iGameStatus	= GAMESTATUS_PLAY_GAME;
-		this->iNowStageNo	= 0;
-		this->iEndStageNo	= 0;
-		this->bAddUiFlg		= false;
+		this->iGameStatus	= GAMESTATUS_PLAY_GAME;		// ゲーム状態
+		this->iNowStageNo	= 0;						// 開始ステージ番号
+		this->iEndStageNo	= 0;						// 最終ステージ番号
+		this->bGameSlowFlg	= false;					// スローモーションフラグ		/*2025.02.05 菊池雅道 変数追加 */
+		this->iSlowCount	= 0;						// スローモーションのカウント
+		this->bAddUiFlg		= false;					// UI追加フラグ
+		this->iStartTime	= 0;						// 開始時の時間
+		this->iClearTime	= 0;						// クリア時の時間
 
 		/* カメラ関連 */
 		this->iCameraMode						= CAMERA_MODE_FREE;							// カメラモード

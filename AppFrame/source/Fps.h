@@ -13,7 +13,6 @@ class Fps
 		virtual ~Fps() {};	// デストラクタ
 
 		void FpsAdjustment();			// フレームレート調整処理
-		void FpsStop();					// 処理を停止(ヒットストップ等で使用)
 
 	private:
 		/* 関数 */
