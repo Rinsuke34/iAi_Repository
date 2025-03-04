@@ -38,9 +38,9 @@ static const int	FLAME_COUNT_TO_MAX_SPEED			= 180;					// プレイヤーの走りの通常
 static const float	STICK_TILT_PLAER_DASH				= 0.8f;					// プレイヤーが走り状態になるスティックの傾き（範囲：最大1）	/* 2025.01.09 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0?1.0）				/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_TURN_LIMIT					= DX_PI_F * 2.0f;		// プレイヤーの回転角度制限(ラジアン)							/* 2025.02.10 菊池雅道 移動関連の定数追加 */	/* 2025.02.13 菊池雅道 定数修正 */
-static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 20.0f;				// プレイヤーの壁キックの移動フレーム数							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
-static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 30.0f;				// プレイヤーの壁キックの速度(水平成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
-static const float	PLAYER_WALL_KICK_VERTICAL_SPEED		= -30.0f;				// プレイヤーの壁キックの速度(垂直成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 30.0f;				// プレイヤーの壁キックの移動フレーム数							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 80.0f;				// プレイヤーの壁キックの速度(水平成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_WALL_KICK_VERTICAL_SPEED		= -15.0f;				// プレイヤーの壁キックの速度(垂直成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 
 // 回避関係
 static const float	PLAYER_DODGE_SPEED					= 100.0f;				// プレイヤーの回避速度											/* 2025.01.09 菊池雅道 移動関連の定数追加 */
