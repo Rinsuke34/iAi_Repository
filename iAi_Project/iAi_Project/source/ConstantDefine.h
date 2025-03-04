@@ -1,5 +1,6 @@
 /* 2024.01.06 駒沢風助 ファイル作成 */
 /* 2025.03.03 菊池雅道 ロックオン関連の定数追加 */
+/* 2025.03.03 菊池雅道 プレイヤー関連の定数追加 */
 #pragma once
 
 #include "StructDefine.h"
@@ -92,3 +93,10 @@ static const int    COMBO_RANK_BORDER_S = 21;   // Sランク
 static const int    COMBO_RANK_BORDER_A = 11;   // Aランク
 static const int    COMBO_RANK_BORDER_B = 5;    // Bランク
 static const int    COMBO_RANK_BORDER_C = 2;    // Cランク
+
+/* スロー関連 */
+static const int	SLOW_SPEED = 1;				// スロー状態での速度(何フレームに一度実行されるか)
+
+/* プレイヤー関連 */
+static const int	PLAYER_STRONG_MELEE_AFTER_COUNT_MAX = 120 * 1 / (SLOW_SPEED + 1);	// 近接攻撃(強)後で敵を倒した後のカウントの最大値(※第一項にスローモーションを考慮しないフレーム数を書く)	/* 2025.03.03 菊池雅道 攻撃関連の定数追加 */
+

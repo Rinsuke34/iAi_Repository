@@ -12,12 +12,15 @@
 /* 2025.02.26 菊池雅道	クールタイム処理追加 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 */
+/* 2025.03.04 菊池雅道	スローモーション処理追加 */
+/* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正 */
 
 
 #include "CharacterPlayer.h"
 
-/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-/* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 開始 */
+/* 2025.02.05 菊池雅道	ステータス関連修正			開始 */
+/* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		開始 */
+/* 2025.03.04 菊池雅道	スローモーション処理追加	開始 */
 // 攻撃状態遷移管理
 void CharacterPlayer::Player_Attack_Transition()
 {
@@ -66,27 +69,37 @@ void CharacterPlayer::Player_Attack_Transition()
 				}
 			}
 
+			// 近距離攻撃(強)で敵を倒した後の処理
 			/* 近距離攻撃(強)で敵を倒した後のフラグを確認 */
 			if(this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 			{
 				// 近距離攻撃(強)で敵を倒した後の場合
-
 				/* 近距離攻撃(強)後のカウントを取得 */
 				int iPlayerMeleeStrongAfterCount = this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount();
 
 				/* 近距離攻撃(強)後のカウントを加算 */
 				this->PlayerStatusList->SetPlayerMeleeStrongAfterCount(iPlayerMeleeStrongAfterCount + 1);
 
-				/* 近距離攻撃(強)後のカウントが一定数を超えているか確認 */
-				if (iPlayerMeleeStrongAfterCount >= PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
+				/* 近距離攻撃(強)後のカウントが一定数を超えていないか確認 */
+				if (iPlayerMeleeStrongAfterCount < PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
 				{
-					// 一定数を超えた場合
+					// 近距離攻撃(強)後のカウントが一定数を超えていない場合
+					/* スローモーションフラグを有効化 */
+					this->StageStatusList->SetGameSlowFlg(true);
+				}
+				else
+				{
+					// 近距離攻撃(強)後のカウントが一定数を超えた場合
 					/* 近距離攻撃(強)後のカウントをリセット */
 					this->PlayerStatusList->SetPlayerMeleeStrongAfterCount(0);
 
+					/* スローモーションフラグを効化 */
+					this->StageStatusList->SetGameSlowFlg(false);
+
 					/* 近距離攻撃(強)で敵を倒した後のフラグを解除 */
-					this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+					this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);	
 				}
+
 			}
 			break;
 
@@ -104,6 +117,8 @@ void CharacterPlayer::Player_Attack_Transition()
 
 		/* 近接攻撃中(強) */
 		case PLAYER_ATTACKSTATUS_MELEE_STRONG:
+
+			
 			/* 近距離攻撃(強) */
 			Player_Charge_Attack();
 			break;
@@ -127,8 +142,9 @@ void CharacterPlayer::Player_Attack_Transition()
 
 	}
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
+/* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		終了 */
+/* 2025.03.04 菊池雅道	スローモーション処理追加	終了 */
 
 	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
@@ -150,12 +166,6 @@ void CharacterPlayer::Player_Melee_Posture()
 
 	/* プレイヤーが近接攻撃(強)で敵を倒した後のカウントを取得 */
 	int iPlayerMeleeStrongAfterCount = this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount();
-
-	if (iPlayerMeleeStrongAfterCount >= PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
-	{
-		this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
-	
-	}
 
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
@@ -222,7 +232,7 @@ void CharacterPlayer::Player_Melee_Posture()
 		/* 近接攻撃(強)チャージ処理 */
 		{
 			/* チャージフレームが最大値を超えていないか確認 */
-			if (iNowAttakChargeFlame < PLAYER_MELEE_CHARGE_MAX)
+			if (iNowAttakChargeFlame <= PLAYER_MELEE_CHARGE_MAX)
 			{
 				// 超えていない場合
 				/* プレイヤーの現在の攻撃チャージフレームを加算 */
@@ -456,9 +466,20 @@ void CharacterPlayer::Player_Melee_Weak()
 /* 2025.02.03 菊池雅道	近距離攻撃(強)後の処理追加	開始 */
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		開始 */
+/* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		開始 */
+/* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		開始 */
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
+	//近距離攻撃(強)中はスローモーションを行わない
+	/* スローモーションフラグを確認 */
+	if (this->StageStatusList->bGetGameSlowFlg() == true)
+	{
+		// スローモーション中の場合
+		/* スローモーションフラグを無効化 */
+		this->StageStatusList->SetGameSlowFlg(false);
+	}
+
 	/* 近距離攻撃(強)状態でのチャージフレーム数を取得 */
 	int iMeleeStrongChargeCount = this->PlayerStatusList->iGetPlayerMeleeStrongChargeCount();
 
@@ -484,40 +505,47 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* 空中での近距離攻撃(強)回数を加算 */
 			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(iNowMelleeStrongAirCount + 1);
 		}
+
+		/* ロックオン中のエネミーを取得 */
+		EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+
+		/* 近接攻撃(強)による移動量を取得 */
+		VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
+
+		// ※ロックオン中のエネミーが存在するかで処理を分岐させる
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合(敵に攻撃する場合)
+			/* 空中での近接攻撃(強)の回数をリセット */
+			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
+
+			// 存在する場合
+			/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
+			vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+
+			/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
+			vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 200.f));
+
+			/* 敵を攻撃したフラグを設定 */
+			this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
+
+			/* 近接攻撃(強)による移動量を取得 */
+			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(vecMoveDirection);
+		}
+
 	}
 	else
 	{
 		// 1以上である場合
 		/* 攻撃＆移動処理 */
-		// ※ロックオン中のエネミーが存在するかで処理を分岐させる
 		{
-			/* ロックオン中のエネミーを取得 */
-			EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
-
 			/* 近接攻撃(強)による移動量を取得 */
 			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 
 			/* 移動量をfloat型で取得 */
 			float fMove = VSize(vecMoveDirection);
-
-			/* ロックオン中のエネミーが存在するか */
-			if (pLockOnEnemy != nullptr)
-			{
-				// 存在する場合(敵に攻撃する場合)
-				/* 空中での近接攻撃(強)の回数をリセット */
-				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
-
-				// 存在する場合
-				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
-				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
-
-				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
-				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 200.f));
-
-				/* 敵を攻撃したフラグを設定 */
-				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
-			}
-
+			
 			/* 攻撃＆移動処理に入ってからのカウントを取得 */
 			int iCount = iMeleeStrongChargeCount;
 
@@ -604,65 +632,71 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 	}
 
-	// 溜め攻撃後、次の敵を探す処理
-	// 仮でプレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする
-	if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+	// 近接攻撃(強)で敵を倒した後、次の敵を探す
+	/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
+	if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 	{
-		/* 索敵範囲を設定※値は仮 */
-		COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
-
-		/* プレイヤーに近いエネミーを取得する */
-		NearEnemy stNearEnemy = { nullptr, 0.f };
-
-		/* エネミーリストを取得 */
-		auto& EnemyList = ObjectList->GetEnemyList();
-
-		/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
-		for (auto* enemy : EnemyList)
+		// 近接攻撃(強)で敵を倒した後の場合
+		// 溜め攻撃後、次の敵を探す処理
+		// 仮でプレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
-			/* 索敵範囲に接触しているか確認 */
-			if (enemy->HitCheck(stSearchSqere) == true)
+			/* 索敵範囲を設定※値は仮 */
+			COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
+
+			/* プレイヤーに近いエネミーを取得する */
+			NearEnemy stNearEnemy = { nullptr, 0.f };
+
+			/* エネミーリストを取得 */
+			auto& EnemyList = ObjectList->GetEnemyList();
+
+			/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
+			for (auto* enemy : EnemyList)
 			{
-				// 索敵範囲内である場合
-				/* コアのワールド座標を取得 */
-				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
-
-				/* プレイヤーとの差を求める */
-				float fx = vecCoreWord.x - this->vecPosition.x;
-				float fy = vecCoreWord.y - this->vecPosition.y;
-				float fDistance = (fx * fx) + (fy * fy);
-
-				/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
-				if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+				/* 索敵範囲に接触しているか確認 */
+				if (enemy->HitCheck(stSearchSqere) == true)
 				{
-					// 近い場合
-					/* プレイヤーから近いエネミーを更新 */
-					stNearEnemy.pEnemy = enemy;
-					stNearEnemy.fDistance = fDistance;
+					// 索敵範囲内である場合
+					/* コアのワールド座標を取得 */
+					VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+
+					/* プレイヤーとの差を求める */
+					float fx = vecCoreWord.x - this->vecPosition.x;
+					float fy = vecCoreWord.y - this->vecPosition.y;
+					float fDistance = (fx * fx) + (fy * fy);
+
+					/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
+					if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+					{
+						// 近い場合
+						/* プレイヤーから近いエネミーを更新 */
+						stNearEnemy.pEnemy = enemy;
+						stNearEnemy.fDistance = fDistance;
+					}
 				}
 			}
+
+			/* 最もプレイヤー近いエネミーを対象に指定 */
+			if (stNearEnemy.pEnemy != nullptr)
+			{
+				//対象が存在する場合
+				/* プレイヤーから見た敵の向きを取得 */
+				VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
+
+				/* プレイヤーから見た敵の向きを正規化 */
+				vecNearEnemy = VNorm(vecNearEnemy);
+
+				/* プレイヤーから見た敵の角度を取得 */
+				float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
+
+				/* プレイヤーの向きを設定 */
+				this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
+
+				/* プレイヤーの向きにカメラの向きを固定 */
+				this->StageStatusList->SetCameraAngleX(this->PlayerStatusList->fGetPlayerAngleX());
+			}
+
 		}
-
-		/* 最もプレイヤー近いエネミーを対象に指定 */
-		if (stNearEnemy.pEnemy != nullptr)
-		{
-			//対象が存在する場合
-			/* プレイヤーから見た敵の向きを取得 */
-			VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
-
-			/* プレイヤーから見た敵の向きを正規化 */
-			vecNearEnemy = VNorm(vecNearEnemy);
-
-			/* プレイヤーから見た敵の角度を取得 */
-			float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
-
-			/* プレイヤーの向きを設定 */
-			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
-
-			/* プレイヤーの向きにカメラの向きを固定 */
-			this->StageStatusList->SetCameraAngleX(this->PlayerStatusList->fGetPlayerAngleX());
-		}
-
 	}
 	/* 溜め攻撃のチャージフレーム数を+1する */
 	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(iMeleeStrongChargeCount + 1);
@@ -673,6 +707,7 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		終了 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		終了 */
+/* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		終了 */
 
 
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 開始 */
