@@ -66,7 +66,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 // DXライブラリ初期化
 void Main::DxLibInit()
 {
-	/* DXLibの重複を可能にする(通信テスト用) */
+	/* タイトルの設定 */
+	SetMainWindowText("瞬電");
+
+	/* ログ出力を無効にする */
+	SetOutApplicationLogValidFlag(FALSE);
+
+	/* DXLibの重複を可能にする */
 	SetDoubleStartValidFlag(TRUE);
 
 	/* 画面の解像度を横1920×縦1080、1ドットあたり32ビットに指定する */

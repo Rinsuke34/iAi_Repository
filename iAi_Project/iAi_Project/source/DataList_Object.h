@@ -72,7 +72,7 @@ class DataList_Object : public DataListBase
 		void	DrawBullet_Bloom();		// 弾発光描写
 		void	DrawPlatform_Bloom();	// プラットフォーム発光描写
 		void	DrawEffectItem_Bloom();	// アイテム(実体なし)発光描写
-		void	DrawPickUpItem_Bloom();	// アイテム(実体あり)発光描写
+		void	DrawPickUpItem_Bloom();	// アイテム(実体あり)発光描写		
 
 		/* オブジェクト削除 */
 		// ※単独のデータはデストラクタで開放されるため、リストで管理しているデータのみ対象とする。
@@ -123,6 +123,4 @@ class DataList_Object : public DataListBase
 		std::vector<PlatformBase*>		pPlatformList;		// プラットフォーム
 		std::vector<EffectItemBase*>	pEffectItemList;	// アイテム(実体なし)
 		std::vector<PickUpItemBase*>	pPickUpItemList;	// アイテム(実体あり)
-
-	protected:
 };

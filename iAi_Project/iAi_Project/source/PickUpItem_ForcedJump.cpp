@@ -28,7 +28,7 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/gimmick_jump");
+		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/ForcedJump/ForcedJump");
 	}
 }
 
@@ -43,9 +43,9 @@ void PickUpItem_ForcedJump::Initialization()
 {
 	/* コリジョン設定 */
 	{
-		this->stCollisionCapsule.fCapsuleRadius		= 50.0f;
-		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 50.0f, 0.0f));
-		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, -50.0f, 0.0f));
+		this->stCollisionCapsule.fCapsuleRadius		= 100.0f;
+		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 400.0f, 0.0f));
+		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
 	}
 }
 

@@ -52,6 +52,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerAimCancelledFlg			= false;							// 遠距離攻撃(構え)がキャンセルされたかのフラグ		/* 2025.02.11 菊池雅道 初期化処理追加 */
 	this->bPlayerDeadFlg					= false;							// プレイヤー死亡フラグ
 	this->iPlayerDamageCount				= 0;								// 被ダメージ回数
+	this->bFallFlg							= false;							// 落下フラグ
 
 	/* プレイヤーモーション関連 */
 	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)

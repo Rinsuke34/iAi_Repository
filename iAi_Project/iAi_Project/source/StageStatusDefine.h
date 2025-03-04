@@ -47,9 +47,6 @@ static const int	CAMERA_FIXED_POSITION_D					= 4;				// カメラ固定座標(D地点)
 static const int	CAMERA_FIXED_POSITION_E					= 5;				// カメラ固定座標(E地点)
 static const int	CAMERA_FIXED_POSITION_MAX				= 6;				// カメラ固定座標の最大数
 
-/* スロー関連 */
-static const int	SLOW_SPEED								= 1;				// スロー状態での速度(何フレームに一度実行されるか)
-
 /* カメラ固定座標情報 */
 struct CAMERA_FIXED_POSITION_INFO
 {

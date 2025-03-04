@@ -18,7 +18,8 @@ class FallFog : public PlatformBasic
 		FallFog();				// コンストラクタ
 		virtual ~FallFog() {};	// デストラクタ
 
-		virtual void	Draw()				override;	// 描写
+		void	Draw()				override;		// 描写
+		void	BloomDraw()			override {};	// 発光描写
 
 	private:
 		/* 使用する画像のハンドル */

@@ -21,8 +21,11 @@
 // ギミック
 #include "GimmickDisappear.h"
 #include "Gimmick_ForcedJump_Spawn.h"
-//スクリーン
 #include "Screen.h"
+#include "Gimmick_FallJudgment.h"
+// 霧
+#include "FallFog.h"
+
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -34,6 +37,9 @@ void SceneStage::LoadMapData()
 
 	/* マップ名を取得 */
 	std::string MapName = STAGE_NAME[iStageNo];
+
+	/* 落下復帰ポイント情報の初期化 */
+	StageStatusList->RecoveryPointList_Initialization();
 
 	/* マップデータの読み込み */
 	{
@@ -363,10 +369,10 @@ void SceneStage::LoadMapData()
 					/* 落下判定用のオブジェクトの基準サイズの設定 */
 					VECTOR localVertices[4] =
 					{
-						VGet( -1000.0f,	0.0f, -1000.0f ),  // 左奥
-						VGet( +1000.0f,	0.0f, -1000.0f ),  // 右奥
-						VGet( -1000.0f,	0.0f, +1000.0f ),  // 左手前
-						VGet( +1000.0f,	0.0f, +1000.0f )   // 右手前
+						VGet(+1000.0f,	0.0f, +1000.0f),	// 右奥
+						VGet(+1000.0f,	0.0f, -1000.0f),	// 右前
+						VGet(-1000.0f,	0.0f, -1000.0f),	// 左前
+						VGet(-1000.0f,	0.0f, +1000.0f)		// 左奥
 					};
 
 					/* 行列の作成 (スケール → 回転 → 平行移動) */
@@ -384,6 +390,52 @@ void SceneStage::LoadMapData()
 					{
 						vecFourDirections[i] = VTransform(localVertices[i], matTransform);
 					}
+
+					/* 霧を作成 */
+					VECTOR topRight = vecFourDirections[0];
+					VECTOR topLeft = vecFourDirections[3];
+					VECTOR bottomRight = vecFourDirections[1];
+
+					// 水平方向と垂直方向のステップ
+					VECTOR horizontalStep = VScale(VNorm(VSub(topLeft, topRight)), 300.0f);
+					VECTOR verticalStep = VScale(VNorm(VSub(bottomRight, topRight)), 300.0f);
+
+					// 最も右奥から左奥まで横に進みつつ縦に埋めていく
+					for (VECTOR startPos = topRight; startPos.x >= topLeft.x; startPos = VAdd(startPos, horizontalStep))
+					{
+						VECTOR verticalPos = startPos;
+						while (verticalPos.z >= bottomRight.z)
+						{
+							PlatformBase* pFog = new FallFog();
+							ObjectList->SetPlatform(pFog);
+							pFog->SetPosition(verticalPos);
+
+							verticalPos = VAdd(verticalPos, verticalStep);
+						}
+					}
+
+					/* "オブジェクト管理"に落下判定位置を追加 */
+					PlatformBase* pPlatform = new Gimmick_FallJudgment();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* モデル */
+					std::string Path = "Object/" + name + "/" + name;
+					pPlatform->SetModelHandle(this->ModelList->iGetModel(Path));
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+				}
+				else if(name == "Marker_FallRecovery")
+				{
+					// 落下復帰ポイントの場合
+					/* 落下復帰ポイント情報の追加 */
+					StageStatusList->SetFallRecoveryPoint(vecPos);
 				}
 			}
 		}

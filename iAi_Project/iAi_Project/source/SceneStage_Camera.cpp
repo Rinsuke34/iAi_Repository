@@ -97,6 +97,11 @@ void SceneStage::SetCmaera_Setup()
 	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
 	SetCameraNearFar(100.0f, 30000.f);
 
+	/* フォグの範囲を設定 */
+	SetFogEnable(TRUE);
+	SetFogColor(256, 44, 42);
+	SetFogStartEnd(20000.f, 26000.f);
+
 	/* カメラ設定 */
 	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
 }

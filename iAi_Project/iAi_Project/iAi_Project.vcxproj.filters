@@ -379,6 +379,12 @@
     <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
       <UniqueIdentifier>{a28b15d3-1e64-4016-b0a0-6650822ae566}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\落下判定">
+      <UniqueIdentifier>{10f9c78f-2e66-4d5f-baea-0233358a4bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\落下判定">
+      <UniqueIdentifier>{d37e63ac-34cb-4e28-bbd9-014b6fdb786d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -581,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="source\FallFog.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_FallJudgment.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\落下判定</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -806,5 +815,16 @@
     <ClInclude Include="source\FallFog.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
     </ClInclude>
+    <ClInclude Include="source\resource.h">
+      <Filter>リソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_FallJudgment.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\落下判定</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -14,11 +14,14 @@ class DataList_StageStatus : public DataListBase
 {
 	public:
 		DataList_StageStatus();				// コンストラクタ
-		virtual ~DataList_StageStatus() {};	// デストラクタ
+		virtual ~DataList_StageStatus();	// デストラクタ
+
+		void	RecoveryPointList_Initialization();		// 落下復帰ポイント初期化
 
 		/* データ取得 */
 		// リスト
-		std::vector<ScreenEffect_Base*>&	GetScreenEffectList()	{ return this->pScreenEffectList; }		// 画面エフェクトリスト取得
+		std::vector<ScreenEffect_Base*>&	GetScreenEffectList()		{ return this->pScreenEffectList; }			// 画面エフェクトリスト取得
+		std::vector<VECTOR>&				vecGetFallRecoveryPointList()	{ return this->vecFallRecoveryPointList; }	// 落下復帰ポイントリスト取得
 		// 単独
 		// ステージ状態
 		int		iGetGameStatus()	{ return this->iGameStatus; };	// ゲーム状態を取得
@@ -48,7 +51,8 @@ class DataList_StageStatus : public DataListBase
 
 		/* データ設定 */
 		// リスト
-		void	SetScreenEffect(ScreenEffect_Base* pScreenEffect)	{ pScreenEffectList.emplace_back(pScreenEffect); }	// 画面エフェクト
+		void	SetScreenEffect(ScreenEffect_Base* pScreenEffect)	{ pScreenEffectList.emplace_back(pScreenEffect); }					// 画面エフェクトリスト設定
+		void	SetFallRecoveryPoint(VECTOR vecFallRecoveryPoint)	{ vecFallRecoveryPointList.emplace_back(vecFallRecoveryPoint); }	// 落下復帰ポイントリスト設定
 		// 単独
 		// ステージ状態
 		void	SetGameStatus(int iGameStatus)		{ this->iGameStatus		= iGameStatus; };	// ゲーム状態を設定
@@ -78,7 +82,8 @@ class DataList_StageStatus : public DataListBase
 
 	private:
 		/* 管理するデータリスト */
-		std::vector<ScreenEffect_Base*>		pScreenEffectList;		// 画面エフェクトリスト
+		std::vector<ScreenEffect_Base*>		pScreenEffectList;			// 画面エフェクトリスト
+		std::vector<VECTOR>					vecFallRecoveryPointList;	// 落下復帰ポイントリスト
 
 		/* 管理するデータ */
 		int		iGameStatus;	// ゲーム状態

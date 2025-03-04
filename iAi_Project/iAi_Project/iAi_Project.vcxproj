@@ -194,6 +194,7 @@
     <ClCompile Include="source\Enemy_Explosion.cpp" />
     <ClCompile Include="source\FallFog.cpp" />
     <ClCompile Include="source\GimmickDisappear.cpp" />
+    <ClCompile Include="source\Gimmick_FallJudgment.cpp" />
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
@@ -260,6 +261,8 @@
     <ClInclude Include="source\EnemyNormal.h" />
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\FallFog.h" />
+    <ClInclude Include="source\Gimmick_FallJudgment.h" />
+    <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\SceneAddStageSetup.h" />
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\Screen.h" />
@@ -300,6 +303,9 @@
     <ClInclude Include="source\SceneLoad.h" />
     <ClInclude Include="source\SceneOption.h" />
     <ClInclude Include="source\SceneTitle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

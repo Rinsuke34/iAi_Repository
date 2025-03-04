@@ -10,6 +10,7 @@
 /* 2025.02.22 菊池雅道	壁キック処理追加 */
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加 */
+/* 2025.03.04 菊池雅道	回避の処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -624,6 +625,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
 	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
 	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
+	/* 2025.03.04 菊池雅道	回避の処理修正 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -716,14 +718,37 @@ void CharacterPlayer::Player_Dodg()
 						/* カメラの水平方向の向きを移動用の向きに設定 */
 						float fAngleX = this->StageStatusList->fGetCameraAngleX();
 
-						/* 移動量を算出 */
-						VECTOR vecMove;
-						vecMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-						vecMove.y = 0.0f;
-						vecMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+						/* 回避方向ベクトル */
+						VECTOR vecDodgMove;
 
-						/* 回避の移動方向を現在の移動用の向きに設定 */
-						this->PlayerStatusList->SetPlayerDodgeDirection(VNorm(vecMove));
+						/* スティック入力がされているか確認 */
+						if (vecInput.x != 0 || vecInput.z != 0)
+						{
+							// スティック入力がされている場合
+							/* スティック入力による回避方向を設定 */
+							vecDodgMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+							vecDodgMove.y = 0.0f;
+							vecDodgMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+						}
+						else
+						{
+							// スティック入力がされていない場合
+							//プレイヤーが向いている方向に回避する
+							/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
+							vecDodgMove = { 0,0,-1 };
+
+							/* プレイヤーの角度からY軸の回転行列を求める */
+							MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
+
+							/* プレイヤーの向きによる回避方向を設定 */
+							vecDodgMove = VTransform(vecDodgMove, matPlayerRotation);
+						}
+
+						/* 回避方向を正規化 */
+						vecDodgMove = VNorm(vecDodgMove);
+
+						/* 現在の回避方向をセットする */
+						this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
 					}
 
 					/* 回避状態の進行率をリセット */
@@ -782,6 +807,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.02.06 菊池雅道	エフェクト処理修正 終了 */
 	/* 2025.02.10 菊池雅道	回避処理修正 終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
+/* 2025.03.04 菊池雅道	回避の処理修正 終了 */
 
 /* 2025.01.09 菊池雅道　移動処理追加					追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加				開始 */

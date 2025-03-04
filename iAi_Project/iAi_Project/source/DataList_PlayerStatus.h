@@ -68,6 +68,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bGetPlayerAimCancelledFlg()			{ return this->bPlayerAimCancelledFlg; }			// 遠距離攻撃(構え)がキャンセルされたかのフラグを取得				/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerDeadFlg()					{ return this->bPlayerDeadFlg; }					// プレイヤー死亡フラグを取得
 		int		iGetPlayerDamageCount()				{ return this->iPlayerDamageCount; }				// プレイヤーの被ダメージ数を取得
+		bool	bGetFallFlg()						{ return this->bFallFlg; }							// 落下フラグを取得
 
 		/* プレイヤーモーション関連 */
 		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
@@ -129,6 +130,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerAimCancelledFlg(bool bPlayerAimCancelledFlg)				{ this->bPlayerAimCancelledFlg			= bPlayerAimCancelledFlg; }				// 遠距離攻撃(構え)がキャンセルされたかのフラグを設定	/* 2025.02.11 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerDeadFlg(bool bPlayerDeadFlg)								{ this->bPlayerDeadFlg					= bPlayerDeadFlg; }						// プレイヤー死亡フラグ
 		void	SetPlayerDamageCount(int iPlayerDamageCount)						{ this->iPlayerDamageCount				= iPlayerDamageCount; }					// プレイヤーの被ダメージ数を設定
+		void	SetFallFlg(bool bFallFlg)											{ this->bFallFlg						= bFallFlg; }							// 落下フラグを設定
 
 		/* プレイヤーモーション関連 */
 		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
@@ -198,6 +200,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerAimCancelledFlg;			// 遠距離攻撃(構え)がキャンセルされたかのフラグ
 		bool	bPlayerDeadFlg;					// プレイヤー死亡フラグ
 		int		iPlayerDamageCount;				// 被ダメージ回数
+		bool	bFallFlg;						// 落下フラグ
 
 		/* プレイヤーモーション関連 */
 		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)

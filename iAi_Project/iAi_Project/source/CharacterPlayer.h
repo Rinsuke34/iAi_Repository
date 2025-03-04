@@ -53,7 +53,6 @@ class CharacterPlayer : public CharacterBase
 		virtual void	CollisionDraw()		override;		// 当たり判定描写
 
 	private:
-	protected:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
 		DataList_Input*			InputList;			// 入力管理
@@ -63,10 +62,11 @@ class CharacterPlayer : public CharacterBase
 		DataList_StageStatus*	StageStatusList;	// ステージ状態リスト
 
 		/* 関数 */
-		void	CollisionUpdate();		// コリジョン更新
-		void	PlayerHitCheck();				// 当たり判定処理
-		void	RadianLimitAdjustment(float& fRadian);				// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
-		void	UpdateCooldownTime();								// クールタイムの更新			/* 2025.02.26 菊池雅道 クールタイム関連の関数追加 */
+		void	CollisionUpdate();						// コリジョン更新
+		void	PlayerHitCheck();						// 当たり判定処理
+		void	RadianLimitAdjustment(float& fRadian);	// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
+		void	UpdateCooldownTime();					// クールタイムの更新			/* 2025.02.26 菊池雅道 クールタイム関連の関数追加 */
+		void	PlayerFallRecovery();					// 落下からの復帰				/* 2025.03.02 駒沢風助 落下復帰処理作成 */
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ

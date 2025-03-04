@@ -36,3 +36,21 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// カメラの回転角度制限(下)
 	}
 }
+
+// デストラクタ
+DataList_StageStatus::~DataList_StageStatus()
+{
+	/* 画面エフェクトリストのクリア */
+	for (auto& pScreenEffect : this->pScreenEffectList)
+	{
+		delete pScreenEffect;
+	}
+	this->pScreenEffectList.clear();
+}
+
+// 落下復帰ポイント初期化
+void DataList_StageStatus::RecoveryPointList_Initialization()
+{
+	/* 落下復帰ポイントリストのクリア */
+	this->vecFallRecoveryPointList.clear();
+}

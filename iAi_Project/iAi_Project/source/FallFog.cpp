@@ -20,5 +20,5 @@ FallFog::FallFog() : PlatformBasic()
 void FallFog::Draw()
 {
 	/* 霧の画像をビルボードとして描写する */
-	DrawBillboard3D(this->vecPosition, 1.f, 1.f, 1.f, 0.f, *this->piGrHandle_Fog, TRUE);
+	DrawBillboard3D(this->vecPosition, 0.5f, 0.5f, 650.0f, 0.f, *this->piGrHandle_Fog, TRUE);
 }

@@ -7,6 +7,7 @@
 /* 2025.02.19 菊池雅道	エフェクト処理追加 */
 /* 2025.02.22 菊池雅道	壁キック処理追加 */
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+/* 2025.03.02 駒沢風助	落下復帰処理作成 */
 
 #include "CharacterPlayer.h"
 
@@ -99,13 +100,15 @@ void CharacterPlayer::Update()
 	/* 当たり判定処理 */
 	PlayerHitCheck();
 
-	/* プレイヤーが落下したか */
-	if (this->vecPosition.y <= 0)
+	/* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+	/* プレイヤーが落下したか確認 */
+	if (PlayerStatusList->bGetFallFlg() == true)
 	{
-		// 落下した場合
-		/* プレイヤーのHPを0にする */
-		this->PlayerStatusList->SetPlayerNowHp(0);
+		// 落下している場合
+		/* 落下復帰処理 */
+		PlayerFallRecovery();
 	}
+	/* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 
 	/* プレイヤーの現在HPが0以下(死亡状態)であるか確認 */
 	if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
@@ -358,3 +361,45 @@ void CharacterPlayer::UpdateCooldownTime()
 	UpdateCooldownTime(this->iDodgeCoolTime);
 }
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+
+/* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+// 落下からの復帰
+void CharacterPlayer::PlayerFallRecovery()
+{
+	/* 最も近い復帰地点の座標 */
+	VECTOR	vecCloseRecoveryPoint	= VGet(0.f, 0.f, 0.f);	// 座標
+	float	fCloseDistance			= 0.f;					// 距離
+	bool	bFastFlg				= true;					// 最初の確認フラグ
+
+	/* 現在の座標から最も近い復帰地点を取得 */
+	for (auto& vecRecoveryPoint : this->StageStatusList->vecGetFallRecoveryPointList())
+	{
+		/* 復帰地点と現在の座標の距離を取得 */
+		// ※距離の2乗を取得
+		float fDistance = VSize(VSub(vecRecoveryPoint, this->vecPosition));
+
+		/* 現在設定されている復帰地点よりも距離が短いか、あるいは最初の確認であるか確認 */
+		if ((fDistance < fCloseDistance) || (bFastFlg == true))
+		{
+			// 距離が短い、あるいは最初の確認である場合
+			/* 最も近い復帰地点を更新 */
+			vecCloseRecoveryPoint = vecRecoveryPoint;
+
+			/* 最も近い復帰地点の距離を更新 */
+			fCloseDistance = fDistance;
+		}
+
+		/* 最初の確認フラグを無効にする */
+		bFastFlg = false;
+	}
+
+	/* プレイヤーの座標を最も近い復帰地点に設定 */
+	this->vecPosition = vecCloseRecoveryPoint;
+
+	/* プレイヤーのHPを-1する */
+	this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+
+	/* 落下フラグを無効にする */
+	this->PlayerStatusList->SetFallFlg(false);
+}
+/* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
