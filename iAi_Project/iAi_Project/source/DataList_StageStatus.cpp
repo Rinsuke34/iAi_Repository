@@ -19,8 +19,8 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->iClearTime	= 0;						// クリア時の時間
 
 		/* カメラ関連 */
-		this->iCameraMode						= CAMERA_MODE_FREE;							// カメラモード
-		this->iCameraMode_Old					= CAMERA_MODE_FREE;							// カメラモード(変更前)
+		this->iCameraMode						= CAMERA_MODE_NORMAL;							// カメラモード
+		this->iCameraMode_Old					= CAMERA_MODE_NORMAL;							// カメラモード(変更前)
 		this->vecCameraUp						= VGet(0, 1, 0);							// カメラの上方向(Y+方向で固定)
 		this->vecCameraPosition					= VGet(0, 0, 0);							// カメラの座標(現在地点)
 		this->vecCameraPosition_Start			= VGet(0, 0, 0);							// カメラの座標(変更前地点)

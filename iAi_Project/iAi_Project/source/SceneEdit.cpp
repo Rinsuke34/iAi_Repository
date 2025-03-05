@@ -419,6 +419,7 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 	{
 		// 入力されている場合
+		/* 選択項目を上に進める */
 		this->iSelectItem -= 6;
 	}
 
@@ -426,6 +427,7 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 	{
 		// 入力されている場合
+		/* 選択項目を下に進める */
 		this->iSelectItem += 6;
 	}
 
@@ -433,6 +435,7 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 	{
 		// 入力されている場合
+		/* 選択項目を左に進める */
 		this->iSelectItem -= 1;
 	}
 
@@ -440,6 +443,7 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 	{
 		// 入力されている場合
+		/* 選択項目を右に進める */
 		this->iSelectItem += 1;
 	}
 

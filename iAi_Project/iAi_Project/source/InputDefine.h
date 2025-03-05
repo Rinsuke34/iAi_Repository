@@ -21,6 +21,7 @@ static const int UI_LEFT	= 2;	// 左
 static const int UI_RIGHT	= 3;	// 右
 static const int UI_DECID	= 4;	// 決定
 static const int UI_CANCEL	= 5;	// キャンセル
+static const int UI_PAUSE	= 6;	// ポーズ
 
 // ゲーム操作
 static const int GAME_JUMP		= 0;	// ジャンプ

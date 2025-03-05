@@ -1,16 +1,16 @@
 /* 2025.02.27 ファイル作成 駒沢風助 */
 
-#include "SceneAddStageSetup.h"
+#include "SceneAddGameSetup.h"
 
-/* シーン「ステージ追加セットアップ」の定義 */
+/* シーン"ゲーム"追加セットアップの定義 */
 // コンストラクタ
-SceneAddStageSetup::SceneAddStageSetup() : SceneBase("AddStageSetup", 10, true)
+SceneAddSceneGameSetup::SceneAddSceneGameSetup() : SceneBase("AddSceneGameSetup", 10, true)
 {
 
 }
 
 // 計算
-void SceneAddStageSetup::Process()
+void SceneAddSceneGameSetup::Process()
 {
 	/* 現行シーン削除フラグを有効化 */
 	gpSceneServer->SetDeleteCurrentSceneFlg(true);

@@ -94,7 +94,7 @@ void CharacterPlayer::Player_Attack_Transition()
 					/* 近距離攻撃(強)後のカウントをリセット */
 					this->PlayerStatusList->SetPlayerMeleeStrongAfterCount(0);
 
-					/* スローモーションフラグを効化 */
+					/* スローモーションフラグを無効化 */
 					this->StageStatusList->SetGameSlowFlg(false);
 
 					/* 近距離攻撃(強)で敵を倒した後のフラグを解除 */
@@ -523,7 +523,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 
 				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
-				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 200.f));
+				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
 
 				/* 敵を攻撃したフラグを設定 */
 				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);

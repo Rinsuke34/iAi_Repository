@@ -18,9 +18,10 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;	// ミサイル誘導カウント
 	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;	// ミサイル弾の持続カウント
 
-	this->iTextureHandle = LoadGraph("resource/ImageData/Test/a.png");
-
 	this->bPredictedLandingFlg = false;
+	this->bSaveFlg = false;
+
+	this->vecHitPosition = VGet(0, 0, 0);
 
 	/* データリスト取得 */
 	{
@@ -175,7 +176,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	vecNextPosition.y = this->vecPosition.y;
 	vecNextPosition.z = this->vecPosition.z;
 
-	// 主人公の上部分の当たり判定から下方向へ向けた線分を作成
+	// ミサイルの中心から下方向へ半径の長さ分線分を作成
 	this->stVerticalCollision.vecLineStart = this->vecPosition;
 	this->stVerticalCollision.vecLineStart.y += 25;
 	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
@@ -196,13 +197,22 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		// 接触しているか確認
 		if (stHitPolyDim.HitFlag == 1)
 		{
-			// 接触している場合
-		// ミサイルの削除フラグを有効化
-		this->bDeleteFlg = true;
-			this->bPredictedLandingFlg = false;
+			BulletEnemyRangeMissileExplosion();
+			break;
+		}
+	}
+}
 
+
+void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
+{
+	// 接触している場合
+	if (bSaveFlg == FALSE)
+	{
+		//ミサイルエフェクトを削除
+		this->pEffect->SetDeleteFlg(true);
+		bSaveFlg = TRUE;
 		/* エフェクト追加 */
-
 		/*爆発エフェクトを生成 */
 		this->pEffectExplosion = new EffectManualDelete();
 
@@ -225,7 +235,23 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}
-			break;
+
+		// エフェクトが再生中かどうか確認
+		if (IsEffekseer3DEffectPlaying(this->pEffectExplosion->iGetEffectHandle()))
+		{
+			// エフェクトが再生終了している場合
+			this->bDeleteFlg = true;
+		}
+		else
+		{
+			//弾速を0にする
+			this->vecDirection = VGet(0, 0, 0);
+			//ミサイルの接触部分を中心に球の爆風当たり判定を作成
+			this->vecPosition = this->vecPosition;
+			this->stCollisionSqhere.vecSqhere = this->vecPosition;
+			this->stCollisionSqhere.fSqhereRadius = 570.0f;
+			bSaveFlg = TRUE;
+
 		}
 	}
 	}
@@ -234,6 +260,9 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 void BulletEnemyRangeMissile::CollisionDraw()
 {
 	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
+
+	//爆風の当たり判定を描写
+	DrawSphere3D(this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius, 12, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
 }
 
 // 更新

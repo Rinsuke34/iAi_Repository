@@ -11,6 +11,7 @@
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加 */
 /* 2025.03.04 菊池雅道	回避の処理修正 */
+/* 2025.03.05 菊池雅道	衝突判定処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -978,6 +979,7 @@ void CharacterPlayer::Movement_Vertical()
 
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
+/* 2025.03.05 菊池雅道	衝突判定処理修正	開始 */
 
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
@@ -1003,12 +1005,13 @@ void CharacterPlayer::Movement_Horizontal()
 	{
 		/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
 		// ※ 元の位置から移動後の位置へ向けたカプセルコリジョンを作成
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].fCapsuleRadius = PLAYER_WIDE;
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
-		stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius = PLAYER_WIDE;
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].fCapsuleRadius = PLAYER_WIDE;
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius = PLAYER_WIDE;
+		
 
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetCollisionList();
@@ -1020,21 +1023,12 @@ void CharacterPlayer::Movement_Horizontal()
 			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
 			{
 				/* オブジェクトと接触しているか確認 */
-				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stHorizontalCollision[i]);
+				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision[i]);
 
 				/* 接触しているか確認 */
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
-
-					/* 移動量を分割して衝突判定する */
-					for (int i = 0; i < iMoveHitCheckCount; i++)
-					{
-						/* 移動後座標に球体ポリゴンを作成 */
-						vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
-
-						/* ポリゴンと接触した座標 */
-						VECTOR vecHitPos = VGet(0.f, 0.f, 0.f);
 
 						/* 接触したポリゴンから法線ベクトルを取得し加算する */
 						for (int j = 0; j < stHitPolyDim.HitNum; j++)
@@ -1059,6 +1053,17 @@ void CharacterPlayer::Movement_Horizontal()
 						// ※ 取得した法線ベクトルの平均を取得
 						vecNormalSum = VNorm(vecNormalSum);
 
+					// プレイヤーが移動しているかによって処理を分岐
+					/* プレイヤーの移動量を分割して判定する回数を確認 */
+					if (iMoveHitCheckCount > 0)
+					{
+						// 移動量を分割して判定する回数が1以上の場合(移動している場合)
+						/* 移動量を分割して衝突判定する */
+						for (int i = 0; i < iMoveHitCheckCount; i++)
+						{
+							/* 移動後座標に球体ポリゴンを作成 */
+							vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
+
 						/* 移動後座標に球体ポリゴンを作成 */
 						COLLISION_SQHERE stSphere;
 						stSphere.vecSqhere = vecDevisionMovePosition;
@@ -1066,7 +1071,6 @@ void CharacterPlayer::Movement_Horizontal()
 
 						/* 法線の方向にプレイヤーを押し出す */
 						// ※ 対象のコリジョンと接触しなくなるまで押し出す
-						// ※ このやり方では、高速で移動した場合にコリジョンが押し出されない可能性があるので修正予定
 						bool bHitFlag = true;
 						while (bHitFlag)
 						{
@@ -1094,8 +1098,17 @@ void CharacterPlayer::Movement_Horizontal()
 						/* 壁キックフラグを有効にする */
 						this->PlayerStatusList->SetPlayerKickWallFlg(true);
 					}
+					
+					}
+					else
+					{
+						// 移動量を分割して判定する回数が0の場合(移動していない場合)
+						/* 法線ベクトルの方向へ押し出し処理を行う */
+						vecNextPosition = VAdd(this->vecPosition, VScale(vecNormalSum, 1.f));
 				}
 			}
+				
+			}	
 		}
 	}
 
@@ -1103,4 +1116,5 @@ void CharacterPlayer::Movement_Horizontal()
 	this->vecPosition = vecNextPosition;
 }
 /* 2025.02.07 菊池雅道	衝突判定処理修正	終了 */
-/* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
+/* 2025.02.22 菊池雅道	壁キック処理追加	終了 */
+/* 2025.03.05 菊池雅道	衝突判定処理修正	終了 */

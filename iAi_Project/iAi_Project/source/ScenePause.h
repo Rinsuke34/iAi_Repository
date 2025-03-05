@@ -1,0 +1,33 @@
+/* 2025.03.05 ファイル作成 駒沢風助 */
+
+#pragma once
+#include "AppFrame.h"
+#include "PublicInclude.h"
+#include "ScenePauseDefine.h"
+
+/* データリスト */
+#include "DataList_Image.h"
+
+/* シーン */
+#include "SceneOption.h"
+#include "SceneAddTitleSetup.h"
+
+/* 一時停止クラスの宣言 */
+
+// 一時停止クラス
+class ScenePause : public SceneBase
+{
+	public:
+		ScenePause();					// コンストラクタ
+		virtual ~ScenePause() {};		// デストラクタ
+
+		void	Process()			override;	// 計算
+		void	Draw()				override;	// 描画
+
+	private:
+		/* 使用する画像のハンドル */
+		int* piGrHandle_Arrow;		// 矢印
+
+		/* 変数 */
+		int	iSelectItem;			// 選択中の項目の番号
+};

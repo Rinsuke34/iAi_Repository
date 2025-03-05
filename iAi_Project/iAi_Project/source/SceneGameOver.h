@@ -9,7 +9,7 @@
 #include "DataList_Image.h"
 
 /* シーン */
-#include "SceneTitle.h"
+#include "SceneAddTitleSetup.h"
 
 /* シーン"ゲームオーバー"クラスの宣言 */
 

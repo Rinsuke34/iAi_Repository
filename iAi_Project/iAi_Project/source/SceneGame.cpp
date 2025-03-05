@@ -30,7 +30,7 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	this->StageStatusList->SetEndStageNo(STAGE_END);
 
 	/* カメラモードを"フリー"に設定 */
-	this->StageStatusList->SetCameraMode(CAMERA_MODE_FREE);
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
 
 	/* UI追加フラグを有効化 */
 	this->StageStatusList->SetAddUiFlg(true);
@@ -57,12 +57,6 @@ SceneGame::~SceneGame()
 		/* ゲームリソース管理 */
 		gpDataListServer->DeleteDataList("DataList_StageResource");
 	}
-}
-
-// 初期化
-void SceneGame::Initialization()
-{
-	
 }
 
 // 計算
@@ -109,7 +103,7 @@ void SceneGame::Process()
 		gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 		/* シーン"タイトル画面"を追加 */
-		gpSceneServer->AddSceneReservation(new SceneTitle());
+		gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
 	}
 }
 

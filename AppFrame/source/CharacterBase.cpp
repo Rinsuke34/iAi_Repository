@@ -146,7 +146,7 @@ bool CharacterBase::HitCheck(int iModelHandle, int iFrameIndex)
 	// 戻り値
 	// bool			: 接触している(true) / 接触していない(false)
 
-	// ポリゴンとの接触情報
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
 
 	/* プレイヤーと対象のモデルが接触しているかの情報取得 */

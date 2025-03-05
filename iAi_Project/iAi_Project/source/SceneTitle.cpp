@@ -50,9 +50,12 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	/* 初期化処理 */
 	this->pSceneStage->Initialization();
 
+	this->bGameStartFlg = false;
+
+	//UIカウントを初期化
 	this->UICount = 0;
 
-	pSceneStage->iGetNowCameraFixedPositionNo();
+	//カメラ固定位置を設定
 	pSceneStage->SetNowCameraFixedPositionNo(0);
 }
 
@@ -71,54 +74,137 @@ void SceneTitle::Initialization()
 // 計算
 void SceneTitle::Process()
 {
+	//カメラの位置がポジションAまたはBか確認
+	if (UICount == CAMERA_FIXED_POSITION_A || UICount == CAMERA_FIXED_POSITION_B)
+	{
+		//カメラの位置がポジションAまたはBの場合
+		//決定ボタンが押された場合
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		{
+			//決定ボタンが押された場合
+			//UIカウントをポジションEに設定
+			UICount = CAMERA_FIXED_POSITION_E;
+			//カメラ固定位置を取得
+			pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
+			pSceneStage->SetNowCameraFixedPositionNo(UICount);
+			//ゲームスタートフラグを無効
+			this->bGameStartFlg = FALSE;
+		}
+		
+	}
+	//カメラの位置がポジションEか確認
+	if (UICount == CAMERA_FIXED_POSITION_E)
+	{
+		//カメラの位置がポジションEの場合
+		//決定ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID)&&this->bGameStartFlg == TRUE)
+		{
+			//決定ボタンが押された場合
+			/* ロード画面追加フラグを有効化 */
+			gpSceneServer->SetAddLoadSceneFlg(true);
 	
+			/* 現行シーン削除フラグを有効化 */
+			gpSceneServer->SetDeleteCurrentSceneFlg(true);
 	
-	/* キーボードから移動方向を取得 */
-	/* 前進 */
+			/* シーン"ゲーム"を追加 */
+			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+			return;
+		}
+		//ゲームスタートフラグを有効化
+		this->bGameStartFlg = TRUE;
+	}
+	//カメラの位置が初期位置か確認
+	if (UICount == 0)
+	{
+		//カメラの位置が初期位置の場合
+		//決定ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		{
+			//決定ボタンが押された場合
+			//UIカウントを増やす
+			UICount++;
+			//カメラ固定位置を取得
+			pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
+			pSceneStage->SetNowCameraFixedPositionNo(UICount);
+		}
+	}
+	//カメラの位置が初期位置以外か確認
+	if ((5 > UICount) || (UICount > 0))
+	{
+		//カメラの位置が初期位置以外の場合
+		//上ボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 	{
+			//上ボタンが押された場合
+			//UIカウントを増やす
 		UICount++;
-		if (UICount >= CAMERA_FIXED_POSITION_MAX)
+			//UIカウントがポジションE以上か確認
+			if (UICount >= CAMERA_FIXED_POSITION_E)
 		{
+				//UIカウントがポジションE以上の場合
+				//UIカウントをポジションAに設定
 			UICount = 1;
 		}
-	pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置を取得
+		pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
 		pSceneStage->SetNowCameraFixedPositionNo(UICount);
 	}
-
-	/* 後退 */
+		//下ボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
 	{
+			//下ボタンが押された場合
+			//UIカウントを減らす
 		UICount--;
-		if (UICount < 0)
+			//UIカウントがポジションA未満か確認
+			if (UICount < 1)
 		{
-			UICount = CAMERA_FIXED_POSITION_E;
+				//UIカウントがポジションA未満の場合
+				//UIカウントをポジションDに設定
+				UICount = CAMERA_FIXED_POSITION_D;
 
 		}
+			//カメラ固定位置を取得
 		pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
 		pSceneStage->SetNowCameraFixedPositionNo(UICount);
+			//	pScreen->SetUICount(UICount);
 	}
-	
-
-	/* いずれかのボタンが入力されたらシーンを削除 */
-	/* 決定が入力されたら */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		//キャンセルボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
 	{
-		/* ロード画面追加フラグを有効化 */
-		gpSceneServer->SetAddLoadSceneFlg(true);
-
-		/* 現行シーン削除フラグを有効化 */
-		gpSceneServer->SetDeleteCurrentSceneFlg(true);
-
-		/* シーン"ゲーム"を追加 */
-		gpSceneServer->AddSceneReservation(new SceneAddStageSetup());
-		return;
+			//キャンセルボタンが押された場合
+			//UIカウントを初期化
+			UICount = 0;
+			//カメラ固定位置を取得
+			pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
+			pSceneStage->SetNowCameraFixedPositionNo(UICount);
+		}
+	}
+	if (UICount == 5)
+	{
+		//キャンセルボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		{
+			//キャンセルボタンが押された場合
+			//UIカウントを初期化
+			UICount = 1;
+			//カメラ固定位置を取得
+			pSceneStage->iGetNowCameraFixedPositionNo();
+			//カメラ固定位置をUIカウントの値に設定
+			pSceneStage->SetNowCameraFixedPositionNo(UICount);
+		}
 	}
 }
 
 // 描画
 void SceneTitle::Draw()
 {
+	if (UICount == 0)
+	{
 	/* 描画ブレンドモードを加算にする */
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
@@ -143,4 +229,5 @@ void SceneTitle::Draw()
 	SetDrawMode(DX_DRAWMODE_NEAREST);
 
 	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "決定			：ステージ1_1へ");
+	}
 }

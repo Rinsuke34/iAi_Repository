@@ -6,7 +6,7 @@
 
 /* シーン */
 #include "SceneStage.h"
-#include "SceneAddStageSetup.h"
+#include "SceneAddGameSetup.h"
 #include "Screen.h"
 
 
@@ -44,8 +44,9 @@ class SceneTitle : public SceneBase
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_TitleLogo;		// タイトルロゴ
+		//変数
 		int UICount;	//UIのカウント
-		int textureTitleHandle;
-		int textureHomeHandle;
+
+		bool bGameStartFlg;					//スタートフラグ
 
 };

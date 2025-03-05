@@ -32,14 +32,25 @@ public:
 
 private:
 
+	//関数
+	void	Process();				// 更新
+
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 
 	// テクスチャハンドルを追加
-	int textureTitleHandle;
-	//int textureHomeHandle;
+	int textureTitleHandle;			// タイトル
+	int textureNewgameHandle;		// ニューゲーム
+	int textureContinueHandle;		// コンティニュー
+	int textureDateHandle;			// データ
+	int textureConfigHandle;		// コンフィグ
+	int textureStageHandle;			// ステージ
 
+	bool StartFlg;	//スタートフラグ	
+	bool bHomeFlg;	//ホームフラグ
+
+	int UICount;	//UIのカウント
 protected:
 };

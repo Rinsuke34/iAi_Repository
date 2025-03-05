@@ -29,6 +29,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 		/* "ステージ状態管理"を取得 */
 		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+
+		/* "オプション設定管理"を取得 */
+		this->OptionList		= dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
 	/* 画像読み込み */
@@ -189,6 +192,12 @@ void SceneStage::Process()
 			}
 			break;
 	}
+
+	/* カメラ設定準備 */
+	SetCamera_Setup();
+
+	/* エフェクト更新 */
+	UpdateEffekseer3D();
 }
 
 // 計算(メインの処理)
@@ -229,16 +238,26 @@ void SceneStage::Process_Main()
 	if ((this->ObjectList->GetCharacterPlayer() != nullptr) && (this->PlayerStatusList->bGetPlayerDeadFlg() == true))
 	{
 		// プレイヤーが存在かつ死亡フラグが有効ならば
-		
 		/* ゲーム状態を"ゲームオーバー"に変更する */
 		this->StageStatusList->SetGameStatus(GAMESTATUS_GAMEOVER);
 	}
 
-	/* デバッグ処理 */
+	/* UI追加フラグが有効である(ゲーム中である)か確認 */
+	if (this->StageStatusList->bGetAddUiFlg() == true)
 	{
+		// 有効である場合
+		/* オプションボタンが押されているか */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_PAUSE) == true)
+		{
+			// 押されている場合
+			/* シーン"一時停止"を追加 */
+			gpSceneServer->AddSceneReservation(new ScenePause());
+		}
+
 		/* エンターキーを入力されたか確認 */
 		if (CheckHitKey(KEY_INPUT_RETURN) == TRUE)
 		{
+			/* シーン"一時停止"を追加 */
 			gpSceneServer->AddSceneReservation(new SceneUi_Debug());
 		}
 	}

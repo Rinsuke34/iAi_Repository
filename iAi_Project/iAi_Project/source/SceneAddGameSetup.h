@@ -7,18 +7,15 @@
 /* シーン */
 #include "SceneGame.h"
 
-/* シーン「ステージ追加セットアップ」の宣言 */
+/* シーン"ゲーム"追加セットアップの宣言 */
 
-// シーン "ステージ追加セットアップ"
+// シーン "ゲーム"追加セットアップ
 // ※タイトル → ゲームと遷移してしまうと一部データリストが削除→取得となってしまうため、対策用に追加
-class SceneAddStageSetup : public SceneBase
+class SceneAddSceneGameSetup : public SceneBase
 {
 	public:
-		SceneAddStageSetup();				// コンストラクタ
-		virtual ~SceneAddStageSetup()	{};	// デストラクタ
+		SceneAddSceneGameSetup();				// コンストラクタ
+		virtual ~SceneAddSceneGameSetup()	{};	// デストラクタ
 
 		void	Process()			override;	// 計算
-
-	private:
-	protected:
 };

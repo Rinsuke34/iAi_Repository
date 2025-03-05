@@ -5,8 +5,8 @@
 
 /* ステージクラスの定義(カメラ制御部分) */
 
-// カメラ設定
-void SceneStage::SetCamera()
+// カメラ設定準備
+void SceneStage::SetCamera_Setup()
 {
 	/* カメラモードが変更されているか確認 */
 	if (this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old())
@@ -20,27 +20,27 @@ void SceneStage::SetCamera()
 	}
 
 	/* カメラ設定で使用する変数の定義 */
-	float fChangeCameraRatio = 1.f;	// 入力によるカメラ回転倍率(0ならプレイヤー操作で回転できなくなる)
+	int iCameraType		= INPUT_CAMERA_NORMAL;		// カメラ移動タイプ
 
 	/* カメラモードに応じて処理を変更 */
 	switch (this->StageStatusList->iGetCameraMode())
 	{
 		/* フリー */
-		case CAMERA_MODE_FREE:
+		case CAMERA_MODE_NORMAL:
 			/* カメラ設定 */
 			SetCamera_Free();
 			break;
 
 		/* 固定 */
 		case CAMERA_MODE_LOCK:
-			/* カメラ回転倍率を変更 */
-			fChangeCameraRatio = 0.f;
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
 			break;
 
 		/* 構え(ズーム) */
 		case CAMERA_MODE_AIM_MELEE:
-			/* カメラ回転倍率を変更 */
-			fChangeCameraRatio = 0.5f;
+			/* カメラ移動タイプを"エイム"に設定 */
+			iCameraType = INPUT_CAMERA_AIM;
 
 			/* カメラ設定 */
 			SetCamera_Aim_Melee();
@@ -48,8 +48,8 @@ void SceneStage::SetCamera()
 
 		/* 構え(クナイ構え) */
 		case CAMERA_MODE_AIM_KUNAI:
-			/* カメラ回転倍率を変更 */
-			fChangeCameraRatio = 0.5f;
+			/* カメラ移動タイプを"エイム"に設定 */
+			iCameraType = INPUT_CAMERA_AIM;
 
 			/* カメラ設定 */
 			SetCamera_Aim_Kunai();
@@ -57,8 +57,8 @@ void SceneStage::SetCamera()
 
 		/* タイトル */
 		case CAMERA_MODE_TITLE:
-			/* カメラ回転倍率を変更 */
-			fChangeCameraRatio = 0.f;
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
 
 			/* カメラ設定 */
 			SetCamera_Title();
@@ -66,8 +66,8 @@ void SceneStage::SetCamera()
 
 		/* ステージクリア */
 		case CAMERA_MODE_STAGECLEAR:
-			/* カメラ回転倍率を変更 */
-			fChangeCameraRatio = 0.f;
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
 
 			/* カメラ設定 */
 			SetCamera_StageClear();
@@ -76,7 +76,7 @@ void SceneStage::SetCamera()
 
 	// 反映する場合
 	/* 入力によるカメラ回転の取得処理を実施 */
-	CameraRotateUpdata(fChangeCameraRatio);
+	CameraRotateUpdata(iCameraType);
 
 	/* カメラ座標の補正 */
 	// ※一瞬で切り替わると違和感があるため、カメラ座標に補間処理を行う
@@ -86,8 +86,8 @@ void SceneStage::SetCamera()
 	this->StageStatusList->SetCameraMode_Old(this->StageStatusList->iGetCameraMode());
 }
 
-// カメラ設定(セットアップ用)
-void SceneStage::SetCmaera_Setup()
+// カメラ設定
+void SceneStage::SetCmaera()
 {
 	/* グローバルアンビエントライトカラーを赤色に設定 */
 	// ※デフォルトの黒色だと暗すぎるので赤色に変更
@@ -107,10 +107,10 @@ void SceneStage::SetCmaera_Setup()
 }
 
 // 入力によるカメラ回転量取得
-void SceneStage::CameraRotateUpdata(float fRate)
+void SceneStage::CameraRotateUpdata(int iCameraType)
 {
 	// 引数
-	// fRate	:	回転量倍率(オプション設定による倍率とは別物)
+	// iCameraType	:	カメラ移動タイプ
 
 	/* 現在の回転量等を取得 */
 	float fCameraAngleX						= this->StageStatusList->fGetCameraAngleX();						// X軸回転量
@@ -118,14 +118,61 @@ void SceneStage::CameraRotateUpdata(float fRate)
 	float fCameraRotationalSpeed_Controller	= this->StageStatusList->fGetCameraRotationalSpeed_Controller();	// 回転速度(コントローラー)
 	float fCameraRotationalSpeed_Mouse		= this->StageStatusList->fGetCameraRotationalSpeed_Mouse();			// 回転速度(マウス)
 
+	/* オプションから回転倍率を取得 */
+	float	fCameraSensitive[INPUT_TYPE_MAX];	// 回転量倍率
+	switch (iCameraType)
+	{
+		// ノーマル状態
+		case INPUT_CAMERA_NORMAL:
+			/* 入力感度をオプションから取得 */
+			fCameraSensitive[INPUT_TYPE_CONTROLLER]	= OptionList->fGetCameraSensitivity(INPUT_TYPE_CONTROLLER,	INPUT_CAMERA_MODE_NORMAL);
+			fCameraSensitive[INPUT_TYPE_MOUSE]		= OptionList->fGetCameraSensitivity(INPUT_TYPE_MOUSE,		INPUT_CAMERA_MODE_NORMAL);
+			break;
+
+		// エイム状態
+		case INPUT_CAMERA_AIM:
+			/* 入力感度をオプションから取得 */
+			fCameraSensitive[INPUT_TYPE_CONTROLLER]	= OptionList->fGetCameraSensitivity(INPUT_TYPE_CONTROLLER,	INPUT_CAMERA_MODE_AIM);
+			fCameraSensitive[INPUT_TYPE_MOUSE]		= OptionList->fGetCameraSensitivity(INPUT_TYPE_MOUSE,		INPUT_CAMERA_MODE_AIM);
+			break;
+
+		// 無し(入力受付無し)状態
+		case INPUT_CAMERA_NONE:
+			/* 入力感度を0に設定 */
+			fCameraSensitive[INPUT_TYPE_CONTROLLER]	= 0.f;
+			fCameraSensitive[INPUT_TYPE_MOUSE]		= 0.f;
+			break;
+	}
+
+	/* オプションから反転設定を取得 */
+	int		iCameraReverse[INPUT_TYPE_MAX][AXIS_MAX];	// 反転設定(1なら通常、-1なら反転)
+	for (int i = 0; i < INPUT_TYPE_MAX; ++i)
+	{
+		for (int j = 0; j < AXIS_MAX; ++j)
+		{
+			/* 反転設定であるか確認 */
+			// ※iは入力タイプ,jは軸
+			if (OptionList->bGetCameraInversion(i, j) == true)
+			{
+				// 反転設定である場合
+				iCameraReverse[i][j] = -1;
+			}
+			else
+			{
+				// 通常設定である場合
+				iCameraReverse[i][j] = 1;
+			}
+		}
+	}
+
 	/* 入力からカメラ回転量を取得 */
 	/* マウス */
-	fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse * fRate;
-	fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse * fRate;
+	fCameraAngleX -= gstKeyboardInputData.iMouseMoveX * fCameraRotationalSpeed_Mouse * fCameraSensitive[INPUT_TYPE_MOUSE] * iCameraReverse[INPUT_TYPE_MOUSE][AXIS_X];
+	fCameraAngleY -= gstKeyboardInputData.iMouseMoveY * fCameraRotationalSpeed_Mouse * fCameraSensitive[INPUT_TYPE_MOUSE] * iCameraReverse[INPUT_TYPE_MOUSE][AXIS_Y];
 
 	/* コントローラー */
-	fCameraAngleX += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]) * fRate;
-	fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]) * fRate;
+	fCameraAngleX -= fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickX[INPUT_RIGHT]) * fCameraSensitive[INPUT_TYPE_CONTROLLER] * iCameraReverse[INPUT_TYPE_CONTROLLER][AXIS_X];
+	fCameraAngleY += fCameraRotationalSpeed_Controller * PUBLIC_PROCESS::fAnalogStickNorm(gstJoypadInputData.sAnalogStickY[INPUT_RIGHT]) * fCameraSensitive[INPUT_TYPE_CONTROLLER] * iCameraReverse[INPUT_TYPE_CONTROLLER][AXIS_Y];
 
 	/* Y軸の回転角度制限 */
 	float fAngleLimitUp		= this->StageStatusList->fGetCameraAngleLimitUp();		// 上方向の制限角度
@@ -299,7 +346,7 @@ void SceneStage::CameraSmoothing()
 
 		/* カメラの座標(線形補間後)を算出 */
 		VECTOR vecStart		= this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
-		VECTOR vecTarget	= this->StageStatusList->vecGetCameraPosition_Target();	// 線形補完の移動後座標
+		VECTOR vecTarget	= this->StageStatusList->vecGetCameraPosition_Target();		// 線形補完の移動後座標
 		VECTOR vecCameraPosition;
 		vecCameraPosition.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
 		vecCameraPosition.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;

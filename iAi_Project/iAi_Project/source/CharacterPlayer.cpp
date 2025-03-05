@@ -94,7 +94,7 @@ void CharacterPlayer::Update()
 		this->vecMove = VGet(0, 0, 0);
 
 		/* カメラモードを"フリーモード"に変更 */
-		this->StageStatusList->SetCameraMode(CAMERA_MODE_FREE);
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
 	}
 
 	/* 当たり判定処理 */

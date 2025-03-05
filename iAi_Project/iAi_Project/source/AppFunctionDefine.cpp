@@ -14,6 +14,7 @@
 #include "DataList_Image.h"
 #include "DataList_Effect.h"
 #include "DataList_StageStatus.h"
+#include "DataList_Option.h"
 
 /* AppFrameで使用する関数の定義 */
 
@@ -63,6 +64,9 @@ namespace PROJECT_INIT
 
 			/* データリストサーバーに"ステージ状態管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_StageStatus());
+
+			/* データリストサーバーに"オプション設定管理"を追加 */
+			gpDataListServer->AddDataList(new DataList_Option());
 		}
 	
 		/* データリスト取得 */

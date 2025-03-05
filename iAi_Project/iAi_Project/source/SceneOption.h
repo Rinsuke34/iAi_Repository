@@ -1,4 +1,4 @@
-/* 2024.12.XX YYYY ZZZZ */
+/* 2025.03.05 ファイル追加 駒沢風助 */
 
 #pragma once
 #include "AppFrame.h"
@@ -13,7 +13,6 @@ class SceneOption : public SceneBase
 		SceneOption();							// コンストラクタ
 		virtual ~SceneOption();					// デストラクタ
 
-		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 

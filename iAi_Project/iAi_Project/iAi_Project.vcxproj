@@ -171,6 +171,7 @@
     <ClCompile Include="source\CharacterPlayerMove.cpp" />
     <ClCompile Include="source\DataList_Effect.cpp" />
     <ClCompile Include="source\DataList_GameResource.cpp" />
+    <ClCompile Include="source\DataList_Option.cpp" />
     <ClCompile Include="source\DataList_StageStatus.cpp" />
     <ClCompile Include="source\DataList_Image.cpp" />
     <ClCompile Include="source\DataList_Input.cpp" />
@@ -197,15 +198,16 @@
     <ClCompile Include="source\Gimmick_FallJudgment.cpp" />
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
+    <ClCompile Include="source\SceneAddTitleSetup.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
-    <ClCompile Include="source\SceneAddStageSetup.cpp" />
+    <ClCompile Include="source\SceneAddGameSetup.cpp" />
+    <ClCompile Include="source\ScenePause.cpp" />
     <ClCompile Include="source\SceneStageClear.cpp" />
     <ClCompile Include="source\Screen.cpp" />
     <ClCompile Include="source\ScreenEffect_Damage.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
     <ClCompile Include="source\SceneGameOver.cpp" />
-    <ClCompile Include="source\SceneInputConfig.cpp" />
     <ClCompile Include="source\SceneLoad.cpp" />
     <ClCompile Include="source\SceneOption.cpp" />
     <ClCompile Include="source\SceneResult.cpp" />
@@ -263,7 +265,10 @@
     <ClInclude Include="source\FallFog.h" />
     <ClInclude Include="source\Gimmick_FallJudgment.h" />
     <ClInclude Include="source\resource.h" />
-    <ClInclude Include="source\SceneAddStageSetup.h" />
+    <ClInclude Include="source\SceneAddGameSetup.h" />
+    <ClInclude Include="source\SceneAddTitleSetup.h" />
+    <ClInclude Include="source\ScenePause.h" />
+    <ClInclude Include="source\ScenePauseDefine.h" />
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
@@ -299,7 +304,6 @@
     <ClInclude Include="source\DataList_Object.h" />
     <ClInclude Include="source\DataList_Option.h" />
     <ClInclude Include="source\SceneGame.h" />
-    <ClInclude Include="source\SceneInputConfig.h" />
     <ClInclude Include="source\SceneLoad.h" />
     <ClInclude Include="source\SceneOption.h" />
     <ClInclude Include="source\SceneTitle.h" />

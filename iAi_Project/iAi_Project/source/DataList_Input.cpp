@@ -125,10 +125,10 @@ bool DataList_Input::bGetInterfaceInput(int iInputType, int iGetInputUI)
 	// bool			: 確認対象の入力が行われているか(true:行われている、false:行われていない)
 
 	/* ジョイパッド入力定義テーブル */
-	int iPadInput[]			= { XINPUT_BUTTON_DPAD_UP, XINPUT_BUTTON_DPAD_DOWN, XINPUT_BUTTON_DPAD_LEFT, XINPUT_BUTTON_DPAD_RIGHT, XINPUT_BUTTON_A, XINPUT_BUTTON_B };
+	int iPadInput[]			= { XINPUT_BUTTON_DPAD_UP, XINPUT_BUTTON_DPAD_DOWN, XINPUT_BUTTON_DPAD_LEFT, XINPUT_BUTTON_DPAD_RIGHT, XINPUT_BUTTON_A, XINPUT_BUTTON_B, XINPUT_BUTTON_START };
 
 	/* キーボード入力定義テーブル */
-	int iKeyboardInput[]	= { KEY_INPUT_UP, KEY_INPUT_DOWN, KEY_INPUT_LEFT, KEY_INPUT_RIGHT, KEY_INPUT_Z, KEY_INPUT_X };
+	int iKeyboardInput[]	= { KEY_INPUT_UP, KEY_INPUT_DOWN, KEY_INPUT_LEFT, KEY_INPUT_RIGHT, KEY_INPUT_Z, KEY_INPUT_X, KEY_INPUT_ESCAPE };
 
 	/* 対象の入力が行われているか確認 */
 	{

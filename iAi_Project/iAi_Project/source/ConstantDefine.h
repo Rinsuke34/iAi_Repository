@@ -100,3 +100,25 @@ static const int	SLOW_SPEED = 1;				// スロー状態での速度(何フレームに一度実行さ
 /* プレイヤー関連 */
 static const int	PLAYER_STRONG_MELEE_AFTER_COUNT_MAX = 120 * 1 / (SLOW_SPEED + 1);	// 近接攻撃(強)後で敵を倒した後のカウントの最大値(※第一項にスローモーションを考慮しないフレーム数を書く)	/* 2025.03.03 菊池雅道 攻撃関連の定数追加 */
 
+/* プレイヤー入力タイプ */
+static const int    INPUT_TYPE_CONTROLLER   = 0;    // コントローラ
+static const int    INPUT_TYPE_MOUSE        = 1;    // マウス
+static const int    INPUT_TYPE_MAX          = 2;    // 入力タイプの総数
+
+/* カメラ関連 */
+// カメラ移動タイプ
+static const int	INPUT_CAMERA_NORMAL     = 0;	// 通常
+static const int	INPUT_CAMERA_AIM        = 1;	// エイム(構え/クナイ構え)
+static const int	INPUT_CAMERA_NONE       = 2;	// 無し(入力受付なし)
+static const int	INPUT_CAMERA_MAX        = 3;	// カメラ移動タイプの総数
+
+/* 入力オプション関連 */
+// 軸
+static const int    AXIS_X                  = 0;	// X軸
+static const int    AXIS_Y                  = 1;	// Y軸
+static const int    AXIS_MAX                = 2;	// 軸の総数
+// カメラ状態
+static const int    INPUT_CAMERA_MODE_NORMAL      = 0;	// 通常状態
+static const int    INPUT_CAMERA_MODE_AIM         = 1;	// エイム状態
+static const int    INPUT_CAMERA_MODE_MAX         = 2;	// カメラ状態の総数
+

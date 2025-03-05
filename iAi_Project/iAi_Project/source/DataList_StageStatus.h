@@ -91,7 +91,7 @@ class DataList_StageStatus : public DataListBase
 		int		iEndStageNo;	// 最終ステージ番号
 		bool	bGameSlowFlg;	// スローモーションフラグ		/*2025.02.05 菊池雅道 変数追加 */
 		int		iSlowCount;		// スローモーションのカウント
-		bool	bAddUiFlg;		// UI追加フラグ
+		bool	bAddUiFlg;		// UI追加フラグ(基本的にタイトルでは無効、ゲームでは有効)
 		int		iStartTime;		// 開始時の時間
 		int		iClearTime;		// クリア時の時間
 

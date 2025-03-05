@@ -94,12 +94,6 @@
     <Filter Include="ヘッダー ファイル\データリスト\オブジェクト管理">
       <UniqueIdentifier>{1d13ccce-95f6-4828-a8e9-6a160d4a7af9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\シーン\オプション\入力設定">
-      <UniqueIdentifier>{a62effd1-cd42-43a5-973f-b69d809a08ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\シーン\オプション\入力設定">
-      <UniqueIdentifier>{1962f9e5-1676-4750-828b-edc338e5aa03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\定義">
       <UniqueIdentifier>{fee04d11-66e3-4a33-bc5d-8b4d78c2ca63}</UniqueIdentifier>
     </Filter>
@@ -385,6 +379,12 @@
     <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\落下判定">
       <UniqueIdentifier>{d37e63ac-34cb-4e28-bbd9-014b6fdb786d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\一時停止">
+      <UniqueIdentifier>{b503a21e-52b3-49d5-92a9-3b7b148182e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\一時停止">
+      <UniqueIdentifier>{e8915cf2-bd09-4792-9efe-c12e3adb0000}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -407,9 +407,6 @@
     </ClCompile>
     <ClCompile Include="source\DataList_Object.cpp">
       <Filter>ソース ファイル\データリスト\オブジェクト管理</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SceneInputConfig.cpp">
-      <Filter>ソース ファイル\シーン\オプション\入力設定</Filter>
     </ClCompile>
     <ClCompile Include="source\VariableDefine.cpp">
       <Filter>ソース ファイル\定義</Filter>
@@ -576,7 +573,7 @@
     <ClCompile Include="source\ScreenEffect_Damage.cpp">
       <Filter>ソース ファイル\画面エフェクト\ベース\被ダメージ</Filter>
     </ClCompile>
-    <ClCompile Include="source\SceneAddStageSetup.cpp">
+    <ClCompile Include="source\SceneAddGameSetup.cpp">
       <Filter>ソース ファイル\シーン\セットアップ</Filter>
     </ClCompile>
     <ClCompile Include="source\Screen.cpp">
@@ -590,6 +587,15 @@
     </ClCompile>
     <ClCompile Include="source\Gimmick_FallJudgment.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\落下判定</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DataList_Option.cpp">
+      <Filter>ソース ファイル\データリスト\オプション</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScenePause.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\一時停止</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneAddTitleSetup.cpp">
+      <Filter>ソース ファイル\シーン\セットアップ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -613,9 +619,6 @@
     </ClInclude>
     <ClInclude Include="source\DataList_Object.h">
       <Filter>ヘッダー ファイル\データリスト\オブジェクト管理</Filter>
-    </ClInclude>
-    <ClInclude Include="source\SceneInputConfig.h">
-      <Filter>ヘッダー ファイル\シーン\オプション\入力設定</Filter>
     </ClInclude>
     <ClInclude Include="source\DataList_Input.h">
       <Filter>ヘッダー ファイル\データリスト\入力</Filter>
@@ -803,7 +806,7 @@
     <ClInclude Include="source\ScreenEffect_Damage.h">
       <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
     </ClInclude>
-    <ClInclude Include="source\SceneAddStageSetup.h">
+    <ClInclude Include="source\SceneAddGameSetup.h">
       <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
     </ClInclude>
     <ClInclude Include="source\Screen.h">
@@ -820,6 +823,15 @@
     </ClInclude>
     <ClInclude Include="source\Gimmick_FallJudgment.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\落下判定</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScenePause.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\一時停止</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScenePauseDefine.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\一時停止</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneAddTitleSetup.h">
+      <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -22,16 +22,21 @@ Screen::Screen() : PlatformBasic()
 		/* データリスト"画像ハンドル管理"を取得 */
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
-		/* タイトルロゴ */
-		//this->textureTitleHandle = ImageList->piGetImage_Movie("Object/SignBoard/ScreenTexture");
-        this->textureTitleHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");
+		/* スクリーンに映る映像 */
+		this->textureTitleHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");			//タイトル
+		this->textureNewgameHandle = *ImageList->piGetImage_Movie("Test/Newgame");			//ニューゲーム
+		this->textureContinueHandle = *ImageList->piGetImage_Movie("Test/Continue");		//コンティニュー
+		this->textureDateHandle = *ImageList->piGetImage_Movie("Test/Date");				//データ
+		this->textureConfigHandle = *ImageList->piGetImage_Movie("Test/Config");			//コンフィグ
+		this->textureStageHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");			//ステージ
 	}
 
-	// テクスチャの読み込み
-	MV1SetTextureGraphHandle(iModelHandle, 0, this->textureTitleHandle, true);
+	/* UIカウントを初期化 */
+	this->UICount = 0;
 
-	//pScreen->iGetNowCameraFixedPositionNo();
-
+	//動画再生フラグを初期化
+	this->StartFlg = false;
+	this->bHomeFlg = false;
 
 	/* スクリーンを発光フレームとして登録 */
 	{
@@ -77,11 +82,108 @@ Screen::~Screen()
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
-
-// 更新
-void Screen::Update()
+//処理
+void Screen::Process()
 {
+	//現在のシーンがタイトルシーンか確認
+	if (gpSceneServer->GetScene("Title"))
+	{
+		//タイトルシーンの場合
+		//カメラ固定位置が初期位置か確認
+		if (UICount > 0)
+		{
+			//決定ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			{
+				//決定ボタンが押された場合
+				this->bHomeFlg = FALSE;
+			}
+		}
+		if (UICount == 0)
+		{
+			//初期位置の場合
+			//決定ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			{
+				//決定ボタンが押された場合
+				this->bHomeFlg = TRUE;
+				//UIカウントを増やす
+				UICount = 1;
+			}
+		}
+		//初期位置以外か確認
+		if ((5 > UICount) || (UICount > 0))
+		{
+			//初期位置以外の場合
+			//上ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+			{
+				//上ボタンが押された場合
+				//動画再生フラグを有効化
+				this->StartFlg = TRUE;
+				this->bHomeFlg = TRUE;
+				//UIカウントを増やす
+				UICount++;
+				//UIカウントがポジションE以上か確認
+				if (UICount >= CAMERA_FIXED_POSITION_E)
+				{
+					//UIカウントがポジションE以上の場合
+					//UIカウントをポジションAに設定
+					UICount = 1;
+				}
+			}
 
+			//下ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+			{
+				//下ボタンが押された場合
+				//動画再生フラグを有効化
+				this->StartFlg = TRUE;
+				this->bHomeFlg = TRUE;
+				//UIカウントを減らす
+				UICount--;
+				//UIカウントがポジションA未満か確認
+				if (UICount < 1)
+				{
+					//UIカウントがポジションA未満の場合
+					//UIカウントをポジションDに設定
+					UICount = CAMERA_FIXED_POSITION_D;
+
+				}
+			}
+			//キャンセルボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+{
+				//キャンセルボタンが押された場合
+				if (this->bHomeFlg ==TRUE)
+				{
+					//UIカウントを初期化
+					UICount = 0;
+					this->StartFlg = TRUE;
+				}
+				if(this->bHomeFlg == FALSE)
+				{
+					//UIカウントをポジションAに設定
+					UICount = 1;
+
+				}
+
+				this->bHomeFlg = TRUE;
+			}
+		}
+		//カメラ固定位置が初期位置か確認
+		if (UICount == 0)
+		{
+			//初期位置の場合
+			//動画再生フラグが有効か確認
+			if (this->StartFlg == TRUE)
+			{
+				//動画再生フラグが有効の場合
+				//ムービーの再生時間を初期化する
+				SeekMovieToGraph(this->textureTitleHandle, 0);
+			}
+			//モデルのテクスチャをTitleHandleに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->textureTitleHandle, true);
 	/* タイトルロゴを再生 */
 	PlayMovieToGraph(this->textureTitleHandle);
 
@@ -95,5 +197,142 @@ void Screen::Update()
 		/* ムービーの再生時間を初期化する */
 		SeekMovieToGraph(this->textureTitleHandle, 0);
 	}
+			//動画再生フラグを無効化
+			this->StartFlg = false;
+		}
+		//カメラ固定位置がポジションAか確認
+		if (UICount == 1)
+		{
+			//ポジションAの場合
+			//動画再生フラグが有効か確認
+			if (this->StartFlg == TRUE)
+			{
+				//動画再生フラグが有効の場合
+				//ムービーの再生時間を初期化する
+				SeekMovieToGraph(this->textureNewgameHandle, 0);
+			}
+			//モデルのテクスチャをNewgameHandleに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->textureNewgameHandle, true);
+			/* タイトルロゴを再生 */
+			PlayMovieToGraph(this->textureNewgameHandle);
+			/* ムービーを描写 */
+			DrawGraph(100, -100, this->textureNewgameHandle, TRUE);
+			/* 再生が終了しているか確認 */
+			if (GetMovieStateToGraph(this->textureNewgameHandle) == FALSE)
+			{
+				// 再生が終了している場合
+				/* ムービーの再生時間を初期化する */
+				SeekMovieToGraph(this->textureNewgameHandle, 0);
+			}
+			//動画再生フラグを無効化
+			this->StartFlg = false;
+		}
+		//カメラ固定位置がポジションBか確認
+		if (UICount == 2)
+		{
+			//ポジションBの場合
+			//動画再生フラグが有効か確認
+			if (this->StartFlg == TRUE)
+			{
+				//動画再生フラグが有効の場合
+				//ムービーの再生時間を初期化する
+				SeekMovieToGraph(this->textureContinueHandle, 0);
+			}
+			//モデルのテクスチャをContinueHandleに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->textureContinueHandle, true);
+			/* タイトルロゴを再生 */
+			PlayMovieToGraph(this->textureContinueHandle);
+			/* ムービーを描写 */
+			DrawGraph(100, -100, this->textureContinueHandle, TRUE);
+			/* 再生が終了しているか確認 */
+			if (GetMovieStateToGraph(this->textureContinueHandle) == FALSE)
+			{
+				// 再生が終了している場合
+				/* ムービーの再生時間を初期化する */
+				SeekMovieToGraph(this->textureContinueHandle, 0);
+			}
+			//動画再生フラグを無効化
+			this->StartFlg = false;
+		}
+		//カメラ固定位置がポジションCか確認
+		if (UICount == 3)
+		{
+			//ポジションCの場合
+			//動画再生フラグが有効か確認
+			if (this->StartFlg == TRUE)
+			{
+				//動画再生フラグが有効の場合
+				//ムービーの再生時間を初期化する
+				SeekMovieToGraph(this->textureDateHandle, 0);
+			}
+			//モデルのテクスチャをDateHandleに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->textureDateHandle, true);
+			/* タイトルロゴを再生 */
+			PlayMovieToGraph(this->textureDateHandle);
+			/* ムービーを描写 */
+			DrawGraph(100, -100, this->textureDateHandle, TRUE);
+			/* 再生が終了しているか確認 */
+			if (GetMovieStateToGraph(this->textureDateHandle) == FALSE)
+			{
+				// 再生が終了している場合
+				/* ムービーの再生時間を初期化する */
+				SeekMovieToGraph(this->textureDateHandle, 0);
+			}
+			//動画再生フラグを無効化
+			this->StartFlg = false;
+		}
+		//カメラ固定位置がポジションDか確認
+		if (UICount == 4)
+		{
+			//ポジションDの場合
+			//動画再生フラグが有効か確認
+			if (this->StartFlg == TRUE)
+			{
+				//動画再生フラグが有効の場合
+				//ムービーの再生時間を初期化する
+				SeekMovieToGraph(this->textureConfigHandle, 0);
+			}
+			//モデルのテクスチャをConfigHandleに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->textureConfigHandle, true);
+			/* タイトルロゴを再生 */
+			PlayMovieToGraph(this->textureConfigHandle);
+			/* ムービーを描写 */
+			DrawGraph(100, -100, this->textureConfigHandle, TRUE);
+			/* 再生が終了しているか確認 */
+			if (GetMovieStateToGraph(this->textureConfigHandle) == FALSE)
+			{
+				// 再生が終了している場合
+				/* ムービーの再生時間を初期化する */
+				SeekMovieToGraph(this->textureConfigHandle, 0);
+			}
+			//動画再生フラグを無効化
+			this->StartFlg = false;
+		}
+	}
+	//現在のシーンがステージシーン以外か確認
+	else if (gpSceneServer->GetScene("Stage"))
+	{
+		//ステージシーン以外の場合
+		//モデルのテクスチャをStageHandleに設定
+		MV1SetTextureGraphHandle(iModelHandle, 1, this->textureStageHandle, true);
+		/* タイトルロゴを再生 */
+		PlayMovieToGraph(this->textureStageHandle);
+		/* ムービーを描写 */
+		DrawGraph(100, -100, this->textureStageHandle, TRUE);
+		/* 再生が終了しているか確認 */
+		if (GetMovieStateToGraph(this->textureStageHandle) == FALSE)
+		{
+			// 再生が終了している場合
+			/* ムービーの再生時間を初期化する */
+			SeekMovieToGraph(this->textureStageHandle, 1);
+		}
+	}
+}
 
+
+// 更新
+void Screen::Update()
+{
+	//処理
+	Process();
 }

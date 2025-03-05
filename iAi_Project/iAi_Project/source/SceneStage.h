@@ -11,12 +11,14 @@
 #include "DataList_Model.h"
 #include "DataList_StageStatus.h"
 #include "DataList_Image.h"
+#include "DataList_Option.h"
 
 /* シーン */
 #include "SceneGameOver.h"
 #include "SceneStageClear.h"
 #include "SceneResult.h"
 #include "SceneEdit.h"
+#include "ScenePause.h"
 #include "SceneUi_Crosshairs.h"
 #include "SceneUi_Combo.h"
 #include "SceneUi_Hp.h"
@@ -56,6 +58,7 @@ class SceneStage : public SceneBase
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 		DataList_Model*			ModelList;			// 3Dモデル管理
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
+		DataList_Option*		OptionList;			// オプション設定管理
 
 		/* 関数 */
 		void	Process_Main();			// 計算(メインの処理)
@@ -65,17 +68,17 @@ class SceneStage : public SceneBase
 		void	SetupMainScreen();		// メインの描写処理
 		void	SetupEffectScreen();	// エフェクトの描写処理
 		void	SetupScreenEffects();	// 画面エフェクト
-		void	SetCamera();			// カメラ設定
-		void	SetCmaera_Setup();		// カメラ設定(セットアップ用)
+		void	SetCamera_Setup();		// カメラ設定準備
+		void	SetCmaera();			// カメラ設定
 
 		/* カメラモード関連 */
-		void	CameraRotateUpdata(float fRate);	// 入力によるカメラ回転量取得
-		void	SetCamera_Free();					// カメラ設定(フリー)
-		void	SetCamera_Aim_Melee();				// カメラ設定(構え(近接攻撃構え))
-		void	SetCamera_Aim_Kunai();				// カメラ設定(構え(クナイ構え))
-		void	SetCamera_Title();					// カメラ設定(タイトル)
-		void	SetCamera_StageClear();				// カメラ設定(ステージクリア)
-		void	CameraSmoothing();					// カメラ補正
+		void	CameraRotateUpdata(int iCameraType);	// 入力によるカメラ回転量取得
+		void	SetCamera_Free();						// カメラ設定(フリー)
+		void	SetCamera_Aim_Melee();					// カメラ設定(構え(近接攻撃構え))
+		void	SetCamera_Aim_Kunai();					// カメラ設定(構え(クナイ構え))
+		void	SetCamera_Title();						// カメラ設定(タイトル)
+		void	SetCamera_StageClear();					// カメラ設定(ステージクリア)
+		void	CameraSmoothing();						// カメラ補正
 
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写

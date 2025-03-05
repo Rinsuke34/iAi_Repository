@@ -44,4 +44,7 @@ class PlatformBase : public ObjectBase
 		int						iModelHandle;			// モデルハンドル
 		std::vector<int>		aiLightFrameNo;			// 発光フレーム番号
 		int						iCollisionFrameNo;		// コリジョンフレーム番号(※モデルにつき1つだけ)
+		VECTOR					vecCenterPosition;		// オブジェクトの中心座標(コリジョン処理軽量化用)
+		float					fRoughRadius;			// オブジェクトの大まかな半径(コリジョン処理軽量化用)
+
 };

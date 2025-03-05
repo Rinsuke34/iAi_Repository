@@ -11,7 +11,7 @@
 
 /* シーン */
 #include "SceneStage.h"
-#include "SceneTitle.h"
+#include "SceneAddTitleSetup.h"
 
 /* シーン「ゲーム」の宣言 */
 
@@ -22,7 +22,6 @@ class SceneGame : public SceneBase
 		SceneGame();							// コンストラクタ
 		virtual ~SceneGame();					// デストラクタ
 
-		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 

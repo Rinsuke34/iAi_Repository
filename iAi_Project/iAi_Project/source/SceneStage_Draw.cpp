@@ -15,9 +15,6 @@ void SceneStage::Draw()
 		return;
 	}
 
-	/* カメラ設定 */
-	SetCamera();
-
 	/* 透明度に関係なく描写するよう設定　*/
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_ALWAYS);
 
@@ -36,8 +33,8 @@ void SceneStage::Draw()
 	/* 画面エフェクトを描写 */
 	SetupScreenEffects();
 
-	/* カメラ設定(セットアップ用) */
-	SetCmaera_Setup();
+	/* カメラ設定 */
+	SetCmaera();
 
 	/* ゲーム状態が"ステージクリア"である場合 */
 	// ※ステージクリア処理用のカウントが1以上であるなら"ステージクリア"判定
@@ -107,7 +104,7 @@ void SceneStage::SetupLightMap()
 		ClearDrawScreen();
 
 		/* カメラ設定(セットアップ用) */
-		SetCmaera_Setup();
+		SetCmaera();
 
 		/* すべてのオブジェクトの発光部分の描写 */
 		ObjectList->DrawAll_Bloom();
@@ -136,7 +133,7 @@ void SceneStage::SetupMainScreen()
 	ClearDrawScreen();
 
 	/* カメラ設定(セットアップ用) */
-	SetCmaera_Setup();
+	SetCmaera();
 
 	/* 描写に使用するシャドウマップの設定 */
 	SetUseShadowMap(0, this->iShadowMapScreenHandle);
@@ -203,9 +200,6 @@ void SceneStage::SetupMainScreen()
 /* エフェクトの描写処理 */
 void SceneStage::SetupEffectScreen()
 {
-	/* エフェクト更新 */
-	UpdateEffekseer3D();
-
 	/* エフェクト用カメラ位置同期 */
 	Effekseer_Sync3DSetting();
 

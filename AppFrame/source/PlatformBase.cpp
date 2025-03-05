@@ -140,7 +140,19 @@ bool PlatformBase::HitCheck(COLLISION_CAPSULE	stCapsule)
 		return false;
 	}
 
-	// ポリゴンとの接触情報
+	/* オブジェクトの大まかなコリジョンと接触していないか確認 */
+	// 軽量化のため、ポリゴンとの接触確認の前に大まかな円と接触しているかを確認する
+	if (HitCheck_Sphere_Capsule(
+		/* このオブジェクトのコリジョン(大まかな円) */
+		this->vecCenterPosition, this->fRoughRadius,
+		/* 判定するオブジェクトのコリジョン */
+		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius) == FALSE)
+	{
+		// 接触していない場合
+		return false;
+	}
+
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
 
 	/* プラットフォームのモデルと対象のカプセルコリジョンが接触しているかの情報取得 */
@@ -176,7 +188,19 @@ bool PlatformBase::HitCheck(COLLISION_SQHERE	stSqhere)
 		return false;
 	}
 
-	// ポリゴンとの接触情報
+	/* オブジェクトの大まかなコリジョンと接触していないか確認 */
+	// 軽量化のため、ポリゴンとの接触確認の前に大まかな円と接触しているかを確認する
+	if (HitCheck_Sphere_Sphere(
+		/* このオブジェクトのコリジョン(大まかな円) */
+		this->vecCenterPosition, this->fRoughRadius,
+		/* 判定するオブジェクトのコリジョン */
+		stSqhere.vecSqhere, stSqhere.fSqhereRadius) == FALSE)
+	{
+		// 接触していない場合
+		return false;
+	}
+
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
 
 	/* プラットフォームのモデルと対象の球体コリジョンが接触しているかの情報取得 */
@@ -212,7 +236,19 @@ bool PlatformBase::HitCheck(COLLISION_LINE		stLine)
 		return false;
 	}
 
-	// ポリゴンとの接触情報
+	/* オブジェクトの大まかなコリジョンと接触していないか確認 */
+	// 軽量化のため、ポリゴンとの接触確認の前に大まかな円と接触しているかを確認する
+	if (HitCheck_Line_Sphere(
+		/* 判定するオブジェクトのコリジョン */
+		stLine.vecLineStart, stLine.vecLineEnd,
+		/* このオブジェクトのコリジョン(大まかな円) */
+		this->vecCenterPosition, this->fRoughRadius) == FALSE)
+	{
+		// 接触していない場合
+		return false;
+	}
+
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY stHitPolyDim;
 
 	/* プラットフォームのモデルと対象の線分コリジョンが接触しているかの情報取得 */
@@ -242,8 +278,22 @@ MV1_COLL_RESULT_POLY PlatformBase::HitCheck_Line(COLLISION_LINE	stLine)
 	// 戻り値
 	// MV1_COLL_RESULT_POLY	: 接触情報
 
-	// ポリゴンとの接触情報
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY stHitPolyDim;
+
+	/* オブジェクトの大まかなコリジョンと接触していないか確認 */
+	// 軽量化のため、ポリゴンとの接触確認の前に大まかな円と接触しているかを確認する
+	if (HitCheck_Line_Sphere(
+		/* 判定するオブジェクトのコリジョン */
+		stLine.vecLineStart, stLine.vecLineEnd,
+		/* このオブジェクトのコリジョン(大まかな円) */
+		this->vecCenterPosition, this->fRoughRadius) == FALSE)
+	{
+		// 接触していない場合
+		/* 非接触として判定する */
+		stHitPolyDim.HitFlag = FALSE;
+		return stHitPolyDim;
+	}
 
 	/* コリジョンフレームが存在しないか確認 */
 	if (this->iCollisionFrameNo < 0)
@@ -272,8 +322,22 @@ MV1_COLL_RESULT_POLY_DIM PlatformBase::HitCheck_Capsule(COLLISION_CAPSULE	stCaps
 	// 戻り値
 	// MV1_COLL_RESULT_POLY_DIM	: 接触情報
 
-	// ポリゴンとの接触情報
+	/* ポリゴンとの接触情報 */
 	MV1_COLL_RESULT_POLY_DIM stHitPolyDim;
+
+	/* オブジェクトの大まかなコリジョンと接触していないか確認 */
+	// 軽量化のため、ポリゴンとの接触確認の前に大まかな円と接触しているかを確認する
+	if (HitCheck_Sphere_Capsule(
+		/* このオブジェクトのコリジョン(大まかな円) */
+		this->vecCenterPosition, this->fRoughRadius,
+		/* 判定するオブジェクトのコリジョン */
+		stCapsule.vecCapsuleTop, stCapsule.vecCapsuleBottom, stCapsule.fCapsuleRadius) == FALSE)
+	{
+		// 接触していない場合
+		/* 非接触として判定する */
+		stHitPolyDim.HitNum = FALSE;
+		return stHitPolyDim;
+	}
 
 	/* コリジョンフレームが存在しないか確認 */
 	if (this->iCollisionFrameNo < 0)
@@ -309,6 +373,26 @@ void PlatformBase::UpdateCollisionFrame()
 
 		/* コリジョンの設定されたフレームを描写しないように設定 */
 		MV1SetFrameVisible(this->iModelHandle, this->iCollisionFrameNo, FALSE);
+
+		/* コリジョンフレームに含まれるメッシュ番号を取得 */
+		int iMeshNo = MV1GetFrameMesh(this->iModelHandle, this->iCollisionFrameNo, 0);
+
+		/* フレームのワールド変換行列を取得 */
+		MATRIX frameMatrix = MV1GetFrameLocalWorldMatrix(this->iModelHandle, this->iCollisionFrameNo);
+
+		/*取得したメッシュの最大座標と最小座標を取得 */
+		VECTOR vecMinPos = MV1GetMeshMinPosition(this->iModelHandle, iMeshNo);
+		VECTOR vecMaxPos = MV1GetMeshMaxPosition(this->iModelHandle, iMeshNo);
+
+		/* メッシュの最大座標と最小座標をワールド座標に変換 */
+		vecMinPos = VTransform(vecMinPos, frameMatrix);
+		vecMaxPos = VTransform(vecMaxPos, frameMatrix);
+
+		/* メッシュの中心座標(コリジョンフレームの中心座標)を取得 */
+		this->vecCenterPosition	= VScale(VAdd(vecMinPos, vecMaxPos), 0.5f);
+
+		/* 中心座標からコリジョンを包み込む大まかな半径を取得 */
+		this->fRoughRadius		= VSize(VSub(vecMaxPos, vecMinPos)) * 0.5f;
 	}
 }
 

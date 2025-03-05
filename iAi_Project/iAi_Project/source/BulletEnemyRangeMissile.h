@@ -41,6 +41,7 @@ private:
 
 
 	void BulletEnemyRangeMissileMove();	// ミサイル弾の移動処理
+	void BulletEnemyRangeMissileExplosion();// ミサイル弾の爆発処理
 
 	int iDurationCount;			// 弾の持続カウント
 
@@ -55,7 +56,9 @@ private:
 	int iTextureHandle;				// テクスチャハンドル
 
 	bool bPredictedLandingFlg;		//着弾予測フラグ
+	bool bSaveFlg;					//セーブフラグ
 
+	VECTOR vecHitPosition;			//ヒットポジション
 protected:
 
 	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン

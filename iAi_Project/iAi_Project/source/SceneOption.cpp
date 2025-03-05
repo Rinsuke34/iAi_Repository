@@ -1,23 +1,17 @@
-/* 2024.12.XX YYYY ZZZZ */
+/* 2025.03.05 ファイル追加 駒沢風助 */
 
 #include "SceneOption.h"
 
 /* シーン「オプション」の定義 */
 
 // コンストラクタ
-SceneOption::SceneOption() : SceneBase("Option", 0, false)
+SceneOption::SceneOption() : SceneBase("Option", 500, true)
 {
 
 }
 
 // デストラクタ
 SceneOption::~SceneOption()
-{
-
-}
-
-// 初期化
-void SceneOption::Initialization()
 {
 
 }

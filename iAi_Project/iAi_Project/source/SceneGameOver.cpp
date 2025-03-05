@@ -55,8 +55,8 @@ void SceneGameOver::Process()
 			/* 現行シーン削除フラグを有効化 */
 			gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
-			/* シーン"ホーム"を追加 */
-			gpSceneServer->AddSceneReservation(new SceneTitle());
+			/* シーン"タイトル"を追加 */
+			gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
 			return;
 		}
 	}
