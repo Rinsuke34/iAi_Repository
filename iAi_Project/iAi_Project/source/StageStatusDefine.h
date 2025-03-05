@@ -37,7 +37,7 @@ static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// 構え(クナイ構え)
 static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
 static const int	CAMERA_MODE_STAGECLEAR					= 5;				// ステージクリア
 // 線形補間
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 2;			// カメラ座標の線形保管用カウントの最大値
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 1;			// カメラ座標の線形保管用カウントの最大値
 // カメラ固定座標
 static const int	CAMERA_FIXED_POSITION_START				= 0;				// カメラ固定座標(開始地点)
 static const int	CAMERA_FIXED_POSITION_A					= 1;				// カメラ固定座標(A地点)

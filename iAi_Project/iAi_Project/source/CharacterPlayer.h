@@ -75,7 +75,6 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Dodg();				// ‰ñ”ğ 2025.01.09 ‹e’r‰ë“¹ ŠÖ”’Ç‰Á
 		void	Movement_Vertical();		// ˆÚ“®ˆ—(‚’¼•ûŒü)
 		void	Movement_Horizontal();		// ˆÚ“®ˆ—(…•½•ûŒü)
-		void	Movement_Test();
 
 		// UŒ‚ƒAƒNƒVƒ‡ƒ“
 		void	Player_Attack_Transition();			// UŒ‚ó‘Ô‘JˆÚŠÇ—
