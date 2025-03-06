@@ -25,7 +25,7 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->vecCameraPosition					= VGet(0, 0, 0);							// カメラの座標(現在地点)
 		this->vecCameraPosition_Start			= VGet(0, 0, 0);							// カメラの座標(変更前地点)
 		this->vecCameraPosition_Target			= VGet(0, 0, 0);							// カメラの座標(変更後地点)
-		this->iCameraPositionLeapCount			= CAMERA_POSITION_LEAP_COUNT_MAX;			// カメラ座標の線形保管用カウント
+		this->iCameraPositionLeapCount			= CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;	// カメラ座標の線形保管用カウント
 		this->vecCameraTarget					= VGet(0, 0, 0);							// カメラの注視点
 		this->fCameraRadius						= INIT_CAMERA_RADIUS;						// カメラの中心点からの距離
 		this->fCameraAngleX						= 0;										// カメラのX軸回転量

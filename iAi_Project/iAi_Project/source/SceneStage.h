@@ -1,4 +1,5 @@
 /* 2025.01.16 ファイル作成 駒沢風助 */
+/* 2025.03.06 菊池雅道	カメラ制御処理修正 */
 
 #pragma once
 #include "AppFrame.h"
@@ -72,14 +73,14 @@ class SceneStage : public SceneBase
 		void	SetCmaera();			// カメラ設定
 
 		/* カメラモード関連 */
-		void	CameraRotateUpdata(int iCameraType);	// 入力によるカメラ回転量取得
-		void	SetCamera_Free();						// カメラ設定(フリー)
-		void	SetCamera_Aim_Melee();					// カメラ設定(構え(近接攻撃構え))
-		void	SetCamera_Aim_Kunai();					// カメラ設定(構え(クナイ構え))
-		void	SetCamera_Title();						// カメラ設定(タイトル)
-		void	SetCamera_StageClear();					// カメラ設定(ステージクリア)
-		void	CameraSmoothing();						// カメラ補正
-
+		void	CameraRotateUpdata(int iCameraType);				// 入力によるカメラ回転量取得
+		void	SetCamera_Free();									// カメラ設定(フリー)
+		void	SetCamera_Aim_Melee();								// カメラ設定(構え(近接攻撃構え))
+		void	SetCamera_Aim_Kunai();								// カメラ設定(構え(クナイ構え))
+		void	SetCamera_Title();									// カメラ設定(タイトル)
+		void	SetCamera_StageClear();								// カメラ設定(ステージクリア)
+		void	CameraSmoothing(int iCameraPositionLeapCountMax);	// カメラ補正						/* 2025.03.06 菊池雅道	カメラ制御処理修正 */
+		
 		/* デバッグ関連 */
 		void	DrawDebug();						// デバッグ描写
 

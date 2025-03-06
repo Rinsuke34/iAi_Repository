@@ -1,4 +1,5 @@
 /* 2024.12.26 駒沢風助 ファイル作成 */
+/* 2025.03.06 菊池雅道 定数追加 */
 
 #pragma once
 #include <string>
@@ -37,7 +38,11 @@ static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// 構え(クナイ構え)
 static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
 static const int	CAMERA_MODE_STAGECLEAR					= 5;				// ステージクリア
 // 線形補間
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX			= 60 * 1;			// カメラ座標の線形保管用カウントの最大値
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL		= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(フリー)				/* 2025.03.06 菊池雅道 定数追加 */
+static const int	CAMERA_POSITION_LEAP_CONT_MAX_TITLE			= 60 * 2;		// カメラ座標の線形保管用カウントの最大値(タイトル)				/* 2025.03.06 菊池雅道 定数追加 */
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX_MELEE		= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(近距離攻撃(強))		/* 2025.03.06 菊池雅道 定数追加 */
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX_PROJECTILE	= 30 * 1;		// カメラ座標の線形保管用カウントの最大値(遠距離攻撃)			/* 2025.03.06 菊池雅道 定数追加 */
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX_STAGECLEAR	= 60 * 2;		// カメラ座標の線形保管用カウントの最大値(ステージクリア)		/* 2025.03.06 菊池雅道 定数追加 */
 // カメラ固定座標
 static const int	CAMERA_FIXED_POSITION_START				= 0;				// カメラ固定座標(開始地点)
 static const int	CAMERA_FIXED_POSITION_A					= 1;				// カメラ固定座標(A地点)
