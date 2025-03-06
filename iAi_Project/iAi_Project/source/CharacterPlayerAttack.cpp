@@ -16,6 +16,7 @@
 /* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正 */
 /* 2025.03.06 菊池雅道	スローモーション処理修正 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正 */
+/* 2025.03.06 菊池雅道	エフェクト処理追加 */
 
 
 #include "CharacterPlayer.h"
@@ -213,9 +214,6 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 溜めエフェクトの読み込み */
 			this->pChargeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge/FX_charge")));
 
-			/* 溜めエフェクトの座標設定(仮座標) */
-			this->pChargeEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-
 			/* 溜めエフェクトの回転量設定 */
 			this->pChargeEffect->SetRotation(this->vecRotation);
 
@@ -267,17 +265,11 @@ void CharacterPlayer::Player_Melee_Posture()
 						this->ObjectList->SetEffect(pAddEffect);
 					}
 
-					/* 溜め完了エフェクトの座標設定(仮) */
-					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
-
 					/* 溜め完了後エフェクトを生成 */
 					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
 					
 					/* 溜め完了後エフェクトの読み込み */
 					this->pChargeHoldEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_hold/FX_charge_hold")));
-					
-					/* 溜め完了後エフェクトの座標設定(仮座標) */
-					this->pChargeHoldEffect->SetPosition(VAdd(this->vecPosition, VGet(0, 100, 0)));
 					
 					/* 溜め完了後エフェクトの回転量設定 */
 					this->pChargeHoldEffect->SetRotation(this->vecRotation);
@@ -416,10 +408,11 @@ void CharacterPlayer::Player_Melee_Posture()
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
 {
-	/* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始*/
-	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
+	/* 2025.01.22 菊池雅道	攻撃処理追加			開始 */
+	/* 2025.01.26 駒沢風助	コード修正				開始*/
+	/* 2025.02.05 菊池雅道	ステータス関連修正		開始 */
+	/* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
+	/* 2025.03.06 菊池雅道	エフェクト処理追加		開始 */
 
 	// クールタイムが残っている場合攻撃しない
 	/* 近接攻撃(弱)のクールタイムを確認 */
@@ -450,16 +443,35 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 近接攻撃(弱)のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
+	/* 抜刀エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+
+	/* 抜刀エフェクトの読み込み */
+	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
+
+	/* 抜刀エフェクトの初期化 */
+	pSeathEffect->Initialization();
+
+	/* 抜刀エフェクトの時間を設定 */
+	pSeathEffect->SetDeleteCount(20);
+
+	/* 抜刀エフェクトをリストに登録 */
+	{
+		/* 抜刀エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pSeathEffect);
+	}
+
 	/* 近接攻撃(弱)のクールタイム設定 */
 	this->iMeleeWeakCoolTime = PLAYER_MELEE_WEAK_COLLTIME;
 
-	/* 未完成なのでとりあえず自由状態に戻す */
+	/* 自由状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 }
-/* 2025.01.22 菊池雅道　攻撃処理追加	終了 */
-/* 2025.01.26 駒沢風助	コード修正		終了 */
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.02.26 菊池雅道	クールタイム処理追加 終了 */
+/* 2025.01.22 菊池雅道　攻撃処理追加			終了 */
+/* 2025.01.26 駒沢風助	コード修正				終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正		終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
+/* 2025.03.06 菊池雅道	エフェクト処理追加		終了 */
 
 /* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
 /* 2025.01.26 駒沢風助	コード修正		開始 */
