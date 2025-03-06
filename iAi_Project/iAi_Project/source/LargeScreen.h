@@ -21,14 +21,14 @@
 /* テスト用敵クラス */
 
 // 消失ギミッククラス
-class Screen : public PlatformBasic
+class LargeScreen : public PlatformBasic
 {
 public:
-	Screen();				// コンストラクタ
-	virtual ~Screen();		// デストラクタ
+	LargeScreen();				// コンストラクタ
+	virtual ~LargeScreen();		// デストラクタ
 
 	virtual void	Update()			override;		// 更新
-	
+
 
 private:
 
@@ -49,7 +49,7 @@ private:
 	int iTextureStageHandle;			// ステージ
 
 	bool bStartFlg;		//スタートフラグ	
-	bool bHomeFlg;	//ホームフラグ
+	bool bHomeFlg;		//ホームフラグ
 	bool bGameStartFlg;	//ゲームスタートフラグ
 
 	int iUICount;	//UIのカウント

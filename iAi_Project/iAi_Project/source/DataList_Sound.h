@@ -5,6 +5,12 @@
 #include "AppFrame.h"
 #include "SoundDefine.h"
 
+/* データリスト */
+//#include "DataList_Option.h"
+
+/* 循環参照対策先行定義 */
+//class DataList_Option;
+
 /* サウンド管理データリストの宣言 */
 
 // サウンド管理データリスト
@@ -26,12 +32,13 @@ class DataList_Sound : public DataListBase
 		void SE_PlaySound(int iSeNo);			// サウンドを再生
 
 	private:
+		/* データリスト */
+//		DataList_Option* OptionList;				// オプション設定管理
+
 		/* BGM関係 */
 		// ※BGMは再生するタイミングで読み込みを行う
-		int iBgmVolume;								// BGMの音量(0 ～ 255)
 		int iBgmHandle;								// BGMのハンドル
 
 		/* SE関係 */
-		int iSeVolum;								// SEの音量(0 ～ 255)
 		std::map<std::string, int>	pSeHandleList;	// サウンドハンドルリスト
 };

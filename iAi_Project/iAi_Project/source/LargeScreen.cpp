@@ -1,8 +1,8 @@
 /* 2025.02.28 石川智也 ファイル作成 */
-#include "Screen.h"
+#include "LargeScreen.h"
 
 // コンストラクタ
-Screen::Screen() : PlatformBasic()
+LargeScreen::LargeScreen() : PlatformBasic()
 {
 	/* データリスト */
 	{
@@ -15,7 +15,7 @@ Screen::Screen() : PlatformBasic()
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Object/SignBoard/SignBoard");
+		this->iModelHandle = ModelListHandle->iGetModel("Object/LargeScreen/LargeScreen");
 	}
 
 	{
@@ -55,7 +55,7 @@ Screen::Screen() : PlatformBasic()
 			const char* cFrameName = MV1GetFrameName(this->iModelHandle, i);
 
 			/* 最初の6文字が"Screen"であるか確認 */
-			if (strncmp(cFrameName, "Screen", 5) == 0)
+			if (strncmp(cFrameName, "Large", 5) == 0)
 			{
 				/* 発光フレーム番号を取得 */
 				this->aiLightFrameNo.push_back(i);
@@ -82,88 +82,89 @@ Screen::Screen() : PlatformBasic()
 }
 
 // デストラクタ
-Screen::~Screen()
+LargeScreen::~LargeScreen()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 //処理
-void Screen::Process()
+void LargeScreen::Process()
 {
-	//現在のシーンがタイトルシーンか確認
+	// 現在のシーンがタイトルシーンか確認
 	if (gpSceneServer->GetScene("Title"))
 	{
-		//タイトルシーンの場合
-        //UIカウントによって処理を分岐
+		// タイトルシーンの場合
+		//UIカウントによって処理を分岐
 		switch (iUICount)
-        {
-		//カメラ固定位置が初期位置か確認
-        case CAMERA_FIXED_POSITION_START:
+		{
+			// カメラ固定位置が初期位置か確認
+		case CAMERA_FIXED_POSITION_START:
 
-            // 初期位置の場合
+			// 初期位置の場合
 			// 何かボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
-            {
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
+			{
 				// 何かボタンが押された場合
 				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				this->bHomeFlg = TRUE;
 
 				//UIカウントをポジションAに変更
-                iUICount = CAMERA_FIXED_POSITION_A;
-            }
+				iUICount = CAMERA_FIXED_POSITION_A;
+			}
 
 			//スタートフラグを有効化か確認
-            if (this->bStartFlg == TRUE)
-		{
+			if (this->bStartFlg == TRUE)
+			{
 				//スタートフラグが有効な場合
 				//タイトル映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureTitleHandle, 0);
-            }
+				SeekMovieToGraph(this->iTextureTitleHandle, 0);
+			}
 
 			//モデルのテクスチャをタイトルテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureTitleHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureTitleHandle, true);
 
 			//タイトル映像の再生
-            PlayMovieToGraph(this->iTextureTitleHandle);
+			PlayMovieToGraph(this->iTextureTitleHandle);
 
 			//タイトル映像の描写
-            DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
+			DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
 
 			//タイトル映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
-            {
+			if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
+			{
 				//タイトル映像の再生が終了している場合
 				//タイトル映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureTitleHandle, 0);
-            }
+				SeekMovieToGraph(this->iTextureTitleHandle, 0);
+			}
 
 			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
+			this->bStartFlg = false;
+			break;
 
 			// ポジションAか確認
-        case CAMERA_FIXED_POSITION_A:
+		case CAMERA_FIXED_POSITION_A:
 
-            // ポジションAの場合
-			//決定ボタンが押されたか確認
+			// ポジションAの場合
+			// 決定ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 			{
-				//決定ボタンが押された場合
+				// 決定ボタンが押された場合
 				// Homeフラグを無効化
-                this->bGameStartFlg = FALSE;
+				this->bGameStartFlg = FALSE;
 
 				//Homeフラグを有効化
 				this->bHomeFlg = FALSE;
+
 			}
 			// 上ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-            {
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+			{
 				// 上ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// bGameStartFlgフラグを有効化
-                this->bGameStartFlg = TRUE;
+				this->bGameStartFlg = TRUE;
 
 				//Homeフラグを有効か確認
 				if (this->bHomeFlg == TRUE)
@@ -171,27 +172,27 @@ void Screen::Process()
 					//Homeフラグが有効な場合
 					//UIカウントをポジションDに変更
 					iUICount = CAMERA_FIXED_POSITION_D;
-		}
+				}
 
 				//Homeフラグが無効か確認
 				if (this->bHomeFlg == FALSE)
-		{
+				{
 					//Homeフラグが無効な場合
 					//UIカウントをポジションスタートに変更
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
 
-            }
+			}
 
 			// 下ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
 			{
 				// 下ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// bGameStartFlgフラグを有効化
-                this->bGameStartFlg = TRUE;
+				this->bGameStartFlg = TRUE;
 
 				//Homeフラグを有効か確認
 				if (this->bHomeFlg == TRUE)
@@ -208,16 +209,16 @@ void Screen::Process()
 					//UIカウントをポジションスタートに変更
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
-            }
+			}
 
 			// キャンセルボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-            {
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+			{
 				// キャンセルボタンが押された場合
 				//スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
-                
+
 				//bGameStartFlgフラグが無効か確認
 				if (this->bGameStartFlg == FALSE)
 				{
@@ -245,54 +246,46 @@ void Screen::Process()
 					iUICount = CAMERA_FIXED_POSITION_A;
 
 					//bGameStartFlgフラグを有効化
-				this->bHomeFlg = TRUE;
+					this->bHomeFlg = TRUE;
+				}
 			}
-		}
-
-			
 
 			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
-            {
+			if (this->bStartFlg == TRUE)
+			{
 				//スタートフラグが有効な場合
 				//ニューゲーム映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
-            }
+				SeekMovieToGraph(this->iTextureNewgameHandle, 0);
+			}
 
 			//モデルのテクスチャをニューゲームテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureNewgameHandle, true);
-
-			/* 描画ブレンドモードを減算にする */
-			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureNewgameHandle, true);
 
 			//ニューゲーム映像の再生
-            PlayMovieToGraph(this->iTextureNewgameHandle);
+			PlayMovieToGraph(this->iTextureNewgameHandle);
 
 			//ニューゲーム映像の描写
-            DrawGraph(100, -100, this->iTextureNewgameHandle, TRUE);
+			DrawGraph(100, -100, this->iTextureNewgameHandle, TRUE);
 
 			//ニューゲーム映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureNewgameHandle) == FALSE)
-            {
+			if (GetMovieStateToGraph(this->iTextureNewgameHandle) == FALSE)
+			{
 				//ニューゲーム映像の再生が終了している場合
 				//ニューゲーム映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
-            }
-
-			/* 描画ブレンドモードをブレンド無しに戻す */
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+				SeekMovieToGraph(this->iTextureNewgameHandle, 0);
+			}
 
 			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
+			this->bStartFlg = false;
+			break;
 
 			// ポジションBか確認
-        case CAMERA_FIXED_POSITION_B:
+		case CAMERA_FIXED_POSITION_B:
 
-            // ポジションBの場合
+			// ポジションBの場合
 			// 決定ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-		{
+			{
 				// 決定ボタンが押された場合
 				// Homeフラグを無効化
 				this->bGameStartFlg = FALSE;
@@ -301,10 +294,10 @@ void Screen::Process()
 				this->bHomeFlg = FALSE;
 
 			}
-			//上ボタンが押されたか確認
+			// 上ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 			{
-				//上ボタンが押された場合
+				// 上ボタンが押された場合
 				// スタートフラグを有効化
 				this->bStartFlg = TRUE;
 
@@ -329,10 +322,10 @@ void Screen::Process()
 
 			}
 
-			//下ボタンが押されたか確認
+			// 下ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
 			{
-				//下ボタンが押された場合
+				// 下ボタンが押された場合
 				// スタートフラグを有効化
 				this->bStartFlg = TRUE;
 
@@ -355,10 +348,11 @@ void Screen::Process()
 					iUICount = CAMERA_FIXED_POSITION_B;
 				}
 			}
-			//キャンセルボタンが押されたか確認
+
+			// キャンセルボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-{
-				//キャンセルボタンが押された場合
+			{
+				// キャンセルボタンが押された場合
 				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
 
@@ -390,223 +384,224 @@ void Screen::Process()
 					iUICount = CAMERA_FIXED_POSITION_A;
 
 					//bGameStartFlgフラグを有効化
-				this->bHomeFlg = TRUE;
+					this->bHomeFlg = TRUE;
+				}
 			}
-		}
 
 			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
+			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
 				//コンティニュー映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureContinueHandle, 0);
-	}
+				SeekMovieToGraph(this->iTextureContinueHandle, 0);
+			}
 
 			//モデルのテクスチャをコンティニューテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureContinueHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureContinueHandle, true);
 
 			//コンティニュー映像の再生
-            PlayMovieToGraph(this->iTextureContinueHandle);
+			PlayMovieToGraph(this->iTextureContinueHandle);
 
 			//コンティニュー映像の描写
-            DrawGraph(100, -100, this->iTextureContinueHandle, TRUE);
+			DrawGraph(100, -100, this->iTextureContinueHandle, TRUE);
 
 			//コンティニュー映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureContinueHandle) == FALSE)
-            {
+			if (GetMovieStateToGraph(this->iTextureContinueHandle) == FALSE)
+			{
 				//コンティニュー映像の再生が終了している場合
 				//コンティニュー映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureContinueHandle, 0);
-		}
+				SeekMovieToGraph(this->iTextureContinueHandle, 0);
+			}
 
 			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
+			this->bStartFlg = false;
+			break;
 
 			// ポジションCか確認
-        case CAMERA_FIXED_POSITION_C:
+		case CAMERA_FIXED_POSITION_C:
 
-            // ポジションCの場合
+			// ポジションCの場合
 			// 決定ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-		{
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			{
 				// 決定ボタンが押された場合
 				// Homeフラグを無効化
-                this->bHomeFlg = FALSE;
-            }
+				this->bHomeFlg = FALSE;
+			}
 
 			// 上ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 			{
 				// 上ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				this->bHomeFlg = TRUE;
 
 				//UIカウントをポジションBに変更
 				iUICount = CAMERA_FIXED_POSITION_B;
 			}
 
 			// 下ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-            {
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+			{
 				// 下ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				this->bHomeFlg = TRUE;
 
 				//UIカウントをポジションDに変更
 				iUICount = CAMERA_FIXED_POSITION_D;
-		}
+			}
 
-            // キャンセルボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-		{
-                // キャンセルボタンが押された場合
-                //スタートフラグを有効化
-                this->bStartFlg = TRUE;
+			// キャンセルボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+			{
+				// キャンセルボタンが押された場合
+				//スタートフラグを有効化
+				this->bStartFlg = TRUE;
 
-                //Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				//Homeフラグを有効化
+				this->bHomeFlg = TRUE;
 
-                //UIカウントをポジションスタートに変更
-                iUICount = CAMERA_FIXED_POSITION_START;
-            }
+				//UIカウントをポジションスタートに変更
+				iUICount = CAMERA_FIXED_POSITION_START;
+			}
 
 			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
+			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
 				//データ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureDateHandle, 0);
+				SeekMovieToGraph(this->iTextureDateHandle, 0);
 			}
 
 			//モデルのテクスチャをデータテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureDateHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureDateHandle, true);
 
 			//データ映像の再生
-            PlayMovieToGraph(this->iTextureDateHandle);
+			PlayMovieToGraph(this->iTextureDateHandle);
 
 			//データ映像の描写
-            DrawGraph(100, -100, this->iTextureDateHandle, TRUE);
+			DrawGraph(100, -100, this->iTextureDateHandle, TRUE);
 
 			//データ映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureDateHandle) == FALSE)
-            {
+			if (GetMovieStateToGraph(this->iTextureDateHandle) == FALSE)
+			{
 				//データ映像の再生が終了している場合
 				//データ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureDateHandle, 0);
-		}
+				SeekMovieToGraph(this->iTextureDateHandle, 0);
+			}
 
 			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
+			this->bStartFlg = false;
+			break;
 
 			// ポジションDか確認
-        case CAMERA_FIXED_POSITION_D:
+		case CAMERA_FIXED_POSITION_D:
 
-            // ポジションDの場合
+			// ポジションDの場合
 			// 決定ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-		{
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			{
 				// 決定ボタンが押された場合
 				// Homeフラグを無効化
-                this->bHomeFlg = FALSE;
-            }
+				this->bHomeFlg = FALSE;
+			}
 
 			// 上ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 			{
 				// 上ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				this->bHomeFlg = TRUE;
 
 				//UIカウントをポジションCに変更
 				iUICount = CAMERA_FIXED_POSITION_C;
 			}
 
 			// 下ボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-            {
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+			{
 				// 下ボタンが押された場合
 				// スタートフラグを有効化
-                this->bStartFlg = TRUE;
+				this->bStartFlg = TRUE;
 
 				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				this->bHomeFlg = TRUE;
 
 				//UIカウントをポジションAに変更
 				iUICount = CAMERA_FIXED_POSITION_A;
-		}
+			}
 
-            // キャンセルボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-		{
-                // キャンセルボタンが押された場合
-                //スタートフラグを有効化
-                this->bStartFlg = TRUE;
+			// キャンセルボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+			{
+				// キャンセルボタンが押された場合
+				//スタートフラグを有効化
+				this->bStartFlg = TRUE;
 
-                //Homeフラグを有効化
-                this->bHomeFlg = TRUE;
+				//Homeフラグを有効化
+				this->bHomeFlg = TRUE;
 
-                //UIカウントをポジションスタートに変更
-                iUICount = CAMERA_FIXED_POSITION_START;
-            }
+				//UIカウントをポジションスタートに変更
+				iUICount = CAMERA_FIXED_POSITION_START;
+			}
 
 			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
+			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
 				//コンフィグ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureConfigHandle, 0);
-            }
+				SeekMovieToGraph(this->iTextureConfigHandle, 0);
+			}
 
 			//モデルのテクスチャをコンフィグテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureConfigHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureConfigHandle, true);
 
 			//コンフィグ映像の再生
-            PlayMovieToGraph(this->iTextureConfigHandle);
+			PlayMovieToGraph(this->iTextureConfigHandle);
 
 			//コンフィグ映像の描写
-            DrawGraph(100, -100, this->iTextureConfigHandle, TRUE);
+			DrawGraph(100, -100, this->iTextureConfigHandle, TRUE);
 
 			//コンフィグ映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureConfigHandle) == FALSE)
-            {
+			if (GetMovieStateToGraph(this->iTextureConfigHandle) == FALSE)
+			{
 				//コンフィグ映像の再生が終了している場合
 				//コンフィグ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureConfigHandle, 0);
+				SeekMovieToGraph(this->iTextureConfigHandle, 0);
 			}
 
 			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
+			this->bStartFlg = false;
+			break;
 		}
 	}
 	else if (gpSceneServer->GetScene("Stage"))
 	{
-        // 現在のシーンがステージシーン以外の場合
-        MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureStageHandle, true);
-        PlayMovieToGraph(this->iTextureStageHandle);
-        DrawGraph(100, -100, this->iTextureStageHandle, TRUE);
+		// 現在のシーンがステージシーン以外の場合
+		MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureStageHandle, true);
+		PlayMovieToGraph(this->iTextureStageHandle);
+		DrawGraph(100, -100, this->iTextureStageHandle, TRUE);
 
-        if (GetMovieStateToGraph(this->iTextureStageHandle) == FALSE)
-        {
-            SeekMovieToGraph(this->iTextureStageHandle, 1);
+		if (GetMovieStateToGraph(this->iTextureStageHandle) == FALSE)
+		{
+			SeekMovieToGraph(this->iTextureStageHandle, 1);
 		}
 	}
 }
 
 
+
 // 更新
-void Screen::Update()
+void LargeScreen::Update()
 {
 	//処理
 	Process();

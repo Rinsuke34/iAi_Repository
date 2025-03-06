@@ -3,6 +3,7 @@
 /* 2025.03.03 菊池雅道 プレイヤー関連の定数追加 */
 #pragma once
 
+#include <string>
 #include "StructDefine.h"
 
 /* プロジェクトで使用する定数の宣言 */
@@ -122,3 +123,7 @@ static const int    INPUT_CAMERA_MODE_NORMAL      = 0;	// 通常状態
 static const int    INPUT_CAMERA_MODE_AIM         = 1;	// エイム状態
 static const int    INPUT_CAMERA_MODE_MAX         = 2;	// カメラ状態の総数
 
+/* データ型名称 */
+static const std::string DATA_TYPE_BOOL     = "bool";	// ブール型
+static const std::string DATA_TYPE_INT      = "int";	// 整数型
+static const std::string DATA_TYPE_FLOAT    = "float";	// 浮動小数点型

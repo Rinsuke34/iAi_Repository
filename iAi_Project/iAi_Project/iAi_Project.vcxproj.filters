@@ -597,6 +597,9 @@
     <ClCompile Include="source\SceneAddTitleSetup.cpp">
       <Filter>ソース ファイル\シーン\セットアップ</Filter>
     </ClCompile>
+    <ClCompile Include="source\LargeScreen.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -832,6 +835,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneAddTitleSetup.h">
       <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\OptionDefine.h">
+      <Filter>ヘッダー ファイル\データリスト\オプション</Filter>
+    </ClInclude>
+    <ClInclude Include="source\LargeScreen.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

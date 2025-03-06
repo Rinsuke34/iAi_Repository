@@ -3,6 +3,11 @@
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
+#include <vector>
+
+/* データリスト */
+#include "DataList_Image.h"
+#include "DataList_Option.h"
 
 /* シーン「オプション」の宣言 */
 
@@ -17,6 +22,15 @@ class SceneOption : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
+		/* 使用するデータリスト */
+		DataList_Option* OptionList;			// オプション設定管理
 
-	protected:
+		/* 画像ハンドル */
+		int* piGrHandle_ResultFrame;			// リザルト用フレーム
+		int* piGrHandle_Arrow;					// 矢印
+
+		/* 変数 */
+		std::vector<OPTION_LIST>*	astOptionNameList;	// オプション名リスト
+		int							iSelectItem;		// 選択中の項目の番号
+		bool						bSelectFlg;			// 選択状態であるかのフラグ
 };

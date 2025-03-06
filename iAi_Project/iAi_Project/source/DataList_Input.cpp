@@ -124,26 +124,54 @@ bool DataList_Input::bGetInterfaceInput(int iInputType, int iGetInputUI)
 	// 戻り値
 	// bool			: 確認対象の入力が行われているか(true:行われている、false:行われていない)
 
-	/* ジョイパッド入力定義テーブル */
-	int iPadInput[]			= { XINPUT_BUTTON_DPAD_UP, XINPUT_BUTTON_DPAD_DOWN, XINPUT_BUTTON_DPAD_LEFT, XINPUT_BUTTON_DPAD_RIGHT, XINPUT_BUTTON_A, XINPUT_BUTTON_B, XINPUT_BUTTON_START };
-
-	/* キーボード入力定義テーブル */
-	int iKeyboardInput[]	= { KEY_INPUT_UP, KEY_INPUT_DOWN, KEY_INPUT_LEFT, KEY_INPUT_RIGHT, KEY_INPUT_Z, KEY_INPUT_X, KEY_INPUT_ESCAPE };
-
-	/* 対象の入力が行われているか確認 */
+	/* 入力内容が"任意のボタン"以外であるか確認 */
+	if(iGetInputUI != UI_ANY)
 	{
-		/* ジョイパッド */
-		if (gstJoypadInputData.cgInput[iInputType][iPadInput[iGetInputUI]] == TRUE)
+		// "任意のボタン"以外の場合
+		/* ジョイパッド入力定義テーブル */
+		int iPadInput[] = { XINPUT_BUTTON_DPAD_UP, XINPUT_BUTTON_DPAD_DOWN, XINPUT_BUTTON_DPAD_LEFT, XINPUT_BUTTON_DPAD_RIGHT, XINPUT_BUTTON_A, XINPUT_BUTTON_B, XINPUT_BUTTON_START };
+
+		/* キーボード入力定義テーブル */
+		int iKeyboardInput[] = { KEY_INPUT_UP, KEY_INPUT_DOWN, KEY_INPUT_LEFT, KEY_INPUT_RIGHT, KEY_INPUT_Z, KEY_INPUT_X, KEY_INPUT_ESCAPE };
+
+		/* 対象の入力が行われているか確認 */
 		{
-			// 入力されている場合
-			return true;
+			/* ジョイパッド */
+			if (gstJoypadInputData.cgInput[iInputType][iPadInput[iGetInputUI]] == TRUE)
+			{
+				// 入力されている場合
+				return true;
+			}
+
+			/* キーボード＆マウス */
+			if (gstKeyboardInputData.cgInput[iInputType][iKeyboardInput[iGetInputUI]] == TRUE)
+			{
+				// 入力されている場合
+				return true;
+			}
 		}
-		
-		/* キーボード＆マウス */
-		if (gstKeyboardInputData.cgInput[iInputType][iKeyboardInput[iGetInputUI]] == TRUE)
+	}
+	else
+	{
+		// "任意のボタン"である場合
+		/* ジョイパッド */
+		for (int i = 0; i < 16; i++)
 		{
-			// 入力されている場合
-			return true;
+			if (gstJoypadInputData.cgInput[iInputType][i] == TRUE)
+			{
+				// 入力されている場合
+				return true;
+			}
+		}
+
+		/* キーボード＆マウス */
+		for (int i = 0; i < 256; i++)
+		{
+			if (gstKeyboardInputData.cgInput[iInputType][i] == TRUE)
+			{
+				// 入力されている場合
+				return true;
+			}
 		}
 	}
 

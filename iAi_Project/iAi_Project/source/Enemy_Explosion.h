@@ -47,17 +47,18 @@ private:
 	int iXdistance;			// X軸の距離
 
 	int iZdistance;			// Z軸の距離
+	int iDetonationRange;			//起爆範囲内
+	int iBlastRange;				//爆発範囲内
 	int iStopCount;			// 停止カウント
 	float fSpeed;			// 移動速度
+	float fGravity;						// 重力
 
-	int iDetonationRange;	//起爆範囲内
 
 	bool bEffectGenerated;	// 起爆予告エフェクト生成フラグ
 	bool bFallFlg;			// 落下フラグ
 	bool bStopFlg;			// 停止フラグ
 	bool bCountFlg;			//カウントフラグ
 	bool bBlastFlg;			//爆発フラグ
-	float fGravity;				// 重力
 
 
 	VECTOR vecLastRotation;	// 最後の回転量

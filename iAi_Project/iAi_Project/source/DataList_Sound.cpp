@@ -7,10 +7,11 @@
 // コンストラクタ
 DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 {
-	/* 初期化 */
-	this->iBgmVolume	= 128;		// BGMの音量(0 ～ 255)
-	this->iBgmHandle	= 0;		// BGMのハンドル
-	this->iSeVolum		= 64;		// SEの音量(0 ～ 255)
+	/* データリスト取得 */
+	{
+		/* "オプション設定管理"を取得 */
+//		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+	}
 
 	/* 全てのSEを取得 */
 	SE_AllSetHandle();
@@ -86,7 +87,7 @@ void DataList_Sound::BGM_VolumeChange()
 	{
 		// 設定されているなら
 		/* BGMの音量を変更する */
-		ChangeVolumeSoundMem(this->iBgmVolume, this->iBgmHandle);
+//		ChangeVolumeSoundMem(this->OptionList->iGetBgmVolume(), this->iBgmHandle);
 	}
 }
 
@@ -128,6 +129,9 @@ void DataList_Sound::SE_PlaySound(int iSeNo)
 {
 	// 引数
 	// iSeNo		<- 読み込むSEの番号
+
+	/* SEの音量を設定 */
+//	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo]]);
 
 	/* SEを再生する */
 	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo]], DX_PLAYTYPE_BACK);

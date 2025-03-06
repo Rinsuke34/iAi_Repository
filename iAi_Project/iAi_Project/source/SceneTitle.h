@@ -8,6 +8,7 @@
 #include "SceneStage.h"
 #include "SceneAddGameSetup.h"
 #include "Screen.h"
+#include "LargeScreen.h"
 
 
 /* データリスト */
@@ -45,7 +46,16 @@ class SceneTitle : public SceneBase
 		/* 使用する画像のハンドル */
 		int* piGrHandle_TitleLogo;		// タイトルロゴ
 		//変数
-		int UICount;	//UIのカウント
+		int iUICount;	//UIのカウント
+		//UIの画像Handle
+		int iImageNewgameHandle;		// ニューゲーム
+		int iImageNewgameChoiceHandle;	// ニューゲーム選択
+		int iImageContinueHandle;		// コンティニュー
+		int iImageContinueChoiceHandle;	// コンティニュー選択
+		int iImageDateHandle;			// データ
+		int iImageDateChoiceHandle;		// データ選択
+		int iImageConfigHandle;			// コンフィグ
+		int iImageConfigChoiceHandle;	// コンフィグ選択
 
 		bool bGameStartFlg;					//スタートフラグ
 

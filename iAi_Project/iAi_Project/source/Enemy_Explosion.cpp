@@ -11,6 +11,7 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 	this->fSpeed = ENEMY_CHASE_SPEED;				// 移動速度
 	this->iDetonationRange = ENEMY_DETONATION_RANGE;	//起爆範囲内
 	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
+	this->iBlastRange		= ENEMY_EXPLOSION_RANGE;	// 爆発範囲内
 
 	// HPを設定
 	this->iMaxHp = 1;
@@ -166,8 +167,13 @@ void ExplosionEnemy::MoveEnemy()
 				//エネミーの削除フラグを有効にする
 				this->bDeleteFlg = true;
 
+				//プレイヤーが爆風範囲内にいるかどうかを確認
+				if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_EXPLOSION_RANGE)
+				{
+					//プレイヤーが爆風範囲内にいる場合
 				//プレイヤーを吹き飛ばす
 				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+				}
 			}
 		}
 	

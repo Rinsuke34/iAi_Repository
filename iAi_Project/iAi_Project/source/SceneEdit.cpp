@@ -37,8 +37,6 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	}
 
 	/* 初期化 */
-	// テスト用
-	this->iUpgradeRate	= 0;					// アップグレードのレート(0～10)
 	this->iSelectItem	= 0;					// 選択中の項目の番号
 	// 新規のエディット情報
 	for (int i = 0; i < EDIT_UPGRADE_MAX; i++)

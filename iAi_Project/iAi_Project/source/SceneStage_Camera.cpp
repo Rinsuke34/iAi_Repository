@@ -1,10 +1,12 @@
 /* 2025.02.02 ファイル作成 駒沢風助 */
 /* 2025.02.23 菊池雅道	カメラ制御処理修正 */
+/* 2025.03.06 菊池雅道	カメラ制御処理修正 */
 
 #include "SceneStage.h"
 
 /* ステージクラスの定義(カメラ制御部分) */
 
+/* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */
 // カメラ設定準備
 void SceneStage::SetCamera_Setup()
 {
@@ -21,6 +23,7 @@ void SceneStage::SetCamera_Setup()
 
 	/* カメラ設定で使用する変数の定義 */
 	int iCameraType		= INPUT_CAMERA_NORMAL;		// カメラ移動タイプ
+	int iCameraLeapCountMax	= CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;				// カメラ座標の補間カウント最大値
 
 	/* カメラモードに応じて処理を変更 */
 	switch (this->StageStatusList->iGetCameraMode())
@@ -29,6 +32,9 @@ void SceneStage::SetCamera_Setup()
 		case CAMERA_MODE_NORMAL:
 			/* カメラ設定 */
 			SetCamera_Free();
+			
+			/* カメラ座標の補間カウント最大値をフリーの値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;
 			break;
 
 		/* 固定 */
@@ -42,6 +48,9 @@ void SceneStage::SetCamera_Setup()
 			/* カメラ移動タイプを"エイム"に設定 */
 			iCameraType = INPUT_CAMERA_AIM;
 
+			/* カメラ座標の補間カウント最大値を近距離攻撃(強)の値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_COUNT_MAX_MELEE;
+			
 			/* カメラ設定 */
 			SetCamera_Aim_Melee();
 			break;
@@ -50,6 +59,9 @@ void SceneStage::SetCamera_Setup()
 		case CAMERA_MODE_AIM_KUNAI:
 			/* カメラ移動タイプを"エイム"に設定 */
 			iCameraType = INPUT_CAMERA_AIM;
+
+			/* カメラ座標の補間カウント最大値を遠距離攻撃の値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_COUNT_MAX_PROJECTILE;
 
 			/* カメラ設定 */
 			SetCamera_Aim_Kunai();
@@ -60,6 +72,8 @@ void SceneStage::SetCamera_Setup()
 			/* カメラ移動タイプを"無し"に設定 */
 			iCameraType = INPUT_CAMERA_NONE;
 
+			/* カメラ座標の補間カウント最大値をタイトルの値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_CONT_MAX_TITLE;
 			/* カメラ設定 */
 			SetCamera_Title();
 			break;
@@ -68,6 +82,9 @@ void SceneStage::SetCamera_Setup()
 		case CAMERA_MODE_STAGECLEAR:
 			/* カメラ移動タイプを"無し"に設定 */
 			iCameraType = INPUT_CAMERA_NONE;
+
+			/* カメラ座標の補間カウント最大値をステージクリアの値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_COUNT_MAX_STAGECLEAR;
 
 			/* カメラ設定 */
 			SetCamera_StageClear();
@@ -80,11 +97,12 @@ void SceneStage::SetCamera_Setup()
 
 	/* カメラ座標の補正 */
 	// ※一瞬で切り替わると違和感があるため、カメラ座標に補間処理を行う
-	CameraSmoothing();
+	CameraSmoothing(iCameraLeapCountMax);
 
 	/* 現時点でのカメラモードを保存 */
 	this->StageStatusList->SetCameraMode_Old(this->StageStatusList->iGetCameraMode());
 }
+/* 2025.03.06 菊池雅道	カメラ制御処理修正 終了 */
 
 // カメラ設定
 void SceneStage::SetCmaera()
@@ -260,7 +278,7 @@ void SceneStage::SetCamera_Aim_Kunai()
 	// プレイヤーの右斜め後ろにカメラを配置する
 
 	/* カメラの基本の高さ */ 
-	float fHeightOffset = PLAYER_HEIGHT; 
+	float fHeightOffset = 120.0f; 
 	
 	// プレイヤーが見切れないように角度に応じて高さを変化させる
 	/* 上下角度に応じた補正 */ 
@@ -331,18 +349,19 @@ void SceneStage::SetCamera_StageClear()
 	}
 }
 
+/* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */
 // カメラ補正
-void SceneStage::CameraSmoothing()
+void SceneStage::CameraSmoothing(int iCameraPositionLeapCountMax)
 {
 	/* カメラ線形補間用カウントを取得 */
 	int iCameraPositionLeapCount = this->StageStatusList->iGetCameraPositionLeapCount();
 
 	/* カメラ線形補完用カウントが最大値に達しているか */
-	if (iCameraPositionLeapCount < CAMERA_POSITION_LEAP_COUNT_MAX)
+	if (iCameraPositionLeapCount < iCameraPositionLeapCountMax)
 	{
 		// 最大値に達していない場合
 		/* カメラ線形補間の割合を取得 */
-		float fLeapRatio = ((float)iCameraPositionLeapCount / (float)CAMERA_POSITION_LEAP_COUNT_MAX);
+		float fLeapRatio = ((float)iCameraPositionLeapCount / (float)iCameraPositionLeapCountMax);
 
 		/* カメラの座標(線形補間後)を算出 */
 		VECTOR vecStart		= this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
@@ -367,3 +386,4 @@ void SceneStage::CameraSmoothing()
 		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition_Target());
 	}
 }
+/* 2025.03.06 菊池雅道	カメラ制御処理修正  */

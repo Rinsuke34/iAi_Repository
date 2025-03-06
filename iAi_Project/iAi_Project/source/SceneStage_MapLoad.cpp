@@ -22,6 +22,7 @@
 #include "GimmickDisappear.h"
 #include "Gimmick_ForcedJump_Spawn.h"
 #include "Screen.h"
+#include "LargeScreen.h"
 #include "Gimmick_FallJudgment.h"
 // 霧
 #include "FallFog.h"
@@ -360,6 +361,22 @@ void SceneStage::LoadMapData()
 					/* 回転量設定 */
 					pScreen->SetRotation(vecRot);
 				}
+				else if (name == "LargeScreen")
+				{
+					// スクリーンの場合
+					/* "オブジェクト管理"にスクリーンを追加 */
+					LargeScreen* pLargeScreen = new LargeScreen();
+					ObjectList->SetPlatform(pLargeScreen);
+
+					/* 座標設定 */
+					pLargeScreen->SetPosition(vecPos);
+
+					/* 回転量設定 */
+					pLargeScreen->SetRotation(vecRot);
+
+					/* 拡大率設定*/
+					pLargeScreen->SetScale(vecScale);
+					}
 				else if (name == "FallJudgment")
 				{
 					// 落下判定の場合

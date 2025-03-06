@@ -41,7 +41,6 @@ class SceneEdit : public SceneBase
 
 		/* 変数 */
 		EDIT_SELECT_ITEM	astSelectItemList[SELECT_ITEM_MAX];		// 選択項目一覧
-		int					iUpgradeRate;							// アップグレードのレート(0～10)
 		int					iSelectItem;							// 選択中の項目の番号
 		int					iHoldSelectItemNo;						// ホールド中の選択項目の番号
 		int					iHoldSelectItemType;					// ホールド中の選択項目の種類
