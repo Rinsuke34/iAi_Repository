@@ -8,6 +8,7 @@
 /* 2025.02.22 菊池雅道	壁キック処理追加 */
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 /* 2025.03.02 駒沢風助	落下復帰処理作成 */
+/* 2025.03.06 菊池雅道	当たり判定処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -181,11 +182,15 @@ void CharacterPlayer::CollisionUpdate()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.02.19 菊池雅道	エフェクト処理追加 開始 */
+/* 2025.03.06 菊池雅道	当たり判定処理修正 開始 */
 /* 当たり判定処理 */
 void CharacterPlayer::PlayerHitCheck()
 {
 	/* プレイヤーの状態を取得 */
+	/* 移動状態 */
 	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
+	/* 攻撃状態 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーが被弾処理を行うか(無敵か)判定するフラグ */
 	bool bHiteFlag = true;
@@ -201,13 +206,13 @@ void CharacterPlayer::PlayerHitCheck()
 	{
 		// 無敵時間中でない場合
 		/* プレイヤーの移動状態が被弾処理を受ける状態か確認 */
-		// ※攻撃状態は考慮しない
 		switch (iPlayerMoveState)
 		{
 			/* 被弾処理を行う状態 */
 			case PLAYER_MOVESTATUS_FREE:			// 自由状態	
 				/* 被弾処理を行う状態 */
 				bHiteFlag = true;	
+				
 				break;
 
 			/* 被弾処理を行わない状態(無敵状態) */
@@ -219,6 +224,32 @@ void CharacterPlayer::PlayerHitCheck()
 				bHiteFlag = false;
 					
 				break;
+		}
+		/* プレイヤーの攻撃状態が被弾処理を受ける状態か確認 */
+		switch (iPlayerAttackState)
+		{
+			/* 被弾処理を行う状態 */			
+			case PLAYER_ATTACKSTATUS_FREE:					// 自由状態	
+			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
+			case PLAYER_ATTACKSTATUS_MELEE_WEEK:			// 近接攻撃中(弱)	
+			case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+			case PLAYER_ATTACKSTATUS_PROJECTILE:			// 遠距離攻撃中
+
+				/* 被弾処理を行う */
+				bHiteFlag = true;
+				
+				break;
+	
+			/* 被弾処理を行わない状態(無敵状態) */
+			case PLAYER_ATTACKSTATUS_EVENT:					// イベント状態(操作不可)
+			case PLAYER_ATTACKSTATUS_MELEE_STRONG:			// 近接攻撃中(強)
+			case PLAYER_ATTACKSTATUS_DEAD:					// 死亡状態(操作不可)
+
+				/* 被弾処理を行わない(無敵状態) */
+				bHiteFlag = false;
+
+				break;
+			
 		}
 	
 		/* 被弾処理 */
@@ -316,6 +347,7 @@ void CharacterPlayer::PlayerHitCheck()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.19 菊池雅道	エフェクト処理追加 終了 */
+/* 2025.03.06 菊池雅道	当たり判定処理修正 終了 */
 
 /* 2025.02.14 菊池雅道	回転関連の関数追加 開始 */
 // 角度(ラジアン)の制限と補正
