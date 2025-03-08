@@ -758,6 +758,13 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* プレイヤーの向きにカメラの向きを固定 */
 				this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
 		}
+		else
+		{
+			// 対象が存在しない場合
+
+			/* 敵を攻撃したフラグを解除(スローモーション解除のため) */
+			this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+		}
 
 	}
 	}
