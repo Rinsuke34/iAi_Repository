@@ -961,9 +961,11 @@ void CharacterPlayer::Movement_Vertical()
 		/* 着地フラグが無効である(空中にいる)か確認 */
 		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 		{
+			// 無効である(空中にいる)場合
+			/* プレイヤーの移動モーションが"回避"でないか確認 */
 			if (this->PlayerStatusList->iGetPlayerMoveState() != PLAYER_MOVESTATUS_DODGING)
 			{
-				// 無効である(空中にいる)場合
+				// 回避モーションでない場合
 				/* 上昇しているか確認 */
 				if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 				{
