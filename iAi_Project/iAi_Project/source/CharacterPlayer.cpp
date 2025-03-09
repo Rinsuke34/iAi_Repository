@@ -9,6 +9,7 @@
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 /* 2025.03.02 駒沢風助	落下復帰処理作成 */
 /* 2025.03.06 菊池雅道	当たり判定処理修正 */
+/* 2025.03.08 駒沢風助	新モデル対応 */
 
 #include "CharacterPlayer.h"
 
@@ -73,7 +74,10 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 
 		/* コリジョンフレーム番号取得 */
-		this->iKatanaFrameNo = MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");				/* 2025.02.19 菊池雅道	追加 */
+		this->iKatanaFrameNo	= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
+
+		/* 上半身のフレーム番号取得 */
+		this->iUpperBodyFrameNo	= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
 	}
 }
 

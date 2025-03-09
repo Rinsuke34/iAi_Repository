@@ -2,6 +2,9 @@
 
 #include "DataList_Sound.h"
 
+/* データリスト */
+#include "DataList_Option.h"
+
 /* サウンド管理データリストの定義 */
 
 // コンストラクタ
@@ -10,7 +13,7 @@ DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 	/* データリスト取得 */
 	{
 		/* "オプション設定管理"を取得 */
-//		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
 	/* 全てのSEを取得 */
@@ -87,7 +90,7 @@ void DataList_Sound::BGM_VolumeChange()
 	{
 		// 設定されているなら
 		/* BGMの音量を変更する */
-//		ChangeVolumeSoundMem(this->OptionList->iGetBgmVolume(), this->iBgmHandle);
+		ChangeVolumeSoundMem(this->OptionList->iGetBgmVolume(), this->iBgmHandle);
 	}
 }
 
@@ -131,7 +134,7 @@ void DataList_Sound::SE_PlaySound(int iSeNo)
 	// iSeNo		<- 読み込むSEの番号
 
 	/* SEの音量を設定 */
-//	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo]]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo]]);
 
 	/* SEを再生する */
 	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo]], DX_PLAYTYPE_BACK);

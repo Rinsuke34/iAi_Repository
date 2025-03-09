@@ -4,7 +4,7 @@
 
 /* 霧(落下位置)クラスの定義 */
 // コンストラクタ
-FallFog::FallFog() : PlatformBasic()
+FallFog::FallFog() : PlatformBase()
 {
 	/* 画像リソース取得 */
 	{

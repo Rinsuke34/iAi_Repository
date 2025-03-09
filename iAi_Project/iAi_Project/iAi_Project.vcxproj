@@ -192,6 +192,10 @@
     <ClCompile Include="source\EnemyGoalObject.cpp" />
     <ClCompile Include="source\EnemyMissile.cpp" />
     <ClCompile Include="source\EnemyNormal.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Beam.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Escape.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Explosion.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Missile.cpp" />
     <ClCompile Include="source\Enemy_Explosion.cpp" />
     <ClCompile Include="source\FallFog.cpp" />
     <ClCompile Include="source\GimmickDisappear.cpp" />
@@ -226,8 +230,9 @@
     <ClCompile Include="source\SceneUi_Kunai.cpp" />
     <ClCompile Include="source\ScreenEffect_Base.cpp" />
     <ClCompile Include="source\SkySqhereBasic.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Base.cpp" />
+    <ClCompile Include="source\EnemySpawnPoint_Normal.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
-    <ClCompile Include="source\PlatformBasic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BulletEnemyRangeBeam.h" />
@@ -262,6 +267,10 @@
     <ClInclude Include="source\EnemyGoalObject.h" />
     <ClInclude Include="source\EnemyMissile.h" />
     <ClInclude Include="source\EnemyNormal.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Beam.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Escape.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Explosion.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Missile.h" />
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\FallFog.h" />
     <ClInclude Include="source\Gimmick_FallJudgment.h" />
@@ -274,6 +283,8 @@
     <ClInclude Include="source\ScenePauseDefine.h" />
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\Screen.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Base.h" />
+    <ClInclude Include="source\EnemySpawnPoint_Normal.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />
@@ -281,7 +292,6 @@
     <ClInclude Include="source\include\SceneEditDefine.h" />
     <ClInclude Include="source\InputDefine.h" />
     <ClInclude Include="source\PickUpItem_ForcedJump.h" />
-    <ClInclude Include="source\PlatformBasic.h" />
     <ClInclude Include="source\PlayerBulletDefine.h" />
     <ClInclude Include="source\PlayerMotionDefine.h" />
     <ClInclude Include="source\PlayerStatusDefine.h" />

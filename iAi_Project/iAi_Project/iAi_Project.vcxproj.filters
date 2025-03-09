@@ -253,14 +253,8 @@
     <Filter Include="ソース ファイル\オブジェクト\アクタ\アイテム\実体あり">
       <UniqueIdentifier>{ed3e8fe2-29d6-4896-bdf4-677855c09859}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
-      <UniqueIdentifier>{c5ba7085-d87c-4d73-a988-5442d5f02cf1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
       <UniqueIdentifier>{bbe01ac4-d7ee-41d6-9650-41f9bee35d5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
-      <UniqueIdentifier>{09e3c1e0-6545-4500-b429-197170b734d4}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\消える床">
       <UniqueIdentifier>{294cdc1f-a067-4bb5-8688-f832bed72c59}</UniqueIdentifier>
@@ -370,9 +364,6 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
       <UniqueIdentifier>{d81edc86-b2e0-4bd0-994d-66011c56f1d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
-      <UniqueIdentifier>{a28b15d3-1e64-4016-b0a0-6650822ae566}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\落下判定">
       <UniqueIdentifier>{10f9c78f-2e66-4d5f-baea-0233358a4bfd}</UniqueIdentifier>
     </Filter>
@@ -384,6 +375,51 @@
     </Filter>
     <Filter Include="ソース ファイル\シーン\ゲームメイン\一時停止">
       <UniqueIdentifier>{e8915cf2-bd09-4792-9efe-c12e3adb0000}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{09e3c1e0-6545-4500-b429-197170b734d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\強制ジャンプ">
+      <UniqueIdentifier>{c5ba7085-d87c-4d73-a988-5442d5f02cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント">
+      <UniqueIdentifier>{4f786aaa-5278-467e-a275-f764dda73eac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント">
+      <UniqueIdentifier>{dd089bc2-ef38-4077-8754-988020f17f9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ノーマル">
+      <UniqueIdentifier>{c3f6cbb1-bda3-459c-8203-539c22de5b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ノーマル">
+      <UniqueIdentifier>{07d7ebf2-2eb1-46e1-847b-ffa5466f2dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ビーム">
+      <UniqueIdentifier>{2ab8d009-fd72-4de0-894c-7d1c16ed7274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ミサイル">
+      <UniqueIdentifier>{9e025510-dad2-485a-b7e0-cd30758bb58b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\自爆">
+      <UniqueIdentifier>{e339ee33-791d-4698-b928-60ac05f33ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走">
+      <UniqueIdentifier>{d32207cd-a209-43f0-a30d-4c177a5c2fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走">
+      <UniqueIdentifier>{d0db947b-2544-4a4b-bf10-0074688025c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\自爆">
+      <UniqueIdentifier>{8c616f3a-b06c-4815-b71a-5440d4430103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ミサイル">
+      <UniqueIdentifier>{8f323121-758e-44db-a5f3-67abb7eab97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ビーム">
+      <UniqueIdentifier>{d8ee9319-9b74-419b-9276-4d468d77d65d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
+      <UniqueIdentifier>{aa3fea37-41c8-49bb-841a-05a8c5949c37}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -419,9 +455,6 @@
     </ClCompile>
     <ClCompile Include="source\DataList_Model.cpp">
       <Filter>ソース ファイル\データリスト\3Dモデル管理</Filter>
-    </ClCompile>
-    <ClCompile Include="source\PlatformBasic.cpp">
-      <Filter>ソース ファイル\オブジェクト\プラットフォーム</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneStage.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージ</Filter>
@@ -582,9 +615,6 @@
     <ClCompile Include="source\SceneStageClear.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ステージクリア</Filter>
     </ClCompile>
-    <ClCompile Include="source\FallFog.cpp">
-      <Filter>ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
-    </ClCompile>
     <ClCompile Include="source\Gimmick_FallJudgment.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\落下判定</Filter>
     </ClCompile>
@@ -599,6 +629,27 @@
     </ClCompile>
     <ClCompile Include="source\LargeScreen.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Normal.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ノーマル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Base.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FallFog.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Beam.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ビーム</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Missile.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ミサイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Explosion.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\自爆</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EnemySpawnPoint_Escape.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -649,9 +700,6 @@
     </ClInclude>
     <ClInclude Include="source\DataList_Model.h">
       <Filter>ヘッダー ファイル\データリスト\3Dモデル管理</Filter>
-    </ClInclude>
-    <ClInclude Include="source\PlatformBasic.h">
-      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム</Filter>
     </ClInclude>
     <ClInclude Include="source\SceneStage.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ステージ</Filter>
@@ -841,6 +889,24 @@
     </ClInclude>
     <ClInclude Include="source\LargeScreen.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Normal.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ノーマル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Base.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Beam.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ビーム</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Missile.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\ミサイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Explosion.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\自爆</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EnemySpawnPoint_Escape.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

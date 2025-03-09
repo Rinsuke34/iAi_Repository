@@ -36,8 +36,8 @@ static const std::string	MOTION_MOVE_JUMP_START	= "mot_move_jump_f_start";		// ƒ
 static const std::string	MOTION_MOVE_JUMP_UP		= "mot_move_jump_f_uploop";		// ƒWƒƒƒ“ƒv(ã¸)
 static const std::string	MOTION_MOVE_JUMP_FALL	= "mot_move_jump_fall_loop";	// ƒWƒƒƒ“ƒv(—‰º)
 static const std::string	MOTION_MOVE_lAND		= "mot_move_land";				// ’…’n
-static const std::string	MOTION_MOVE_DODGE		= "mot_attack_charge_step";		// ‰ñ”ğ(‹­UŒ‚(ˆÚ“®’†)‚ğ—¬—p)
-static const std::string	MOTION_MOVE_DIE			= "mot_damage_die";				// €–S
+static const std::string	MOTION_MOVE_DODGE		= "mot_move_dodge";				// ‰ñ”ğ
+static const std::string	MOTION_MOVE_DIE			= "mot_damage_die02";			// €–S
 // UŒ‚Œn(ã”¼g‚Ì‚İ‘ÎÛ)
 static const std::string	MOTION_ATTACK			= "mot_attack_nomal";			// ãUŒ‚
 static const std::string	MOTION_CHARGE_STEP		= "mot_attack_charge_step";		// ‹­UŒ‚(ˆÚ“®’†)

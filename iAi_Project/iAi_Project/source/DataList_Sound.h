@@ -5,11 +5,8 @@
 #include "AppFrame.h"
 #include "SoundDefine.h"
 
-/* データリスト */
-//#include "DataList_Option.h"
-
 /* 循環参照対策先行定義 */
-//class DataList_Option;
+class DataList_Option;
 
 /* サウンド管理データリストの宣言 */
 
@@ -33,7 +30,7 @@ class DataList_Sound : public DataListBase
 
 	private:
 		/* データリスト */
-//		DataList_Option* OptionList;				// オプション設定管理
+		DataList_Option* OptionList;				// オプション設定管理
 
 		/* BGM関係 */
 		// ※BGMは再生するタイミングで読み込みを行う

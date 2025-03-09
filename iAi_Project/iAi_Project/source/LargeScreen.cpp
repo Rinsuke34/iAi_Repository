@@ -2,7 +2,7 @@
 #include "LargeScreen.h"
 
 // コンストラクタ
-LargeScreen::LargeScreen() : PlatformBasic()
+LargeScreen::LargeScreen() : PlatformBase()
 {
 	/* データリスト */
 	{

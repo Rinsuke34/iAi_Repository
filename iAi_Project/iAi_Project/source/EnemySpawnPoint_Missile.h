@@ -1,0 +1,20 @@
+/* 2025.03.08 駒沢風助 ファイル作成 */
+
+#pragma once
+#include "Appframe.h"
+
+/* オブジェクト */
+#include "EnemySpawnPoint_Base.h"
+#include "EnemyMissile.h"
+
+/* エネミー(ミサイル)スポナークラスの宣言 */
+
+// エネミー(ミサイル)スポナークラス
+class EnemySpawnPoint_Missile : public EnemySpawnPoint_Base
+{
+	public:
+		EnemySpawnPoint_Missile();					// コンストラクタ
+		virtual ~EnemySpawnPoint_Missile() {};		// デストラクタ
+
+		virtual void	Initialization() override;	// 初期化
+};

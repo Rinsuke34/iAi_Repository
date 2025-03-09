@@ -6,13 +6,10 @@
 /* データリスト */
 #include "DataList_Object.h"
 
-/* オブジェクト */
-#include "PlatformBasic.h"
-
 /* 霧(落下位置)クラスの宣言 */
 
 // 霧(落下位置)クラス
-class FallFog : public PlatformBasic
+class FallFog : public PlatformBase
 {
 	public:
 		FallFog();				// コンストラクタ

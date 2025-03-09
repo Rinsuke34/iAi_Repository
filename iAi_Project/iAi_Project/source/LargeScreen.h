@@ -9,7 +9,6 @@
 #include "DataList_Image.h"
 
 /* オブジェクト */
-#include "PlatformBasic.h"
 #include "EffectManualDelete.h"
 #include "PlayerStatusDefine.h"
 #include "GimmickDefine.h"
@@ -21,7 +20,7 @@
 /* テスト用敵クラス */
 
 // 消失ギミッククラス
-class LargeScreen : public PlatformBasic
+class LargeScreen : public PlatformBase
 {
 public:
 	LargeScreen();				// コンストラクタ

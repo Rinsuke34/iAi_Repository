@@ -7,10 +7,12 @@
 
 /* オブジェクト */
 #include "EnemyBasic.h"
+#include "EnemySpawnPoint_Base.h"
 
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
 class EnemyBasic;
+class EnemySpawnPoint_Base;
 
 /* オブジェクト管理クラスの宣言 */
 
@@ -22,15 +24,16 @@ class DataList_Object : public DataListBase
 		virtual ~DataList_Object();		// デストラクタ
 
 		/* リスト内オブジェクト初期化 */
-		void	InitializationAll();		// 全オブジェクト初期化
-		void	InitializationPlayer();		// プレイヤー初期化
-		void	InitializationSkySqhere();	// スカイスフィア初期化
-		void	InitializationEnemy();		// エネミー初期化
-		void	InitializationEffect();		// エフェクト初期化
-		void	InitializationBullet();		// 弾初期化
-		void	InitializationPlatform();	// プラットフォーム初期化
-		void	InitializationEffectItem();	// アイテム(実体なし)初期化
-		void	InitializationPickUpItem();	// アイテム(実体あり)初期化
+		void	InitializationAll();				// 全オブジェクト初期化
+		void	InitializationPlayer();				// プレイヤー初期化
+		void	InitializationSkySqhere();			// スカイスフィア初期化
+		void	InitializationEnemy();				// エネミー初期化
+		void	InitializationEffect();				// エフェクト初期化
+		void	InitializationBullet();				// 弾初期化
+		void	InitializationPlatform();			// プラットフォーム初期化
+		void	InitializationEffectItem();			// アイテム(実体なし)初期化
+		void	InitializationPickUpItem();			// アイテム(実体あり)初期化
+		void	InitializationEnemySpawnPoint();	// エネミースポナー初期化
 
 		/* リスト内オブジェクト更新 */
 		void	UpdateAll();			// 全オブジェクト更新
@@ -90,12 +93,13 @@ class DataList_Object : public DataListBase
 		SkySqhereBase* GetSkySqhere()		{ return this->pSkySqhere; }		// スカイスフィア取得
 
 		// リスト
-		std::vector<EnemyBasic*>&		GetEnemyList()		{ return this->pEnemyList; }		// エネミー取得
-		std::vector<EffectBase*>&		GetEffectList()		{ return this->pEffectList; }		// エフェクト取得
-		std::vector<BulletBase*>&		GetBulletList()		{ return this->pBulletList; }		// 弾取得
-		std::vector<PlatformBase*>&		GetCollisionList()	{ return this->pPlatformList; }		// プラットフォーム
-		std::vector<EffectItemBase*>&	GetEffectItemList()	{ return this->pEffectItemList; }	// アイテム(実体なし)
-		std::vector<PickUpItemBase*>&	GetPickUpItemList()	{ return this->pPickUpItemList; }	// アイテム(実体あり)
+		std::vector<EnemyBasic*>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
+		std::vector<EffectBase*>&			GetEffectList()				{ return this->pEffectList; }			// エフェクト取得
+		std::vector<BulletBase*>&			GetBulletList()				{ return this->pBulletList; }			// 弾取得
+		std::vector<PlatformBase*>&			GetCollisionList()			{ return this->pPlatformList; }			// プラットフォーム
+		std::vector<EffectItemBase*>&		GetEffectItemList()			{ return this->pEffectItemList; }		// アイテム(実体なし)
+		std::vector<PickUpItemBase*>&		GetPickUpItemList()			{ return this->pPickUpItemList; }		// アイテム(実体あり)
+		std::vector<EnemySpawnPoint_Base*>&	GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント
 		
 		/* データ設定 */
 		// 単独
@@ -103,12 +107,13 @@ class DataList_Object : public DataListBase
 		void	SetSkySqhere(SkySqhereBase* pSkySqhere)			{ this->pSkySqhere			= pSkySqhere; }		// スカイスフィア設定
 
 		// リスト
-		void	SetEnemy(EnemyBasic* pEnemy)				{ pEnemyList.emplace_back(pEnemy); };			// エネミー追加
-		void	SetEffect(EffectBase* pEffect)				{ pEffectList.emplace_back(pEffect); };			// エフェクト追加
-		void	SetBullet(BulletBase* pBullet)				{ pBulletList.emplace_back(pBullet); };			// 弾追加
-		void	SetPlatform(PlatformBase* pPlatform)		{ pPlatformList.emplace_back(pPlatform); };		// プラットフォーム追加
-		void	SetEffectItem(EffectItemBase* pEffectItem)	{ pEffectItemList.emplace_back(pEffectItem); };	// アイテム(実体なし)追加
-		void	SetPickUpItem(PickUpItemBase* pPickUpItem)	{ pPickUpItemList.emplace_back(pPickUpItem); };	// アイテム(実体なし)追加
+		void	SetEnemy(EnemyBasic* pEnemy)								{ pEnemyList.emplace_back(pEnemy); };						// エネミー追加
+		void	SetEffect(EffectBase* pEffect)								{ pEffectList.emplace_back(pEffect); };						// エフェクト追加
+		void	SetBullet(BulletBase* pBullet)								{ pBulletList.emplace_back(pBullet); };						// 弾追加
+		void	SetPlatform(PlatformBase* pPlatform)						{ pPlatformList.emplace_back(pPlatform); };					// プラットフォーム追加
+		void	SetEffectItem(EffectItemBase* pEffectItem)					{ pEffectItemList.emplace_back(pEffectItem); };				// アイテム(実体なし)追加
+		void	SetPickUpItem(PickUpItemBase* pPickUpItem)					{ pPickUpItemList.emplace_back(pPickUpItem); };				// アイテム(実体なし)追加
+		void	SetEnemySpawnPoint(EnemySpawnPoint_Base* pEnemySpawnPoint)	{ pEnemySpawnPointList.emplace_back(pEnemySpawnPoint); };	// エネミースポーンポイント追加
 
 	private:
 		/* 管理するデータ */
@@ -117,10 +122,11 @@ class DataList_Object : public DataListBase
 		SkySqhereBase*					pSkySqhere;			// スカイスフィア
 
 		// リスト
-		std::vector<EnemyBasic*>		pEnemyList;			// エネミー
-		std::vector<EffectBase*>		pEffectList;		// エフェクト
-		std::vector<BulletBase*>		pBulletList;		// 弾
-		std::vector<PlatformBase*>		pPlatformList;		// プラットフォーム
-		std::vector<EffectItemBase*>	pEffectItemList;	// アイテム(実体なし)
-		std::vector<PickUpItemBase*>	pPickUpItemList;	// アイテム(実体あり)
+		std::vector<EnemyBasic*>			pEnemyList;				// エネミー
+		std::vector<EffectBase*>			pEffectList;			// エフェクト
+		std::vector<BulletBase*>			pBulletList;			// 弾
+		std::vector<PlatformBase*>			pPlatformList;			// プラットフォーム
+		std::vector<EffectItemBase*>		pEffectItemList;		// アイテム(実体なし)
+		std::vector<PickUpItemBase*>		pPickUpItemList;		// アイテム(実体あり)
+		std::vector<EnemySpawnPoint_Base*>	pEnemySpawnPointList;	// エネミースポーンポイント
 };

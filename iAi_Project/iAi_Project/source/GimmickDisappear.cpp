@@ -2,7 +2,7 @@
 #include "GimmickDisappear.h"
 
 // コンストラクタ
-GimmickDisappear::GimmickDisappear() : PlatformBasic()
+GimmickDisappear::GimmickDisappear() : PlatformBase()
 {
 	/* データリスト */
 	{

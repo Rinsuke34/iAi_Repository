@@ -2,7 +2,7 @@
 #include "Screen.h"
 
 // コンストラクタ
-Screen::Screen() : PlatformBasic()
+Screen::Screen() : PlatformBase()
 {
 	/* データリスト */
 	{

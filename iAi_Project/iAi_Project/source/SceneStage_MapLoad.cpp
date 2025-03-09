@@ -7,15 +7,19 @@
 // プレイヤー
 #include "CharacterPlayer.h"
 // エネミー
-#include "EnemyNormal.h"
-#include "EnemyEscape.h"
 #include "EnemyGoalObject.h"
-#include "EnemyNormal.h"
-#include "EnemyMissile.h"
-#include "EnemyBeam.h"
-#include "Enemy_Explosion.h"
-// プラットフォーム
-#include "PlatformBasic.h"
+//#include "EnemyNormal.h"
+//#include "EnemyEscape.h"
+//#include "EnemyNormal.h"
+//#include "EnemyMissile.h"
+//#include "EnemyBeam.h"
+//#include "Enemy_Explosion.h"
+// エネミー(スポーンポイント)
+#include "EnemySpawnPoint_Normal.h"
+#include "EnemySpawnPoint_Escape.h"
+#include "EnemySpawnPoint_Missile.h"
+#include "EnemySpawnPoint_Beam.h"
+#include "EnemySpawnPoint_Explosion.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
 // ギミック
@@ -183,8 +187,10 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(ビーム)の場合
 					/* "オブジェクト管理"にエネミー(ビーム)を追加 */
-					BeamEnemy* AddEnemy = new BeamEnemy();
-					ObjectList->SetEnemy(AddEnemy);
+					//BeamEnemy* AddEnemy = new BeamEnemy();
+					//ObjectList->SetEnemy(AddEnemy);
+					EnemySpawnPoint_Beam* AddEnemy = new EnemySpawnPoint_Beam();
+					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -196,8 +202,10 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(逃走)の場合
 					/* "オブジェクト管理"にエネミー(逃走)を追加 */
-					EscapeEnemy* AddEnemy = new EscapeEnemy();
-					ObjectList->SetEnemy(AddEnemy);
+					//EscapeEnemy* AddEnemy = new EscapeEnemy();
+					//ObjectList->SetEnemy(AddEnemy);
+					EnemySpawnPoint_Escape* AddEnemy = new EnemySpawnPoint_Escape();
+					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -209,8 +217,10 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(自爆)の場合
 					/* "オブジェクト管理"にエネミー(自爆)を追加 */
-					ExplosionEnemy* AddEnemy = new ExplosionEnemy();
-					ObjectList->SetEnemy(AddEnemy);
+					//ExplosionEnemy* AddEnemy = new ExplosionEnemy();
+					//ObjectList->SetEnemy(AddEnemy);
+					EnemySpawnPoint_Explosion* AddEnemy = new EnemySpawnPoint_Explosion();
+					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -222,8 +232,10 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(ミサイル)の場合
 					/* "オブジェクト管理"にエネミー(ミサイル)を追加 */
-					MissileEnemy* AddEnemy = new MissileEnemy();
-					ObjectList->SetEnemy(AddEnemy);
+					//MissileEnemy* AddEnemy = new MissileEnemy();
+					//ObjectList->SetEnemy(AddEnemy);
+					EnemySpawnPoint_Missile* AddEnemy = new EnemySpawnPoint_Missile();
+					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -235,8 +247,10 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(通常)の場合
 					/* "オブジェクト管理"にエネミー(通常)を追加 */
-					NormalEnemy* AddEnemy = new NormalEnemy();
-					ObjectList->SetEnemy(AddEnemy);
+					//NormalEnemy* AddEnemy = new NormalEnemy();
+					//ObjectList->SetEnemy(AddEnemy);
+					EnemySpawnPoint_Normal* AddEnemy = new EnemySpawnPoint_Normal();
+					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -247,7 +261,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Gimmick_Jump")
 				{
 					// ギミック(強制ジャンプ)の場合
-					PlatformBasic* pAddGimick = new Gimmick_ForcedJump_Spawn();
+					PlatformBase* pAddGimick = new Gimmick_ForcedJump_Spawn();
 					ObjectList->SetPlatform(pAddGimick);
 
 					/* 座標設定 */

@@ -50,9 +50,6 @@ namespace PROJECT_INIT
 			/* データリストサーバーに"プレイヤー入力管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_Input());
 
-			/* データリストサーバーに"サウンド管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Sound());
-
 			/* データリストサーバーに"3Dモデル管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_Model());
 
@@ -67,6 +64,10 @@ namespace PROJECT_INIT
 
 			/* データリストサーバーに"オプション設定管理"を追加 */
 			gpDataListServer->AddDataList(new DataList_Option());
+
+			/* データリストサーバーに"サウンド管理"を追加 */
+			// ※サウンド管理では、オプション設定管理を取得するため、オプション設定管理より後に追加する
+			gpDataListServer->AddDataList(new DataList_Sound());
 		}
 	
 		/* データリスト取得 */

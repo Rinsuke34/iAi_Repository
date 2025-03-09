@@ -74,8 +74,8 @@ void SceneOption::Process()
 		return;
 	}
 
-	/* "上"が入力されているか */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+	/* "上"が入力、あるいは右がトリガ入力されているか確認 */
+	if ((gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_UP) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT) == true))
 	{
 		// 入力されている場合
 		/* 選択状態フラグを確認 */
@@ -139,8 +139,8 @@ void SceneOption::Process()
 		}
 	}
 
-	/* "下"が入力されているか */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+	/* "下"が入力、あるいは左がトリガ入力されているか確認 */
+	if ((gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_DOWN) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT) == true))
 	{
 		// 入力されている場合
 		/* 選択状態フラグを確認 */
@@ -213,13 +213,17 @@ void SceneOption::Process()
 	{
 		this->iSelectItem = this->astOptionNameList->size() - 1;
 	}
+
+	/* BGMの音量を変更 */
+	// ※音量調整をリアルタイムで反映するため、毎フレーム音量を更新する
+	gpDataList_Sound->BGM_VolumeChange();
 }
 
 // 描画
 void SceneOption::Draw()
 {
-	/* リザルト用のフレームを描写 */
-	// 仮
+	/* リザルト用のフレームを描写する */
+	// ※リザルト用のフレームを流用する
 	int AddSize = 100;
 	DrawExtendGraph(0 + AddSize, 0 + AddSize, SCREEN_SIZE_WIDE - AddSize, SCREEN_SIZE_HEIGHT - AddSize, *this->piGrHandle_ResultFrame, FALSE);
 
@@ -229,6 +233,9 @@ void SceneOption::Draw()
 	/* オプション描写 */
 	for (int i = 0; i < iOptionMax; i++)
 	{
+		/* 項目の色を設定 */
+		int iColor = GetColor(255, 255, 255);
+
 		/* 描写位置を設定 */
 		int iDrawPosX = 300;
 		int iDrawPosY = 200 + i * 50;
@@ -239,10 +246,13 @@ void SceneOption::Draw()
 			// 選択中の場合
 			/* 矢印を描写 */
 			DrawExtendGraph(iDrawPosX - 30, iDrawPosY, iDrawPosX, iDrawPosY + 40, *this->piGrHandle_Arrow, FALSE);
+
+			/* 選択中の項目の色を変更 */
+			iColor = GetColor(255, 0, 0);
 		}
 
 		/* オプション名を描写 */
-		DrawStringToHandle(iDrawPosX + 50, iDrawPosY, this->astOptionNameList->at(i).Name.c_str(), GetColor(255, 255, 255), giFontHandle);
+		DrawStringToHandle(iDrawPosX + 50, iDrawPosY, this->astOptionNameList->at(i).Name.c_str(), iColor, giFontHandle);
 
 		/* オプションの設定値を描写 */
 		{
@@ -257,25 +267,25 @@ void SceneOption::Draw()
 				if (*static_cast<bool*>(this->astOptionNameList->at(i).pValue) == true)
 				{
 					// 有効である場合
-					DrawStringToHandle(iDrawPosX + 1000, iDrawPosY, "有効", GetColor(255, 255, 255), giFontHandle);
+					DrawStringToHandle(iDrawPosX + 1000, iDrawPosY, "有効", iColor, giFontHandle);
 				}
 				else
 				{
 					// 無効である場合
-					DrawStringToHandle(iDrawPosX + 1000, iDrawPosY, "無効", GetColor(255, 255, 255), giFontHandle);
+					DrawStringToHandle(iDrawPosX + 1000, iDrawPosY, "無効", iColor, giFontHandle);
 				}
 			}
 			else if (OptionType == DATA_TYPE_INT)
 			{
 				// 整数型の場合
 				/* 現在の値を描写する */
-				DrawFormatStringToHandle(iDrawPosX + 1000, iDrawPosY, GetColor(255, 255, 255), giFontHandle, "%d", *static_cast<int*>(this->astOptionNameList->at(i).pValue));
+				DrawFormatStringToHandle(iDrawPosX + 1000, iDrawPosY, iColor, giFontHandle, "%d", *static_cast<int*>(this->astOptionNameList->at(i).pValue));
 			}
 			else if (OptionType == DATA_TYPE_FLOAT)
 			{
 				// 浮動小数点型の場合
 				/* 現在の値を描写する */
-				DrawFormatStringToHandle(iDrawPosX + 1000, iDrawPosY, GetColor(255, 255, 255), giFontHandle, "%.2f", *static_cast<float*>(this->astOptionNameList->at(i).pValue));
+				DrawFormatStringToHandle(iDrawPosX + 1000, iDrawPosY, iColor, giFontHandle, "%.2f", *static_cast<float*>(this->astOptionNameList->at(i).pValue));
 			}
 		}
 	}

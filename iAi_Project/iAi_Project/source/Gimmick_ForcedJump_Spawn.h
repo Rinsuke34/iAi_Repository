@@ -8,7 +8,6 @@
 #include "DataList_Object.h"
 
 /* オブジェクト */
-#include "PlatformBasic.h"
 #include "PickUpItem_ForcedJump.h"
 
 /* 循環参照対策(後ほど対策は実施) */
@@ -17,7 +16,7 @@ class PickUpItem_ForcedJump;
 /* 強制ジャンプギミックスポナークラスの宣言 */
 
 // 強制ジャンプギミックスポナークラス
-class Gimmick_ForcedJump_Spawn : public PlatformBasic
+class Gimmick_ForcedJump_Spawn : public PlatformBase
 {
 	public:
 		Gimmick_ForcedJump_Spawn();				// コンストラクタ

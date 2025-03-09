@@ -66,8 +66,8 @@ void CharacterPlayer::Draw()
 		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	fWholeAttackBlendrate);	// 攻撃モーション
 
 		/* 上半身のブレンド率を設定 */
-		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	63, fUpperMoveBlendRate,	TRUE);
-		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	63, fUpperAttackBlendRate,	TRUE);
+		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),	this->iUpperBodyFrameNo,	fUpperMoveBlendRate,	TRUE);
+		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),	this->iUpperBodyFrameNo,	fUpperAttackBlendRate,	TRUE);
 	}
 
 	/* モデル描写 */

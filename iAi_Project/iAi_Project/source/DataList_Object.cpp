@@ -8,75 +8,32 @@
 DataList_Object::DataList_Object() : DataListBase("DataList_Object")
 {
 	/* 初期化 */
-	// プレイヤー
-	this->pCharacterPlayer	=	nullptr;
-
-	// スカイスフィア
-	this->pSkySqhere		=	nullptr;
-
-	// エネミー
-	this->pEnemyList.clear();
-	
-	// 弾
-	this->pBulletList.clear();
-
-	// エフェクト
-	this->pEffectList.clear();
-
-	// プラットフォーム
-	this->pPlatformList.clear();
-
-	// アイテム(実体なし)
-	this->pEffectItemList.clear();
-
-	// アイテム(実体あり)
-	this->pPickUpItemList.clear();
+	{
+		this->pCharacterPlayer	=	nullptr;	// プレイヤー
+		this->pSkySqhere		=	nullptr;	// スカイスフィア
+		this->pEnemyList.clear();				// エネミー
+		this->pBulletList.clear();				// 弾
+		this->pEffectList.clear();				// エフェクト
+		this->pPlatformList.clear();			// プラットフォーム
+		this->pEffectItemList.clear();			// アイテム(実体なし)
+		this->pPickUpItemList.clear();			// アイテム(実体あり)
+		this->pEnemySpawnPointList.clear();		// エネミースポナー
+	}
 }
 
 // デストラクタ
 DataList_Object::~DataList_Object()
 {
-	/* 解放 */
-	// プレイヤー
-	delete this->pCharacterPlayer;
-
-	// スカイスフィア
-	delete this->pSkySqhere;
-
-	// エネミー
-	for (auto& pEnemy : this->pEnemyList)
+	/* メモリ解放 */
 	{
-		delete pEnemy;
-	}
-
-	// 弾
-	for (auto& pBullet : this->pBulletList)
-	{
-		delete pBullet;
-	}
-
-	// エフェクト
-	for (auto& pEffect : this->pEffectList)
-	{
-		delete pEffect;
-	}
-
-	// プラットフォーム
-	for (auto& pPlatform : this->pPlatformList)
-	{
-		delete pPlatform;
-	}
-
-	// アイテム(実体なし)
-	for (auto& pEffectItem : this->pEffectItemList)
-	{
-		delete pEffectItem;
-	}
-
-	// アイテム(実体あり)
-	for (auto& pPickUpItem : this->pPickUpItemList)
-	{
-		delete pPickUpItem;
+		delete this->pCharacterPlayer;											// プレイヤー
+		delete this->pSkySqhere;												// スカイスフィア
+		for (auto& pEnemy : this->pEnemyList)			{ delete pEnemy; }		// エネミー
+		for (auto& pBullet : this->pBulletList)			{ delete pBullet; }		// 弾		
+		for (auto& pEffect : this->pEffectList)			{ delete pEffect; }		// エフェクト
+		for (auto& pPlatform : this->pPlatformList)		{ delete pPlatform; }	// プラットフォーム
+		for (auto& pEffectItem : this->pEffectItemList)	{ delete pEffectItem; }	// アイテム(実体なし)
+		for (auto& pPickUpItem : this->pPickUpItemList)	{ delete pPickUpItem; }	// アイテム(実体あり)
 	}
 }
 
@@ -93,6 +50,7 @@ void DataList_Object::InitializationAll()
 	InitializationPlatform();
 	InitializationEffectItem();
 	InitializationPickUpItem();
+	InitializationEnemySpawnPoint();
 }
 
 // プレイヤー初期化
@@ -172,6 +130,16 @@ void DataList_Object::InitializationPickUpItem()
 	for (auto& pPickUpItem : this->pPickUpItemList)
 	{
 		pPickUpItem->Initialization();
+	}
+}
+
+// エネミースポナー初期化
+void DataList_Object::InitializationEnemySpawnPoint()
+{
+	/* すべてのエネミースポナーの初期化を呼ぶ */
+	for (auto& pEnemySpawnPoint : this->pEnemySpawnPointList)
+	{
+		pEnemySpawnPoint->Initialization();
 	}
 }
 

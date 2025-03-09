@@ -8,6 +8,7 @@
 /* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 /* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 /* 2025.02.26 菊池雅道 クールタイム関連の関数・変数追加 */
+/* 2025.03.08 駒沢風助 新モデル対応 */
 
 #pragma once
 #include "Appframe.h"
@@ -89,16 +90,17 @@ class CharacterPlayer : public CharacterBase
 
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
-		BulletPlayerMeleeWeak* pBulletMeleeWeak;	// 近接攻撃(弱)の弾
-		BulletPlayerKunaiEffect* pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
+		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
+		BulletPlayerKunaiEffect*	pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
 		EffectManualDelete_PlayerFollow_Frame* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 		EffectManualDelete_PlayerFollow_Frame* pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-		EffectManualDelete_PlayerFollow*	pDodgeEffect;		//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow*		pDodgeEffect;			//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
-		/* フレームのハンドル */
+		/* フレーム番号 */
 		int		iKatanaFrameNo;			// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
+		int		iUpperBodyFrameNo;		// 上半身のフレーム番号							/* 2025.03.08 駒沢風助 新モデル対応 */		
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

@@ -8,13 +8,10 @@
 #include "DataList_Object.h"
 #include "DataList_PlayerStatus.h"
 
-/* オブジェクト */
-#include "PlatformBasic.h"
-
 /* 落下判定クラスの宣言 */
 
 // 落下判定クラス
-class Gimmick_FallJudgment : public PlatformBasic
+class Gimmick_FallJudgment : public PlatformBase
 {
 	public:
 		Gimmick_FallJudgment();				// コンストラクタ

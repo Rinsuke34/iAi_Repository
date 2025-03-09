@@ -91,9 +91,6 @@
     <Filter Include="ソース ファイル\オブジェクト\ベース\アクタ\バレット">
       <UniqueIdentifier>{ba86bd9a-b8db-4041-bcd0-28afa1877ca6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\オブジェクト\ベース\トリガ">
-      <UniqueIdentifier>{da6bee33-4902-4263-adc1-2c0d4ee85fd4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\オブジェクト\ベース\プラットフォーム">
       <UniqueIdentifier>{f4dfc76d-1f22-4fed-9a82-8a06554a5df3}</UniqueIdentifier>
     </Filter>
@@ -108,9 +105,6 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\アクタ\キャラクター\エネミー">
       <UniqueIdentifier>{2dd18806-e1b9-46b6-aafa-e789570ca401}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\オブジェクト\ベース\トリガ">
-      <UniqueIdentifier>{7941b78e-5ad2-453a-904e-a21c19e2f243}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\オブジェクト\ベース\プラットフォーム">
       <UniqueIdentifier>{a567878f-3be2-486c-ae68-247e9de2ac16}</UniqueIdentifier>

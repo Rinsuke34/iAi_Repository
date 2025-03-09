@@ -9,7 +9,6 @@
 #include "DataList_Image.h"
 
 /* オブジェクト */
-#include "PlatformBasic.h"
 #include "EffectManualDelete.h"
 #include "PlayerStatusDefine.h"
 #include "GimmickDefine.h"
@@ -21,37 +20,33 @@
 /* テスト用敵クラス */
 
 // 消失ギミッククラス
-class Screen : public PlatformBasic
+class Screen : public PlatformBase
 {
-public:
-	Screen();				// コンストラクタ
-	virtual ~Screen();		// デストラクタ
+	public:
+		Screen();				// コンストラクタ
+		virtual ~Screen();		// デストラクタ
 
-	virtual void	Update()			override;		// 更新
+		virtual void	Update()			override;		// 更新
 	
+	private:
+		/* 使用するデータリスト */
+		DataList_Object*	ObjectList;	// オブジェクト管理
+		CharacterBase*		pPlayer;	// プレイヤー
 
-private:
+		/* 関数 */
+		void	Process();				// 更新
 
-	//関数
-	void	Process();				// 更新
+		/* テクスチャハンドル */
+		int iTextureTitleHandle;		// タイトル
+		int iTextureNewgameHandle;		// ニューゲーム
+		int iTextureContinueHandle;		// コンティニュー
+		int iTextureDateHandle;			// データ
+		int iTextureConfigHandle;		// コンフィグ
+		int iTextureStageHandle;		// ステージ
 
+		bool bStartFlg;					//スタートフラグ	
+		bool bHomeFlg;					//ホームフラグ
+		bool bGameStartFlg;				//ゲームスタートフラグ
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
-
-	// テクスチャハンドルを追加
-	int iTextureTitleHandle;			// タイトル
-	int iTextureNewgameHandle;		// ニューゲーム
-	int iTextureContinueHandle;		// コンティニュー
-	int iTextureDateHandle;			// データ
-	int iTextureConfigHandle;		// コンフィグ
-	int iTextureStageHandle;			// ステージ
-
-	bool bStartFlg;		//スタートフラグ	
-	bool bHomeFlg;	//ホームフラグ
-	bool bGameStartFlg;	//ゲームスタートフラグ
-
-	int iUICount;	//UIのカウント
-protected:
+		int iUICount;					//UIのカウント
 };

@@ -330,8 +330,8 @@ void CharacterPlayer::Player_Move()
 						/* 現在のモーションが"回避"でないか確認 */
 						if (this->PlayerStatusList->iGetPlayerMoveState() != PLAYER_MOVESTATUS_DODGING)
 						{
-						/* 待機モーション設定 */
-						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+							/* 待機モーション設定 */
+							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
 						
 						}		
 					}
@@ -961,25 +961,27 @@ void CharacterPlayer::Movement_Vertical()
 		/* 着地フラグが無効である(空中にいる)か確認 */
 		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 		{
+			// 無効である(空中にいる)場合
+			/* プレイヤーの移動モーションが"回避"でないか確認 */
 			if (this->PlayerStatusList->iGetPlayerMoveState() != PLAYER_MOVESTATUS_DODGING)
 			{
-			// 無効である(空中にいる)場合
-			/* 上昇しているか確認 */
-			if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
-			{
-				// 上昇している場合
-				/* モーションが"ジャンプ(開始)"でないことを確認 */
-				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+				// 回避モーションでない場合
+				/* 上昇しているか確認 */
+				if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 				{
-				/* モーションを"ジャンプ(上昇)"に設定 */
-				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+					// 上昇している場合
+					/* モーションが"ジャンプ(開始)"でないことを確認 */
+					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+					{
+						/* モーションを"ジャンプ(上昇)"に設定 */
+						PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+					}
 				}
-			}
-			else
-			{
-				// 下降している場合
-				/* モーションを"ジャンプ(下降)"に設定 */
-				PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+				else
+				{
+					// 下降している場合
+					/* モーションを"ジャンプ(下降)"に設定 */
+					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
 				}
 			}
 		}

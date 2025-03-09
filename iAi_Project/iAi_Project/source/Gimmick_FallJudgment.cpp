@@ -4,7 +4,7 @@
 
 /* 落下判定クラスの定義 */
 // コンストラクタ
-Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBasic()
+Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBase()
 {
 	/* データリストを取得 */
 	{

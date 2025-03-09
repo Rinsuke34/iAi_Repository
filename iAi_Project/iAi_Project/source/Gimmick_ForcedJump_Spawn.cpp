@@ -4,7 +4,7 @@
 
 /* 強制ジャンプギミックスポナークラスの定義 */
 // コンストラクタ
-Gimmick_ForcedJump_Spawn::Gimmick_ForcedJump_Spawn() : PlatformBasic()
+Gimmick_ForcedJump_Spawn::Gimmick_ForcedJump_Spawn() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
