@@ -6,12 +6,12 @@
 #include "PublicInclude.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EnemySpawnPoint_Base.h"
 
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
-class EnemyBasic;
+class Enemy_Basic;
 class EnemySpawnPoint_Base;
 
 /* オブジェクト管理クラスの宣言 */
@@ -87,13 +87,25 @@ class DataList_Object : public DataListBase
 		void	DeleteEffectItem();		// 削除フラグが有効なアイテム(実体なし)を削除
 		void	DeletePickUpItem();		// 削除フラグが有効なアイテム(実体あり)を削除
 
+		/* リスト内オブジェクトリセット処理 */
+		void	ResetAll();				// 全オブジェクトリセット処理
+		void	ResetPlayer();			// プレイヤーリセット処理
+		void	ResetSkySqhere();		// スカイスフィアリセット処理
+		void	ResetEnemy();			// エネミーリセット処理
+		void	ResetEffect();			// エフェクトリセット処理
+		void	ResetBullet();			// 弾リセット処理
+		void	ResetPlatform();		// プラットフォームリセット処理
+		void	ResetEffectItem();		// アイテム(実体なし)リセット処理
+		void	ResetPickUpItem();		// アイテム(実体あり)リセット処理
+		void	ResetEnemySpawnPoint();	// エネミースポナーリセット処理
+
 		/* データ取得 */
 		// 単独
 		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
 		SkySqhereBase* GetSkySqhere()		{ return this->pSkySqhere; }		// スカイスフィア取得
 
 		// リスト
-		std::vector<EnemyBasic*>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
+		std::vector<Enemy_Basic*>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
 		std::vector<EffectBase*>&			GetEffectList()				{ return this->pEffectList; }			// エフェクト取得
 		std::vector<BulletBase*>&			GetBulletList()				{ return this->pBulletList; }			// 弾取得
 		std::vector<PlatformBase*>&			GetCollisionList()			{ return this->pPlatformList; }			// プラットフォーム
@@ -107,7 +119,7 @@ class DataList_Object : public DataListBase
 		void	SetSkySqhere(SkySqhereBase* pSkySqhere)			{ this->pSkySqhere			= pSkySqhere; }		// スカイスフィア設定
 
 		// リスト
-		void	SetEnemy(EnemyBasic* pEnemy)								{ pEnemyList.emplace_back(pEnemy); };						// エネミー追加
+		void	SetEnemy(Enemy_Basic* pEnemy)								{ pEnemyList.emplace_back(pEnemy); };						// エネミー追加
 		void	SetEffect(EffectBase* pEffect)								{ pEffectList.emplace_back(pEffect); };						// エフェクト追加
 		void	SetBullet(BulletBase* pBullet)								{ pBulletList.emplace_back(pBullet); };						// 弾追加
 		void	SetPlatform(PlatformBase* pPlatform)						{ pPlatformList.emplace_back(pPlatform); };					// プラットフォーム追加
@@ -122,7 +134,7 @@ class DataList_Object : public DataListBase
 		SkySqhereBase*					pSkySqhere;			// スカイスフィア
 
 		// リスト
-		std::vector<EnemyBasic*>			pEnemyList;				// エネミー
+		std::vector<Enemy_Basic*>			pEnemyList;				// エネミー
 		std::vector<EffectBase*>			pEffectList;			// エフェクト
 		std::vector<BulletBase*>			pBulletList;			// 弾
 		std::vector<PlatformBase*>			pPlatformList;			// プラットフォーム

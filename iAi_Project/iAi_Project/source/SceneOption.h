@@ -3,6 +3,7 @@
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
+#include "SceneOptionDefine.h"
 #include <vector>
 
 /* データリスト */

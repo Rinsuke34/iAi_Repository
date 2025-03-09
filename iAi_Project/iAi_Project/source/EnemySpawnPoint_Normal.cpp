@@ -15,7 +15,7 @@ void EnemySpawnPoint_Normal::Initialization()
 	/* エネミー(ノーマル)生成処理 */
 	{
 		/* エネミー(ノーマル)を作成 */
-		NormalEnemy* AddEnemy = new NormalEnemy();
+		Enemy_Normal* AddEnemy = new Enemy_Normal();
 
 		/* 生成したエネミー(ノーマル)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

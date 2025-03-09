@@ -1,8 +1,8 @@
 /* 2025.01.29 石川智也 ファイル作成 */
-#include "EnemyNormal.h"
+#include "Enemy_Normal.h"
 
 // コンストラクタ
-NormalEnemy::NormalEnemy() : EnemyBasic()
+Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 {
 
 	/* オブジェクトのハンドル */
@@ -37,13 +37,13 @@ NormalEnemy::NormalEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-NormalEnemy::~NormalEnemy()
+Enemy_Normal::~Enemy_Normal()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 // 初期化
-void NormalEnemy::Initialization()
+void Enemy_Normal::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -55,7 +55,7 @@ void NormalEnemy::Initialization()
 }
 
 // 敵を移動させる
-void NormalEnemy::MoveEnemy()
+void Enemy_Normal::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
@@ -135,7 +135,7 @@ void NormalEnemy::MoveEnemy()
 }
 
 // ノーマル弾の発射
-void NormalEnemy::Player_Range_Normal_Shot()
+void Enemy_Normal::Player_Range_Normal_Shot()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
@@ -172,7 +172,7 @@ void NormalEnemy::Player_Range_Normal_Shot()
 }
 
 // 更新
-void NormalEnemy::Update()
+void Enemy_Normal::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -194,10 +194,14 @@ void NormalEnemy::Update()
 		}
 	}
 
-	if (this->iGetNowHP() <= 0)
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
 	{
-		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
+		// HPが0以下である場合
+		/* 撃破時の処理を実行 */
+		Defeat();
+
+		return;
 	}
 
 	// エネミーを移動させる

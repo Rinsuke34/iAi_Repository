@@ -21,6 +21,16 @@ void Fps::FpsAdjustment()
 {
 	/* 時刻計算 */
 	FpsUpdate();
+
+	/* フレームレート調整のため待機 */
+	FpsWait();
+}
+
+// フレームレート描画(デバッグ用)
+void Fps::DrawFPS()
+{
+	/* フレームレート描画 */
+	DrawFormatStringToHandle(0, 0, GetColor(255, 255, 255), giFontHandle, "FPS:%d", giNowFps);
 }
 
 // 時刻計算

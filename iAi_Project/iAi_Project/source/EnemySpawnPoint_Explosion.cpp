@@ -15,7 +15,7 @@ void EnemySpawnPoint_Explosion::Initialization()
 	/* エネミー(自爆)生成処理 */
 	{
 		/* エネミー(自爆)を作成 */
-		ExplosionEnemy* AddEnemy = new ExplosionEnemy();
+		Enemy_Explosion* AddEnemy = new Enemy_Explosion();
 
 		/* 生成したエネミー(自爆)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

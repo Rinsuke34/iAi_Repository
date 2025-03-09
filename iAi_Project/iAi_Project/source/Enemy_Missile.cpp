@@ -1,8 +1,8 @@
 /* 2025.01.30 石川智也 ファイル作成 */
-#include "EnemyMissile.h"
+#include "Enemy_Missile.h"
 
 // コンストラクタ
-MissileEnemy::MissileEnemy() : EnemyBasic()
+Enemy_Missile::Enemy_Missile() : Enemy_Basic()
 {
 
 	/* オブジェクトのハンドル */
@@ -36,13 +36,13 @@ MissileEnemy::MissileEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-MissileEnemy::~MissileEnemy()
+Enemy_Missile::~Enemy_Missile()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 // 初期化
-void MissileEnemy::Initialization()
+void Enemy_Missile::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -54,7 +54,7 @@ void MissileEnemy::Initialization()
 }
 
 // 敵を移動させる
-void MissileEnemy::MoveEnemy()
+void Enemy_Missile::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
@@ -96,7 +96,7 @@ void MissileEnemy::MoveEnemy()
 }
 
 // ミサイル弾の発射
-void MissileEnemy::Player_Range_Missile_Shot()
+void Enemy_Missile::Player_Range_Missile_Shot()
 {
 	// ミサイルを生成
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
@@ -125,17 +125,10 @@ void MissileEnemy::Player_Range_Missile_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeMissile);
-
-
-
 }
 
-
-
-
-
 // 更新
-void MissileEnemy::Update()
+void Enemy_Missile::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -157,12 +150,14 @@ void MissileEnemy::Update()
 		}
 	}
 
-
-
-	if (this->iGetNowHP() <= 0)
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
 	{
-		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
+		// HPが0以下である場合
+		/* 撃破時の処理を実行 */
+		Defeat();
+
+		return;
 	}
 
 	// エネミーを移動させる

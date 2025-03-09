@@ -2,7 +2,7 @@
 #include "Enemy_Explosion.h"
 
 // コンストラクタ
-ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
+Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 {
 
 
@@ -45,13 +45,13 @@ ExplosionEnemy::ExplosionEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-ExplosionEnemy::~ExplosionEnemy()
+Enemy_Explosion::~Enemy_Explosion()
 {
 
 }
 
 // 初期化
-void ExplosionEnemy::Initialization()
+void Enemy_Explosion::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -62,7 +62,7 @@ void ExplosionEnemy::Initialization()
 	LoadCoreFrameNo();
 }
 
-void ExplosionEnemy::MoveEnemy()
+void Enemy_Explosion::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
@@ -179,7 +179,7 @@ void ExplosionEnemy::MoveEnemy()
 	
 }
 
-void ExplosionEnemy::Enemy_Gravity()
+void Enemy_Explosion::Enemy_Gravity()
 {
 	// 移動後の座標を取得(垂直方向)
 	VECTOR vecNextPosition;
@@ -231,7 +231,7 @@ void ExplosionEnemy::Enemy_Gravity()
 }
 
 // 更新
-void ExplosionEnemy::Update()
+void Enemy_Explosion::Update()
 {
     // バレットリストを取得
 	auto& BulletList = ObjectList->GetBulletList();
@@ -264,6 +264,24 @@ void ExplosionEnemy::Update()
 			//爆発予告エフェクトの削除フラグを有効化
 			this->pEffectDetonation->SetDeleteFlg(true);
 		}
+	}
+
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
+	{
+		// HPが0以下である場合
+		/* 撃破時の処理を実行 */
+		Defeat();
+
+		/* 爆発予告エフェクトを一度でも生成したか確認 */
+		if (this->pEffectDetonation != nullptr)
+		{
+			// 一度でも生成した場合
+			/* 爆発予告エフェクトの削除フラグを有効化 */
+			this->pEffectDetonation->SetDeleteFlg(true);
+		}
+
+		return;
 	}
 
 	// エネミーを移動させる

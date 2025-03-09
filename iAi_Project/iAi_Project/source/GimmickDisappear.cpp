@@ -15,7 +15,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/cube");
+		this->iModelHandle = ModelListHandle->iGetModel("Object/DisappearFloor/DisappearFloor");
 	}
 
 	//プレイヤーの情報を取得

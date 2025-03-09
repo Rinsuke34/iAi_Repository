@@ -15,8 +15,10 @@ class DataList_Object;
 class EnemySpawnPoint_Base : public PlatformBase
 {
 	public:
-		EnemySpawnPoint_Base();							// コンストラクタ
-		virtual ~EnemySpawnPoint_Base() {};				// デストラクタ
+		EnemySpawnPoint_Base();					// コンストラクタ
+		virtual ~EnemySpawnPoint_Base() {};		// デストラクタ
+
+		virtual void	Reset()	override;		// リセット処理
 
 	protected:
 		/* 使用するデータリスト */

@@ -15,7 +15,7 @@ void EnemySpawnPoint_Escape::Initialization()
 	/* エネミー(逃走)生成処理 */
 	{
 		/* エネミー(逃走)を作成 */
-		EscapeEnemy* AddEnemy = new EscapeEnemy();
+		Enemy_Escape* AddEnemy = new Enemy_Escape();
 
 		/* 生成したエネミー(逃走)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

@@ -11,3 +11,10 @@ EnemySpawnPoint_Base::EnemySpawnPoint_Base() : PlatformBase()
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 }
+
+// リセット処理
+void EnemySpawnPoint_Base::Reset()
+{
+	/* このオブジェクトの初期化処理を実行する */
+	Initialization();
+}

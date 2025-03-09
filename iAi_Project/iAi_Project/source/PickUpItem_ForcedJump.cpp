@@ -32,12 +32,6 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 	}
 }
 
-// デストラクタ
-PickUpItem_ForcedJump::~PickUpItem_ForcedJump()
-{
-	
-}
-
 // 初期化
 void PickUpItem_ForcedJump::Initialization()
 {
@@ -93,4 +87,11 @@ void PickUpItem_ForcedJump::Update()
 		/* 生成元のスポーンフラグを有効にする */
 		this->pGimmick_ForcedJump_Spawn->SetSpawnObjectFlg(true);
 	}
+}
+
+// リセット処理
+void PickUpItem_ForcedJump::Reset()
+{
+	/* このオブジェクトの削除フラグを有効にする */
+	this->bDeleteFlg = true;
 }

@@ -1,4 +1,4 @@
-/* 2024.01.29 石川智也 ファイル作成 */
+/* 2024.01.30 石川智也 ファイル作成 */
 
 #pragma once
 #include "Appframe.h"
@@ -8,49 +8,38 @@
 #include "DataList_Object.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EffectManualDelete.h"
-#include "BulletEnemyRangeNormal.h"
+#include "BulletEnemyRangeMissile.h"
 #include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class NormalEnemy : public EnemyBasic
+class Enemy_Missile : public Enemy_Basic
 {
 public:
-	NormalEnemy();				// コンストラクタ
-	virtual ~NormalEnemy();		// デストラクタ
+	Enemy_Missile();				// コンストラクタ
+	virtual ~Enemy_Missile();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
 
 private:
-	//EffectManualDelete* pEffect;
+	EffectManualDelete* pEffect;
 
-	EffectManualDelete* pEffectWarning;					//警告エフェクト
+	EffectManualDelete* pEffectHit;					//警告エフェクト
 
-	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
-
-
+protected:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 
-	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
+	void	Player_Range_Missile_Shot();			// イクラ弾攻撃
 
+	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
 
-	//変数
 	int		iFiringCount;	// 発射カウント
-
-	int		iGuidanceCount;	// 誘導カウント
-
-	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
-	
-
-protected:
-
 
 };

@@ -6,6 +6,12 @@
 // コンストラクタ
 ScenePause::ScenePause() : SceneBase("Pause", 450, true)
 {
+	/* データリスト取得 */
+	{
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+	}
+
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
@@ -37,6 +43,11 @@ void ScenePause::Process()
 
 			/* 最初から */
 			case PAUSE_MANU_RESTART:
+				/* ゲーム状態を"リセット"に変更する */
+				this->StageStatusList->SetGameStatus(GAMESTATUS_RESET);
+
+				/* このシーンの削除フラグを有効にする */
+				this->bDeleteFlg = true;
 				break;
 
 			/* オプション */
@@ -55,8 +66,6 @@ void ScenePause::Process()
 
 				/* シーン"タイトル"を追加 */
 				gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
-
-				/* 既存 */
 				break;
 		}
 

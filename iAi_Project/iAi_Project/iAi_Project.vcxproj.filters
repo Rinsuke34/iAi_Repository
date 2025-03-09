@@ -474,10 +474,10 @@
     <ClCompile Include="source\EffectSelfDelete.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyBasic.cpp">
+    <ClCompile Include="source\Enemy_Basic.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyGoalObject.cpp">
+    <ClCompile Include="source\Enemy_GoalObject.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClCompile>
     <ClCompile Include="source\DataList_Effect.cpp">
@@ -498,13 +498,13 @@
     <ClCompile Include="source\BulletEnemyRangeNormal.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\エネミー</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyMissile.cpp">
+    <ClCompile Include="source\Enemy_Missile.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyNormal.cpp">
+    <ClCompile Include="source\Enemy_Normal.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyEscape.cpp">
+    <ClCompile Include="source\Enemy_Escape.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneStage_Camera.cpp">
@@ -525,7 +525,7 @@
     <ClCompile Include="source\CharacterPlayerMove.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="source\EnemyBeam.cpp">
+    <ClCompile Include="source\Enemy_Beam.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム</Filter>
     </ClCompile>
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp">
@@ -719,10 +719,10 @@
     <ClInclude Include="source\EffectSelfDelete.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyBasic.h">
+    <ClInclude Include="source\Enemy_Basic.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyGoalObject.h">
+    <ClInclude Include="source\Enemy_GoalObject.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ゴールオブジェクト</Filter>
     </ClInclude>
     <ClInclude Include="source\DataList_Effect.h">
@@ -734,13 +734,13 @@
     <ClInclude Include="source\SoundDefine.h">
       <Filter>ヘッダー ファイル\データリスト\サウンド管理</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyEscape.h">
+    <ClInclude Include="source\Enemy_Escape.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\逃走</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyMissile.h">
+    <ClInclude Include="source\Enemy_Missile.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyNormal.h">
+    <ClInclude Include="source\Enemy_Normal.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
     </ClInclude>
     <ClInclude Include="source\Enemy_Explosion.h">
@@ -749,7 +749,7 @@
     <ClInclude Include="source\EnemyDefine.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー</Filter>
     </ClInclude>
-    <ClInclude Include="source\EnemyBeam.h">
+    <ClInclude Include="source\Enemy_Beam.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ビーム</Filter>
     </ClInclude>
     <ClInclude Include="source\BulletEnemyRangeBeam.h">
@@ -907,6 +907,9 @@
     </ClInclude>
     <ClInclude Include="source\EnemySpawnPoint_Escape.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneOptionDefine.h">
+      <Filter>ヘッダー ファイル\シーン\オプション</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

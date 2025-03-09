@@ -12,7 +12,8 @@ class Fps
 		Fps();				// コンストラクタ
 		virtual ~Fps() {};	// デストラクタ
 
-		void FpsAdjustment();			// フレームレート調整処理
+		void	FpsAdjustment();		// フレームレート調整処理
+		void	DrawFPS();				// フレームレート描画(デバッグ用)
 
 	private:
 		/* 関数 */

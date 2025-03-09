@@ -7,6 +7,7 @@
 
 /* データリスト */
 #include "DataList_Image.h"
+#include "DataList_StageStatus.h"
 
 /* シーン */
 #include "SceneOption.h"
@@ -25,6 +26,9 @@ class ScenePause : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
+		/* 使用するデータリスト */
+		DataList_StageStatus* StageStatusList;	// ステージ状態管理
+
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Arrow;		// 矢印
 

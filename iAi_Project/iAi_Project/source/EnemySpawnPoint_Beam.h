@@ -5,7 +5,7 @@
 
 /* オブジェクト */
 #include "EnemySpawnPoint_Base.h"
-#include "EnemyBeam.h"
+#include "Enemy_Beam.h"
 
 /* エネミー(ビーム)スポナークラスの宣言 */
 

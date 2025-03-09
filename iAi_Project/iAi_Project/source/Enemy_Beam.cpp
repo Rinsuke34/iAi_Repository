@@ -1,8 +1,8 @@
 /* 2025.01.29 石川智也 ファイル作成 */
-#include "EnemyBeam.h"
+#include "Enemy_Beam.h"
 
 // コンストラクタ
-BeamEnemy::BeamEnemy() : EnemyBasic()
+Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 {
 
 	/* オブジェクトのハンドル */
@@ -36,13 +36,13 @@ BeamEnemy::BeamEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-BeamEnemy::~BeamEnemy()
+Enemy_Beam::~Enemy_Beam()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
 }
 
 // 初期化
-void BeamEnemy::Initialization()
+void Enemy_Beam::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -54,7 +54,7 @@ void BeamEnemy::Initialization()
 }
 
 // 敵を移動させる
-void BeamEnemy::MoveEnemy()
+void Enemy_Beam::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
@@ -137,7 +137,7 @@ void BeamEnemy::MoveEnemy()
 }
 
 // ビームの発射
-void BeamEnemy::Player_Range_Beam_Shot()
+void Enemy_Beam::Player_Range_Beam_Shot()
 {
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
@@ -173,7 +173,7 @@ void BeamEnemy::Player_Range_Beam_Shot()
 }
 
 // 更新
-void BeamEnemy::Update()
+void Enemy_Beam::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -195,10 +195,12 @@ void BeamEnemy::Update()
 		}
 	}
 
-	if (this->iGetNowHP() <= 0)
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
 	{
-		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
+		// HPが0以下である場合
+		/* 撃破時の処理を実行 */
+		Defeat();
 
 		/* ビームを一度でも生成したかを確認 */
 		if (this->pBulletRangeBeam != nullptr)
@@ -207,6 +209,8 @@ void BeamEnemy::Update()
 			//ビームの削除フラグを有効化
 			this->pBulletRangeBeam->SetDeleteFlg(true);
 		}
+
+		return;
 	}
 
 	// エネミーを移動させる

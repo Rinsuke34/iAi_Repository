@@ -52,6 +52,7 @@ class CharacterPlayer : public CharacterBase
 		virtual void	Update()			override;		// 更新
 		virtual void	Draw()				override;		// 描写
 		virtual void	CollisionDraw()		override;		// 当たり判定描写
+		virtual void	Reset()				override;		// リセット処理
 
 	private:
 		/* 使用するデータリスト */
@@ -94,8 +95,8 @@ class CharacterPlayer : public CharacterBase
 		BulletPlayerKunaiEffect*	pBulletKunaiEffect;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
-		EffectManualDelete_PlayerFollow_Frame* pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-		EffectManualDelete_PlayerFollow_Frame* pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow_Frame*	pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		EffectManualDelete_PlayerFollow_Frame*	pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 		EffectManualDelete_PlayerFollow*		pDodgeEffect;			//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
 		/* フレーム番号 */

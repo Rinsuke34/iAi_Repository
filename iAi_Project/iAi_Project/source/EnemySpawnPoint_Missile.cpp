@@ -15,7 +15,7 @@ void EnemySpawnPoint_Missile::Initialization()
 	/* エネミー(ミサイル)生成処理 */
 	{
 		/* エネミー(ミサイル)を作成 */
-		MissileEnemy* AddEnemy = new MissileEnemy();
+		Enemy_Missile* AddEnemy = new Enemy_Missile();
 
 		/* 生成したエネミー(ミサイル)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

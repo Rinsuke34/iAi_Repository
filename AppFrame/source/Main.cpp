@@ -163,4 +163,10 @@ void Main::DebugDraw()
 	{
 		gpDataListServer->DrawDataList();
 	}
+
+	/* FPS•`ŽÊ */
+	if (gbDrawFpsFlg == true)
+	{
+		gpFps->DrawFPS();
+	}
 }

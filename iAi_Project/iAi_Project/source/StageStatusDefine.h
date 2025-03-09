@@ -14,6 +14,8 @@ static const int	GAMESTATUS_RESULT				= 3;	// ƒŠƒUƒ‹ƒgÀs
 static const int	GAMESTATUS_EDIT					= 4;	// ƒGƒfƒBƒbƒgÀs
 static const int	GAMESTATUS_NEXTSTAGE			= 5;	// Ÿ‚ÌƒXƒe[ƒW‚Ö‘JˆÚ
 static const int	GAMESTATUS_GAMEOVER				= 6;	// ƒQ[ƒ€ƒI[ƒo[
+static const int	GAMESTATUS_RESET				= 7;	// ƒŠƒZƒbƒg
+static const int	GAMESTATUS_START				= 8;	// ƒQ[ƒ€ŠJn
 
 /* ƒQ[ƒ€ƒNƒŠƒA‚ÌƒJƒEƒ“ƒg‚É‰‚¶‚½ˆ— */
 static const int	STAGECLEAR_COUNT_START				= 0;	// ƒXƒe[ƒWƒNƒŠƒAˆ—ŠJn
@@ -30,6 +32,10 @@ static const float	INIT_CAMERA_ROTATIONAL_SPEED_CONTROLLER	= 0.02f;			// ƒJƒƒ‰‚
 static const float	INIT_CAMERA_ROTATIONAL_SPEED_MOUSE		= 0.005f;			// ƒJƒƒ‰‚Ì‰ñ“]‘¬“x(ƒ}ƒEƒX)
 static const float	INIT_CAMERA_ANGLE_LIMIT_UP				= DX_PI_F / +2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(ã)(ƒ‰ƒWƒAƒ“)
 static const float	INIT_CAMERA_ANGLE_LIMIT_DOWN			= DX_PI_F / -2.f;	// ƒJƒƒ‰‚Ì‰ñ“]Šp“x§ŒÀ(‰º)(ƒ‰ƒWƒAƒ“)
+static const float	INIT_CAMERA_NEAR						= 100.f;			// ƒJƒƒ‰‚Ì‘O•ûƒNƒŠƒbƒv‹——£
+static const float	INIT_CAMERA_FAR							= 30000.f;			// ƒJƒƒ‰‚ÌŒã•ûƒNƒŠƒbƒv‹——£
+static const float	INIT_CAMERA_FOG_START					= 20000.f;			// ƒJƒƒ‰‚ÌƒtƒHƒOŠJn‹——£
+static const float	INIT_CAMERA_FOG_END						= 26000.f;			// ƒJƒƒ‰‚ÌƒtƒHƒOI—¹‹——£
 // ƒJƒƒ‰ó‘Ô
 static const int	CAMERA_MODE_NORMAL						= 0;				// ƒtƒŠ[ƒ‚[ƒh(’Êí‚ÌOlÌ‹“_)
 static const int    CAMERA_MODE_LOCK						= 1;				// ŒÅ’è

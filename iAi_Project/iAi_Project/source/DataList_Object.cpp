@@ -61,16 +61,18 @@ void DataList_Object::InitializationPlayer()
 	if (this->pCharacterPlayer != nullptr)
 	{
 		// プレイヤーが存在する場合
-		/* プレイヤーの初期化を呼ぶ */
+		/* プレイヤーの初期化処理 */
 		this->pCharacterPlayer->Initialization();
+		this->pCharacterPlayer->SetupInitialPosition();
 	}
 }
 
 // スカイスフィア初期化
 void DataList_Object::InitializationSkySqhere()
 {
-	/* スカイスフィアの初期化 */
+	/* スカイスフィアの初期化処理 */
 	this->pSkySqhere->Initialization();
+	this->pSkySqhere->SetupInitialPosition();
 }
 
 // エネミー初期化
@@ -80,6 +82,7 @@ void DataList_Object::InitializationEnemy()
 	for (auto& pEnemy : this->pEnemyList)
 	{
 		pEnemy->Initialization();
+		pEnemy->SetupInitialPosition();
 	}
 }
 
@@ -90,6 +93,7 @@ void DataList_Object::InitializationEffect()
 	for (auto& pEffect : this->pEffectList)
 	{
 		pEffect->Initialization();
+		pEffect->SetupInitialPosition();
 	}
 }
 
@@ -100,6 +104,7 @@ void DataList_Object::InitializationBullet()
 	for (auto& pBullet : this->pBulletList)
 	{
 		pBullet->Initialization();
+		pBullet->SetupInitialPosition();
 	}
 }
 
@@ -110,6 +115,7 @@ void DataList_Object::InitializationPlatform()
 	for (auto& pPlatform : this->pPlatformList)
 	{
 		pPlatform->Initialization();
+		pPlatform->SetupInitialPosition();
 	}
 }
 
@@ -120,6 +126,7 @@ void DataList_Object::InitializationEffectItem()
 	for (auto& pEffectItem : this->pEffectItemList)
 	{
 		pEffectItem->Initialization();
+		pEffectItem->SetupInitialPosition();
 	}
 }
 
@@ -130,6 +137,7 @@ void DataList_Object::InitializationPickUpItem()
 	for (auto& pPickUpItem : this->pPickUpItemList)
 	{
 		pPickUpItem->Initialization();
+		pPickUpItem->SetupInitialPosition();
 	}
 }
 
@@ -140,6 +148,7 @@ void DataList_Object::InitializationEnemySpawnPoint()
 	for (auto& pEnemySpawnPoint : this->pEnemySpawnPointList)
 	{
 		pEnemySpawnPoint->Initialization();
+		pEnemySpawnPoint->SetupInitialPosition();
 	}
 }
 
@@ -649,4 +658,109 @@ void DataList_Object::DeletePickUpItem()
 			return false;
 		}
 	}), pPickUpItemList.end());
+}
+
+// 全オブジェクトリセット処理
+void DataList_Object::ResetAll()
+{
+	/* 登録されているすべてのオブジェクトのリセット処理 */
+	ResetPlayer();
+	ResetSkySqhere();
+	ResetEnemy();
+	ResetEffect();
+	ResetBullet();
+	ResetPlatform();
+	ResetEffectItem();
+	ResetPickUpItem();
+	ResetEnemySpawnPoint();
+}
+
+// プレイヤーリセット処理
+void DataList_Object::ResetPlayer()
+{
+	/* プレイヤーが存在するか確認 */
+	// ※ タイトル画面等プレイヤーが存在しない場合はnullptrとなる
+	if (this->pCharacterPlayer != nullptr)
+	{
+		// プレイヤーが存在する場合
+		/* プレイヤーのリセット処理を呼ぶ */
+		this->pCharacterPlayer->Reset();
+	}
+}
+
+// スカイスフィアリセット処理
+void DataList_Object::ResetSkySqhere()
+{
+	/* スカイスフィアのリセット処理を呼ぶ */
+	this->pSkySqhere->Reset();
+}
+
+// エネミーリセット処理
+void DataList_Object::ResetEnemy()
+{
+	/* すべてのエネミーのリセット処理を呼ぶ */
+	for (auto& pEnemy : this->pEnemyList)
+	{
+		pEnemy->Reset();
+	}
+}
+
+// エフェクトリセット処理
+void DataList_Object::ResetEffect()
+{
+	/* すべてのエフェクトのリセット処理を呼ぶ */
+	for (auto& pEffect : this->pEffectList)
+	{
+		pEffect->Reset();
+	}
+}
+
+// 弾リセット処理
+void DataList_Object::ResetBullet()
+{
+	/* すべての弾のリセット処理を呼ぶ */
+	for (auto& pBullet : this->pBulletList)
+	{
+		pBullet->Reset();
+	}
+}
+
+// プラットフォームリセット処理
+void DataList_Object::ResetPlatform()
+{
+	/* すべてのプラットフォームのリセット処理 */
+	for (auto& pPlatform : this->pPlatformList)
+	{
+		pPlatform->Reset();
+	}
+}
+
+// アイテム(実体なし)リセット処理
+void DataList_Object::ResetEffectItem()
+{
+	/* すべてのアイテム(実体なし)のリセット処理を呼ぶ */
+	for (auto& pEffectItem : this->pEffectItemList)
+	{
+		pEffectItem->Reset();
+	}
+}
+
+// アイテム(実体あり)リセット処理
+void DataList_Object::ResetPickUpItem()
+{
+	/* すべてのアイテム(実体あり)のリセット処理を呼ぶ */
+	for (auto& pPickUpItem : this->pPickUpItemList)
+	{
+		pPickUpItem->Reset();
+	}
+}
+
+// エネミースポナーリセット処理
+void DataList_Object::ResetEnemySpawnPoint()
+{
+	/* すべてのエネミースポナーのリセット処理を呼ぶ */
+	for (auto& pEnemySpawnPoint : this->pEnemySpawnPointList)
+	{
+		pEnemySpawnPoint->Reset();
+	}
 }

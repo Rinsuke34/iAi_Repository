@@ -5,7 +5,7 @@
 
 /* オブジェクト */
 #include "EnemySpawnPoint_Base.h"
-#include "EnemyEscape.h"
+#include "Enemy_Escape.h"
 
 /* エネミー(逃走)スポナークラスの宣言 */
 

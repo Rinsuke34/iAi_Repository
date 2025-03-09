@@ -113,12 +113,12 @@ void SceneStage::SetCmaera()
 
 	/* カメラの手前と奥のクリップ距離を設定 */
 	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
-	SetCameraNearFar(100.0f, 30000.f);
+	SetCameraNearFar(INIT_CAMERA_NEAR, INIT_CAMERA_FAR);
 
 	/* フォグの範囲を設定 */
 	SetFogEnable(TRUE);
 	SetFogColor(256, 44, 42);
-	SetFogStartEnd(20000.f, 26000.f);
+	SetFogStartEnd(INIT_CAMERA_FOG_START, INIT_CAMERA_FOG_END);
 
 	/* カメラ設定 */
 	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
@@ -323,7 +323,7 @@ void SceneStage::SetCamera_Title()
 void SceneStage::SetCamera_StageClear()
 {
 	/* クリア時カウントが"カメラ回転"に設定されたカウントであるか確認 */
-	if ((this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_FAST) || (this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_LAST))
+	if ((this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_FAST))
 	{
 		/* 現在のカメラ座標を取得 */
 		VECTOR vecCameraPosition = this->StageStatusList->vecGetCameraPosition();

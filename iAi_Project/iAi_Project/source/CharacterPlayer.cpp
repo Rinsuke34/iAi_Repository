@@ -31,9 +31,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
 
 		/* 変数 */
-		this->vecMove		= VGet(0.f, 0.f, 0.f);	// 移動量
-		this->vecNormalSum	= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
-		this->iObjectType	= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
+		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
+		this->vecNormalSum				= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
+		this->iObjectType				= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
 		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
@@ -88,6 +88,15 @@ void CharacterPlayer::Initialization()
 
 	/* コリジョンを更新 */
 	CollisionUpdate();
+}
+
+// リセット処理
+void CharacterPlayer::Reset()
+{
+	/* 座標、回転量、拡大率を初期値に設定 */
+	this->vecPosition	= this->vecPosition_Initial;
+	this->vecScale		= this->vecScale_Initial;
+	this->vecRotation	= this->vecRotation_Initial;
 }
 
 // 更新

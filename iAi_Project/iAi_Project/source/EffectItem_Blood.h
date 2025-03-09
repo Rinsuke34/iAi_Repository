@@ -19,10 +19,11 @@ class EffectItem_Blood : public EffectItemBase
 {
 	public:
 		EffectItem_Blood();				// コンストラクタ
-		virtual ~EffectItem_Blood();	// デストラクタ
+		virtual ~EffectItem_Blood() {};	// デストラクタ
 
 		virtual void	Update()		override;	// 更新
 		virtual void	Draw()			override;	// 描写
+		virtual void	Reset()			override;	// リセット処理
 
 		/* データ設定 */
 		void	SetMoveDirection(VECTOR vecMoveDirection) { this->vecMoveDirection = vecMoveDirection; }	// 移動方向を設定

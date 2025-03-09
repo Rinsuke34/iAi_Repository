@@ -8,48 +8,48 @@
 #include "DataList_Object.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EffectManualDelete.h"
-#include "BulletEnemyRangeBeam.h"
+#include "BulletEnemyRangeNormal.h"
 #include "PlayerStatusDefine.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class BeamEnemy : public EnemyBasic
+class Enemy_Normal : public Enemy_Basic
 {
 public:
-	BeamEnemy();				// コンストラクタ
-	virtual ~BeamEnemy();		// デストラクタ
+	Enemy_Normal();				// コンストラクタ
+	virtual ~Enemy_Normal();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
 
 private:
+	//EffectManualDelete* pEffect;
 
-	//エフェクト
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
 
-	BulletEnemyRangeBeam* pBulletRangeBeam;				// ビーム
+	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
+
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 
-
 	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Beam_Shot();			// ビームの発射
+	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
 
 
 	//変数
 	int		iFiringCount;	// 発射カウント
 
-	int		iDurationCount;	// ビームの持続カウント
-
-	int		iChargeCount;	// ビームのチャージカウント
+	int		iGuidanceCount;	// 誘導カウント
 
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
+	
+
 protected:
 
 

@@ -1,8 +1,8 @@
 /* 2025.01.2８ 石川智也 ファイル作成 */
-#include "EnemyEscape.h"
+#include "Enemy_Escape.h"
 
 // コンストラクタ
-EscapeEnemy::EscapeEnemy() : EnemyBasic()
+Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 {
 
 	this->iXescapedistance = ENEMY_X_ESCAPE_DISTANCE;		// X軸の距離
@@ -35,13 +35,13 @@ EscapeEnemy::EscapeEnemy() : EnemyBasic()
 }
 
 // デストラクタ
-EscapeEnemy::~EscapeEnemy()
+Enemy_Escape::~Enemy_Escape()
 {
 
 }
 
 // 初期化
-void EscapeEnemy::Initialization()
+void Enemy_Escape::Initialization()
 {
 	/* コリジョンセット */
 	this->stCollisionCapsule.fCapsuleRadius = 100;
@@ -52,7 +52,7 @@ void EscapeEnemy::Initialization()
 	LoadCoreFrameNo();
 }
 
-void EscapeEnemy::MoveEnemy()
+void Enemy_Escape::MoveEnemy()
 {
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
@@ -112,7 +112,7 @@ void EscapeEnemy::MoveEnemy()
 	}
 }
 
-void EscapeEnemy::Enemy_Gravity()
+void Enemy_Escape::Enemy_Gravity()
 {
 	// 移動後の座標を取得(垂直方向)
 	VECTOR vecNextPosition;
@@ -173,13 +173,13 @@ void EscapeEnemy::Enemy_Gravity()
 }
 
 //コリジョン描写
-void EscapeEnemy::CollisionDraw()
+void Enemy_Escape::CollisionDraw()
 {
 	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
 }
 
 // 更新
-void EscapeEnemy::Update()
+void Enemy_Escape::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -201,13 +201,14 @@ void EscapeEnemy::Update()
 		}
 	}
 
-
-
-	if (this->iGetNowHP() <= 0)
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
 	{
+		// HPが0以下である場合
+		/* 撃破時の処理を実行 */
+		Defeat();
 
-		// 削除フラグを有効にする
-		this->SetDeleteFlg(true);
+		return;
 	}
 
 	MoveEnemy();

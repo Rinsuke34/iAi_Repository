@@ -8,7 +8,7 @@
 #include "DataList_Object.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EnemyDefine.h"
 #include "EffectManualDelete.h"
 #include "CharacterPlayer.h"
@@ -16,11 +16,11 @@
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class ExplosionEnemy : public EnemyBasic
+class Enemy_Explosion : public Enemy_Basic
 {
 public:
-	ExplosionEnemy();				// コンストラクタ
-	virtual ~ExplosionEnemy();		// デストラクタ
+	Enemy_Explosion();				// コンストラクタ
+	virtual ~Enemy_Explosion();		// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新

@@ -8,18 +8,18 @@
 #include "DataList_Object.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EnemyDefine.h"
 #include "EffectManualDelete.h"
 
 /* テスト用敵クラス */
 
 // エネミーベースクラス
-class EscapeEnemy : public EnemyBasic
+class Enemy_Escape : public Enemy_Basic
 {
 	public:
-		EscapeEnemy();				// コンストラクタ
-		virtual ~EscapeEnemy();		// デストラクタ
+		Enemy_Escape();				// コンストラクタ
+		virtual ~Enemy_Escape();		// デストラクタ
 	
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新

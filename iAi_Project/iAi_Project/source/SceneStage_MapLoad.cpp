@@ -3,17 +3,10 @@
 #include "SceneStage.h"
 
 /* オブジェクト */
-// ※仮処理(増えたりする可能性あり)
 // プレイヤー
 #include "CharacterPlayer.h"
 // エネミー
-#include "EnemyGoalObject.h"
-//#include "EnemyNormal.h"
-//#include "EnemyEscape.h"
-//#include "EnemyNormal.h"
-//#include "EnemyMissile.h"
-//#include "EnemyBeam.h"
-//#include "Enemy_Explosion.h"
+#include "Enemy_GoalObject.h"
 // エネミー(スポーンポイント)
 #include "EnemySpawnPoint_Normal.h"
 #include "EnemySpawnPoint_Escape.h"
@@ -174,7 +167,7 @@ void SceneStage::LoadMapData()
 				{
 					// ゴール地点の場合
 					/* "オブジェクト管理"にゴールオブジェクトを追加 */
-					EnemyBasic* pGoal = new EnemyGoalObject();
+					Enemy_Basic* pGoal = new Enemy_GoalObject();
 					ObjectList->SetEnemy(pGoal);
 
 					/* 座標設定 */
@@ -186,9 +179,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Enemy_Beam")
 				{
 					// エネミー(ビーム)の場合
-					/* "オブジェクト管理"にエネミー(ビーム)を追加 */
-					//BeamEnemy* AddEnemy = new BeamEnemy();
-					//ObjectList->SetEnemy(AddEnemy);
+					/* "オブジェクト管理"にエネミー(ビーム)スポナーを追加 */
 					EnemySpawnPoint_Beam* AddEnemy = new EnemySpawnPoint_Beam();
 					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
@@ -201,9 +192,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Enemy_Escape")
 				{
 					// エネミー(逃走)の場合
-					/* "オブジェクト管理"にエネミー(逃走)を追加 */
-					//EscapeEnemy* AddEnemy = new EscapeEnemy();
-					//ObjectList->SetEnemy(AddEnemy);
+					/* "オブジェクト管理"にエネミー(逃走)スポナーを追加 */
 					EnemySpawnPoint_Escape* AddEnemy = new EnemySpawnPoint_Escape();
 					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
@@ -216,9 +205,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Enemy_Explosion")
 				{
 					// エネミー(自爆)の場合
-					/* "オブジェクト管理"にエネミー(自爆)を追加 */
-					//ExplosionEnemy* AddEnemy = new ExplosionEnemy();
-					//ObjectList->SetEnemy(AddEnemy);
+					/* "オブジェクト管理"にエネミー(自爆)スポナーを追加 */
 					EnemySpawnPoint_Explosion* AddEnemy = new EnemySpawnPoint_Explosion();
 					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
@@ -231,9 +218,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Enemy_Missile")
 				{
 					// エネミー(ミサイル)の場合
-					/* "オブジェクト管理"にエネミー(ミサイル)を追加 */
-					//MissileEnemy* AddEnemy = new MissileEnemy();
-					//ObjectList->SetEnemy(AddEnemy);
+					/* "オブジェクト管理"にエネミー(ミサイル)スポナーを追加 */
 					EnemySpawnPoint_Missile* AddEnemy = new EnemySpawnPoint_Missile();
 					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
@@ -246,9 +231,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Enemy_Normal")
 				{
 					// エネミー(通常)の場合
-					/* "オブジェクト管理"にエネミー(通常)を追加 */
-					//NormalEnemy* AddEnemy = new NormalEnemy();
-					//ObjectList->SetEnemy(AddEnemy);
+					/* "オブジェクト管理"にエネミー(通常)スポナーを追加 */
 					EnemySpawnPoint_Normal* AddEnemy = new EnemySpawnPoint_Normal();
 					ObjectList->SetEnemySpawnPoint(AddEnemy);
 
@@ -390,7 +373,7 @@ void SceneStage::LoadMapData()
 
 					/* 拡大率設定*/
 					pLargeScreen->SetScale(vecScale);
-					}
+				}
 				else if (name == "FallJudgment")
 				{
 					// 落下判定の場合
@@ -467,6 +450,23 @@ void SceneStage::LoadMapData()
 					// 落下復帰ポイントの場合
 					/* 落下復帰ポイント情報の追加 */
 					StageStatusList->SetFallRecoveryPoint(vecPos);
+				}
+				else if (name == "DisappearFloor")
+				{
+					// 床消失の場合
+					/* "オブジェクト管理"に床消失を追加 */
+					PlatformBase* pPlatform = new GimmickDisappear();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
 				}
 			}
 		}

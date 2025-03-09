@@ -9,21 +9,22 @@
 #include "DataList_StageStatus.h"
 
 /* オブジェクト */
-#include "EnemyBasic.h"
+#include "Enemy_Basic.h"
 #include "EffectManualDelete.h"
 
 /* ゴールオブジェクトクラスの宣言 */
 
 // ゴールクラス
-class EnemyGoalObject : public EnemyBasic
+class Enemy_GoalObject : public Enemy_Basic
 {
 	public:
-		EnemyGoalObject();				// コンストラクタ
-		virtual ~EnemyGoalObject();		// デストラクタ
+		Enemy_GoalObject();					// コンストラクタ
+		virtual ~Enemy_GoalObject();		// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
 		virtual void	BloomDraw()			override;		// 発光描写
+		virtual void	Reset()				override {};	// リセット処理
 
 		/* データ取得 */
 		bool	bGetStageChangeFlg()	{ return this->bStageChangeFlg; };		// 次のステージに遷移するかのフラグを取得

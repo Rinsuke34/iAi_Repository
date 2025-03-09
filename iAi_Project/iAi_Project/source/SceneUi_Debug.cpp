@@ -20,6 +20,7 @@ SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 	pDebugManu.push_back(&gbDrawCollisionFlg);			// 全オブジェクトのコリジョン描写
 	pDebugManu.push_back(&gbDrawDeleteBackGroundFlg);	// バックグランドオブジェクトの非表示
 	pDebugManu.push_back(&gbUseMouseFlg);				// マウス使用フラグの有効・無効の切り替え
+	pDebugManu.push_back(&gbDrawFpsFlg);				// フレームレートの描写
 }
 
 // 計算
@@ -75,6 +76,7 @@ void SceneUi_Debug::Draw()
 	DrawFormatString(800, 300 + 16 * 6, GetColor(255, 255, 255), "全オブジェクトのコリジョン描写");
 	DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
 	DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
+	DrawFormatString(800, 300 + 16 * 9, GetColor(255, 255, 255), "フレームレートの描写");
 
 	DrawFormatString(780, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
 }

@@ -15,7 +15,7 @@ void EnemySpawnPoint_Beam::Initialization()
 	/* エネミー(ビーム)生成処理 */
 	{
 		/* エネミー(ビーム)を作成 */
-		BeamEnemy* AddEnemy = new BeamEnemy();
+		Enemy_Beam* AddEnemy = new Enemy_Beam();
 
 		/* 生成したエネミー(ビーム)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

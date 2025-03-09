@@ -32,3 +32,4 @@ bool							gbNowLoadingFlg	= false;	// ローディングフラグ
 /* デバッグ用描写管理フラグ */
 bool gbDrawSceneListFlg		= true;					// シーンリストの描写
 bool gbDrawDatalistFlg		= false;				// データリストの描写
+bool gbDrawFpsFlg			= true;					// フレームレートの描写

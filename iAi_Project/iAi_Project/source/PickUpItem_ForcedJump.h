@@ -23,12 +23,13 @@ class CharacterPlayer;
 class PickUpItem_ForcedJump : public PickUpItemBase
 {
 	public:
-		PickUpItem_ForcedJump();			// コンストラクタ
-		virtual ~PickUpItem_ForcedJump();	// デストラクタ
+		PickUpItem_ForcedJump();				// コンストラクタ
+		virtual ~PickUpItem_ForcedJump() {};	// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
 		virtual void	BloomDraw()			override {};	// 発光描写
+		virtual void	Reset()				override;		// リセット処理
 
 		/* データ設定 */
 		void SetGimmick_ForcedJump_Spawn(Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定

@@ -243,7 +243,7 @@ void SceneUi_Crosshairs::Process()
 	{
 		// 使用しない場合
 		/* ロックオン対象のエネミーを取得 */
-		EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+		Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 		/* ロックオン対象のエネミーが存在するか確認 */
 		if (pLockOnEnemy != nullptr)

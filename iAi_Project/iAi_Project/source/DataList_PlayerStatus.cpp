@@ -8,13 +8,15 @@
 /* 2025.03.03 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* プレイヤーステータス管理クラスの定義 */
 
 // コンストラクタ
 DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerStatus")
 {
-	/* 初期化(仮) */
+	/* 初期化 */
 	/* プレイヤー状態関連 */
 	this->iPlayerMoveState					= PLAYER_MOVESTATUS_FREE;			// プレイヤーの移動状態
 	this->iPlayerAttackState				= PLAYER_ATTACKSTATUS_FREE;			// プレイヤーの攻撃状態
@@ -44,7 +46,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerMeleeStrongEnemyAttackFlg	= false;							// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 初期化処理追加 */
 	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
-	this->iPlayerNowHp						= INIT_ATTRIBUTES_HP_MAX;			// プレイヤーの現在のHP
 	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
 	this->iPlayerComboNowCount				= 0;								// プレイヤーの現在のコンボ数
 	this->iPlayerComboMaxCount				= 0;								// プレイヤーの最大コンボ数
@@ -59,7 +60,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMotion_Move_Old			= -1;								// 変更前プレイヤーモーション(移動系)
 	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;			// プレイヤーモーション(攻撃系)
 	this->iPlayerMotion_Attack_Old			= -1;								// 変更前プレイヤーモーション(攻撃系)
-	
 	this->fMotionTimer_Move					= 0;								// モーションカウント(移動系)
 	this->fMotionTimer_Move_End				= 1;								// モーションカウント(移動系/終了時間)(※初期化時の不具合防止のため1に設定)
 	this->fMotionTimer_Attack				= 0;								// モーションカウント(攻撃系)
@@ -67,21 +67,82 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;
-	
-	/* 能力値関連 */
-	this->fPlayerMoveAcceleration			= INIT_ATTRIBUTES_MOVE_ACCELERATION;	// プレイヤーの移動加速度
-	this->fPlayerMaxMoveSpeed				= INIT_ATTRIBUTES_MOVE_SPEED_MAX;		// プレイヤーの最大移動速度
-	this->fPlayerFallAcceleration			= INIT_ATTRIBUTES_FALL_ACCELERATION;	// プレイヤーの落下加速度
-	this->fPlayerMaxFallSpeed				= INIT_ATTRIBUTES_FALL_SPEED_MAX;		// プレイヤーの最大落下速度
-	this->iPlayerMaxJumpCount				= INIT_ATTRIBUTES_JUMP_COUNT_MAX;		// プレイヤーのジャンプ回数(最大数)
-	this->fPlayerRockOnRadius				= INIT_ATTRIBUTES_ROCK_ON_RADIUS;		// ロックオン範囲の半径
-	this->iPlayerMaxHp						= INIT_ATTRIBUTES_HP_MAX;				// プレイヤーの最大HP
-	this->iPlayerMaxInvincibleTime			= INIT_ATTRIBUTES_INVINCIBLE_TIME_MAX;	// プレイヤーの最大無敵時間
-	this->iPlayerMeleeStrongAirMaxCount		= PLAYER_STRONG_MELEE_AIR_MAX;			// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.11 菊池雅道 初期化処理追加 */
+
+	/* ステータスデータの読み込み */
+	LoadPlayerStatuxData();
+
+	/* HP現在値をHP最大値に設定 */
+	this->iPlayerNowHp = this->iPlayerMaxHp;
 }
 
 // デストラクタ
 DataList_PlayerStatus::~DataList_PlayerStatus()
 {
+	/* ステータスデータの保存 */
+	SavePlayerStatuxData();
+}
 
+// ステータスデータ読み込み
+void DataList_PlayerStatus::LoadPlayerStatuxData()
+{
+	/* Jsonファイル展開 */
+	std::ifstream inputFile(FILE_PATH_STATUS);
+
+	/* ファイルの展開が成功したか確認 */
+	if (inputFile.is_open() == true)
+	{
+		// ファイルが存在する場合
+		/* 現在のステージの各評価の基準値を取得する */
+		nlohmann::json	json;
+		inputFile >> json;
+
+		for (auto& option : this->astPlayerStatusList)
+		{
+			if (json.contains(option.Name) && json[option.Name].contains("value"))
+			{
+				if (option.Type == DATA_TYPE_BOOL)
+				{
+					*static_cast<bool*>(option.pValue) = json[option.Name]["value"].get<bool>();
+				}
+				else if (option.Type == DATA_TYPE_INT)
+				{
+					*static_cast<int*>(option.pValue) = json[option.Name]["value"].get<int>();
+				}
+				else if (option.Type == DATA_TYPE_FLOAT)
+				{
+					*static_cast<float*>(option.pValue) = json[option.Name]["value"].get<float>();
+				}
+			}
+		}
+	}
+}
+
+// ステータスデータ保存
+void DataList_PlayerStatus::SavePlayerStatuxData()
+{
+	/* Jsonファイル読み込み */
+	nlohmann::json json;
+
+	/* 変数リストをループして JSON に書き込み */
+	for (auto& option : this->astPlayerStatusList)
+	{
+		if (option.Type == DATA_TYPE_BOOL)
+		{
+			json[option.Name]["value"] = *static_cast<bool*>(option.pValue);
+		}
+		else if (option.Type == DATA_TYPE_INT)
+		{
+			json[option.Name]["value"] = *static_cast<int*>(option.pValue);
+		}
+		else if (option.Type == DATA_TYPE_FLOAT)
+		{
+			json[option.Name]["value"] = *static_cast<float*>(option.pValue);
+		}
+	}
+
+	/* Jsonファイル展開 */
+	std::ofstream outputFile(FILE_PATH_STATUS);
+
+	/* Jsonファイル書き込み */
+	outputFile << json.dump(4);
 }

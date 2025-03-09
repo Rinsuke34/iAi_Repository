@@ -6,12 +6,15 @@
 /* オプション関連の構造体や定数の宣言を行う */
 
 /* オプション関連の最大、最小値 */
-static const float	OPTION_CAMERA_SENSITIVITY_MIN	=	0.1f;	// カメラ感度の最小値
-static const float	OPTION_CAMERA_SENSITIVITY_MAX	=	10.f;	// カメラ感度の最大値
-static const float	OPTION_CAMERA_SENSITIVITY_STEP	=	0.1f;	// カメラ感度の変更量
-static const float	OPTION_SOUND_VOLUME_MIN			=	0.f;	// サウンドの音量の最小値
-static const float	OPTION_SOUND_VOLUME_MAX			=	255.f;	// サウンドの音量の最大値
-static const float	OPTION_SOUND_VOLUME_STEP		=	1.f;	// サウンドの音量の変更量
+static const float	OPTION_CAMERA_SENSITIVITY_MIN	=	0.1f;		// カメラ感度の最小値
+static const float	OPTION_CAMERA_SENSITIVITY_MAX	=	10.f;		// カメラ感度の最大値
+static const float	OPTION_CAMERA_SENSITIVITY_STEP	=	0.1f;		// カメラ感度の変更量
+static const float	OPTION_SOUND_VOLUME_MIN			=	0.f;		// サウンドの音量の最小値
+static const float	OPTION_SOUND_VOLUME_MAX			=	255.f;		// サウンドの音量の最大値
+static const float	OPTION_SOUND_VOLUME_STEP		=	1.f;		// サウンドの音量の変更量
+static const float	OPTION_ENEMY_DRAW_DISTANCE_MIN	=	1000.f;		// エネミー描写距離の最小値
+static const float	OPTION_ENEMY_DRAW_DISTANCE_MAX	=	30000.f;	// エネミー描写距離の最大値
+static const float	OPTION_ENEMY_DRAW_DISTANCE_STEP	=	1000.f;		// エネミー描写距離の変更量
 
 /* オプション名(Jsonファイル内) */
 // カメラ系
@@ -23,6 +26,7 @@ const std::string OPTION_NAME_CAMERASENSITIVITY_CONTROLLER_X	= "CameraSensitivit
 const std::string OPTION_NAME_CAMERASENSITIVITY_CONTROLLER_Y	= "CameraSensitivity_Controller_Y";			// カメラ感度倍率(コントローラー/Y軸)
 const std::string OPTION_NAME_CAMERASENSITIVITY_MOUSE_X			= "CameraSensitivity_Mouse_X";				// カメラ感度倍率(マウス/X軸)
 const std::string OPTION_NAME_CAMERASENSITIVITY_MOUSE_Y			= "CameraSensitivity_Mouse_Y";				// カメラ感度倍率(マウス/Y軸)
+const std::string OPTION_NAME_ENEMY_DRAW_DISTANCE				= "Enemy_Draw_Distance";					// エネミー描写距離
 // サウンド系
 const std::string OPTION_NAME_BGMVOLUME							= "Bgm_Volume";								// BGMの音量( 0 ～ 255 )
 const std::string OPTION_NAME_SEVOLUME							= "Se_Volume";								// SEの音量( 0 ～ 255 )
@@ -40,6 +44,7 @@ const std::string OPTION_NAME_CAMERASENSITIVITY_CONTROLLER_X_JP		= "カメラ感度倍
 const std::string OPTION_NAME_CAMERASENSITIVITY_CONTROLLER_Y_JP		= "カメラ感度倍率(コントローラー/Y軸)";			// カメラ感度倍率(コントローラー/Y軸)
 const std::string OPTION_NAME_CAMERASENSITIVITY_MOUSE_X_JP			= "カメラ感度倍率(マウス/X軸)";					// カメラ感度倍率(マウス/X軸)
 const std::string OPTION_NAME_CAMERASENSITIVITY_MOUSE_Y_JP			= "カメラ感度倍率(マウス/Y軸)";					// カメラ感度倍率(マウス/Y軸)
+const std::string OPTION_NAME_ENEMY_DRAW_DISTANCE_JP				= "エネミー描写距離";							// エネミー描写距離
 // サウンド系
 const std::string OPTION_NAME_BGMVOLUME_JP							= "BGMの音量";									// BGMの音量( 0 ～ 255 )
 const std::string OPTION_NAME_SEVOLUME_JP							= "SEの音量";									// SEの音量( 0 ～ 255 )

@@ -36,6 +36,7 @@ extern int giNowFps;							// 現在のフレームレート
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawSceneListFlg;					// シーンリストの描写
 extern bool	gbDrawDatalistFlg;					// プレイヤーステータスの描写
+extern bool gbDrawFpsFlg;						// フレームレートの描写
 
 /* ローディング関連 */
 extern std::vector<std::future<void>>	gstLoadingFutures;		// ローディング処理のスレッド追跡用future

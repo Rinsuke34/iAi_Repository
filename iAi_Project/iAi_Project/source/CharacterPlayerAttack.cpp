@@ -520,7 +520,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 
 			/* ロックオン中のエネミーを取得 */
-			EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+			Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 			/* 近接攻撃(強)による移動量を取得 */
 			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
@@ -893,7 +893,7 @@ void CharacterPlayer::Player_Projectile()
 	this->pBulletKunaiEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
 	/* ロックオン中のエネミーを取得 */
-	EnemyBasic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 	/* ロックオン中のエネミーが存在するか */
 	if (pLockOnEnemy != nullptr)

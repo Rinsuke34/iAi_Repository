@@ -1,11 +1,11 @@
 /* 2025.01.21 駒沢風助 ファイル作成 */
 
-#include "EnemyGoalObject.h"
+#include "Enemy_GoalObject.h"
 
 /* ゴールオブジェクトクラスの定義 */
 
 // コンストラクタ
-EnemyGoalObject::EnemyGoalObject() : EnemyBasic()
+Enemy_GoalObject::Enemy_GoalObject() : Enemy_Basic()
 {
 	/* 初期化 */
 	this->iMaxHp			= 1;
@@ -36,7 +36,7 @@ EnemyGoalObject::EnemyGoalObject() : EnemyBasic()
 }
 
 // デストラクタ
-EnemyGoalObject::~EnemyGoalObject()
+Enemy_GoalObject::~Enemy_GoalObject()
 {
 	/* エフェクトを削除する */
 	{
@@ -46,9 +46,9 @@ EnemyGoalObject::~EnemyGoalObject()
 }
 
 // 初期化
-void EnemyGoalObject::Initialization()
+void Enemy_GoalObject::Initialization()
 {
-	EnemyBasic::Initialization();
+	Enemy_Basic::Initialization();
 
 	/* コリジョンセット */
 	this->stCollisionCapsule.vecCapsuleBottom	= this->vecPosition;
@@ -84,7 +84,7 @@ void EnemyGoalObject::Initialization()
 }
 
 // 更新
-void EnemyGoalObject::Update()
+void Enemy_GoalObject::Update()
 {
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
@@ -140,7 +140,7 @@ void EnemyGoalObject::Update()
 }
 
 // 発光描写
-void EnemyGoalObject::BloomDraw()
+void Enemy_GoalObject::BloomDraw()
 {
 	/* 元の色を保存 */
 	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);

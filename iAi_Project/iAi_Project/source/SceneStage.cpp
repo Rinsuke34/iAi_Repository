@@ -191,6 +191,18 @@ void SceneStage::Process()
 				gpSceneServer->AddSceneReservation(pAddScene);
 			}
 			break;
+
+		/* "リセット"状態 */
+		case GAMESTATUS_RESET:
+			/* すべてのオブジェクトのリセット処理を実行する */
+			ObjectList->ResetAll();
+
+			/* ステージ状態を初期化する */
+			Initialization();
+
+			/* ゲーム状態を"ゲーム実行"に変更 */
+			StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			break;
 	}
 
 	/* カメラ設定準備 */

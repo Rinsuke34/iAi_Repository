@@ -23,12 +23,6 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 	}
 }
 
-// デストラクタ
-EffectItem_Blood::~EffectItem_Blood()
-{
-
-}
-
 // 更新
 void EffectItem_Blood::Update()
 {
@@ -86,4 +80,11 @@ void EffectItem_Blood::Draw()
 	//DrawModiBillboard3D(VECTOR Pos, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int GrHandle, int TransFlag);
 	int iColor = GetColor(255, 0, 0);
 	DrawSphere3D(this->vecPosition, 10.f, 16, iColor, iColor, TRUE);
+}
+
+// リセット処理
+void EffectItem_Blood::Reset()
+{
+	/* このオブジェクトの削除フラグを有効にする */
+	this->bDeleteFlg = true;
 }
