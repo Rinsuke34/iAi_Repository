@@ -421,6 +421,12 @@
     <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\霧%28ビルボード%29">
       <UniqueIdentifier>{aa3fea37-41c8-49bb-841a-05a8c5949c37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\移動床">
+      <UniqueIdentifier>{30ef3e7f-623f-433a-ac41-ba0f61d4cba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\移動床">
+      <UniqueIdentifier>{39e3119c-c1dd-45a2-b5d7-aeff3299f007}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -650,6 +656,9 @@
     </ClCompile>
     <ClCompile Include="source\EnemySpawnPoint_Escape.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\エネミースポーンポイント\逃走</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_MoveFloor.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\移動床</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -910,6 +919,9 @@
     </ClInclude>
     <ClInclude Include="source\SceneOptionDefine.h">
       <Filter>ヘッダー ファイル\シーン\オプション</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_MoveFloor.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\移動床</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

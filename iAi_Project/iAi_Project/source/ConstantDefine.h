@@ -127,3 +127,8 @@ static const int    INPUT_CAMERA_MODE_MAX         = 2;	// カメラ状態の総数
 static const std::string DATA_TYPE_BOOL     = "bool";	// ブール型
 static const std::string DATA_TYPE_INT      = "int";	// 整数型
 static const std::string DATA_TYPE_FLOAT    = "float";	// 浮動小数点型
+
+/* ギミック関連 */
+static const int	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_SHORT  = 0;		// 移動床の移動距離タイプ(短)
+static const int	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_NORMAL = 1;		// 移動床の移動距離タイプ(中)
+static const int	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_LONG   = 2;		// 移動床の移動距離タイプ(長)

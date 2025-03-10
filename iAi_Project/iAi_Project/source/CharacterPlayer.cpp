@@ -28,7 +28,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->pChargeEffect			=	nullptr;		//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 		this->pDodgeEffect			=	nullptr;		//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
-		/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
+	
 
 		/* 変数 */
 		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
@@ -74,10 +74,14 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 
 		/* コリジョンフレーム番号取得 */
+		/* 刀のフレーム */
 		this->iKatanaFrameNo	= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
 
 		/* 上半身のフレーム番号取得 */
 		this->iUpperBodyFrameNo	= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
+		
+		/* クナイを持つ手のフレーム */
+		this->iKunaiHandFrameNo = MV1SearchFrame(this->iModelHandle, "Kunai_LeftHand");				/* 2025.03.10 菊池雅道	追加 */
 	}
 }
 

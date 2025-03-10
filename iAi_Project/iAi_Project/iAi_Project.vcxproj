@@ -201,6 +201,7 @@
     <ClCompile Include="source\GimmickDisappear.cpp" />
     <ClCompile Include="source\Gimmick_FallJudgment.cpp" />
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
+    <ClCompile Include="source\Gimmick_MoveFloor.cpp" />
     <ClCompile Include="source\LargeScreen.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneAddTitleSetup.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\FallFog.h" />
     <ClInclude Include="source\Gimmick_FallJudgment.h" />
+    <ClInclude Include="source\Gimmick_MoveFloor.h" />
     <ClInclude Include="source\LargeScreen.h" />
     <ClInclude Include="source\OptionDefine.h" />
     <ClInclude Include="source\resource.h" />

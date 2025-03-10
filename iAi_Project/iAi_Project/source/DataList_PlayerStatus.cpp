@@ -26,7 +26,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerTurnSpeed					= PLAYER_TURN_SPEED;				// プレイヤーの方向転換の速度	/* 2025.02.10 菊池雅道 初期化処理追加 */
 	this->fPlayerNowFallSpeed				= 0;								// プレイヤーの現在の落下速度
 	this->iPlayerNowJumpCount				= 0;								// プレイヤーのジャンプ回数(現在数)
-	this->iPlayerNormalDashFlameCount		= 0;								//通常ダッシュ時経過フレーム数（高速ダッシュへの移行に使用			/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->bPlayerJumpingFlag				= false;							//プレイヤーがジャンプ中かのフラグ									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerJumpCount					= 0;								//プレイヤーの現在のジャンプ回数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->fPlayerDodgeProgress				= 0.0f;								//プレイヤー回避モーション進行度									/* 2025.01.10 菊池雅道 初期化処理追加 */
@@ -35,7 +34,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerJumpSpeed					= 0;								//プレイヤージャンプ速度											/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerNowDodgeFlame				= 0;								//プレイヤーの現在の回避フレーム数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->fPlayerDodgeSpeed					= 0;								//プレイヤー回避速度												/* 2025.01.10 菊池雅道 初期化処理追加 */
-	this->bPlayerAfterDodgeFlag				= false;							//プレイヤーの回避後フラグ											/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->bPlayerKickWallFlg				= false;							//プレイヤーが壁を蹴ったかのフラグ									/* 2025.02.22 菊池雅道 初期化処理追加 */
 	this->iPlayerAfterKickWallCount			= 0;								//プレイヤーが壁を蹴った後のカウント								/* 2025.02.22 菊池雅道 初期化処理追加 */
 	this->bPlayerAfterKickWallFlg			= false;							//プレイヤーが壁を蹴った後のフラグ									/* 2025.02.22 菊池雅道 初期化処理追加 */

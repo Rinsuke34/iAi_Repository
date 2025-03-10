@@ -91,98 +91,29 @@ void SceneTitle::Initialization()
 // 計算
 void SceneTitle::Process()
 {
-	//UIカウントによって処理を分岐
+	// 決定ボタンが押されたか確認
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+	{
     switch (iUICount)
 	{
-		// カメラの位置がポジションAまたはBか確認
+			//はじめからホーム画面
         case CAMERA_FIXED_POSITION_A:
+			//つづきからホーム画面
         case CAMERA_FIXED_POSITION_B:
-
-			//カメラの位置がポジションAまたはBの場合
-			// 決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-			{
-				//決定ボタンが押された場合
-				//UiカウントをポジションEに変更
+			//Uiカウント(カメラ)を確認画面に変更
 	            iUICount = CAMERA_FIXED_POSITION_E;
 
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
+			//カメラ固定位置をUIカウント(カメラ)に設定
 		        pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 
 				//ゲームスタートフラグを無効化
 				this->bGameStartFlg = FALSE;
-			}
-		
-			// 上ボタンが押されたか確認
-	        if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-	        {
-	            // 上ボタンが押された場合
-	            //UIカウントを減少
-	            iUICount--;
-
-				//UIカウントがポジションAより小さいか確認
-				if (iUICount < CAMERA_FIXED_POSITION_A)
-		        {
-					//UIカウントがポジションAより小さい場合
-					//UIカウントをポジションDに設定
-		            iUICount = CAMERA_FIXED_POSITION_D;
-				}
-
-				//カメラ固定位置を取得
-	            pSceneStage->iGetNowCameraFixedPositionNo();
-	
-				//カメラ固定位置をUIカウントに設定
-		        pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			}
-
-			// 下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-			{
-				// 下ボタンが押された場合
-				//UIカウントを増加
-				iUICount++;
-
-					//UIカウントがポジションEより大きいか確認
-				if (iUICount >= CAMERA_FIXED_POSITION_E)
-				{
-					//UIカウントがポジションEより大きい場合
-					//UIカウントをポジションAに設定
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			}
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//UIカウントをポジションスタートに設定
-				iUICount = CAMERA_FIXED_POSITION_START;
-
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			}
 			break;
 
-		// カメラの位置がポジションEか確認
+			//確認画面
 		case CAMERA_FIXED_POSITION_E:
-
-			//カメラの位置がポジションEの場合
-			//決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID)&&this->bGameStartFlg == TRUE)
+			if (this->bGameStartFlg == TRUE)
 			{
-				//決定ボタンが押された場合
 				// シーンの追加を設定
 				gpSceneServer->SetAddLoadSceneFlg(true);
 	
@@ -193,81 +124,103 @@ void SceneTitle::Process()
 				gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
 				return;
 			}
-
-			//ゲームスタートフラグを有効化
 			this->bGameStartFlg = TRUE;
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//UIカウントをポジションAに設定
-				iUICount = CAMERA_FIXED_POSITION_A;
-
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			}
 			break;
 
-		// カメラの位置がポジションスタートか確認
-		case CAMERA_FIXED_POSITION_START:
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+			/* 現在のカメラポジションが設定画面であるか確認 */
+			if (this->iUICount == CAMERA_FIXED_POSITION_D)
+			{
+				/* シーン"オプション"を追加 */
+				gpSceneServer->AddSceneReservation(new SceneOption());
+			}
+			return;
+		}
+			}
 
-			// カメラの位置がポジションスタートの場合
+	// カメラの位置がタイトルか確認
+	if (iUICount == CAMERA_FIXED_POSITION_START)
+	{
 			// 何かボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
 			{
-				// 何かボタンが押された場合
-				//UIカウントをポジションAに設定
+			//UIカウント(カメラ)をはじめからホーム画面に設定
 				iUICount++;
 
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
+			//カメラ固定位置をはじめからホーム画面に設定
 				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 			}
+	}
+
+	// キャンセルボタンが押されたか確認
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+	{
+		switch (iUICount)
+		{
+			//はじめからホーム画面
+		case CAMERA_FIXED_POSITION_A:
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+			//UIカウント(カメラ)をタイトルに設定
+			iUICount = CAMERA_FIXED_POSITION_START;
 			break;
 
-		// カメラの位置がポジションCまたはDか確認
-		case CAMERA_FIXED_POSITION_D:
-		case CAMERA_FIXED_POSITION_C:
 
-			// カメラの位置がポジションCまたはDの場合
-			/* 2025.01.09 提出用臨時コーディング修正	駒沢風助	開始*/
-			// ※本来は石川さんが担当する箇所ですが、ソースコード提出を行う必要がありますので臨時で修正します。
-			/* 決定ボタンが押されたか確認 */
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+			//現在のシーンがシーン"オプション"か確認
+			if (new SceneOption())
 			{
-				// 決定ボタンが押された場合
-				/* 現在のカメラポジションがDであるか確認 */
-				if (this->iUICount == CAMERA_FIXED_POSITION_D)
-				{
-					/* シーン"オプション"を追加 */
-					gpSceneServer->AddSceneReservation(new SceneOption());
-				}
-				return;
+				//シーン"オプション"の場合
+				iUICount = CAMERA_FIXED_POSITION_D;
 			}
-			/* 2025.01.09 提出用臨時コーディング修正	駒沢風助	終了*/
+			else
+				{
+				//シーン"オプション"でない場合
+				//UIカウント(カメラ)をはじめからホーム画面に設定
+				iUICount = CAMERA_FIXED_POSITION_START;
+				}
+			break;
+
+			//確認画面
+		case CAMERA_FIXED_POSITION_E:
+			//UIカウントをはじめからホーム画面に設定
+			iUICount = CAMERA_FIXED_POSITION_A;
+			break;
+		}
+
+		//カメラ固定位置をカメラに設定
+		pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			}
 			
 			//上ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 			{
-				//上ボタンが押された場合
+		switch (iUICount)
+		{
+			//はじめからホーム画面
+		case CAMERA_FIXED_POSITION_A:
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
 				//UIカウントを減少
 				iUICount--;
 
-				//UIカウントがポジションAより小さいか確認
+			//UIの選択肢が上にあるか確認
 				if (iUICount < CAMERA_FIXED_POSITION_A)
 				{
-					//UIカウントがポジションAより小さい場合
-					//UIカウントをポジションDに設定
+				//上にない場合
+				//UIカウント(カメラ)を設定ホーム画面に設定
 				     iUICount = CAMERA_FIXED_POSITION_D;
 				}
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
+			break;
+		}
 
 				//カメラ固定位置をUIカウントに設定
 	            pSceneStage->SetNowCameraFixedPositionNo(iUICount);
@@ -276,39 +229,31 @@ void SceneTitle::Process()
 			//下ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
 			{
-				//下ボタンが押された場合
+		switch (iUICount)
+		{
+			//はじめからホーム画面
+		case CAMERA_FIXED_POSITION_A:
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
 				//UIカウントを増加
 				iUICount++;
 
-				//UIカウントがポジションEより大きいか確認
+			//選択肢が下にあるか確認
 				if (iUICount >= CAMERA_FIXED_POSITION_E)
 				{
-					//UIカウントがポジションEより大きい場合
-					//UIカウントをポジションAに設定
+				//下にない場合
+				//UIカウント(カメラ)をはじめからホーム画面に設定
 				    iUICount = CAMERA_FIXED_POSITION_A;
 				}
-           
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
-
-				//カメラ固定位置をUIカウントに設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			break;
 			}
-
-			//キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				//キャンセルボタンが押された場合
-				//UIカウントをポジションスタートに設定
-	            iUICount = CAMERA_FIXED_POSITION_START;
-
-				//カメラ固定位置を取得
-				pSceneStage->iGetNowCameraFixedPositionNo();
 
 				//カメラ固定位置をUIカウントに設定
 			    pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			}
-			break;
 	}
 }
 

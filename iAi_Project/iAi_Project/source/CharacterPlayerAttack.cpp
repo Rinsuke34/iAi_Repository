@@ -17,6 +17,7 @@
 /* 2025.03.06 菊池雅道	スローモーション処理修正 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正 */
 /* 2025.03.06 菊池雅道	エフェクト処理追加 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加 */
 
 
 #include "CharacterPlayer.h"
@@ -758,6 +759,13 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* プレイヤーの向きにカメラの向きを固定 */
 				this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
 		}
+			else
+			{
+				// 対象が存在しない場合
+
+				/* 敵を攻撃したフラグを解除(スローモーション解除のため) */
+				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+			}
 
 	}
 	}
@@ -877,6 +885,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -929,6 +938,24 @@ void CharacterPlayer::Player_Projectile()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
+	/* 遠距離攻撃エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKunaiHandFrameNo);
+
+	/* 遠距離攻撃エフェクトの読み込み */
+	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
+
+	/* 遠距離攻撃エフェクトの初期化 */
+	pSeathEffect->Initialization();
+
+	/* 遠距離攻撃エフェクトの時間を設定 */
+	pSeathEffect->SetDeleteCount(20);
+
+	/* 遠距離攻撃エフェクトをリストに登録 */
+	{
+		/* 遠距離攻撃エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pSeathEffect);
+	}
+
 	/* 遠距離攻撃のクールタイムを設定 */
 	this->iProjectileCoolTime = PLAYER_PROJECTILE_COLLTIME;
 
@@ -938,3 +965,4 @@ void CharacterPlayer::Player_Projectile()
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */

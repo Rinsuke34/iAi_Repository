@@ -21,8 +21,10 @@ class PlatformBase : public ObjectBase
 		virtual void	CollisionDraw();					// 当たり判定描写
 
 		int		iGetModelHandle()		{ return this->iModelHandle; };			// モデルハンドルを取得
+		VECTOR	vecGetPlatformMove()	{ return this->vecPlatformMove; };		// プラットフォームの移動量を取得
 
 		void	SetModelHandle(int iModelHandle)			{ this->iModelHandle		= iModelHandle; };			// モデルハンドルを設定
+		void	SetPlatformMove(VECTOR vecPlatformMove)		{ this->vecPlatformMove		= vecPlatformMove; };		// プラットフォームの移動量を設定
 
 		/* 接触判定 */
 		// 簡易的な結果(接触しているかどうか)
@@ -46,5 +48,5 @@ class PlatformBase : public ObjectBase
 		int						iCollisionFrameNo;		// コリジョンフレーム番号(※モデルにつき1つだけ)
 		VECTOR					vecCenterPosition;		// オブジェクトの中心座標(コリジョン処理軽量化用)
 		float					fRoughRadius;			// オブジェクトの大まかな半径(コリジョン処理軽量化用)
-
+		VECTOR					vecPlatformMove;		// プラットフォームの移動量
 };

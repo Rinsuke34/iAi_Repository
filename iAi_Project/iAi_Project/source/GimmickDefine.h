@@ -1,10 +1,15 @@
 /* 2024.02.10 石川智也 ファイル作成 */
+/* 2024.03.10 駒沢風助 移動床追加 */
 
 #pragma once
-
-
 
 static const int GIMMICK_DISAPPEAR_TIME					= 90;	// ギミックの消滅時間
 static const int GIMMICK_TEXTURE_CHANGE_COUNT			= 90;	// テクスチャ変更カウント
 static const int GIMMICK_TEXTURE_CHANGE_FIRST_COUNT		= 90;	// ギミックテクスチャ変更カウント
 static const int GIMMICK_TEXTURE_CHANGE_SECOND_COUNT	= 90;	// ギミックテクスチャ変更カウント
+
+/* 移動床関連 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT			= 200.f;		// 移動床の移動距離(短)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_NORMAL			= 400.f;		// 移動床の移動距離(中)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_LONG			= 600.f;		// 移動床の移動距離(長)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_SPEED					= 1.f;			// 移動床の移動速度				/* 2024.03.10 駒沢風助 移動床追加 */

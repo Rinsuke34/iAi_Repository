@@ -4,6 +4,7 @@
 #include "Appframe.h"
 
 /* データリスト */
+#include "DataList_Model.h"
 #include "DataList_Object.h"
 
 /* オブジェクト */
@@ -24,6 +25,7 @@ public:
 	virtual void	Initialization()	override;	// 初期化
 	virtual void	Update()			override;	// 更新
 	virtual void	CollisionDraw()		override;	// 当たり判定描写
+	virtual void	Draw()				override;	// 描画	
 
 private:
 
@@ -59,7 +61,9 @@ private:
 	bool bSaveFlg;					//セーブフラグ
 
 	VECTOR vecHitPosition;			//ヒットポジション
+	VECTOR vecModelPosition;		//着弾モデルの座標
 protected:
 
 	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
+	COLLISION_LINE		stFallCollision;			// 落下方向のコリジョン
 };

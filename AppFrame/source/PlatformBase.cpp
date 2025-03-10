@@ -11,6 +11,7 @@ PlatformBase::PlatformBase() : ObjectBase()
 	this->iModelHandle		= 0;					// モデルハンドル
 	this->vecRotation		= VGet(0.f, 0.f, 0.f);	// 回転量
 	this->iCollisionFrameNo = -1;					// コリジョンフレーム番号
+	this->vecPlatformMove	= VGet(0.f, 0.f, 0.f);	// プラットフォームの移動量
 }
 
 // デストラクタ

@@ -9,6 +9,7 @@
 /* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 /* 2025.02.26 菊池雅道 クールタイム関連の関数・変数追加 */
 /* 2025.03.08 駒沢風助 新モデル対応 */
+/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -102,6 +103,7 @@ class CharacterPlayer : public CharacterBase
 		/* フレーム番号 */
 		int		iKatanaFrameNo;			// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
 		int		iUpperBodyFrameNo;		// 上半身のフレーム番号							/* 2025.03.08 駒沢風助 新モデル対応 */		
+		int		iKunaiHandFrameNo;		// クナイを持つ手のフレーム番号					/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

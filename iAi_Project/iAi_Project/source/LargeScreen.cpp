@@ -93,7 +93,111 @@ void LargeScreen::Process()
 	// 現在のシーンがタイトルシーンか確認
 	if (gpSceneServer->GetScene("Title"))
 	{
-		// タイトルシーンの場合
+		// 決定ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		{
+			switch (iUICount)
+			{
+				//はじめからホーム画面
+			case CAMERA_FIXED_POSITION_A:
+				//つづきからホーム画面
+			case CAMERA_FIXED_POSITION_B:
+				//ゲームスタートフラグを無効化
+				this->bGameStartFlg = FALSE;
+
+				//ホームフラグを無効化
+				this->bHomeFlg = FALSE;
+				break;
+
+				//データホーム画面
+			case CAMERA_FIXED_POSITION_C:
+				//設定ホーム画面
+			case CAMERA_FIXED_POSITION_D:
+				// Homeフラグを無効化
+				this->bHomeFlg = FALSE;
+				break;
+			}
+		}
+
+		// キャンセルボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		{
+			switch (iUICount)
+			{
+				//はじめからホーム画面
+			case CAMERA_FIXED_POSITION_A:
+				//つづきからホーム画面
+			case CAMERA_FIXED_POSITION_B:
+				//データホーム画面
+			case CAMERA_FIXED_POSITION_C:
+				//設定ホーム画面
+			case CAMERA_FIXED_POSITION_D:
+
+				//ホームフラグを有効化か確認
+				if (this->bHomeFlg == TRUE)
+				{
+					//ホームフラグが有効な場合
+					//UIカウント(カメラ)をタイトルに設定
+					iUICount = CAMERA_FIXED_POSITION_START;
+				}
+				//ホームフラグを有効化
+				this->bHomeFlg = TRUE;
+				break;
+			}
+		}
+
+		// 上ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+		{
+			switch (iUICount)
+			{
+				//はじめからホーム画面
+			case CAMERA_FIXED_POSITION_A:
+				//つづきからホーム画面
+			case CAMERA_FIXED_POSITION_B:
+				//データホーム画面
+			case CAMERA_FIXED_POSITION_C:
+				//設定ホーム画面
+			case CAMERA_FIXED_POSITION_D:
+				// UIカウントを減少
+				iUICount--;
+
+				// UIカウントがはじめからより小さいか確認
+				if (iUICount < CAMERA_FIXED_POSITION_A)
+				{
+					//カメラ固定位置を設定ホーム画面に設定
+					iUICount = CAMERA_FIXED_POSITION_D;
+				}
+				break;
+			}
+		}
+
+		// 下ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+		{
+			switch (iUICount)
+			{
+				//はじめからホーム画面
+			case CAMERA_FIXED_POSITION_A:
+				//つづきからホーム画面
+			case CAMERA_FIXED_POSITION_B:
+				//データホーム画面
+			case CAMERA_FIXED_POSITION_C:
+				//設定ホーム画面
+			case CAMERA_FIXED_POSITION_D:
+				// UIカウントを増加
+				iUICount++;
+
+				// UIカウントが確認画面より大きいか確認
+				if (iUICount >= CAMERA_FIXED_POSITION_E)
+				{
+					// カメラ固定位置をはじめからに設定
+					iUICount = CAMERA_FIXED_POSITION_A;
+				}
+				break;
+			}
+		}
+
 		//UIカウントによって処理を分岐
 		switch (iUICount)
 		{
@@ -143,113 +247,6 @@ void LargeScreen::Process()
 
 			// ポジションAか確認
 		case CAMERA_FIXED_POSITION_A:
-
-			// ポジションAの場合
-			// 決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-			{
-				// 決定ボタンが押された場合
-				// Homeフラグを無効化
-				this->bGameStartFlg = FALSE;
-
-				//Homeフラグを有効化
-				this->bHomeFlg = FALSE;
-
-			}
-			// 上ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-			{
-				// 上ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// bGameStartFlgフラグを有効化
-				this->bGameStartFlg = TRUE;
-
-				//Homeフラグを有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションDに変更
-					iUICount = CAMERA_FIXED_POSITION_D;
-				}
-
-				//Homeフラグが無効か確認
-				if (this->bHomeFlg == FALSE)
-				{
-					//Homeフラグが無効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-
-			}
-
-			// 下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-			{
-				// 下ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// bGameStartFlgフラグを有効化
-				this->bGameStartFlg = TRUE;
-
-				//Homeフラグを有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションDに変更
-					iUICount = CAMERA_FIXED_POSITION_B;
-				}
-
-				//Homeフラグが無効か確認
-				if (this->bHomeFlg == FALSE)
-				{
-					//Homeフラグが無効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-			}
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-
-				//bGameStartFlgフラグが無効か確認
-				if (this->bGameStartFlg == FALSE)
-				{
-					//bGameStartFlgフラグが有効な場合
-					//bGameStartFlgフラグを無効化
-					this->bGameStartFlg = TRUE;
-				}
-
-				//Homeフラグが有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_START;
-
-					//bGameStartFlgフラグを無効化
-					this->bGameStartFlg = FALSE;
-				}
-
-				//bGameStartFlgフラグが有効か確認
-				if (this->bGameStartFlg == TRUE)
-				{
-					//bGameStartFlgフラグが有効な場合
-					//UIカウントをポジションAに変更
-					iUICount = CAMERA_FIXED_POSITION_A;
-
-					//bGameStartFlgフラグを有効化
-					this->bHomeFlg = TRUE;
-				}
-			}
-
 			//スタートフラグが有効か確認
 			if (this->bStartFlg == TRUE)
 			{
@@ -281,113 +278,6 @@ void LargeScreen::Process()
 
 			// ポジションBか確認
 		case CAMERA_FIXED_POSITION_B:
-
-			// ポジションBの場合
-			// 決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-			{
-				// 決定ボタンが押された場合
-				// Homeフラグを無効化
-				this->bGameStartFlg = FALSE;
-
-				//Homeフラグを有効化
-				this->bHomeFlg = FALSE;
-
-			}
-			// 上ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-			{
-				// 上ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// bGameStartFlgフラグを有効化
-				this->bGameStartFlg = TRUE;
-
-				//Homeフラグを有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションDに変更
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-
-				//Homeフラグが無効か確認
-				if (this->bHomeFlg == FALSE)
-				{
-					//Homeフラグが無効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_B;
-				}
-
-			}
-
-			// 下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-			{
-				// 下ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// bGameStartFlgフラグを有効化
-				this->bGameStartFlg = TRUE;
-
-				//Homeフラグを有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションDに変更
-					iUICount = CAMERA_FIXED_POSITION_C;
-				}
-
-				//Homeフラグが無効か確認
-				if (this->bHomeFlg == FALSE)
-				{
-					//Homeフラグが無効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_B;
-				}
-			}
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-
-				//bGameStartFlgフラグが無効か確認
-				if (this->bGameStartFlg == FALSE)
-				{
-					//bGameStartFlgフラグが有効な場合
-					//bGameStartFlgフラグを無効化
-					this->bGameStartFlg = TRUE;
-				}
-
-				//Homeフラグが有効か確認
-				if (this->bHomeFlg == TRUE)
-				{
-					//Homeフラグが有効な場合
-					//UIカウントをポジションスタートに変更
-					iUICount = CAMERA_FIXED_POSITION_START;
-
-					//bGameStartFlgフラグを無効化
-					this->bGameStartFlg = FALSE;
-				}
-
-				//bGameStartFlgフラグが有効か確認
-				if (this->bGameStartFlg == TRUE)
-				{
-					//bGameStartFlgフラグが有効な場合
-					//UIカウントをポジションAに変更
-					iUICount = CAMERA_FIXED_POSITION_A;
-
-					//bGameStartFlgフラグを有効化
-					this->bHomeFlg = TRUE;
-				}
-			}
-
 			//スタートフラグが有効か確認
 			if (this->bStartFlg == TRUE)
 			{
@@ -419,58 +309,6 @@ void LargeScreen::Process()
 
 			// ポジションCか確認
 		case CAMERA_FIXED_POSITION_C:
-
-			// ポジションCの場合
-			// 決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-			{
-				// 決定ボタンが押された場合
-				// Homeフラグを無効化
-				this->bHomeFlg = FALSE;
-			}
-
-			// 上ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-			{
-				// 上ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションBに変更
-				iUICount = CAMERA_FIXED_POSITION_B;
-			}
-
-			// 下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-			{
-				// 下ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションDに変更
-				iUICount = CAMERA_FIXED_POSITION_D;
-			}
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				//Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションスタートに変更
-				iUICount = CAMERA_FIXED_POSITION_START;
-			}
-
 			//スタートフラグが有効か確認
 			if (this->bStartFlg == TRUE)
 			{
@@ -502,58 +340,6 @@ void LargeScreen::Process()
 
 			// ポジションDか確認
 		case CAMERA_FIXED_POSITION_D:
-
-			// ポジションDの場合
-			// 決定ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
-			{
-				// 決定ボタンが押された場合
-				// Homeフラグを無効化
-				this->bHomeFlg = FALSE;
-			}
-
-			// 上ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
-			{
-				// 上ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションCに変更
-				iUICount = CAMERA_FIXED_POSITION_C;
-			}
-
-			// 下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
-			{
-				// 下ボタンが押された場合
-				// スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションAに変更
-				iUICount = CAMERA_FIXED_POSITION_A;
-			}
-
-			// キャンセルボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
-			{
-				// キャンセルボタンが押された場合
-				//スタートフラグを有効化
-				this->bStartFlg = TRUE;
-
-				//Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションスタートに変更
-				iUICount = CAMERA_FIXED_POSITION_START;
-			}
-
 			//スタートフラグが有効か確認
 			if (this->bStartFlg == TRUE)
 			{
@@ -586,7 +372,7 @@ void LargeScreen::Process()
 	}
 	else if (gpSceneServer->GetScene("Stage"))
 	{
-		// 現在のシーンがステージシーン以外の場合
+		// 現在のシーンがステージシーンの場合
 		MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureStageHandle, true);
 		PlayMovieToGraph(this->iTextureStageHandle);
 		DrawGraph(100, -100, this->iTextureStageHandle, TRUE);

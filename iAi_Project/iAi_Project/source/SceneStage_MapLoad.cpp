@@ -21,9 +21,9 @@
 #include "Screen.h"
 #include "LargeScreen.h"
 #include "Gimmick_FallJudgment.h"
+#include "Gimmick_MoveFloor.h"
 // 霧
 #include "FallFog.h"
-
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -411,8 +411,8 @@ void SceneStage::LoadMapData()
 					VECTOR bottomRight = vecFourDirections[1];
 
 					// 水平方向と垂直方向のステップ
-					VECTOR horizontalStep = VScale(VNorm(VSub(topLeft, topRight)), 300.0f);
-					VECTOR verticalStep = VScale(VNorm(VSub(bottomRight, topRight)), 300.0f);
+					VECTOR horizontalStep = VScale(VNorm(VSub(topLeft, topRight)), 3000.0f);
+					VECTOR verticalStep = VScale(VNorm(VSub(bottomRight, topRight)), 3000.0f);
 
 					// 最も右奥から左奥まで横に進みつつ縦に埋めていく
 					for (VECTOR startPos = topRight; startPos.x >= topLeft.x; startPos = VAdd(startPos, horizontalStep))
@@ -466,7 +466,120 @@ void SceneStage::LoadMapData()
 
 					/* 拡大率 */
 					pPlatform->SetScale(vecScale);
+				}
+				else if (name == "MoveFloor_X_Long")
+				{
+					// 移動床(X軸)(長距離)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
 
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(false, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_LONG);
+				}
+				else if (name == "MoveFloor_X_Normal")
+				{
+					// 移動床(X軸)(通常)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(false, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_NORMAL);
+				}
+				else if (name == "MoveFloor_X_Short")
+				{
+					// 移動床(X軸)(短距離)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(false, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_SHORT);
+				}
+				else if (name == "MoveFloor_Y_Long")
+				{
+					// 移動床(Y軸)(長距離)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(true, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_LONG);
+				}
+				else if (name == "MoveFloor_Y_Normal")
+				{
+					// 移動床(Y軸)(通常)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(true, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_NORMAL);
+				}
+				else if (name == "MoveFloor_Y_Short")
+				{
+					// 移動床(Y軸)(短距離)の場合
+					/* "オブジェクト管理"に移動床を追加 */
+					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					this->ObjectList->SetPlatform(pPlatform);
+
+					/* 座標 */
+					pPlatform->SetPosition(vecPos);
+
+					/* 回転量 */
+					pPlatform->SetRotation(vecRot);
+
+					/* 拡大率 */
+					pPlatform->SetScale(vecScale);
+
+					/* 移動方向設定 */
+					pPlatform->SetupMoveDirection(true, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_SHORT);
 				}
 			}
 		}

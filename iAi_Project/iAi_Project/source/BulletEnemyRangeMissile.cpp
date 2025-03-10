@@ -28,6 +28,16 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 	}
+
+	/* モデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Missilepoint/Missilepoint");
+	}
 }
 
 // デストラクタ
@@ -170,6 +180,12 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 	this->pEffectGuidance->SetRotation(rotation);
 
+	// ミサイルの中心からミサイルの移動方向に線分を作成
+	this->stFallCollision.vecLineStart = this->vecPosition;
+	this->stFallCollision.vecLineStart.y += 25;
+	this->stFallCollision.vecLineEnd = this->vecPosition;
+	this->stFallCollision.vecLineEnd.y -= 9999;
+
 	// 移動後の座標を取得(垂直方向)
 	VECTOR vecNextPosition;
 	vecNextPosition.x = this->vecPosition.x;
@@ -198,6 +214,19 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		if (stHitPolyDim.HitFlag == 1)
 		{
 			BulletEnemyRangeMissileExplosion();
+			break;
+		}
+	}
+	for (auto* platform : PlatformList)
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stFallCollision);
+		// 接触しているか確認
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+			// モデルの描写位置を接触地点に設定かつy座標をコリジョンと被らないように設定
+			this->vecModelPosition = stHitPolyDim.HitPosition;
+			this->vecModelPosition.y += 15;
 			break;
 		}
 	}
@@ -261,8 +290,22 @@ void BulletEnemyRangeMissile::CollisionDraw()
 {
 	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
 
+	DrawLine3D(this->stFallCollision.vecLineStart, this->stFallCollision.vecLineEnd, GetColor(255, 0, 0));
+
 	//爆風の当たり判定を描写
 	DrawSphere3D(this->stCollisionSqhere.vecSqhere, this->stCollisionSqhere.fSqhereRadius, 12, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
+
+
+}
+
+// 描画
+void BulletEnemyRangeMissile::Draw()
+{
+	// モデルの座標を設定
+	MV1SetPosition(this->iModelHandle, this->vecModelPosition);
+
+	// モデルの描写
+	MV1DrawModel(this->iModelHandle);
 }
 
 // 更新
