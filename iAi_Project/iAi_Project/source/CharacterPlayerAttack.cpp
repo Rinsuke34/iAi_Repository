@@ -936,6 +936,24 @@ void CharacterPlayer::Player_Projectile()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
+	/* 遠距離攻撃エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKunaiHandFrameNo);
+
+	/* 遠距離攻撃エフェクトの読み込み */
+	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
+
+	/* 遠距離攻撃エフェクトの初期化 */
+	pSeathEffect->Initialization();
+
+	/* 遠距離攻撃エフェクトの時間を設定 */
+	pSeathEffect->SetDeleteCount(20);
+
+	/* 遠距離攻撃エフェクトをリストに登録 */
+	{
+		/* 遠距離攻撃エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pSeathEffect);
+	}
+
 	/* 遠距離攻撃のクールタイムを設定 */
 	this->iProjectileCoolTime = PLAYER_PROJECTILE_COLLTIME;
 

@@ -390,6 +390,7 @@ void CharacterPlayer::Player_Jump()
 					/* ジャンプ回数を更新 */
 					this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
 
+					/* ジャンプフラグを有効にする */
 					this->PlayerStatusList->SetPlayerJumpingFlag(true);
 
 					/* ジャンプのSEを再生 */
@@ -426,6 +427,14 @@ void CharacterPlayer::Player_Jump()
 								this->ObjectList->SetEffect(pAirJumpEffect);
 							}
 						}
+					}
+					
+					/* プレイヤーのモーションが"近距離攻撃(強)(終了)"であるか確認 */
+					if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+					{
+						// 近距離攻撃(強)(終了)モーション中の場合
+						/* プレイヤーのモーションを"無し"に変更 */
+						this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
 					}
 
 					/* モーションを"ジャンプ(開始)"に設定 */
