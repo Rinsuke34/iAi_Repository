@@ -17,6 +17,7 @@
 /* 2025.03.06 菊池雅道	スローモーション処理修正 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正 */
 /* 2025.03.06 菊池雅道	エフェクト処理追加 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加 */
 
 
 #include "CharacterPlayer.h"
@@ -652,17 +653,17 @@ void CharacterPlayer::Player_Charge_Attack()
 		// 近接攻撃(強)で敵を倒した後の場合
 		// 次の敵を探す処理
 		/* プレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする */ 
-	if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
-	{
+		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+		{
 			// モーションが"近距離攻撃(強)(終了)"になった場合
 			/* 索敵範囲を設定 */
-		COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
+			COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
 
-		/* プレイヤーに近いエネミーを取得する */
-		NearEnemy stNearEnemy = { nullptr, 0.f };
+			/* プレイヤーに近いエネミーを取得する */
+			NearEnemy stNearEnemy = { nullptr, 0.f };
 
-		/* エネミーリストを取得 */
-		auto& EnemyList = ObjectList->GetEnemyList();
+			/* エネミーリストを取得 */
+			auto& EnemyList = ObjectList->GetEnemyList();
 
 			/* プレイヤーからエネミーの最小ベクトルを保持する変数 */
 			VECTOR vecMinDirection = VGet(PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE);
@@ -670,14 +671,14 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* プレイヤーからエネミーの最小距離を保持する変数 */
 			float fMinDistance = VSize(vecMinDirection);
 
-		/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
-		for (auto* enemy : EnemyList)
-		{
-			/* 索敵範囲に接触しているか確認 */
-			if (enemy->HitCheck(stSearchSqere) == true)
+			/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
+			for (auto* enemy : EnemyList)
 			{
-				// 索敵範囲内である場合
-				/* コアのワールド座標を取得 */
+				/* 索敵範囲に接触しているか確認 */
+				if (enemy->HitCheck(stSearchSqere) == true)
+				{
+					// 索敵範囲内である場合
+					/* コアのワールド座標を取得 */
 					VECTOR vecCoreWorld = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
 					/* プレイヤーとエネミーの間を確認する線分コリジョンを設定 */
@@ -724,42 +725,49 @@ void CharacterPlayer::Player_Charge_Attack()
 						/* プレイヤーからエネミーの距離を設定 */
 						float fDistance = VSize(vecDirection);
 
-				/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
+						/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
 						if (fMinDistance >= fDistance)
-				{
-					// 近い場合
-					/* プレイヤーから近いエネミーを更新 */
-					stNearEnemy.pEnemy = enemy;
-					stNearEnemy.fDistance = fDistance;
+						{
+							// 近い場合
+							/* プレイヤーから近いエネミーを更新 */
+							stNearEnemy.pEnemy = enemy;
+							stNearEnemy.fDistance = fDistance;
 
 							/* プレイヤーからエネミーの最小距離を更新 */
 							fMinDistance = fDistance;
 						}	
+					}
 				}
 			}
-		}
 
-		/* 最もプレイヤー近いエネミーを対象に指定 */
-		if (stNearEnemy.pEnemy != nullptr)
-		{
-			//対象が存在する場合
-			/* プレイヤーから見た敵の向きを取得 */
-			VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
+			/* 最もプレイヤー近いエネミーを対象に指定 */
+			if (stNearEnemy.pEnemy != nullptr)
+			{
+				//対象が存在する場合
+				/* プレイヤーから見た敵の向きを取得 */
+				VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
 
-			/* プレイヤーから見た敵の向きを正規化 */
-			vecNearEnemy = VNorm(vecNearEnemy);
+				/* プレイヤーから見た敵の向きを正規化 */
+				vecNearEnemy = VNorm(vecNearEnemy);
 
-			/* プレイヤーから見た敵の角度を取得 */
-			float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
+				/* プレイヤーから見た敵の角度を取得 */
+				float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
 
-			/* プレイヤーの向きを設定 */
-			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
+				/* プレイヤーの向きを設定 */
+				this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
 
-			/* プレイヤーの向きにカメラの向きを固定 */
+				/* プレイヤーの向きにカメラの向きを固定 */
 				this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
-		}
+			}
+			else
+			{
+				// 対象が存在しない場合
 
-	}
+				/* 敵を攻撃したフラグを解除(スローモーション解除のため) */
+				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+			}
+
+		}
 	}
 	/* 溜め攻撃のチャージフレーム数を+1する */
 	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(iMeleeStrongChargeCount + 1);
@@ -877,6 +885,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -929,6 +938,24 @@ void CharacterPlayer::Player_Projectile()
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
+	/* 遠距離攻撃エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKunaiHandFrameNo);
+
+	/* 遠距離攻撃エフェクトの読み込み */
+	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
+
+	/* 遠距離攻撃エフェクトの初期化 */
+	pSeathEffect->Initialization();
+
+	/* 遠距離攻撃エフェクトの時間を設定 */
+	pSeathEffect->SetDeleteCount(20);
+
+	/* 遠距離攻撃エフェクトをリストに登録 */
+	{
+		/* 遠距離攻撃エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pSeathEffect);
+	}
+
 	/* 遠距離攻撃のクールタイムを設定 */
 	this->iProjectileCoolTime = PLAYER_PROJECTILE_COLLTIME;
 
@@ -938,3 +965,4 @@ void CharacterPlayer::Player_Projectile()
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */
