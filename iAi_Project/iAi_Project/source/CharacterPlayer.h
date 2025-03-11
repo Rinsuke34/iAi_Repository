@@ -119,4 +119,6 @@ class CharacterPlayer : public CharacterBase
 		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iProjectileCoolTime;	// 遠距離攻撃クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iDodgeCoolTime;			// 回避クールタイム				/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+
+		float	fEnemyAngleX;			// プレイヤーの角度(X軸)		/* 2025.02.13 菊池雅道 回転関連の変数追加 */
 };

@@ -17,7 +17,6 @@ BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
 	this->fKunaiAngleY					= 0.0f;								// クナイのY軸回転角度
 	this->iKunaiDeleteCount				= KUNAI_ATTACK_COUNT;				// クナイの削除カウント(攻撃時間)
 	this->bKunaiAttackFlg				= false;							// クナイの攻撃フラグ
-	this->pEnemy = nullptr;							// 敵管理
 
 	/* モデル取得 */
 	{
@@ -31,9 +30,6 @@ BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
 
 	/* データリスト取得 */
 	{
-		/* "入力管理"を取得 */
-		this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
-
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 		
@@ -125,83 +121,6 @@ void BulletPlayerKunaiEffect::Initialization()
 
 }
 
-// 初期化(座標指定)
-void BulletPlayerKunaiEffect::Initialization(Enemy_Basic* pEnemy)
-{
-
-	/* クナイの生成地点からターゲットまでのベクトルをクナイの移動ベクトルに設定 */
-	this->vecKunaiMoveDirection = VSub(this->vecKunaiTargetPosition, this->vecPosition);
-
-	/* クナイの射線上を確認する線分コリジョンを設定 */
-	COLLISION_LINE stCollisionLine;
-
-	/* 射線の開始点を設定 */
-	stCollisionLine.vecLineStart = this->StageStatusList->vecGetCameraPosition();
-
-	/* 射線の終了点を設定 */
-	stCollisionLine.vecLineEnd = this->vecKunaiTargetPosition;
-
-	/* クナイ発射地点からターゲットの最小ベクトルを保持する */
-	VECTOR vecMinDirection = VSub(this->vecKunaiTargetPosition, this->StageStatusList->vecGetCameraPosition());
-
-	/* クナイ発射地点からターゲットの最小距離を保持する */
-	float fMinDistance = VSize(vecMinDirection);
-
-	/* プラットフォームを取得 */
-	auto& PlatformList = ObjectList->GetCollisionList();
-
-	// 射線上にプラットフォームが存在するか確認する
-	for (auto* platform : PlatformList)
-	{
-		/* プラットフォームと接触しているか確認 */
-		MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
-
-		/* 接触している場合 */
-		if (stHitPoly.HitFlag == true)
-		{
-			/* クナイ発射地点から接触地点のベクトルを設定 */
-			VECTOR vecDirection = VSub(stHitPoly.HitPosition, this->StageStatusList->vecGetCameraPosition());
-
-			/* クナイ発射地点から接触地点の距離を設定 */
-			float fDistance = VSize(vecDirection);
-
-			/* クナイの射線上の最小距離を確認 */
-			if (fMinDistance >= fDistance)
-			{
-				/* 接触した座標をターゲット座標に設定 */
-				vecKunaiTargetPosition = stHitPoly.HitPosition;
-
-				/* クナイの移動ベクトルを再設定 */
-				this->vecKunaiMoveDirection = VSub(this->vecKunaiTargetPosition, this->vecPosition);
-
-				/* クナイの射線上の最小距離を更新 */
-				fMinDistance = fDistance;
-			}
-		}
-	}
-
-	/* クナイの移動距離を設定 */
-	this->fKunaiTargetDistance = VSize(this->vecKunaiMoveDirection);
-
-	/* クナイの移動ベクトルを正規化 */
-	this->vecKunaiMoveDirection = VNorm(this->vecKunaiMoveDirection);
-
-	/* モデルのX軸回転の計算 */
-	/* 高さ(Y軸)の差 */
-	float fHeightDiff = this->vecKunaiTargetPosition.y - this->vecPosition.y;
-	/* X - Z 平面上の距離を計算 */
-	float fHorizontalDist = VSize(VGet(this->vecKunaiTargetPosition.x - this->vecPosition.x, 0, this->vecKunaiTargetPosition.z - this->vecPosition.z));
-
-	/* X軸の回転角度を求める（ラジアン単位） */
-	fKunaiAngleX = atan2f(fHeightDiff, fHorizontalDist);
-
-	/* モデルのY軸回転の計算(X-Z 平面上の方向) */
-	fKunaiAngleY = atan2f(this->vecKunaiTargetPosition.x - this->vecPosition.x, this->vecKunaiTargetPosition.z - this->vecPosition.z);
-
-	this->pEnemy = pEnemy;
-
-}
-
 // 描画
 void BulletPlayerKunaiEffect::Draw()
 {
@@ -213,14 +132,6 @@ void BulletPlayerKunaiEffect::Draw()
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
-
-	if (pEnemy != nullptr)
-	{
-		float x = pEnemy->vecGetRotation().x;
-		float y = pEnemy->vecGetRotation().y;
-		float z = pEnemy->vecGetRotation().z;
-		DrawFormatString(1000, 1000, GetColor(255, 255, 255), "敵の向き%f,%f,%f", x, y, z);
-	}
 }
 
 // 更新
@@ -236,9 +147,7 @@ void BulletPlayerKunaiEffect::Update()
 	if (this->fKunaiMoveDistance >= this->fKunaiTargetDistance)
 	{
 		/* 攻撃処理を行う */
-		//this->Attack();
-
-		this->Move();
+		this->Attack();
 	}
 }
 
@@ -305,137 +214,5 @@ void BulletPlayerKunaiEffect::Attack()
 	{
 		/* クナイの削除フラグを設定 */
 		this->bDeleteFlg = true;
-	}
-
-	
-}
-
-void BulletPlayerKunaiEffect::Move()
-{
-	if (this->pEnemy != nullptr)
-	{
-		//VECTOR enemy = MV1GetRotationXYZ(pEnemy->);
-		
-		/*VECTOR vecMeleeWeakVector = VNorm(enemy);
-		vecMeleeWeakVector = VScale(vecMeleeWeakVector, -500);
-		vecMeleeWeakVector.y = 0;
-		vecMeleeWeakVector = VAdd(pEnemy->vecGetPosition(), vecMeleeWeakVector);*/
-
-		
-
-		/*vecMeleeWeakVector = VNorm(vecMeleeWeakVector);
-		vecMeleeWeakVector = VScale(vecMeleeWeakVector, 200);
-		vecMeleeWeakVector.y = 0;*/
-		//vecMeleeWeakVector = VAdd(pEnemy->vecGetPosition(), vecMeleeWeakVector);
-
-		//VECTOR vecMeleeWeakVector = VAdd(pEnemy->vecGetPosition(), vecMeleeWeakVector);
-	
-		/*this->ObjectList->GetCharacterPlayer()->SetPosition(pEnemy->vecGetPosition());
-
-
-		this->PlayerStatusList->SetPlayerAttackState(3);*/
-
-		/* クナイの座標をターゲット座標に固定 */
-		this->vecPosition = pEnemy->vecGetPosition();
-
-
-		/* 攻撃入力がされた場合 */
-		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
-		{
-			/* モデルを非表示に設定 */
-			MV1SetVisible(this->iModelHandle, false);
-
-			/* クナイの攻撃フラグを設定 */
-			this->bKunaiAttackFlg = true;
-
-			/* プレイヤーの角度からY軸の回転行列を求める */
-			MATRIX matPlayerRotation = MGetRotY((pEnemy->vecGetRotation().y));
-
-			/* カメラ位置の水平方向の平行移動行列 */
-			//MATRIX matHorizontalOffset = MGetTranslate(VGet(0.0f, 0, 150.0f));
-
-			/* 行列を乗算しカメラ位置の行列を求める */
-			//MATRIX matCameraPos = MMult(matHorizontalOffset, matPlayerRotation);
-
-			VECTOR vecMeleeWeakVector = VGet(0, 0, 1);
-
-			/* 行列をベクトルに変換 */
-			vecMeleeWeakVector = VTransform(vecMeleeWeakVector, matPlayerRotation);
-
-			vecMeleeWeakVector = VNorm(vecMeleeWeakVector);
-
-			/* プレイヤーから見た敵の角度を取得 */
-			float fNearEnemyRotate = -atan2f(vecMeleeWeakVector.x, vecMeleeWeakVector.z);
-
-			/* プレイヤーの向きを設定 */
-			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate-PI);
-
-
-			vecMeleeWeakVector = VScale(vecMeleeWeakVector, 250);
-
-			vecMeleeWeakVector = VAdd(pEnemy->vecGetPosition(), vecMeleeWeakVector);
-
-			this->ObjectList->GetCharacterPlayer()->SetPosition(vecMeleeWeakVector);
-
-			//this->PlayerStatusList->SetPlayerAngleX(0.0f);
-
-			////対象が存在する場合
-			///* プレイヤーから見た敵の向きを取得 */
-			//VECTOR vecNearEnemy = VSub(this->ObjectList->GetCharacterPlayer()->vecGetPosition(), pEnemy->vecGetPosition());
-
-			///* プレイヤーから見た敵の向きを正規化 */
-			//vecNearEnemy = VNorm(vecNearEnemy);
-
-			///* プレイヤーから見た敵の角度を取得 */
-			//float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
-
-			///* プレイヤーの向きを設定 */
-			//this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate-PI);
-
-			//this->PlayerStatusList->SetPlayerAngleX(pEnemy->vecGetRotation().y);
-			
-			/* プレイヤーの状態を"自由状態"に遷移 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
-
-			/* プレイヤーのモーションを"近距離攻撃(強)(終了)"に変更 */
-			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
-
-			/* 当たり判定設定 */
-			{
-				
-				this->stCollisionSqhere.vecSqhere = pEnemy->vecGetPosition();
-				
-				this->stCollisionSqhere.fSqhereRadius = 50;
-			}
-
-		}
-
-	}
-	else
-	{
-		/* クナイの座標をターゲット座標に固定 */
-		this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
-		/* クナイの削除フラグを設定 */
-		this->bDeleteFlg = true;
-
-	}
-	
-
-	if (this->bKunaiAttackFlg == true)
-	{
-		// クナイの削除処理
-		/* クナイの削除カウント(攻撃時間)が残っていた場合 */
-		if (iKunaiDeleteCount > 0)
-		{
-			/* クナイの削除カウント(攻撃時間)を減算 */
-			iKunaiDeleteCount--;
-		}
-		/* クナイの削除カウント(攻撃時間)が0になった場合 */
-		else
-		{
-			/* クナイの削除フラグを設定 */
-			this->bDeleteFlg = true;
-		}
-	
 	}
 }

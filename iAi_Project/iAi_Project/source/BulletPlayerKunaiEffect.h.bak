@@ -24,13 +24,10 @@ class BulletPlayerKunaiEffect : public BulletBase
 		virtual ~BulletPlayerKunaiEffect();		// デストラクタ
 
 		virtual void	Initialization()	override;	// 初期化
-		virtual void	Initialization		(Enemy_Basic* pEnemy);	// 初期化(座標指定)
 		virtual void	Update()			override;	// 更新
 		virtual void	Draw()				override;	// 描画	
 
 		void	Attack();								// 攻撃処理
-		void	Move();									// 移動処理
-		
 
 		VECTOR	GetKunaiTargetPosition()							{ return this->vecKunaiTargetPosition; }					// クナイのターゲット座標を取得
 
@@ -47,9 +44,7 @@ class BulletPlayerKunaiEffect : public BulletBase
 		bool	bKunaiAttackFlg;				// クナイの攻撃フラグ
 
 		/* 使用するデータリスト */
-		DataList_Input*			InputList;			// 入力管理
 		DataList_Object*		ObjectList;			// オブジェクト管理
-		Enemy_Basic*			 pEnemy;			// 敵管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 

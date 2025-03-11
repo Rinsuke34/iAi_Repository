@@ -83,6 +83,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* クナイを持つ手のフレーム */
 		this->iKunaiHandFrameNo = MV1SearchFrame(this->iModelHandle, "Kunai_LeftHand");				/* 2025.03.10 菊池雅道	追加 */
 	}
+
+	this->fEnemyAngleX = 0;
 }
 
 // 初期化
