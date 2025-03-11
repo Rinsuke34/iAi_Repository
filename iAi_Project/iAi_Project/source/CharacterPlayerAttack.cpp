@@ -939,7 +939,7 @@ void CharacterPlayer::Player_Projectile()
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
 	/* 遠距離攻撃エフェクトを生成 */
-	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKunaiHandFrameNo);
+	EffectSelfDelete* pSeathEffect = new EffectSelfDelete();
 
 	/* 遠距離攻撃エフェクトの読み込み */
 	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
@@ -949,6 +949,12 @@ void CharacterPlayer::Player_Projectile()
 
 	/* 遠距離攻撃エフェクトの時間を設定 */
 	pSeathEffect->SetDeleteCount(20);
+
+	/* クナイの手の座標を取得 */
+	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiHandFrameNo);
+
+	/* 遠距離攻撃エフェクトの座標を設定 */
+	pSeathEffect->SetPosition(vecKunaiHand);
 
 	/* 遠距離攻撃エフェクトをリストに登録 */
 	{
