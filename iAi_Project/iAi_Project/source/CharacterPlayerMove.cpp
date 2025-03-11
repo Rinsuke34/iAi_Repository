@@ -14,6 +14,7 @@
 /* 2025.03.05 菊池雅道	衝突判定処理修正 */
 /* 2025.03.10 駒沢風助	移動床実装 */
 /* 2025.03.08 菊池雅道	移動処理修正 */
+/* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -733,6 +734,7 @@ void CharacterPlayer::Player_Dodg()
 /* 2025.02.05 菊池雅道	ステータス関連修正				開始 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	開始 */
 /* 2025.03.10 駒沢風助	移動床実装						開始 */
+/* 2025.03.11 菊池雅道	モーション関連の処理追加		開始 */
 
 // 移動処理(垂直方向)
 void CharacterPlayer::Movement_Vertical()
@@ -801,6 +803,9 @@ void CharacterPlayer::Movement_Vertical()
 
 					/* 空中での近距離攻撃(強)回数をリセット */
 					this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
+
+					/* 落下状態になってからのフレーム数をリセット */
+					iFallingFrame = 0;
 
 					/* 着地したプラットフォームの移動量をプレイヤー移動量に加算 */
 					vecNextPosition = VAdd(this->vecPosition, platform->vecGetPlatformMove());
@@ -892,9 +897,18 @@ void CharacterPlayer::Movement_Vertical()
 				else
 				{
 					// 下降している場合
-					/* モーションを"ジャンプ(下降)"に設定 */
-					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+					/* 落下状態になってからのフレーム数を加算 */
+					iFallingFrame++;
+		
+					/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
+					if (iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
+					{
+						// 一定数を超えている場合
+						/* モーションを"ジャンプ(下降)"に設定 */
+						PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+					}
 				}
+					
 			}
 		}
 	}
@@ -904,6 +918,7 @@ void CharacterPlayer::Movement_Vertical()
 /* 2025.02.05 菊池雅道	ステータス関連修正				終了 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	終了 */
 /* 2025.03.10 駒沢風助	移動床実装						終了 */
+/* 2025.03.11 菊池雅道	モーション関連の処理追加		終了 */
 
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */

@@ -10,6 +10,7 @@
 /* 2025.03.02 駒沢風助	落下復帰処理作成 */
 /* 2025.03.06 菊池雅道	当たり判定処理修正 */
 /* 2025.03.08 駒沢風助	新モデル対応 */
+/* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -44,6 +45,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};				// 水平方向コリジョン(下側)
 		this->stMeleeStrongMoveCollsion							= {};				// 近接攻撃(強)のコリジョン(移動後の座標)
 		this->vecMoveSize										= VGet(0, 0, 0);	// 移動量
+		this->iFallingFrame										= 0;				// 落下状態になってからのフレーム数		/* 2025.03.11 菊池雅道 モーション関連の処理追加 */
 	}
 
 	/* データリスト取得 */
