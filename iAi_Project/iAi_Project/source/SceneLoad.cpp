@@ -9,6 +9,9 @@ SceneLoad::SceneLoad() : SceneBase("Load", 9999, true)
 {
 	/* テスト用 */
 	this->iTestCount = 0;
+
+	/* ロード中フラグを有効にする */
+	gbNowLoadingFlg = true;
 }
 
 // デストラクタ
@@ -26,45 +29,17 @@ void SceneLoad::Initialization()
 // 計算
 void SceneLoad::Process()
 {
-	/* スレッドは作成していないので後ほど修正 */
-	/* ロードスレッドが建っているか確認 */
-	if (gstLoadingFutures.empty())
+	/* 非同期読み込みが完了しているか確認 */
+	if (GetASyncLoadNum() <= 0)
 	{
-		// スレッドが建っていないならば
+		// 非同期読み込みが完了している場合
 		/* シーン削除フラグを有効にする */
 		this->bDeleteFlg = true;
 
-		/* ローディングフラグを無効にする */
+		/* ロード中フラグを無効にする */
 		gbNowLoadingFlg = false;
 		return;
 	}
-
-	/* ローディングが完了しているか確認 */
-	for (auto load = gstLoadingFutures.begin(); load != gstLoadingFutures.end(); )
-	{
-		/* 100ms待機する */
-		auto status = load->wait_for(std::chrono::milliseconds(100));
-
-		/* 対象のスレッドが完了しているか確認 */
-		if (status == std::future_status::ready)
-		{
-			// スレッドが完了している場合
-			/* ベクターから削除 */
-			load = gstLoadingFutures.erase(load);
-		}
-		else
-		{
-			// スレッドが完了していない場合
-			/* 次のスレッドを確認 */
-			++load;
-		}
-	}
-
-	/* テストカウント */
-	this->iTestCount++;
-
-	/* ローディングフラグを有効にする */
-	gbNowLoadingFlg = true;
 
 	return;
 }

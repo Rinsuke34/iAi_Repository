@@ -14,6 +14,7 @@ class DataList_Model : public DataListBase
 		virtual ~DataList_Model();		// デストラクタ
 
 		/* 3Dモデル取得 */
+		void	LoadModel(std::string modelName);			// 3Dモデルロード(事前読み込み用)
 		int		iGetModel(std::string modelName);			// 3Dモデル取得
 
 	private:

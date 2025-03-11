@@ -427,6 +427,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\移動床">
       <UniqueIdentifier>{39e3119c-c1dd-45a2-b5d7-aeff3299f007}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ">
+      <UniqueIdentifier>{898c30b3-243d-45d2-af40-48d08a8ef68e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ">
+      <UniqueIdentifier>{bca257ca-4d2d-4d92-9261-d7c60aa2b865}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -659,6 +665,9 @@
     </ClCompile>
     <ClCompile Include="source\Gimmick_MoveFloor.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\移動床</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Debug_StageJump.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -922,6 +931,9 @@
     </ClInclude>
     <ClInclude Include="source\Gimmick_MoveFloor.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\移動床</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Debug_StageJump.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

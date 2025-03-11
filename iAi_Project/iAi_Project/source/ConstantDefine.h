@@ -54,8 +54,12 @@ static const int    ALPHA_MAX               = 255;		// アルファ値の最大値
 static const int    FADE_ALPHA_CHANGE_SPEED = 3;		// フェードイン/アウトの速度
 
 /* デバッグ関連 */
-static const int DEBUG_MAP_HEIGHT	= 256;	// デバッグ描写の高さ
-static const int DEBUG_MAP_WIDTH	= 256;	// デバッグ描写の横幅
+static const int    DEBUG_MAP_HEIGHT	    = 256;	// デバッグ描写の高さ
+static const int    DEBUG_MAP_WIDTH         = 256;	// デバッグ描写の横幅
+// デバッグモード
+static const int	DEBUG_MODE_OPTION       = 0;	// デバッグオプション
+static const int	DEBUG_MODE_OPERATION    = 1;	// デバッグ操作
+static const int	DEBUG_MODE_MAX          = 2;	// デバッグモードの総数
 
 /* ロックオン関係 */
 // エネミーのプレイヤーからのロックオン状態

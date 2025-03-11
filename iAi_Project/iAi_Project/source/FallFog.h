@@ -15,6 +15,7 @@ class FallFog : public PlatformBase
 		FallFog();				// コンストラクタ
 		virtual ~FallFog() {};	// デストラクタ
 
+		void	Initialization()	override;		// 初期化
 		void	Draw()				override;		// 描写
 		void	BloomDraw()			override {};	// 発光描写
 

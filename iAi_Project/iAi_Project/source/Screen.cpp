@@ -98,6 +98,15 @@ void Screen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				// Homeフラグを有効化
+				this->bHomeFlg = TRUE;
+
+				// UIカウントをはじめからに変更
+				iUICount = CAMERA_FIXED_POSITION_A;
+				break;
+
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -132,6 +141,12 @@ void Screen::Process()
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 				//ホームフラグが有効か確認
+				if (this->bHomeFlg == FALSE)
+				{
+					//ホームフラグが有効な場合
+					//UIカウント(カメラ)をタイトルに設定
+					iUICount = CAMERA_FIXED_POSITION_D;
+				}
 				if (this->bHomeFlg == TRUE)
 				{
 					//ホームフラグが有効な場合
@@ -150,6 +165,10 @@ void Screen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				iUICount = 0;
+				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -176,6 +195,10 @@ void Screen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				iUICount = 0;
+				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -202,17 +225,6 @@ void Screen::Process()
         {
 			// カメラ固定位置がタイトルか確認
         case CAMERA_FIXED_POSITION_START:
-			// タイトルの場合
-			// 何かボタンが押されたか確認
-            if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
-            {
-				// 何かボタンが押された場合
-				// Homeフラグを有効化
-                this->bHomeFlg = TRUE;
-
-				// UIカウントをはじめからに変更
-                iUICount = CAMERA_FIXED_POSITION_A;
-            }
 
 			//スタートフラグを有効化か確認
             if (this->bStartFlg == TRUE)

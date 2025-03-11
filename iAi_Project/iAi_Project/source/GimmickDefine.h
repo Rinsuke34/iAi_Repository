@@ -9,7 +9,7 @@ static const int GIMMICK_TEXTURE_CHANGE_FIRST_COUNT		= 90;	// ギミックテクスチャ
 static const int GIMMICK_TEXTURE_CHANGE_SECOND_COUNT	= 90;	// ギミックテクスチャ変更カウント
 
 /* 移動床関連 */
-static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT			= 200.f;		// 移動床の移動距離(短)			/* 2024.03.10 駒沢風助 移動床追加 */
-static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_NORMAL			= 400.f;		// 移動床の移動距離(中)			/* 2024.03.10 駒沢風助 移動床追加 */
-static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_LONG			= 600.f;		// 移動床の移動距離(長)			/* 2024.03.10 駒沢風助 移動床追加 */
-static const float	GIMMICK_MOVEFLOOR_MOVE_SPEED					= 1.f;			// 移動床の移動速度				/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT			= 400.f;		// 移動床の移動距離(短)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_NORMAL			= 800.f;		// 移動床の移動距離(中)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_LONG			= 1200.f;		// 移動床の移動距離(長)			/* 2024.03.10 駒沢風助 移動床追加 */
+static const float	GIMMICK_MOVEFLOOR_MOVE_SPEED					= 5.f;			// 移動床の移動速度				/* 2024.03.10 駒沢風助 移動床追加 */

@@ -58,5 +58,6 @@ class SceneTitle : public SceneBase
 		int iImageConfigChoiceHandle;	// コンフィグ選択
 
 		bool bGameStartFlg;					//スタートフラグ
+		bool bHomeFlg;					//ホームフラグ
 
 };

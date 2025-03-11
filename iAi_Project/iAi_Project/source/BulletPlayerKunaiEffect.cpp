@@ -25,7 +25,7 @@ BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Bullet/Kunai_0218");
+		this->iModelHandle = ModelListHandle->iGetModel("Bullet/Kunai/Kunai");
 	}
 
 	/* データリスト取得 */

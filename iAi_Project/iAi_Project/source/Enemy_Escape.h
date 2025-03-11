@@ -32,14 +32,19 @@ class Enemy_Escape : public Enemy_Basic
 	DataList_Object* ObjectList;			// オブジェクト管理
 
 	/* 関数 */
-	void MoveEnemy(); // 敵を移動させるメソッドを追加
-	void Enemy_Gravity(); // 重力処理メソッドを追加
+	void MoveEnemy();				// 敵を移動させるメソッドを追加
+	void Enemy_Gravity();			// 重力処理メソッドを追加
+	void Enemy_Model_Animation();	// エネミーモデルアニメーション
 
 	/* 変数 */
 	int iXescapedistance;			// X軸の距離
 
 	int iZescapedistance;			// Z軸の距離
 	int iEscapespeed;			// 移動速度
+
+	int	iRunAttachIndex;		// 走りモーションアタッチインデックス
+	float fRunTotalTime;		// 走りモーションの総時間
+	float fRunPlayTime;			// 走り再生時間
 	float fGravity;				// 重力
 
 

@@ -32,6 +32,9 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
 		this->pEffect = nullptr;
 	}
+
+	this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+	this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
 }
 
 // デストラクタ
@@ -176,6 +179,25 @@ void Enemy_Escape::Enemy_Gravity()
 void Enemy_Escape::CollisionDraw()
 {
 	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
+
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 32, GetColor(255, 0, 0), GetColor(255, 0, 0), FALSE);
+}
+
+// エネミーモデルアニメーション
+void Enemy_Escape::Enemy_Model_Animation()
+{
+
+	this->fRunPlayTime += 1.0f;
+	// 再生時間をセットする
+	MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+	//再生時間がアニメーションの総再生時間に達したか確認
+	if (this->fRunPlayTime >= this->fRunTotalTime)
+	{
+		// アニメーションの再生時間が総再生時間に達した場合
+		// 再生時間を初期化する
+		this->fRunPlayTime = 0.0f;
+	}
 }
 
 // 更新

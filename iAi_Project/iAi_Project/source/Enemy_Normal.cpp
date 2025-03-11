@@ -25,7 +25,7 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Normal/Enemy_Normal");
 	}
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
@@ -34,6 +34,17 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
 
 	this->pEffectWarning = nullptr;	// 警告エフェクト
+
+	/*モーション関連*/
+	// エネミーモデルに攻撃のアニメーションをアタッチする
+	this->iAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
+	// アタッチした攻撃アニメーションの総再生時間を取得する
+	this->fAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iAttackAttachIndex);
+
+	this->bAttackMotionFlg = false;			// 攻撃モーションフラグ
+	this->bAttackNowMotionFlg = false;		// 攻撃中モーションフラグ
+	this->bAttackEndMotionFlg = false;		// 攻撃終了モーションフラグ
+	this->bAttackEndLoopMotionFlg = false;	// 攻撃終了ループモーションフラグ
 }
 
 // デストラクタ
@@ -140,6 +151,13 @@ void Enemy_Normal::Player_Range_Normal_Shot()
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
+	//攻撃モーションフラグを有効化
+	this->bAttackEndLoopMotionFlg = false;
+
+	//攻撃モーションフラグを有効化
+	this->bAttackMotionFlg = true;
+
+
 	// ノーマル弾を生成
 	this->pBulletRangeNormal = new BulletEnemyRangeNormal;
 	/* 攻撃の生成方向の設定 */
@@ -169,6 +187,91 @@ void Enemy_Normal::Player_Range_Normal_Shot()
 
 
 	
+}
+
+// エネミーモデルアニメーション
+void Enemy_Normal::Enemy_Model_Animation()
+{
+	// 攻撃モーションフラグが有効か確認
+	if (this->bAttackMotionFlg)
+	{
+		// 攻撃モーションフラグが有効の場合
+		this->fAttackPlayTime += 0.5f;
+		// 再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iAttackAttachIndex, this->fAttackPlayTime);
+
+		// 再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fAttackPlayTime >= this->fAttackTotalTime)
+		{
+			// アニメーションの再生時間が総再生時間に達した場合
+			// アタッチした攻撃アニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iAttackAttachIndex);
+			// 再生時間を初期化する
+			this->fAttackPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iAttackNowAttachIndex = MV1AttachAnim(this->iModelHandle, 1, -1, FALSE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fAttackNowTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iAttackNowAttachIndex);
+
+			this->bAttackNowMotionFlg = true;
+			// 攻撃モーションフラグを無効化
+			this->bAttackMotionFlg = false;
+		}
+	}
+
+	if (this->bAttackNowMotionFlg)
+	{
+		this->fAttackNowPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iAttackNowAttachIndex, this->fAttackNowPlayTime);
+
+		if (this->fAttackNowPlayTime >= this->fAttackNowTotalTime)
+		{
+			// アタッチしたアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iAttackNowAttachIndex);
+			this->fAttackNowPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iAttackEndAttachIndex);
+
+			this->bAttackNowMotionFlg = false;
+			this->bAttackEndMotionFlg = true;
+		}
+	}
+
+	if (this->bAttackEndMotionFlg)
+	{
+		this->fAttackEndPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iAttackEndAttachIndex, this->fAttackEndPlayTime);
+
+		if (this->fAttackEndPlayTime >= this->fAttackEndTotalTime)
+		{
+			// アタッチしたアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iAttackEndAttachIndex);
+			this->fAttackEndPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iAttackEndLoopAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, TRUE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fAttackEndLoopTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iAttackEndLoopAttachIndex);
+
+			this->bAttackEndMotionFlg = false;
+			this->bAttackEndLoopMotionFlg = true;
+		}
+	}
+
+	if (this->bAttackEndLoopMotionFlg)
+	{
+		this->fAttackEndLoopPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iAttackEndLoopAttachIndex, this->fAttackEndPlayTime);
+
+		if (this->fAttackEndPlayTime >= this->fAttackEndLoopTotalTime)
+		{
+			this->fAttackEndLoopPlayTime = 0.0f;
+			this->bAttackEndLoopMotionFlg = false;
+			// アニメーションのループが終了したら、最初の攻撃モーションフラグを再度有効化
+			this->bAttackMotionFlg = true;
+		}
+	}
 }
 
 // 更新
@@ -206,6 +309,9 @@ void Enemy_Normal::Update()
 
 	// エネミーを移動させる
 	MoveEnemy();
+
+	// エネミーモデルアニメーション
+	Enemy_Model_Animation();
 
 	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;

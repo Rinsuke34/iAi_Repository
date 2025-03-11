@@ -9,7 +9,8 @@
 /* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 /* 2025.02.26 菊池雅道 クールタイム関連の関数・変数追加 */
 /* 2025.03.08 駒沢風助 新モデル対応 */
-/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
+/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
+
 
 #pragma once
 #include "Appframe.h"
@@ -114,6 +115,7 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
 		VECTOR				vecMoveSize;					// 移動量(デバッグ用)		<- ※この変数がないとパッケージ化する際にキーボードでの移動の不具合が発生する(駒沢)
+		int					iFallingFrame;					// 落下状態になってからのフレーム数(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 
 		/* クールタイム関連 */
 		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */

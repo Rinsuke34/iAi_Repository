@@ -7,6 +7,7 @@
 /* 2025.02.22 菊池雅道 移動関連の定数追加 */
 /* 2025.02.26 菊池雅道 クールタイム関連の定数追加 */
 /* 2025.02.26 菊池雅道 攻撃関連の定数追加 */
+/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -67,15 +68,16 @@ static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// 遠距離攻撃中						/* 2
 static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// 死亡状態(操作不可)
 
 /* プレイヤー処理用定数 */
-static const float	PLAYER_HEIGHT						= 160.f;	// 高さ(当たり判定)
-static const float	PLAYER_WIDE							= 15.f;		// 幅(当たり判定)
-static const float	PLAYER_CLIMBED_HEIGHT				= 35.f;		// 歩きで登れる高さ
-static const int	PLAYER_CHARGE_TO_STRONG_TIME		= 30;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
-static const int	PLAYER_MOVE_COLLISION_UP			= 0;		// プレイヤーの移動用コリジョン上側
-static const int	PLAYER_MOVE_COLLISION_DOWN			= 1;		// プレイヤーの移動用コリジョン下側
-static const int	PLAYER_MOVE_COLLISION_MAX			= 2;		// プレイヤーの移動用コリジョン数
-static const int	PLAYER_MELEE_STRONG_MOVESPEED		= 100;		// 近接攻撃(強)の移動速度
-static const int	PLAYER_MELEE_CHARGE_MAX				= 180;		// 近接攻撃の最大溜め時間
+static const float	PLAYER_HEIGHT							= 160.f;	// 高さ(当たり判定)
+static const float	PLAYER_WIDE								= 15.f;		// 幅(当たり判定)
+static const float	PLAYER_CLIMBED_HEIGHT					= 10.f;		// 歩きで登れる高さ
+static const int	PLAYER_CHARGE_TO_STRONG_TIME			= 30;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
+static const int	PLAYER_MOVE_COLLISION_UP				= 0;		// プレイヤーの移動用コリジョン上側
+static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// プレイヤーの移動用コリジョン下側
+static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// プレイヤーの移動用コリジョン数
+static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// 近接攻撃(強)の移動速度
+static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// 近接攻撃の最大溜め時間
+static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 10;		// 落下時ジャンプ下降モーションに切り替える際の猶予フレーム(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
 
 /* プレイヤー能力値リスト */
 struct PLAYER_STATUS_LIST

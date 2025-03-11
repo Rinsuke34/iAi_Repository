@@ -18,8 +18,5 @@ class SceneLoad : public SceneBase
 		void	Draw()				override;	// 描画
 
 	private:
-		/* テスト用 */
-		int iTestCount;
-
-	protected:
+		int iTestCount;	// テスト用カウント
 };

@@ -8,7 +8,8 @@
 SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 {
 	/* 初期化 */
-	this->iSelectNo	= 0;
+	this->iSelectMode	= 0;
+	this->iSelectNo		= DEBUG_MODE_OPTION;
 
 	/* グローバル変数をデバッグ項目に登録 */
 	pDebugManu.push_back(&gbDrawSceneListFlg);			// シーンリストの描写
@@ -26,32 +27,76 @@ SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 // 計算
 void SceneUi_Debug::Process()
 {
-	/* プレイヤーの入力取得 */
-	// ※プレイヤーの入力に応じて選択中の項目番号を変更する
-	// 上入力
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+	/* モードに応じて処理を変更する */
+	switch (this->iSelectMode)
 	{
-		this->iSelectNo -= 1;
-		if (this->iSelectNo < 0)
+		/* デバッグオプション */
+		case DEBUG_MODE_OPTION:
+			/* プレイヤーの入力取得 */
+			// ※プレイヤーの入力に応じて選択中の項目番号を変更する
+			// 上入力
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+			{
+				this->iSelectNo -= 1;
+				if (this->iSelectNo < 0)
+				{
+					this->iSelectNo = 0;
+				}
+			}
+
+			// 下入力
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+			{
+				this->iSelectNo += 1;
+				if (this->iSelectNo > pDebugManu.size())
+				{
+					this->iSelectNo = (int)pDebugManu.size();
+				}
+			}
+
+			// 決定
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+			{
+				*pDebugManu[this->iSelectNo] = bToggleFlg(*pDebugManu[this->iSelectNo]);
+			}
+			break;
+
+		/* デバッグ操作 */
+		case DEBUG_MODE_OPERATION:
+			// 決定
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+			{
+				/* シーン"ステージジャンプ"を作成 */
+				SceneBase* pAddScene = new SceneUi_Debug_StageJump();
+
+				/* シーン"ステージジャンプ"をシーンサーバーに追加 */
+				gpSceneServer->AddSceneReservation(pAddScene);
+			}
+			break;
+	}
+
+	// 左入力
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
+	{
+		this->iSelectNo = 0;
+
+		this->iSelectMode += 1;
+		if (this->iSelectMode >= DEBUG_MODE_MAX)
 		{
-			this->iSelectNo = 0;
+			this->iSelectMode = DEBUG_MODE_MAX - 1;
 		}
 	}
 
-	// 下入力
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+	// 右入力
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 	{
-		this->iSelectNo += 1;
-		if (this->iSelectNo > pDebugManu.size())
-		{
-			this->iSelectNo = (int)pDebugManu.size();
-		}
-	}
+		this->iSelectNo = 0;
 
-	// 決定
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
-	{
-		*pDebugManu[this->iSelectNo] = bToggleFlg(*pDebugManu[this->iSelectNo]);
+		this->iSelectMode -= 1;
+		if (this->iSelectMode <= 0)
+		{
+			this->iSelectMode = 0;
+		}
 	}
 
 	// 戻る
@@ -66,18 +111,37 @@ void SceneUi_Debug::Process()
 // 描画
 void SceneUi_Debug::Draw()
 {
-	DrawBox(780, 300, 1200, 300 + 16 * 9, GetColor(0, 0, 0), TRUE);
-	DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
-	DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "データリストの描写");
-	DrawFormatString(800, 300 + 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
-	DrawFormatString(800, 300 + 16 * 3, GetColor(255, 255, 255), "ライトマップの描写");
-	DrawFormatString(800, 300 + 16 * 4, GetColor(255, 255, 255), "ライトマップ(縮小)の描写");
-	DrawFormatString(800, 300 + 16 * 5, GetColor(255, 255, 255), "ライトマップ(ぼかし)のハンドル");
-	DrawFormatString(800, 300 + 16 * 6, GetColor(255, 255, 255), "全オブジェクトのコリジョン描写");
-	DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
-	DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
-	DrawFormatString(800, 300 + 16 * 9, GetColor(255, 255, 255), "フレームレートの描写");
+	/* モードに応じて処理を変更する */
+	switch (this->iSelectMode)
+	{
+		/* デバッグオプション */
+		case DEBUG_MODE_OPTION:
+			DrawBox(780, 300, 1200, 300 - 16, GetColor(255, 0, 0), TRUE);
+			DrawFormatString(800, 300 - 16, GetColor(255, 255, 255), "デバッグオプション");
+			DrawBox(780, 300, 1200, 300 + 16 * 10, GetColor(0, 0, 0), TRUE);
+			DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
+			DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "データリストの描写");
+			DrawFormatString(800, 300 + 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
+			DrawFormatString(800, 300 + 16 * 3, GetColor(255, 255, 255), "ライトマップの描写");
+			DrawFormatString(800, 300 + 16 * 4, GetColor(255, 255, 255), "ライトマップ(縮小)の描写");
+			DrawFormatString(800, 300 + 16 * 5, GetColor(255, 255, 255), "ライトマップ(ぼかし)のハンドル");
+			DrawFormatString(800, 300 + 16 * 6, GetColor(255, 255, 255), "全オブジェクトのコリジョン描写");
+			DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
+			DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
+			DrawFormatString(800, 300 + 16 * 9, GetColor(255, 255, 255), "フレームレートの描写");
+			break;
 
+		/* デバッグ操作 */
+		case DEBUG_MODE_OPERATION:
+			DrawBox(780, 300, 1200, 300 - 16, GetColor(255, 0, 0), TRUE);
+			DrawFormatString(800, 300 - 16, GetColor(255, 255, 255), "デバッグ操作");
+			DrawBox(780, 300, 1200, 300 + 16 * 1, GetColor(0, 0, 0), TRUE);
+			DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "ステージジャンプ");
+			break;
+
+	}
+
+	/* 矢印を描写 */
 	DrawFormatString(780, 300 + 16 * this->iSelectNo, GetColor(255, 255, 255), "→");
 }
 

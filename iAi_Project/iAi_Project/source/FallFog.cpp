@@ -16,6 +16,13 @@ FallFog::FallFog() : PlatformBase()
 	}
 }
 
+// ‰Šú‰»
+void FallFog::Initialization()
+{
+	/* À•W‚ÌˆÊ’u‚ðƒ‰ƒ“ƒ_ƒ€‚Å‰º‚°‚é */
+	this->vecPosition.y = this->vecPosition.y - GetRand(500) - 100;
+}
+
 // •`ŽÊ
 void FallFog::Draw()
 {

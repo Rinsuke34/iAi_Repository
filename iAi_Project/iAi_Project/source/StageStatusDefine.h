@@ -16,6 +16,7 @@ static const int	GAMESTATUS_NEXTSTAGE			= 5;	// 次のステージへ遷移
 static const int	GAMESTATUS_GAMEOVER				= 6;	// ゲームオーバー
 static const int	GAMESTATUS_RESET				= 7;	// リセット
 static const int	GAMESTATUS_START				= 8;	// ゲーム開始
+static const int	GAMESTATUS_STAGE_JUMP			= 9;	// ステージジャンプ
 
 /* ゲームクリア時のカウントに応じた処理 */
 static const int	STAGECLEAR_COUNT_START				= 0;	// ステージクリア処理開始

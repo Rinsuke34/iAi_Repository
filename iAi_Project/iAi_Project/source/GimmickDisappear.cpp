@@ -15,7 +15,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Object/DisappearFloor/DisappearFloor");
+		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/DisappearFloor/DisappearFloor");
 	}
 
 	//プレイヤーの情報を取得
@@ -30,11 +30,13 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	//ギミックテクスチャ変更カウント
 	this->iTextureSecondChangeCount = GIMMICK_TEXTURE_CHANGE_SECOND_COUNT;
 
+	/* データリスト"画像ハンドル管理"を取得 */
+	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	// テクスチャの読み込み
-	this->textureOrangeHandle = LoadGraph("resource/ModelData/Gimmick/Orange.png");
+	this->textureOrangeHandle = *ImageList->piGetImage("resource/ModelData/Gimmick/Orange.png");
 
 	// テクスチャの読み込み
-	this->textureRedHandle = LoadGraph("resource/ModelData/Gimmick/aka.png");
+	this->textureRedHandle = LoadGraph("resource/ModelData/Gimmick/DisappearFloor/red.png");
 }
 
 // デストラクタ
@@ -49,36 +51,12 @@ void GimmickDisappear::ProcessGimmick()
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	//プレイヤーがギミックの上に乗っているか確認
-	if (playerPos.x > this->vecPosition.x - 50 && playerPos.x < this->vecPosition.x + 50 &&
-		playerPos.y > this->vecPosition.y - 50 && playerPos.y < this->vecPosition.y + 50 &&
-		playerPos.z > this->vecPosition.z - 50 && playerPos.z < this->vecPosition.z + 50)
+	//プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
+	VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
+	if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
+		playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
 	{
 		//プレイヤーがギミックの上に乗っている場合
-		/* エフェクト追加 */
-
-		/*爆発エフェクトを生成 */
-		this->pEffectSine = new EffectManualDelete();
-
-		/* エフェクトの読み込み */
-		this->pEffectSine->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_sine/FX_g_mine_sine")));
-
-		/* エフェクトの座標設定 */
-		this->pEffectSine->SetPosition(this->vecPosition);
-
-		/* エフェクトの回転量設定 */
-		this->pEffectSine->SetRotation(this->vecRotation);
-
-		/* エフェクトの初期化 */
-		this->pEffectSine->Initialization();
-
-		/* エフェクトをリストに登録 */
-		{
-			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-			/* エフェクトをリストに登録 */
-			ObjectListHandle->SetEffect(this->pEffectSine);
-		}
 		//テクスチャの変更カウントを減らす
 		iTextureFirstChangeCount--;
 

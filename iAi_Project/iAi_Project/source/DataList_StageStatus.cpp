@@ -17,6 +17,7 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->bAddUiFlg		= false;					// UI追加フラグ
 		this->iStartTime	= 0;						// 開始時の時間
 		this->iClearTime	= 0;						// クリア時の時間
+		this->iJumpStageNo	= 0;						// ジャンプ後のステージ番号(デバッグ用)
 
 		/* カメラ関連 */
 		this->iCameraMode						= CAMERA_MODE_NORMAL;							// カメラモード

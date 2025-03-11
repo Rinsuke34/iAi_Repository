@@ -25,6 +25,32 @@ DataList_Effect::~DataList_Effect()
 	pEffectList.clear();
 }
 
+// エフェクトロード(事前読み込み用)
+void DataList_Effect::LoadEffect(std::string effectName)
+{
+	// 引数
+	// effectName	: エフェクト名
+
+	/* エフェクトを読み込む */
+	// ※複製は行わない
+
+	/* 対象のエフェクトが存在するか確認 */
+	if (bCheckEffect(effectName) == false)
+	{
+		// 存在しない場合
+		/* エフェクトのファイルパスを取得 */
+		std::string FileName = "resource/EffectData/" + effectName + ".efkefc";
+
+		/* エフェクトを読み込み */
+		int iReturn = LoadEffekseerEffect(FileName.c_str());
+
+		/* エフェクトをリストに追加 */
+		this->pEffectList[effectName] = iReturn;
+	}
+
+	return;
+}
+
 // エフェクト取得
 int DataList_Effect::iGetEffect(std::string effectName)
 {

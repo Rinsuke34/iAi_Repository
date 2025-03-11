@@ -67,7 +67,12 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	/* 初期化処理 */
 	this->pSceneStage->Initialization();
 
+	//スタートフラグを無効化
 	this->bGameStartFlg = false;
+
+	//ホームフラグを無効化
+	this->bHomeFlg = false;
+
 
 	//UIカウントを初期化
 	this->iUICount = CAMERA_FIXED_POSITION_START;
@@ -96,6 +101,14 @@ void SceneTitle::Process()
 	{
     switch (iUICount)
 	{
+		case CAMERA_FIXED_POSITION_START:
+			//UIカウント(カメラ)をはじめからホーム画面に設定
+			iUICount++;
+
+			//カメラ固定位置をはじめからホーム画面に設定
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			this->bHomeFlg = TRUE;
+			break;
 			//はじめからホーム画面
         case CAMERA_FIXED_POSITION_A:
 			//つづきからホーム画面
@@ -108,6 +121,9 @@ void SceneTitle::Process()
 
 				//ゲームスタートフラグを無効化
 				this->bGameStartFlg = FALSE;
+
+			//ホームフラグを無効化
+			this->bHomeFlg = FALSE;
 			break;
 
 			//確認画面
@@ -135,21 +151,9 @@ void SceneTitle::Process()
 				/* シーン"オプション"を追加 */
 				gpSceneServer->AddSceneReservation(new SceneOption());
 			}
-			return;
-		}
-			}
-
-	// カメラの位置がタイトルか確認
-	if (iUICount == CAMERA_FIXED_POSITION_START)
-	{
-			// 何かボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
-			{
-			//UIカウント(カメラ)をはじめからホーム画面に設定
-				iUICount++;
-
-			//カメラ固定位置をはじめからホーム画面に設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			//ホームフラグを無効化
+			this->bHomeFlg = FALSE;
+			break;
 			}
 	}
 
@@ -171,18 +175,18 @@ void SceneTitle::Process()
 
 			//設定ホーム画面
 		case CAMERA_FIXED_POSITION_D:
-			//現在のシーンがシーン"オプション"か確認
-			if (new SceneOption())
+			//ホームフラグが有効か確認
+			if (this->bHomeFlg == FALSE)
 			{
-				//シーン"オプション"の場合
+				//UIカウント(カメラ)をはじめからホーム画面に設定
 				iUICount = CAMERA_FIXED_POSITION_D;
 			}
-			else
+			if (this->bHomeFlg == TRUE)
 				{
-				//シーン"オプション"でない場合
 				//UIカウント(カメラ)をはじめからホーム画面に設定
 				iUICount = CAMERA_FIXED_POSITION_START;
 				}
+			this->bHomeFlg = TRUE;
 			break;
 
 			//確認画面
@@ -201,6 +205,10 @@ void SceneTitle::Process()
 			{
 		switch (iUICount)
 		{
+			//タイトル画面
+		case CAMERA_FIXED_POSITION_START:
+			iUICount = 0;
+			break;
 			//はじめからホーム画面
 		case CAMERA_FIXED_POSITION_A:
 			//つづきからホーム画面
@@ -231,6 +239,10 @@ void SceneTitle::Process()
 			{
 		switch (iUICount)
 		{
+			//タイトル画面
+		case CAMERA_FIXED_POSITION_START:
+			iUICount = 0;
+			break;
 			//はじめからホーム画面
 		case CAMERA_FIXED_POSITION_A:
 			//つづきからホーム画面

@@ -40,14 +40,31 @@ private:
 	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
 	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
-
+	void	Enemy_Model_Animation();			// エネミーモデルアニメーション
 
 	//変数
 	int		iFiringCount;	// 発射カウント
 
 	int		iGuidanceCount;	// 誘導カウント
 
+	//モーション関連変数
+	int		iAttackAttachIndex;			// 攻撃モーションアタッチインデックス
+	int		iAttackNowAttachIndex;		// 攻撃中モーションアタッチインデックス
+	int		iAttackEndAttachIndex;		// 攻撃終了モーションアタッチインデックス
+	int		iAttackEndLoopAttachIndex;	// 攻撃終了ループモーションアタッチインデックス
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
+	bool	bAttackMotionFlg;			// 攻撃モーションフラグ
+	bool	bAttackNowMotionFlg;		// 攻撃中モーションフラグ
+	bool	bAttackEndMotionFlg;		// 攻撃終了モーションフラグ
+	bool	bAttackEndLoopMotionFlg;	// 攻撃終了ループモーションフラグ
+	float	fAttackTotalTime;			// 攻撃モーションの総時間
+	float	fAttackNowTotalTime;		// 攻撃中モーションの総時間
+	float	fAttackEndTotalTime;		// 攻撃終了モーションの総時間
+	float	fAttackEndLoopTotalTime;	// 攻撃終了ループモーションの総時間
+	float	fAttackPlayTime;			// 攻撃再生時間
+	float	fAttackNowPlayTime;			// 攻撃中再生時間
+	float	fAttackEndPlayTime;			// 攻撃終了再生時間
+	float	fAttackEndLoopPlayTime;		// 攻撃終了ループ再生時間
 	
 
 protected:

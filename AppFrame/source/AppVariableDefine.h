@@ -39,5 +39,4 @@ extern bool	gbDrawDatalistFlg;					// プレイヤーステータスの描写
 extern bool gbDrawFpsFlg;						// フレームレートの描写
 
 /* ローディング関連 */
-extern std::vector<std::future<void>>	gstLoadingFutures;		// ローディング処理のスレッド追跡用future
-extern bool								gbNowLoadingFlg;		// ローディングフラグ
+extern bool gbNowLoadingFlg;					// ロード中フラグ

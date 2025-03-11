@@ -32,6 +32,7 @@ class DataList_StageStatus : public DataListBase
 		bool	bGetAddUiFlg()		{ return this->bAddUiFlg; };	// UI追加フラグを取得
 		int		iGetStartTime()		{ return this->iStartTime; };	// 開始時の時間を取得
 		int		iGetClearTime()		{ return this->iClearTime; };	// クリア時の時間を取得
+		int		iGetJumpStageNo()	{ return this->iJumpStageNo; };	// ジャンプ後のステージ番号(デバッグ用)を取得
 		// カメラ関連
 		int		iGetCameraMode()						{ return this->iCameraMode; }							// カメラモード取得
 		int		iGetCameraMode_Old()					{ return this->iCameraMode_Old; }						// カメラモード取得(変更前)
@@ -63,6 +64,7 @@ class DataList_StageStatus : public DataListBase
 		void	SetAddUiFlg(bool bAddUiFlg)			{ this->bAddUiFlg		= bAddUiFlg; };		// UI追加フラグ設定
 		void	SetStartTime(int iStartTime)		{ this->iStartTime		= iStartTime; };	// 開始時時間の設定
 		void	SetClearTime(int iClearTime)		{ this->iClearTime		= iClearTime; };	// クリア時時間の設定
+		void	SetJumpStageNo(int iJumpStageNo)	{ this->iJumpStageNo	= iJumpStageNo; };	// ジャンプ後のステージ番号(デバッグ用)設定
 		// カメラ関連
 		void	SetCameraMode(int iCameraMode)										{ this->iCameraMode							= iCameraMode; }				// カメラモード設定
 		void	SetCameraMode_Old(int iCameraMode_Old)								{ this->iCameraMode_Old						= iCameraMode_Old; }			// カメラモード(変更前)設定
@@ -94,6 +96,7 @@ class DataList_StageStatus : public DataListBase
 		bool	bAddUiFlg;		// UI追加フラグ(基本的にタイトルでは無効、ゲームでは有効)
 		int		iStartTime;		// 開始時の時間
 		int		iClearTime;		// クリア時の時間
+		int		iJumpStageNo;	// ジャンプ後のステージ番号(デバッグ用)
 
 		/* カメラ関連 */
 		int		iCameraMode;						// カメラモード

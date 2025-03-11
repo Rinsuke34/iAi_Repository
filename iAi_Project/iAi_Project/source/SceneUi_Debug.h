@@ -4,6 +4,9 @@
 #include "AppFrame.h"
 #include "PublicInclude.h"
 
+/* シーン */
+#include "SceneUi_Debug_StageJump.h"
+
 /* UI(デバッグメニュー)クラスの宣言 */
 
 // UI(デバッグメニュー)クラス
@@ -21,6 +24,7 @@ class SceneUi_Debug : public SceneBase
 		bool	bToggleFlg(bool bFlg);		// trueとfalseの切り替え
 
 		/* 変数 */
+		int					iSelectMode;	// 選択中のモード
 		std::vector<bool*>	pDebugManu;		// デバッグ用広域変数の項目一覧
 		int					iSelectNo;		// 選択中の項目の番号
 };

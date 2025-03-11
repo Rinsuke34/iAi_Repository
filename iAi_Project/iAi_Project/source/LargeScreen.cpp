@@ -98,6 +98,15 @@ void LargeScreen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				// 何かボタンが押された場合
+				// Homeフラグを有効化
+				this->bHomeFlg = TRUE;
+
+				//UIカウントをポジションAに変更
+				iUICount = CAMERA_FIXED_POSITION_A;
+				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -151,6 +160,10 @@ void LargeScreen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				iUICount = 0;
+				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -177,6 +190,10 @@ void LargeScreen::Process()
 		{
 			switch (iUICount)
 			{
+				//タイトル画面
+			case CAMERA_FIXED_POSITION_START:
+				iUICount = 0;
+				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
@@ -203,19 +220,6 @@ void LargeScreen::Process()
 		{
 			// カメラ固定位置が初期位置か確認
 		case CAMERA_FIXED_POSITION_START:
-
-			// 初期位置の場合
-			// 何かボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_ANY))
-			{
-				// 何かボタンが押された場合
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
-
-				//UIカウントをポジションAに変更
-				iUICount = CAMERA_FIXED_POSITION_A;
-			}
-
 			//スタートフラグを有効化か確認
 			if (this->bStartFlg == TRUE)
 			{

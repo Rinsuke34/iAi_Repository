@@ -176,9 +176,6 @@ void SceneStage::Process()
 		case GAMESTATUS_NEXTSTAGE:
 			/* シーンの削除フラグを有効にする */
 			this->bDeleteFlg = true;
-
-			/* ゲーム状態を"ゲーム実行"に変更する */
-			this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
 		/* "ゲームオーバー"状態 */
@@ -202,6 +199,14 @@ void SceneStage::Process()
 
 			/* ゲーム状態を"ゲーム実行"に変更 */
 			StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			break;
+
+		/* ステージジャンプ */
+		case GAMESTATUS_STAGE_JUMP:
+			/* シーンの削除フラグを有効にする */
+			this->bDeleteFlg = true;
+
+
 			break;
 	}
 

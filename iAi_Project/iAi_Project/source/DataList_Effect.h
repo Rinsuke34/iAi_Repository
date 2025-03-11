@@ -14,6 +14,7 @@ class DataList_Effect : public DataListBase
 		virtual ~DataList_Effect();		// デストラクタ
 
 		/* エフェクトリソース取得 */
+		void	LoadEffect(std::string effectName);			// エフェクトロード(事前読み込み用)
 		int		iGetEffect(std::string effectName);			// エフェクト取得
 
 	private:
