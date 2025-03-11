@@ -15,6 +15,7 @@
 /* 2025.03.10 駒沢風助	移動床実装 */
 /* 2025.03.08 菊池雅道	移動処理修正 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
+/* 2025.03.11 菊池雅道	回避の処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -546,9 +547,12 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
 	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
 	/* 2025.03.04 菊池雅道	回避の処理修正 開始 */
+	/* 2025.03.11 菊池雅道	回避の処理修正 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーの回避処理を行うかのフラグ */
 	bool bDodgeFlag = true;
@@ -585,6 +589,13 @@ void CharacterPlayer::Player_Dodg()
 			if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
 			{
 				// 超えていない(回避状態を継続する)場合
+				/* プレイヤーの攻撃状態が近距離攻撃(強)中か確認 */
+				if (iPlayerAttackState == PLAYER_ATTACKSTATUS_MELEE_STRONG)
+				{
+					// 近距離攻撃(強)中である場合
+					/* 回避処理を行わない */
+					return;
+				}
 
 				/* 回避による移動方向を設定し、移動する */
 				/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
@@ -614,106 +625,111 @@ void CharacterPlayer::Player_Dodg()
 			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
 			{
 				// 回避が入力されている場合
-				/* 空中での回避回数制限を超えていないか */
-				if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
+				/* プレイヤーの攻撃状態が近距離攻撃(強)中でないことを確認 */
+				if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
 				{
-					/* 回避のクールタイムが残っているか確認 */
-					if (this->iDodgeCoolTime > 0)
+					// 近距離攻撃(強)中でない場合
+					/* 空中での回避回数制限を超えていないか */
+					if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
 					{
-						// クールタイムが残っている場合
-						/* 回避を行わない */
-						return;
-					}
-
-					/* 回避開始時の時間をリセット */
-					this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
-
-					/* 回避方向設定 */
-					{
-						/* 入力による移動量を取得 */
-						VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
-
-						/* カメラの水平方向の向きを移動用の向きに設定 */
-						float fAngleX = this->StageStatusList->fGetCameraAngleX();
-
-						/* 回避方向ベクトル */
-						VECTOR vecDodgMove;
-
-						/* スティック入力がされているか確認 */
-						if (vecInput.x != 0 || vecInput.z != 0)
+						/* 回避のクールタイムが残っているか確認 */
+						if (this->iDodgeCoolTime > 0)
 						{
-							// スティック入力がされている場合
-							/* スティック入力による回避方向を設定 */
-							vecDodgMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-							vecDodgMove.y = 0.0f;
-							vecDodgMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-						}
-						else
-						{
-							// スティック入力がされていない場合
-							//プレイヤーが向いている方向に回避する
-							/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
-							vecDodgMove = { 0,0,-1 };
-
-							/* プレイヤーの角度からY軸の回転行列を求める */
-							MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
-
-							/* プレイヤーの向きによる回避方向を設定 */
-							vecDodgMove = VTransform(vecDodgMove, matPlayerRotation);
+							// クールタイムが残っている場合
+							/* 回避を行わない */
+							return;
 						}
 
-						/* 回避方向を正規化 */
-						vecDodgMove = VNorm(vecDodgMove);
+						/* 回避開始時の時間をリセット */
+						this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
 
-						/* 現在の回避方向をセットする */
-						this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
-					}
-
-					/* 回避状態の進行率をリセット */
-					this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
-
-					/* 落下の加速度を初期化 */
-					this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
-
-					/* プレイヤー状態を"回避状態中"に設定 */
-					this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
-
-					/* プレイヤーのモーションを回避に設定 */
-					this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DODGE);
-
-					/* プレイヤーが着地していないかを確認 */
-					if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-					{
-						// 着地していない場合
-						/* 空中での回避回数のカウントを進める */
-						this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
-					}
-
-					/* 回避のSEを再生 */
-					gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
-
-					/* 回避エフェクト追加 */
-					{
-						/* 回避エフェクトを生成 */
-						this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
-
-						/* 回避エフェクトの読み込み */
-						this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
-
-						/* エフェクトの回転量設定 */
-						this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-
-						/* 回避エフェクトの初期化 */
-						this->pDodgeEffect->Initialization();
-
-						/* 回避エフェクトをリストに登録 */
+						/* 回避方向設定 */
 						{
+							/* 入力による移動量を取得 */
+							VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+							/* カメラの水平方向の向きを移動用の向きに設定 */
+							float fAngleX = this->StageStatusList->fGetCameraAngleX();
+
+							/* 回避方向ベクトル */
+							VECTOR vecDodgMove;
+
+							/* スティック入力がされているか確認 */
+							if (vecInput.x != 0 || vecInput.z != 0)
+							{
+								// スティック入力がされている場合
+								/* スティック入力による回避方向を設定 */
+								vecDodgMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+								vecDodgMove.y = 0.0f;
+								vecDodgMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+							}
+							else
+							{
+								// スティック入力がされていない場合
+								//プレイヤーが向いている方向に回避する
+								/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
+								vecDodgMove = { 0,0,-1 };
+
+								/* プレイヤーの角度からY軸の回転行列を求める */
+								MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
+
+								/* プレイヤーの向きによる回避方向を設定 */
+								vecDodgMove = VTransform(vecDodgMove, matPlayerRotation);
+							}
+
+							/* 回避方向を正規化 */
+							vecDodgMove = VNorm(vecDodgMove);
+
+							/* 現在の回避方向をセットする */
+							this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
+						}
+
+						/* 回避状態の進行率をリセット */
+						this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
+
+						/* 落下の加速度を初期化 */
+						this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
+						/* プレイヤー状態を"回避状態中"に設定 */
+						this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
+
+						/* プレイヤーのモーションを回避に設定 */
+						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DODGE);
+
+						/* プレイヤーが着地していないかを確認 */
+						if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+						{
+							// 着地していない場合
+							/* 空中での回避回数のカウントを進める */
+							this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
+						}
+
+						/* 回避のSEを再生 */
+						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
+
+						/* 回避エフェクト追加 */
+						{
+							/* 回避エフェクトを生成 */
+							this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
+
+							/* 回避エフェクトの読み込み */
+							this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
+
+							/* エフェクトの回転量設定 */
+							this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+
+							/* 回避エフェクトの初期化 */
+							this->pDodgeEffect->Initialization();
+
 							/* 回避エフェクトをリストに登録 */
-							this->ObjectList->SetEffect(this->pDodgeEffect);
+							{
+								/* 回避エフェクトをリストに登録 */
+								this->ObjectList->SetEffect(this->pDodgeEffect);
+							}
 						}
+						/* 回避クールタイムを設定 */
+						this->iDodgeCoolTime = PLAYER_DODGE_COOLTIME;
 					}
-					/* 回避クールタイムを設定 */
-					this->iDodgeCoolTime = PLAYER_DODGE_COOLTIME;
 				}
 			}
 		}
@@ -728,6 +744,7 @@ void CharacterPlayer::Player_Dodg()
 /* 2025.02.10 菊池雅道	回避処理修正 終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
 /* 2025.03.04 菊池雅道	回避の処理修正 終了 */
+/* 2025.03.11 菊池雅道	回避の処理修正 終了 */
 
 /* 2025.01.09 菊池雅道　移動処理追加					追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加				開始 */
@@ -897,16 +914,27 @@ void CharacterPlayer::Movement_Vertical()
 				else
 				{
 					// 下降している場合
-					/* 落下状態になってからのフレーム数を加算 */
-					iFallingFrame++;
-		
-					/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
-					if (iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
+					/* プレイヤーがジャンプ中であるか確認 */
+					if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 					{
-						// 一定数を超えている場合
 						/* モーションを"ジャンプ(下降)"に設定 */
 						PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+
 					}
+					else
+					{
+						// ジャンプ中でない場合
+						/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
+						if (iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
+						{
+							// 一定数を超えている場合
+							/* モーションを"ジャンプ(下降)"に設定 */
+							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+						}					
+					}
+
+					/* 落下状態になってからのフレーム数を加算 */
+					iFallingFrame++;
 				}
 					
 			}

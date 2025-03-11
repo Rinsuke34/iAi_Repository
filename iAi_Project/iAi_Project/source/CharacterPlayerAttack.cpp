@@ -939,27 +939,27 @@ void CharacterPlayer::Player_Projectile()
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
 
 	/* 遠距離攻撃エフェクトを生成 */
-	EffectSelfDelete* pSeathEffect = new EffectSelfDelete();
+	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();
 
 	/* 遠距離攻撃エフェクトの読み込み */
-	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
+	pProjectileEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
 
 	/* 遠距離攻撃エフェクトの初期化 */
-	pSeathEffect->Initialization();
+	pProjectileEffect->Initialization();
 
 	/* 遠距離攻撃エフェクトの時間を設定 */
-	pSeathEffect->SetDeleteCount(20);
+	pProjectileEffect->SetDeleteCount(20);
 
 	/* クナイの手の座標を取得 */
 	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiHandFrameNo);
 
 	/* 遠距離攻撃エフェクトの座標を設定 */
-	pSeathEffect->SetPosition(vecKunaiHand);
+	pProjectileEffect->SetPosition(vecKunaiHand);
 
 	/* 遠距離攻撃エフェクトをリストに登録 */
 	{
 		/* 遠距離攻撃エフェクトをリストに登録 */
-		this->ObjectList->SetEffect(pSeathEffect);
+		this->ObjectList->SetEffect(pProjectileEffect);
 	}
 
 	/* 遠距離攻撃のクールタイムを設定 */

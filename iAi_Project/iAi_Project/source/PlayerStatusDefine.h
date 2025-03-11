@@ -77,7 +77,7 @@ static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// プレイヤーの移動用コリジ
 static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// プレイヤーの移動用コリジョン数
 static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// 近接攻撃(強)の移動速度
 static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// 近接攻撃の最大溜め時間
-static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 1;		// 落下時ジャンプ下降モーションに切り替える際の猶予フレーム(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
+static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 5;		// 落下時ジャンプ下降モーションに切り替える際の猶予フレーム(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
 /* プレイヤー能力値リスト */
 struct PLAYER_STATUS_LIST
 {
