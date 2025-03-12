@@ -16,8 +16,15 @@ DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
+	/* 初期化 */
+	this->apiSpeakerInfo[VOICE_TYPE_PLAYER]	=	nullptr;
+	this->apiSpeakerInfo[VOICE_TYPE_DOCTOR]	=	nullptr;
+
 	/* 全てのSEを取得 */
 	SE_AllSetHandle();
+
+	/* 全てのボイスを取得 */
+	VOICE_AllSetHandle();
 }
 
 // デストラクタ
@@ -110,7 +117,7 @@ void DataList_Sound::BGM_StopSound()
 // 全てのサウンドハンドルを取得
 void DataList_Sound::SE_AllSetHandle()
 {
-	/* リソースファイルから全てのサウンドを取得 */
+	/* リソースファイルから全てのSEを取得 */
 	for (int i = 0; i < SE_MAX; i++)
 	{
 		/* ファイル名を取得 */
@@ -119,15 +126,15 @@ void DataList_Sound::SE_AllSetHandle()
 		/* 対象のSEファイルのパスを取得 */
 		std::string FilePath	= "resource/SoundData/SE/" + FileName + ".wav";
 		
-		/* サウンドを読み込み */
+		/* SEを読み込み */
 		int iAddSoundHandle		= LoadSoundMem(FilePath.c_str());
 
-		/* サウンドをリストに追加 */
+		/* SEをリストに追加 */
 		this->pSeHandleList[FileName] = iAddSoundHandle;
 	}
 }
 
-// サウンドを再生
+// SEを再生
 void DataList_Sound::SE_PlaySound(int iSeNo)
 {
 	// 引数
@@ -140,3 +147,77 @@ void DataList_Sound::SE_PlaySound(int iSeNo)
 	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo]], DX_PLAYTYPE_BACK);
 }
 
+// 全てのボイスハンドルを取得
+void DataList_Sound::VOICE_AllSetHandle()
+{
+	/* リソースファイルから全てのボイスを取得 */
+	for (int i = 0; i < VOICE_MAX; i++)
+	{
+		/* ファイル名を取得 */
+		std::string	FileName			= stVoice_Info[i].aVoiceName;
+
+		/* ボイスタイプに応じたフォルダ名を取得 */
+		std::string FileName_VoiceType	= VOICE_TYPE_NAME[stVoice_Info[i].iVoiceType];
+
+		/* 対象のボイスファイルのパスを取得 */
+		std::string FilePath = "resource/SoundData/VOICE/" + FileName_VoiceType+ "/" + FileName + ".opus";
+
+		/* ボイスをリストに追加 */
+		VOICE_HANDLE_INFO addVoice;
+		addVoice.iVoiceHandle	= LoadSoundMem(FilePath.c_str());
+		addVoice.iVoiceType		= stVoice_Info[i].iVoiceType;
+		addVoice.iVoiceNo		= stVoice_Info[i].iVoiceNo;
+
+		this->VoiceHandleList.push_back(addVoice);
+	}
+}
+
+// ボイスを再生
+void DataList_Sound::VOICE_PlaySound(int iVoiceNo)
+{
+	// 引数
+	// iVoiceNo		<- 読み込むボイスの番号
+
+	/* ボイス情報を保存する用の構造体を定義 */
+	std::vector<int>	SelectVoice;
+	int					iVoiceType = 0;
+
+	/* 対象のボイス番号のすべてのボイスを取得 */
+	for (int i = 0; i < VOICE_MAX; i++)
+	{
+		/* ボイス番号を取得 */
+		if (this->VoiceHandleList[i].iVoiceNo == iVoiceNo)
+		{
+			/* ボイスのハンドルを取得 */
+			SelectVoice.push_back(this->VoiceHandleList[i].iVoiceHandle);
+
+			/* ボイスの種類(発言者情報)を取得 */
+			iVoiceType = this->VoiceHandleList[i].iVoiceType;
+		}
+	}
+
+	/* ボイスの個数が複数あるならランダムに1つピックする */
+	int iVoiceHandle = SelectVoice[GetRand(static_cast<int>(SelectVoice.size()) - 1)];
+
+	/* 設定されたボイスが登録されているか確認 */
+	if (this->apiSpeakerInfo[iVoiceType] != nullptr)
+	{
+		// 登録されている場合
+		/* 設定された発言者のボイスが再生状態であるか確認 */
+		if (CheckSoundMem(*this->apiSpeakerInfo[iVoiceType]) == 1)
+		{
+			// ボイスが再生状態である場合
+			/* ボイスを停止 */
+			StopSoundMem(*this->apiSpeakerInfo[iVoiceType]);
+		}
+	}
+
+	/* ボイスの音量を設定 */
+	ChangeVolumeSoundMem(this->OptionList->iGetVoiceVolume(), iVoiceHandle);
+
+	/* ボイスを再生する */
+	PlaySoundMem(iVoiceHandle, DX_PLAYTYPE_BACK);
+
+	/* 発言者情報を更新 */
+	this->apiSpeakerInfo[iVoiceType] = &iVoiceHandle;
+}

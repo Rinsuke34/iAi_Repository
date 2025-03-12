@@ -286,6 +286,7 @@
     <ClInclude Include="source\SceneOptionDefine.h" />
     <ClInclude Include="source\ScenePause.h" />
     <ClInclude Include="source\ScenePauseDefine.h" />
+    <ClInclude Include="source\SceneResultDefine.h" />
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
     <ClInclude Include="source\Screen.h" />

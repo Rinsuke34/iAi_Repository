@@ -3,11 +3,13 @@
 #pragma once
 #include "AppFrame.h"
 #include "PublicInclude.h"
+#include "SceneResultDefine.h"
 
 /* データリスト */
 #include "DataList_StageStatus.h"
 #include "DataList_GameResource.h"
 #include "DataList_PlayerStatus.h"
+#include "DataList_Image.h"
 
 /* シーン"リザルト"クラスの宣言 */
 
@@ -16,9 +18,8 @@ class SceneResult : public SceneBase
 {
 	public:
 		SceneResult();							// コンストラクタ
-		virtual ~SceneResult();					// デストラクタ
+		virtual ~SceneResult() {};				// デストラクタ
 
-		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
@@ -27,6 +28,11 @@ class SceneResult : public SceneBase
 		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
 		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
+
+		/* 使用する画像のハンドル */
+		int*	piGrHandle_ResultBackGround;		// リザルト画面の背景
+		int*	piGrHandle_String_Result;			// リザルト画面の文字(リザルト)
+		int*	piGrHandle_String_Rank;				// リザルト画面の文字(ランク)
 
 		/* 関数 */
 		void	Process_Main();					// メイン処理

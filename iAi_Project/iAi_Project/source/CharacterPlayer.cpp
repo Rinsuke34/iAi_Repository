@@ -348,7 +348,7 @@ void CharacterPlayer::PlayerHitCheck()
 								this->ObjectList->SetEffect(pShockEffect);
 							}
 							
-							/* 画面エフェクト(非ダメージ)作成 */
+							/* 画面エフェクト(被ダメージ)作成 */
 							this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 						}
 					}

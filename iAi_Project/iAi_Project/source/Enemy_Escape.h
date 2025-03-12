@@ -35,23 +35,32 @@ class Enemy_Escape : public Enemy_Basic
 	void MoveEnemy();				// 敵を移動させるメソッドを追加
 	void Enemy_Gravity();			// 重力処理メソッドを追加
 	void Enemy_Model_Animation();	// エネミーモデルアニメーション
+	void Movement_Horizontal();		// 水平移動
 
 	/* 変数 */
 	int iXescapedistance;			// X軸の距離
 
 	int iZescapedistance;			// Z軸の距離
 	int iEscapespeed;			// 移動速度
-
-	int	iRunAttachIndex;		// 走りモーションアタッチインデックス
-	float fRunTotalTime;		// 走りモーションの総時間
-	float fRunPlayTime;			// 走り再生時間
 	float fGravity;				// 重力
+	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+
+	//モーション関係変数
+	int iDieAttachIndex;			// 死亡モーションアタッチインデックス
+	int	iRunAttachIndex;		// 走りモーションアタッチインデックス
+	float fDieTotalTime;			// 死亡モーションの総時間
+	float fRunTotalTime;		// 走りモーションの総時間
+	float fDiePlayTime;				// 死亡再生時間
+	float fRunPlayTime;			// 走り再生時間
+	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ
 
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:
 	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
+	COLLISION_CAPSULE		stHorizontalCollision;			// 水平方向のコリジョン
+	COLLISION_SQHERE		stSphere;
 
 	VECTOR				vecMove;				// 移動量
-
+	VECTOR				vecNormalSum;						// プレイヤーに接触するオブジェクトの法線ベクトルの合計
 };

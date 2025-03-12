@@ -947,6 +947,9 @@
     <ClInclude Include="source\ScreenEffect_SlowMotion.h">
       <Filter>ヘッダー ファイル\画面エフェクト\スローモーション</Filter>
     </ClInclude>
+    <ClInclude Include="source\SceneResultDefine.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\リザルト</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

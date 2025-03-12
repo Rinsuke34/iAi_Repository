@@ -127,16 +127,16 @@ void ScenePause::Draw()
 	/* 選択肢描写 */
 	{
 		/* 続ける */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 100, GetColor(255, 255, 255), giFontHandle, "続ける");
+		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 100, GetColor(255, 255, 255), giFontHandle_Normal, "続ける");
 
 		/* 最初から */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 50, GetColor(255, 255, 255), giFontHandle, "最初から");
+		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 50, GetColor(255, 255, 255), giFontHandle_Normal, "最初から");
 
 		/* オプション */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2, GetColor(255, 255, 255), giFontHandle, "オプション");
+		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2, GetColor(255, 255, 255), giFontHandle_Normal, "オプション");
 
 		/* タイトルへ */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 + 50, GetColor(255, 255, 255), giFontHandle, "タイトルへ");
+		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 + 50, GetColor(255, 255, 255), giFontHandle_Normal, "タイトルへ");
 	}
 
 	/* 矢印描写 */

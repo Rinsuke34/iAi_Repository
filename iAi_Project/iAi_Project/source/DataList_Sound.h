@@ -29,8 +29,8 @@ class DataList_Sound : public DataListBase
 		void SE_PlaySound(int iSeNo);			// サウンドを再生
 
 		/* ボイス関係 */
-		//void VOICE_AllSetHandle();				// 全てのボイスハンドルを取得
-		//void VOICE_PlaySound(int iVoiceNo);		// ボイスを再生
+		void VOICE_AllSetHandle();				// 全てのボイスハンドルを取得
+		void VOICE_PlaySound(int iVoiceNo);		// ボイスを再生
 
 	private:
 		/* データリスト */
@@ -38,10 +38,12 @@ class DataList_Sound : public DataListBase
 
 		/* BGM関係 */
 		// ※BGMは再生するタイミングで読み込みを行う
-		int iBgmHandle;								// BGMのハンドル
+		int iBgmHandle;										// BGMのハンドル
 
 		/* SE関係 */
-		std::map<std::string, int>	pSeHandleList;	// サウンドハンドルリスト
+		std::map<std::string, int>	pSeHandleList;			// サウンドハンドルリスト
 
 		/* ボイス関係 */
+		std::vector<VOICE_HANDLE_INFO>	VoiceHandleList;					// ボイスハンドルリスト
+		int*							apiSpeakerInfo[VOICE_TYPE_MAX];		// 発言者のボイス情報
 };

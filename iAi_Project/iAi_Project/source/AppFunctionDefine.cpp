@@ -81,8 +81,25 @@ namespace PROJECT_INIT
 
 		/* フォント設定 */
 		{
-			/* フォントハンドルを取得 */
-			giFontHandle = LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
+			/* フォントハンドルを取得(通常サイズとする) */
+			giFontHandle_Normal = LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
+
+			/* フォントハンドルを取得(大きいサイズとする) */
+			giFonthandle_Big	= CreateFontToHandle(NULL, 90, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Normal);
+		}
+
+		/* シェーダー読み込み */
+		{
+			///* シェーダーハンドルを取得 */
+			//giPixelShaderHandle		= LoadPixelShader("resource/Shader/PixelFog.pso");		// ピクセルシェーダー
+			//giVertexShaderhandle	= LoadVertexShader("resource/Shader/VertexFog.vso");	// 頂点シェーダー
+
+			//MV1SetUseOrigShader(TRUE);
+
+			//SetUsePixelShader(giPixelShaderHandle);
+			//SetUseVertexShader(giVertexShaderhandle);
+
+//			DeleteShader(giShaderHandle);
 		}
 	}
 }

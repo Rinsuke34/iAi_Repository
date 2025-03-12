@@ -26,20 +26,44 @@ public:
 	virtual void	Update()			override;		// 更新
 
 private:
-	EffectManualDelete* pEffect;
 
-	EffectManualDelete* pEffectHit;					//警告エフェクト
-
-protected:
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
+	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
+	EffectManualDelete* pEffectHit;						//警告エフェクト
 
+	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Missile_Shot();			// イクラ弾攻撃
+	void	Player_Range_Missile_Shot();				// ミサイル弾攻撃
+	void	Enemy_Model_Animation();					// エネミーモデルアニメーション
 
-	BulletEnemyRangeMissile* pBulletRangeMissile;	// ミサイル弾
-
+	//変数
 	int		iFiringCount;	// 発射カウント
+	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+
+
+	//モーション関連変数
+	int		iMissileAttackAttachIndex;					// ミサイル攻撃モーションアタッチインデックス
+	int		iMissileAttackNowAttachIndex;				// ミサイル攻撃中モーションアタッチインデックス
+	int		iMissileAttackEndAttachIndex;				// ミサイル攻撃終了モーションアタッチインデックス
+	int		iMissileAttackEndLoopAttachIndex;			// ミサイル攻撃終了ループモーションアタッチインデックス
+	int		iDieAttachIndex;							// 死亡モーションアタッチインデックス
+	bool	bMissileAttackMotionFlg;					// ミサイル攻撃モーションフラグ
+	bool	bMissileAttackNowMotionFlg;					// ミサイル攻撃中モーションフラグ
+	bool	bMissileAttackEndMotionFlg;					// ミサイル攻撃終了モーションフラグ
+	bool	bMissileAttackEndLoopMotionFlg;				// ミサイル攻撃終了ループモーションフラグ
+	float	fMissileAttackTotalTime;					// ミサイル攻撃モーションの総時間
+	float	fMissileAttackNowTotalTime;					// ミサイル攻撃中モーションの総時間
+	float	fMissileAttackEndTotalTime;					// ミサイル攻撃終了モーションの総時間
+	float	fMissileAttackEndLoopTotalTime;				// ミサイル攻撃終了ループモーションの総時間
+	float	fDieTotalTime;								// 死亡モーションの総時間
+	float	fMissileAttackPlayTime;						// ミサイル攻撃再生時間
+	float	fMissileAttackNowPlayTime;					// ミサイル攻撃中再生時間
+	float	fMissileAttackEndPlayTime;					// ミサイル攻撃終了再生時間
+	float	fMissileAttackEndLoopPlayTime;				// ミサイル攻撃終了ループ再生時間
+	float	fDiePlayTime;								// 死亡再生時間
+
+protected:
 
 };

@@ -19,3 +19,7 @@ extern bool gbDrawLightMapDownScaleFlg;		// ライトマップ(縮小)の描写
 extern bool gbDrawLightMapGaussFlg;			// ライトマップ(ぼかし)のハンドル
 extern bool gbDrawCollisionFlg;				// コリジョン描写
 extern bool gbDrawDeleteBackGroundFlg;		// バックグランド非表示
+
+/* シェーダー */
+//extern int	giPixelShaderHandle;			// シェーダーハンドル
+//extern int	giVertexShaderhandle;			// 頂点シェーダーハンドル

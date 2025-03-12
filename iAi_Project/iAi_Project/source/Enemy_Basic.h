@@ -39,10 +39,16 @@ class Enemy_Basic : public EnemyBase
 		/* データ取得 */
 		int		iGetPlayerLockOnType()	{ return this->iPlayerLockOnType; }		// プレイヤー視点でのロックオン状態を取得
 		int		iGetCoreFrameNo()		{ return this->iCoreFrameNo; }			// コアとなるフレーム番号を取得
+		bool	bGetDeadFlg()			{ return this->bDeadFlg; };				// 死亡フラグを取得
 
 		/* データ設定 */
 		void	SetPlayerLockOnType(int iPlayerLockOnType)	{ this->iPlayerLockOnType	= iPlayerLockOnType; }	// プレイヤー視点でのロックオン状態を設定
 		void	SetCoreFrameNo(int iCoreFrameNo)			{ this->iCoreFrameNo		= iCoreFrameNo; }		// コアとなるフレーム番号を設定
+		void	SetDeadFlg(bool bDeadFlg)					{ this->bDeadFlg			= bDeadFlg; };			// 死亡フラグを設定
+
+	protected:
+		/* 変数 */
+		bool	bDeadFlg;			// 死亡フラグ
 
 	private:
 		/* 使用するデータリスト */
@@ -52,4 +58,5 @@ class Enemy_Basic : public EnemyBase
 		/* 変数 */
 		int		iPlayerLockOnType;	// プレイヤー視点でのロックオン状態
 		int		iCoreFrameNo;		// コアとなるフレーム番号
+		int		iBloodAmount;		// ブラッド量
 };

@@ -55,5 +55,5 @@ void SceneEdit::Draw()
 	}
 
 	/* ŠŽƒuƒ‰ƒbƒh•`ŽÊ */
-	DrawFormatStringToHandle(500, 200, GetColor(255, 0, 0),	giFontHandle, "ŠŽBLOOD : %d", this->GameResourceList->iGetHaveBlood());
+	DrawFormatStringToHandle(500, 200, GetColor(255, 0, 0),	giFontHandle_Normal, "ŠŽBLOOD : %d", this->GameResourceList->iGetHaveBlood());
 }

@@ -26,12 +26,12 @@ public:
 	virtual void	Update()			override;		// 更新
 
 private:
-	//EffectManualDelete* pEffect;
 
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
 
 	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
 
+	EffectManualDelete* pEffectHit;						//ヒットエフェクト
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
@@ -47,25 +47,29 @@ private:
 
 	int		iGuidanceCount;	// 誘導カウント
 
-	//モーション関連変数
-	int		iAttackAttachIndex;			// 攻撃モーションアタッチインデックス
-	int		iAttackNowAttachIndex;		// 攻撃中モーションアタッチインデックス
-	int		iAttackEndAttachIndex;		// 攻撃終了モーションアタッチインデックス
-	int		iAttackEndLoopAttachIndex;	// 攻撃終了ループモーションアタッチインデックス
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
-	bool	bAttackMotionFlg;			// 攻撃モーションフラグ
-	bool	bAttackNowMotionFlg;		// 攻撃中モーションフラグ
-	bool	bAttackEndMotionFlg;		// 攻撃終了モーションフラグ
-	bool	bAttackEndLoopMotionFlg;	// 攻撃終了ループモーションフラグ
-	float	fAttackTotalTime;			// 攻撃モーションの総時間
-	float	fAttackNowTotalTime;		// 攻撃中モーションの総時間
-	float	fAttackEndTotalTime;		// 攻撃終了モーションの総時間
-	float	fAttackEndLoopTotalTime;	// 攻撃終了ループモーションの総時間
-	float	fAttackPlayTime;			// 攻撃再生時間
-	float	fAttackNowPlayTime;			// 攻撃中再生時間
-	float	fAttackEndPlayTime;			// 攻撃終了再生時間
-	float	fAttackEndLoopPlayTime;		// 攻撃終了ループ再生時間
+	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	
+	//モーション関連変数
+	int		iNormalAttackAttachIndex;					// 攻撃モーションアタッチインデックス
+	int		iNormalAttackNowAttachIndex;				// 攻撃中モーションアタッチインデックス
+	int		iNormalAttackEndAttachIndex;				// 攻撃終了モーションアタッチインデックス
+	int		iNormalAttackEndLoopAttachIndex;			// 攻撃終了ループモーションアタッチインデックス
+	int		iDieAttachIndex;							// 死亡モーションアタッチインデックス
+	bool	bNormalAttackMotionFlg;						// 攻撃モーションフラグ
+	bool	bNormalAttackNowMotionFlg;					// 攻撃中モーションフラグ
+	bool	bNormalAttackEndMotionFlg;					// 攻撃終了モーションフラグ
+	bool	bNormalAttackEndLoopMotionFlg;				// 攻撃終了ループモーションフラグ
+	float	fNormalAttackTotalTime;						// 攻撃モーションの総時間
+	float	fNormalAttackNowTotalTime;					// 攻撃中モーションの総時間
+	float	fNormalAttackEndTotalTime;					// 攻撃終了モーションの総時間
+	float	fNormalAttackEndLoopTotalTime;				// 攻撃終了ループモーションの総時間
+	float	fDieTotalTime;								// 死亡モーションの総時間
+	float	fNormalAttackPlayTime;						// 攻撃再生時間
+	float	fNormalAttackNowPlayTime;					// 攻撃中再生時間
+	float	fNormalAttackEndPlayTime;					// 攻撃終了再生時間
+	float	fNormalAttackEndLoopPlayTime;				// 攻撃終了ループ再生時間
+	float	fDiePlayTime;								// 死亡再生時間
 
 protected:
 

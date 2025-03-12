@@ -83,6 +83,9 @@ void Main::DxLibInit()
 
 	/* ウィンドウが非アクティブでもプログラムを実行させる */
 	SetAlwaysRunFlag(true);
+
+	/* 使用するDirect3DのバージョンをDirectX11に設定(デフォルトでなっているはずだが念のため) */
+	SetUseDirect3DVersion(DX_DIRECT3D_11);
 }
 
 // メインプログラム初期化
@@ -139,7 +142,8 @@ void Main::MainEnd()
 	delete gpDataListServer;
 
 	/* フォントデータを削除する */
-	DeleteFontToHandle(giFontHandle);
+	DeleteFontToHandle(giFontHandle_Normal);
+	DeleteFontToHandle(giFonthandle_Big);
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();

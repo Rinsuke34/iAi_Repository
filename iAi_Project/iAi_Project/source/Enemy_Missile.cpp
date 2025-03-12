@@ -25,14 +25,23 @@ Enemy_Missile::Enemy_Missile() : Enemy_Basic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Missile/Enemy_Missile");
 	}
 
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();
-	this->pEffect = nullptr;
-
+	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->iFiringCount = ENEMY_MISSILE_INTERVAL;	// 発射カウント
+	/*モーション関連*/
+	// エネミーモデルに攻撃のアニメーションをアタッチする
+	this->iMissileAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
+	// アタッチした攻撃アニメーションの総再生時間を取得する
+	this->fMissileAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackAttachIndex);
+
+	this->bMissileAttackMotionFlg = false;			// 攻撃モーションフラグ
+	this->bMissileAttackNowMotionFlg = false;		// 攻撃中モーションフラグ
+	this->bMissileAttackEndMotionFlg = false;		// 攻撃終了モーションフラグ
+	this->bMissileAttackEndLoopMotionFlg = false;	// 攻撃終了ループモーションフラグ
 }
 
 // デストラクタ
@@ -98,6 +107,30 @@ void Enemy_Missile::MoveEnemy()
 // ミサイル弾の発射
 void Enemy_Missile::Player_Range_Missile_Shot()
 {
+	//攻撃終了ループモーションフラグを無効化
+	this->bMissileAttackEndLoopMotionFlg = false;
+
+	//攻撃モーションフラグを有効化
+	this->bMissileAttackMotionFlg = true;
+
+	
+}
+
+// エネミーモデルアニメーション
+void Enemy_Missile::Enemy_Model_Animation()
+{
+	// 攻撃モーションフラグが有効か確認
+	if (this->bMissileAttackMotionFlg)
+	{
+		// 攻撃モーションフラグが有効の場合
+		this->fMissileAttackPlayTime += 0.5f;
+		// 再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackAttachIndex, this->fMissileAttackPlayTime);
+
+		// 再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fMissileAttackPlayTime >= this->fMissileAttackTotalTime)
+		{
+			// アニメーションの再生時間が総再生時間に達した場合
 	// ミサイルを生成
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
@@ -125,6 +158,74 @@ void Enemy_Missile::Player_Range_Missile_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeMissile);
+			// アタッチした攻撃アニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iMissileAttackAttachIndex);
+			// 再生時間を初期化する
+			this->fMissileAttackPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iMissileAttackNowAttachIndex = MV1AttachAnim(this->iModelHandle, 1, -1, FALSE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fMissileAttackNowTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackNowAttachIndex);
+
+			this->bMissileAttackNowMotionFlg = true;
+			// 攻撃モーションフラグを無効化
+			this->bMissileAttackMotionFlg = false;
+		}
+	}
+
+	if (this->bMissileAttackNowMotionFlg)
+	{
+		this->fMissileAttackNowPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackNowAttachIndex, this->fMissileAttackNowPlayTime);
+
+		if (this->fMissileAttackNowPlayTime >= this->fMissileAttackNowTotalTime)
+		{
+			// アタッチしたアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iMissileAttackNowAttachIndex);
+			this->fMissileAttackNowPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iMissileAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fMissileAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackEndAttachIndex);
+
+			this->bMissileAttackNowMotionFlg = false;
+			this->bMissileAttackEndMotionFlg = true;
+		}
+	}
+
+	if (this->bMissileAttackEndMotionFlg)
+	{
+		this->fMissileAttackEndPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackEndAttachIndex, this->fMissileAttackEndPlayTime);
+
+		if (this->fMissileAttackEndPlayTime >= this->fMissileAttackEndTotalTime)
+		{
+			// アタッチしたアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iMissileAttackEndAttachIndex);
+			this->fMissileAttackEndPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iMissileAttackEndLoopAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, TRUE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fMissileAttackEndLoopTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackEndLoopAttachIndex);
+
+			this->bMissileAttackEndMotionFlg = false;
+			this->bMissileAttackEndLoopMotionFlg = true;
+		}
+	}
+
+	if (this->bMissileAttackEndLoopMotionFlg)
+	{
+		this->fMissileAttackEndLoopPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackEndLoopAttachIndex, this->fMissileAttackEndPlayTime);
+
+		if (this->fMissileAttackEndPlayTime >= this->fMissileAttackEndLoopTotalTime)
+		{
+			this->fMissileAttackEndLoopPlayTime = 0.0f;
+			this->bMissileAttackEndLoopMotionFlg = false;
+			// アニメーションのループが終了したら、最初の攻撃モーションフラグを再度有効化
+			this->bMissileAttackMotionFlg = true;
+		}
+	}
 }
 
 // 更新
@@ -150,18 +251,80 @@ void Enemy_Missile::Update()
 		}
 	}
 
-	/* HPが0以下であるか確認 */
-	if (this->iNowHp <= 0)
-	{
-		// HPが0以下である場合
-		/* 撃破時の処理を実行 */
-		Defeat();
-
-		return;
-	}
 
 	// エネミーを移動させる
 	MoveEnemy();
+
+	// エネミーモデルアニメーション
+	Enemy_Model_Animation();
+
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
+	{
+		/* 死亡フラグを有効化 */
+		this->bDeadFlg = true;
+
+		// HPが0以下である場合
+		 if (this->bHitEffectGenerated == FALSE)
+		{
+			/* Hitエフェクト追加 */
+			{
+				/* 時間経過で削除されるエフェクトを追加 */
+				EffectManualDelete* AddEffect = new EffectManualDelete();
+
+				/* エフェクト読み込み */
+				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+
+				/* エフェクトの座標設定 */
+				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
+
+				/* エフェクトの回転量設定 */
+				AddEffect->SetRotation(this->vecRotation);
+
+				/* エフェクトの初期化 */
+				AddEffect->Initialization();
+
+				/* リストに登録 */
+				{
+					/* "オブジェクト管理"データリストを取得 */
+					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					/* エフェクトをリストに登録 */
+					ObjectListHandle->SetEffect(AddEffect);
+				}
+
+
+				this->bHitEffectGenerated = TRUE;
+			}
+		}
+		//死亡モーション以外のモーションをデタッチ
+		MV1DetachAnim(this->iModelHandle, this->iMissileAttackAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iMissileAttackNowAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iMissileAttackEndAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iMissileAttackEndLoopAttachIndex);
+
+		//死亡モーションの再生時間を加算
+		this->fDiePlayTime += 2.5f;
+
+		// 死亡モーションをアタッチ
+		this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		//アタッチした死亡モーションの再生時間をセット
+		MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+		// 死亡モーションの総再生時間を取得
+		this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+		// 死亡モーションの再生時間が総再生時間に達したか確認
+		if (this->fDiePlayTime >= this->fDieTotalTime)
+		{
+		/* 撃破時の処理を実行 */
+		Defeat();
+
+			//爆発SE再生
+			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		}
+		return;
+	}
 
 	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;

@@ -144,8 +144,8 @@ void Screen::Process()
 				if (this->bHomeFlg == FALSE)
 				{
 					//ホームフラグが有効な場合
-					//UIカウント(カメラ)をタイトルに設定
-					iUICount = CAMERA_FIXED_POSITION_D;
+					//UIカウント(カメラ)をはじめからに設定
+					iUICount = CAMERA_FIXED_POSITION_A;
 				}
 				if (this->bHomeFlg == TRUE)
 				{

@@ -25,14 +25,29 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Beam/Enemy_Beam");
 	}
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
-
-	this->bEffectGenerated = false;	// 警告エフェクト生成フラグ
-
 	this->iFiringCount = ENEMY_BEAM_INTERVAL;	// 発射カウント
+	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;			// ビームチャージカウント
+	this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;	//ビームの持続カウント
+	this->bEffectGenerated		 = false;					// 警告エフェクト生成フラグ
+	this->bHitEffectGenerated	 = false;					// ヒットエフェクト生成フラグ
+	this->bChargeFlg			 = false;					// チャージフラグ
+	this->bFiringFlg			 = false;					// 発射フラグ
+	this->bDirectionFlg			 = true;					// 向き固定フラグ
+
+	/*モーション関連*/
+// エネミーモデルに攻撃のアニメーションをアタッチする
+	this->iBeamAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
+	// アタッチした攻撃アニメーションの総再生時間を取得する
+	this->fBeamAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackAttachIndex);
+
+	this->bBeamAttackMotionFlg			= false;			// 攻撃モーションフラグ
+	this->bBeamAttackNowMotionFlg		= false;			// 攻撃中モーションフラグ
+	this->bBeamAttackEndMotionFlg		= false;			// 攻撃終了モーションフラグ
+	this->bBeamAttackEndLoopMotionFlg	= false;			// 攻撃終了ループモーションフラグ
 }
 
 // デストラクタ
@@ -68,11 +83,15 @@ void Enemy_Beam::MoveEnemy()
 	//攻撃予告エフェクトの座標を設定
 	VECTOR vecWarning = VGet(vecPosition.x, vecPosition.y + vecPosition.y / 2, vecPosition.z);
 
-	//エネミーの向きを設定
-	this->vecRotation = VRot;
+	
 
-	//エネミーの縦向きを取得
-	MV1SetRotationXYZ(iModelHandle, VRot);
+	if (this->bDirectionFlg == true)
+	{
+		//エネミーの向きを設定
+		this->vecRotation = VRot;
+		//エネミーの向きを取得
+		MV1SetRotationXYZ(iModelHandle, VRot);
+	}
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
@@ -125,7 +144,7 @@ void Enemy_Beam::MoveEnemy()
 			// モデルのフレーム２番を表示
 			MV1SetFrameVisible(iModelHandle, 2, TRUE);
 			// 発射カウントが0以下の場合
-			// ノーマル弾を発射する
+			// ビームを発射する
 			Player_Range_Beam_Shot();
 
 			// 発射カウントを初期化
@@ -144,6 +163,9 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 
 	// ビームを生成
 	this->pBulletRangeBeam = new BulletEnemyRangeBeam;
+
+	//チャージフラグを有効化
+	this->bChargeFlg = true;
 
 	/* 攻撃の生成方向の設定 */
 	/* 攻撃座標を算出 */
@@ -172,6 +194,143 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 
 }
 
+//チャージ
+void Enemy_Beam::Charge()
+{
+	if (this->bChargeFlg == TRUE)
+	{
+		iChargeCount--;	// チャージカウントを減算
+
+		this->bDirectionFlg = true;
+
+		// チャージカウントが0以下か確認
+		if (this->iChargeCount <= 0)
+		{
+			// チャージカウントが0以下の場合
+			//攻撃終了ループモーションフラグを無効化
+			this->bBeamAttackEndLoopMotionFlg = false;
+
+			//攻撃モーションフラグを有効化
+			this->bBeamAttackMotionFlg = true;
+
+			// チャージカウントを初期化
+			this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;
+
+			this->bChargeFlg = false;
+
+			this->bFiringFlg = true;
+
+			this->bDirectionFlg = false;
+		}
+	}
+	if (this->bFiringFlg == TRUE)
+	{
+		// ビームの持続カウントを減算
+		this->iBeamDurationCount--;
+		// ビームの持続カウントが0以下か確認
+		if (this->iBeamDurationCount <= 0)
+		{
+			// ビームの持続カウントが0以下の場合
+			this->bFiringFlg = false;
+
+			this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;
+		}
+	}
+}
+
+// エネミーモデルアニメーション
+void Enemy_Beam::Enemy_Model_Animation()
+{
+
+	// 攻撃モーションフラグが有効か確認
+	if (this->bBeamAttackMotionFlg)
+	{
+		// 攻撃モーションフラグが有効の場合
+		this->fBeamAttackPlayTime += 0.5f;
+		// 再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackAttachIndex, this->fBeamAttackPlayTime);
+
+		// 再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fBeamAttackPlayTime >= this->fBeamAttackTotalTime)
+		{
+			// アニメーションの再生時間が総再生時間に達した場合
+			// アタッチした攻撃アニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iBeamAttackAttachIndex);
+			// 再生時間を初期化する
+			this->fBeamAttackPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iBeamAttackNowAttachIndex = MV1AttachAnim(this->iModelHandle, 1, -1, FALSE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fBeamAttackNowTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackNowAttachIndex);
+
+			this->bBeamAttackNowMotionFlg = true;
+			// 攻撃モーションフラグを無効化
+			this->bBeamAttackMotionFlg = false;
+		}
+	}
+
+	if (this->bBeamAttackNowMotionFlg)
+	{
+		this->fBeamAttackNowPlayTime += 1.0f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackNowAttachIndex, this->fBeamAttackNowPlayTime);
+
+		if (this->fBeamAttackNowPlayTime >= this->fBeamAttackNowTotalTime)
+		{
+			if (this->iBeamDurationCount <= this->iChargeCount)
+			{
+				// アタッチしたアニメーションをデタッチする
+				MV1DetachAnim(this->iModelHandle, iBeamAttackNowAttachIndex);
+				this->fBeamAttackNowPlayTime = 0.0f;
+				// エネミーモデルに攻撃のアニメーションをアタッチする
+				this->iBeamAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
+				// アタッチした攻撃アニメーションの総再生時間を取得する
+				this->fBeamAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackEndAttachIndex);
+
+				this->bBeamAttackNowMotionFlg = false;
+				this->bBeamAttackEndMotionFlg = true;
+
+				
+			}
+		}
+	}
+
+	if (this->bBeamAttackEndMotionFlg)
+	{
+		this->fBeamAttackEndPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackEndAttachIndex, this->fBeamAttackEndPlayTime);
+
+		if (this->fBeamAttackEndPlayTime >= this->fBeamAttackEndTotalTime)
+		{
+			// アタッチしたアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, iBeamAttackEndAttachIndex);
+			this->fBeamAttackEndPlayTime = 0.0f;
+			// エネミーモデルに攻撃のアニメーションをアタッチする
+			this->iBeamAttackEndLoopAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, TRUE);
+			// アタッチした攻撃アニメーションの総再生時間を取得する
+			this->fBeamAttackEndLoopTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackEndLoopAttachIndex);
+
+			this->bBeamAttackEndMotionFlg = false;
+			this->bBeamAttackEndLoopMotionFlg = true;
+
+			this->bDirectionFlg = true;
+		}
+	}
+
+	if (this->bBeamAttackEndLoopMotionFlg)
+	{
+		this->fBeamAttackEndLoopPlayTime += 0.5f;
+		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackEndLoopAttachIndex, this->fBeamAttackEndPlayTime);
+
+		if (this->fBeamAttackEndPlayTime >= this->fBeamAttackEndLoopTotalTime)
+		{
+			this->fBeamAttackEndLoopPlayTime = 0.0f;
+			this->bBeamAttackEndLoopMotionFlg = false;
+			// アニメーションのループが終了したら、最初の攻撃モーションフラグを再度有効化
+			this->bBeamAttackMotionFlg = true;
+		}
+	}
+}
+
 // 更新
 void Enemy_Beam::Update()
 {
@@ -195,26 +354,88 @@ void Enemy_Beam::Update()
 		}
 	}
 
+	// エネミーを移動させる
+	MoveEnemy();
+
+	// エネミーモデルアニメーション
+	Enemy_Model_Animation();
+
+	// チャージ
+	Charge();
+
 	/* HPが0以下であるか確認 */
 	if (this->iNowHp <= 0)
 	{
 		// HPが0以下である場合
-		/* 撃破時の処理を実行 */
-		Defeat();
+		/* 死亡フラグを有効化 */
+		this->bDeadFlg = true;
 
-		/* ビームを一度でも生成したかを確認 */
+		if (this->bHitEffectGenerated == FALSE)
+		{
+			/* Hitエフェクト追加 */
+			{
+				/* 時間経過で削除されるエフェクトを追加 */
+				EffectManualDelete* AddEffect = new EffectManualDelete();
+
+				/* エフェクト読み込み */
+				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+
+				/* エフェクトの座標設定 */
+				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
+
+				/* エフェクトの回転量設定 */
+				AddEffect->SetRotation(this->vecRotation);
+
+				/* エフェクトの初期化 */
+				AddEffect->Initialization();
+
+				/* リストに登録 */
+				{
+					/* "オブジェクト管理"データリストを取得 */
+					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					/* エフェクトをリストに登録 */
+					ObjectListHandle->SetEffect(AddEffect);
+				}
+
+
+				this->bHitEffectGenerated = TRUE;
+			}
+		}
+		//死亡モーション以外のモーションをデタッチ
+		MV1DetachAnim(this->iModelHandle, this->iBeamAttackAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iBeamAttackNowAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iBeamAttackEndAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iBeamAttackEndLoopAttachIndex);
+
+		//ビームエフェクトを削除
 		if (this->pBulletRangeBeam != nullptr)
 		{
-			// 一度でも生成した場合
-			//ビームの削除フラグを有効化
 			this->pBulletRangeBeam->SetDeleteFlg(true);
 		}
 
+		//死亡モーションの再生時間を加算
+		this->fDiePlayTime += 2.5f;
+
+		// 死亡モーションをアタッチ
+		this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		//アタッチした死亡モーションの再生時間をセット
+		MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+		// 死亡モーションの総再生時間を取得
+		this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+		// 死亡モーションの再生時間が総再生時間に達したか確認
+		if (this->fDiePlayTime >= this->fDieTotalTime)
+		{
+			/* 撃破時の処理を実行 */
+			Defeat();
+
+			//爆発SE再生
+			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		}
 		return;
 	}
-
-	// エネミーを移動させる
-	MoveEnemy();
 
 	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;

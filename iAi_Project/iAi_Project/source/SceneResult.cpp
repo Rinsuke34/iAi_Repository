@@ -21,23 +21,26 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
+	/* 画像読み込み */
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* リザルト画面背景 */
+		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_ResultBackGround_mini");
+
+		/* リザルト画面の文字(リザルト) */
+		this->piGrHandle_String_Result		= ImageList->piGetImage("Result/UI_Moji_Result");
+
+		/* リザルト画面の文字(ランク) */
+		this->piGrHandle_String_Rank		= ImageList->piGetImage("Result/UI_Moji_Rank");
+	}
+
 	/* 各評価基準を取得 */
 	ResultCalculation_JsonLoad();
 
 	/* 各評価点を算出 */
 	ClearEvaluation();
-}
-
-// デストラクタ
-SceneResult::~SceneResult()
-{
-
-}
-
-// 初期化
-void SceneResult::Initialization()
-{
-
 }
 
 // 計算
@@ -66,19 +69,37 @@ void SceneResult::Process()
 // 描画
 void SceneResult::Draw()
 {
-	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：エディット画面へ");
+	/* 画面の背景描写 */
+	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
 
-	/* 評価描写(仮) */
-	DrawFormatStringToHandle(500, 32 * 2, GetColor(255, 255, 255),	giFontHandle, "クリアタイム");
-	DrawFormatStringToHandle(500, 32 * 3, GetColor(255, 255, 255), giFontHandle, "記録：%d", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
-	DrawFormatStringToHandle(500, 32 * 4, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Time);
-	DrawFormatStringToHandle(500, 32 * 5, GetColor(255, 255, 255),	giFontHandle, "最大コンボ");
-	DrawFormatStringToHandle(500, 32 * 6, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerComboMaxCount());
-	DrawFormatStringToHandle(500, 32 * 7, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Combo);
-	DrawFormatStringToHandle(500, 32 * 8, GetColor(255, 255, 255),	giFontHandle, "被ダメージ");
-	DrawFormatStringToHandle(500, 32 * 9, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerDamageCount());
-	DrawFormatStringToHandle(500, 32 * 10, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Damage);
-	DrawFormatStringToHandle(500, 32 * 11, GetColor(255, 255, 255), giFontHandle, "総合評価：%d", this->iClearEvaluation_Total);
+	/* 文字描写(画像部分) */
+	DrawGraph(RESULT_STRING_RESULT_POSITION_X, RESULT_STRING_RESULT_POSITION_Y, *this->piGrHandle_String_Result, TRUE);
+	DrawGraph(RESULT_STRING_RANK_POSITION_X, RESULT_STRING_RANK_POSITION_Y, *this->piGrHandle_String_Rank, TRUE);
+	
+	/* 白線 */
+	DrawBox(RESULT_STRING_RESULT_LINE_LU, RESULT_STRING_RESULT_LINE_LD, RESULT_STRING_RESULT_LINE_RU, RESULT_STRING_RESULT_LINE_RD, GetColor(255, 255, 255), TRUE);
+	DrawBox(RESULT_STRING_RANK_LINE_LU, RESULT_STRING_RANK_LINE_LD, RESULT_STRING_RANK_LINE_RU, RESULT_STRING_RANK_LINE_RD, GetColor(255, 255, 255), TRUE);
+
+	/* 文字(マキナスフォント試用部分) */
+	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFonthandle_Big,	"CLEAR TIME");
+	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFonthandle_Big,	"MAX COMBO");
+	DrawFormatStringToHandle(80, 560, GetColor(0, 0, 0), giFonthandle_Big,	"TAKE DAMAGE");
+	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFonthandle_Big,	"GET BLOOD");
+
+
+	//DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：エディット画面へ");
+
+	///* 評価描写(仮) */
+	//DrawFormatStringToHandle(500, 32 * 2, GetColor(255, 255, 255),	giFontHandle, "クリアタイム");
+	//DrawFormatStringToHandle(500, 32 * 3, GetColor(255, 255, 255), giFontHandle, "記録：%d", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
+	//DrawFormatStringToHandle(500, 32 * 4, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Time);
+	//DrawFormatStringToHandle(500, 32 * 5, GetColor(255, 255, 255),	giFontHandle, "最大コンボ");
+	//DrawFormatStringToHandle(500, 32 * 6, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerComboMaxCount());
+	//DrawFormatStringToHandle(500, 32 * 7, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Combo);
+	//DrawFormatStringToHandle(500, 32 * 8, GetColor(255, 255, 255),	giFontHandle, "被ダメージ");
+	//DrawFormatStringToHandle(500, 32 * 9, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerDamageCount());
+	//DrawFormatStringToHandle(500, 32 * 10, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Damage);
+	//DrawFormatStringToHandle(500, 32 * 11, GetColor(255, 255, 255), giFontHandle, "総合評価：%d", this->iClearEvaluation_Total);
 }
 
 // メイン処理

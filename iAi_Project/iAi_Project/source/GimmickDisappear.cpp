@@ -33,10 +33,10 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	/* データリスト"画像ハンドル管理"を取得 */
 	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	// テクスチャの読み込み
-	this->textureOrangeHandle = *ImageList->piGetImage("resource/ModelData/Gimmick/Orange.png");
+	this->textureOrangeHandle = *ImageList->piGetImage("DisappearFloor/Orange");
 
 	// テクスチャの読み込み
-	this->textureRedHandle = LoadGraph("resource/ModelData/Gimmick/DisappearFloor/red.png");
+	this->textureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
 }
 
 // デストラクタ
@@ -66,6 +66,7 @@ void GimmickDisappear::ProcessGimmick()
 			//テクスチャの変更カウントが0以下になった場合
 			// 0番のテクスチャをオレンジテクスチャに変更
 			MV1SetTextureGraphHandle(iModelHandle, 0, textureOrangeHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 1, textureOrangeHandle, true);
 
 			//セカンドテクスチャの変更カウントを減らす
 			iTextureSecondChangeCount--;
@@ -80,6 +81,7 @@ void GimmickDisappear::ProcessGimmick()
 
 				// 0番のテクスチャを赤テクスチャに変更
 				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
+				MV1SetTextureGraphHandle(iModelHandle, 1, textureRedHandle, true);
 			
 				//PlayMovieToGraph(textureHandle); // 再生開始
 

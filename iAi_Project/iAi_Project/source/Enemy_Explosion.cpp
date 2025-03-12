@@ -33,7 +33,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy");
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Explosion/Enemy_Explosion");
 	}
 	this->iStopCount = 0;
 	this->pEffect = nullptr;
@@ -42,6 +42,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	this->bStopFlg = true;
 	this->bCountFlg = false;
 	this->bBlastFlg = false;
+	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 }
 
 // デストラクタ
@@ -112,6 +113,30 @@ void Enemy_Explosion::MoveEnemy()
         // 探知範囲内にいるエネミーのみ処理を行う
         if (!bEffectGenerated)
 		{
+			//待機モーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+
+			//走りモーションをアタッチする
+			this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+			//走りモーションの総再生時間を取得する
+			this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+			//再生速度を加算
+			this->fRunPlayTime += 1.0f;
+
+			//再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+			//再生時間がアニメーションの総再生時間に達したか確認
+			if (this->fRunPlayTime >= this->fRunTotalTime)
+			{
+				//アニメーションの再生時間が総再生時間に達した場合
+				//再生時間を初期化する
+				this->fRunPlayTime = 0.0f;
+			}
+
+
 			// エネミーをプレイヤーに近づける
 			VECTOR direction = VNorm(VSub(playerPos, this->vecPosition));
 
@@ -131,6 +156,14 @@ void Enemy_Explosion::MoveEnemy()
 		if (this->bBlastFlg == true)
 		{
 				// プレイヤーがエネミーの起爆範囲内に入った場合
+				//走りモーションをデタッチする
+				MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+
+				//爆発モーションをアタッチする
+				this->iExplosionAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
+
+
+
                 // 起爆予告エフェクトを生成
                 this->pEffectDetonation = new EffectManualDelete();
 
@@ -164,8 +197,8 @@ void Enemy_Explosion::MoveEnemy()
             if (IsEffekseer3DEffectPlaying(this->pEffectDetonation->iGetEffectHandle()))
 			{
                 // エフェクトが再生終了している場合
-				//エネミーの削除フラグを有効にする
-				this->bDeleteFlg = true;
+				/* 撃破時の処理を実行 */
+				Defeat();
 
 				//プレイヤーが爆風範囲内にいるかどうかを確認
 				if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_EXPLOSION_RANGE)
@@ -196,10 +229,6 @@ void Enemy_Explosion::Enemy_Gravity()
 	// 足場を取得
 	auto& PlatformList = ObjectList->GetCollisionList();
 
-
-
-
-
 	//// 足場と接触するか確認
 	bool bHitFlg = false;
 	for (auto* platform : PlatformList)
@@ -221,7 +250,7 @@ void Enemy_Explosion::Enemy_Gravity()
 		if (!bHitFlg)
 		{
 			//接触フラグが無効の場合
-			////接触フラグが無効の場合
+			//接触フラグが無効の場合
 			this->fGravity = 0;
 			this->vecMove.y = 0;
 			this->bFallFlg = false;
@@ -253,16 +282,41 @@ void Enemy_Explosion::Update()
 		}
 	}
 
-	if (this->iGetNowHP() <= 0)
+	if (this->iNowHp <= 0)
 	{
-		// 削除フラグを有効にする
-		this->bDeleteFlg = true;
+		/* 死亡フラグを有効化 */
+		this->bDeadFlg = true;
+
 		/* 爆発予告エフェクトを一度でも生成したかを確認 */
 		if (this->pEffectDetonation != nullptr)
 		{
 			// 一度でも生成した場合
 			//爆発予告エフェクトの削除フラグを有効化
 			this->pEffectDetonation->SetDeleteFlg(true);
+
+			//死亡モーション以外のモーションをデタッチ
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+			//死亡モーションの再生時間を加算
+			this->fDiePlayTime += 2.5f;
+
+			// 死亡モーションをアタッチ
+			this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+			//アタッチした死亡モーションの再生時間をセット
+			MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+			// 死亡モーションの総再生時間を取得
+			this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+			// 死亡モーションの再生時間が総再生時間に達したか確認
+			if (this->fDiePlayTime >= this->fDieTotalTime)
+			{
+				/* 撃破時の処理を実行 */
+				Defeat();
+			}
 		}
 	}
 
@@ -270,17 +324,64 @@ void Enemy_Explosion::Update()
 	if (this->iNowHp <= 0)
 	{
 		// HPが0以下である場合
-		/* 撃破時の処理を実行 */
-		Defeat();
 
-		/* 爆発予告エフェクトを一度でも生成したか確認 */
-		if (this->pEffectDetonation != nullptr)
+		if (this->bHitEffectGenerated == FALSE)
 		{
-			// 一度でも生成した場合
-			/* 爆発予告エフェクトの削除フラグを有効化 */
-			this->pEffectDetonation->SetDeleteFlg(true);
+			/* Hitエフェクト追加 */
+			{
+				/* 時間経過で削除されるエフェクトを追加 */
+				EffectManualDelete* AddEffect = new EffectManualDelete();
+
+				/* エフェクト読み込み */
+				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+
+				/* エフェクトの座標設定 */
+				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
+
+				/* エフェクトの回転量設定 */
+				AddEffect->SetRotation(this->vecRotation);
+
+				/* エフェクトの初期化 */
+				AddEffect->Initialization();
+
+				/* リストに登録 */
+				{
+					/* "オブジェクト管理"データリストを取得 */
+					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					/* エフェクトをリストに登録 */
+					ObjectListHandle->SetEffect(AddEffect);
 		}
 
+
+				this->bHitEffectGenerated = TRUE;
+			}
+		}
+		//死亡モーション以外のモーションをデタッチ
+		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+		//死亡モーションの再生時間を加算
+		this->fDiePlayTime += 2.5f;
+
+		// 死亡モーションをアタッチ
+		this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		//アタッチした死亡モーションの再生時間をセット
+		MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+		// 死亡モーションの総再生時間を取得
+		this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+		// 死亡モーションの再生時間が総再生時間に達したか確認
+		if (this->fDiePlayTime >= this->fDieTotalTime)
+		{
+			/* 撃破時の処理を実行 */
+			Defeat();
+
+			//爆発SE再生
+			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		}
 		return;
 	}
 

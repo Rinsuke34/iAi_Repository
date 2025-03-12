@@ -19,6 +19,7 @@ Enemy_Basic::Enemy_Basic() : EnemyBase()
 	/* 初期化 */
 	this->iPlayerLockOnType	= PLAYER_LOCKON_NONE;	// ロックオンされていない状態にする
 	this->iCoreFrameNo		= -1;					// コアフレーム番号を初期化
+	this->bDeadFlg			= false;				// 死亡フラグ
 }
 
 // 発光描写

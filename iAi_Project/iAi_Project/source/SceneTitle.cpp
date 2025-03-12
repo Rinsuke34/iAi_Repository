@@ -79,6 +79,9 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 
 	//カメラ固定位置を設定
 	pSceneStage->SetNowCameraFixedPositionNo(0);
+
+	/* ボイス"タイトルコール"再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_TITLE_CALL);
 }
 
 // デストラクタ
@@ -108,6 +111,7 @@ void SceneTitle::Process()
 			//カメラ固定位置をはじめからホーム画面に設定
 			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 			this->bHomeFlg = TRUE;
+
 			break;
 			//はじめからホーム画面
         case CAMERA_FIXED_POSITION_A:

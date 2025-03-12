@@ -59,6 +59,21 @@ private:
 	bool bStopFlg;			// 停止フラグ
 	bool bCountFlg;			//カウントフラグ
 	bool bBlastFlg;			//爆発フラグ
+	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+
+	//モーション関連変数
+	int iWaitAttachIndex;						// 待機モーションアタッチインデックス
+	int iRunAttachIndex;						// 走りモーションアタッチインデックス
+	int iExplosionAttachIndex;					// 爆発モーションアタッチインデックス
+	int iDieAttachIndex;						// 死亡モーションアタッチインデックス
+	float fWaitTotalTime;						// 待機モーションの総時間
+	float fRunTotalTime;						// 走りモーションの総時間
+	float fExplosionTotalTime;					// 爆発モーションの総時間
+	float fDieTotalTime;						// 死亡モーションの総時間
+	float fWaitPlayTime;						// 待機再生時間
+	float fRunPlayTime;							// 走り再生時間
+	float fExplosionPlayTime;					// 爆発再生時間
+	float fDiePlayTime;							// 死亡再生時間
 
 
 	VECTOR vecLastRotation;	// 最後の回転量

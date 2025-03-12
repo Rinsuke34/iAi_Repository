@@ -42,10 +42,11 @@ static  const int   SE_PLAYER_CHARGE_COMPLETE   = 16;   // 溜め居合チャージ完了
 static  const int   SE_PLAYER_SPIAI             = 17;   // 溜め居合攻撃
 // SE番号(エネミー関係)
 static  const int   SE_ENEMY_IKURA_ATTACK       = 18;   // いくら攻撃
-static  const int   SE_ENEMY_BEAM_ATTACK        = 19;   // ビーム攻撃
-static  const int   SE_ENEMY_DAMAGE             = 20;   // 撃破
+static  const int   SE_ENEMY_BEAM_CHARGE        = 19;   // ビームチャージ
+static  const int   SE_ENEMY_BEAM_SHOT          = 20;   // ビームショット
+static  const int   SE_ENEMY_DAMAGE             = 21;   // 撃破
 
-static  const int   SE_MAX                      = 21;   // SE総数
+static  const int   SE_MAX                      = 22;   // SE総数
 
 // SE名称
 static const std::string SE_NAME[SE_MAX] =
@@ -72,7 +73,8 @@ static const std::string SE_NAME[SE_MAX] =
     "SE_Player_SPiai",              // 溜め居合攻撃
     // エネミー関係
     "SE_Ikura_Attack",              // いくら攻撃
-    "SE_Beam_Attack",               // ビーム攻撃
+    "SE_Beam_Charge",               // ビームチャージ
+	"SE_Beam_Shot",                 // ビームショット
     "SE_Enemy_Damage"               // 撃破
 };
 
@@ -80,6 +82,7 @@ static const std::string SE_NAME[SE_MAX] =
 // ボイスタイプ
 static  const int   VOICE_TYPE_PLAYER   = 0;    // プレイヤー
 static  const int   VOICE_TYPE_DOCTOR   = 1;    // 博士(サエジマキョウコ)
+static  const int   VOICE_TYPE_MAX      = 2;    // ボイスタイプ総数
 
 // ボイス番号(共通)
 static  const int   VOICE_TITLE_CALL                        = 0;    // タイトルコール(共通)
@@ -110,9 +113,9 @@ static  const int   VOICE_DOCTOR_CONVERSATION_BYTHEWAY      = 22;   // 会話(博士
 static  const int   VOICE_DOCTOR_CONVERSATION_THAT_1        = 23;   // 会話(博士/あれは1)
 static  const int   VOICE_DOCTOR_CONVERSATION_THAT_2        = 24;   // 会話(博士/あれは2)
 
-static  const int   VOICE_MAX                               = 25;   // ボイス総数
+static  const int   VOICE_MAX                               = 54;   // ボイス総数(一部重複あり)
 
-// ボイス情報用配列
+// ボイス情報配列用構造体
 struct VOICE_INFO
 {
 	int         iVoiceType;     // ボイスタイプ
@@ -120,11 +123,25 @@ struct VOICE_INFO
 	std::string aVoiceName;     // ファイル名
 };
 
-/*
-// ボイス情報
-static const VOICE_INFO stVoiceInfo[54] =
+// ボイスハンドル管理用構造体
+struct VOICE_HANDLE_INFO
 {
-	// ボイスタイプ,        ボイス番号,                             ファイル名
+	int         iVoiceHandle;   // ボイスハンドル
+	int         iVoiceType;     // ボイスタイプ
+	int         iVoiceNo;       // ボイス番号
+};
+
+// ファイル名称(ボイスタイプ)
+static const std::string VOICE_TYPE_NAME[VOICE_TYPE_MAX] =
+{
+    "Player",   // プレイヤー
+    "Doctor"    // 博士
+};
+
+// ボイス情報
+const VOICE_INFO stVoice_Info[VOICE_MAX] =
+{
+    // ボイスタイプ,        ボイス番号,                             ファイル名
     { VOICE_TYPE_PLAYER,    VOICE_TITLE_CALL,                       "CV_P_Title1"       },      // タイトルコール(プレイヤー)
     { VOICE_TYPE_PLAYER,    VOICE_TITLE_CALL,                       "CV_P_Title2"       },      // タイトルコール(プレイヤー)
     { VOICE_TYPE_PLAYER,    VOICE_TITLE_CALL,                       "CV_P_Title3"       },      // タイトルコール(プレイヤー)
@@ -179,5 +196,4 @@ static const VOICE_INFO stVoiceInfo[54] =
     { VOICE_TYPE_DOCTOR,    VOICE_DOCTOR_CONVERSATION_BYTHEWAY,     "CV_S_ByTheWay"     },      // 会話(博士/ところで)
     { VOICE_TYPE_DOCTOR,    VOICE_DOCTOR_CONVERSATION_THAT_1,       "CV_S_That"         },      // 会話(博士/あれは1)
     { VOICE_TYPE_DOCTOR,    VOICE_DOCTOR_CONVERSATION_THAT_2,       "CV_S_That2"        },      // 会話(博士/あれは2)
-}
-*/
+};

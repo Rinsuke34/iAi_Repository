@@ -8,7 +8,8 @@
 bool gbEndFlg	= false;	// プログラム終了フラグ
 
 /* フォント関連 */
-int	giFontHandle	= 0;	// フォントハンドル
+int	giFontHandle_Normal	= 0;	// フォントハンドル(通常サイズ)
+int giFonthandle_Big	= 0;	// フォントハンドル(大サイズ)
 
 /* プレイヤーの入力情報 */
 Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド
