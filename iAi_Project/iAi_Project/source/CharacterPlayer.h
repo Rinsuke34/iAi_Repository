@@ -37,9 +37,11 @@
 
 /* 画像エフェクト */
 #include "ScreenEffect_Damage.h"
+#include "ScreenEffect_SlowMotion.h"
 
 /* 循環参照対策 */
 class ScreenEffect_Damage;
+class ScreenEffect_SlowMotion;
 
 /* プレイヤークラスの宣言 */
 

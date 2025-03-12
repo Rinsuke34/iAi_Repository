@@ -348,14 +348,8 @@ void CharacterPlayer::PlayerHitCheck()
 								this->ObjectList->SetEffect(pShockEffect);
 							}
 							
-							/* 画面エフェクト */
-							{
-								/* 画面エフェクトを生成 */
-								ScreenEffect_Base* pScreenEffect = new ScreenEffect_Damage();
-
-								/* 画面エフェクトをリストに登録 */
-								this->StageStatusList->SetScreenEffect(pScreenEffect);
-							}
+							/* 画面エフェクト(非ダメージ)作成 */
+							this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 						}
 					}
 				}

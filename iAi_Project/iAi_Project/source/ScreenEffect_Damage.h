@@ -5,9 +5,9 @@
 
 #include "ScreenEffect_Base.h"
 
-/* すべての画面エフェクトのベースとなるクラスの宣言 */
+/* 画面エフェクト(被ダメージ)クラスの宣言 */
 
-// 画面エフェクトベースクラス
+// 画面エフェクト(被ダメージ)クラス
 class ScreenEffect_Damage : public ScreenEffect_Base
 {
 	public:

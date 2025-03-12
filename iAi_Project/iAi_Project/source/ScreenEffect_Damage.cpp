@@ -2,7 +2,7 @@
 
 #include "ScreenEffect_Damage.h"
 
-/* すべての画面エフェクトのベースとなるクラスの宣言 */
+/* 画面エフェクト(被ダメージ)クラスの宣言 */
 
 // コンストラクタ
 ScreenEffect_Damage::ScreenEffect_Damage() : ScreenEffect_Base()
@@ -21,7 +21,7 @@ void ScreenEffect_Damage::ScreenEffectDraw(int iGrHandle_Screen)
 	/* エフェクトのシフト量変更カウントを更新 */
 	this->iEffectShiftChangeCount--;
 
-	/* シフト量変更カウントが0いかになったか確認 */
+	/* シフト量変更カウントが0以下になったか確認 */
 	if (this->iEffectShiftChangeCount <= 0)
 	{
 		// シフト量変更カウントが0いかになった場合
@@ -32,9 +32,6 @@ void ScreenEffect_Damage::ScreenEffectDraw(int iGrHandle_Screen)
 		this->stEffectShift.ix = GetRand(DAMAGE_EFFECT_SHIFT) - DAMAGE_EFFECT_SHIFT / 2;
 		this->stEffectShift.iy = GetRand(DAMAGE_EFFECT_SHIFT) - DAMAGE_EFFECT_SHIFT / 2;
 	}
-
-	//int iEffectShift = static_cast<int>(DAMAGE_EFFECT_SHIFT * ((1.0 - static_cast<float>(this->iDeleteTime)) / DAMAGE_EFFECT_TIME));
-	//iEffectShift = DAMAGE_EFFECT_SHIFT;
 
 	/* 描写ブレンドモードを"アルファブレンド"に設定 */
 	SetDrawBlendMode(DX_BLENDMODE_ADD, DAMAGE_EFFECT_ALPHA);

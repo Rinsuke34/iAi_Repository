@@ -13,7 +13,7 @@ class ScreenEffect_Base
 		ScreenEffect_Base();				// コンストラクタ
 		virtual ~ScreenEffect_Base()	{};	// デストラクタ
 
-		void	Update(int iGrHandle_Screen);	// 更新
+		virtual void	Update(int iGrHandle_Screen);	// 更新
 
 		bool	bGetDeleteFlg() { return this->bDeleteFlg; };	// 削除フラグを取得
 

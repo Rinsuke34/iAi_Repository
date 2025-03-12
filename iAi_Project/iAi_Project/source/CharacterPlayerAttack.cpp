@@ -89,8 +89,16 @@ void CharacterPlayer::Player_Attack_Transition()
 				if (iPlayerMeleeStrongAfterCount < PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
 				{
 					// 近距離攻撃(強)後のカウントが一定数を超えていない場合
-					/* スローモーションフラグを有効化 */
-					this->StageStatusList->SetGameSlowFlg(true);
+					/* スローモーションフラグが無効であるか確認 */
+					if (this->StageStatusList->bGetGameSlowFlg() == false)
+					{
+						// 無効である場合
+						/* スローモーションフラグを有効化 */
+						this->StageStatusList->SetGameSlowFlg(true);
+
+						/* 画面エフェクト(スローモーション)を生成 */
+						this->StageStatusList->SetScreenEffect(new ScreenEffect_SlowMotion);
+					}
 				}
 				else
 				{
@@ -852,8 +860,16 @@ void CharacterPlayer::Player_Projectile_Posture()
 		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
 			// ジャンプ中の場合
-			/* スローモーションフラグを有効化 */ 
-			this->StageStatusList->SetGameSlowFlg(true);
+			/* スローモーションフラグが無効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == false)
+			{
+				// 無効である場合
+				/* スローモーションフラグを有効化 */
+				this->StageStatusList->SetGameSlowFlg(true);
+
+				/* 画面エフェクト(スローモーション)を生成 */
+				this->StageStatusList->SetScreenEffect(new ScreenEffect_SlowMotion);
+			}
 		}
 		/* ジャンプ中の場合 */
 		else

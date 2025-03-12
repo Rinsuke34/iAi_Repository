@@ -331,12 +331,6 @@
     <Filter Include="ヘッダー ファイル\画面エフェクト\ベース">
       <UniqueIdentifier>{7162cbde-b7df-4efa-8a21-1ca1937e7d49}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース\非ダメージ">
-      <UniqueIdentifier>{5437bfbc-e56d-46c1-b7ff-25a9c756d781}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\画面エフェクト\ベース\被ダメージ">
-      <UniqueIdentifier>{59185a37-feef-4bf4-9b1b-603f604856aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\データリスト\ステージ状態管理">
       <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
     </Filter>
@@ -432,6 +426,18 @@
     </Filter>
     <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ">
       <UniqueIdentifier>{bca257ca-4d2d-4d92-9261-d7c60aa2b865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\被ダメージ">
+      <UniqueIdentifier>{59185a37-feef-4bf4-9b1b-603f604856aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\被ダメージ">
+      <UniqueIdentifier>{5437bfbc-e56d-46c1-b7ff-25a9c756d781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\スローモーション">
+      <UniqueIdentifier>{6658fefd-80b2-453c-a671-dc6ce4bbe4cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\スローモーション">
+      <UniqueIdentifier>{ddc5d0e3-8431-430f-b701-8aa9e023f647}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -616,7 +622,7 @@
       <Filter>ソース ファイル\画面エフェクト\ベース</Filter>
     </ClCompile>
     <ClCompile Include="source\ScreenEffect_Damage.cpp">
-      <Filter>ソース ファイル\画面エフェクト\ベース\被ダメージ</Filter>
+      <Filter>ソース ファイル\画面エフェクト\被ダメージ</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneAddGameSetup.cpp">
       <Filter>ソース ファイル\シーン\セットアップ</Filter>
@@ -668,6 +674,9 @@
     </ClCompile>
     <ClCompile Include="source\SceneUi_Debug_StageJump.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_SlowMotion.cpp">
+      <Filter>ソース ファイル\画面エフェクト\スローモーション</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -873,7 +882,7 @@
       <Filter>ヘッダー ファイル\画面エフェクト\ベース</Filter>
     </ClInclude>
     <ClInclude Include="source\ScreenEffect_Damage.h">
-      <Filter>ヘッダー ファイル\画面エフェクト\ベース\非ダメージ</Filter>
+      <Filter>ヘッダー ファイル\画面エフェクト\被ダメージ</Filter>
     </ClInclude>
     <ClInclude Include="source\SceneAddGameSetup.h">
       <Filter>ヘッダー ファイル\シーン\セットアップ</Filter>
@@ -934,6 +943,9 @@
     </ClInclude>
     <ClInclude Include="source\SceneUi_Debug_StageJump.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステージジャンプ</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_SlowMotion.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\スローモーション</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

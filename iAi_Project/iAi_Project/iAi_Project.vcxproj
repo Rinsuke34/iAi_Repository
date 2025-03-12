@@ -231,6 +231,7 @@
     <ClCompile Include="source\SceneUi_Hp.cpp" />
     <ClCompile Include="source\SceneUi_Kunai.cpp" />
     <ClCompile Include="source\ScreenEffect_Base.cpp" />
+    <ClCompile Include="source\ScreenEffect_SlowMotion.cpp" />
     <ClCompile Include="source\SkySqhereBasic.cpp" />
     <ClCompile Include="source\EnemySpawnPoint_Base.cpp" />
     <ClCompile Include="source\EnemySpawnPoint_Normal.cpp" />
@@ -290,6 +291,7 @@
     <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\EnemySpawnPoint_Base.h" />
     <ClInclude Include="source\EnemySpawnPoint_Normal.h" />
+    <ClInclude Include="source\ScreenEffect_SlowMotion.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />
