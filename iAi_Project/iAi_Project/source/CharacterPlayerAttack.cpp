@@ -477,15 +477,7 @@ void CharacterPlayer::Player_Melee_Weak()
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	//近距離攻撃(強)中はスローモーションを行わない
-	/* スローモーションフラグを確認 */
-	if (this->StageStatusList->bGetGameSlowFlg() == true)
-	{
-		// スローモーション中の場合
-		/* スローモーションフラグを無効化 */
-		this->StageStatusList->SetGameSlowFlg(false);
-	}
-
+	
 	/* 近距離攻撃(強)状態でのチャージフレーム数を取得 */
 	int iMeleeStrongChargeCount = this->PlayerStatusList->iGetPlayerMeleeStrongChargeCount();
 

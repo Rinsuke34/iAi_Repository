@@ -63,6 +63,14 @@ void SceneUi_Crosshairs::Process()
 		/* ロックオン範囲内のエネミーのうち最も画面中央に近いエネミーをロックオン対象に設定 */
 		for (auto* enemy : EnemyList)
 		{
+			/* 対象のエネミーの死亡フラグが有効であるか確認 */
+			if (enemy->bGetDeadFlg() == true)
+			{
+				// 有効である場合
+				/* 判定の対象外とする */
+				continue;
+			}
+
 			/* ロックオン範囲に接触しているか確認 */
 			if (enemy->HitCheck(this->PlayerStatusList->stGetMeleeSearchCollision()) == true)
 			{
@@ -133,6 +141,14 @@ void SceneUi_Crosshairs::Process()
 		/* スクリーンのロックオン範囲内のエネミーのうち最もレティクル(画面の中心的)に近いエネミーをロックオン対象に設定 */
 		for (auto* enemy : EnemyList)
 		{
+			/* 対象のエネミーの死亡フラグが有効であるか確認 */
+			if (enemy->bGetDeadFlg() == true)
+			{
+				// 有効である場合
+				/* 判定の対象外とする */
+				continue;
+			}
+
 			/* コアのワールド座標を取得 */
 			VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
