@@ -20,6 +20,7 @@
 /* 2025.03.10 菊池雅道	エフェクト処理追加 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正 */
 /* 2025.03.13 駒沢風助	クナイ弾数設定 */
+/* 2025.03.13 菊池雅道	クナイ処理変更 */
 
 
 #include "CharacterPlayer.h"
@@ -948,6 +949,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
+/* 2025.03.13 菊池雅道	クナイ処理変更 開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -957,11 +959,11 @@ void CharacterPlayer::Player_Projectile()
 	/* カメラモードを"構え(クナイ攻撃)"に変更 */
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 	
-	/* クナイ(エフェクト)を作成 */
-	this->pBulletKunaiEffect = new BulletPlayerKunaiEffect;
+	/* クナイ(ワープ)を作成 */
+	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-	/* クナイ(エフェクト)生成座標を設定 */
-	this->pBulletKunaiEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
+	/* クナイ(ワープ)生成座標を設定 */
+	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
 	/* ロックオン中のエネミーを取得 */
 	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
@@ -970,13 +972,16 @@ void CharacterPlayer::Player_Projectile()
 	if (pLockOnEnemy != nullptr)
 	{
 		// 存在する場合
-		/* クナイ(エフェクト)のターゲット座標をロックオン中のエネミーに設定 */
-		this->pBulletKunaiEffect->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
-}
+		/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
+		this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+
+		/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
+		this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
+	}
 	else
 	{
 		// 存在しない場合
-		// クナイ(エフェクト)のターゲット座標をカメラの注視点の先に設定
+		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
 
 		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
 		VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
@@ -990,21 +995,16 @@ void CharacterPlayer::Player_Projectile()
 		/* ターゲット座標の座標ベクトルを取得 */
 		vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
 
-		// クナイ(エフェクト)にターゲット座標を設定
-		this->pBulletKunaiEffect->SetKunaiTargetPosition(vecKunaiTarget);
+		// クナイ(ワープ)にターゲット座標を設定
+		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+
 	}
 
 	/* 初期化を行う */
-	this->pBulletKunaiEffect->Initialization();
+	this->pBulletKunaiWarp->Initialization();
 	
 	/* バレットリストに追加 */
-	ObjectList->SetBullet(this->pBulletKunaiEffect);
-
-	/* 遠距離攻撃のSEを再生 */
-	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
-
-	/* 遠距離攻撃ボイスを再生 */
-	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_PROJECTILE);
+	ObjectList->SetBullet(this->pBulletKunaiWarp);
 
 	/* 遠距離攻撃エフェクトを生成 */
 	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();
@@ -1040,3 +1040,4 @@ void CharacterPlayer::Player_Projectile()
 /* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */
+/* 2025.03.13 菊池雅道	クナイ処理変更			終了 */

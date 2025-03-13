@@ -1,64 +1,33 @@
-/* 2025.02.14 菊池雅道 ファイル作成 */
+/* 2025.03.13 菊池雅道 ファイル作成 */
 
-#include "BulletPlayerKunaiEffect.h"
+#include "BulletPlayerKunaiAttack.h"
 
-/* クナイ(エフェクト)クラスの定義 */
+/* クナイ(攻撃)クラスの定義 */
 
 // コンストラクタ
-BulletPlayerKunaiEffect::BulletPlayerKunaiEffect() : BulletBase()
-{
-	/* 初期化 */
-	this->iObjectType					= OBJECT_TYPE_BULLET_PLAYER;		// オブジェクトの種類を"弾(プレイヤー)"に設定
-	this->vecKunaiTargetPosition		= VGet(0,0,0);						// ターゲット座標
-	this->vecKunaiMoveDirection			= VGet(0, 0, 0);					// クナイの移動する方向
-	this->fKunaiTargetDistance			= 0.0f;								// クナイの発射地点からターゲットまでの距離
-	this->fKunaiMoveDistance			= 0.0f;								// クナイの移動距離
-	this->fKunaiAngleX					= 0.0f;								// クナイのX軸回転角度
-	this->fKunaiAngleY					= 0.0f;								// クナイのY軸回転角度
-	this->iKunaiDeleteCount				= KUNAI_ATTACK_COUNT;				// クナイの削除カウント(攻撃時間)
-	this->bKunaiAttackFlg				= false;							// クナイの攻撃フラグ
-
-	/* モデル取得 */
-	{
-		/* "3Dモデル管理"データリストを取得 */
-		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
-
-		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Bullet/Kunai/Kunai");
-	}
-
-	/* データリスト取得 */
-	{
-		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-		
-		/* "プレイヤー状態管理"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
-
-		/* "ステージ状態管理"を管理 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
-	}
-}
-
-// デストラクタ
-BulletPlayerKunaiEffect::~BulletPlayerKunaiEffect()
+BulletPlayerKunaiAttack::BulletPlayerKunaiAttack() 
 {
 	
 }
 
+// デストラクタ
+BulletPlayerKunaiAttack::~BulletPlayerKunaiAttack()
+{
+
+}
+
 // 初期化
-void BulletPlayerKunaiEffect::Initialization()
+void BulletPlayerKunaiAttack::Initialization()
 {
 	/* クナイの生成地点からターゲットまでのベクトルをクナイの移動ベクトルに設定 */
 	this->vecKunaiMoveDirection = VSub(this->vecKunaiTargetPosition, this->vecPosition);
 
-	/* クナイの射線上を確認する線分コリジョンを設定 */ 
+	/* クナイの射線上を確認する線分コリジョンを設定 */
 	COLLISION_LINE stCollisionLine;
-	
-	/* 射線の開始点を設定 */ 
+
+	/* 射線の開始点を設定 */
 	stCollisionLine.vecLineStart = this->StageStatusList->vecGetCameraPosition();
-	
+
 	/* 射線の終了点を設定 */
 	stCollisionLine.vecLineEnd = this->vecKunaiTargetPosition;
 
@@ -74,18 +43,18 @@ void BulletPlayerKunaiEffect::Initialization()
 	// 射線上にプラットフォームが存在するか確認する
 	for (auto* platform : PlatformList)
 	{
-			/* プラットフォームと接触しているか確認 */
-			MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
+		/* プラットフォームと接触しているか確認 */
+		MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
 
-			/* 接触している場合 */
-			if (stHitPoly.HitFlag == true)
-			{
+		/* 接触している場合 */
+		if (stHitPoly.HitFlag == true)
+		{
 			/* クナイ発射地点から接触地点のベクトルを設定 */
 			VECTOR vecDirection = VSub(stHitPoly.HitPosition, this->StageStatusList->vecGetCameraPosition());
-				
+
 			/* クナイ発射地点から接触地点の距離を設定 */
 			float fDistance = VSize(vecDirection);
-				
+
 			/* クナイの射線上の最小距離を確認 */
 			if (fMinDistance >= fDistance)
 			{
@@ -118,11 +87,10 @@ void BulletPlayerKunaiEffect::Initialization()
 
 	/* モデルのY軸回転の計算(X-Z 平面上の方向) */
 	fKunaiAngleY = atan2f(this->vecKunaiTargetPosition.x - this->vecPosition.x, this->vecKunaiTargetPosition.z - this->vecPosition.z);
-
 }
 
 // 描画
-void BulletPlayerKunaiEffect::Draw()
+void BulletPlayerKunaiAttack::Draw()
 {
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
@@ -135,24 +103,25 @@ void BulletPlayerKunaiEffect::Draw()
 }
 
 // 更新
-void BulletPlayerKunaiEffect::Update()
+void BulletPlayerKunaiAttack::Update()
 {
 	/* クナイの移動ベクトルをスケールして移動 */
-	this->vecPosition =  VAdd(this->vecPosition, VScale(vecKunaiMoveDirection,KUNAI_SPEED));;
+	this->vecPosition = VAdd(this->vecPosition, VScale(vecKunaiMoveDirection, KUNAI_SPEED));;
 
 	/* クナイの移動距離を加算 */
 	this->fKunaiMoveDistance += KUNAI_SPEED;
 
-	/* クナイの移動距離がターゲットまでの距離を超えたら */ 
+	/* クナイの移動距離がターゲットまでの距離を超えたら */
 	if (this->fKunaiMoveDistance >= this->fKunaiTargetDistance)
 	{
 		/* 攻撃処理を行う */
 		this->Attack();
+
 	}
 }
 
 // 攻撃処理
-void BulletPlayerKunaiEffect::Attack()
+void BulletPlayerKunaiAttack::Attack()
 {
 	// 攻撃時の設定を行う
 	/* クナイの攻撃フラグを確認 */
@@ -189,16 +158,16 @@ void BulletPlayerKunaiEffect::Attack()
 
 			/* エフェクトの削除されるまでの時間を設定 */
 			AddEffect->SetDeleteCount(iKunaiDeleteCount);
-			
+
 			/* エフェクトのスケール設定(大きさは仮) */
-			AddEffect->SetScale(VGet(12.0f,12.0f,12.0f));
+			AddEffect->SetScale(VGet(12.0f, 12.0f, 12.0f));
 
 			/* エフェクトの初期化 */
 			AddEffect->Initialization();
 
 			/* エフェクトをリストに登録 */
 			this->ObjectList->SetEffect(AddEffect);
-			
+
 		}
 	}
 
@@ -215,4 +184,6 @@ void BulletPlayerKunaiEffect::Attack()
 		/* クナイの削除フラグを設定 */
 		this->bDeleteFlg = true;
 	}
+
+
 }

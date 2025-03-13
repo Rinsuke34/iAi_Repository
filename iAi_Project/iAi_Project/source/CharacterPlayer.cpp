@@ -11,6 +11,7 @@
 /* 2025.03.06 菊池雅道	当たり判定処理修正 */
 /* 2025.03.08 駒沢風助	新モデル対応 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
+/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -20,9 +21,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
 	{
-		/* オブジェクトのハンドル */
-		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
-		this->pBulletKunaiEffect =	nullptr;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletMeleeWeak		=	nullptr;	// 近接攻撃(弱)の弾
+		this->pBulletKunaiWarp		= nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletKunaiAttack	= nullptr;	// クナイ(攻撃)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 
 		/* エフェクトのハンドル */
