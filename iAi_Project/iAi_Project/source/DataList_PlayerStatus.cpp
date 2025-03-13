@@ -6,6 +6,7 @@
 /* 2025.02.22 菊池雅道 初期化処理追加 */
 /* 2025.02.26 菊池雅道 初期化処理追加 */
 /* 2025.03.03 菊池雅道 初期化処理追加 */
+/* 2025.03.11 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
 #include <nlohmann/json.hpp>
@@ -43,6 +44,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMeleeStrongAirCount		= 0;								// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 初期化処理追加 */
 	this->bPlayerMeleeStrongEnemyAttackFlg	= false;							// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 初期化処理追加 */
 	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 初期化処理追加 */
+	this->iPlayerSlowMotionCount			= 0;								// プレイヤーのスローモーションカウント											/* 2025.03.11 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
 	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
 	this->iPlayerComboNowCount				= 0;								// プレイヤーの現在のコンボ数

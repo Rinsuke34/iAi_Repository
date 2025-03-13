@@ -7,6 +7,7 @@
 /* 2025.02.22 菊池雅道 移動関連の変数・関数追加 */
 /* 2025.02.26 菊池雅道 攻撃関連の変数・関数追加 */
 /* 2025.03.03 菊池雅道 攻撃関連の変数・関数追加 */
+/* 2025.03.12 菊池雅道 スローモーション関連の変数・関数追加 */
 
 
 #pragma once
@@ -61,6 +62,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerAfterKickWallCount()		{ return this->iPlayerAfterKickWallCount; }			// プレイヤーが壁を蹴った後のカウントを取得							/* 2025.02.22 菊池雅道 移動関連の関数追加 */
 		bool	bGetPlayerAfterKickWallFlg()		{ return this->bPlayerAfterKickWallFlg; }			// プレイヤーが壁を蹴った後のフラグを取得							/* 2025.02.22 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerMeleeStrongChargeCount()	{ return this->iPlayerMeleeStrongChargeCount; }		// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数を取得
+		int		iGetPlayerSlowMotionCount()			{ return this->iPlayerSlowMotionCount; }			// プレイヤーのスローモーションカウントを取得						/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
 		Enemy_Basic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
 		int		iGetPlayerNowHp()					{ return this->iPlayerNowHp; }						// プレイヤーの現在のHPを取得
 		int		iGetPlayerNowInvincibleTime()		{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
@@ -112,6 +114,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerMeleeStrongAirCount(int iPlayerMeleeStrongAirCount)		{ this->iPlayerMeleeStrongAirCount		= iPlayerMeleeStrongAirCount; }			// プレイヤーが空中で近距離攻撃(強)を行った回数を設定		/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongEnemyAttackFlg(bool bPlayerMeleeStrongEnemyAttackFlg)	{ this->bPlayerMeleeStrongEnemyAttackFlg = bPlayerMeleeStrongEnemyAttackFlg; }	// プレイヤーが近距離攻撃(強)でエネミーを攻撃したかのフラグを設定		/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongAfterCount(int iPlayerMeleeStrongAfterCount)			{ this->iPlayerMeleeStrongAfterCount = iPlayerMeleeStrongAfterCount; }			// プレイヤーが近距離攻撃(強)でエネミーを攻撃した後のカウントを設定		/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerSlowMotionCount(int iPlayerSlowMotionCount)				{ this->iPlayerSlowMotionCount			= iPlayerSlowMotionCount; }				// プレイヤーのスローモーションのカウントを設定									/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
 		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)				{ this->fPlayerNowMotionCount			= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
 		void	SetPlayerJumpCount(int iPlayerJumpCount)							{ this->iPlayerJumpCount				= iPlayerJumpCount; }					// プレイヤージャンプ回数を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag)						{ this->bPlayerJumpingFlag				= bPlayerJumpingFlag; }					// プレイヤーがジャンプ中かのフラグを設定	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
@@ -189,6 +192,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerMeleeStrongAirCount;			// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerMeleeStrongEnemyAttackFlg;	// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerMeleeStrongAfterCount;		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerSlowMotionCount;				// プレイヤーのスローモーションフレーム数カウント								/* 2025.03.12 菊池雅道 スローモーション関連の変数追加 */
 		Enemy_Basic*	pLockOnEnemy;				// ロックオン対象のエネミー
 		int		iPlayerNowHp;						// プレイヤーの現在のHP
 		int		iPlayerNowInvincibleTime;			// プレイヤーの現在の残り無敵時間

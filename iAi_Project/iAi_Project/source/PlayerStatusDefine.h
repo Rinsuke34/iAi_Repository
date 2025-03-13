@@ -8,6 +8,7 @@
 /* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.02.26 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.11 ‹e’r‰ë“¹ ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
+/* 2025.03.12 ‹e’r‰ë“¹ ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -78,6 +79,7 @@ static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ
 static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// ‹ßÚUŒ‚(‹­)‚ÌˆÚ“®‘¬“x
 static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// ‹ßÚUŒ‚‚ÌÅ‘å—­‚ßŽžŠÔ
 static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 10;		// —Ž‰ºŽžƒWƒƒƒ“ƒv‰º~ƒ‚[ƒVƒ‡ƒ“‚ÉØ‚è‘Ö‚¦‚éÛ‚Ì—P—\ƒtƒŒ[ƒ€(ˆÓ}‚µ‚È‚¢ƒ‚[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦‚ð–hŽ~‚·‚é‚½‚ß‚ÉŽg—p)		/* 2025.03.11 ‹e’r‰ë“¹ ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_SLOWMOTION_COUNT_MAX				= 120;		// ƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚ÌÅ‘åƒtƒŒ[ƒ€”																					/* 2025.03.12 ‹e’r‰ë“¹ ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 /* ƒvƒŒƒCƒ„[”\—Í’lƒŠƒXƒg */
 struct PLAYER_STATUS_LIST

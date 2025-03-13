@@ -220,30 +220,31 @@ void SceneStage::Process()
 // 計算(メインの処理)
 void SceneStage::Process_Main()
 {
+	/* 2025.03.12 コメントアウト 菊池雅道 */
 	/* スローモーションフラグが有効であるか確認 */
-	if (StageStatusList->bGetGameSlowFlg() == true)
-	{
-		// 有効である場合
-		/* スローモーションカウントを取得 */
-		int iSlowCount = StageStatusList->iGetSlowCount();
+	//if (StageStatusList->bGetGameSlowFlg() == true)
+	//{
+	//	// 有効である場合
+	//	/* スローモーションカウントを取得 */
+	//	int iSlowCount = StageStatusList->iGetSlowCount();
 
-		/* スローモーションのカウントが0であるか確認 */
-		if (iSlowCount <= 0)
-		{
-			// 0である場合
-			/* カウントを初期化する */
-			StageStatusList->SetSlowCount(SLOW_SPEED);
-		}
-		else
-		{
-			// 0でない場合
-			/* カウントを-1する */
-			StageStatusList->SetSlowCount(iSlowCount - 1);
+	//	/* スローモーションのカウントが0であるか確認 */
+	//	if (iSlowCount <= 0)
+	//	{
+	//		// 0である場合
+	//		/* カウントを初期化する */
+	//		StageStatusList->SetSlowCount(SLOW_SPEED);
+	//	}
+	//	else
+	//	{
+	//		// 0でない場合
+	//		/* カウントを-1する */
+	//		StageStatusList->SetSlowCount(iSlowCount - 1);
 
-			/* 計算処理を終了する */
-			return;
-		}
-	}
+	//		/* 計算処理を終了する */
+	//		return;
+	//	}
+	//}
 
 	/* すべてのオブジェクトの更新 */
 	ObjectList->UpdateAll();

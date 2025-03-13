@@ -16,6 +16,7 @@
 /* 2025.03.08 菊池雅道	移動処理修正 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.11 菊池雅道	回避の処理修正 */
+/* 2025.03.12 菊池雅道	スローモーション処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -23,6 +24,7 @@
 void CharacterPlayer::Player_Move()
 {
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
 
 	/* プレイヤー移動量取得 */
 	float fStickTiltMagnitude	= this->InputList->fGetGameInputMove();				// スティックを倒した強さ
@@ -75,26 +77,46 @@ void CharacterPlayer::Player_Move()
 		{
 
 			/* 移動処理を通常通りに行う状態 */
-			case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
+		case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
 
-				/* 移動速度補正無しにする */
-				fMoveSpeedRatio = 1.f;
+			/* 移動速度補正無しにする */
+			fMoveSpeedRatio = 1.f;
 
-				/* プレイヤーの向きを移動方向に合わせる */
-				bPlayerAngleSetFlg = true;
-				break;
+			/* プレイヤーの向きを移動方向に合わせる */
+			bPlayerAngleSetFlg = true;
+			break;
 
 			/* 移動処理を速度を抑えて行う状態 */
-			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
-			case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+		case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
 
+			/* 移動速度補正0.5倍にする */
+			// ※仮の値
+			fMoveSpeedRatio = 0.5f;
+
+			/* プレイヤーの向きを移動方向に合わせない */
+			bPlayerAngleSetFlg = false;
+			break;
+
+		case PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE:	// 遠距離攻撃構え中
+			
+			/* スローモーション中であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// スローモーション中である場合
+				/* 移動速度補正0.1倍にする */
+				fMoveSpeedRatio = 0.1f;
+			}
+			else
+			{
+				// スローモーション中でない場合
 				/* 移動速度補正0.5倍にする */
-				// ※仮の値
 				fMoveSpeedRatio = 0.5f;
+			}
+				
 
-				/* プレイヤーの向きを移動方向に合わせない */
-				bPlayerAngleSetFlg = false;
-				break;
+			/* プレイヤーの向きを移動方向に合わせない */
+			bPlayerAngleSetFlg = false;
+			break;
 
 			/* 移動処理を行わない状態 */
 			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
@@ -104,6 +126,7 @@ void CharacterPlayer::Player_Move()
 		}
 	}
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+	/* 2025.03.12 菊池雅道	スローモーション処理追加 終了 */
 
 	/* 2025.01.09 菊池雅道	移動処理追加	   開始 */
 	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
@@ -462,6 +485,7 @@ void CharacterPlayer::Player_Jump()
 /* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
 // 重力処理
 void CharacterPlayer::Player_Gravity()
 {
@@ -526,6 +550,14 @@ void CharacterPlayer::Player_Gravity()
 		float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
 		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
 
+		/* スローモーション中か確認 */
+		if (this->StageStatusList->bGetGameSlowFlg() == true)
+		{
+			// スローモーション中の場合
+			/* 加速度を少なくする */
+			fFallSpeed = fFallSpeed * 0.5f;
+		}
+
 		/* 落下の加速度を更新 */
 		this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
 
@@ -534,6 +566,7 @@ void CharacterPlayer::Player_Gravity()
 	}
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
+/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
 
 
 // 回避
@@ -822,10 +855,13 @@ void CharacterPlayer::Movement_Vertical()
 					this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 
 					/* 落下状態になってからのフレーム数をリセット */
-					iFallingFrame = 0;
+					this->iFallingFrame = 0;
 
 					/* 着地したプラットフォームの移動量をプレイヤー移動量に加算 */
 					vecNextPosition = VAdd(this->vecPosition, platform->vecGetPlatformMove());
+
+					/* プレイヤーのスローモーションカウントをリセット */
+					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 				}
 				else
 				{
@@ -904,11 +940,16 @@ void CharacterPlayer::Movement_Vertical()
 				if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 				{
 					// 上昇している場合
-					/* モーションが"ジャンプ(開始)"でないことを確認 */
-					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+					/* プレイヤーの攻撃モーションが"投げ(準備)"でないか確認 */
+					if(this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_THROW_READY)
 					{
-						/* モーションを"ジャンプ(上昇)"に設定 */
-						PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+						// 攻撃モーションが投げ(準備)でない場合
+						/* モーションが"ジャンプ(開始)"でないことを確認 */
+						if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+						{
+							/* モーションを"ジャンプ(上昇)"に設定 */
+							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+						}
 					}
 				}
 				else
@@ -918,22 +959,22 @@ void CharacterPlayer::Movement_Vertical()
 					if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 					{
 						/* モーションを"ジャンプ(下降)"に設定 */
-						PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
 					}
 					else
 					{
 						// ジャンプ中でない場合
 						/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
-						if (iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
+						if (this->iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
 						{
 							// 一定数を超えている場合
 							/* モーションを"ジャンプ(下降)"に設定 */
-							PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
 						}					
 					}
 
 					/* 落下状態になってからのフレーム数を加算 */
-					iFallingFrame++;
+					this->iFallingFrame++;
 				}
 					
 			}
