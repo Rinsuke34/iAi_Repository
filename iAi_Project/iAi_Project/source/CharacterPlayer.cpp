@@ -303,6 +303,9 @@ void CharacterPlayer::PlayerHitCheck()
 						/* 被ダメージのSEを再生 */
 						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
 
+						/* 被ダメージボイスを再生 */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
+
 						/* 被ダメージのエフェクトを生成 */
 						{
 							/* ダメージ発生時エフェクト */

@@ -45,7 +45,7 @@ static const int	PLAYER_DODGE_COOLTIME				= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒN[ƒ‹ƒ
 
 // UŒ‚ŠÖŒW
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ				/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_MELEE_WEAK_COLLTIME			= 60;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€										/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// ‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3 * 2;	// ƒRƒ“ƒ{‚ÌŽ‘±ŽžŠÔ

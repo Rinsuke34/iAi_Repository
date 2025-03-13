@@ -423,6 +423,9 @@ void CharacterPlayer::Player_Jump()
 					/* ジャンプのSEを再生 */
 					gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
 
+					/* ジャンプのボイスを再生 */
+					gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+					
 					//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
 
 					/* 地面にいない事を確認 */
@@ -739,6 +742,9 @@ void CharacterPlayer::Player_Dodg()
 
 						/* 回避のSEを再生 */
 						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
+
+						/* 回避のボイスを再生 */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
 
 						/* 回避エフェクト追加 */
 						{

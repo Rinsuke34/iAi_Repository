@@ -96,9 +96,6 @@ void CharacterPlayer::Draw()
 
 	/* ˆÚ“®—Ê•`ŽÊ */
 	DrawFormatString(600, 200 + 16 * 0, GetColor(255, 255, 255), "ˆÚ“®—Ê X:%f, Y:%f, Z:%f", vecMoveSize.x, vecMoveSize.y, vecMoveSize.z);
-	DrawFormatString(600, 200 + 16 * 25, GetColor(255, 255, 255), "ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ %d", this->StageStatusList->bGetGameSlowFlg());
-
-
 }
 
 // “–‚½‚è”»’è•`ŽÊ

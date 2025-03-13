@@ -436,6 +436,9 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 近接攻撃(弱)のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
+	/* 攻撃ボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+
 	/* 抜刀エフェクトを生成 */
 	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
 
@@ -491,6 +494,9 @@ void CharacterPlayer::Player_Charge_Attack()
 
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
+
+		/* 近距離攻撃(強)ボイスを再生 */
+		gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_STRONG_MELEE);
 
 		// 空中で攻撃した場合の処理
 		/* プレイヤーの着地フラグを確認 */
@@ -679,6 +685,9 @@ void CharacterPlayer::Player_Charge_Attack()
 					/* 線分コリジョンの開始点を設定(プレイヤー) */
 					stCollisionLine.vecLineStart = this->vecPosition;
 
+					/* 開始点の高さをプレイヤーの高さとする */
+					stCollisionLine.vecLineStart.y = this->vecPosition.y + PLAYER_HEIGHT;
+
 					/* 線分コリジョン終了点を設定(エネミー) */
 					stCollisionLine.vecLineEnd = vecCoreWorld;
 
@@ -749,14 +758,16 @@ void CharacterPlayer::Player_Charge_Attack()
 			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
 
 			/* プレイヤーの向きにカメラの向きを固定 */
-				this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
+			this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
 		}
 			else
 			{
 				// 対象が存在しない場合
-
-				/* 敵を攻撃したフラグを解除(スローモーション解除のため) */
+				/* 敵を攻撃したフラグを解除 */
 				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+
+				/* 攻撃後ボイスを再生 */
+				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
 			}
 
 	}
@@ -960,6 +971,12 @@ void CharacterPlayer::Player_Projectile()
 	
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
+
+	/* 遠距離攻撃のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
+
+	/* 遠距離攻撃ボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_PROJECTILE);
 
 	/* 遠距離攻撃エフェクトを生成 */
 	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();
