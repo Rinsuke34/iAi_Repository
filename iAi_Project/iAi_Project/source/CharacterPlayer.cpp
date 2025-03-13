@@ -89,7 +89,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iUpperBodyFrameNo		= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 ‹î‘ò•—• Vƒ‚ƒfƒ‹‘Î‰ž */
 		
 		/* ƒNƒiƒC‚ðŽ‚ÂŽè‚ÌƒtƒŒ[ƒ€ */
-		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai_LeftHand");				/* 2025.03.10 ‹e’r‰ë“¹	’Ç‰Á */
+		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");					/* 2025.03.10 ‹e’r‰ë“¹	’Ç‰Á */
 	}
 }
 
