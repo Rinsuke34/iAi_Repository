@@ -14,7 +14,7 @@ class SceneUi_Edit : public SceneBase
 {
 	public:
 		SceneUi_Edit();					// コンストラクタ
-		virtual ~SceneUi_Edit();		// デストラクタ
+		virtual ~SceneUi_Edit() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画

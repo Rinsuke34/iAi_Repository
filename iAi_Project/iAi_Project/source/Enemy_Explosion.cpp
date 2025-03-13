@@ -43,6 +43,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	this->bCountFlg = false;
 	this->bBlastFlg = false;
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg = true;					// 向き固定フラグ
 }
 
 // デストラクタ
@@ -93,14 +94,19 @@ void Enemy_Explosion::MoveEnemy()
 	VECTOR VRot = VGet(0, 0, 0);
 
 	// 重力処理
-	this->vecMove.y -= fGravity;
+	this->vecMove.y -= ENEMY_GRAVITY_SREED;
 	this->vecPosition.y += this->vecMove.y;
 
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
+	if (this->bDirectionFlg == true)
+	{
 	//エネミーの向きを設定
 	this->vecRotation = VRot;
+		//エネミーの向きを取得
+		MV1SetRotationXYZ(iModelHandle, VRot);
+	}
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
@@ -268,8 +274,8 @@ void Enemy_Explosion::Update()
     // プレイヤー攻撃と接触するか確認
 	for (auto* bullet : BulletList)
 	{
-        // オブジェクトタイプが"弾(プレイヤー)"であるか確認
-		if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER)
+		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
+		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
 		{
 			// 弾(プレイヤー)の場合
             // 弾との接触判定
@@ -356,6 +362,7 @@ void Enemy_Explosion::Update()
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
+		this->bDirectionFlg = false;
 		//死亡モーション以外のモーションをデタッチ
 		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
 		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);

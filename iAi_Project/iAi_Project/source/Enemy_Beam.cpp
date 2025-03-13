@@ -37,6 +37,7 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	this->bChargeFlg			 = false;					// チャージフラグ
 	this->bFiringFlg			 = false;					// 発射フラグ
 	this->bDirectionFlg			 = true;					// 向き固定フラグ
+	this->bBeamSEFlg			 = false;					// ビームSEフラグ
 
 	/*モーション関連*/
 // エネミーモデルに攻撃のアニメーションをアタッチする
@@ -164,6 +165,9 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 	// ビームを生成
 	this->pBulletRangeBeam = new BulletEnemyRangeBeam;
 
+	//効果音再生
+	gpDataList_Sound->SE_PlaySound(SE_ENEMY_BEAM_CHARGE);
+
 	//チャージフラグを有効化
 	this->bChargeFlg = true;
 
@@ -221,10 +225,20 @@ void Enemy_Beam::Charge()
 			this->bFiringFlg = true;
 
 			this->bDirectionFlg = false;
+
+			this->bBeamSEFlg = true;
 		}
 	}
 	if (this->bFiringFlg == TRUE)
 	{
+		if (this->bBeamSEFlg == TRUE)
+		{
+			//効果音再生
+			gpDataList_Sound->SE_PlaySound(SE_ENEMY_BEAM_SHOT);
+
+			this->bBeamSEFlg = false;
+		}
+
 		// ビームの持続カウントを減算
 		this->iBeamDurationCount--;
 		// ビームの持続カウントが0以下か確認
@@ -340,8 +354,8 @@ void Enemy_Beam::Update()
 	/* プレイヤー攻撃と接触するか確認 */
 	for (auto* bullet : BulletList)
 	{
-		/* オブジェクトタイプが"弾(プレイヤー)"であるか確認 */
-		if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER)
+		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
+		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
 		{
 			// 弾(プレイヤー)の場合
 			/* 弾との接触判定 */
@@ -401,6 +415,7 @@ void Enemy_Beam::Update()
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
+		this->bDirectionFlg = false;
 		//死亡モーション以外のモーションをデタッチ
 		MV1DetachAnim(this->iModelHandle, this->iBeamAttackAttachIndex);
 		MV1DetachAnim(this->iModelHandle, this->iBeamAttackNowAttachIndex);

@@ -34,10 +34,10 @@ static const std::string	MOTION_MOVE_WAIT		= "mot_attack_charge_loop";		// 待機
 static const std::string	MOTION_MOVE_WALK		= "mot_move_run";				// 歩行
 static const std::string	MOTION_MOVE_JUMP_START	= "mot_move_jump_f_start";		// ジャンプ(開始)
 static const std::string	MOTION_MOVE_JUMP_UP		= "mot_move_jump_f_uploop";		// ジャンプ(上昇)
-static const std::string	MOTION_MOVE_JUMP_FALL	= "mot_move_jump_fall_loop";	// ジャンプ(落下)
+static const std::string	MOTION_MOVE_JUMP_FALL	= "mot_move_jump_f_downloop";	// ジャンプ(落下)
 static const std::string	MOTION_MOVE_lAND		= "mot_move_land";				// 着地
 static const std::string	MOTION_MOVE_DODGE		= "mot_move_dodge";				// 回避
-static const std::string	MOTION_MOVE_DIE			= "mot_damage_die02";			// 死亡
+static const std::string	MOTION_MOVE_DIE			= "mot_damage_die";				// 死亡
 // 攻撃系(上半身のみ対象)
 static const std::string	MOTION_ATTACK			= "mot_attack_nomal";			// 弱攻撃
 static const std::string	MOTION_CHARGE_STEP		= "mot_attack_charge_step";		// 強攻撃(移動中)
@@ -53,27 +53,28 @@ struct PLAYER_MOTION
 	int		iMotionID;			// モーションID
 	std::string	strMotionName;	// モーション名
 	int		iNextMotionID;		// 次のモーションID(ループさせたい場合、元のモーションと同じ値を入力)
+	bool	bWeponHandFlg;		// 武器を手に持っているかのフラグ(※攻撃系のモーションのみ使用)
 };
 
 /* モーションIDとモーション名を統合した定数配列 */
 static const std::array<PLAYER_MOTION, MOTION_ID_MAX> MOTION_LIST =
 { {
-	// モーションID,				モーション名,			次のモーションID
+	// モーションID,				モーション名,			次のモーションID,				武器を手に持っているかのフラグ
 	// 移動系
-	{ MOTION_ID_MOVE_WAIT,			MOTION_MOVE_WAIT,		MOTION_ID_MOVE_WAIT				},
-	{ MOTION_ID_MOVE_WALK,			MOTION_MOVE_WALK,		MOTION_ID_MOVE_WALK				},
-	{ MOTION_ID_MOVE_JUMP_START,	MOTION_MOVE_JUMP_START,	MOTION_ID_MOVE_JUMP_UP			},
-	{ MOTION_ID_MOVE_JUMP_UP,		MOTION_MOVE_JUMP_UP,	MOTION_ID_MOVE_JUMP_UP			},
-	{ MOTION_ID_MOVE_JUMP_DOWN,		MOTION_MOVE_JUMP_FALL,	MOTION_ID_MOVE_JUMP_DOWN		},
-	{ MOTION_ID_MOVE_LAND,			MOTION_MOVE_lAND,		MOTION_ID_MOVE_WAIT				},
-	{ MOTION_ID_MOVE_DODGE,			MOTION_MOVE_DODGE,		MOTION_ID_MOVE_DODGE			},
-	{ MOTION_ID_MOVE_DIE,			MOTION_MOVE_DIE,		MOTION_ID_MOVE_DIE				},
+	{ MOTION_ID_MOVE_WAIT,			MOTION_MOVE_WAIT,		MOTION_ID_MOVE_WAIT,			false	},
+	{ MOTION_ID_MOVE_WALK,			MOTION_MOVE_WALK,		MOTION_ID_MOVE_WALK,			false	},
+	{ MOTION_ID_MOVE_JUMP_START,	MOTION_MOVE_JUMP_START,	MOTION_ID_MOVE_JUMP_UP,			false	},
+	{ MOTION_ID_MOVE_JUMP_UP,		MOTION_MOVE_JUMP_UP,	MOTION_ID_MOVE_JUMP_UP,			false	},
+	{ MOTION_ID_MOVE_JUMP_DOWN,		MOTION_MOVE_JUMP_FALL,	MOTION_ID_MOVE_JUMP_DOWN,		false	},
+	{ MOTION_ID_MOVE_LAND,			MOTION_MOVE_lAND,		MOTION_ID_MOVE_WAIT,			false	},
+	{ MOTION_ID_MOVE_DODGE,			MOTION_MOVE_DODGE,		MOTION_ID_MOVE_DODGE,			false	},
+	{ MOTION_ID_MOVE_DIE,			MOTION_MOVE_DIE,		MOTION_ID_MOVE_DIE,				false	},
 	// 攻撃系
-	{ MOTION_ID_ATTACK_NONE,		"",						MOTION_ID_ATTACK_NONE			},
-	{ MOTION_ID_ATTACK_WEAK,		MOTION_ATTACK,			MOTION_ID_ATTACK_NONE			},
-	{ MOTION_ID_ATTACK_CHARGE,		MOTION_CHARGE_LOOP ,	MOTION_ID_ATTACK_CHARGE			},
-	{ MOTION_ID_ATTACK_STRONG,		MOTION_CHARGE_STEP ,	MOTION_ID_ATTACK_STRONG			},
-	{ MOTION_ID_ATTACK_STRONG_END,	MOTION_CHARGE_FINISH,	MOTION_ID_ATTACK_NONE			},
-	{ MOTION_ID_ATTACK_THROW_READY,	MOTION_THROW_READY,		MOTION_ID_ATTACK_THROW_READY	},
-	{ MOTION_ID_ATTACK_THROW,		MOTION_THROW,			MOTION_ID_ATTACK_NONE			},
+	{ MOTION_ID_ATTACK_NONE,		"",						MOTION_ID_ATTACK_NONE,			false	},
+	{ MOTION_ID_ATTACK_WEAK,		MOTION_ATTACK,			MOTION_ID_ATTACK_NONE,			true	},
+	{ MOTION_ID_ATTACK_CHARGE,		MOTION_CHARGE_LOOP ,	MOTION_ID_ATTACK_CHARGE,		true	},
+	{ MOTION_ID_ATTACK_STRONG,		MOTION_CHARGE_STEP ,	MOTION_ID_ATTACK_STRONG,		true	},
+	{ MOTION_ID_ATTACK_STRONG_END,	MOTION_CHARGE_FINISH,	MOTION_ID_ATTACK_NONE,			false	},
+	{ MOTION_ID_ATTACK_THROW_READY,	MOTION_THROW_READY,		MOTION_ID_ATTACK_THROW_READY,	false	},
+	{ MOTION_ID_ATTACK_THROW,		MOTION_THROW,			MOTION_ID_ATTACK_NONE,			false	},
 } };

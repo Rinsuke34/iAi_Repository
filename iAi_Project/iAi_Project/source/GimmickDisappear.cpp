@@ -51,10 +51,11 @@ void GimmickDisappear::ProcessGimmick()
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	//プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
-	VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
-	if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
-		playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
+	////プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
+	//VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
+	//if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
+	//	playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
+	if(this->bRidePlayerFlg == true)
 	{
 		//プレイヤーがギミックの上に乗っている場合
 		//テクスチャの変更カウントを減らす
@@ -73,11 +74,11 @@ void GimmickDisappear::ProcessGimmick()
 
 			//セカンドテクスチャの変更カウントが0以下になったか確認
 			if (iTextureSecondChangeCount <= 0)
-		{
+			{
 				//セカンドテクスチャの変更カウントが0以下になった場合
 
 				//ギミックの消滅時間カウントを増やす
-			iDisappearTimeCount++;
+				iDisappearTimeCount++;
 
 				// 0番のテクスチャを赤テクスチャに変更
 				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
@@ -86,18 +87,18 @@ void GimmickDisappear::ProcessGimmick()
 				//PlayMovieToGraph(textureHandle); // 再生開始
 
 				//ギミックの消滅時間カウントが一定数になったか確認
-			if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
-			{
-				//ギミックの消滅時間カウントが一定数になった場合
-				//再生終了
-				//	PauseMovieToGraph(textureHandle);
+				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
+				{
+					//ギミックの消滅時間カウントが一定数になった場合
+					//再生終了
+					//	PauseMovieToGraph(textureHandle);
 				
-				//ギミックを消滅させる
-				this->SetDeleteFlg(true);
+					//ギミックを消滅させる
+					this->SetDeleteFlg(true);
+				}
 			}
 		}
 	}
-}
 }
 
 // 更新

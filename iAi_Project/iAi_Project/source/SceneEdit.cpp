@@ -16,6 +16,9 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 
 		/* "ゲーム内リソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+
+		/* "プレイヤー状態管理"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* 画像リソース取得 */
@@ -241,13 +244,8 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 // デストラクタ
 SceneEdit::~SceneEdit()
 {
-
-}
-
-// 初期化
-void SceneEdit::Initialization()
-{
-	
+	/* プレイヤーのステータスを更新 */
+	this->PlayerStatusList->StatusBuffUpdate();
 }
 
 // 計算

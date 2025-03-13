@@ -19,11 +19,31 @@ Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBase()
 // 更新
 void Gimmick_FallJudgment::Update()
 {
-	/* プレイヤーと接触しているか確認 */
-	if (this->ObjectList->GetCharacterPlayer()->HitCheck(this->iModelHandle, this->iCollisionFrameNo))
+	/* プレイヤーを取得 */
+	CharacterBase* pPlayer = ObjectList->GetCharacterPlayer();
+
+	/* プレイヤーが存在しているか確認 */
+	if (pPlayer != nullptr)
 	{
-		// 接触している場合
-		/* プレイヤーの落下判定を有効にする */
-		this->PlayerStatusList->SetFallFlg(true);
+		//プレイヤーが存在している場合
+		/* プレイヤーと接触しているか確認 */
+		if (pPlayer->HitCheck(this->iModelHandle, this->iCollisionFrameNo))
+		{
+			// 接触している場合
+			/* プレイヤーの落下判定を有効にする */
+			this->PlayerStatusList->SetFallFlg(true);
+		}
+	}
+	
+
+	/* エネミーと接触しているか確認 */
+	for (auto& enemy : this->ObjectList->GetEnemyList())
+	{
+		if (enemy->HitCheck(this->iModelHandle, this->iCollisionFrameNo))
+		{
+			// 接触している場合
+			/* エネミーの削除フラグを有効にする */
+			enemy->SetDeleteFlg(true);
+		}
 	}
 }

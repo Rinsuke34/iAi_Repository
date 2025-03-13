@@ -22,7 +22,7 @@ void DataList_Option::LoadOptionData()
 	if (inputFile.is_open() == true)
 	{
 		// ファイルが存在する場合
-		/* 現在のステージの各評価の基準値を取得する */
+		/* 現在のオプション情報を取得する */
 		nlohmann::json	json;
 		inputFile >> json;
 

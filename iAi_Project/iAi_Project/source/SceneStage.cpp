@@ -120,8 +120,6 @@ void SceneStage::Initialization()
 	this->StageStatusList->SetStartTime(GetNowCount());
 }
 
-
-
 // ŒvŽZ
 void SceneStage::Process()
 {

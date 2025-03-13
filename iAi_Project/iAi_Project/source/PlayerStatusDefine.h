@@ -25,6 +25,8 @@ const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS				= "RockOnRadius";			// ロッ
 const std::string	BASE_STATUS_NAME_HP_MAX						= "Hp_Max";					// プレイヤーの最大HP
 const std::string	BASE_STATUS_NAME_INVINCIBLE_TIME_MAX		= "InvincibleTime_Max";		// プレイヤーの最大無敵時間
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_AIR_COUNT_MAX	= "MeleeStrongAirMaxCount";	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
+const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI			= "StartHaveKunai";			// 初期状態で持っているクナイの個数
+const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI				= "MaxHaveKunai";			// 最大で持てるクナイの個数
 
 /* ファイルパス */
 const std::string FILE_PATH_STATUS = "resource/SetupData/PlayerStatusData.json";

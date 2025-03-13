@@ -7,6 +7,12 @@
 // コンストラクタ
 BulletEnemyRangeNormal::BulletEnemyRangeNormal() : BulletBase()
 {
+	/* データリスト取得 */
+	{
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	}
+
 	/* 初期化 */
 	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(エネミー)"に設定
 	this->pEffect = nullptr;
@@ -15,6 +21,8 @@ BulletEnemyRangeNormal::BulletEnemyRangeNormal() : BulletBase()
 	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// 弾発射カウント
 
 	this->iEnemyNormalDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ノーマル弾の持続カウント
+
+	this->bParryFlg = true;	// パリィフラグ(反射できるか)を有効化
 }
 
 // デストラクタ

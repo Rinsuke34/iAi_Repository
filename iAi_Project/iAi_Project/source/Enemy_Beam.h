@@ -56,6 +56,7 @@ private:
 	bool	bChargeFlg;									// チャージフラグ
 	bool	bFiringFlg;									// 発射フラグ
 	bool	bDirectionFlg;								// 向き固定フラグ
+	bool	bBeamSEFlg;									// ビームSEフラグ
 
 	//モーション関連変数
 	int		iBeamAttackAttachIndex;						// ビーム攻撃モーションアタッチインデックス

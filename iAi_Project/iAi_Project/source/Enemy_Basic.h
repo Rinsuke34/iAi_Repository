@@ -19,6 +19,9 @@
 /* オブジェクト */
 #include "EffectItem_Blood.h"
 
+/* 循環参照対策の先行定義 */
+class DataList_Object;
+
 /* 基本エネミークラスの宣言 */
 
 // 基本エネミークラス
@@ -50,11 +53,16 @@ class Enemy_Basic : public EnemyBase
 		/* 変数 */
 		bool	bDeadFlg;			// 死亡フラグ
 
+		//関数
+		void	Enemy_Gravity();	// 重力処理メソッドを追加
+
+		COLLISION_LINE stVerticalCollision;						// 垂直方向のコリジョン
+		VECTOR vecMove;											// 移動量
 	private:
 		/* 使用するデータリスト */
 		DataList_StageStatus*	StageStatusList;	// ステージ状態
 		DataList_Option*		OptionList;			// オプション
-
+	DataList_Object* ObjectList;			// オブジェクト管理
 		/* 変数 */
 		int		iPlayerLockOnType;	// プレイヤー視点でのロックオン状態
 		int		iCoreFrameNo;		// コアとなるフレーム番号

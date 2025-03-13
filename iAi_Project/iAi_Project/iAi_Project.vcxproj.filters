@@ -678,6 +678,12 @@
     <ClCompile Include="source\ScreenEffect_SlowMotion.cpp">
       <Filter>ソース ファイル\画面エフェクト\スローモーション</Filter>
     </ClCompile>
+    <ClCompile Include="source\Enemy_Missile_Air.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Normal_Air.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\SceneLoad.h">
@@ -949,6 +955,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneResultDefine.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\リザルト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Normal_Air.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Missile_Air.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 /* データリスト */
 #include "DataList_StageStatus.h"
 #include "DataList_GameResource.h"
+#include "DataList_PlayerStatus.h"
 #include "DataList_Image.h"
 
 /* シーン"エディット"クラスの宣言 */
@@ -19,7 +20,6 @@ class SceneEdit : public SceneBase
 		SceneEdit();							// コンストラクタ
 		virtual ~SceneEdit();					// デストラクタ
 
-		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
@@ -27,6 +27,7 @@ class SceneEdit : public SceneBase
 		/* 使用するデータリスト */
 		DataList_StageStatus* StageStatusList;		// ゲーム状態管理
 		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
+		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_SelectFrame;						// 選択フレーム

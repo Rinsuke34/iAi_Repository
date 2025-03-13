@@ -32,7 +32,8 @@ class EffectItem_Blood : public EffectItemBase
 		/* データリスト */
 		DataList_Object* ObjectList;			// オブジェクト管理
 
-		/* 関数 */
+		/* 使用する画像のハンドル */
+		int* piGrHandle_Blood;					// ブラッド画像
 
 		/* 変数 */
 		VECTOR	vecMoveDirection;		// 移動方向

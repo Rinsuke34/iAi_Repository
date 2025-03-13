@@ -128,9 +128,9 @@ void CharacterPlayer::Player_Move()
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 	/* 2025.03.12 菊池雅道	スローモーション処理追加 終了 */
 
-	/* 2025.01.09 菊池雅道	移動処理追加	   開始 */
-	/* 2025.01.30 菊池雅道	モーション処理追加 開始 */
-	/* 2025.03.08 菊池雅道	移動処理修正 開始 */
+	/* 2025.01.09 菊池雅道	移動処理追加		開始 */
+	/* 2025.01.30 菊池雅道	モーション処理追加	開始 */
+	/* 2025.03.08 菊池雅道	移動処理修正		開始 */
 
 	/* 移動処理を行える状態かつ、入力がされているか確認 */
 	if ((vecInput.x != 0 || vecInput.z != 0) && (bPlayerMoveFlg == true))
@@ -423,6 +423,9 @@ void CharacterPlayer::Player_Jump()
 					/* ジャンプのSEを再生 */
 					gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
 
+					/* ジャンプのボイスを再生 */
+					gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+					
 					//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
 
 					/* 地面にいない事を確認 */
@@ -740,6 +743,9 @@ void CharacterPlayer::Player_Dodg()
 						/* 回避のSEを再生 */
 						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
 
+						/* 回避のボイスを再生 */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+
 						/* 回避エフェクト追加 */
 						{
 							/* 回避エフェクトを生成 */
@@ -862,12 +868,18 @@ void CharacterPlayer::Movement_Vertical()
 
 					/* プレイヤーのスローモーションカウントをリセット */
 					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
+
+					/* 対象のプラットフォームをプレイヤーが乗っている状態にする */
+					platform->SetRidePlayerFlg(true);
 				}
 				else
 				{
 					// 着地座標がプレイヤーの現在位置より高い場合
 					/* 着地座標をプレイヤーが天井にめり込まない高さに更新 */
 					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
+
+					/* 対象のプラットフォームをプレイヤーが乗っていない状態にする */
+					platform->SetRidePlayerFlg(false);
 
 					/* ループを抜ける */
 					break;

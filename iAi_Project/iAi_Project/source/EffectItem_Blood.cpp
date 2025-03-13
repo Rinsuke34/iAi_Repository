@@ -13,8 +13,17 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 
 	/* 初期化 */
 	{
-		this->iMoveCount	= 30;
-		this->iMoveFaze		= MOVE_FAZE_RUNDOM;
+		this->iMoveCount = 30;
+		this->iMoveFaze = MOVE_FAZE_RUNDOM;
+	}
+
+	/* 画像リソース取得 */
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* ブラッド */
+		this->piGrHandle_Blood = ImageList->piGetImage("/Test/Blood");
 	}
 
 	/* 移動方向をランダム方向に設定 */
@@ -76,10 +85,9 @@ void EffectItem_Blood::Update()
 // 描写
 void EffectItem_Blood::Draw()
 {
-	/* 仮描写(本番ではビルボード) */
-	//DrawModiBillboard3D(VECTOR Pos, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int GrHandle, int TransFlag);
-	int iColor = GetColor(255, 0, 0);
-	DrawSphere3D(this->vecPosition, 10.f, 16, iColor, iColor, TRUE);
+	/* 描写 */
+	DrawBillboard3D(this->vecPosition, 0.5f, 0.5f, 25.f, 0.f, *this->piGrHandle_Blood, TRUE);
+
 }
 
 // リセット処理

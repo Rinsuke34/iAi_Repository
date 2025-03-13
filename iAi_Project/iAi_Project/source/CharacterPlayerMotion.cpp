@@ -117,5 +117,25 @@ void CharacterPlayer::Player_Motion_Transition()
 
 		/* モーションの再生時間を設定 */
 		this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Attack);
+
+		/* 現在のモーションの武器を手に持っているかのフラグを確認 */
+		if (MOTION_LIST[iMotionNo_Attack].bWeponHandFlg == true)
+		{
+			// 表示フラグが有効である場合
+			/* 右手の刀を表示する */
+			MV1SetFrameVisible(this->iModelHandle, this->iKatanaFrameNo_RightHand, TRUE);
+
+			/* 背面の刀を非表示にする */
+			MV1SetFrameVisible(this->iModelHandle, this->iKatanaFrameNo_Waist, FALSE);
+		}
+		else
+		{
+			// 表示フラグが無効である場合
+			/* 右手の刀を非表示にする */
+			MV1SetFrameVisible(this->iModelHandle, this->iKatanaFrameNo_RightHand, FALSE);
+
+			/* 背面の刀を表示する */
+			MV1SetFrameVisible(this->iModelHandle, this->iKatanaFrameNo_Waist, TRUE);
+		}
 	}
 }

@@ -41,6 +41,7 @@ private:
 	//変数
 	int		iFiringCount;	// 発射カウント
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+	bool	bDirectionFlg;								// 向き固定フラグ
 
 
 	//モーション関連変数

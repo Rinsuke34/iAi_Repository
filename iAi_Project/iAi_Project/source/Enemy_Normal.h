@@ -49,6 +49,8 @@ private:
 
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+	bool	bDirectionFlg;								// 向き固定フラグ
+	bool	bWarningEffectFlg;							// 警告エフェクトフラグ
 	
 	//モーション関連変数
 	int		iNormalAttackAttachIndex;					// 攻撃モーションアタッチインデックス

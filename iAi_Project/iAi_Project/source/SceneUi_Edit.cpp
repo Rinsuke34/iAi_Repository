@@ -16,12 +16,6 @@ SceneUi_Edit::SceneUi_Edit() : SceneBase("UI_Edit", 105, false)
 	}
 }
 
-// デストラクタ
-SceneUi_Edit::~SceneUi_Edit()
-{
-
-}
-
 // 計算
 void SceneUi_Edit::Process()
 {
@@ -41,9 +35,9 @@ void SceneUi_Edit::Draw()
 	for (int i = 0; i < EDIT_MAX; i++)
 	{
 		/* エディットフレーム描写 */
-		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->stGetNowEditData(i).iEditRank), TRUE);
+		DrawExtendGraph(30 + 75 * i, 777, 30 + 75 * i + 128, 777 + 128, *this->GameResourceList->piGetGrHandle_EditFrame(this->GameResourceList->stGetNowEditData(i).iEditRank), TRUE);
 
 		/* エディット効果描写 */
-		DrawGraph(0 + 128 * i, 1080 - 128, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->stGetNowEditData(i).iEditEffect), TRUE);
+		DrawExtendGraph(30 + 75 * i, 777, 30 + 75 * i + 128, 777 + 128, *this->GameResourceList->piGetGrHandle_EditEffect(this->GameResourceList->stGetNowEditData(i).iEditEffect), TRUE);
 	}
 }

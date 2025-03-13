@@ -1,5 +1,6 @@
 /* 2025.01.24 駒沢風助 ファイル作成 */
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理追加・修正 */
+/* 2025.03.13 駒沢風助 弾パリィ作成 */
 
 #include "BulletPlayerMeleeWeak.h"
 
@@ -11,12 +12,18 @@ BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 	/* "プレイヤー状態"を取得 */
 	this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
+	/* "オブジェクト管理"を取得 */
+	this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+	/* "エフェクト管理"を取得 */
+	this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+
 	/* プレイヤー取得 */
 	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 
 	/* 初期化 */
-	this->iObjectType	= OBJECT_TYPE_BULLET_PLAYER;	// オブジェクトの種類を"弾(プレイヤー)"に設定
-	this->pMeleeWeakEffect = nullptr;						// 近接攻撃(弱)エフェクトのハンドル
+	this->iObjectType		= OBJECT_TYPE_MELEE_PLAYER;	// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
+	this->pMeleeWeakEffect	= nullptr;						// 近接攻撃(弱)エフェクトのハンドル
 	ArrengementPositionPlayerFront();						// 座標設定(プレイヤーの前方に設定)
 
 	/* 仮追加 */
@@ -71,9 +78,74 @@ void BulletPlayerMeleeWeak::Initialization()
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理修正 終了 */
 
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理修正 開始 */
+/* 2025.03.13 駒沢風助 弾パリィ作成			開始 */
 // 更新
 void BulletPlayerMeleeWeak::Update()
 {
+	/* 弾パリィ処理 */
+	for (auto& bullet : this->ObjectList->GetBulletList())
+	{
+		/* パリィフラグが有効であるか確認 */
+		if (bullet->bGetParryFlg() == true)
+		{
+			// パリィフラグが有効である場合
+			/* 接触しているか確認 */
+			if (bullet->HitCheck(this->stCollisionSqhere) == true)
+			{
+				// 接触している場合
+				/* カウンターフラグが有効であるか確認 */
+				if (this->PlayerStatusList->bGetAddCounter() == true)
+				{
+					// 有効である場合
+					/* パリィフラグを無効に設定 */
+					bullet->SetParryFlg(false);
+
+					/* オブジェクトタイプを弾(プレイヤー)に変更 */
+					bullet->SetObjectType(OBJECT_TYPE_BULLET_PLAYER);
+
+					/* 対象オブジェクトの移動方向を取得 */
+					VECTOR vecMoveDirection = bullet->vecGetMoveDirection();
+
+					/* 移動方向を反転 */
+					vecMoveDirection = VScale(vecMoveDirection, -1);
+
+					/* 移動方向を設定 */
+					bullet->SetDirection(vecMoveDirection);
+
+					/* ダメージ発生時エフェクトを描写 */
+					{
+						/* 被ダメージの瞬間に発生するエフェクトを追加 */
+						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+
+						/* 座標を設定 */
+						pDamageEffect->SetPosition(this->vecPosition);
+
+						/* エフェクトを取得 */
+						pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+
+						/* 拡大率を設定 */
+						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+
+						/* 削除カウントを設定 */
+						pDamageEffect->SetDeleteCount(60);
+
+						/* エフェクト初期化処理 */
+						pDamageEffect->Initialization();
+
+						/* オブジェクトリストに登録 */
+						this->ObjectList->SetEffect(pDamageEffect);
+					}
+				}
+				else
+				{
+					// 無効である場合
+					/* 削除フラグを有効にする */
+					bullet->SetDeleteFlg(true);
+				}
+			}
+		}
+	}
+
 	/* 仮処理 */
 	// 本来はプレイヤー側で削除フラグを設定する予定
 	if (iDeleteCount > 0)
@@ -98,6 +170,7 @@ void BulletPlayerMeleeWeak::Update()
 	this->stCollisionSqhere.vecSqhere = this->vecPosition;
 }
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理修正 終了 */
+/* 2025.03.13 駒沢風助 弾パリィ作成			終了*/
 
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理追加 開始 */
 // バレットの位置をプレイヤーの前方に設定する

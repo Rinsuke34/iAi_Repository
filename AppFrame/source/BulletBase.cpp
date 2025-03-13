@@ -8,10 +8,11 @@
 BulletBase::BulletBase() : ActorBase()
 {
 	/* 初期化 */
-	this->stCollisionSqhere	= {};	// コリジョン(球体)
-	this->vecDirection		= {};	// 向き
-	this->fMoveSpeed		= 0;	// 移動速度
-	this->iTargetObjectType	= 0;	// 接触する対象となるオブジェクトのタイプ
+	this->stCollisionSqhere	= {};		// コリジョン(球体)
+	this->vecDirection		= {};		// 向き
+	this->fMoveSpeed		= 0;		// 移動速度
+	this->iTargetObjectType	= 0;		// 接触する対象となるオブジェクトのタイプ
+	this->bParryFlg			= false;	// パリィフラグ(反射できるか)
 }
 
 // 当たり判定描写

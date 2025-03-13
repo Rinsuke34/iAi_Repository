@@ -51,20 +51,11 @@ void SceneUi_Hp::Process()
 void SceneUi_Hp::Draw()
 {
 	/* HPÉtÉåÅ[ÉÄï`âÊ(âº) */
-	DrawGraph(100, 740, *this->piGrHandle_Hp_Frame, TRUE);
+	DrawGraph(60, 880, *this->piGrHandle_Hp_Frame, TRUE);
 
 	/* HPÉQÅ[ÉWï`é  */
 	for (int i = 0; i < this->PlayerStatusList->iGetPlayerNowHp(); i++)
 	{
-		DrawGraph(100 + 185 + (25 * i), 740 + 40, *this->piGrHandle_Hp_Gauge, TRUE);
+		DrawGraph(245 + (25 * i), 880 + 40, *this->piGrHandle_Hp_Gauge, TRUE);
 	}
-
-	/* åªç›HP */
-	DrawFormatString(500, 700 + 16 * 0, GetColor(255, 255, 255), "åªç›HP : %d", this->PlayerStatusList->iGetPlayerNowHp());
-
-	/* ç≈ëÂHP */
-	DrawFormatString(500, 700 + 16 * 1, GetColor(255, 255, 255), "ç≈ëÂHP : %d", this->PlayerStatusList->iGetPlayerMaxHp());
-
-	/* ñ≥ìGéûä‘ */
-	DrawFormatString(500, 700 + 16 * 2, GetColor(255, 255, 255), "ñ≥ìGéûä‘ : %d", this->PlayerStatusList->iGetPlayerNowInvincibleTime());
 }

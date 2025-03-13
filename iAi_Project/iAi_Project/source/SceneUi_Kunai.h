@@ -22,6 +22,6 @@ class SceneUi_Kunai : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
+		DataList_PlayerStatus*	PlayerStatusList;		// プレイヤー状態管理
 		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
 };

@@ -126,17 +126,16 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 
     // ビームのエフェクトの反対向きを設定
     VECTOR rotation2 = VGet(rotation.x, rotation.y + DX_PI_F, rotation.z);
-    // 正面を向いているか確認
+
+	// エフェクトの向きを設定する前に、必要な回転軸がどれかを確認
     if (this->vecDirection.z > 0)
     {
         // 正面を向いている場合
-        // ビームのエフェクトの向きを設定
         this->pEffect->SetRotation(rotation2);
     }
     else
     {
         // 正面を向いていない場合
-        // ビームのエフェクトの反対向きを設定
 	this->pEffect->SetRotation(rotation);
 }
 }

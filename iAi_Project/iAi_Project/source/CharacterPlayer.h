@@ -104,9 +104,11 @@ class CharacterPlayer : public CharacterBase
 		EffectManualDelete_PlayerFollow*		pDodgeEffect;			//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
 		/* フレーム番号 */
-		int		iKatanaFrameNo;			// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
-		int		iUpperBodyFrameNo;		// 上半身のフレーム番号							/* 2025.03.08 駒沢風助 新モデル対応 */		
-		int		iKunaiHandFrameNo;		// クナイを持つ手のフレーム番号					/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
+		int		iKatanaFrameNo;				// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */
+		int		iKatanaFrameNo_Waist;		// 刀のフレーム番号(背面)						/* 2025.03.13 駒沢風助 新モデル対応 */
+		int		iKatanaFrameNo_RightHand;	// 刀のフレーム番号(右手)						/* 2025.03.13 駒沢風助 新モデル対応 */
+		int		iUpperBodyFrameNo;			// 上半身のフレーム番号							/* 2025.03.08 駒沢風助 新モデル対応 */
+		int		iKunaiHandFrameNo;			// クナイを持つ手のフレーム番号					/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量

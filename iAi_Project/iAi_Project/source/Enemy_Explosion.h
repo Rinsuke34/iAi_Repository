@@ -27,11 +27,8 @@ public:
 
 private:
 	/* エフェクト */
-	EffectManualDelete* pEffect;
-
-	//起爆エフェクト
-	EffectManualDelete* pEffectDetonation;
-
+	EffectManualDelete* pEffect; 						// エフェクト
+	EffectManualDelete* pEffectDetonation;				// 起爆エフェクト
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 
@@ -39,8 +36,9 @@ private:
 	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
 	/*関数*/
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
-	void Enemy_Gravity(); // 重力処理メソッドを追加
 	void CliffFallCheck();	// 崖に落ちるかどうかの判定メソッドを追加
+	void Enemy_Gravity();									// 重力処理メソッドを追加
+
 
 
 	/*変数*/
@@ -60,6 +58,7 @@ private:
 	bool bCountFlg;			//カウントフラグ
 	bool bBlastFlg;			//爆発フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+	bool bDirectionFlg;								// 向き固定フラグ
 
 	//モーション関連変数
 	int iWaitAttachIndex;						// 待機モーションアタッチインデックス
@@ -78,7 +77,5 @@ private:
 
 	VECTOR vecLastRotation;	// 最後の回転量
 protected:
-	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 
-	VECTOR				vecMove;				// 移動量
 };

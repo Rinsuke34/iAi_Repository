@@ -6,7 +6,7 @@
 BulletPlayerMeleeStrong::BulletPlayerMeleeStrong() : BulletBase()
 {
 	/* 初期化 */
-	this->iObjectType			= OBJECT_TYPE_BULLET_PLAYER;	// オブジェクトの種類を"弾(プレイヤー)"に設定
+	this->iObjectType			= OBJECT_TYPE_MELEE_PLAYER;	// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
 	this->stCollisionCapsule	= {};
 
 	/* 仮追加 */

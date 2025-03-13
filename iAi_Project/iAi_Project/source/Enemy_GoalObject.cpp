@@ -92,11 +92,11 @@ void Enemy_GoalObject::Update()
 	/* プレイヤーの攻撃と接触するか確認 */
 	for (auto* bullet : BulletList)
 	{
-		/* オブジェクトタイプが"弾(プレイヤー)"であるか確認 */
-		if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER)
+		/* オブジェクトタイプが"近接攻撃(プレイヤー)"であるか確認 */
+		if (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER)
 		{
-			// 弾(プレイヤー)の場合
-			/* 弾との接触判定 */
+			// 近接攻撃(プレイヤー)の場合
+			/* 近接攻撃との接触判定 */
 			if (bullet->HitCheck(this->stCollisionCapsule) == true)
 			{
 				// 接触している場合

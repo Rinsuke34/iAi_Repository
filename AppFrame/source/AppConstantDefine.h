@@ -37,8 +37,9 @@ static const unsigned char	INIT_TRIGGER_THRESHOLD	= 10;	// ƒgƒŠƒK[“ü—Í‚Ì‰Šúè‡’
 // ¦ÚG”»’è‚ğs‚¤Û‚Ég—p
 static const int OBJECT_TYPE_PLAYER			= 0;	// ƒvƒŒƒCƒ„[
 static const int OBJECT_TYPE_ENEMY			= 1;	// ƒGƒlƒ~[
-static const int OBJECT_TYPE_BULLET_PLAYER	= 2;	// ’eŠÛ(ƒvƒŒƒCƒ„[)
-static const int OBJECT_TYPE_BULLET_ENEMY	= 3;	// ’eŠÛ(ƒGƒlƒ~[)
+static const int OBJECT_TYPE_MELEE_PLAYER	= 2;	// ‹ßÚUŒ‚(ƒvƒŒƒCƒ„[)
+static const int OBJECT_TYPE_BULLET_PLAYER	= 3;	// ’eŠÛ(ƒvƒŒƒCƒ„[)
+static const int OBJECT_TYPE_BULLET_ENEMY	= 4;	// ’eŠÛ(ƒGƒlƒ~[)
 
 /* EffekseerŠÖ˜A */
 static const int EFFECT_MAX_PARTICLE		= 8000;		// ƒGƒtƒFƒNƒg‚ÌÅ‘åƒp[ƒeƒBƒNƒ‹”

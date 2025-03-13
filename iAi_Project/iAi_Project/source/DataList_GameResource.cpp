@@ -1,6 +1,8 @@
 /* 2025.02.11 駒沢風助 ファイル作成 */
 
 #include "DataList_GameResource.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* ゲーム内リソース管理クラスの定義 */
 // コンストラクタ
@@ -53,12 +55,6 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 	}
 }
 
-// デストラクタ
-DataList_GameResource::~DataList_GameResource()
-{
-
-}
-
 /* データ設定 */
 // 現在のエディット情報設定
 void DataList_GameResource::SetNowEditData(int iEditNum, int iEditEffect, int iEditRank)
@@ -70,4 +66,38 @@ void DataList_GameResource::SetNowEditData(int iEditNum, int iEditEffect, int iE
 
 	this->NowEditData[iEditNum].iEditEffect	= iEditEffect;
 	this->NowEditData[iEditNum].iEditRank	= iEditRank;
+}
+
+// エディット効果量読み込み
+void DataList_GameResource::JsonLoadEditEffectValue()
+{
+	// ファイルが存在する場合
+	/* パスとファイル名の設定 */
+	std::string FilePath = "resource/SetupData/";	// 保存場所
+	std::string jsonFileName = "EditDataBase.json";		// ファイル名
+
+	/* ファイル展開 */
+	std::ifstream inputFile(FilePath + jsonFileName);
+
+	/* ファイルの展開が成功したか確認 */
+	if (inputFile.is_open())
+	{
+		// ファイルが存在する場合
+		/* 現在のステージの各評価の基準値を取得する */
+		nlohmann::json	json;
+		inputFile >> json;
+
+		/* すべての要素を読み込む */
+		for (auto& data : json)
+		{
+			/* エディット情報を取得 */
+			EDIT_EFFECT_VALUE stEditEffectValue;
+			data.at("Rank").get_to(stEditEffectValue.iEditRank);
+			data.at("Effect").get_to(stEditEffectValue.iEditEffect);
+			data.at("Value").get_to(stEditEffectValue.iValue);
+
+			/* エディットの効果量登録 */
+			EditEffectValueList.push_back(stEditEffectValue);
+		}
+	}
 }

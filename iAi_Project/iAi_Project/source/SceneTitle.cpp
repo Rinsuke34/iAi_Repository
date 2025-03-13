@@ -33,8 +33,8 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 		this->iImageContinueChoiceHandle = *ImageList->piGetImage("Test/UIContinue_Choice");
 
 		/* データ */
-		this->iImageDateHandle = *ImageList->piGetImage("Test/UIData");
-		this->iImageDateChoiceHandle = *ImageList->piGetImage("Test/UIData_Choice");
+		this->iImageDateHandle = *ImageList->piGetImage("Test/gameend");
+		this->iImageDateChoiceHandle = *ImageList->piGetImage("Test/gameend2");
 
 		/* コンフィグ */
 		this->iImageConfigHandle = *ImageList->piGetImage("Test/UIConfig");
@@ -147,6 +147,11 @@ void SceneTitle::Process()
 			this->bGameStartFlg = TRUE;
 			break;
 
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+		{
+			gbEndFlg = true;
+		}
 			//設定ホーム画面
 		case CAMERA_FIXED_POSITION_D:
 			/* 現在のカメラポジションが設定画面であるか確認 */

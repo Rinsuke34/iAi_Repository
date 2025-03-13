@@ -17,6 +17,9 @@
 #include "PlayerStatusDefine.h"
 #include "PlayerMotionDefine.h"
 
+/* データリスト */
+#include "DataList_GameResource.h"
+
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
 class Enemy_Basic;
@@ -33,6 +36,9 @@ class DataList_PlayerStatus : public DataListBase
 		/* jsonファイル関連 */
 		void	LoadPlayerStatuxData();			// ステータスデータ読み込み
 		void	SavePlayerStatuxData();			// ステータスデータ保存
+
+		/* バフ更新 */
+		void	StatusBuffUpdate();				// プレイヤーバフ更新
 
 		/* データ取得 */
 		// プレイヤー状態関連
@@ -73,6 +79,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bGetPlayerDeadFlg()					{ return this->bPlayerDeadFlg; }					// プレイヤー死亡フラグを取得
 		int		iGetPlayerDamageCount()				{ return this->iPlayerDamageCount; }				// プレイヤーの被ダメージ数を取得
 		bool	bGetFallFlg()						{ return this->bFallFlg; }							// 落下フラグを取得
+		int		iGetNowHaveKunai()					{ return this->iNowHaveKunai; }						// 現在持っているクナイの数
 
 		/* プレイヤーモーション関連 */
 		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }				// プレイヤーモーション(移動系)を取得
@@ -90,7 +97,7 @@ class DataList_PlayerStatus : public DataListBase
 		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
 		bool				bGetMeleeSearchCollisionUseFlg()	{ return this->bMeleeSearchCollisionUseFlg; };	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを取得
 
-		// 能力値関連※プレイヤーの装備等によって上下する可能性のあるステータス)
+		// 能力値関連(※調整を行えるステータス)
 		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
 		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// プレイヤーの最大移動速度取得
 		float	fGetPlayerFallAcceleration()	{ return this->fPlayerFallAcceleration; }	// プレイヤーの落下加速度取得
@@ -99,6 +106,19 @@ class DataList_PlayerStatus : public DataListBase
 		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ロックオン範囲の半径を設定
 		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// プレイヤーの最大HP取得
 		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// プレイヤーの最大無敵時間取得
+		int		iGetStartHaveKunai()			{ return this->iStartHaveKunai; }			// 初期状態で持っているクナイの数
+		int		iGetMaxhaveKunai()				{ return this->iMaxhaveKunai; }				// 最大で持てるクナイの数
+
+		/* プレイヤーバフ関連(エディット周り) */
+		float	fGetAddMoveSpeedUp()					{ return this->fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
+		int		iGetAddBlood()							{ return this->iAddBlood; }							// ブラッド(ゲーム内通貨)の入手量(個)
+		int		iGetAddAttackChargeFrameShortening()	{ return this->iAddAttackChargeFrameShortening; }	// チャージ時間短縮値(フレーム)
+		int		iGetAddJumpCount()						{ return this->iAddJumpCount; }						// ジャンプ回数増加値(回)
+		int		iGetAddMeleeStrongAirMaxCount()			{ return this->iAddMeleeStrongAirMaxCount; }		// 空中での近距離攻撃(強)回数増加値(回)
+		int		iGetAddKunaiKeepProbability()			{ return this->iAddKunaiKeepProbability; }			// クナイ保持確率(%)
+		int		iGetAddBarrier()						{ return this->iAddBarrier; }						// バリア数(個)
+		bool	bGetAddCounter()						{ return this->bAddCounter; }						// カウンター追加フラグ(有効/無効)
+		bool	bGetAddMaxHpOne()						{ return this->bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 		/* データ設定 */
 		// プレイヤー状態関連
@@ -134,6 +154,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerDeadFlg(bool bPlayerDeadFlg)								{ this->bPlayerDeadFlg					= bPlayerDeadFlg; }						// プレイヤー死亡フラグ
 		void	SetPlayerDamageCount(int iPlayerDamageCount)						{ this->iPlayerDamageCount				= iPlayerDamageCount; }					// プレイヤーの被ダメージ数を設定
 		void	SetFallFlg(bool bFallFlg)											{ this->bFallFlg						= bFallFlg; }							// 落下フラグを設定
+		void	SetNowHaveKunai(int iNowHaveKunai)									{ this->iNowHaveKunai					= iNowHaveKunai; }						// 現在持っているクナイの数を設定
 
 		/* プレイヤーモーション関連 */
 		void	SetPlayerMotion_Move(int iPlayerMotion_Move)							{ this->iPlayerMotion_Move				= iPlayerMotion_Move; };				// プレイヤーモーション(移動系)を設定
@@ -151,7 +172,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)	{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }				// 近接攻撃(強)のロックオン範囲コリジョンを設定
 		void	SetMeleeSearchCollisionUseFlg(bool bMeleeSearchCollisionUseFlg)		{ this->bMeleeSearchCollisionUseFlg		= bMeleeSearchCollisionUseFlg; }		// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを設定
 
-		// 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス)
+		// 能力値関連(※調整を行えるステータス)
 		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)				{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// プレイヤーの移動加速度設定
 		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)						{ this->fPlayerMaxMoveSpeed				= fPlayerMaxMoveSpeed;}				// プレイヤーの最大移動速度設定
 		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)				{ this->fPlayerFallAcceleration			= fPlayerFallAcceleration; }		// プレイヤーの落下加速度設定
@@ -165,6 +186,19 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)						{ this->fPlayerRockOnRadius				= fPlayerRockOnRadius; }			// ロックオン範囲の半径を設定
 		void	SetPlayerMaxHp(int iPlayerMaxHp)										{ this->iPlayerMaxHp					= iPlayerMaxHp; }					// プレイヤーの最大HP設定
 		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)				{ this->iPlayerMaxInvincibleTime		= iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
+		void	SetStartHaveKunai(int iStartHaveKunai)									{ this->iStartHaveKunai					= iStartHaveKunai; }				// 初期状態で持っているクナイの数
+		void	SetMaxhaveKunai(int iMaxhaveKunai)										{ this->iMaxhaveKunai					= iMaxhaveKunai; }					// 最大で持てるクナイの数
+
+		/* プレイヤーバフ関連(エディット周り) */
+		void	SetAddMoveSpeedUp(float fAddMoveSpeedUp)								{ this->fAddMoveSpeedUp					= fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
+		void	SetAddBlood(int iAddBlood)												{ this->iAddBlood						= iAddBlood; }							// ブラッド(ゲーム内通貨)の入手量(個)
+		void	SetAddAttackChargeFrameShortening(int iAddAttackChargeFrameShortening)	{ this->iAddAttackChargeFrameShortening	= iAddAttackChargeFrameShortening; }	// チャージ時間短縮値(フレーム)
+		void	SetAddJumpCount(int iAddJumpCount)										{ this->iAddJumpCount					= iAddJumpCount; }						// ジャンプ回数増加値(回)
+		void	SetAddMeleeStrongAirMaxCount(int iAddMeleeStrongAirMaxCount)			{ this->iAddMeleeStrongAirMaxCount		= iAddMeleeStrongAirMaxCount; }			// 空中での近距離攻撃(強)回数増加値(回)
+		void	SetAddKunaiKeepProbability(int iAddKunaiKeepProbability)				{ this->iAddKunaiKeepProbability		= iAddKunaiKeepProbability; }			// クナイ保持確率(%)
+		void	SetAddBarrier(int iAddBarrier)											{ this->iAddBarrier						= iAddBarrier; }						// バリア数(個)
+		void	SetAddCounter(int bAddCounter)											{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
+		void	SetAddMaxHpOne(int bAddMaxHpOne)										{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 	private:
 		/* プレイヤー状態関連 */
@@ -187,7 +221,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerAfterKickWallCount;			// プレイヤーが壁を蹴ってからの経過フレーム数									/* 2025.02.22 菊池雅道 移動関連の変数追加 */
 		bool	bPlayerAfterKickWallFlg;			// プレイヤーが壁を蹴った後の状態かのフラグ										/* 2025.02.22 菊池雅道 移動関連の変数追加 */
 		VECTOR	vecPlayerChargeAttakTargetMove;		// 近接攻撃(強)による移動量														/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
-		int		iPlayerNowAttakChargeFlame;			//現在のプレイヤー溜め攻撃チャージフレーム数									/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerNowAttakChargeFlame;			// 現在のプレイヤー溜め攻撃チャージフレーム数									/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerMeleeStrongChargeCount;		// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数
 		int		iPlayerMeleeStrongAirCount;			// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerMeleeStrongEnemyAttackFlg;	// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
@@ -203,6 +237,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerDeadFlg;						// プレイヤー死亡フラグ
 		int		iPlayerDamageCount;					// 被ダメージ回数
 		bool	bFallFlg;							// 落下フラグ
+		int		iNowHaveKunai;						// 現在持っているクナイの数
 
 		/* プレイヤーモーション関連 */
 		int		iPlayerMotion_Move;					// プレイヤーモーション(移動系)
@@ -232,6 +267,19 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerMaxHp;					// プレイヤーの最大HP
 		int		iPlayerMaxInvincibleTime;		// プレイヤーの最大無敵時間
 		int		iPlayerMeleeStrongAirMaxCount;	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
+		int		iStartHaveKunai;				// 初期状態で持っているクナイの数
+		int		iMaxhaveKunai;					// 最大で持てるクナイの数
+
+		/* プレイヤーバフ関連(エディット周り) */
+		float	fAddMoveSpeedUp;					// 移動速度上昇値(速度/フレーム)
+		int		iAddBlood;							// ブラッド(ゲーム内通貨)の入手量(個)
+		int		iAddAttackChargeFrameShortening;	// チャージ時間短縮値(フレーム)
+		int		iAddJumpCount;						// ジャンプ回数増加値(回)
+		int		iAddMeleeStrongAirMaxCount;			// 空中での近距離攻撃(強)回数増加値(回)
+		int		iAddKunaiKeepProbability;			// クナイ保持確率(%)
+		int		iAddBarrier;						// バリア数(個)
+		bool	bAddCounter;						// カウンター追加フラグ(有効/無効)
+		bool	bAddMaxHpOne;						// 最大HP1化フラグ(有効/無効)
 		
 		/* Jsonファイルでのオプション名と変数の対応表 */
 		std::vector<PLAYER_STATUS_LIST> astPlayerStatusList =
@@ -245,6 +293,8 @@ class DataList_PlayerStatus : public DataListBase
 			{ BASE_STATUS_NAME_ROCK_ON_RADIUS,				&fPlayerRockOnRadius,			DATA_TYPE_FLOAT	},	// ロックオン範囲の半径
 			{ BASE_STATUS_NAME_HP_MAX,						&iPlayerMaxHp,					DATA_TYPE_INT	},	// プレイヤーの最大HP
 			{ BASE_STATUS_NAME_INVINCIBLE_TIME_MAX,			&iPlayerMaxInvincibleTime,		DATA_TYPE_INT	},	// プレイヤーの最大無敵時間
-			{ BASE_STATUS_NAME_MELEE_STRONG_AIR_COUNT_MAX,	&iPlayerMeleeStrongAirMaxCount,	DATA_TYPE_INT	}	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
+			{ BASE_STATUS_NAME_MELEE_STRONG_AIR_COUNT_MAX,	&iPlayerMeleeStrongAirMaxCount,	DATA_TYPE_INT	},	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
+			{ BASE_STATUS_NAME_START_HAVE_KUNAI,			&iStartHaveKunai,				DATA_TYPE_INT	},	// 初期状態で持っているクナイの個数
+			{ BASE_STATUS_NAME_MAX_HAVE_KUNAI,				&iMaxhaveKunai,					DATA_TYPE_INT	}	// 最大で持てるクナイの個数
 		};
 };

@@ -77,13 +77,19 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* コリジョンフレーム番号取得 */
 		/* 刀のフレーム */
-		this->iKatanaFrameNo	= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
+		this->iKatanaFrameNo		= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
+
+		/* 2025.03.13 駒沢風助 新モデル追加 開始 */
+		/* 刀のフレーム番号 */
+		this->iKatanaFrameNo_Waist		= MV1SearchFrame(this->iModelHandle, "Katana_Waist");		// 刀のフレーム番号(背面)
+		this->iKatanaFrameNo_RightHand	= MV1SearchFrame(this->iModelHandle, "Katana_RightHand");	// 刀のフレーム番号(右手)
+		/* 2025.03.13 駒沢風助 新モデル追加 終了 */
 
 		/* 上半身のフレーム番号取得 */
-		this->iUpperBodyFrameNo	= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
+		this->iUpperBodyFrameNo		= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
 		
 		/* クナイを持つ手のフレーム */
-		this->iKunaiHandFrameNo = MV1SearchFrame(this->iModelHandle, "Kunai_LeftHand");				/* 2025.03.10 菊池雅道	追加 */
+		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai_LeftHand");				/* 2025.03.10 菊池雅道	追加 */
 	}
 }
 
@@ -302,6 +308,9 @@ void CharacterPlayer::PlayerHitCheck()
 
 						/* 被ダメージのSEを再生 */
 						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+						/* 被ダメージボイスを再生 */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
 
 						/* 被ダメージのエフェクトを生成 */
 						{

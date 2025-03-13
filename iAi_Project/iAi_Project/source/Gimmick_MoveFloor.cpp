@@ -87,8 +87,6 @@ void Gimmick_MoveFloor::Update()
 	MV1TerminateCollInfo(this->iModelHandle, this->iCollisionFrameNo);
 
 	/* コリジョン更新 */
-	//MV1RefreshCollInfo(this->iModelHandle, this->iCollisionFrameNo, TRUE);
-
 	UpdateCollisionFrame();
 }
 

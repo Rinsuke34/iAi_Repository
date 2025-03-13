@@ -12,6 +12,7 @@ PlatformBase::PlatformBase() : ObjectBase()
 	this->vecRotation		= VGet(0.f, 0.f, 0.f);	// 回転量
 	this->iCollisionFrameNo = -1;					// コリジョンフレーム番号
 	this->vecPlatformMove	= VGet(0.f, 0.f, 0.f);	// プラットフォームの移動量
+	this->bRidePlayerFlg	= false;				// プレイヤーが乗っているかのフラグ
 }
 
 // デストラクタ

@@ -132,20 +132,15 @@ void SceneUi_Combo::Draw()
 		/* コンボフレーム描画(仮) */
 		DrawGraph(100, 360, *this->piGrHandle_Combo_Frame, TRUE);
 
-		/* コンボタイマー描写(仮) */
+		/* コンボタイマー描写 */
 		double dComboTimerPercent = (static_cast<double>(this->PlayerStatusList->iGetPlayerComboDuration()) / INIT_ATTRIBUTES_COMBO_DURATION) * 100.0;
 		DrawCircleGauge(101 + (176 / 2), 360 + (176 / 2), dComboTimerPercent, *this->piGrHandle_Combo_Timer);
 
 		/* ランクを描写 */
+		/* 描写予定のアルファベットのサイズを取得 */
+		int iSizeX, iSizeY;
+
+
 		DrawGraph(100 + (176 / 2) - (118 / 2), 360 + (176 / 2) - (156 / 2), *this->piGrHandle_Combo_Alphabet[this->iPlayerComboRank], TRUE);
 	}
-
-	/* 現在のコンボ数描写(仮) */
-	DrawFormatString(400, 360 + 16 * 0, GetColor(255, 255, 255), "現在のコンボ数 : %d", this->PlayerStatusList->iGetPlayerComboNowCount());
-
-	/* 最大コンボ数描写(仮) */
-	DrawFormatString(400, 360 + 16 * 1, GetColor(255, 255, 255), "最大コンボ数 :  %d", this->PlayerStatusList->iGetPlayerComboMaxCount());
-
-	/* コンボの残り継続時間描写(仮) */
-	DrawFormatString(400, 360 + 16 * 2, GetColor(255, 255, 255), "コンボ継続時間 : %d", this->PlayerStatusList->iGetPlayerComboDuration());
 }

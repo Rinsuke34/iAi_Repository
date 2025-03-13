@@ -19,6 +19,7 @@
 /* 2025.03.06 菊池雅道	エフェクト処理追加 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正 */
+/* 2025.03.13 駒沢風助	クナイ弾数設定 */
 
 
 #include "CharacterPlayer.h"
@@ -287,9 +288,6 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition()));
 
-			/* 縦方向には移動しないように設定 */
-			vecMoveDirection.y = 0;
-
 			/* 近接攻撃(強)による移動量を設定 */
 			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMove));
 
@@ -436,6 +434,9 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 近接攻撃(弱)のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
+	/* 攻撃ボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+
 	/* 抜刀エフェクトを生成 */
 	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
 
@@ -477,14 +478,6 @@ void CharacterPlayer::Player_Melee_Weak()
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
-	//近距離攻撃(強)中はスローモーションを行わない
-	/* スローモーションフラグを確認 */
-	if (this->StageStatusList->bGetGameSlowFlg() == true)
-	{
-		// スローモーション中の場合
-		/* スローモーションフラグを無効化 */
-		this->StageStatusList->SetGameSlowFlg(false);
-	}
 
 	/* 近距離攻撃(強)状態でのチャージフレーム数を取得 */
 	int iMeleeStrongChargeCount = this->PlayerStatusList->iGetPlayerMeleeStrongChargeCount();
@@ -499,6 +492,9 @@ void CharacterPlayer::Player_Charge_Attack()
 
 		/* 溜め居合攻撃のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
+
+		/* 近距離攻撃(強)ボイスを再生 */
+		gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_STRONG_MELEE);
 
 		// 空中で攻撃した場合の処理
 		/* プレイヤーの着地フラグを確認 */
@@ -687,6 +683,9 @@ void CharacterPlayer::Player_Charge_Attack()
 					/* 線分コリジョンの開始点を設定(プレイヤー) */
 					stCollisionLine.vecLineStart = this->vecPosition;
 
+					/* 開始点の高さをプレイヤーの高さとする */
+					stCollisionLine.vecLineStart.y = this->vecPosition.y + PLAYER_HEIGHT;
+
 					/* 線分コリジョン終了点を設定(エネミー) */
 					stCollisionLine.vecLineEnd = vecCoreWorld;
 
@@ -762,9 +761,11 @@ void CharacterPlayer::Player_Charge_Attack()
 			else
 			{
 				// 対象が存在しない場合
-
-				/* 敵を攻撃したフラグを解除(スローモーション解除のため) */
+				/* 敵を攻撃したフラグを解除 */
 				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+
+				/* 攻撃後ボイスを再生 */
+				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
 			}
 
 	}
@@ -786,6 +787,7 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.03.04 菊池雅道	スローモーション処理追加	開始 */
 /* 2025.03.06 菊池雅道	スローモーション処理修正	開始 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正	開始 */
+/* 2025.03.13 駒沢風助	クナイ弾数設定				開始 */
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()
 {
@@ -852,11 +854,39 @@ void CharacterPlayer::Player_Projectile_Posture()
 			if (this->iProjectileCoolTime == 0)
 			{
 				// クールタイムが0の場合
-				/* プレイヤーのモーションを投擲に設定 */
-				this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_THROW);
-			
-				/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
-				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
+				/* 現在のクナイの所持数を取得 */
+				int iNowKunaiCount = this->PlayerStatusList->iGetNowHaveKunai();
+
+				/* クナイを所持しているかを確認 */
+				if (iNowKunaiCount > 0)
+				{
+					// 所持している場合
+					/* クナイ消費無効率(%)を取得 */
+					int iKeepProbability = this->PlayerStatusList->iGetAddKunaiKeepProbability();
+
+					/* ランダム(0～100)な値を取得し、クナイ消費無効率よりも小さい値であるか確認 */
+					if (GetRand(100) <= iKeepProbability)
+					{
+						// 小さい場合
+						/* クナイを消費しない */
+						iNowKunaiCount = 0;
+					}
+					else
+					{
+						// 大きい場合
+						/* クナイを消費する */
+						iNowKunaiCount--;
+					}
+
+					/* クナイの所持数を設定 */
+					this->PlayerStatusList->SetNowHaveKunai(iNowKunaiCount);
+
+					/* プレイヤーのモーションを投擲に設定 */
+					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_THROW);
+
+					/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
+					this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
+				}
 			}
 		}
 		/* ジャンプ入力がされた場合 */
@@ -912,6 +942,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.03.04 菊池雅道	スローモーション処理追加	終了 */
 /* 2025.03.06 菊池雅道	スローモーション処理修正	終了 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正	終了 */
+/* 2025.03.13 駒沢風助	クナイ弾数設定				終了 */
 
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
@@ -968,6 +999,12 @@ void CharacterPlayer::Player_Projectile()
 	
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiEffect);
+
+	/* 遠距離攻撃のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
+
+	/* 遠距離攻撃ボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_PROJECTILE);
 
 	/* 遠距離攻撃エフェクトを生成 */
 	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();

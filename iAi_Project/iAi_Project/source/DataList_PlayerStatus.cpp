@@ -9,6 +9,7 @@
 /* 2025.03.11 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
+#include <vector>
 #include <nlohmann/json.hpp>
 #include <fstream>
 
@@ -54,6 +55,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bPlayerDeadFlg					= false;							// プレイヤー死亡フラグ
 	this->iPlayerDamageCount				= 0;								// 被ダメージ回数
 	this->bFallFlg							= false;							// 落下フラグ
+	this->iNowHaveKunai						= 0;								// 現在持っているクナイの数
 
 	/* プレイヤーモーション関連 */
 	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)
@@ -68,11 +70,42 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	/* 判定処理用コリジョン */
 	this->bMeleeSearchCollisionUseFlg		= false;
 
+	/* 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス))*/
+	this->fPlayerMoveAcceleration			= 0;	// プレイヤーの移動加速度
+	this->fPlayerMaxMoveSpeed				= 0;	// プレイヤーの最大移動速度
+	this->fPlayerFallAcceleration			= 0;	// プレイヤーの落下加速度
+	this->fPlayerMaxFallSpeed				= 0;	// プレイヤーの最大落下速度
+	this->iPlayerMaxJumpCount				= 0;	// プレイヤーのジャンプ回数(最大数)
+	this->fPlayerJumpSpeed					= 0;	// プレイヤージャンプ速度
+	this->fPlayerDodgeSpeed					= 0;	// プレイヤー回避速度
+	this->fPlayerRockOnRadius				= 0;	// ロックオン範囲の半径
+	this->iPlayerMaxHp						= 0;	// プレイヤーの最大HP
+	this->iPlayerMaxInvincibleTime			= 0;	// プレイヤーの最大無敵時間
+	this->iPlayerMeleeStrongAirMaxCount		= 0;	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
+	this->iStartHaveKunai					= 0;	// 初期状態で持っているクナイの数
+	this->iMaxhaveKunai						= 0;	// 最大で持てるクナイの数
+
+	/* プレイヤーバフ関連(エディット周り) */
+	this->fAddMoveSpeedUp					= 0;		// 移動速度上昇値(速度/フレーム)
+	this->iAddBlood							= 0;		// ブラッド(ゲーム内通貨)の入手量(個)
+	this->iAddAttackChargeFrameShortening	= 0;		// チャージ時間短縮値(フレーム)
+	this->iAddJumpCount						= 0;		// ジャンプ回数増加値(回)
+	this->iAddMeleeStrongAirMaxCount		= 0;		// 空中での近距離攻撃(強)回数増加値(回)
+	this->iAddKunaiKeepProbability			= 0;		// クナイ保持確率(%)
+	this->iAddBarrier						= 0;		// バリア数(個)
+	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
+	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
+
 	/* ステータスデータの読み込み */
 	LoadPlayerStatuxData();
 
 	/* HP現在値をHP最大値に設定 */
 	this->iPlayerNowHp = this->iPlayerMaxHp;
+
+	/* クナイ本数を初期状態でのクナイ本数に設定 */
+	this->iNowHaveKunai = this->iStartHaveKunai;
+
+	this->bAddCounter = true;
 }
 
 // デストラクタ
@@ -145,4 +178,114 @@ void DataList_PlayerStatus::SavePlayerStatuxData()
 
 	/* Jsonファイル書き込み */
 	outputFile << json.dump(4);
+}
+
+// プレイヤーバフ更新
+void DataList_PlayerStatus::StatusBuffUpdate()
+{
+	/* ステータスデータの読み込み */
+	LoadPlayerStatuxData();
+
+	/* 現在のエディット情報に応じてプレイヤーバフ関連を更新する */
+	/* 全ステータス初期化 */
+	this->fAddMoveSpeedUp					= 0;		// 移動速度上昇値(速度/フレーム)
+	this->iAddBlood							= 0;		// ブラッド(ゲーム内通貨)の入手量(個)
+	this->iAddAttackChargeFrameShortening	= 0;		// チャージ時間短縮値(フレーム)
+	this->iAddJumpCount						= 0;		// ジャンプ回数増加値(回)
+	this->iAddMeleeStrongAirMaxCount		= 0;		// 空中での近距離攻撃(強)回数増加値(回)
+	this->iAddKunaiKeepProbability			= 0;		// クナイ保持確率(%)
+	this->iAddBarrier						= 0;		// バリア数(個)
+	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
+	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
+
+	/* "ゲーム内リソース管理"を取得 */
+	DataList_GameResource* GameResource = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+
+	/* 現在のエディット情報を取得 */
+	for (int i = 0; i < EDIT_MAX; i++)
+	{
+		/* エディット情報取得 */
+		EDIT_DATA EditData = GameResource->stGetNowEditData(i);
+
+		/* エディットの効果量を取得 */
+		int iEffectValue = 0;
+		for (auto& data : GameResource->GetEffectValueList())
+		{
+			/* エディットの種類とランクが同じであるか確認 */
+			if ((EditData.iEditEffect == data.iEditEffect) && (EditData.iEditRank == data.iEditRank))
+			{
+				// 同じである場合
+				iEffectValue = data.iValue;
+				return;
+			}
+		}
+		
+		/* エディット情報に応じてプレイヤーバフ関連を更新する */
+		switch (EditData.iEditEffect)
+		{
+			/* 通常 */
+			// 移動速度アップ
+			case EDIT_EFFECT_NORMAL_MOVE_SPEED_UP:
+				/* 効果量分加算する */
+				this->fAddMoveSpeedUp += static_cast<float>(iEffectValue);
+				this->fPlayerMaxMoveSpeed += this->fAddMoveSpeedUp;
+				break;
+
+			// ブラッド取得量アップ
+			case EDIT_EFFECT_NORMAL_GET_BLOOD_UP:
+				/* 効果量分加算する */
+				this->iAddBlood += iEffectValue;
+				break;
+
+			// コンボ継続時間アップ
+			case EDIT_EFFECT_NORMAL_COMBO_DURATION_UP:
+				/* 効果量分加算する */
+				this->iAddAttackChargeFrameShortening += iEffectValue;
+				break;
+
+			// 近接攻撃溜め時間減少
+			case EDIT_EFFECT_NORMAL_MELEE_CHARGE_REDUCTION:
+				/* 効果量分加算する */
+				this->iAddJumpCount += iEffectValue;
+				break;
+
+			// ジャンプ回数アップ
+			case EDIT_EFFECT_NORMAL_JUMP_COUNT_UP:
+				/* 効果量分加算する */
+				this->iAddMeleeStrongAirMaxCount += iEffectValue;
+				break;
+
+			// 空中居合攻撃回数アップ
+			case EDIT_EFFECT_NORMAL_AIR_MELEE_COUNT_UP:
+				/* 効果量分加算する */
+				this->iAddKunaiKeepProbability += iEffectValue;
+				break;
+
+			// クナイ消費確率無効
+			case EDIT_EFFECT_NORMAL_KUNAI_KEEP:
+				/* 効果量分加算する */
+				this->iAddBarrier += iEffectValue;
+				break;
+
+			// バリア回数アップ
+			case EDIT_EFFECT_NORMAL_BARIER_COUNT_UP:
+				/* 効果量分加算する */
+				this->bAddCounter = true;
+				break;
+
+			/* 特殊 */
+			// カウンターアクション追加
+			case EDIT_EFFECT_SPECIAL_COUNTER:
+				/* 有効に設定する */
+				this->bAddMaxHpOne = true;
+				break;
+
+			/* 呪い */
+			// HP1制限
+			case EDIT_EFFECT_CURCE_LIMIT_HP_ONE:
+				/* 有効に設定する */
+				this->bAddMaxHpOne = true;
+				break;
+		}
+	}
 }

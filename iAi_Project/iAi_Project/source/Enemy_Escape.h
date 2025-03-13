@@ -26,14 +26,13 @@ class Enemy_Escape : public Enemy_Basic
 	virtual void	CollisionDraw()		override;	// 当たり判定描写
 	private:
 	/* エフェクト */
-	EffectManualDelete* pEffect;
+	EffectManualDelete* pEffect;							// エフェクト
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
 
 	/* 関数 */
 	void MoveEnemy();				// 敵を移動させるメソッドを追加
-	void Enemy_Gravity();			// 重力処理メソッドを追加
 	void Enemy_Model_Animation();	// エネミーモデルアニメーション
 	void Movement_Horizontal();		// 水平移動
 
@@ -44,6 +43,7 @@ class Enemy_Escape : public Enemy_Basic
 	int iEscapespeed;			// 移動速度
 	float fGravity;				// 重力
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+	bool bDirectionFlg;										// 向き固定フラグ
 
 	//モーション関係変数
 	int iDieAttachIndex;			// 死亡モーションアタッチインデックス
@@ -57,10 +57,8 @@ class Enemy_Escape : public Enemy_Basic
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:
-	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 	COLLISION_CAPSULE		stHorizontalCollision;			// 水平方向のコリジョン
-	COLLISION_SQHERE		stSphere;
+	COLLISION_SQHERE stSphere;								// 球のコリジョン
 
-	VECTOR				vecMove;				// 移動量
 	VECTOR				vecNormalSum;						// プレイヤーに接触するオブジェクトの法線ベクトルの合計
 };
