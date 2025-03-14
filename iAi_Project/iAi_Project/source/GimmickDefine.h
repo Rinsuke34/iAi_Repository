@@ -7,6 +7,7 @@ static const int GIMMICK_DISAPPEAR_TIME					= 90;	// ギミックの消滅時間
 static const int GIMMICK_TEXTURE_CHANGE_COUNT			= 90;	// テクスチャ変更カウント
 static const int GIMMICK_TEXTURE_CHANGE_FIRST_COUNT		= 90;	// ギミックテクスチャ変更カウント
 static const int GIMMICK_TEXTURE_CHANGE_SECOND_COUNT	= 90;	// ギミックテクスチャ変更カウント
+static const int GIMMICK_SPAWN_COUNT					= 180;	// ギミックのスポーンカウント
 
 /* 移動床関連 */
 static const float	GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT			= 400.f;		// 移動床の移動距離(短)			/* 2024.03.10 駒沢風助 移動床追加 */

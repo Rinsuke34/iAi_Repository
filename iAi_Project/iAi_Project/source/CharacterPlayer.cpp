@@ -11,6 +11,8 @@
 /* 2025.03.06 菊池雅道	当たり判定処理修正 */
 /* 2025.03.08 駒沢風助	新モデル対応 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
+/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -22,7 +24,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	{
 		/* オブジェクトのハンドル */
 		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
-		this->pBulletKunaiEffect =	nullptr;	// クナイ(エフェクト)の弾	/* 2025.02.14 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletKunaiWarp		= nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletKunaiAttack	= nullptr;	// クナイ(攻撃)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 
 		/* エフェクトのハンドル */
@@ -90,6 +93,35 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		
 		/* クナイを持つ手のフレーム */
 		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");					/* 2025.03.10 菊池雅道	追加 */
+	}
+
+	/* モーションアタッチ */
+	{
+		/* 初期モーション番号を設定 */
+		int iInitialMotionNo_Move	= this->PlayerStatusList->iGetPlayerMotion_Move();
+		int iInitialMotionNo_Attack	= this->PlayerStatusList->iGetPlayerMotion_Attack();
+
+		// モーションのアタッチ
+		int iMotionIndex_Move = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Move].strMotionName.c_str());
+		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex_Move, -1));
+
+		int iMotionIndex_Attack = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Attack].strMotionName.c_str());
+		this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(MV1AttachAnim(this->iModelHandle, iMotionIndex_Attack, -1));
+
+		// モーションタイマーの初期化
+		this->PlayerStatusList->SetMotionCount_Move(0.f);
+		this->PlayerStatusList->SetMotionCount_Attack(0.f);
+
+		// モーション終了時間の設定
+		float fEndTime_Move = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
+		this->PlayerStatusList->SetMotionCount_Move_End(fEndTime_Move);
+
+		float fEndTime_Attack = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack());
+		this->PlayerStatusList->SetMotionCount_Attack_End(fEndTime_Attack);
+
+		// 初期モーション番号を保存
+		this->PlayerStatusList->SetPlayerMotion_Move(iInitialMotionNo_Move);
+		this->PlayerStatusList->SetPlayerMotion_Attack(iInitialMotionNo_Attack);
 	}
 }
 
@@ -416,6 +448,7 @@ void CharacterPlayer::UpdateCooldownTime()
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
 /* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 追加 */
 // 落下からの復帰
 void CharacterPlayer::PlayerFallRecovery()
 {
@@ -454,5 +487,24 @@ void CharacterPlayer::PlayerFallRecovery()
 
 	/* 落下フラグを無効にする */
 	this->PlayerStatusList->SetFallFlg(false);
+
+	/* 復帰エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow* pRecoveryEffect = new EffectSelfDelete_PlayerFollow(true);
+
+	/* 復帰エフェクトの読み込み */
+	pRecoveryEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_appearance/FX_appearance")));
+
+	/* 復帰エフェクトの初期化 */
+	pRecoveryEffect->Initialization();
+
+	/* 復帰エフェクトの時間を設定 */
+	pRecoveryEffect->SetDeleteCount(90);
+
+	/* 復帰エフェクトをリストに登録 */
+	{
+		/* 復帰エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pRecoveryEffect);
+}
 }
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */

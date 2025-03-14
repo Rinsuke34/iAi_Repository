@@ -22,23 +22,23 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* タイトルロゴ */
-		this->piGrHandle_TitleLogo = ImageList->piGetImage_Movie("Test/TitleLogo");
+		this->piGrHandle_TitleLogo = ImageList->piGetImage_Movie("Home/TitleLogo");
 
 		/* ニューゲーム */
-		this->iImageNewgameHandle = *ImageList->piGetImage("Test/UINewgame");
-		this->iImageNewgameChoiceHandle = *ImageList->piGetImage("Test/UINewgame_Choice");
+		this->iImageNewgameHandle = *ImageList->piGetImage("Home/UINewgame");
+		this->iImageNewgameChoiceHandle = *ImageList->piGetImage("Home/UINewgame_Choice");
 
 		/* コンティニュー */
-		this->iImageContinueHandle = *ImageList->piGetImage("Test/UIContinue");
-		this->iImageContinueChoiceHandle = *ImageList->piGetImage("Test/UIContinue_Choice");
+		this->iImageContinueHandle = *ImageList->piGetImage("Home/UIContinue");
+		this->iImageContinueChoiceHandle = *ImageList->piGetImage("Home/UIContinue_Choice");
 
 		/* データ */
-		this->iImageDateHandle = *ImageList->piGetImage("Test/gameend");
-		this->iImageDateChoiceHandle = *ImageList->piGetImage("Test/gameend2");
+		this->iImageDateHandle = *ImageList->piGetImage("Home/UIGameend");
+		this->iImageDateChoiceHandle = *ImageList->piGetImage("Home/UIGameend_Choice");
 
 		/* コンフィグ */
-		this->iImageConfigHandle = *ImageList->piGetImage("Test/UIConfig");
-		this->iImageConfigChoiceHandle = *ImageList->piGetImage("Test/UIConfig_Choice");
+		this->iImageConfigHandle = *ImageList->piGetImage("Home/UIConfig");
+		this->iImageConfigChoiceHandle = *ImageList->piGetImage("Home/UIConfig_Choice");
 
 	}
 

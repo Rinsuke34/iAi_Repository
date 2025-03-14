@@ -110,10 +110,11 @@ void Enemy_Explosion::MoveEnemy()
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
 	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE && this->bStopFlg == true)  // x軸とz軸の距離が1000未満の場合
+	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE && this->bStopFlg == true)  // x軸とz軸の距離が1000未満y軸距離が500未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
         // 探知範囲内にいるエネミーのみ処理を行う

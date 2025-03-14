@@ -57,6 +57,8 @@ private:
 	bool	bFiringFlg;									// 発射フラグ
 	bool	bDirectionFlg;								// 向き固定フラグ
 	bool	bBeamSEFlg;									// ビームSEフラグ
+	bool	bShotFlg;									// ショットフラグ	
+	bool	bWarningEffectFlg;							// 警告エフェクトフラグ
 
 	//モーション関連変数
 	int		iBeamAttackAttachIndex;						// ビーム攻撃モーションアタッチインデックス

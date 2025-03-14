@@ -53,6 +53,8 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 		/* スコア関連 */
 		this->iClearTotalEvaluation = 0;
 	}
+
+	JsonLoadEditEffectValue();
 }
 
 /* データ設定 */

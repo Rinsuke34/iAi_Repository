@@ -20,6 +20,7 @@
 /* 2025.03.10 菊池雅道	エフェクト処理追加 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正 */
 /* 2025.03.13 駒沢風助	クナイ弾数設定 */
+/* 2025.03.13 菊池雅道	クナイ処理変更 */
 
 
 #include "CharacterPlayer.h"
@@ -201,6 +202,9 @@ void CharacterPlayer::Player_Melee_Posture()
 
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
+
+			/* 溜めのSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE);
 
 			/* 溜めのエフェクトを刀の位置に生成 */
 			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
@@ -765,7 +769,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
 
 				/* 攻撃後ボイスを再生 */
-				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
+				//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
 			}
 
 	}
@@ -804,38 +808,51 @@ void CharacterPlayer::Player_Projectile_Posture()
 		/* ジャンプ中のフラグを確認 */
 		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
+			/* スローモーションカウントを取得 */
+			int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
 			// ジャンプ中の場合
 			/* スローモーションフラグが無効であるか確認 */
 			if (this->StageStatusList->bGetGameSlowFlg() == false)
 			{
 				// 無効である場合
+				/* スローモーションカウントが一定値を超えていないか確認 */
+				if (iNowSlowMotionCount <= PLAYER_SLOWMOTION_COUNT_MAX)
+				{
+					//スローモーションカウントが一定値以下の場合
 				/* 画面エフェクト(被ダメージ)作成 */
 				this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 
 				/* スローモーションフラグを有効化 */
 				this->StageStatusList->SetGameSlowFlg(true);
 			}
-
-			/* スローモーションカウントを取得 */
-			int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
+			}
 
 			/* スローモーションカウントが一定値を超えているか確認 */
 			if (iNowSlowMotionCount > PLAYER_SLOWMOTION_COUNT_MAX)
 			{
 				// スローモーションカウントが一定値を超えている場合
+				/* スローモーションフラグが有効であるか確認 */
+				if (this->StageStatusList->bGetGameSlowFlg() == true)
+				{
+					// 有効である場合
 				/* スローモーションフラグを無効化 */
 				this->StageStatusList->SetGameSlowFlg(false);	
+			}
 			}
 
 			/* スローモーションカウントを加算する */
 			this->PlayerStatusList->SetPlayerSlowMotionCount(iNowSlowMotionCount + 1);
 		}
-		/* ジャンプ中の場合 */
 		else
 		{
 			// ジャンプ中でない場合
-			/* スローモーションフラグを解除 */
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
 			this->StageStatusList->SetGameSlowFlg(false);
+		}
 		}
 
 		/* プレイヤーのモーションが投擲でないか確認 */
@@ -902,9 +919,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 			/* プレイヤー攻撃状態を"自由状態"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
-			/* スローモーションフラグを解除 */
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
 			this->StageStatusList->SetGameSlowFlg(false);
-
+			}
 		}
 		/* 回避入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
@@ -919,8 +940,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 			/* プレイヤー攻撃状態を"自由状態"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
-			/* スローモーションフラグを解除 */
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
 			this->StageStatusList->SetGameSlowFlg(false);
+		}
 		}
 		
 	}
@@ -948,6 +974,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
+/* 2025.03.13 菊池雅道	クナイ処理変更 開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -957,11 +984,11 @@ void CharacterPlayer::Player_Projectile()
 	/* カメラモードを"構え(クナイ攻撃)"に変更 */
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 	
-	/* クナイ(エフェクト)を作成 */
-	this->pBulletKunaiEffect = new BulletPlayerKunaiEffect;
+	/* クナイ(ワープ)を作成 */
+	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-	/* クナイ(エフェクト)生成座標を設定 */
-	this->pBulletKunaiEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
+	/* クナイ(ワープ)生成座標を設定 */
+	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
 	/* ロックオン中のエネミーを取得 */
 	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
@@ -970,13 +997,16 @@ void CharacterPlayer::Player_Projectile()
 	if (pLockOnEnemy != nullptr)
 	{
 		// 存在する場合
-		/* クナイ(エフェクト)のターゲット座標をロックオン中のエネミーに設定 */
-		this->pBulletKunaiEffect->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+		/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
+		this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+
+		/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
+		this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
 }
 	else
 	{
 		// 存在しない場合
-		// クナイ(エフェクト)のターゲット座標をカメラの注視点の先に設定
+		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
 
 		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
 		VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
@@ -990,15 +1020,16 @@ void CharacterPlayer::Player_Projectile()
 		/* ターゲット座標の座標ベクトルを取得 */
 		vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
 
-		// クナイ(エフェクト)にターゲット座標を設定
-		this->pBulletKunaiEffect->SetKunaiTargetPosition(vecKunaiTarget);
+		// クナイ(ワープ)にターゲット座標を設定
+		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+
 	}
 
 	/* 初期化を行う */
-	this->pBulletKunaiEffect->Initialization();
+	this->pBulletKunaiWarp->Initialization();
 	
 	/* バレットリストに追加 */
-	ObjectList->SetBullet(this->pBulletKunaiEffect);
+	ObjectList->SetBullet(this->pBulletKunaiWarp);
 
 	/* 遠距離攻撃のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
@@ -1040,3 +1071,4 @@ void CharacterPlayer::Player_Projectile()
 /* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */
+/* 2025.03.13 菊池雅道	クナイ処理変更			終了 */

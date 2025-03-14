@@ -1,12 +1,31 @@
 /* 2025.02.13 ファイル作成 駒沢風助 */
 
 #include "SceneEdit.h"
+#include "SceneResultDefine.h"
 
 /* シーン"エディット"クラスの定義(描写部分) */
 
 // 描画
 void SceneEdit::Draw()
 {
+	/* 画面の背景描写 */
+	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
+
+	/* NEW */
+	DrawGraph(290, 180, *this->piGrHandle_New, TRUE);
+
+	/* 背景 */
+	DrawGraph(350, 885, *this->piGrHandle_UnderExplain_Under, TRUE);
+
+	/* エディット背景 */
+	DrawGraph(350, 250, *this->piGrHandle_Under, TRUE);
+	DrawGraph(625, 250, *this->piGrHandle_Under, TRUE);
+	DrawGraph(900, 250, *this->piGrHandle_Under, TRUE);
+	DrawGraph(1175, 250, *this->piGrHandle_Under, TRUE);
+	DrawGraph(1450, 250, *this->piGrHandle_Under, TRUE);
+
+	DrawGraph(350, 695, *this->piGrHandle_NowEdit_Under, TRUE);
+
 	/* 各項目の描写 */
 	for (int i = 0; i < SELECT_ITEM_MAX; i++)
 	{
@@ -15,7 +34,7 @@ void SceneEdit::Draw()
 		{
 			// "次へ"である場合
 			/* "次へ"ボタン描写 */
-			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *piGrHandle_SelectNext, TRUE);
+			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->piGrHandle_NextButton, TRUE);
 		}
 		else
 		{
@@ -56,4 +75,10 @@ void SceneEdit::Draw()
 
 	/* 所持ブラッド描写 */
 	DrawFormatStringToHandle(500, 200, GetColor(255, 0, 0),	giFontHandle_Normal, "所持BLOOD : %d", this->GameResourceList->iGetHaveBlood());
+
+	/* 鍵アイコン */
+	DrawGraph(30, 210, *this->piGrHandle_EditLock, TRUE);
+
+	/* ゴミ箱アイコン */
+	DrawGraph(30, 650, *this->piGrHandle_Delete, TRUE);
 }

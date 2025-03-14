@@ -72,7 +72,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fMotionTimer_Move_End			= 0;								// モーションタイマー(移動系/終了時間)
 	this->iPlayerMotionAttachIndex_Move	= 0;								// プレイヤーモーション(移動系)のアタッチ番号
 
-	this->iPlayerMotion_Move_Old			= MOTION_ID_MOVE_WAIT;			// 変更前プレイヤーモーション(移動系)
+	this->iPlayerMotion_Move_Old			= MOTION_ID_MOVE_WALK;			// 変更前プレイヤーモーション(移動系)
 	this->fMotionTimer_Move_Old				= 0;							// 変更前モーションタイマー(移動系)
 	this->fMotionTimer_Move_Old_End			= 0;							// 変更前モーションタイマー(移動系/終了時間)
 	this->iPlayerMotionAttachIndex_Move_Old	= 0;							// 変更前プレイヤーモーション(移動系)のアタッチ番号
@@ -128,8 +128,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 
 	/* クナイ本数を初期状態でのクナイ本数に設定 */
 	this->iNowHaveKunai = this->iStartHaveKunai;
-
-	this->bAddCounter = true;
 }
 
 // デストラクタ
@@ -240,7 +238,7 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 			{
 				// 同じである場合
 				iEffectValue = data.iValue;
-				return;
+				break;
 			}
 		}
 		
@@ -264,45 +262,49 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 			// コンボ継続時間アップ
 			case EDIT_EFFECT_NORMAL_COMBO_DURATION_UP:
 				/* 効果量分加算する */
-				this->iAddAttackChargeFrameShortening += iEffectValue;
+
 				break;
 
 			// 近接攻撃溜め時間減少
 			case EDIT_EFFECT_NORMAL_MELEE_CHARGE_REDUCTION:
 				/* 効果量分加算する */
-				this->iAddJumpCount += iEffectValue;
+				this->iAddAttackChargeFrameShortening += iEffectValue;
 				break;
 
 			// ジャンプ回数アップ
 			case EDIT_EFFECT_NORMAL_JUMP_COUNT_UP:
 				/* 効果量分加算する */
-				this->iAddMeleeStrongAirMaxCount += iEffectValue;
+				this->iAddJumpCount += iEffectValue;
 				break;
 
 			// 空中居合攻撃回数アップ
 			case EDIT_EFFECT_NORMAL_AIR_MELEE_COUNT_UP:
 				/* 効果量分加算する */
-				this->iAddKunaiKeepProbability	+= iEffectValue;
-				this->iPlayerMaxJumpCount		+= this->iAddJumpCount;
+				this->iAddMeleeStrongAirMaxCount += iEffectValue;
 				break;
 
 			// クナイ消費確率無効
 			case EDIT_EFFECT_NORMAL_KUNAI_KEEP:
 				/* 効果量分加算する */
-				this->iAddBarrier += iEffectValue;
+				this->iAddKunaiKeepProbability += iEffectValue;
 				break;
 
 			// バリア回数アップ
 			case EDIT_EFFECT_NORMAL_BARIER_COUNT_UP:
 				/* 効果量分加算する */
-				this->bAddCounter = true;
+				this->iAddBarrier += iEffectValue;
 				break;
 
 			/* 特殊 */
 			// カウンターアクション追加
 			case EDIT_EFFECT_SPECIAL_COUNTER:
 				/* 有効に設定する */
-				this->bAddMaxHpOne = true;
+				this->bAddCounter = true;
+				break;
+
+			case EDIT_EFFECT_KUNAI_EXPLOSION:
+				/* 有効に設定する */
+				this->bAddKunaiExplosion = true;
 				break;
 
 			/* 呪い */
@@ -313,4 +315,6 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 				break;
 		}
 	}
+
+	this->iPlayerMaxJumpCount += this->iAddJumpCount;
 }

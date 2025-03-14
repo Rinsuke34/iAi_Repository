@@ -32,9 +32,9 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 
 	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
 	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
-
-	this->pEffectWarning = nullptr;	// 警告エフェクト
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
+	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
+	this->bShotFlg = false;						// ショットフラグ
 
 	/*モーション関連*/
 	// エネミーモデルに攻撃のアニメーションをアタッチする
@@ -47,7 +47,6 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 	this->bNormalAttackEndMotionFlg = false;		// 攻撃終了モーションフラグ
 	this->bNormalAttackEndLoopMotionFlg = false;	// 攻撃終了ループモーションフラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
-	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
 }
 
 // デストラクタ
@@ -93,11 +92,12 @@ void Enemy_Normal::MoveEnemy()
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
 
 	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
+	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
 		iFiringCount--;	// 発射カウントを減少
@@ -109,6 +109,8 @@ void Enemy_Normal::MoveEnemy()
 			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
 			{
 				this->bWarningEffectFlg = false;
+
+				this->bShotFlg = true;
 
 			/* 攻撃予告エフェクト追加 */
 			{
@@ -137,21 +139,23 @@ void Enemy_Normal::MoveEnemy()
 			}
 		}
 		}
-		//発射カウントが0以下か確認
-		if (iFiringCount <= 0)
+	}
+	//エフェクトがnullptrでないか確認
+	if (this->pEffectWarning != nullptr)
 		{
-
-			// モデルのフレーム０番を表示
-			MV1SetFrameVisible(iModelHandle, 0, TRUE);
-
-			// モデルのフレーム２番を表示
-			MV1SetFrameVisible(iModelHandle, 2, TRUE);
-			// 発射カウントが0以下の場合
+		// エフェクトが再生中かどうか確認
+		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
+		{
+			if (this->bShotFlg == true)
+			{
+				// エフェクトが再生終了している場合
 			// ノーマル弾を発射する
 			Player_Range_Normal_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+		}
+			this->bShotFlg = false;
 		}
 	}
 

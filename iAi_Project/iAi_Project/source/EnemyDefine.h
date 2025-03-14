@@ -5,6 +5,7 @@
 /* エネミーで使用する定数の宣言を行う */
 
 static const int	ENEMY_X_DISTANCE		= 1000;		// エネミーのX軸の探知範囲
+static const int	ENEMY_Y_DISTANCE		= 1000;		// エネミーのY軸の探知範囲
 static const int	ENEMY_Z_DISTANCE		= 1000;		// エネミーのZ軸の探知範囲
 static const int	ENEMY_DETONATION_RANGE	= 300;		// エネミーの起爆範囲
 static const int	ENEMY_EXPLOSION_RANGE	= 500;		// エネミーの爆発範囲

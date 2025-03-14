@@ -389,6 +389,9 @@ void SceneStage::LoadMapData()
 						VGet(-1000.0f,	0.0f, +1000.0f)		// 左奥
 					};
 
+					/* 霧等の位置を下げる */
+					vecPos.y -= 2000.0f;
+
 					/* 行列の作成 (スケール → 回転 → 平行移動) */
 					MATRIX matScale	= MGetScale(vecScale);
 					MATRIX matRotX	= MGetRotX(vecRot.x);

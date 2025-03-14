@@ -30,6 +30,15 @@ class SceneEdit : public SceneBase
 		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
+		int* piGrHandle_ResultBackGround;					// リザルト画面背景(流用)
+		int* piGrHandle_EditLock;							// ロック
+		int* piGrHandle_UnderExplain_Under;
+		int* piGrHandle_Delete;
+		int* piGrHandle_New;
+		int* piGrHandle_Under;
+		int* piGrHandle_NextButton;
+		int* piGrHandle_NowEdit_Under;
+
 		int* piGrHandle_SelectFrame;						// 選択フレーム
 		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム

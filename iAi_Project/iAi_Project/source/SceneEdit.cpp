@@ -37,6 +37,18 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_UPGRADE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleUpgrade");
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_INTERCHANGEABLE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Interchangeable");
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Impossible");
+
+		/* ÉäÉUÉãÉgâÊñ îwåi */
+		this->piGrHandle_ResultBackGround = ImageList->piGetImage("Result/UI_ResultBackGround_mini");
+
+		this->piGrHandle_EditLock = ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
+		this->piGrHandle_UnderExplain_Under = ImageList->piGetImage("Edit/Scene/UI_NowEditExplain_Under");
+		this->piGrHandle_Delete = ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
+		this->piGrHandle_New = ImageList->piGetImage("Edit/Scene/UI_Moji_New");
+		this->piGrHandle_Under = ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
+		this->piGrHandle_NextButton = ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
+		this->piGrHandle_NowEdit_Under = ImageList->piGetImage("Edit/Scene/UI_NowEdit_Under");
+
 	}
 
 	/* èâä˙âª */
@@ -213,19 +225,19 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			/* ï`é ç¿ïWê›íË(âº) */
 			st2DPosition stSelectItemPos[SELECT_ITEM_MAX] =
 			{
-				{ 500 + (128 + 64) * 0, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 1, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 2, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 3, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 4, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 5, 1080 - 128 * 6 },
-				{ 500 + (128 + 64) * 0, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 1, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 2, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 3, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 4, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 5, 1080 - 128 * 3 },
-				{ 500 + (128 + 64) * 6, 1080 - 128 * 3 },
+				{ 30, 210 },
+				{ 310, 210 },
+				{ 590, 210 },
+				{ 870, 210 },
+				{ 1150, 210 },
+				{ 1430, 210 },
+				{ 30, 650 },
+				{ 350, 650 },
+				{ 625, 650 },
+				{ 900, 650 },
+				{ 1175, 650 },
+				{ 1450, 650 },
+				{ 1515, 950 }
 			};
 
 			/* ç¿ïWê›íË */

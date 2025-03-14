@@ -30,6 +30,9 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	//ギミックテクスチャ変更カウント
 	this->iTextureSecondChangeCount = GIMMICK_TEXTURE_CHANGE_SECOND_COUNT;
 
+	//ギミックのスポーンカウント
+	this->iSpawnCount = GIMMICK_SPAWN_COUNT;
+
 	/* データリスト"画像ハンドル管理"を取得 */
 	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	// テクスチャの読み込み
@@ -37,6 +40,9 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 
 	// テクスチャの読み込み
 	this->textureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
+
+	//消滅フラグ
+	this->bDisappearFlg = false;
 }
 
 // デストラクタ
@@ -51,15 +57,16 @@ void GimmickDisappear::ProcessGimmick()
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	////プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
-	//VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
-	//if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
-	//	playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
-	if(this->bRidePlayerFlg == true)
+	//プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
+	VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
+	if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
+		playerPos.y >= vecFramePos.y - 50 && playerPos.y <= vecFramePos.y + 50 &&
+		playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
 	{
 		//プレイヤーがギミックの上に乗っている場合
 		//テクスチャの変更カウントを減らす
 		iTextureFirstChangeCount--;
+;
 
 		//テクスチャの変更カウントが0以下になったか確認
 		if (iTextureFirstChangeCount <= 0)
@@ -90,11 +97,16 @@ void GimmickDisappear::ProcessGimmick()
 				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
 				{
 					//ギミックの消滅時間カウントが一定数になった場合
-					//再生終了
-					//	PauseMovieToGraph(textureHandle);
 				
-					//ギミックを消滅させる
-					this->SetDeleteFlg(true);
+					this->bDisappearFlg = true;
+				
+					//ギミックを消す
+					MV1SetVisible(iModelHandle, FALSE);
+
+					//コリジョンを削除
+					MV1TerminateCollInfo(iModelHandle, 0);
+
+
 				}
 			}
 		}

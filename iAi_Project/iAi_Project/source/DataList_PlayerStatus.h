@@ -132,6 +132,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetAddKunaiKeepProbability()			{ return this->iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		int		iGetAddBarrier()						{ return this->iAddBarrier; }						// バリア数(個)
 		bool	bGetAddCounter()						{ return this->bAddCounter; }						// カウンター追加フラグ(有効/無効)
+		bool	bGetKunaiExplosion()					{ return this->bAddKunaiExplosion; }					// クナイ爆発化フラグ(有効/無効)
 		bool	bGetAddMaxHpOne()						{ return this->bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 		/* データ設定 */
@@ -224,8 +225,9 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetAddMeleeStrongAirMaxCount(int iAddMeleeStrongAirMaxCount)					{ this->iAddMeleeStrongAirMaxCount		= iAddMeleeStrongAirMaxCount; }			// 空中での近距離攻撃(強)回数増加値(回)
 		void	SetAddKunaiKeepProbability(int iAddKunaiKeepProbability)						{ this->iAddKunaiKeepProbability		= iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		void	SetAddBarrier(int iAddBarrier)													{ this->iAddBarrier						= iAddBarrier; }						// バリア数(個)
-		void	SetAddCounter(int bAddCounter)													{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		void	SetAddMaxHpOne(int bAddMaxHpOne)												{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
+		void	SetAddCounter(bool bAddCounter)													{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
+		bool	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion					= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
+		void	SetAddMaxHpOne(bool bAddMaxHpOne)												{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 	private:
 		/* プレイヤー状態関連 */
@@ -319,6 +321,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iAddKunaiKeepProbability;			// クナイ保持確率(%)
 		int		iAddBarrier;						// バリア数(個)
 		bool	bAddCounter;						// カウンター追加フラグ(有効/無効)
+		bool	bAddKunaiExplosion;					// クナイ爆発化フラグ(有効/無効)
 		bool	bAddMaxHpOne;						// 最大HP1化フラグ(有効/無効)
 		
 		/* Jsonファイルでのオプション名と変数の対応表 */

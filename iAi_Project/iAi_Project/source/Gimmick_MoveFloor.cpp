@@ -97,6 +97,9 @@ void  Gimmick_MoveFloor::SetupMoveDirection(bool bVerticalDirection, int iMoveDi
 	// bVerticalDirection	:	‚’¼•ûŒü‚ÉˆÚ“®‚·‚é‚©(true:‚’¼•ûŒü / false:…•½•ûŒü)
 	// iMoveDistance		:	ˆÚ“®‹——£(0:’Z‹——£ / 1:’†‹——£ / 2’·‹——£)
 
+	/* Šg‘å—¦Žæ“¾(XŽ²‚ÌŠg‘å—¦) */
+	float fScaleX = this->vecScale.x;
+
 	/* ˆÚ“®‹——£Žæ“¾ */
 	float fMoveDistance = 0.f;
 
@@ -105,17 +108,17 @@ void  Gimmick_MoveFloor::SetupMoveDirection(bool bVerticalDirection, int iMoveDi
 	{
 		/* ’Z‹——£ */
 		case GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_SHORT:
-			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT;
+			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_SHORT * fScaleX;
 			break;
 
 		/* ’†‹——£ */
 		case GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_NORMAL:
-			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_NORMAL;
+			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_NORMAL * fScaleX;
 			break;
 
 		/* ’·‹——£ */
 		case GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_LONG:
-			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_LONG;
+			fMoveDistance = GIMMICK_MOVEFLOOR_MOVE_DISTANCE_LONG * fScaleX;
 			break;
 	}
 

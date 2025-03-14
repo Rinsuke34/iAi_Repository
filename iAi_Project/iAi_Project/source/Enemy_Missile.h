@@ -31,7 +31,8 @@ private:
 	DataList_Object* ObjectList;			// オブジェクト管理
 	CharacterBase* pPlayer;			// プレイヤー
 	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
-	EffectManualDelete* pEffectHit;						//警告エフェクト
+	EffectManualDelete* pEffectHit;						//ヒットエフェクト
+	EffectManualDelete* pEffectWarning;					//警告エフェクト
 
 	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
@@ -42,6 +43,8 @@ private:
 	int		iFiringCount;	// 発射カウント
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool	bDirectionFlg;								// 向き固定フラグ
+	bool	bShotFlg;									// ショットフラグ
+	bool	bWarningEffectFlg;							// 警告エフェクトフラグ
 
 
 	//モーション関連変数

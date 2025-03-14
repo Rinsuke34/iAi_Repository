@@ -35,6 +35,9 @@ private:
 	//ギミックの消滅時間
 	int iDisappearTime;
 
+	//ギミックスポーンカウント
+	int iSpawnCount;
+
 	//ギミックの消滅時間カウント
 	int iDisappearTimeCount;
 
@@ -47,6 +50,8 @@ private:
 	int textureRedHandle;
 
 	int textureOrangeHandle;
+
+	bool bDisappearFlg;	// 消滅フラグ
 
 protected:
 };

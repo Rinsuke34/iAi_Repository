@@ -161,7 +161,9 @@
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp" />
     <ClCompile Include="source\BulletEnemyRangeMissile.cpp" />
     <ClCompile Include="source\BulletEnemyRangeNormal.cpp" />
-    <ClCompile Include="source\BulletPlayerKunaiEffect.cpp" />
+    <ClCompile Include="source\BulletPlayerKunai.cpp" />
+    <ClCompile Include="source\BulletPlayerKunaiAttack.cpp" />
+    <ClCompile Include="source\BulletPlayerKunaiWarp.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
@@ -243,7 +245,9 @@
     <ClInclude Include="source\BulletEnemyRangeBeam.h" />
     <ClInclude Include="source\BulletEnemyRangeMissile.h" />
     <ClInclude Include="source\BulletEnemyRangeNormal.h" />
-    <ClInclude Include="source\BulletPlayerKunaiEffect.h" />
+    <ClInclude Include="source\BulletPlayerKunai.h" />
+    <ClInclude Include="source\BulletPlayerKunaiAttack.h" />
+    <ClInclude Include="source\BulletPlayerKunaiWarp.h" />
     <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />

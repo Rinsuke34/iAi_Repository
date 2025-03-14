@@ -38,6 +38,8 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	this->bFiringFlg			 = false;					// 発射フラグ
 	this->bDirectionFlg			 = true;					// 向き固定フラグ
 	this->bBeamSEFlg			 = false;					// ビームSEフラグ
+	this->bShotFlg				 = true;					// ショットフラグ
+	this->bWarningEffectFlg		 = true;					// 警告エフェクトフラグ
 
 	/*モーション関連*/
 // エネミーモデルに攻撃のアニメーションをアタッチする
@@ -96,19 +98,26 @@ void Enemy_Beam::MoveEnemy()
 
 	//プレイヤーとエネミーのXZ軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
-	iFiringCount--;
+	
 
 	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
+	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
+		iFiringCount--;
 
 		//誘導カウントが発射カウントより大きいか確認
 		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 		{
 			// 誘導カウントが発射カウントより大きい場合
+			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			{
+				this->bWarningEffectFlg = false;
+
+				this->bShotFlg = true;
 			/* 攻撃予告エフェクト追加 */
 			{
 				/* 攻撃予告エフェクトを生成 */
@@ -135,21 +144,26 @@ void Enemy_Beam::MoveEnemy()
 				}
 			}
 		}
-		//発射カウントが0以下か確認
-		if (iFiringCount <= 0)
+		}
+	}
+	//エフェクトがnullptrでないか確認
+	if (this->pEffectWarning != nullptr)
 		{
-
-			// モデルのフレーム０番を表示
-			MV1SetFrameVisible(iModelHandle, 0, TRUE);
-
-			// モデルのフレーム２番を表示
-			MV1SetFrameVisible(iModelHandle, 2, TRUE);
-			// 発射カウントが0以下の場合
+		// エフェクトが再生中かどうか確認
+		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
+		{
+			if (this->bShotFlg == true)
+			{
+				// エフェクトが再生終了している場合
 			// ビームを発射する
 			Player_Range_Beam_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_BEAM_INTERVAL;
+
+				this->bWarningEffectFlg = true;
+			}
+			this->bShotFlg = false;
 		}
 	}
 

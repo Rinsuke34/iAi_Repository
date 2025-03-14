@@ -23,12 +23,12 @@ LargeScreen::LargeScreen() : PlatformBase()
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* スクリーンに映る映像 */
-		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");			//タイトル
-		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Test/Newgame");			//ニューゲーム
-		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Test/Continue");		//コンティニュー
-		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Test/Date");				//データ
-		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Test/Config");			//コンフィグ
-		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Test/TitleLogo");			//ステージ
+		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//タイトル
+		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
+		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
+		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Date");				//データ
+		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Config");			//コンフィグ
+		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
 	}
 
 	/* UIカウントを初期化 */
