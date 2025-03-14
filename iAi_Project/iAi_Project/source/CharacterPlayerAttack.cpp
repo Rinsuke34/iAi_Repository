@@ -203,6 +203,9 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
+			/* 溜めのSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE);
+
 			/* 溜めのエフェクトを刀の位置に生成 */
 			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
 
@@ -766,7 +769,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
 
 				/* 攻撃後ボイスを再生 */
-				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
+				//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
 			}
 
 	}
@@ -805,38 +808,52 @@ void CharacterPlayer::Player_Projectile_Posture()
 		/* ジャンプ中のフラグを確認 */
 		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
 		{
+			/* スローモーションカウントを取得 */
+			int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
 			// ジャンプ中の場合
 			/* スローモーションフラグが無効であるか確認 */
 			if (this->StageStatusList->bGetGameSlowFlg() == false)
 			{
 				// 無効である場合
-				/* 画面エフェクト(被ダメージ)作成 */
-				this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+				/* スローモーションカウントが一定値を超えていないか確認 */
+				if (iNowSlowMotionCount <= PLAYER_SLOWMOTION_COUNT_MAX)
+				{
+					//スローモーションカウントが一定値以下の場合
+					/* 画面エフェクト(被ダメージ)作成 */
+					this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 
-				/* スローモーションフラグを有効化 */
-				this->StageStatusList->SetGameSlowFlg(true);
+					/* スローモーションフラグを有効化 */
+					this->StageStatusList->SetGameSlowFlg(true);
+				}
+				
 			}
-
-			/* スローモーションカウントを取得 */
-			int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
 
 			/* スローモーションカウントが一定値を超えているか確認 */
 			if (iNowSlowMotionCount > PLAYER_SLOWMOTION_COUNT_MAX)
 			{
 				// スローモーションカウントが一定値を超えている場合
-				/* スローモーションフラグを無効化 */
-				this->StageStatusList->SetGameSlowFlg(false);	
+				/* スローモーションフラグが有効であるか確認 */
+				if (this->StageStatusList->bGetGameSlowFlg() == true)
+				{
+					// 有効である場合
+					/* スローモーションフラグを無効化 */
+					this->StageStatusList->SetGameSlowFlg(false);	
+				}				
 			}
 
 			/* スローモーションカウントを加算する */
 			this->PlayerStatusList->SetPlayerSlowMotionCount(iNowSlowMotionCount + 1);
 		}
-		/* ジャンプ中の場合 */
 		else
 		{
 			// ジャンプ中でない場合
-			/* スローモーションフラグを解除 */
-			this->StageStatusList->SetGameSlowFlg(false);
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
 		}
 
 		/* プレイヤーのモーションが投擲でないか確認 */
@@ -903,9 +920,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 			/* プレイヤー攻撃状態を"自由状態"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
-			/* スローモーションフラグを解除 */
-			this->StageStatusList->SetGameSlowFlg(false);
-
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
 		}
 		/* 回避入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
@@ -920,8 +941,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 			/* プレイヤー攻撃状態を"自由状態"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
 
-			/* スローモーションフラグを解除 */
-			this->StageStatusList->SetGameSlowFlg(false);
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
 		}
 		
 	}
@@ -1005,6 +1031,12 @@ void CharacterPlayer::Player_Projectile()
 	
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiWarp);
+
+	/* 遠距離攻撃のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
+
+	/* 遠距離攻撃ボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_PROJECTILE);
 
 	/* 遠距離攻撃エフェクトを生成 */
 	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();

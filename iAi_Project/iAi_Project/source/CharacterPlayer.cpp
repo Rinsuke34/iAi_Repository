@@ -12,6 +12,7 @@
 /* 2025.03.08 駒沢風助	新モデル対応 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -417,6 +418,7 @@ void CharacterPlayer::UpdateCooldownTime()
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
 /* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 追加 */
 // 落下からの復帰
 void CharacterPlayer::PlayerFallRecovery()
 {
@@ -455,5 +457,24 @@ void CharacterPlayer::PlayerFallRecovery()
 
 	/* 落下フラグを無効にする */
 	this->PlayerStatusList->SetFallFlg(false);
+
+	/* 復帰エフェクトを生成 */
+	EffectSelfDelete_PlayerFollow* pRecoveryEffect = new EffectSelfDelete_PlayerFollow(true);
+
+	/* 復帰エフェクトの読み込み */
+	pRecoveryEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_appearance/FX_appearance")));
+
+	/* 復帰エフェクトの初期化 */
+	pRecoveryEffect->Initialization();
+
+	/* 復帰エフェクトの時間を設定 */
+	pRecoveryEffect->SetDeleteCount(90);
+
+	/* 復帰エフェクトをリストに登録 */
+	{
+		/* 復帰エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(pRecoveryEffect);
+	}
 }
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
+/* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */

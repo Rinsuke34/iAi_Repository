@@ -178,6 +178,14 @@ void BulletPlayerKunaiWarp:: Warp()
 			/* プレイヤーのモーションを"近距離攻撃(強)(終了)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
 
+			/* スローモーションフラグが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションフラグを無効化 */
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
+
 			/* 当たり判定設定 */
 			{
 				/* 敵の位置に当たり判定を設定 */
@@ -190,6 +198,26 @@ void BulletPlayerKunaiWarp:: Warp()
 			/* クナイの攻撃フラグを設定 */
 			this->bKunaiAttackFlg = true;
 
+			/* ワープのSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
+
+			/* ワープエフェクトを生成 */
+			EffectSelfDelete_PlayerFollow* pWarpeEffect = new EffectSelfDelete_PlayerFollow(true);
+
+			/* ワープエフェクトの読み込み */
+			pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("charge_finish/FX_charge_finish")));
+
+			/* ワープエフェクトの初期化 */
+			pWarpeEffect->Initialization();
+
+			/* ワープエフェクトの時間を設定 */
+			pWarpeEffect->SetDeleteCount(90);
+
+			/* ワープエフェクトをリストに登録 */
+			{
+				/* ワープエフェクトをリストに登録 */
+				this->ObjectList->SetEffect(pWarpeEffect);
+			}
 		}
 	}
 	else
@@ -217,6 +245,38 @@ void BulletPlayerKunaiWarp:: Warp()
 
 			/* 遠距離攻撃構え状態をキャンセルする */
 			this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
+		}
+
+		/* スローモーションフラグが有効であるか確認 */
+		if (this->StageStatusList->bGetGameSlowFlg() == true)
+		{
+			// 有効である場合
+			/* スローモーションフラグを無効化 */
+			this->StageStatusList->SetGameSlowFlg(false);
+		}
+
+		/* ワープのSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
+
+		/* ワープエフェクトを生成 */
+		EffectSelfDelete* pWarpeEffect = new EffectSelfDelete();
+
+		/* ワープエフェクトの読み込み */
+		pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
+
+		/* ワープエフェクトの初期化 */
+		pWarpeEffect->Initialization();
+
+		/* ワープエフェクトの時間を設定 */
+		pWarpeEffect->SetDeleteCount(60);
+
+		/* ワープエフェクトの座標を設定 */
+		pWarpeEffect->SetPosition(vecPosition);
+
+		/* ワープエフェクトをリストに登録 */
+		{
+			/* ワープエフェクトをリストに登録 */
+			this->ObjectList->SetEffect(pWarpeEffect);
 		}
 
 		/* クナイの削除フラグを設定 */

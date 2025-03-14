@@ -894,9 +894,12 @@ void CharacterPlayer::Movement_Vertical()
 		/* プレイヤーの状態を取得 */
 		int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
 
-		/* 回避中にエフェクトが出ないようにする */
+		/* 回避中にSEとエフェクトが出ないようにする */
 		if (iPlayerMoveState != PLAYER_MOVESTATUS_DODGING)
 		{
+			/* 着地のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_PLAYER_LANDING);
+
 			/* エフェクト追加 */
 			{
 				/* 着地のエフェクトを生成 */

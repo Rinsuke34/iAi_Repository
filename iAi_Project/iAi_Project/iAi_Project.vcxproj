@@ -157,13 +157,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunai.cpp" />
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiAttack.cpp" />
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiWarp.cpp" />
     <ClCompile Include="source\AppFunctionDefine.cpp" />
     <ClCompile Include="source\BulletEnemyRangeBeam.cpp" />
     <ClCompile Include="source\BulletEnemyRangeMissile.cpp" />
     <ClCompile Include="source\BulletEnemyRangeNormal.cpp" />
+    <ClCompile Include="source\BulletPlayerKunai.cpp" />
+    <ClCompile Include="source\BulletPlayerKunaiAttack.cpp" />
+    <ClCompile Include="source\BulletPlayerKunaiWarp.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeStrong.cpp" />
     <ClCompile Include="source\BulletPlayerMeleeWeak.cpp" />
     <ClCompile Include="source\CharacterPlayer.cpp" />
@@ -242,12 +242,12 @@
     <ClCompile Include="source\VariableDefine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunai.h" />
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiAttack.h" />
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiWarp.h" />
     <ClInclude Include="source\BulletEnemyRangeBeam.h" />
     <ClInclude Include="source\BulletEnemyRangeMissile.h" />
     <ClInclude Include="source\BulletEnemyRangeNormal.h" />
+    <ClInclude Include="source\BulletPlayerKunai.h" />
+    <ClInclude Include="source\BulletPlayerKunaiAttack.h" />
+    <ClInclude Include="source\BulletPlayerKunaiWarp.h" />
     <ClInclude Include="source\BulletPlayerMeleeStrong.h" />
     <ClInclude Include="source\BulletPlayerMeleeWeak.h" />
     <ClInclude Include="source\CharacterPlayer.h" />

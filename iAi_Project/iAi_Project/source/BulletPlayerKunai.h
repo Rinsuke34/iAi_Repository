@@ -10,6 +10,7 @@
 
 /* オブジェクト */
 #include "PlayerBulletDefine.h"
+#include "EffectSelfDelete_PlayerFollow.h"
 
 /* 定数 */
 #include "PublicInclude.h"
@@ -48,5 +49,6 @@ class BulletPlayerKunai : public BulletBase
 		DataList_Object* ObjectList;					// オブジェクト管理
 		DataList_PlayerStatus* PlayerStatusList;		// プレイヤー状態
 		DataList_StageStatus* StageStatusList;			// ステージ状態管理
+		DataList_Effect* EffectList;					// エフェクトリソース管理
 };
 

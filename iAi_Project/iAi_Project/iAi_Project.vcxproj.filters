@@ -681,13 +681,13 @@
     <ClCompile Include="source\Enemy_Normal_Air.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\ノーマル</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunai.cpp">
+    <ClCompile Include="source\BulletPlayerKunai.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiAttack.cpp">
+    <ClCompile Include="source\BulletPlayerKunaiWarp.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiWarp.cpp">
+    <ClCompile Include="source\BulletPlayerKunaiAttack.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
   </ItemGroup>
@@ -965,13 +965,13 @@
     <ClInclude Include="source\Enemy_Missile_Air.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiAttack.h">
+    <ClInclude Include="source\BulletPlayerKunai.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunaiWarp.h">
+    <ClInclude Include="source\BulletPlayerKunaiWarp.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\iAi_Repository - コピー\iAi_Project\iAi_Project\source\BulletPlayerKunai.h">
+    <ClInclude Include="source\BulletPlayerKunaiAttack.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
   </ItemGroup>

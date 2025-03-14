@@ -142,6 +142,9 @@ void BulletPlayerKunaiAttack::Attack()
 			this->stCollisionSqhere.fSqhereRadius = KUNAI_ATTACK_RADIUS;
 		}
 
+		/* 爆発SE再生 */
+		gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+
 		/* 爆発エフェクト生成 */
 		{
 			/* 時間経過で削除されるエフェクトを追加 */
@@ -184,6 +187,5 @@ void BulletPlayerKunaiAttack::Attack()
 		/* クナイの削除フラグを設定 */
 		this->bDeleteFlg = true;
 	}
-
 
 }
