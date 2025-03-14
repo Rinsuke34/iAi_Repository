@@ -11,7 +11,6 @@
 #include "DataList_PlayerStatus.h"
 #include "DataList_Model.h"
 #include "DataList_StageStatus.h"
-#include "DataList_Image.h"
 #include "DataList_Option.h"
 
 /* ÉVÅ[Éì */

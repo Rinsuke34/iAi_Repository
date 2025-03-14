@@ -26,7 +26,7 @@ class Enemy_Escape : public Enemy_Basic
 	virtual void	CollisionDraw()		override;	// 当たり判定描写
 	private:
 	/* エフェクト */
-	EffectManualDelete* pEffect;							// エフェクト
+		EffectSelfDelete* pEffect;							// エフェクト
 
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
@@ -46,10 +46,13 @@ class Enemy_Escape : public Enemy_Basic
 	bool bDirectionFlg;										// 向き固定フラグ
 
 	//モーション関係変数
+	int iWaitAttachIndex;			// 待機モーションアタッチインデックス
 	int iDieAttachIndex;			// 死亡モーションアタッチインデックス
 	int	iRunAttachIndex;		// 走りモーションアタッチインデックス
+	float fWaitTotalTime;			// 待機モーションの総時間
 	float fDieTotalTime;			// 死亡モーションの総時間
 	float fRunTotalTime;		// 走りモーションの総時間
+	float fWaitPlayTime;			// 待機再生時間
 	float fDiePlayTime;				// 死亡再生時間
 	float fRunPlayTime;			// 走り再生時間
 	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ

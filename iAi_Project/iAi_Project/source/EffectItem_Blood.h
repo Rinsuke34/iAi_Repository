@@ -4,9 +4,10 @@
 #include "Appframe.h"
 #include "EffectItem_BloodDefine.h"
 
-/* シーン */
+/* データリスト */
 #include "DataList_Object.h"
 #include "DataList_GameResource.h"
+#include "DataList_Model.h"
 
 /* 循環参照対策(後ほど対策は実施) */
 class DataList_Object;
@@ -22,7 +23,6 @@ class EffectItem_Blood : public EffectItemBase
 		virtual ~EffectItem_Blood() {};	// デストラクタ
 
 		virtual void	Update()		override;	// 更新
-		virtual void	Draw()			override;	// 描写
 		virtual void	Reset()			override;	// リセット処理
 
 		/* データ設定 */
@@ -31,9 +31,6 @@ class EffectItem_Blood : public EffectItemBase
 	private:
 		/* データリスト */
 		DataList_Object* ObjectList;			// オブジェクト管理
-
-		/* 使用する画像のハンドル */
-		int* piGrHandle_Blood;					// ブラッド画像
 
 		/* 変数 */
 		VECTOR	vecMoveDirection;		// 移動方向

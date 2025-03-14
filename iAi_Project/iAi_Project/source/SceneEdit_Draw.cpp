@@ -8,6 +8,9 @@
 // •`‰æ
 void SceneEdit::Draw()
 {
+	/* ƒŠƒUƒ‹ƒg—p‚ÌƒtƒŒ[ƒ€‚ð•`ŽÊ */
+	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
+
 	/* ‰æ–Ê‚Ì”wŒi•`ŽÊ */
 	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
 
@@ -18,11 +21,11 @@ void SceneEdit::Draw()
 	DrawGraph(350, 885, *this->piGrHandle_UnderExplain_Under, TRUE);
 
 	/* ƒGƒfƒBƒbƒg”wŒi */
-	DrawGraph(350, 250, *this->piGrHandle_Under, TRUE);
-	DrawGraph(625, 250, *this->piGrHandle_Under, TRUE);
-	DrawGraph(900, 250, *this->piGrHandle_Under, TRUE);
-	DrawGraph(1175, 250, *this->piGrHandle_Under, TRUE);
-	DrawGraph(1450, 250, *this->piGrHandle_Under, TRUE);
+	DrawGraph(350, 250, *this->piGrHandle_NewEdit_Under, TRUE);
+	DrawGraph(625, 250, *this->piGrHandle_NewEdit_Under, TRUE);
+	DrawGraph(900, 250, *this->piGrHandle_NewEdit_Under, TRUE);
+	DrawGraph(1175, 250, *this->piGrHandle_NewEdit_Under, TRUE);
+	DrawGraph(1450, 250, *this->piGrHandle_NewEdit_Under, TRUE);
 
 	DrawGraph(350, 695, *this->piGrHandle_NowEdit_Under, TRUE);
 

@@ -4,7 +4,7 @@
 
 /* エネミー(ノーマル)スポナークラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Normal::EnemySpawnPoint_Normal() : EnemySpawnPoint_Base()
+EnemySpawnPoint_Normal::EnemySpawnPoint_Normal() : SpawnPoint_Base()
 {
 
 }

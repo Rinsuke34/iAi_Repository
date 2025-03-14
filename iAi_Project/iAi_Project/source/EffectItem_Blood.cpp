@@ -17,18 +17,24 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 		this->iMoveFaze = MOVE_FAZE_RUNDOM;
 	}
 
-	/* 画像リソース取得 */
-	{
-		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
-
-		/* ブラッド */
-		this->piGrHandle_Blood = ImageList->piGetImage("/Test/Blood");
-	}
-
 	/* 移動方向をランダム方向に設定 */
 	{
 		this->vecMoveDirection = VGet((float)(GetRand(100) - 50) / 100.0f, (float)(GetRand(100) - 50) / 100.0f, (float)(GetRand(100) - 50) / 100.0f);
+	}
+
+	/* モデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood");
+
+		/* モデル縮小 */
+		MV1SetScale(this->iModelHandle, VGet(0.2f, 0.2f, 0.2f));
+
+		UpdataLightFrame();
 	}
 }
 
@@ -80,14 +86,6 @@ void EffectItem_Blood::Update()
 	
 	/* カウントを進める */
 	this->iMoveCount -= 1;
-}
-
-// 描写
-void EffectItem_Blood::Draw()
-{
-	/* 描写 */
-	DrawBillboard3D(this->vecPosition, 0.5f, 0.5f, 25.f, 0.f, *this->piGrHandle_Blood, TRUE);
-
 }
 
 // リセット処理

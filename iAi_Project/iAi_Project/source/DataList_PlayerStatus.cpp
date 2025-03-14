@@ -58,37 +58,26 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iNowHaveKunai						= 0;								// 現在持っているクナイの数
 
 	/* プレイヤーモーション関連 */
-//	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)
-//	this->iPlayerMotion_Move_Old			= -1;								// 変更前プレイヤーモーション(移動系)
-//	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;			// プレイヤーモーション(攻撃系)
-//	this->iPlayerMotion_Attack_Old			= -1;								// 変更前プレイヤーモーション(攻撃系)
-//	this->fMotionTimer_Move					= 0;								// モーションカウント(移動系)
-//	this->fMotionTimer_Move_End				= 1;								// モーションカウント(移動系/終了時間)(※初期化時の不具合防止のため1に設定)
-//	this->fMotionTimer_Attack				= 0;								// モーションカウント(攻撃系)
-//	this->fMotionTimer_Attack_End			= 1;								// モーションカウント(攻撃系/終了時間)(※初期化時の不具合防止のため1に設定)
 
-	this->iPlayerMotion_Move			= MOTION_ID_MOVE_WAIT;				// プレイヤーモーション(移動系)
-	this->fMotionTimer_Move				= 0;								// モーションタイマー(移動系)
-	this->fMotionTimer_Move_End			= 0;								// モーションタイマー(移動系/終了時間)
-	this->iPlayerMotionAttachIndex_Move	= 0;								// プレイヤーモーション(移動系)のアタッチ番号
 
+	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// プレイヤーモーション(移動系)
 	this->iPlayerMotion_Move_Old			= MOTION_ID_MOVE_WALK;			// 変更前プレイヤーモーション(移動系)
+	this->fMotionTimer_Move					= 0;							// モーションタイマー(移動系)
 	this->fMotionTimer_Move_Old				= 0;							// 変更前モーションタイマー(移動系)
+	this->fMotionTimer_Move_End				= 0;							// モーションタイマー(移動系/終了時間)
 	this->fMotionTimer_Move_Old_End			= 0;							// 変更前モーションタイマー(移動系/終了時間)
+	this->iPlayerMotionAttachIndex_Move		= 0;							// プレイヤーモーション(移動系)のアタッチ番号		
 	this->iPlayerMotionAttachIndex_Move_Old	= 0;							// 変更前プレイヤーモーション(移動系)のアタッチ番号
-
 	this->fNowMoveMotionBlendRate			= 0;							// 現在の移動モーションのブレンド率
 
-	this->iPlayerMotion_Attack				= MOTION_ID_ATTACK_NONE;		// プレイヤーモーション(攻撃系)
-	this->fMotionTimer_Attack				= 0;							// モーションタイマー(攻撃系)
-	this->fMotionTimer_Attack_End			= 0;							// モーションタイマー(攻撃系/終了時間)
-	this->iPlayerMotionAttachIndex_Attack	= 0;							// プレイヤーモーション(攻撃系)のアタッチ番号
-
-	this->iPlayerMotion_Attack_Old				= MOTION_ID_ATTACK_NONE;	// 変更前プレイヤーモーション(攻撃系)		
+	this->iPlayerMotion_Attack					= MOTION_ID_ATTACK_NONE;	// プレイヤーモーション(攻撃系)
+	this->iPlayerMotion_Attack_Old				= MOTION_ID_ATTACK_NONE;	// 変更前プレイヤーモーション(攻撃系)
+	this->fMotionTimer_Attack					= 0;						// モーションタイマー(攻撃系)
 	this->fMotionTimer_Attack_Old				= 0;						// 変更前モーションタイマー(攻撃系)
+	this->fMotionTimer_Attack_End				= 0;						// モーションタイマー(攻撃系/終了時間)
 	this->fMotionTimer_Attack_Old_End			= 0;						// 変更前モーションタイマー(攻撃系/終了時間)
+	this->iPlayerMotionAttachIndex_Attack		= 0;						// プレイヤーモーション(攻撃系)のアタッチ番号	
 	this->iPlayerMotionAttachIndex_Attack_Old	= 0;						// 変更前プレイヤーモーション(攻撃系)のアタッチ番号
-
 	this->fNowAttackMotionBlendRate				= 0;						// 現在の攻撃モーションのブレンド率
 
 	/* 判定処理用コリジョン */
@@ -315,6 +304,4 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 				break;
 		}
 	}
-
-	this->iPlayerMaxJumpCount += this->iAddJumpCount;
 }

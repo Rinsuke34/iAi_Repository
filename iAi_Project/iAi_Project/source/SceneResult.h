@@ -33,6 +33,7 @@ class SceneResult : public SceneBase
 		int*	piGrHandle_ResultBackGround;		// リザルト画面の背景
 		int*	piGrHandle_String_Result;			// リザルト画面の文字(リザルト)
 		int*	piGrHandle_String_Rank;				// リザルト画面の文字(ランク)
+		int*	piGrHandle_ResultFrame;				// リザルトフレーム
 
 		/* 関数 */
 		void	Process_Main();					// メイン処理

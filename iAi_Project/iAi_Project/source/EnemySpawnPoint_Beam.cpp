@@ -4,7 +4,7 @@
 
 /* エネミー(ビーム)スポナークラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Beam::EnemySpawnPoint_Beam() : EnemySpawnPoint_Base()
+EnemySpawnPoint_Beam::EnemySpawnPoint_Beam() : SpawnPoint_Base()
 {
 
 }

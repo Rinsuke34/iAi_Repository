@@ -4,13 +4,13 @@
 #include "Appframe.h"
 
 /* オブジェクト */
-#include "EnemySpawnPoint_Base.h"
+#include "SpawnPoint_Base.h"
 #include "Enemy_Explosion.h"
 
 /* エネミー(自爆)スポナークラスの宣言 */
 
 // エネミー(自爆)スポナークラス
-class EnemySpawnPoint_Explosion : public EnemySpawnPoint_Base
+class EnemySpawnPoint_Explosion : public SpawnPoint_Base
 {
 	public:
 		EnemySpawnPoint_Explosion();				// コンストラクタ

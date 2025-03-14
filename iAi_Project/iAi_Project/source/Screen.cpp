@@ -171,8 +171,43 @@ void Screen::Process()
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+				if(this->bHomeFlg == FALSE)
+				{
+					//はじめから画面
+					iUICount = CAMERA_FIXED_POSITION_A;
+				}
+				else
+				{
+					// UIカウントを減少
+					iUICount--;
+
+					// UIカウントがはじめからより小さいか確認
+					if (iUICount < CAMERA_FIXED_POSITION_A)
+					{
+						//カメラ固定位置を設定ホーム画面に設定
+						iUICount = CAMERA_FIXED_POSITION_D;
+					}
+				}
+				break;
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+				if(this->bHomeFlg == FALSE)
+				{
+					//つづきから画面
+					iUICount = CAMERA_FIXED_POSITION_B;
+				}
+				else
+				{
+					// UIカウントを減少
+					iUICount--;
+					// UIカウントがはじめからより小さいか確認
+					if (iUICount < CAMERA_FIXED_POSITION_A)
+					{
+						//カメラ固定位置を設定ホーム画面に設定
+						iUICount = CAMERA_FIXED_POSITION_D;
+					}
+				}
+				break;
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
 				//設定ホーム画面
@@ -201,8 +236,42 @@ void Screen::Process()
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+				if(this->bHomeFlg == FALSE)
+				{
+					//はじめから画面
+					iUICount = CAMERA_FIXED_POSITION_A;
+				}
+				else
+				{
+					// UIカウントを増加
+					iUICount++;
+					// UIカウントが確認画面より大きいか確認
+					if (iUICount >= CAMERA_FIXED_POSITION_E)
+					{
+						//カメラ固定位置をはじめからに設定
+						iUICount = CAMERA_FIXED_POSITION_A;
+					}
+				}
+				break;
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+				if(this->bHomeFlg == FALSE)
+				{
+					//つづきから画面
+					iUICount = CAMERA_FIXED_POSITION_B;
+				}
+				else
+				{
+					// UIカウントを増加
+					iUICount++;
+					// UIカウントが確認画面より大きいか確認
+					if (iUICount >= CAMERA_FIXED_POSITION_E)
+					{
+						//カメラ固定位置をはじめからに設定
+						iUICount = CAMERA_FIXED_POSITION_A;
+					}
+				}
+				break;
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
 				//設定ホーム画面
@@ -389,15 +458,33 @@ void Screen::Process()
 	}
 	else if (gpSceneServer->GetScene("Stage"))
 	{
-		// 現在のシーンがステージシーンの場合
-        MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureStageHandle, true);
-        PlayMovieToGraph(this->iTextureStageHandle);
-        DrawGraph(100, -100, this->iTextureStageHandle, TRUE);
+		////スタートフラグを有効化か確認
+		//if (this->bStartFlg == TRUE)
+		//{
+		//	//スタートフラグが有効な場合
+		//	//タイトル映像の再生位置を0に設定
+		//	SeekMovieToGraph(this->iTextureTitleHandle, 0);
+		//}
 
-        if (GetMovieStateToGraph(this->iTextureStageHandle) == FALSE)
+		//モデルのテクスチャをタイトルテクスチャに設定
+		MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureTitleHandle, true);
+
+		//タイトル映像の再生
+		PlayMovieToGraph(this->iTextureTitleHandle);
+
+		//タイトル映像の描写
+		DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
+
+		//タイトル映像の再生が終了しているか確認
+		if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
         {
-            SeekMovieToGraph(this->iTextureStageHandle, 1);
+			//タイトル映像の再生が終了している場合
+			//タイトル映像の再生位置を0に設定
+			SeekMovieToGraph(this->iTextureTitleHandle, 0);
 		}
+
+		//スタートフラグを無効化
+		//this->bStartFlg = false;
 	}
 }
 

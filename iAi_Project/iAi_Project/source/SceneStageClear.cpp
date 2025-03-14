@@ -53,13 +53,13 @@ void SceneGameClear::Process()
 // 描画
 void SceneGameClear::Draw()
 {
-	/* 描画ブレンドモードを加算にする */
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	///* 描画ブレンドモードを加算にする */
+	//SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
 
 	/* ステージクリア画面を再生 */
 	PlayMovieToGraph(*this->piGrHandle_GameClear);
 
-	/* "ゲームオーバー"を描写 */
+	/* "ステージクリア"を描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_GameClear, TRUE);
 
 	/* 再生が終了しているか確認 */
@@ -70,11 +70,11 @@ void SceneGameClear::Draw()
 		SeekMovieToGraph(*this->piGrHandle_GameClear, 0);
 	}
 
-	/* 描画ブレンドモードをブレンド無しに戻す */
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	///* 描画ブレンドモードをブレンド無しに戻す */
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-	/* 描画モードを二アレストに戻す */
-	SetDrawMode(DX_DRAWMODE_NEAREST);
+	///* 描画モードを二アレストに戻す */
+	//SetDrawMode(DX_DRAWMODE_NEAREST);
 }
 
 // メイン処理

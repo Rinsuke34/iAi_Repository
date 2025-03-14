@@ -39,15 +39,18 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Impossible");
 
 		/* リザルト画面背景 */
-		this->piGrHandle_ResultBackGround = ImageList->piGetImage("Result/UI_ResultBackGround_mini");
+		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_ResultBackGround_mini");
 
-		this->piGrHandle_EditLock = ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
-		this->piGrHandle_UnderExplain_Under = ImageList->piGetImage("Edit/Scene/UI_NowEditExplain_Under");
-		this->piGrHandle_Delete = ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
-		this->piGrHandle_New = ImageList->piGetImage("Edit/Scene/UI_Moji_New");
-		this->piGrHandle_Under = ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
-		this->piGrHandle_NextButton = ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
-		this->piGrHandle_NowEdit_Under = ImageList->piGetImage("Edit/Scene/UI_NowEdit_Under");
+		/* リザルトフレーム */
+		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
+
+		this->piGrHandle_EditLock			= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
+		this->piGrHandle_UnderExplain_Under	= ImageList->piGetImage("Edit/Scene/UI_NowEditExplain_Under");
+		this->piGrHandle_Delete				= ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
+		this->piGrHandle_New				= ImageList->piGetImage("Edit/Scene/UI_Moji_New");
+		this->piGrHandle_NewEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
+		this->piGrHandle_NextButton			= ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
+		this->piGrHandle_NowEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NowEdit_Under");
 
 	}
 
@@ -387,8 +390,22 @@ void SceneEdit::Process_Decid()
 			if (this->iSelectItem == SELECT_ITEM_NEXT)
 			{
 				// "次へ"である場合
-				/* ゲーム状態を"次のステージへ遷移"に変更する */
-				this->StageStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
+				/* 最初にエディット画面を追加するか確認 */
+				if (this->StageStatusList->bGetFastEditFlg() == true)
+				{
+					// 追加する場合
+					/* ゲーム状態を"リセット"に変更する */
+					this->StageStatusList->SetGameStatus(GAMESTATUS_RESET);
+
+					/* 最初にエディット画面を追加しない状態にする */
+					this->StageStatusList->SetFastEditFlg(false);
+				}
+				else
+				{
+					// 追加しない場合
+					/* ゲーム状態を"次のステージへ遷移"に変更する */
+					this->StageStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
+				}
 
 				/* 決定時の処理を終了する */
 				return;

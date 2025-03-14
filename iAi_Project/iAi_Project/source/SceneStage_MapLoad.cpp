@@ -13,6 +13,8 @@
 #include "EnemySpawnPoint_Missile.h"
 #include "EnemySpawnPoint_Beam.h"
 #include "EnemySpawnPoint_Explosion.h"
+// スポーンポイント
+#include "SpawnPoint_Blood_PickupItem.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
 // ギミック
@@ -181,7 +183,7 @@ void SceneStage::LoadMapData()
 					// エネミー(ビーム)の場合
 					/* "オブジェクト管理"にエネミー(ビーム)スポナーを追加 */
 					EnemySpawnPoint_Beam* AddEnemy = new EnemySpawnPoint_Beam();
-					ObjectList->SetEnemySpawnPoint(AddEnemy);
+					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -194,7 +196,7 @@ void SceneStage::LoadMapData()
 					// エネミー(逃走)の場合
 					/* "オブジェクト管理"にエネミー(逃走)スポナーを追加 */
 					EnemySpawnPoint_Escape* AddEnemy = new EnemySpawnPoint_Escape();
-					ObjectList->SetEnemySpawnPoint(AddEnemy);
+					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -207,7 +209,7 @@ void SceneStage::LoadMapData()
 					// エネミー(自爆)の場合
 					/* "オブジェクト管理"にエネミー(自爆)スポナーを追加 */
 					EnemySpawnPoint_Explosion* AddEnemy = new EnemySpawnPoint_Explosion();
-					ObjectList->SetEnemySpawnPoint(AddEnemy);
+					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -220,7 +222,7 @@ void SceneStage::LoadMapData()
 					// エネミー(ミサイル)の場合
 					/* "オブジェクト管理"にエネミー(ミサイル)スポナーを追加 */
 					EnemySpawnPoint_Missile* AddEnemy = new EnemySpawnPoint_Missile();
-					ObjectList->SetEnemySpawnPoint(AddEnemy);
+					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -233,7 +235,7 @@ void SceneStage::LoadMapData()
 					// エネミー(通常)の場合
 					/* "オブジェクト管理"にエネミー(通常)スポナーを追加 */
 					EnemySpawnPoint_Normal* AddEnemy = new EnemySpawnPoint_Normal();
-					ObjectList->SetEnemySpawnPoint(AddEnemy);
+					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
 					AddEnemy->SetPosition(vecPos);
@@ -583,6 +585,19 @@ void SceneStage::LoadMapData()
 
 					/* 移動方向設定 */
 					pPlatform->SetupMoveDirection(true, GIMMICK_MOVEFLOOR_MOVE_DISTANCE_TYPE_SHORT);
+				}
+				else if (name == "Blood")
+				{
+					// ブラッド(ピックアップアイテム)スポナーの場合
+					/* "オブジェクト管理"にブラッド(ピックアップアイテム)スポナーを追加 */
+					SpawnPoint_Blood_PickupItem* pBlood = new SpawnPoint_Blood_PickupItem();
+					ObjectList->SetSpawnPoint(pBlood);
+
+					/* 座標設定 */
+					pBlood->SetPosition(vecPos);
+
+					/* 回転量設定 */
+					pBlood->SetRotation(vecRot);
 				}
 			}
 		}

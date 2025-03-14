@@ -31,6 +31,8 @@ Enemy_Missile_Air::Enemy_Missile_Air() : Enemy_Basic()
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
+	this->bShotFlg = true;						// ミサイル発射フラグ
+	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
 	this->iFiringCount = ENEMY_MISSILE_INTERVAL;	// 発射カウント
 	/*モーション関連*/
 	// エネミーモデルに空中のアニメーションをアタッチする
@@ -97,12 +99,61 @@ void Enemy_Missile_Air::MoveEnemy()
 		if (iFiringCount <= 0)
 		{
 			// 発射カウントが0以下の場合
+			// 誘導カウントが発射カウントより大きい場合
+			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			{
+				this->bWarningEffectFlg = false;
 
+				this->bShotFlg = true;
+
+				/* 攻撃予告エフェクト追加 */
+				{
+					/* 攻撃予告エフェクトを生成 */
+					this->pEffectWarning = new EffectManualDelete();
+
+					/* エフェクトの読み込み */
+					this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
+
+					/* エフェクトの座標設定 */
+					this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
+
+					/* エフェクトの回転量設定 */
+					this->pEffectWarning->SetRotation(this->vecRotation);
+
+					/* エフェクトの初期化 */
+					this->pEffectWarning->Initialization();
+
+					/* エフェクトをリストに登録 */
+					{
+						/* "オブジェクト管理"データリストを取得 */
+						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+						/* エフェクトをリストに登録 */
+						ObjectListHandle->SetEffect(this->pEffectWarning);
+					}
+				}
+			}
+
+		}
+	}
+
+	//エフェクトがnullptrでないか確認
+	if (this->pEffectWarning != nullptr)
+	{
+		// エフェクトが再生中かどうか確認
+		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
+		{
+			if (this->bShotFlg == true)
+			{
+				// エフェクトが再生終了している場合
 		// ミサイルを発射する
 			Player_Range_Missile_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+
+				this->bWarningEffectFlg = true;
+			}
+			this->bShotFlg = false;
 		}
 	}
 }

@@ -34,15 +34,6 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		this->OptionList		= dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
-	/* 画像読み込み */
-	{
-		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
-
-		/* 画像取得 */
-		this->piGrHandle_ResultFrame = ImageList->piGetImage("Result/UI_Result_Frame");
-	}
-
 	/* マップハンドル作成 */
 	// 画像ハンドル
 	this->iMainScreenHandle					= MakeScreen(SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT);
@@ -114,6 +105,14 @@ void SceneStage::Initialization()
 			/* エディット */
 			gpSceneServer->AddSceneReservation(new SceneUi_Edit());
 		}
+	}
+
+	/* 最初にエディット画面を追加するか確認 */
+	if (this->StageStatusList->bGetFastEditFlg() == true)
+	{
+		// 追加する場合
+		/* ゲーム状態を"エディット"状態に変更 */
+		this->StageStatusList->SetGameStatus(GAMESTATUS_EDIT);
 	}
 
 	/* ステージ開始時の時間を設定 */

@@ -4,7 +4,7 @@
 
 /* エネミー(自爆)スポナークラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Explosion::EnemySpawnPoint_Explosion() : EnemySpawnPoint_Base()
+EnemySpawnPoint_Explosion::EnemySpawnPoint_Explosion() : SpawnPoint_Base()
 {
 
 }

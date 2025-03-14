@@ -5,7 +5,7 @@
 /* すべての実体のないアイテムのベースとなるクラスの定義 */
 
 // コンストラクタ
-EffectItemBase::EffectItemBase() : ActorBase()
+EffectItemBase::EffectItemBase() : CharacterBase()
 {
 
 }

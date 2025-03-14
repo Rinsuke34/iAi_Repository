@@ -4,7 +4,7 @@
 
 /* エネミー(逃走)スポナークラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Escape::EnemySpawnPoint_Escape() : EnemySpawnPoint_Base()
+EnemySpawnPoint_Escape::EnemySpawnPoint_Escape() : SpawnPoint_Base()
 {
 
 }

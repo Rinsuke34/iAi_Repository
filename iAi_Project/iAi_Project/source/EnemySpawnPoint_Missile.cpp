@@ -4,7 +4,7 @@
 
 /* エネミー(ミサイル)スポナークラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Missile::EnemySpawnPoint_Missile() : EnemySpawnPoint_Base()
+EnemySpawnPoint_Missile::EnemySpawnPoint_Missile() : SpawnPoint_Base()
 {
 
 }

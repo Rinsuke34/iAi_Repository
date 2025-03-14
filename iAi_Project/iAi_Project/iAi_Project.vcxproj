@@ -207,6 +207,7 @@
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
     <ClCompile Include="source\Gimmick_MoveFloor.cpp" />
     <ClCompile Include="source\LargeScreen.cpp" />
+    <ClCompile Include="source\PickUpItem_Blood.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneAddTitleSetup.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
@@ -237,8 +238,9 @@
     <ClCompile Include="source\ScreenEffect_Base.cpp" />
     <ClCompile Include="source\ScreenEffect_SlowMotion.cpp" />
     <ClCompile Include="source\SkySqhereBasic.cpp" />
-    <ClCompile Include="source\EnemySpawnPoint_Base.cpp" />
+    <ClCompile Include="source\SpawnPoint_Base.cpp" />
     <ClCompile Include="source\EnemySpawnPoint_Normal.cpp" />
+    <ClCompile Include="source\SpawnPoint_Blood_PickupItem.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -288,6 +290,7 @@
     <ClInclude Include="source\Gimmick_MoveFloor.h" />
     <ClInclude Include="source\LargeScreen.h" />
     <ClInclude Include="source\OptionDefine.h" />
+    <ClInclude Include="source\PickUpItem_Blood.h" />
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\SceneAddGameSetup.h" />
     <ClInclude Include="source\SceneAddTitleSetup.h" />
@@ -298,9 +301,10 @@
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
     <ClInclude Include="source\Screen.h" />
-    <ClInclude Include="source\EnemySpawnPoint_Base.h" />
+    <ClInclude Include="source\SpawnPoint_Base.h" />
     <ClInclude Include="source\EnemySpawnPoint_Normal.h" />
     <ClInclude Include="source\ScreenEffect_SlowMotion.h" />
+    <ClInclude Include="source\SpawnPoint_Blood_PickupItem.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />

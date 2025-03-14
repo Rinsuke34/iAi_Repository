@@ -9,14 +9,14 @@
 /* 循環参照対策の先行定義 */
 class DataList_Object;
 
-/* エネミースポナーベースクラスの宣言 */
+/* スポナーベースクラスの宣言 */
 
-// エネミースポナーベースクラス
-class EnemySpawnPoint_Base : public PlatformBase
+// スポナーベースクラス
+class SpawnPoint_Base : public PlatformBase
 {
 	public:
-		EnemySpawnPoint_Base();					// コンストラクタ
-		virtual ~EnemySpawnPoint_Base() {};		// デストラクタ
+		SpawnPoint_Base();					// コンストラクタ
+		virtual ~SpawnPoint_Base() {};		// デストラクタ
 
 		virtual void	Reset()	override;		// リセット処理
 

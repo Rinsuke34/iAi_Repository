@@ -134,13 +134,14 @@ void SceneUi_Combo::Draw()
 
 		/* コンボタイマー描写 */
 		double dComboTimerPercent = (static_cast<double>(this->PlayerStatusList->iGetPlayerComboDuration()) / INIT_ATTRIBUTES_COMBO_DURATION) * 100.0;
-		DrawCircleGauge(101 + (176 / 2), 360 + (176 / 2), dComboTimerPercent, *this->piGrHandle_Combo_Timer);
+		DrawCircleGauge(189, 448, dComboTimerPercent, *this->piGrHandle_Combo_Timer);
 
 		/* ランクを描写 */
 		/* 描写予定のアルファベットのサイズを取得 */
 		int iSizeX, iSizeY;
+		GetGraphSize(*this->piGrHandle_Combo_Alphabet[this->iPlayerComboRank], &iSizeX, &iSizeY);
 
-
-		DrawGraph(100 + (176 / 2) - (118 / 2), 360 + (176 / 2) - (156 / 2), *this->piGrHandle_Combo_Alphabet[this->iPlayerComboRank], TRUE);
+		/* アルファベット描写 */
+		DrawGraph(189 - (iSizeX / 2), 448 - (iSizeY / 2), *this->piGrHandle_Combo_Alphabet[this->iPlayerComboRank], TRUE);
 	}
 }

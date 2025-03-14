@@ -35,6 +35,8 @@ Enemy_Normal_Air::Enemy_Normal_Air() : Enemy_Basic()
 
 	this->pEffectWarning = nullptr;	// 警告エフェクト
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
+	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
+	this->bShotFlg = false;						// ショットフラグ
 
 	/*モーション関連*/
 	// エネミーモデルに空中のアニメーションをアタッチする
@@ -99,6 +101,12 @@ void Enemy_Normal_Air::MoveEnemy()
 		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 		{
 			// 誘導カウントが発射カウントより大きい場合
+			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			{
+				this->bWarningEffectFlg = false;
+
+				this->bShotFlg = true;
+
 			/* 攻撃予告エフェクト追加 */
 			{
 				/* 攻撃予告エフェクトを生成 */
@@ -125,21 +133,17 @@ void Enemy_Normal_Air::MoveEnemy()
 				}
 			}
 		}
+		}
 		//発射カウントが0以下か確認
 		if (iFiringCount <= 0)
 		{
-
-			// モデルのフレーム０番を表示
-			MV1SetFrameVisible(iModelHandle, 0, TRUE);
-
-			// モデルのフレーム２番を表示
-			MV1SetFrameVisible(iModelHandle, 2, TRUE);
 			// 発射カウントが0以下の場合
 			// ノーマル弾を発射する
 			Player_Range_Normal_Shot();
 
 			// 発射カウントを初期化
 			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+			this->bShotFlg = false;
 		}
 	}
 

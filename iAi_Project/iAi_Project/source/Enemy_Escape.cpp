@@ -35,8 +35,6 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bEscapeEffectGenerated = true;	// 逃走エフェクト生成フラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
-	this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
-	this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
 }
 
 // デストラクタ
@@ -81,10 +79,32 @@ void Enemy_Escape::MoveEnemy()
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
 	{
+		//待機モーションをデタッチする
+		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+
+		//走りモーションをアタッチする
+		this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+		//走りモーションの総再生時間を取得する
+		this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+		//再生速度を加算
+		this->fRunPlayTime += 1.0f;
+
+		//再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+		//再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fRunPlayTime >= this->fRunTotalTime)
+		{
+			//アニメーションの再生時間が総再生時間に達した場合
+			//再生時間を初期化する
+			this->fRunPlayTime = 0.0f;
+		}
 		if (this->bEscapeEffectGenerated == true)
 		{
 				// エフェクトを生成
-		this->pEffect = new EffectManualDelete();
+			this->pEffect = new EffectSelfDelete();
 
 		// エフェクトの読み込み
 		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_glitter/FX_e_glitter")));
@@ -94,6 +114,9 @@ void Enemy_Escape::MoveEnemy()
 
 		// エフェクトの回転量設定
 		this->pEffect->SetRotation(this->vecRotation);
+
+			//エフェクトの削除時間
+			this->pEffect->SetDeleteCount(60);
 
 		// エフェクトの初期化
 		this->pEffect->Initialization();
@@ -128,8 +151,16 @@ void Enemy_Escape::MoveEnemy()
 	}
 }
 }
-				}
+	else
+	{
+		// 探知範囲外にいる場合
+		// プレイヤーの方向を向くようにエネミーの向きを定義
+		VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
+		//エネミーの向きを設定
+		this->vecRotation = VRot;
+	}
+}
 
 //コリジョン描写
 void Enemy_Escape::CollisionDraw()

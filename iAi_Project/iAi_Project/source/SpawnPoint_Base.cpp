@@ -1,10 +1,10 @@
 /* 2025.03.08 駒沢風助 ファイル作成 */
 
-#include "EnemySpawnPoint_Base.h"
+#include "SpawnPoint_Base.h"
 
 /* エネミースポナーベースクラスの定義 */
 // コンストラクタ
-EnemySpawnPoint_Base::EnemySpawnPoint_Base() : PlatformBase()
+SpawnPoint_Base::SpawnPoint_Base() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
@@ -13,7 +13,7 @@ EnemySpawnPoint_Base::EnemySpawnPoint_Base() : PlatformBase()
 }
 
 // リセット処理
-void EnemySpawnPoint_Base::Reset()
+void SpawnPoint_Base::Reset()
 {
 	/* このオブジェクトの初期化処理を実行する */
 	Initialization();

@@ -51,14 +51,6 @@ void SceneStage::Draw()
 
 			/* 描写ブレンドモードを"ノーブレンド"に設定 */
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-			/* シーン"リザルト"を作成したか確認 */
-			if (this->iStageClear_Count >= STAGECLEAR_COUNT_START_RESULT)
-			{
-				// 作成している場合
-				/* リザルト用のフレームを描写 */
-				DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
-			}
 		}
 	}	
 }

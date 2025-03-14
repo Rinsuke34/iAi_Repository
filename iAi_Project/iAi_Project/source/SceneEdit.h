@@ -35,9 +35,11 @@ class SceneEdit : public SceneBase
 		int* piGrHandle_UnderExplain_Under;
 		int* piGrHandle_Delete;
 		int* piGrHandle_New;
-		int* piGrHandle_Under;
+		int* piGrHandle_NewEdit_Under;
 		int* piGrHandle_NextButton;
 		int* piGrHandle_NowEdit_Under;
+
+		int* piGrHandle_ResultFrame;						// リザルトフレーム
 
 		int* piGrHandle_SelectFrame;						// 選択フレーム
 		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン

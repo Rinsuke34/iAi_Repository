@@ -34,6 +34,9 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 
 		/* ƒŠƒUƒ‹ƒg‰æ–Ê‚Ì•¶Žš(ƒ‰ƒ“ƒN) */
 		this->piGrHandle_String_Rank		= ImageList->piGetImage("Result/UI_Moji_Rank");
+
+		/* ƒŠƒUƒ‹ƒgƒtƒŒ[ƒ€ */
+		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
 	}
 
 	/* Še•]‰¿Šî€‚ðŽæ“¾ */
@@ -69,6 +72,9 @@ void SceneResult::Process()
 // •`‰æ
 void SceneResult::Draw()
 {
+	/* ƒŠƒUƒ‹ƒg—p‚ÌƒtƒŒ[ƒ€‚ð•`ŽÊ */
+	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
+
 	/* ‰æ–Ê‚Ì”wŒi•`ŽÊ */
 	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
 

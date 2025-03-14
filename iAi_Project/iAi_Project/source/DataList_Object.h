@@ -7,12 +7,12 @@
 
 /* オブジェクト */
 #include "Enemy_Basic.h"
-#include "EnemySpawnPoint_Base.h"
+#include "SpawnPoint_Base.h"
 
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
 class Enemy_Basic;
-class EnemySpawnPoint_Base;
+class SpawnPoint_Base;
 
 /* オブジェクト管理クラスの宣言 */
 
@@ -111,7 +111,7 @@ class DataList_Object : public DataListBase
 		std::vector<PlatformBase*>&			GetCollisionList()			{ return this->pPlatformList; }			// プラットフォーム
 		std::vector<EffectItemBase*>&		GetEffectItemList()			{ return this->pEffectItemList; }		// アイテム(実体なし)
 		std::vector<PickUpItemBase*>&		GetPickUpItemList()			{ return this->pPickUpItemList; }		// アイテム(実体あり)
-		std::vector<EnemySpawnPoint_Base*>&	GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント
+		std::vector<SpawnPoint_Base*>&		GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント
 		
 		/* データ設定 */
 		// 単独
@@ -125,7 +125,7 @@ class DataList_Object : public DataListBase
 		void	SetPlatform(PlatformBase* pPlatform)						{ pPlatformList.emplace_back(pPlatform); };					// プラットフォーム追加
 		void	SetEffectItem(EffectItemBase* pEffectItem)					{ pEffectItemList.emplace_back(pEffectItem); };				// アイテム(実体なし)追加
 		void	SetPickUpItem(PickUpItemBase* pPickUpItem)					{ pPickUpItemList.emplace_back(pPickUpItem); };				// アイテム(実体なし)追加
-		void	SetEnemySpawnPoint(EnemySpawnPoint_Base* pEnemySpawnPoint)	{ pEnemySpawnPointList.emplace_back(pEnemySpawnPoint); };	// エネミースポーンポイント追加
+		void	SetSpawnPoint(SpawnPoint_Base* pSpawnPoint)					{ pEnemySpawnPointList.emplace_back(pSpawnPoint); };		// スポーンポイント追加
 
 	private:
 		/* 管理するデータ */
@@ -140,5 +140,5 @@ class DataList_Object : public DataListBase
 		std::vector<PlatformBase*>			pPlatformList;			// プラットフォーム
 		std::vector<EffectItemBase*>		pEffectItemList;		// アイテム(実体なし)
 		std::vector<PickUpItemBase*>		pPickUpItemList;		// アイテム(実体あり)
-		std::vector<EnemySpawnPoint_Base*>	pEnemySpawnPointList;	// エネミースポーンポイント
+		std::vector<SpawnPoint_Base*>		pEnemySpawnPointList;	// エネミースポーンポイント
 };

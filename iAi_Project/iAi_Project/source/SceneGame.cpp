@@ -35,6 +35,9 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* UI追加フラグを有効化 */
 	this->StageStatusList->SetAddUiFlg(true);
 
+	/* 最初にエディット画面を追加する状態にする */
+	this->StageStatusList->SetFastEditFlg(true);
+
 	/* "最初のステージ番号"のステージを読み込む */
 	/* シーン"ステージ"を作成 */
 	SceneBase* pAddScene = new SceneStage();

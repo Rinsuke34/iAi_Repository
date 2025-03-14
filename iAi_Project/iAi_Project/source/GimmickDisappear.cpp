@@ -57,11 +57,12 @@ void GimmickDisappear::ProcessGimmick()
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
-	//プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
-	VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
-	if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
-		playerPos.y >= vecFramePos.y - 50 && playerPos.y <= vecFramePos.y + 50 &&
-		playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
+	////プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
+	//VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
+	//if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
+	//	playerPos.y >= vecFramePos.y - 50 && playerPos.y <= vecFramePos.y + 55 &&
+	//	playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
+		if (this->bRidePlayerFlg == true)
 	{
 		//プレイヤーがギミックの上に乗っている場合
 		//テクスチャの変更カウントを減らす
@@ -91,7 +92,6 @@ void GimmickDisappear::ProcessGimmick()
 				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
 				MV1SetTextureGraphHandle(iModelHandle, 1, textureRedHandle, true);
 			
-				//PlayMovieToGraph(textureHandle); // 再生開始
 
 				//ギミックの消滅時間カウントが一定数になったか確認
 				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
@@ -101,11 +101,10 @@ void GimmickDisappear::ProcessGimmick()
 					this->bDisappearFlg = true;
 				
 					//ギミックを消す
-					MV1SetVisible(iModelHandle, FALSE);
+					MV1SetVisible(this->iModelHandle, FALSE);
 
 					//コリジョンを削除
-					MV1TerminateCollInfo(iModelHandle, 0);
-
+					MV1TerminateCollInfo(this->iModelHandle, 0);
 
 				}
 			}
