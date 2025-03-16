@@ -38,7 +38,7 @@ void BulletPlayerKunaiAttack::Initialization()
 	float fMinDistance = VSize(vecMinDirection);
 
 	/* プラットフォームを取得 */
-	auto& PlatformList = ObjectList->GetCollisionList();
+	auto& PlatformList = ObjectList->GetPlatformList();
 
 	// 射線上にプラットフォームが存在するか確認する
 	for (auto* platform : PlatformList)

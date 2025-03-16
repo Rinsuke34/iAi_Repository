@@ -108,7 +108,7 @@ class DataList_Object : public DataListBase
 		std::vector<Enemy_Basic*>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
 		std::vector<EffectBase*>&			GetEffectList()				{ return this->pEffectList; }			// エフェクト取得
 		std::vector<BulletBase*>&			GetBulletList()				{ return this->pBulletList; }			// 弾取得
-		std::vector<PlatformBase*>&			GetCollisionList()			{ return this->pPlatformList; }			// プラットフォーム
+		std::vector<PlatformBase*>&			GetPlatformList()			{ return this->pPlatformList; }			// プラットフォーム
 		std::vector<EffectItemBase*>&		GetEffectItemList()			{ return this->pEffectItemList; }		// アイテム(実体なし)
 		std::vector<PickUpItemBase*>&		GetPickUpItemList()			{ return this->pPickUpItemList; }		// アイテム(実体あり)
 		std::vector<SpawnPoint_Base*>&		GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント

@@ -694,7 +694,7 @@ void CharacterPlayer::Player_Charge_Attack()
 					stCollisionLine.vecLineEnd = vecCoreWorld;
 
 					/* プラットフォームを取得 */
-					auto& PlatformList = ObjectList->GetCollisionList();
+					auto& PlatformList = ObjectList->GetPlatformList();
 
 					/* プラットフォームとの接触フラグ */
 					bool bPlatformHitFlag = false;

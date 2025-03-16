@@ -20,14 +20,17 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->iJumpStageNo	= 0;						// ジャンプ後のステージ番号(デバッグ用)
 
 		/* カメラ関連 */
-		this->iCameraMode						= CAMERA_MODE_NORMAL;							// カメラモード
-		this->iCameraMode_Old					= CAMERA_MODE_NORMAL;							// カメラモード(変更前)
+		this->iCameraMode						= CAMERA_MODE_NORMAL;						// カメラモード
+		this->iCameraMode_Old					= CAMERA_MODE_NORMAL;						// カメラモード(変更前)
 		this->vecCameraUp						= VGet(0, 1, 0);							// カメラの上方向(Y+方向で固定)
 		this->vecCameraPosition					= VGet(0, 0, 0);							// カメラの座標(現在地点)
 		this->vecCameraPosition_Start			= VGet(0, 0, 0);							// カメラの座標(変更前地点)
 		this->vecCameraPosition_Target			= VGet(0, 0, 0);							// カメラの座標(変更後地点)
-		this->iCameraPositionLeapCount			= CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;	// カメラ座標の線形保管用カウント
-		this->vecCameraTarget					= VGet(0, 0, 0);							// カメラの注視点
+		this->iCameraPositionLeapCount			= 0;										// カメラ座標の線形保管用カウント
+		this->vecCameraTarget					= VGet(0, 0, 0);							// カメラの注視点(現在地点)
+		this->vecCameraTarget_Start				= VGet(0, 0, 0);							// カメラの注視点(移動前地点)
+		this->vecCameraTarget_Target			= VGet(0, 0, 0);							// カメラの注視点(移動後地点)
+		this->iCameraTargetLeapCount			= 0;										// カメラ注視点の線形補間用カウント
 		this->fCameraRadius						= INIT_CAMERA_RADIUS;						// カメラの中心点からの距離
 		this->fCameraAngleX						= 0;										// カメラのX軸回転量
 		this->fCameraAngleY						= 0;										// カメラのY軸回転量
@@ -49,9 +52,3 @@ DataList_StageStatus::~DataList_StageStatus()
 	this->pScreenEffectList.clear();
 }
 
-// 落下復帰ポイント初期化
-void DataList_StageStatus::RecoveryPointList_Initialization()
-{
-	/* 落下復帰ポイントリストのクリア */
-	this->vecFallRecoveryPointList.clear();
-}

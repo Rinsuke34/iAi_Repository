@@ -13,6 +13,7 @@
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 */
+/* 2025.03.16 駒沢風助	落下復帰処理更新 */
 
 #include "CharacterPlayer.h"
 
@@ -447,8 +448,9 @@ void CharacterPlayer::UpdateCooldownTime()
 }
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
-/* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+/* 2025.03.02 駒沢風助	落下復帰処理作成 開始 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 追加 */
+/* 2025.03.16 駒沢風助	落下復帰処理更新 開始 */
 // 落下からの復帰
 void CharacterPlayer::PlayerFallRecovery()
 {
@@ -457,26 +459,36 @@ void CharacterPlayer::PlayerFallRecovery()
 	float	fCloseDistance			= 0.f;					// 距離
 	bool	bFastFlg				= true;					// 最初の確認フラグ
 
-	/* 現在の座標から最も近い復帰地点を取得 */
-	for (auto& vecRecoveryPoint : this->StageStatusList->vecGetFallRecoveryPointList())
+	/* プレイヤーの座標を最も近い復帰地点に設定 */
+	for (auto& platform : this->ObjectList->GetPlatformList())
 	{
-		/* 復帰地点と現在の座標の距離を取得 */
-		// ※距離の2乗を取得
-		float fDistance = VSize(VSub(vecRecoveryPoint, this->vecPosition));
+		/* "チェックポイント"としてキャスト */
+		Gimmick_CheckPoint* pCheckPoint = dynamic_cast<Gimmick_CheckPoint*>(platform);
 
-		/* 現在設定されている復帰地点よりも距離が短いか、あるいは最初の確認であるか確認 */
-		if ((fDistance < fCloseDistance) || (bFastFlg == true))
+		/* キャストが成功した(チェックポイントであるか)確認 */
+		if (pCheckPoint != nullptr)
 		{
-			// 距離が短い、あるいは最初の確認である場合
-			/* 最も近い復帰地点を更新 */
-			vecCloseRecoveryPoint = vecRecoveryPoint;
+			// チェックポイントである場合
+			/* アクティブ状態であるか確認 */
+			if (pCheckPoint->bGetActiveFlg() == true)
+			{
+				// アクティブ状態である場合
+				// /* 復帰地点と現在の座標の距離を取得 */
+				// ※距離の2乗を取得
+				float fDistance = VSize(VSub(pCheckPoint->vecGetPosition(), this->vecPosition));
 
-			/* 最も近い復帰地点の距離を更新 */
-			fCloseDistance = fDistance;
+				/* 現在設定されている復帰地点よりも距離が短いか、あるいは最初の確認であるか確認 */
+				if ((fDistance < fCloseDistance) || (bFastFlg == true))
+				{
+					// 距離が短い、あるいは最初の確認である場合
+					/* 最も近い復帰地点を更新 */
+					vecCloseRecoveryPoint = pCheckPoint->vecGetPosition();
+
+					/* 最も近い復帰地点の距離を更新 */
+					fCloseDistance = fDistance;
+				}
+			}
 		}
-
-		/* 最初の確認フラグを無効にする */
-		bFastFlg = false;
 	}
 
 	/* プレイヤーの座標を最も近い復帰地点に設定 */
@@ -508,3 +520,4 @@ void CharacterPlayer::PlayerFallRecovery()
 }
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */
+/* 2025.03.16 駒沢風助	落下復帰処理更新 終了 */

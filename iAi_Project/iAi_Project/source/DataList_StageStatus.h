@@ -16,12 +16,9 @@ class DataList_StageStatus : public DataListBase
 		DataList_StageStatus();				// コンストラクタ
 		virtual ~DataList_StageStatus();	// デストラクタ
 
-		void	RecoveryPointList_Initialization();		// 落下復帰ポイント初期化
-
 		/* データ取得 */
 		// リスト
 		std::vector<ScreenEffect_Base*>&	GetScreenEffectList()		{ return this->pScreenEffectList; }			// 画面エフェクトリスト取得
-		std::vector<VECTOR>&				vecGetFallRecoveryPointList()	{ return this->vecFallRecoveryPointList; }	// 落下復帰ポイントリスト取得
 		// 単独
 		// ステージ状態
 		int		iGetGameStatus()	{ return this->iGameStatus; };	// ゲーム状態を取得
@@ -42,7 +39,10 @@ class DataList_StageStatus : public DataListBase
 		VECTOR	vecGetCameraPosition_Start()			{ return this->vecCameraPosition_Start; }				// カメラの座標取得(移動前地点)
 		VECTOR	vecGetCameraPosition_Target()			{ return this->vecCameraPosition_Target; }				// カメラの座標取得(移動後地点)
 		int		iGetCameraPositionLeapCount()			{ return this->iCameraPositionLeapCount; }				// カメラ座標の線形保管用カウント取得
-		VECTOR	vecGetCameraTarget()					{ return this->vecCameraTarget; }						// カメラの注視点取得
+		VECTOR	vecGetCameraTarget()					{ return this->vecCameraTarget; }						// カメラの注視点取得(現在位置)
+		VECTOR	vecGetCameraTarget_Start()				{ return this->vecCameraTarget_Start; }					// カメラの注視点取得(移動前位置)
+		VECTOR	vecGetCameraTarget_Target()				{ return this->vecCameraTarget_Target; }				// カメラの注視点取得(移動後位置)
+		int		iGetCameraTargetLeapCount()				{ return this->iCameraTargetLeapCount; }				// カメラ注視点の線形補間用カウント取得
 		float	fGetCameraRadius()						{ return this->fCameraRadius; }							// カメラの中心点からの距離取得
 		float	fGetCameraAngleX()						{ return this->fCameraAngleX; }							// カメラのX軸回転量(ラジアン)取得
 		float	fGetCameraAngleY()						{ return this->fCameraAngleY; }							// カメラのY軸回転量(ラジアン)取得
@@ -54,7 +54,6 @@ class DataList_StageStatus : public DataListBase
 		/* データ設定 */
 		// リスト
 		void	SetScreenEffect(ScreenEffect_Base* pScreenEffect)	{ pScreenEffectList.emplace_back(pScreenEffect); }					// 画面エフェクトリスト設定
-		void	SetFallRecoveryPoint(VECTOR vecFallRecoveryPoint)	{ vecFallRecoveryPointList.emplace_back(vecFallRecoveryPoint); }	// 落下復帰ポイントリスト設定
 		// 単独
 		// ステージ状態
 		void	SetGameStatus(int iGameStatus)		{ this->iGameStatus		= iGameStatus; };	// ゲーム状態を設定
@@ -75,7 +74,10 @@ class DataList_StageStatus : public DataListBase
 		void	SetCameraPosition_Start(VECTOR vecCameraPosition_Start)				{ this->vecCameraPosition_Start				= vecCameraPosition_Start; }	// カメラの座標設定(移動前地点)
 		void	SetCameraPosition_Target(VECTOR vecCameraPosition_Target)			{ this->vecCameraPosition_Target			= vecCameraPosition_Target; }	// カメラの座標設定(移動後地点)
 		void	SetCameraPositionLeapCount(int iCameraPositionLeapCount)			{ this->iCameraPositionLeapCount			= iCameraPositionLeapCount; }	// カメラ座標の線形保管用カウント設定
-		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; }			// カメラの注視点設定
+		void	SetCameraTarget(VECTOR vecCameraTarget)								{ this->vecCameraTarget						= vecCameraTarget; }			// カメラの注視点設定(現在地点)
+		void	SetCameraTarget_Start(VECTOR vecCameraTarget_Start)					{ this->vecCameraTarget_Start				= vecCameraTarget_Start; }		// カメラの注視点設定(移動前地点)
+		void	SetCameraTarget_Target(VECTOR vecCameraTarget_Target)				{ this->vecCameraTarget_Target				= vecCameraTarget_Target; }		// カメラの注視点設定(移動後地点)
+		void	SetCameraTargetLeapCount(int iCameraTargetLeapCount)				{ this->iCameraTargetLeapCount				= iCameraTargetLeapCount; }		// カメラ注視点の線形補間用カウント設定
 		void	SetCameraRadius(float fCameraRadius)								{ this->fCameraRadius						= fCameraRadius; }				// カメラの中心点からの距離設定
 		void	SetCameraAngleX(float fCameraAngleX)								{ this->fCameraAngleX						= fCameraAngleX; }				// カメラのX軸回転量(ラジアン)設定
 		void	SetCameraAngleY(float fCameraAngleY)								{ this->fCameraAngleY						= fCameraAngleY; }				// カメラのY軸回転量(ラジアン)設定
@@ -87,7 +89,6 @@ class DataList_StageStatus : public DataListBase
 	private:
 		/* 管理するデータリスト */
 		std::vector<ScreenEffect_Base*>		pScreenEffectList;			// 画面エフェクトリスト
-		std::vector<VECTOR>					vecFallRecoveryPointList;	// 落下復帰ポイントリスト
 
 		/* 管理するデータ */
 		int		iGameStatus;	// ゲーム状態
@@ -109,7 +110,10 @@ class DataList_StageStatus : public DataListBase
 		VECTOR	vecCameraPosition_Start;			// カメラの座標(移動前地点)
 		VECTOR	vecCameraPosition_Target;			// カメラの座標(移動後地点)
 		int		iCameraPositionLeapCount;			// カメラ座標の線形保管用カウント
-		VECTOR	vecCameraTarget;					// カメラの注視点
+		VECTOR	vecCameraTarget;					// カメラの注視点(現在地点)
+		VECTOR	vecCameraTarget_Start;				// カメラの注視点(移動前地点)
+		VECTOR	vecCameraTarget_Target;				// カメラの注視点(移動後地点)
+		int		iCameraTargetLeapCount;				// カメラ注視点の線形補間用カウント
 		float	fCameraRadius;						// カメラの中心点からの距離(ズーム量)
 		float	fCameraAngleX;						// カメラのX軸回転量(ラジアン)
 		float	fCameraAngleY;						// カメラのY軸回転量(ラジアン)

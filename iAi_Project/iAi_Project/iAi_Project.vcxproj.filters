@@ -445,6 +445,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\ブラッド%28アイテム%29">
       <UniqueIdentifier>{b5eeeca1-685b-4850-a6ee-539eefb5965d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント">
+      <UniqueIdentifier>{a5c08481-2e76-4121-a198-0aa2c857ca55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント">
+      <UniqueIdentifier>{07f94999-0f9e-44f2-817a-09742acdf92b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -701,6 +707,9 @@
     </ClCompile>
     <ClCompile Include="source\SpawnPoint_Blood_PickupItem.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\ブラッド%28アイテム%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_CheckPoint.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -991,6 +1000,9 @@
     </ClInclude>
     <ClInclude Include="source\SpawnPoint_Blood_PickupItem.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\ブラッド%28アイテム%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_CheckPoint.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

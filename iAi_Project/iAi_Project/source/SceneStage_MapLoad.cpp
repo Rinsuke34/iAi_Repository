@@ -24,8 +24,12 @@
 #include "LargeScreen.h"
 #include "Gimmick_FallJudgment.h"
 #include "Gimmick_MoveFloor.h"
+#include "Gimmick_CheckPoint.h"
 // 霧
 #include "FallFog.h"
+
+/* 循環参照対策の先行定義 */
+class Gimmick_CheckPoint;
 
 /* ステージクラスの定義(マップ読み込み部分) */
 
@@ -37,9 +41,6 @@ void SceneStage::LoadMapData()
 
 	/* マップ名を取得 */
 	std::string MapName = STAGE_NAME[iStageNo];
-
-	/* 落下復帰ポイント情報の初期化 */
-	StageStatusList->RecoveryPointList_Initialization();
 
 	/* マップデータの読み込み */
 	{
@@ -159,11 +160,20 @@ void SceneStage::LoadMapData()
 					CharacterPlayer* pPlayer = new CharacterPlayer();
 					ObjectList->SetCharacterPlayer(pPlayer);
 
+					/* "オブジェクト管理"にチェックポイントを追加 */
+					PlatformBase* pCheckPoint = new Gimmick_CheckPoint();
+					ObjectList->SetPlatform(pCheckPoint);
+
 					/* 座標設定 */
 					pPlayer->SetPosition(vecPos);
+					pCheckPoint->SetPosition(vecPos);
 
 					/* 回転量設定 */
 					pPlayer->SetRotation(vecRot);
+					pCheckPoint->SetRotation(vecRot);
+
+					/* チェックポイントを初期地点として設定 */
+					dynamic_cast<Gimmick_CheckPoint*>(pCheckPoint)->SetStartPositionFlg(true);
 				}
 				else if (name == "Marker_Goal_Object")
 				{
@@ -307,6 +317,8 @@ void SceneStage::LoadMapData()
 					// カメラ注視点(スタート)の場合
 					/* 座標設定(カメラ注視点) */
 					StageStatusList->SetCameraTarget(vecPos);				// カメラの注視点設定(現在地点)
+					StageStatusList->SetCameraTarget_Start(vecPos);			// カメラの注視点設定(移動前地点)
+					StageStatusList->SetCameraTarget_Target(vecPos);		// カメラの注視点設定(移動後地点)
 
 					/* 座標設定(固定座標(開始地点)) */
 					this->vecCameraPositionInfo[CAMERA_FIXED_POSITION_START].bUseFlg	= true;
@@ -453,8 +465,15 @@ void SceneStage::LoadMapData()
 				else if(name == "Marker_FallRecovery")
 				{
 					// 落下復帰ポイントの場合
-					/* 落下復帰ポイント情報の追加 */
-					StageStatusList->SetFallRecoveryPoint(vecPos);
+					/* "オブジェクト管理"にチェックポイントを追加 */
+					PlatformBase* pCheckPoint = new Gimmick_CheckPoint();
+					ObjectList->SetPlatform(pCheckPoint);
+
+					/* 座標設定 */
+					pCheckPoint->SetPosition(vecPos);
+
+					/* 回転量設定 */
+					pCheckPoint->SetRotation(vecRot);
 				}
 				else if (name == "DisappearFloor")
 				{

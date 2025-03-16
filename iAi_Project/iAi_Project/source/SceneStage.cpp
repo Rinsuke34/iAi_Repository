@@ -53,6 +53,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 		vecCameraPositionInfo[i].vecTarget		= VGet(0, 0, 0);
 	}
 	this->iNowCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// 現在のカメラ固定座標番号
+	this->iOldCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// 変更前のカメラ固定座標番号
 	this->iMaxCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
 	this->iBlendAlpha_StageClear_Fadein	= 0;							// ステージクリア時のフェードインのアルファ値
 	this->iStageClear_Count				= 0;							// ステージクリア時の処理で使用するカウント

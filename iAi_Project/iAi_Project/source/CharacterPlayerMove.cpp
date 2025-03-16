@@ -809,7 +809,7 @@ void CharacterPlayer::Movement_Vertical()
 
 	/* 以下、仮処理(近いオブジェクトのみ対象にするようにする) */
 	/* 足場を取得 */
-	auto& PlatformList = ObjectList->GetCollisionList();
+	auto& PlatformList = ObjectList->GetPlatformList();
 
 	/* 着地する座標 */
 	// ※初期値を移動後の座標に設定
@@ -1040,7 +1040,7 @@ void CharacterPlayer::Movement_Horizontal()
 		
 
 		/* 足場を取得 */
-		auto& PlatformList = ObjectList->GetCollisionList();
+		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* 足場と接触するか確認 */
 		for (auto* platform : PlatformList)

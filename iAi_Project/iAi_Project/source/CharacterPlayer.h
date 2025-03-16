@@ -35,14 +35,16 @@
 #include "EffectManualDelete_PlayerFollow_Frame.h"
 #include "EffectSelfDelete_PlayerFollow_Frame.h"
 #include "PlayerBulletDefine.h"
+#include "Gimmick_CheckPoint.h"
 
 /* 画像エフェクト */
 #include "ScreenEffect_Damage.h"
 #include "ScreenEffect_SlowMotion.h"
 
-/* 循環参照対策 */
+/* 循環参照対策の先行定義 */
 class ScreenEffect_Damage;
 class ScreenEffect_SlowMotion;
+class Gimmick_CheckPoint;
 
 /* プレイヤークラスの宣言 */
 

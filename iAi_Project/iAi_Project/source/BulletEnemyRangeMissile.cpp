@@ -199,7 +199,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	this->stVerticalCollision.vecLineEnd.y -= 60;
 
 	// ‘«ê‚ðŽæ“¾
-	auto& PlatformList = ObjectList->GetCollisionList();
+	auto& PlatformList = ObjectList->GetPlatformList();
 
 
 

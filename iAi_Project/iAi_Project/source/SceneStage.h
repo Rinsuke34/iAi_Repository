@@ -47,10 +47,12 @@ class SceneStage : public SceneBase
 
 		/* 固定カメラ番号の設定 */
 		void SetNowCameraFixedPositionNo(int iNowCameraFixedPositionNo)	{ this->iNowCameraFixedPositionNo = iNowCameraFixedPositionNo; }	// 現在のカメラ固定番号の設定
+		void SetOldCmaeraFixedPositionNo(int iOldCameraFixedPositionNo) { this->iOldCameraFixedPositionNo = iOldCameraFixedPositionNo; }	// 変更前のカメラ固定番号の設定
 
 		/* 固定カメラ番号の取得 */
-		int	iGetNowCameraFixedPositionNo()	{ return this->iNowCameraFixedPositionNo; };		// 現在のカメラ固定座標番号
-		int	iGetMaxCameraFixedPositionNo()	{ return this->iMaxCameraFixedPositionNo; };		// カメラ固定座標番号総数
+		int	iGetNowCameraFixedPositionNo()	{ return this->iNowCameraFixedPositionNo; }		// 現在のカメラ固定座標番号
+		int iGetOldCameraFixedPositionNo()	{ return this->iOldCameraFixedPositionNo; }		// 変更前のカメラ固定座標番号
+		int	iGetMaxCameraFixedPositionNo()	{ return this->iMaxCameraFixedPositionNo; }		// カメラ固定座標番号総数
 
 	private:
 		/* 使用するデータリスト */
@@ -96,6 +98,7 @@ class SceneStage : public SceneBase
 		/* カメラ関連 */
 		CAMERA_FIXED_POSITION_INFO	vecCameraPositionInfo[CAMERA_FIXED_POSITION_MAX];	// カメラ固定座標情報
 		int							iNowCameraFixedPositionNo;							// 現在のカメラ固定座標番号
+		int							iOldCameraFixedPositionNo;							// 変更前のカメラ固定座標番号
 		int							iMaxCameraFixedPositionNo;							// カメラ固定座標番号総数
 
 		/* 使用する画像のハンドル */

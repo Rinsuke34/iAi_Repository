@@ -234,7 +234,7 @@ void Enemy_Explosion::Enemy_Gravity()
 	this->stVerticalCollision.vecLineEnd.y -= 9999;
 
 	// ‘«ê‚ğæ“¾
-	auto& PlatformList = ObjectList->GetCollisionList();
+	auto& PlatformList = ObjectList->GetPlatformList();
 
 	//// ‘«ê‚ÆÚG‚·‚é‚©Šm”F
 	bool bHitFlg = false;

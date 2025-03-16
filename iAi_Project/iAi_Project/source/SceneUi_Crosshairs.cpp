@@ -175,7 +175,7 @@ void SceneUi_Crosshairs::Process()
 					COLLISION_LINE stCollisionLine;
 
 					/* プラットフォームを取得 */
-					auto& PlatformList = ObjectList->GetCollisionList();
+					auto& PlatformList = ObjectList->GetPlatformList();
 
 					/* 線分の開始点を設定(カメラ位置) */
 					stCollisionLine.vecLineStart = this->StageStatusList->vecGetCameraPosition();

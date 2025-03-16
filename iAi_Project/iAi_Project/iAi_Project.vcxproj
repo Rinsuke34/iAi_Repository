@@ -203,6 +203,7 @@
     <ClCompile Include="source\Enemy_Normal_Air.cpp" />
     <ClCompile Include="source\FallFog.cpp" />
     <ClCompile Include="source\GimmickDisappear.cpp" />
+    <ClCompile Include="source\Gimmick_CheckPoint.cpp" />
     <ClCompile Include="source\Gimmick_FallJudgment.cpp" />
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
     <ClCompile Include="source\Gimmick_MoveFloor.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\Enemy_Normal_Air.h" />
     <ClInclude Include="source\FallFog.h" />
+    <ClInclude Include="source\Gimmick_CheckPoint.h" />
     <ClInclude Include="source\Gimmick_FallJudgment.h" />
     <ClInclude Include="source\Gimmick_MoveFloor.h" />
     <ClInclude Include="source\LargeScreen.h" />

@@ -1,6 +1,7 @@
 /* 2025.02.02 ファイル作成 駒沢風助 */
 /* 2025.02.23 菊池雅道	カメラ制御処理修正 */
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 */
+/* 2025.03.16 駒沢風助	カメラ制御処理修正 */
 
 #include "SceneStage.h"
 
@@ -10,15 +11,18 @@
 // カメラ設定準備
 void SceneStage::SetCamera_Setup()
 {
-	/* カメラモードが変更されているか確認 */
-	if (this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old())
+	/* カメラモードが変更、あるいはカメラ固定座標が変更されているか確認 */
+	if ((this->StageStatusList->iGetCameraMode() != this->StageStatusList->iGetCameraMode_Old()) ||
+		(this->iNowCameraFixedPositionNo != this->iOldCameraFixedPositionNo))
 	{
 		// 変更されている場合
-		/* カメラ座標の線形保管用カウントを初期化する */
+		/* カメラの線形保管用カウントを初期化する */
 		this->StageStatusList->SetCameraPositionLeapCount(0);
+		this->StageStatusList->SetCameraTargetLeapCount(0);
 
 		/* 現在のカメラの座標を移動前座標として設定する */
 		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition());
+		this->StageStatusList->SetCameraTarget_Start(this->StageStatusList->vecGetCameraTarget());
 	}
 
 	/* カメラ設定で使用する変数の定義 */
@@ -101,6 +105,9 @@ void SceneStage::SetCamera_Setup()
 
 	/* 現時点でのカメラモードを保存 */
 	this->StageStatusList->SetCameraMode_Old(this->StageStatusList->iGetCameraMode());
+
+	/* 現時点でのカメラ固定座標番号を保存 */
+	this->iOldCameraFixedPositionNo = this->iNowCameraFixedPositionNo;
 }
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 終了 */
 
@@ -313,7 +320,8 @@ void SceneStage::SetCamera_Aim_Kunai()
 void SceneStage::SetCamera_Title()
 {
 	/* カメラの注視点設定 */
-	this->StageStatusList->SetCameraTarget(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
+//	this->StageStatusList->SetCameraTarget(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
+	this->StageStatusList->SetCameraTarget_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
 
 	/* カメラの座標設定 */
 	this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecPosition);
@@ -350,40 +358,81 @@ void SceneStage::SetCamera_StageClear()
 }
 
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */
+/* 2025.03.16 駒沢風助	カメラ制御処理修正 開始 */
 // カメラ補正
-void SceneStage::CameraSmoothing(int iCameraPositionLeapCountMax)
+void SceneStage::CameraSmoothing(int iCameraLeapCountMax)
 {
-	/* カメラ線形補間用カウントを取得 */
-	int iCameraPositionLeapCount = this->StageStatusList->iGetCameraPositionLeapCount();
-
-	/* カメラ線形補完用カウントが最大値に達しているか */
-	if (iCameraPositionLeapCount < iCameraPositionLeapCountMax)
+	/* カメラ位置 */
 	{
-		// 最大値に達していない場合
-		/* カメラ線形補間の割合を取得 */
-		float fLeapRatio = ((float)iCameraPositionLeapCount / (float)iCameraPositionLeapCountMax);
+		/* カメラ線形補間用カウントを取得 */
+		int iCameraPositionLeapCount = this->StageStatusList->iGetCameraPositionLeapCount();
 
-		/* カメラの座標(線形補間後)を算出 */
-		VECTOR vecStart		= this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
-		VECTOR vecTarget	= this->StageStatusList->vecGetCameraPosition_Target();		// 線形補完の移動後座標
-		VECTOR vecCameraPosition;
-		vecCameraPosition.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
-		vecCameraPosition.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;
-		vecCameraPosition.z = vecStart.z + (vecTarget.z - vecStart.z) * fLeapRatio;
+		/* カメラ線形補完用カウントが最大値に達しているか */
+		if (iCameraPositionLeapCount < iCameraLeapCountMax)
+		{
+			// 最大値に達していない場合
+			/* カメラ線形補間の割合を取得 */
+			float fLeapRatio = ((float)iCameraPositionLeapCount / (float)iCameraLeapCountMax);
 
-		/* カメラの座標(線形補間後)を現在のカメラ座標に設定 */
-		this->StageStatusList->SetCameraPosition(vecCameraPosition);
+			/* カメラの座標(線形補間後)を算出 */
+			VECTOR vecStart = this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
+			VECTOR vecTarget = this->StageStatusList->vecGetCameraPosition_Target();		// 線形補完の移動後座標
+			VECTOR vecCameraPosition;
+			vecCameraPosition.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
+			vecCameraPosition.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;
+			vecCameraPosition.z = vecStart.z + (vecTarget.z - vecStart.z) * fLeapRatio;
 
-		/* カウントを加算して設定する */
-		this->StageStatusList->SetCameraPositionLeapCount(iCameraPositionLeapCount + 1);
+			/* カメラの座標(線形補間後)を現在のカメラ座標に設定 */
+			this->StageStatusList->SetCameraPosition(vecCameraPosition);
+
+			/* カウントを加算して設定する */
+			this->StageStatusList->SetCameraPositionLeapCount(iCameraPositionLeapCount + 1);
+		}
+		else
+		{
+			// 最大値に達している場合
+			/* カメラの座標(移動後)を現在のカメラ座標に設定 */
+			this->StageStatusList->SetCameraPosition(this->StageStatusList->vecGetCameraPosition_Target());
+
+			this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition_Target());
+		}
 	}
-	else
-	{
-		// 最大値に達している場合
-		/* カメラの座標(移動後)を現在のカメラ座標に設定 */
-		this->StageStatusList->SetCameraPosition(this->StageStatusList->vecGetCameraPosition_Target());
 
-		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition_Target());
+	/* カメラ注視点 */
+	{
+		/* カメラ線形補間用カウントを取得 */
+		int iCameraTargetLeapCount = this->StageStatusList->iGetCameraTargetLeapCount();
+
+		/* カメラ線形補完用カウントが最大値に達しているか */
+		if (iCameraTargetLeapCount < iCameraLeapCountMax)
+		{
+			// 最大値に達していない場合
+			/* カメラ線形補間の割合を取得 */
+			float fLeapRatio = ((float)iCameraTargetLeapCount / (float)iCameraLeapCountMax);
+
+			/* カメラの座標(線形補間後)を算出 */
+			VECTOR vecStart = this->StageStatusList->vecGetCameraTarget_Start();		// 線形補完の移動前座標
+			VECTOR vecTarget = this->StageStatusList->vecGetCameraTarget_Target();		// 線形補完の移動後座標
+			VECTOR vecCameraTarget;
+			vecCameraTarget.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
+			vecCameraTarget.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;
+			vecCameraTarget.z = vecStart.z + (vecTarget.z - vecStart.z) * fLeapRatio;
+
+			/* カメラの注視点(線形補間後)を現在のカメラ注視点に設定 */
+			this->StageStatusList->SetCameraTarget(vecCameraTarget);
+
+			/* カウントを加算して設定する */
+			this->StageStatusList->SetCameraTargetLeapCount(iCameraTargetLeapCount + 1);
+		}
+		else
+		{
+			// 最大値に達している場合
+			/* カメラの注視点(移動後)を現在のカメラ注視点に設定 */
+			this->StageStatusList->SetCameraTarget(this->StageStatusList->vecGetCameraTarget_Target());
+
+			this->StageStatusList->SetCameraTarget_Start(this->StageStatusList->vecGetCameraTarget_Target());
+		}
 	}
 }
 /* 2025.03.06 菊池雅道	カメラ制御処理修正  */
+/* 2025.03.16 駒沢風助	カメラ制御処理修正 終了 */

@@ -168,7 +168,7 @@ void Enemy_Basic::Enemy_Gravity()
 	this->stVerticalCollision.vecLineEnd.y -= 9999;
 
 	// 足場を取得
-	auto& PlatformList = ObjectList->GetCollisionList();
+	auto& PlatformList = ObjectList->GetPlatformList();
 
 	// 着地する座標
 	// 初期値を移動後の座標に設定

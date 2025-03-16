@@ -213,7 +213,7 @@ void Enemy_Escape::Movement_Horizontal()
 	{
 
 		/* ‘«ê‚ğæ“¾ */
-		auto& PlatformList = ObjectList->GetCollisionList();
+		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* ‘«ê‚ÆÚG‚·‚é‚©Šm”F */
 		for (auto* platform : PlatformList)
