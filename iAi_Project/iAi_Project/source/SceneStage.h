@@ -65,6 +65,7 @@ class SceneStage : public SceneBase
 		/* 関数 */
 		void	Process_Main();			// 計算(メインの処理)
 		void	Process_StageClear();	// 計算(ステージクリア時の処理)
+		void	Process_StageStart();	// 計算(ステージ開始時の処理)
 		void	SetupShadowMap();		// シャドウマップの設定
 		void	SetupLightMap();		// ライトマップの設定
 		void	SetupMainScreen();		// メインの描写処理
@@ -80,6 +81,7 @@ class SceneStage : public SceneBase
 		void	SetCamera_Aim_Kunai();					// カメラ設定(構え(クナイ構え))
 		void	SetCamera_Title();						// カメラ設定(タイトル)
 		void	SetCamera_StageClear();					// カメラ設定(ステージクリア)
+		void	SetCamera_StageStart();					// カメラ設定(ステージ開始)
 		void	CameraSmoothing(int iCameraPositionLeapCountMax);	// カメラ補正						/* 2025.03.06 菊池雅道	カメラ制御処理修正 */
 
 		/* デバッグ関連 */

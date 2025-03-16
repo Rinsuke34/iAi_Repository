@@ -64,9 +64,6 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	/* ステージの読み込みを開始 */
 	dynamic_cast<SceneStage*>(this->pSceneStage)->LoadMapData();
 
-	/* 初期化処理 */
-	this->pSceneStage->Initialization();
-
 	//スタートフラグを無効化
 	this->bGameStartFlg = false;
 

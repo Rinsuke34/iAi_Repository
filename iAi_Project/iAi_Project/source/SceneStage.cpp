@@ -118,6 +118,9 @@ void SceneStage::Initialization()
 
 	/* ステージ開始時の時間を設定 */
 	this->StageStatusList->SetStartTime(GetNowCount());
+
+	/* カメラモードを"フリーモード"に設定 */
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
 }
 
 // 計算
@@ -201,12 +204,15 @@ void SceneStage::Process()
 			StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
+		/* "ゲーム開始"状態 */
+		case GAMESTATUS_START:
+			Process_StageStart();
+			break;
+
 		/* ステージジャンプ */
 		case GAMESTATUS_STAGE_JUMP:
 			/* シーンの削除フラグを有効にする */
 			this->bDeleteFlg = true;
-
-
 			break;
 	}
 
@@ -313,6 +319,32 @@ void SceneStage::Process_StageClear()
 
 	/* ステージクリアのカウントを加算 */
 	this->iStageClear_Count += 1;
+}
+
+// 計算(ステージ開始時の処理)
+void SceneStage::Process_StageStart()
+{
+	/* カメラモードを"ステージ開始"に設定 */
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_STAGESTART);
+
+	/* カメラ固定座標の値が最大値を超えているか確認 */
+	if (this->iNowCameraFixedPositionNo >= this->iMaxCameraFixedPositionNo - 1)
+	{
+		// 超えている場合
+		/* ステージ状態を初期化する */
+		Initialization();
+
+		return;
+	}
+
+	/* プレイヤー、エネミー以外のオブジェクトの更新 */
+	//ObjectList->UpdatePlayer();
+	ObjectList->UpdateSkySqhere();
+	ObjectList->UpdateEffect();
+	ObjectList->UpdateBullet();
+	ObjectList->UpdatePlatform();
+	ObjectList->UpdateEffectItem();
+	ObjectList->UpdatePickUpItem();
 }
 
 // デバッグ描写

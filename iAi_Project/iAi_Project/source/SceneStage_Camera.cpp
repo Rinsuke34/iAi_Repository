@@ -93,6 +93,18 @@ void SceneStage::SetCamera_Setup()
 			/* カメラ設定 */
 			SetCamera_StageClear();
 			break;
+
+		/* ステージ開始 */
+		case CAMERA_MODE_STAGESTART:
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
+
+			/* カメラ座標の補間カウント最大値をステージクリアの値に設定 */
+			iCameraLeapCountMax = CAMERA_POSITION_LEAP_COUNT_MAX_STAGESTART;
+
+			/* カメラ設定 */
+			SetCamera_StageStart();
+			break;
 	}
 
 	// 反映する場合
@@ -116,7 +128,7 @@ void SceneStage::SetCmaera()
 {
 	/* グローバルアンビエントライトカラーを赤色に設定 */
 	// ※デフォルトの黒色だと暗すぎるので赤色に変更
-	SetGlobalAmbientLight(GetColorF(1.0f, 0.0f, 0.0f, 0.0f));
+	SetGlobalAmbientLight(GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
 
 	/* カメラの手前と奥のクリップ距離を設定 */
 	// ※スカイスフィア半径(25000)から余裕を少し持たせた値に仮設定
@@ -223,7 +235,7 @@ void SceneStage::SetCamera_Free()
 
 	/* カメラ注視点設定 */
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
-	this->StageStatusList->SetCameraTarget(vecCameraTarget);
+	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
 	vecCameraTarget.y += 20.f;
 
@@ -248,7 +260,7 @@ void SceneStage::SetCamera_Aim_Melee()
 
 	/* カメラ注視点設定 */
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
-	this->StageStatusList->SetCameraTarget(vecCameraTarget);
+	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
 	vecCameraTarget.y += 20.f;
 
@@ -279,7 +291,7 @@ void SceneStage::SetCamera_Aim_Kunai()
 	float fCameraY	= fRadius * +sinf(fCameraAngleY) + vecPlayerPos.y;	// Y座標
 	float fCameraZ	= fRadius * -cosf(fCameraAngleX) + vecPlayerPos.z;	// Z座標
 
-	this->StageStatusList->SetCameraTarget(VGet(fCameraX, fCameraY, fCameraZ));
+	this->StageStatusList->SetCameraTarget_Target(VGet(fCameraX, fCameraY, fCameraZ));
 
 	
 	// プレイヤーの右斜め後ろにカメラを配置する
@@ -320,7 +332,6 @@ void SceneStage::SetCamera_Aim_Kunai()
 void SceneStage::SetCamera_Title()
 {
 	/* カメラの注視点設定 */
-//	this->StageStatusList->SetCameraTarget(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
 	this->StageStatusList->SetCameraTarget_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo].vecTarget);
 
 	/* カメラの座標設定 */
@@ -353,8 +364,60 @@ void SceneStage::SetCamera_StageClear()
 		float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
 		this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
-
 	}
+}
+
+/* カメラ設定(ステージ開始) */
+void SceneStage::SetCamera_StageStart()
+{
+	/* 現在のカメラ固定座標番号に対しての補間が完了しているか確認 */
+	if (this->StageStatusList->iGetCameraPositionLeapCount() >= CAMERA_POSITION_LEAP_COUNT_MAX_STAGESTART)
+	{
+		// 完了している場合
+		/* ターゲットとするカメラ固定座標番号を更新 */
+		/* ターゲットとしているカメラ固定座標番号を保存 */
+		this->iNowCameraFixedPositionNo += 1;
+
+		/* 現在の座標を補間の移動前地点に設定する */
+		this->StageStatusList->SetCameraPosition_Start(this->StageStatusList->vecGetCameraPosition());
+		this->StageStatusList->SetCameraTarget_Start(this->StageStatusList->vecGetCameraTarget());
+
+		/* カメラの線形保管用カウントを初期化する */
+		this->StageStatusList->SetCameraPositionLeapCount(0);
+		this->StageStatusList->SetCameraTargetLeapCount(0);
+	}
+
+	/* カメラ固定座標の値が最大値を超えていないか確認 */
+	if (this->iNowCameraFixedPositionNo <= this->iMaxCameraFixedPositionNo )
+	{
+		// 超えている場合
+		/* カメラの注視点設定 */
+		this->StageStatusList->SetCameraTarget_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo + 1].vecTarget);
+
+		/* カメラの座標設定 */
+		this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo + 1].vecPosition);
+	}
+
+
+	///* 現在番目のカメラ固定座標であるかを取得 */
+	//int iCameraPointMax = (this->StageStatusList->iGetCameraPositionLeapCount() / CAMERA_POSITION_LEAP_COUNT_MAX_STAGESTART);
+
+	///* カメラの注視点設定 */
+	//this->StageStatusList->SetCameraTarget_Target(this->vecCameraPositionInfo[iCameraPointMax + 1].vecTarget);
+
+	///* カメラの座標設定 */
+	//this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iCameraPointMax + 1].vecPosition);
+
+	///* ターゲットとしているカメラ固定座標番号を保存 */
+	//this->iNowCameraFixedPositionNo = iCameraPointMax + 1;
+
+	///* ターゲットとしているカメラ固定座標番号が変更されているか確認 */
+	//if (this->iOldCameraFixedPositionNo != this->iNowCameraFixedPositionNo)
+	//{
+	//	// 変更されている場合
+	//	/* カメラの線形保管用カウントを初期化する */
+	//	this->StageStatusList->SetCameraPositionLeapCount(0);
+	//}
 }
 
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */
@@ -375,8 +438,8 @@ void SceneStage::CameraSmoothing(int iCameraLeapCountMax)
 			float fLeapRatio = ((float)iCameraPositionLeapCount / (float)iCameraLeapCountMax);
 
 			/* カメラの座標(線形補間後)を算出 */
-			VECTOR vecStart = this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
-			VECTOR vecTarget = this->StageStatusList->vecGetCameraPosition_Target();		// 線形補完の移動後座標
+			VECTOR vecStart		= this->StageStatusList->vecGetCameraPosition_Start();		// 線形補完の移動前座標
+			VECTOR vecTarget	= this->StageStatusList->vecGetCameraPosition_Target();		// 線形補完の移動後座標
 			VECTOR vecCameraPosition;
 			vecCameraPosition.x = vecStart.x + (vecTarget.x - vecStart.x) * fLeapRatio;
 			vecCameraPosition.y = vecStart.y + (vecTarget.y - vecStart.y) * fLeapRatio;
