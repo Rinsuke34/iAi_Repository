@@ -451,6 +451,12 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント">
       <UniqueIdentifier>{07f94999-0f9e-44f2-817a-09742acdf92b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整">
+      <UniqueIdentifier>{5fd83e0d-8325-4120-8f28-8e7e94bcb041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整">
+      <UniqueIdentifier>{8dc038d2-eb04-49f2-9494-82ff2e33fe96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -710,6 +716,9 @@
     </ClCompile>
     <ClCompile Include="source\Gimmick_CheckPoint.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1003,6 +1012,9 @@
     </ClInclude>
     <ClInclude Include="source\Gimmick_CheckPoint.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\中間ポイント</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Debug_StatusSetup.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -209,9 +209,9 @@ void SceneOption::Process()
 	{
 		this->iSelectItem = 0;
 	}
-	else if (this->iSelectItem >= this->astOptionNameList->size())
+	else if (this->iSelectItem >= static_cast<int>(this->astOptionNameList->size()))
 	{
-		this->iSelectItem = this->astOptionNameList->size() - 1;
+		this->iSelectItem = static_cast<int>(this->astOptionNameList->size()) - 1;
 	}
 
 	/* BGM‚Ì‰¹—Ê‚ğ•ÏX */
@@ -288,6 +288,4 @@ void SceneOption::Draw()
 			}
 		}
 	}
-
-	/* ‘€ì•û–@ */
 }

@@ -6,6 +6,7 @@
 
 /* シーン */
 #include "SceneUi_Debug_StageJump.h"
+#include "SceneUi_Debug_StatusSetup.h"
 
 /* UI(デバッグメニュー)クラスの宣言 */
 

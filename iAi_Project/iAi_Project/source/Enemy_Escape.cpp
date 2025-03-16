@@ -134,7 +134,7 @@ void Enemy_Escape::MoveEnemy()
 		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
 
 		// プレイヤーから逃げる方向と速度を設定
-		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, this->iEscapespeed));
+		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, static_cast<float>(this->iEscapespeed)));
 
 		// エネミーの向きを初期化する
 		VRot = VGet(0, 0, 0);

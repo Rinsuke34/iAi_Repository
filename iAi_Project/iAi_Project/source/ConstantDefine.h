@@ -60,6 +60,10 @@ static const int    DEBUG_MAP_WIDTH         = 256;	// デバッグ描写の横幅
 static const int	DEBUG_MODE_OPTION       = 0;	// デバッグオプション
 static const int	DEBUG_MODE_OPERATION    = 1;	// デバッグ操作
 static const int	DEBUG_MODE_MAX          = 2;	// デバッグモードの総数
+// デバッグ操作名
+static const int    DEBUG_OPERATION_STAGEJUMP   = 0;	// ステージジャンプ
+static const int    DEBUG_OPERATION_STATUSSETUP = 1;	// ステータス調整
+static const int    DEBUG_OPERATION_MAX         = 2;    // デバッグ操作の総数
 
 /* ロックオン関係 */
 // エネミーのプレイヤーからのロックオン状態

@@ -217,6 +217,7 @@
     <ClCompile Include="source\ScenePause.cpp" />
     <ClCompile Include="source\SceneStageClear.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StageJump.cpp" />
+    <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp" />
     <ClCompile Include="source\Screen.cpp" />
     <ClCompile Include="source\ScreenEffect_Damage.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="source\SceneResultDefine.h" />
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
+    <ClInclude Include="source\SceneUi_Debug_StatusSetup.h" />
     <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\SpawnPoint_Base.h" />
     <ClInclude Include="source\EnemySpawnPoint_Normal.h" />

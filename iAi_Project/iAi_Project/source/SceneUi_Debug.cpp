@@ -8,8 +8,8 @@
 SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 {
 	/* 初期化 */
-	this->iSelectMode	= 0;
-	this->iSelectNo		= DEBUG_MODE_OPTION;
+	this->iSelectMode	= DEBUG_MODE_OPTION;
+	this->iSelectNo		= 0;
 
 	/* グローバル変数をデバッグ項目に登録 */
 	pDebugManu.push_back(&gbDrawSceneListFlg);			// シーンリストの描写
@@ -63,14 +63,55 @@ void SceneUi_Debug::Process()
 
 		/* デバッグ操作 */
 		case DEBUG_MODE_OPERATION:
+			/* プレイヤーの入力取得 */
+			// ※プレイヤーの入力に応じて選択中の項目番号を変更する
+			// 上入力
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+			{
+				this->iSelectNo -= 1;
+				if (this->iSelectNo < 0)
+				{
+					this->iSelectNo = 0;
+				}
+			}
+
+			// 下入力
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+			{
+				this->iSelectNo += 1;
+				if (this->iSelectNo > DEBUG_OPERATION_MAX)
+				{
+					this->iSelectNo = DEBUG_OPERATION_MAX;
+				}
+			}
+
 			// 決定
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 			{
-				/* シーン"ステージジャンプ"を作成 */
-				SceneBase* pAddScene = new SceneUi_Debug_StageJump();
+				switch (this->iSelectNo)
+				{
+					/* ステージジャンプ */
+					case DEBUG_OPERATION_STAGEJUMP:
+						{
+							/* シーン"ステージジャンプ"を作成 */
+							SceneBase* pAddScene = new SceneUi_Debug_StageJump();
 
-				/* シーン"ステージジャンプ"をシーンサーバーに追加 */
-				gpSceneServer->AddSceneReservation(pAddScene);
+							/* シーン"ステージジャンプ"をシーンサーバーに追加 */
+							gpSceneServer->AddSceneReservation(pAddScene);
+						}
+						break;
+
+					/* ステータス調整 */
+					case DEBUG_OPERATION_STATUSSETUP:
+						{
+							/* シーン"ステータス調整"を作成 */
+							SceneBase* pAddScene = new SceneUi_Debug_StatusSetup();
+						
+							/* シーン"ステータス調整"をシーンサーバーに追加 */
+							gpSceneServer->AddSceneReservation(pAddScene);
+						}
+						break;
+				}
 			}
 			break;
 	}
@@ -135,8 +176,9 @@ void SceneUi_Debug::Draw()
 		case DEBUG_MODE_OPERATION:
 			DrawBox(780, 300, 1200, 300 - 16, GetColor(255, 0, 0), TRUE);
 			DrawFormatString(800, 300 - 16, GetColor(255, 255, 255), "デバッグ操作");
-			DrawBox(780, 300, 1200, 300 + 16 * 1, GetColor(0, 0, 0), TRUE);
+			DrawBox(780, 300, 1200, 300 + 16 * 2, GetColor(0, 0, 0), TRUE);
 			DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "ステージジャンプ");
+			DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "ステータス調整");
 			break;
 
 	}

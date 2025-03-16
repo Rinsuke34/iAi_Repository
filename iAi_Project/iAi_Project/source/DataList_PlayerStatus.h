@@ -82,30 +82,24 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetNowHaveKunai()						{ return this->iNowHaveKunai; }						// 現在持っているクナイの数
 
 		/* プレイヤーモーション関連 */
-		int		iGetPlayerMotion_Move()					{ return this->iPlayerMotion_Move; }					// プレイヤーモーション(移動系)を取得
-		float	fGetMotionTimer_Move()					{ return this->fMotionTimer_Move; }						// モーションカウント(移動系)を取得
-		float	fGetMotionTimer_Move_End()				{ return this->fMotionTimer_Move_End; }					// モーションカウント(移動系/終了時間)を取得
-		int		iGetPlayerMotionAttachIndex_Move()		{ return this->iPlayerMotionAttachIndex_Move; }			// プレイヤーモーション(移動系)のアタッチ番号
-
-		int		iGetPlayerMotion_Move_Old()				{ return this->iPlayerMotion_Move_Old; }				// 変更前プレイヤーモーション(移動系)を取得
-		float	fGetMotionTimer_Move_Old()				{ return this->fMotionTimer_Move_Old; }					// 変更前モーションカウント(移動系)を取得
-		float	fGetMotionTimer_Move_Old_End()			{ return this->fMotionTimer_Move_Old_End; }				// 変更前モーションカウント(移動系/終了時間)を取得
-		int		iGetPlayerMotionAttachIndex_Move_Old()	{ return this->iPlayerMotionAttachIndex_Move_Old; }		// 変更前プレイヤーモーション(移動系)のアタッチ番号
-
-		float	fGetNowMoveMotionBlendRate()			{ return this->fNowMoveMotionBlendRate; };				// 現在の移動モーションのブレンド率
-
-		int		iGetPlayerMotion_Attack()				{ return this->iPlayerMotion_Attack; }					// プレイヤーモーション(攻撃系)を取得
-		float	fGetMotionTimer_Attack()				{ return this->fMotionTimer_Attack; }					// モーションカウント(攻撃系)を取得
-		float	fGetMotionTimer_Attack_End()			{ return this->fMotionTimer_Attack_End; }				// モーションカウント(攻撃系/終了時間)を取得
-		int		iGetPlayerMotionAttachIndex_Attack()	{ return this->iPlayerMotionAttachIndex_Attack; }		// プレイヤーモーション(攻撃系)のアタッチ番号		
-
+		int		iGetPlayerMotion_Move()						{ return this->iPlayerMotion_Move; }					// プレイヤーモーション(移動系)を取得
+		float	fGetMotionTimer_Move()						{ return this->fMotionTimer_Move; }						// モーションカウント(移動系)を取得
+		float	fGetMotionTimer_Move_End()					{ return this->fMotionTimer_Move_End; }					// モーションカウント(移動系/終了時間)を取得
+		int		iGetPlayerMotionAttachIndex_Move()			{ return this->iPlayerMotionAttachIndex_Move; }			// プレイヤーモーション(移動系)のアタッチ番号
+		int		iGetPlayerMotion_Move_Old()					{ return this->iPlayerMotion_Move_Old; }				// 変更前プレイヤーモーション(移動系)を取得
+		float	fGetMotionTimer_Move_Old()					{ return this->fMotionTimer_Move_Old; }					// 変更前モーションカウント(移動系)を取得
+		float	fGetMotionTimer_Move_Old_End()				{ return this->fMotionTimer_Move_Old_End; }				// 変更前モーションカウント(移動系/終了時間)を取得
+		int		iGetPlayerMotionAttachIndex_Move_Old()		{ return this->iPlayerMotionAttachIndex_Move_Old; }		// 変更前プレイヤーモーション(移動系)のアタッチ番号
+		float	fGetNowMoveMotionBlendRate()				{ return this->fNowMoveMotionBlendRate; };				// 現在の移動モーションのブレンド率
+		int		iGetPlayerMotion_Attack()					{ return this->iPlayerMotion_Attack; }					// プレイヤーモーション(攻撃系)を取得
+		float	fGetMotionTimer_Attack()					{ return this->fMotionTimer_Attack; }					// モーションカウント(攻撃系)を取得
+		float	fGetMotionTimer_Attack_End()				{ return this->fMotionTimer_Attack_End; }				// モーションカウント(攻撃系/終了時間)を取得
+		int		iGetPlayerMotionAttachIndex_Attack()		{ return this->iPlayerMotionAttachIndex_Attack; }		// プレイヤーモーション(攻撃系)のアタッチ番号		
 		int		iGetPlayerMotion_Attack_Old()				{ return this->iPlayerMotion_Attack_Old; }				// 変更前プレイヤーモーション(攻撃系)を取得
 		float	fGetMotionTimer_Attack_Old()				{ return this->fMotionTimer_Attack_Old; }				// 変更前モーションカウント(攻撃系)を取得
 		float	fGetMotionTimer_Attack_Old_End()			{ return this->fMotionTimer_Attack_Old_End; }			// 変更前モーションカウント(攻撃系/終了時間)を取得
 		int		iGetPlayerMotionAttachIndex_Attack_Old()	{ return this->iPlayerMotionAttachIndex_Attack_Old; }	// 変更前プレイヤーモーション(攻撃系)のアタッチ番号
-
 		float	fGetNowAttackMotionBlendRate()				{ return this->fNowAttackMotionBlendRate; };			// 現在の攻撃モーションのブレンド率
-
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
@@ -132,7 +126,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetAddKunaiKeepProbability()			{ return this->iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		int		iGetAddBarrier()						{ return this->iAddBarrier; }						// バリア数(個)
 		bool	bGetAddCounter()						{ return this->bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		bool	bGetKunaiExplosion()					{ return this->bAddKunaiExplosion; }					// クナイ爆発化フラグ(有効/無効)
+		bool	bGetKunaiExplosion()					{ return this->bAddKunaiExplosion; }				// クナイ爆発化フラグ(有効/無効)
 		bool	bGetAddMaxHpOne()						{ return this->bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 		/* データ設定 */

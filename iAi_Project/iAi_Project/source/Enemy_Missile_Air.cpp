@@ -38,7 +38,7 @@ Enemy_Missile_Air::Enemy_Missile_Air() : Enemy_Basic()
 	// エネミーモデルに空中のアニメーションをアタッチする
 	this->iMissileAirAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
 	// アタッチした空中アニメーションの総再生時間を取得する
-	this->iMissileAirAttachIndex = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAirAttachIndex);
+	this->iMissileAirAttachIndex = MV1GetAttachAnimTotalTime(this->iModelHandle, static_cast<float>(this->iMissileAirAttachIndex));
 	this->bDirectionFlg = true;					// 向き固定フラグ
 }
 

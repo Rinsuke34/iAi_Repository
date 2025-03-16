@@ -338,7 +338,6 @@ void SceneStage::Process_StageStart()
 	}
 
 	/* プレイヤー、エネミー以外のオブジェクトの更新 */
-	//ObjectList->UpdatePlayer();
 	ObjectList->UpdateSkySqhere();
 	ObjectList->UpdateEffect();
 	ObjectList->UpdateBullet();

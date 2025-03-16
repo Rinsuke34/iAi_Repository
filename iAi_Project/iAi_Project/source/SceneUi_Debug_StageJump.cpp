@@ -75,7 +75,7 @@ void SceneUi_Debug_StageJump::Process()
 // 描画
 void SceneUi_Debug_StageJump::Draw()
 {
-	DrawBox(850, 350, 1400, 350 + 16 * 1, GetColor(0, 255, 0), TRUE);
+	DrawBox(850, 350, 1400, 350 + 16 * 1, GetColor(0, 0, 0), TRUE);
 	DrawFormatString(850, 350, GetColor(255, 255, 255), "ジャンプ後ステージ番号 :");
 	DrawFormatString(1200, 350, GetColor(255, 255, 255), STAGE_NAME[this->iJumpStageNo].c_str());
 }
