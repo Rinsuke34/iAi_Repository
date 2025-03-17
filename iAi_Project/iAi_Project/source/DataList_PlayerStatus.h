@@ -99,7 +99,9 @@ class DataList_PlayerStatus : public DataListBase
 		float	fGetMotionTimer_Attack_Old()				{ return this->fMotionTimer_Attack_Old; }				// 変更前モーションカウント(攻撃系)を取得
 		float	fGetMotionTimer_Attack_Old_End()			{ return this->fMotionTimer_Attack_Old_End; }			// 変更前モーションカウント(攻撃系/終了時間)を取得
 		int		iGetPlayerMotionAttachIndex_Attack_Old()	{ return this->iPlayerMotionAttachIndex_Attack_Old; }	// 変更前プレイヤーモーション(攻撃系)のアタッチ番号
-		float	fGetNowAttackMotionBlendRate()				{ return this->fNowAttackMotionBlendRate; };			// 現在の攻撃モーションのブレンド率
+		float	fGetNowAttackMotionBlendRate()				{ return this->fNowAttackMotionBlendRate; }				// 現在の攻撃モーションのブレンド率
+		bool	bGetStartFastMotion()						{ return this->bStartFastMotion; }						// 開始時モーション開始フラグ
+		int		iGetFastMotionCount()						{ return this->iFastMotionCount; }						// 開始時モーションカウント
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stGetMeleeSearchCollision()			{ return this->stMeleeSearchCollision; };		// 近接攻撃(強)のロックオン範囲コリジョンを取得
@@ -170,25 +172,22 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetMotionCount_Move(float fMotionCount_Move)								{ this->fMotionTimer_Move					= fMotionCount_Move; };							// モーションカウント(移動系)
 		void	SetMotionCount_Move_End(float fMotionCount_Move_End)						{ this->fMotionTimer_Move_End				= fMotionCount_Move_End; };						// モーションカウント(移動系/終了時間)を設定
 		void	SetPlayerMotionAttachIndex_Move(int iPlayerMotionAttachIndex_Move)			{ this->iPlayerMotionAttachIndex_Move		= iPlayerMotionAttachIndex_Move; }				// プレイヤーモーション(移動系)のアタッチ番号
-
 		void	SetPlayerMotion_Move_Old(int iPlayerMotion_Move_Old)						{ this->iPlayerMotion_Move_Old				= iPlayerMotion_Move_Old; };					// 変更前プレイヤーモーション(移動系)を設定
 		void	SetMotionCount_Move_Old(float fMotionCount_Move_Old)						{ this->fMotionTimer_Move_Old				= fMotionCount_Move_Old; };						// 変更前モーションカウント(移動系)
 		void	SetMotionCount_Move_Old_End(float fMotionCount_Move_Old_End)				{ this->fMotionTimer_Move_Old_End			= fMotionCount_Move_Old_End; };					// 変更前モーションカウント(移動系/終了時間)を設定
 		void	SetPlayerMotionAttachIndex_Move_Old(int iPlayerMotionAttachIndex_Move_Old)	{ this->iPlayerMotionAttachIndex_Move_Old	= iPlayerMotionAttachIndex_Move_Old; }			// 変更前プレイヤーモーション(移動系)のアタッチ番号
-
 		void	SetNowMoveMotionBlendRate(float fNowMoveMotionBlendRate)					{ this->fNowMoveMotionBlendRate				= fNowMoveMotionBlendRate; }					// 現在の移動モーションのブレンド率
-
 		void	SetPlayerMotion_Attack(int iPlayerMotion_Attack)							{ this->iPlayerMotion_Attack				= iPlayerMotion_Attack; };						// プレイヤーモーション(攻撃系)を設定
 		void	SetMotionCount_Attack(float fMotionCount_Attack)							{ this->fMotionTimer_Attack					= fMotionCount_Attack; };						// モーションカウント(攻撃系)を設定
 		void	SetMotionCount_Attack_End(float fMotionCount_Attack_End)					{ this->fMotionTimer_Attack_End				= fMotionCount_Attack_End; };					// モーションカウント(攻撃系/終了時間)を設定
 		void	SetPlayerMotionAttachIndex_Attack(int iPlayerMotionAttachIndex_Attack)		{ this->iPlayerMotionAttachIndex_Attack		= iPlayerMotionAttachIndex_Attack; }			// プレイヤーモーション(攻撃系)のアタッチ番号
-
 		void	SetPlayerMotion_Attack_Old(int iPlayerMotion_Attack_Old)						{ this->iPlayerMotion_Attack_Old			= iPlayerMotion_Attack_Old; };				// 変更前プレイヤーモーション(攻撃系)を設定
 		void	SetMotionCount_Attack_Old(float fMotionCount_Attack_Old)						{ this->fMotionTimer_Attack_Old				= fMotionCount_Attack_Old; };				// 変更前モーションカウント(攻撃系)を設定
 		void	SetMotionCount_Attack_Old_End(float fMotionCount_Attack_Old_End)				{ this->fMotionTimer_Attack_Old_End			= fMotionCount_Attack_Old_End; };			// 変更前モーションカウント(攻撃系/終了時間)を設定		
-		void	SetPlayerMotionAttachIndex_Attack_Old(int iPlayerMotionAttachIndex_Attack_Old)	{ this->iPlayerMotionAttachIndex_Attack_Old	= iPlayerMotionAttachIndex_Attack_Old; }	// 変更前プレイヤーモーション(攻撃系)のアタッチ番号
-
-		void	SetNowAttackMotionBlendRate(float fNowAttackMotionBlendRate)					{ this->fNowAttackMotionBlendRate		= fNowAttackMotionBlendRate; }					// 現在の攻撃モーションのブレンド率
+		void	SetPlayerMotionAttachIndex_Attack_Old(int iPlayerMotionAttachIndex_Attack_Old)	{ this->iPlayerMotionAttachIndex_Attack_Old	= iPlayerMotionAttachIndex_Attack_Old; }	// 変更前プレイヤーモーション(攻撃系)のアタッチ番号を設定
+		void	SetNowAttackMotionBlendRate(float fNowAttackMotionBlendRate)					{ this->fNowAttackMotionBlendRate			= fNowAttackMotionBlendRate; }				// 現在の攻撃モーションのブレンド率を設定
+		void	SetStartFastMotion(bool bStartFastMotion)										{ this->bStartFastMotion					= bStartFastMotion; }						// 開始時モーション開始フラグを設定
+		void	SetFastMotionCount(int iFastMotionCount)										{ this->iFastMotionCount					= iFastMotionCount; }						// 開始時モーションカウントを設定
 
 		/* 判定処理用コリジョン */
 		void	SetMeleeSearchCollision(COLLISION_CAPSULE stMeleeSearchCollision)				{ this->stMeleeSearchCollision			= stMeleeSearchCollision; }						// 近接攻撃(強)のロックオン範囲コリジョンを設定
@@ -267,25 +266,22 @@ class DataList_PlayerStatus : public DataListBase
 		float	fMotionTimer_Move;						// モーションタイマー(移動系)
 		float	fMotionTimer_Move_End;					// モーションタイマー(移動系/終了時間)
 		int		iPlayerMotionAttachIndex_Move;			// プレイヤーモーション(移動系)のアタッチ番号
-
 		int		iPlayerMotion_Move_Old;					// 変更前プレイヤーモーション(移動系)
 		float	fMotionTimer_Move_Old;					// 変更前モーションタイマー(移動系)
 		float	fMotionTimer_Move_Old_End;				// 変更前モーションタイマー(移動系/終了時間)
 		int		iPlayerMotionAttachIndex_Move_Old;		// 変更前プレイヤーモーション(移動系)のアタッチ番号
-
 		float	fNowMoveMotionBlendRate;				// 現在の移動モーションのブレンド率
-
 		int		iPlayerMotion_Attack;					// プレイヤーモーション(攻撃系)
 		float	fMotionTimer_Attack;					// モーションタイマー(攻撃系)
 		float	fMotionTimer_Attack_End;				// モーションタイマー(攻撃系/終了時間)
 		int		iPlayerMotionAttachIndex_Attack;		// プレイヤーモーション(攻撃系)のアタッチ番号
-		
 		int		iPlayerMotion_Attack_Old;				// 変更前プレイヤーモーション(攻撃系)		
 		float	fMotionTimer_Attack_Old;				// 変更前モーションタイマー(攻撃系)
 		float	fMotionTimer_Attack_Old_End;			// 変更前モーションタイマー(攻撃系/終了時間)
 		int		iPlayerMotionAttachIndex_Attack_Old;	// 変更前プレイヤーモーション(攻撃系)のアタッチ番号
-
 		float	fNowAttackMotionBlendRate;				// 現在の攻撃モーションのブレンド率
+		bool	bStartFastMotion;						// 開始時モーション開始フラグ
+		int		iFastMotionCount;						// 開始時モーションカウント
 
 		/* 判定処理用コリジョン */
 		COLLISION_CAPSULE	stMeleeSearchCollision;			// 近接攻撃(強)のロックオン範囲コリジョン

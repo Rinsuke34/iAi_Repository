@@ -56,10 +56,10 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerDamageCount				= 0;								// 被ダメージ回数
 	this->bFallFlg							= false;							// 落下フラグ
 	this->iNowHaveKunai						= 0;								// 現在持っているクナイの数
+	this->bStartFastMotion					= false;							// 開始時モーション開始フラグ
+	this->iFastMotionCount					= 0;								// 開始時モーションカウント
 
 	/* プレイヤーモーション関連 */
-
-
 	this->iPlayerMotion_Move				= MOTION_ID_MOVE_WAIT;			// プレイヤーモーション(移動系)
 	this->iPlayerMotion_Move_Old			= MOTION_ID_MOVE_WALK;			// 変更前プレイヤーモーション(移動系)
 	this->fMotionTimer_Move					= 0;							// モーションタイマー(移動系)

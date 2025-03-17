@@ -45,6 +45,7 @@ static const int	CAMERA_MODE_AIM_KUNAI					= 3;				// 構え(クナイ構え)
 static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
 static const int	CAMERA_MODE_STAGECLEAR					= 5;				// ステージクリア
 static const int	CAMERA_MODE_STAGESTART					= 6;				// ステージ開始
+static const int	CAMERA_MODE_STAGESTART_CLOSE_UP			= 7;				// ステージ開始(プレイヤークローズアップ)
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL		= 30 * 1;		// カメラ座標の線形保管用カウントの最大値(フリー)				/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_CONT_MAX_TITLE			= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(タイトル)				/* 2025.03.06 菊池雅道 定数追加 */
@@ -60,6 +61,8 @@ static const int	CAMERA_FIXED_POSITION_C					= 3;				// カメラ固定座標(C地点)
 static const int	CAMERA_FIXED_POSITION_D					= 4;				// カメラ固定座標(D地点)
 static const int	CAMERA_FIXED_POSITION_E					= 5;				// カメラ固定座標(E地点)
 static const int	CAMERA_FIXED_POSITION_MAX				= 6;				// カメラ固定座標の最大数
+// クローズアップ関連定数
+static const int	CAMERA_CLOSEUP_COUNT_MAX				= 180;				// クローズアップカウントの最大値
 
 /* カメラ固定座標情報 */
 struct CAMERA_FIXED_POSITION_INFO

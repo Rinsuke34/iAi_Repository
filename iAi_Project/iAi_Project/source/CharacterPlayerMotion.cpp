@@ -191,3 +191,74 @@ void CharacterPlayer::Player_Motion_Transition()
 		MV1SetFrameVisible(this->iModelHandle, this->iKunaiHandFrameNo, FALSE);
 	}
 }
+
+// ゲーム開始時のモーション
+void CharacterPlayer::FastMotion()
+{
+	/* 開始時モーション開始フラグが有効であるか確認 */
+	if (this->PlayerStatusList->bGetStartFastMotion() == true)
+	{
+		// 有効である場合
+		/* 開始時モーションカウントを取得 */
+		int iFastMotionCount = this->PlayerStatusList->iGetFastMotionCount();
+
+		/* アニメーションタイマーを取得する */
+		float fMotionCount = this->PlayerStatusList->fGetMotionTimer_Move();
+
+		/* アニメーションタイマーを進める */
+		fMotionCount += 9.f / static_cast<float>(CAMERA_CLOSEUP_COUNT_MAX);
+
+		/* アニメーションタイマーを設定 */
+		this->PlayerStatusList->SetMotionCount_Move(fMotionCount);
+
+		/* モーションカウントを減少 */
+		iFastMotionCount--;
+
+		/* モーションカウントを設定 */
+		this->PlayerStatusList->SetFastMotionCount(iFastMotionCount);
+
+		/* 開始時モーションカウントが無効(0以下)であるか確認 */
+		if (iFastMotionCount <= 0)
+		{
+			// 無効である場合
+			/* 現在のモーションをデタッチする */
+			MV1DetachAnim(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
+
+			/* モーション初期化 */
+			MotionReset();
+		}
+	}
+}
+
+// モーション初期化
+void CharacterPlayer::MotionReset()
+{
+	/* モーションの初期化処理 */
+	{
+		/* 初期モーション番号を設定 */
+		int iInitialMotionNo_Move = this->PlayerStatusList->iGetPlayerMotion_Move();
+		int iInitialMotionNo_Attack = this->PlayerStatusList->iGetPlayerMotion_Attack();
+
+		// モーションのアタッチ
+		int iMotionIndex_Move = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Move].strMotionName.c_str());
+		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex_Move, -1));
+
+		int iMotionIndex_Attack = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Attack].strMotionName.c_str());
+		this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(MV1AttachAnim(this->iModelHandle, iMotionIndex_Attack, -1));
+
+		// モーションタイマーの初期化
+		this->PlayerStatusList->SetMotionCount_Move(0.f);
+		this->PlayerStatusList->SetMotionCount_Attack(0.f);
+
+		// モーション終了時間の設定
+		float fEndTime_Move = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
+		this->PlayerStatusList->SetMotionCount_Move_End(fEndTime_Move);
+
+		float fEndTime_Attack = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack());
+		this->PlayerStatusList->SetMotionCount_Attack_End(fEndTime_Attack);
+
+		// 初期モーション番号を保存
+		this->PlayerStatusList->SetPlayerMotion_Move(iInitialMotionNo_Move);
+		this->PlayerStatusList->SetPlayerMotion_Attack(iInitialMotionNo_Attack);
+	}
+}

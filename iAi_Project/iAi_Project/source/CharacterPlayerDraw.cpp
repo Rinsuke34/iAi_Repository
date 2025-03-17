@@ -68,8 +68,6 @@ void CharacterPlayer::Draw()
 		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move_Old(),	fWholeMoveBlendrate * fBlendRate);
 		// 攻撃モーション
 		fBlendRate = this->PlayerStatusList->fGetNowAttackMotionBlendRate();
-		//MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),		fWholeAttackBlendrate * (1.f - fBlendRate));
-		//MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack_Old(),	fWholeAttackBlendrate * fBlendRate);
 		MV1SetAttachAnimBlendRate(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), fWholeAttackBlendrate);
 
 		/* 上半身のブレンド率を設定 */
@@ -77,11 +75,8 @@ void CharacterPlayer::Draw()
 		fBlendRate = this->PlayerStatusList->fGetNowMoveMotionBlendRate();
 		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(),		this->iUpperBodyFrameNo,	fUpperMoveBlendRate * (1.f - fBlendRate), TRUE);
 		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move_Old(),	this->iUpperBodyFrameNo,	fUpperMoveBlendRate * fBlendRate, TRUE);
-		//MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move(), this->iUpperBodyFrameNo, fUpperMoveBlendRate, TRUE);
 		// 攻撃モーション
 		fBlendRate = this->PlayerStatusList->fGetNowAttackMotionBlendRate();
-		//MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(),		this->iUpperBodyFrameNo,	fUpperAttackBlendRate * (1.f - fBlendRate), TRUE);
-		//MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack_Old(),	this->iUpperBodyFrameNo,	fUpperAttackBlendRate * fBlendRate, TRUE);
 		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->iUpperBodyFrameNo, fUpperAttackBlendRate, TRUE);
 	}
 

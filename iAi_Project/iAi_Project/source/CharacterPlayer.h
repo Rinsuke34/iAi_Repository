@@ -78,6 +78,8 @@ class CharacterPlayer : public CharacterBase
 		void	RadianLimitAdjustment(float& fRadian);	// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
 		void	UpdateCooldownTime();					// クールタイムの更新			/* 2025.02.26 菊池雅道 クールタイム関連の関数追加 */
 		void	PlayerFallRecovery();					// 落下からの復帰				/* 2025.03.02 駒沢風助 落下復帰処理作成 */
+		void	FastMotion();							// ゲーム開始時のモーション
+		void	MotionReset();							// モーション初期化
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ

@@ -201,9 +201,6 @@ void SceneStage::Process()
 
 			/* ステージ状態を初期化する */
 			Initialization();
-
-			///* ゲーム状態を"ゲーム実行"に変更 */
-			//StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
 		/* "ゲーム開始"状態 */
@@ -326,22 +323,48 @@ void SceneStage::Process_StageClear()
 // 計算(ステージ開始時の処理)
 void SceneStage::Process_StageStart()
 {
-	/* カメラモードを"ステージ開始"に設定 */
-	this->StageStatusList->SetCameraMode(CAMERA_MODE_STAGESTART);
-
 	/* カメラ固定座標の値が最大値を超えているか確認 */
 	if (this->iNowCameraFixedPositionNo >= this->iMaxCameraFixedPositionNo - 1)
 	{
 		// 超えている場合
-		/* ステージ状態を初期化する */
-		Initialization();
+		/* カメラモードを"ステージ開始(プレイヤークローズアップ)"に設定 */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_STAGESTART_CLOSE_UP);
 
-		/* ゲーム状態を"ゲーム実行"に変更 */
-		this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
-		return;
+		/* プレイヤーの"開始時モーション開始フラグ"を有効化 */
+		this->PlayerStatusList->SetStartFastMotion(true);
+		
+		/* クローズアップカウントを取得 */
+		int iCloseUpCount = this->StageStatusList->iGetCloseUpCount();
+
+		/* クローズアップカウントが最大値を超えているか確認 */
+		if (iCloseUpCount >= CAMERA_CLOSEUP_COUNT_MAX)
+		{
+			// 超えている場合
+			/* ステージ状態を初期化する */
+			Initialization();
+
+			/* ゲーム状態を"ゲーム実行"に変更 */
+			this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+		}
+		else
+		{
+			// 超えていない場合
+			/* クローズアップカウントを加算 */
+			this->StageStatusList->SetCameraCloseUpCount(iCloseUpCount + 1);
+		}
+	}
+	else
+	{
+		// 超えていない場合
+		/* カメラモードを"ステージ開始"に設定 */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_STAGESTART);
+
+		/* クローズアップカウントを初期化 */
+		this->StageStatusList->SetCameraCloseUpCount(0);
 	}
 
-	/* プレイヤー、エネミー以外のオブジェクトの更新 */
+	/* エネミー以外のオブジェクトの更新 */
+	ObjectList->UpdatePlayer();
 	ObjectList->UpdateSkySqhere();
 	ObjectList->UpdateEffect();
 	ObjectList->UpdateBullet();

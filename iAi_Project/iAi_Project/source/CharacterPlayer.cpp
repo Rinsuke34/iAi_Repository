@@ -96,33 +96,31 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");					/* 2025.03.10 菊池雅道	追加 */
 	}
 
-	/* モーションアタッチ */
+	/* モーション初期化 */
+	MotionReset();
+
+	/* 開始時モーション設定 */
 	{
-		/* 初期モーション番号を設定 */
-		int iInitialMotionNo_Move	= this->PlayerStatusList->iGetPlayerMotion_Move();
-		int iInitialMotionNo_Attack	= this->PlayerStatusList->iGetPlayerMotion_Attack();
+		/* 現在のモーションをデタッチする */
+		MV1DetachAnim(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
 
-		// モーションのアタッチ
-		int iMotionIndex_Move = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Move].strMotionName.c_str());
-		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex_Move, -1));
+		/* 開始時モーション開始フラグを無効化 */
+		this->PlayerStatusList->SetStartFastMotion(false);
 
-		int iMotionIndex_Attack = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[iInitialMotionNo_Attack].strMotionName.c_str());
-		this->PlayerStatusList->SetPlayerMotionAttachIndex_Attack(MV1AttachAnim(this->iModelHandle, iMotionIndex_Attack, -1));
+		/* 開始時モーションカウントを初期化 */
+		this->PlayerStatusList->SetFastMotionCount(CAMERA_CLOSEUP_COUNT_MAX);
 
-		// モーションタイマーの初期化
-		this->PlayerStatusList->SetMotionCount_Move(0.f);
-		this->PlayerStatusList->SetMotionCount_Attack(0.f);
+		/* 着地モーションのモーション番号を取得 */
+		int iMotionIndex = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[MOTION_ID_MOVE_LAND].strMotionName.c_str());
 
-		// モーション終了時間の設定
-		float fEndTime_Move = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
-		this->PlayerStatusList->SetMotionCount_Move_End(fEndTime_Move);
+		/* モーションをアタッチする */
+		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
 
-		float fEndTime_Attack = MV1GetAttachAnimTotalTime(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack());
-		this->PlayerStatusList->SetMotionCount_Attack_End(fEndTime_Attack);
+		/* アニメーションタイマーを初期化値に設定する */
+		this->PlayerStatusList->SetMotionCount_Move(6.f);
 
-		// 初期モーション番号を保存
-		this->PlayerStatusList->SetPlayerMotion_Move(iInitialMotionNo_Move);
-		this->PlayerStatusList->SetPlayerMotion_Attack(iInitialMotionNo_Attack);
+		/* モーションブレンドレートを100%に設定 */
+		this->PlayerStatusList->SetNowMoveMotionBlendRate(1.f);
 	}
 }
 
@@ -147,6 +145,19 @@ void CharacterPlayer::Reset()
 // 更新
 void CharacterPlayer::Update()
 {
+	/* 開始時モーションカウントが有効(1以上)であるか確認 */
+	if (this->PlayerStatusList->iGetFastMotionCount() > 0)
+	{
+		// 有効である場合
+		/* 開始時モーションの処理を行う */
+		FastMotion();
+
+		/* 座標設定 */
+		MV1SetPosition(this->iModelHandle, this->vecPosition);
+
+		return;
+	}
+
 	/* 毎フレーム実施する初期化処理 */
 	{
 		/* 移動量をリセット */
@@ -521,3 +532,4 @@ void CharacterPlayer::PlayerFallRecovery()
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 終了 */
+

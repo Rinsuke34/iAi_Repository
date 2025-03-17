@@ -38,6 +38,7 @@ DataList_StageStatus::DataList_StageStatus() : DataListBase("DataList_StageStatu
 		this->fCameraRotationalSpeed_Mouse		= INIT_CAMERA_ROTATIONAL_SPEED_MOUSE;		// カメラの回転速度(マウス)
 		this->fCameraAngleLimitUp				= INIT_CAMERA_ANGLE_LIMIT_UP;				// カメラの回転角度制限(上)
 		this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// カメラの回転角度制限(下)
+		this->iCloseUpCount						= 0;										// クローズアップカウント
 	}
 }
 

@@ -105,6 +105,15 @@ void SceneStage::SetCamera_Setup()
 			/* カメラ設定 */
 			SetCamera_StageStart();
 			break;
+
+		/* ステージ開始(プレイヤークローズアップ) */
+		case CAMERA_MODE_STAGESTART_CLOSE_UP:
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
+
+			/* カメラ設定 */
+			SetCamera_StageStart_CloseUp();
+			break;
 	}
 
 	// 反映する場合
@@ -397,27 +406,36 @@ void SceneStage::SetCamera_StageStart()
 		/* カメラの座標設定 */
 		this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iNowCameraFixedPositionNo + 1].vecPosition);
 	}
+}
 
+// カメラ設定(ステージ開始(プレイヤークローズアップ))
+void SceneStage::SetCamera_StageStart_CloseUp()
+{
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
-	///* 現在番目のカメラ固定座標であるかを取得 */
-	//int iCameraPointMax = (this->StageStatusList->iGetCameraPositionLeapCount() / CAMERA_POSITION_LEAP_COUNT_MAX_STAGESTART);
+	/* カメラ注視点設定 */
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
+	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
-	///* カメラの注視点設定 */
-	//this->StageStatusList->SetCameraTarget_Target(this->vecCameraPositionInfo[iCameraPointMax + 1].vecTarget);
+	vecCameraTarget.y += 20.f;
 
-	///* カメラの座標設定 */
-	//this->StageStatusList->SetCameraPosition_Target(this->vecCameraPositionInfo[iCameraPointMax + 1].vecPosition);
+	/* カメラ座標設定 */
+	float fRadius	= 0.f;			// 注視点からの距離
+	if (this->StageStatusList->iGetCloseUpCount() >= 90)
+	{
+		fRadius = 200.f;
+	}
+	else
+	{
+		fRadius = 500.f;
+	}
 
-	///* ターゲットとしているカメラ固定座標番号を保存 */
-	//this->iNowCameraFixedPositionNo = iCameraPointMax + 1;
+	float fCameraX	= fRadius * +sinf(0) + vecCameraTarget.x;	// X座標
+	float fCameraY	= fRadius * -sinf(0) + vecCameraTarget.y;	// Y座標
+	float fCameraZ	= fRadius * -cosf(0) + vecCameraTarget.z;	// Z座標
 
-	///* ターゲットとしているカメラ固定座標番号が変更されているか確認 */
-	//if (this->iOldCameraFixedPositionNo != this->iNowCameraFixedPositionNo)
-	//{
-	//	// 変更されている場合
-	//	/* カメラの線形保管用カウントを初期化する */
-	//	this->StageStatusList->SetCameraPositionLeapCount(0);
-	//}
+	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
 }
 
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */

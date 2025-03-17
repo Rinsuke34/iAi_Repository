@@ -50,6 +50,7 @@ class DataList_StageStatus : public DataListBase
 		float	fGetCameraRotationalSpeed_Mouse()		{ return this->fCameraRotationalSpeed_Mouse; }			// カメラの回転速度(マウス)取得
 		float	fGetCameraAngleLimitUp()				{ return this->fCameraAngleLimitUp; }					// カメラの回転角度制限取得(上)
 		float	fGetCameraAngleLimitDown()				{ return this->fCameraAngleLimitDown; }					// カメラの回転角度制限取得(下)
+		int		iGetCloseUpCount()						{ return this->iCloseUpCount; };						// クローズアップカウント
 
 		/* データ設定 */
 		// リスト
@@ -85,6 +86,7 @@ class DataList_StageStatus : public DataListBase
 		void	SetCameraRotationalSpeed_Mouse(float fCameraRotationalSpeed)		{ this->fCameraRotationalSpeed_Mouse		= fCameraRotationalSpeed; }		// カメラの回転速度(マウス)設定
 		void	SetCameraAngleLimitUp(float fCameraAngleupsideLimitUp)				{ this->fCameraAngleLimitUp					= fCameraAngleLimitUp; }		// カメラの回転角度制限設定(上)
 		void	SetCameraAngleLimitDown(float fCameraAngleupsideLimitDown)			{ this->fCameraAngleLimitDown				= fCameraAngleLimitDown; }		// カメラの回転角度制限設定(下)
+		void	SetCameraCloseUpCount(int iCloseUpCount)							{ this->iCloseUpCount						= iCloseUpCount; };				// クローズアップカウント
 
 	private:
 		/* 管理するデータリスト */
@@ -121,4 +123,5 @@ class DataList_StageStatus : public DataListBase
 		float	fCameraRotationalSpeed_Mouse;		// カメラの回転速度(マウス)
 		float	fCameraAngleLimitUp;				// カメラの回転角度制限(上)
 		float	fCameraAngleLimitDown;				// カメラの回転角度制限(下)
+		int		iCloseUpCount;						// クローズアップカウント
 };
