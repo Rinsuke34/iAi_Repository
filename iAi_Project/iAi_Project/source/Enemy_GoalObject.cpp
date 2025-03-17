@@ -138,55 +138,55 @@ void Enemy_GoalObject::Update()
 		}
 	}
 }
-
-// 発光描写
-void Enemy_GoalObject::BloomDraw()
-{
-	/* 元の色を保存 */
-	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
-	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
-	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
-	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
-	std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
-
-	for (int i = 0; i < iBackUpFrames; i++)
-	{
-		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
-		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
-		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
-		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
-	}
-
-	/* ライトフレームNoに設定された番号以外を黒色でに設定 */
-	for (int i = 0; i < iBackUpFrames; i++)
-	{
-		/* 発光フレームであるか確認 */
-		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end())
-		{
-			// 発光フレームである場合
-			/* 対象フレームを赤色で描写 */
-			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
-		}
-		else
-		{
-			// 発光フレームでない場合
-			/* 対象フレームを黒色で描写 */
-			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-		}
-	}
-
-	/* モデル描写 */
-	MV1DrawModel(this->iModelHandle);
-
-	/* 元の色に戻す */
-	for (int i = 0; i < iBackUpFrames; i++)
-	{
-		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
-		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
-		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
-		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
-	}
-}
+//
+//// 発光描写
+//void Enemy_GoalObject::BloomDraw()
+//{
+//	/* 元の色を保存 */
+//	int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
+//	std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
+//	std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
+//	std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
+//	std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
+//
+//	for (int i = 0; i < iBackUpFrames; i++)
+//	{
+//		vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
+//		vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
+//		vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
+//		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
+//	}
+//
+//	/* ライトフレームNoに設定された番号以外を黒色でに設定 */
+//	for (int i = 0; i < iBackUpFrames; i++)
+//	{
+//		/* 発光フレームであるか確認 */
+//		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end())
+//		{
+//			// 発光フレームである場合
+//			/* 対象フレームを赤色で描写 */
+//			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(1.f, 0.f, 0.f, 1.f));
+//		}
+//		else
+//		{
+//			// 発光フレームでない場合
+//			/* 対象フレームを黒色で描写 */
+//			MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+//			MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+//			MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+//			MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+//		}
+//	}
+//
+//	/* モデル描写 */
+//	MV1DrawModel(this->iModelHandle);
+//
+//	/* 元の色に戻す */
+//	for (int i = 0; i < iBackUpFrames; i++)
+//	{
+//		MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
+//		MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
+//		MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
+//		MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
+//	}
+//}

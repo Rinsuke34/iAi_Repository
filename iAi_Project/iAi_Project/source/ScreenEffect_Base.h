@@ -17,6 +17,9 @@ class ScreenEffect_Base
 
 		bool	bGetDeleteFlg() { return this->bDeleteFlg; };	// 削除フラグを取得
 
+		void	SetDeleteFlg(bool bDeleteFlg)	{ this->bDeleteFlg	= bDeleteFlg; };	// 削除フラグを設定
+		void	SetDeleteTime(int iDeleteTime)	{ this->iDeleteTime	= iDeleteTime; };	// 削除時間を設定
+
 	protected:
 		/* 関数 */
 		virtual void	ScreenEffectDraw(int iGrHandle_Screen) {};	// 画面エフェクト描写(引数は対象の画像のハンドル)

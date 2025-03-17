@@ -48,8 +48,8 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* ステージの読み込みを開始 */
 	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
 
-	/* ゲーム状態を"ゲーム開始"に設定 */
-	this->StageStatusList->SetGameStatus(GAMESTATUS_START);
+	/* 初期化処理を実行する */
+	pAddScene->Initialization();
 }
 
 // デストラクタ

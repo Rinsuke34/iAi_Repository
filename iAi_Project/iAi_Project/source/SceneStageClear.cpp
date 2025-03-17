@@ -53,9 +53,6 @@ void SceneGameClear::Process()
 // 描画
 void SceneGameClear::Draw()
 {
-	///* 描画ブレンドモードを加算にする */
-	//SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
-
 	/* ステージクリア画面を再生 */
 	PlayMovieToGraph(*this->piGrHandle_GameClear);
 
@@ -69,12 +66,6 @@ void SceneGameClear::Draw()
 		/* ムービーの再生時間を初期化する */
 		SeekMovieToGraph(*this->piGrHandle_GameClear, 0);
 	}
-
-	///* 描画ブレンドモードをブレンド無しに戻す */
-	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-	///* 描画モードを二アレストに戻す */
-	//SetDrawMode(DX_DRAWMODE_NEAREST);
 }
 
 // メイン処理

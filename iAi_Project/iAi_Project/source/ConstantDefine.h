@@ -43,9 +43,14 @@ static const std::string STAGE_NAME[STAGE_MAX] =
 };
 
 /* 描写関連 */
-static const int	SHADOWMAP_SIZE_PLATFORM     = 2048;		// シャドウマップのサイズ
+static const int    SHADOWMAP_SIZE_ACTOR        = 4096;     // シャドウマップ(アクタ)のサイズ
+static const int    SHADOWMAP_SIZE_PLATFORM     = 4096 * 2;		// シャドウマップ(プラットフォーム)のサイズ
 
-static const float	SHADOWMAP_RANGE			= 1024;		// シャドウマップの描写範囲
+static const int    SHADOWMAP_RANGE_ACTOR_HEIGHT      = 2048;		// シャドウマップ(アクタ)の高さ
+static const int    SHADOWMAP_RANGE_ACTOR_WIDTH       = 2048;		// シャドウマップ(アクタ)の横幅
+static const int    SHADOWMAP_RANGE_PLATFORM_HEIGHT   = 2048 * 3;	// シャドウマップ(プラットフォーム)の高さ
+static const int    SHADOWMAP_RANGE_PLATFORM_WIDTH    = 2048 * 3;	// シャドウマップ(プラットフォーム)の横幅
+
 static const int	LIGHTMAP_DOWNSCALE		= 8;		// ライトマップの縮小倍率
 static const int	LIGHTMAP_GAUSS_WIDTH	= 16;		// ぼかしの強さ(8, 16, 32のいずれか)
 static const int	LIGHTMAP_GAUSS_RATIO	= 100;		// ぼかしパラメータ(100につき約1ピクセル分の幅)
@@ -83,10 +88,14 @@ static const int    RESULT_EVALUATION_MAX   = 5;    // 評価ランクの総数
 
 /* 画面エフェクト関連 */
 // ダメージエフェクト関連
-static const int	DAMAGE_EFFECT_TIME          = 30;	// ダメージエフェクトの持続時間(フレーム数)
-static const int    DAMAGE_EFFECT_SHIFT_CHANGE  = 10;	// ダメージエフェクトのシフト量変更カウント
-static const int	DAMAGE_EFFECT_ALPHA         = 50;	// ダメージエフェクトのアルファ値(0～100)
-static const int	DAMAGE_EFFECT_SHIFT         = 50;	// ダメージエフェクトの最初のシフト量(ピクセル数)
+static const int	DAMAGE_EFFECT_TIME              = 30;	// ダメージエフェクトの持続時間(フレーム数)
+static const int    DAMAGE_EFFECT_SHIFT_CHANGE      = 10;	// ダメージエフェクトのシフト量変更カウント
+static const int	DAMAGE_EFFECT_ALPHA             = 50;	// ダメージエフェクトのアルファ値(0～100)
+static const int	DAMAGE_EFFECT_SHIFT             = 50;	// ダメージエフェクトの最初のシフト量(ピクセル数)
+// 集中線エフェクト関連
+static const int    CONCENTRATIONLINE_EFFECT_CHANGE = 5;    // 集中線エフェクトの変更間隔(フレーム数)
+static const int	CONCENTRATIONLINE_EFFECT_ALPHA  = 30;	// ダメージエフェクトのアルファ値(0～100)
+static const int    CONCENTRATIONLINE_EFFECT_TYPE   = 2;    // 集中線エフェクトの種類の数
 
 /* コンボ関連 */
 // コンボランク

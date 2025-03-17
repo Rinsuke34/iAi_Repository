@@ -58,27 +58,57 @@ void SceneStage::Draw()
 // シャドウマップの設定
 void SceneStage::SetupShadowMap()
 {
-	/* ライト方向設定 */
-	SetShadowMapLightDirection(this->iShadowMapScreenHandle, VNorm(VGet(0.f, -1.f, 0.f)));
+	/* カメラのターゲット座標を取得 */
+	VECTOR vecTargetPos = this->StageStatusList->vecGetCameraTarget();
 
-	/* シャドウマップの描写範囲設定 */
+	/* シャドウマップ(アクタ) */
 	{
-		/* カメラのターゲット座標を取得 */
-		VECTOR vecTargetPos = this->StageStatusList->vecGetCameraTarget();
+		/* ライト方向設定 */
+		// ※真下方向とする
+		SetShadowMapLightDirection(this->iShadowMapScreenHandle_Actor, VGet(0.f, -1.f, 0.f));
 
-		/* シャドウマップ範囲設定 */
-		// ※カメラのターゲット座標を中心に描写
-		SetShadowMapDrawArea(this->iShadowMapScreenHandle, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE, -SHADOWMAP_RANGE, -SHADOWMAP_RANGE)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE, SHADOWMAP_RANGE, SHADOWMAP_RANGE)));
+		/* シャドウマップの描写範囲設定 */
+		{
+			/* シャドウマップ範囲設定 */
+			// ※カメラ注視点を中心に描写
+			SetShadowMapDrawArea(this->iShadowMapScreenHandle_Actor, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE_ACTOR_WIDTH, -SHADOWMAP_RANGE_ACTOR_HEIGHT, -SHADOWMAP_RANGE_ACTOR_WIDTH)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE_ACTOR_WIDTH, SHADOWMAP_RANGE_ACTOR_HEIGHT, SHADOWMAP_RANGE_ACTOR_WIDTH)));
+		}
+
+		/* シャドウマップへの描写を開始 */
+		ShadowMap_DrawSetup(this->iShadowMapScreenHandle_Actor);
+
+		/* 全てのアクタの描写 */
+		ObjectList->DrawPlayer();
+		ObjectList->DrawEnemy();
+		ObjectList->DrawBullet();
+		ObjectList->DrawEffectItem();
+		ObjectList->DrawPickUpItem();
+
+		/* シャドウマップへの描写を終了 */
+		ShadowMap_DrawEnd();
 	}
+	
+	/* シャドウマップ(プラットフォーム) */
+	{
+		/* ライト方向設定 */
+		SetShadowMapLightDirection(this->iShadowMapScreenHandle_Platform, VNorm(VGet(-1.f, -1.f, -1.f)));
 
-	/* シャドウマップへの描写を開始 */
-	ShadowMap_DrawSetup(this->iShadowMapScreenHandle);
+		/* シャドウマップの描写範囲設定 */
+		{
+			/* シャドウマップ範囲設定 */
+			// ※カメラの向きに進ませる
+			SetShadowMapDrawArea(this->iShadowMapScreenHandle_Platform, VAdd(vecTargetPos, VGet(-SHADOWMAP_RANGE_PLATFORM_WIDTH, -SHADOWMAP_RANGE_PLATFORM_HEIGHT, -SHADOWMAP_RANGE_PLATFORM_WIDTH)), VAdd(vecTargetPos, VGet(SHADOWMAP_RANGE_PLATFORM_WIDTH, SHADOWMAP_RANGE_PLATFORM_HEIGHT, SHADOWMAP_RANGE_PLATFORM_WIDTH)));
+		}
 
-	/* すべてのオブジェクトの描写 */
-	ObjectList->DrawAll();
+		/* シャドウマップへの描写を開始 */
+		ShadowMap_DrawSetup(this->iShadowMapScreenHandle_Platform);
 
-	/* シャドウマップへの描写を終了 */
-	ShadowMap_DrawEnd();
+		/* すべてのプラットフォームの描写 */
+		ObjectList->DrawPlatform();
+
+		/* シャドウマップへの描写を終了 */
+		ShadowMap_DrawEnd();
+	}
 }
 
 // ライトマップの設定
@@ -128,7 +158,8 @@ void SceneStage::SetupMainScreen()
 	SetCmaera();
 
 	/* 描写に使用するシャドウマップの設定 */
-	SetUseShadowMap(0, this->iShadowMapScreenHandle);
+	SetUseShadowMap(0, this->iShadowMapScreenHandle_Actor);
+	SetUseShadowMap(1, this->iShadowMapScreenHandle_Platform);
 
 	/* 半透明部分を描写しないよう設定 */
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_NOT_SEMITRANS_ONLY);
@@ -138,6 +169,7 @@ void SceneStage::SetupMainScreen()
 
 	/* 描写に使用するシャドウマップの設定を解除 */
 	SetUseShadowMap(0, -1);
+	SetUseShadowMap(1, -1);
 
 	/* 半透明部分のみ描写するように設定 */
 	MV1SetSemiTransDrawMode(DX_SEMITRANSDRAWMODE_SEMITRANS_ONLY);

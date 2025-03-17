@@ -307,7 +307,7 @@ MV1_COLL_RESULT_POLY PlatformBase::HitCheck_Line(COLLISION_LINE	stLine)
 	}
 
 	/* プラットフォームのモデルと対象の線分コリジョンが接触しているかの情報取得 */
-	stHitPolyDim = MV1CollCheck_Line(
+ 	stHitPolyDim = MV1CollCheck_Line(
 		/* このオブジェクトのコリジョン */
 		this->iModelHandle, this->iCollisionFrameNo,
 		/* 判定するオブジェクトのコリジョン */

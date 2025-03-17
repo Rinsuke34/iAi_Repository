@@ -95,7 +95,8 @@ class SceneStage : public SceneBase
 		int iLightMapScreenHandle_Gauss;			// ライトマップ(ぼかし)のハンドル
 		int iMainScreenHandle;						// メイン画面のハンドル
 		// シャドウマップハンドル
-		int	iShadowMapScreenHandle;					// シャドウマップのハンドル
+		int	iShadowMapScreenHandle_Actor;			// シャドウマップ(アクタ)のハンドル
+		int	iShadowMapScreenHandle_Platform;		// シャドウマップ(プラットフォーム)のハンドル
 
 		/* カメラ関連 */
 		CAMERA_FIXED_POSITION_INFO	vecCameraPositionInfo[CAMERA_FIXED_POSITION_MAX];	// カメラ固定座標情報

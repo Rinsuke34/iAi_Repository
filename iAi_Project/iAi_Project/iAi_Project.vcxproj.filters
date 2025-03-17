@@ -325,12 +325,6 @@
     <Filter Include="ソース ファイル\画面エフェクト">
       <UniqueIdentifier>{26439899-672d-4708-ab20-cd3ea9fb1e1e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\画面エフェクト\ベース">
-      <UniqueIdentifier>{0c2beafe-0628-4472-9557-743d5fc0066d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\画面エフェクト\ベース">
-      <UniqueIdentifier>{7162cbde-b7df-4efa-8a21-1ca1937e7d49}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\データリスト\ステージ状態管理">
       <UniqueIdentifier>{171743c4-b1ef-4cb7-b907-538957d70d69}</UniqueIdentifier>
     </Filter>
@@ -456,6 +450,12 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整">
       <UniqueIdentifier>{8dc038d2-eb04-49f2-9494-82ff2e33fe96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\画面エフェクト\集中線">
+      <UniqueIdentifier>{894a6bc5-28c1-4fd1-9f11-3d52375b13b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\画面エフェクト\集中線">
+      <UniqueIdentifier>{940980e8-073c-478f-a3ca-47d7ec9235fe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -633,9 +633,6 @@
     <ClCompile Include="source\EffectSelfDelete_PlayerFollow_Frame.cpp">
       <Filter>ソース ファイル\オブジェクト\エフェクト</Filter>
     </ClCompile>
-    <ClCompile Include="source\ScreenEffect_Base.cpp">
-      <Filter>ソース ファイル\画面エフェクト\ベース</Filter>
-    </ClCompile>
     <ClCompile Include="source\ScreenEffect_Damage.cpp">
       <Filter>ソース ファイル\画面エフェクト\被ダメージ</Filter>
     </ClCompile>
@@ -719,6 +716,12 @@
     </ClCompile>
     <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_Base.cpp">
+      <Filter>ソース ファイル\画面エフェクト</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenEffect_ConcentrationLine.cpp">
+      <Filter>ソース ファイル\画面エフェクト\集中線</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -917,9 +920,6 @@
     <ClInclude Include="source\EffectSelfDelete_PlayerFollow_Frame.h">
       <Filter>ヘッダー ファイル\オブジェクト\エフェクト</Filter>
     </ClInclude>
-    <ClInclude Include="source\ScreenEffect_Base.h">
-      <Filter>ヘッダー ファイル\画面エフェクト\ベース</Filter>
-    </ClInclude>
     <ClInclude Include="source\ScreenEffect_Damage.h">
       <Filter>ヘッダー ファイル\画面エフェクト\被ダメージ</Filter>
     </ClInclude>
@@ -1015,6 +1015,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneUi_Debug_StatusSetup.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\デバッグ\ステータス調整</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_Base.h">
+      <Filter>ヘッダー ファイル\画面エフェクト</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenEffect_ConcentrationLine.h">
+      <Filter>ヘッダー ファイル\画面エフェクト\集中線</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

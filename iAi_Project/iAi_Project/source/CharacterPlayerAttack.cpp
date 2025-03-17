@@ -21,7 +21,7 @@
 /* 2025.03.12 菊池雅道	スローモーション処理修正 */
 /* 2025.03.13 駒沢風助	クナイ弾数設定 */
 /* 2025.03.13 菊池雅道	クナイ処理変更 */
-
+/* 2025.03.17 駒沢風助	画面エフェクト追加 */
 
 #include "CharacterPlayer.h"
 
@@ -479,6 +479,8 @@ void CharacterPlayer::Player_Melee_Weak()
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		開始 */
 /* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		開始 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正		開始 */
+/* 2025.03.17 駒沢風助	画面エフェクト追加			開始 */
+
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
 {
@@ -512,34 +514,39 @@ void CharacterPlayer::Player_Charge_Attack()
 			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(iNowMelleeStrongAirCount + 1);
 		}
 
-			/* ロックオン中のエネミーを取得 */
-			Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+		/* ロックオン中のエネミーを取得 */
+		Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
-			/* 近接攻撃(強)による移動量を取得 */
-			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
+		/* 近接攻撃(強)による移動量を取得 */
+		VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 
 		// ※ロックオン中のエネミーが存在するかで処理を分岐させる
-			/* ロックオン中のエネミーが存在するか */
-			if (pLockOnEnemy != nullptr)
-			{
-				// 存在する場合(敵に攻撃する場合)
-				/* 空中での近接攻撃(強)の回数をリセット */
-				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合(敵に攻撃する場合)
+			/* 空中での近接攻撃(強)の回数をリセット */
+			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 
-				// 存在する場合
-				/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
-				vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+			// 存在する場合
+			/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
+			vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 
-				/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
-				vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
+			/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
+			vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
 
-				/* 敵を攻撃したフラグを設定 */
-				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
+			/* 敵を攻撃したフラグを設定 */
+			this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
 
 			/* 近接攻撃(強)による移動量を取得 */
 			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(vecMoveDirection);
-			}
+		}
 
+		/* 画面エフェクト(集中線)作成 */
+		// ※持続時間は回避と同じとする
+		ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
+		this->StageStatusList->SetScreenEffect(pScreenEffect);
+		pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
 	}
 	else
 	{
@@ -785,6 +792,7 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正		終了 */
 /* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		終了 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正		終了 */
+/* 2025.03.17 駒沢風助	画面エフェクト追加			終了 */
 
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */

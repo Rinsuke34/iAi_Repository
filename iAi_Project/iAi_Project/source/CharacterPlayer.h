@@ -40,10 +40,12 @@
 /* 画像エフェクト */
 #include "ScreenEffect_Damage.h"
 #include "ScreenEffect_SlowMotion.h"
+#include "ScreenEffect_ConcentrationLine.h"
 
 /* 循環参照対策の先行定義 */
 class ScreenEffect_Damage;
 class ScreenEffect_SlowMotion;
+class ScreenEffect_ConcentrationLine;
 class Gimmick_CheckPoint;
 
 /* プレイヤークラスの宣言 */

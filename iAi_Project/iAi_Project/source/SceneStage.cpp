@@ -41,7 +41,8 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iLightMapScreenHandle_DownScale	= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	this->iLightMapScreenHandle_Gauss		= MakeScreen(SCREEN_SIZE_WIDE / 8, SCREEN_SIZE_HEIGHT / 8);
 	// シャドウマップハンドル
-	this->iShadowMapScreenHandle			= MakeShadowMap(1028 * 2, 1028 * 2);
+	this->iShadowMapScreenHandle_Actor		= MakeShadowMap(SHADOWMAP_SIZE_ACTOR, SHADOWMAP_SIZE_ACTOR);
+	this->iShadowMapScreenHandle_Platform	= MakeShadowMap(SHADOWMAP_SIZE_PLATFORM, SHADOWMAP_SIZE_PLATFORM);
 
 	/* 初期化 */
 	/* カメラ固定座標の初期化 */
@@ -73,14 +74,15 @@ SceneStage::~SceneStage()
 	DeleteGraph(this->iLightMapScreenHandle_Gauss);
 	DeleteGraph(this->iMainScreenHandle);
 	// シャドウマップ
-	DeleteShadowMap(this->iShadowMapScreenHandle);
+	DeleteShadowMap(this->iShadowMapScreenHandle_Actor);
+	DeleteShadowMap(this->iShadowMapScreenHandle_Platform);
 }
 
 // 初期化
 void SceneStage::Initialization()
 {
-	/* ゲーム状態を"ゲーム実行"に変更 */
-	this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+	/* ゲーム状態を"ゲーム開始"に変更 */
+	this->StageStatusList->SetGameStatus(GAMESTATUS_START);
 
 	/* UIを追加するか確認*/
 	if (this->StageStatusList->bGetAddUiFlg() == true)
@@ -200,8 +202,8 @@ void SceneStage::Process()
 			/* ステージ状態を初期化する */
 			Initialization();
 
-			/* ゲーム状態を"ゲーム実行"に変更 */
-			StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
+			///* ゲーム状態を"ゲーム実行"に変更 */
+			//StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
 		/* "ゲーム開始"状態 */
@@ -334,6 +336,8 @@ void SceneStage::Process_StageStart()
 		/* ステージ状態を初期化する */
 		Initialization();
 
+		/* ゲーム状態を"ゲーム実行"に変更 */
+		this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 		return;
 	}
 
@@ -354,7 +358,9 @@ void SceneStage::DrawDebug()
 	/* シャドウマップ描写 */
 	if (gbDrawShadowMapFlg == true)
 	{
-		TestDrawShadowMap(iShadowMapScreenHandle, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
+		TestDrawShadowMap(iShadowMapScreenHandle_Actor, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
+		iDrawCount++;
+		TestDrawShadowMap(iShadowMapScreenHandle_Platform, SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1));
 		iDrawCount++;
 	}
 

@@ -26,8 +26,8 @@ void SceneStage::SetCamera_Setup()
 	}
 
 	/* カメラ設定で使用する変数の定義 */
-	int iCameraType		= INPUT_CAMERA_NORMAL;		// カメラ移動タイプ
-	int iCameraLeapCountMax	= CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;				// カメラ座標の補間カウント最大値
+	int iCameraType			= INPUT_CAMERA_NORMAL;						// カメラ移動タイプ
+	int iCameraLeapCountMax	= CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL;	// カメラ座標の補間カウント最大値
 
 	/* カメラモードに応じて処理を変更 */
 	switch (this->StageStatusList->iGetCameraMode())

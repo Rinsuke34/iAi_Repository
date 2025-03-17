@@ -584,6 +584,7 @@ void CharacterPlayer::Player_Dodg()
 	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
 	/* 2025.03.04 菊池雅道	回避の処理修正 開始 */
 	/* 2025.03.11 菊池雅道	回避の処理修正 開始 */
+	/* 2025.03.17 駒沢風助	画面エフェクト追加 開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -678,6 +679,11 @@ void CharacterPlayer::Player_Dodg()
 
 						/* 回避開始時の時間をリセット */
 						this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
+
+						/* 画面エフェクト(集中線)作成 */
+						ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
+						this->StageStatusList->SetScreenEffect(pScreenEffect);
+						pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
 
 						/* 回避方向設定 */
 						{
@@ -784,6 +790,7 @@ void CharacterPlayer::Player_Dodg()
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
 /* 2025.03.04 菊池雅道	回避の処理修正 終了 */
 /* 2025.03.11 菊池雅道	回避の処理修正 終了 */
+/* 2025.03.17 駒沢風助	画面エフェクト追加 終了 */
 
 /* 2025.01.09 菊池雅道　移動処理追加					追加 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加				開始 */
