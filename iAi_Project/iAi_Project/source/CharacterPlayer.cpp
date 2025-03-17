@@ -13,6 +13,7 @@
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 */
+/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -41,6 +42,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -407,18 +409,22 @@ void CharacterPlayer::PlayerHitCheck()
 void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 {
 	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
-	/* 2πを超えた場合 */
-	if (fRadian > PLAYER_TURN_LIMIT)
+	while (fRadian > PLAYER_TURN_LIMIT || fRadian < 0)
 	{
-		/* 角度を一周(2π)分補正する */
-		fRadian -= PLAYER_TURN_LIMIT;
+		/* 2πを超えた場合 */
+		if (fRadian > PLAYER_TURN_LIMIT)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian -= PLAYER_TURN_LIMIT;
+		}
+		/* 0を下回った場合 */
+		else if (fRadian < 0)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian += PLAYER_TURN_LIMIT;
+		}
 	}
-	/* 0を下回った場合 */
-	else if (fRadian < 0)
-	{
-		/* 角度を一周(2π)分補正する */
-		fRadian += PLAYER_TURN_LIMIT;
-	}
+	
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
 

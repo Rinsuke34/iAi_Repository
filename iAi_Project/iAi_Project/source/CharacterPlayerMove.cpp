@@ -166,7 +166,7 @@ void CharacterPlayer::Player_Move()
 
 		/* カメラの水平方向の向きを移動用の向きに設定 */
 		float fAngleX = this->StageStatusList->fGetCameraAngleX();
-
+		
 		/* 移動量を算出 */
 		vecAddMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
 		vecAddMove.y = 0.0f;
@@ -188,7 +188,7 @@ void CharacterPlayer::Player_Move()
 			
 			/* 補正したカメラ角度を設定 */
 			this->StageStatusList->SetCameraAngleX(fAngleX);
-
+	
 			/* 入力方向とカメラの向きを合成し移動方向とする */
 			fMoveAngle = fAngleX - fMoveAngle;
 
@@ -197,7 +197,7 @@ void CharacterPlayer::Player_Move()
 
 			/* プレイヤーの現在の向き(ラジアン)を取得 */
 			float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
-
+			
 			/* プレイヤーの現在の向き(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
 			this->RadianLimitAdjustment(fCurrentAngle);
 
@@ -220,7 +220,7 @@ void CharacterPlayer::Player_Move()
 
 			/* 振り向き速度に応じて段階的に移動方向を向く */ 
 			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
-
+		
 			/* プレイヤーの向きを更新 */
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
@@ -985,6 +985,7 @@ void CharacterPlayer::Movement_Vertical()
 							// 一定数を超えている場合
 							/* モーションを"ジャンプ(下降)"に設定 */
 							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+
 						}					
 					}
 
@@ -1055,29 +1056,43 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
+					if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+					{
+						/* 壁キックフラグを解除 */
+						this->PlayerStatusList->SetPlayerKickWallFlg(false);
+						
+						/* 経過フレーム数をリセット */
+						this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
+					}
 
-						/* 接触したポリゴンから法線ベクトルを取得し加算する */
-						for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					/* 接触したポリゴンから法線ベクトルを取得し加算する */
+					for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					{
+						/* 法線ベクトルを取得 */
+						// ※ 法線ベクトルが0であるならば、加算しない
+						if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
 						{
-							/* 法線ベクトルを取得 */
-							// ※ 法線ベクトルが0であるならば、加算しない
-							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
-							{
-								// 法線ベクトルが0でない場合
-								/* 法線ベクトルのY軸を初期化 */
-								stHitPolyDim.Dim[j].Normal.y = 0.f;
+							// 法線ベクトルが0でない場合
+							/* 法線ベクトルのY軸を初期化 */
+							stHitPolyDim.Dim[j].Normal.y = 0.f;
 
-								/* 法線ベクトルを正規化 */
-								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+							/* 法線ベクトルを正規化 */
+							VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
 
-								/* 法線ベクトルを合計に加算 */
-								vecNormalSum = VAdd(vecNormalSum, vecNormal);
-							}
+							/* 法線ベクトルを合計に加算 */
+							vecNormalSum = VAdd(vecNormalSum, vecNormal);
 						}
+					}
 
-						/* 取得した法線ベクトルを正規化 */
-						// ※ 取得した法線ベクトルの平均を取得
-						vecNormalSum = VNorm(vecNormalSum);
+					/* 取得した法線ベクトルを正規化 */
+					// ※ 取得した法線ベクトルの平均を取得
+					vecNormalSum = VNorm(vecNormalSum);
+
+					/* 壁の接触フラグを設定 */
+					this->PlayerStatusList->SetPlayerWallTouchFlg(true);
+
+					/* 壁に接触してからの経過フレーム数をリセット */
+					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
 
 					// プレイヤーが移動しているかによって処理を分岐
 					/* プレイヤーの移動量を分割して判定する回数を確認 */
@@ -1115,27 +1130,99 @@ void CharacterPlayer::Movement_Horizontal()
 						{
 							break;
 						}
-					}
 
-					//壁キック処理
-					/* オブジェクトと接触している状態でジャンプボタンを押した場合 */
-					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
-					{
-						/* 壁キックフラグを有効にする */
-						this->PlayerStatusList->SetPlayerKickWallFlg(true);
-					}
-					
+						
+						}					
 					}
 					else
 					{
 						// 移動量を分割して判定する回数が0の場合(移動していない場合)
 						/* 法線ベクトルの方向へ押し出し処理を行う */
 						vecNextPosition = VAdd(this->vecPosition, VScale(vecNormalSum, 1.f));
+					}
 				}
-			}
 				
 			}	
 		}
+	}
+
+	/* 壁との接触フラグを取得 */
+	bool bWallTouch = this->PlayerStatusList->bGetPlayerWallTouchFlg();	
+
+	// 壁と接触していた場合、条件を満たしたら壁キックを行う
+	/* 壁との接触フラグを確認 */
+	if (bWallTouch == true)
+	{	
+		// 壁との接触フラグが有効の場合
+		/* 壁に接触してからの経過フレーム数を取得 */
+		int iNowAfterWallTouchCount = this->PlayerStatusList->iGetPlayerAfterWallTouchCount();
+
+		/* 壁に接触してからの経過フレーム数を加算 */
+		this->PlayerStatusList->SetPlayerAfterWallTouchCount(iNowAfterWallTouchCount + 1);
+
+		/* 壁に接触してからの経過フレーム数が一定値以下か確認する */
+		if (iNowAfterWallTouchCount <= PLAYER_WALL_KICK_INPUT_FLAME)
+		{
+			//壁に接触してからの経過フレーム数が一定値以下の場合
+
+			/* スティックの入力を取得 */
+			VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+			/* スティック入力方向を求める */
+			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
+
+			/* カメラの水平方向の向きを取得 */
+			float fAngleX = this->StageStatusList->fGetCameraAngleX();
+
+			/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
+			this->RadianLimitAdjustment(fAngleX);
+
+			/* 補正したカメラ角度を設定 */
+			this->StageStatusList->SetCameraAngleX(fAngleX);
+
+			/* 入力方向とカメラの向きを合成し移動方向とする */
+			fMoveAngle = fAngleX - fMoveAngle;
+
+			/* スティック入力方向 */
+			VECTOR vecInputDerection = VGet(0.0f, 0.0f, 0.0f);
+
+			/* スティック入力に方向を設定 */
+			vecInputDerection.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+			vecInputDerection.y = 0.0f;
+			vecInputDerection.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+
+			/* 壁の法線ベクトルとスティック入力方向の内積を求める */
+			float fWallInputDot = VDot(vecNormalSum, vecInputDerection);
+
+			/* 壁の法線ベクトルとスティック入力方向の内積が正(同じ向き)か確認する */
+			if (fWallInputDot > 0)
+			{
+				// 壁の法線ベクトルとスティック入力方向の内積が正(同じ向き)の場合
+				/* ジャンプボタンを押したか確認する */
+				if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+				{
+					// ジャンプボタンを押した場合
+					/* 壁キックフラグを有効にする */
+					this->PlayerStatusList->SetPlayerKickWallFlg(true);
+					
+					/* 壁との接触フラグを解除する */
+					this->PlayerStatusList->SetPlayerWallTouchFlg(false);
+
+					/* 壁に接触してからの経過フレーム数をリセット */
+					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
+				}
+			}
+		}
+		else
+		{
+			//壁に接触してからの経過フレーム数が一定値以上の場合
+			/* 壁との接触フラグを解除する */
+			this->PlayerStatusList->SetPlayerWallTouchFlg(false);
+
+			/* 壁に接触してからの経過フレーム数をリセット */
+			this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
+		}
+		
 	}
 
 	/* プレイヤーの座標を移動させる */

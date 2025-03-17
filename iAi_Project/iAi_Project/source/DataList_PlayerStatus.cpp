@@ -7,6 +7,7 @@
 /* 2025.02.26 菊池雅道 初期化処理追加 */
 /* 2025.03.03 菊池雅道 初期化処理追加 */
 /* 2025.03.11 菊池雅道 初期化処理追加 */
+/* 2025.03.17 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
 #include <vector>
@@ -36,6 +37,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerJumpSpeed					= 0;								//プレイヤージャンプ速度											/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerNowDodgeFlame				= 0;								//プレイヤーの現在の回避フレーム数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->fPlayerDodgeSpeed					= 0;								//プレイヤー回避速度												/* 2025.01.10 菊池雅道 初期化処理追加 */
+	this->bPlayerWallTouchFlg				= false;							//プレイヤーが壁に接触したかのフラグ								/* 2025.03.17 菊池雅道 初期化処理追加 */
+	this->iPlayerAfterWallTouchCount		= 0;								//プレイヤーが壁に接触してからの経過フレーム数						/* 2025.03.17 菊池雅道 初期化処理追加 */
 	this->bPlayerKickWallFlg				= false;							//プレイヤーが壁を蹴ったかのフラグ									/* 2025.02.22 菊池雅道 初期化処理追加 */
 	this->iPlayerAfterKickWallCount			= 0;								//プレイヤーが壁を蹴った後のカウント								/* 2025.02.22 菊池雅道 初期化処理追加 */
 	this->bPlayerAfterKickWallFlg			= false;							//プレイヤーが壁を蹴った後のフラグ									/* 2025.02.22 菊池雅道 初期化処理追加 */
@@ -45,6 +48,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMeleeStrongAirCount		= 0;								// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 初期化処理追加 */
 	this->bPlayerMeleeStrongEnemyAttackFlg	= false;							// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 初期化処理追加 */
 	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 初期化処理追加 */
+	this->bPlayerMeleeStrongContinuousFlg	= false;							// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 初期化処理追加 */
 	this->iPlayerSlowMotionCount			= 0;								// プレイヤーのスローモーションカウント											/* 2025.03.11 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
 	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
