@@ -21,6 +21,18 @@ Gimmick_CheckPoint::Gimmick_CheckPoint() : PlatformBase()
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/CheckPoint/CheckPoint");
 	}
 
+	/* 画像取得 */
+	{
+		/* データリスト"画像ハンドル管理"を取得 */
+		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* 通常時(非アクティブ時)の発光色 */
+		this->piGrHandle_NormalRight = ImageList->piGetImage("SpawnPoint/NormalRight");
+
+		/* アクティブ時の発光色 */
+		this->piGrHandle_ActiveRight = ImageList->piGetImage("SpawnPoint/ActiveRight");
+	}
+
 	/* 初期化 */
 	this->bActiveFlg		= false;
 	this->bStartPositionFlg = false;
@@ -41,12 +53,18 @@ void Gimmick_CheckPoint::Initialization()
 		// スタート地点である場合
 		/* アクティブ状態に設定する */
 		this->bActiveFlg = true;
+
+		/* 発光フレームをアクティブ時の発光色に設定する */
+		MV1SetTextureGraphHandle(this->iModelHandle, this->aiLightFrameNo[0], *this->piGrHandle_ActiveRight, true);
 	}
 	else
 	{
 		// スタート地点でない場合
 		/* 非アクティブ状態に設定する */
 		this->bActiveFlg = false;
+
+		/* 発光フレームを通常時の発光色に設定する */
+		MV1SetTextureGraphHandle(this->iModelHandle, this->aiLightFrameNo[0], *this->piGrHandle_NormalRight, true);
 	}
 }
 
@@ -66,6 +84,9 @@ void Gimmick_CheckPoint::Update()
 			// 接触している場合
 			/* アクティブ状態に設定する */
 			this->bActiveFlg = true;
+
+			/* 発光フレームをアクティブ時の発光色に設定する */
+			MV1SetTextureGraphHandle(this->iModelHandle, this->aiLightFrameNo[0], *this->piGrHandle_ActiveRight, true);
 		}
 	}
 }
@@ -85,66 +106,6 @@ void Gimmick_CheckPoint::BloomDraw()
 	{
 		// アクティブ状態である場合
 		/* 発光描写 */
-		// ※青色で描写
-		{
-			/* フレーム数を取得 */
-			int iBackUpFrames = MV1GetFrameNum(this->iModelHandle);
-
-			/* 元の色を保存 */
-			std::vector<COLOR_F> vecOriginalDifColor(iBackUpFrames);
-			std::vector<COLOR_F> vecOriginalSpcColor(iBackUpFrames);
-			std::vector<COLOR_F> vecOriginalEmiColor(iBackUpFrames);
-			std::vector<COLOR_F> vecOriginalAmbColor(iBackUpFrames);
-
-			for (int i = 0; i < iBackUpFrames; i++)
-			{
-				/* フレームの色を取得 */
-				vecOriginalDifColor[i] = MV1GetFrameDifColorScale(this->iModelHandle, i);
-				vecOriginalSpcColor[i] = MV1GetFrameSpcColorScale(this->iModelHandle, i);
-				vecOriginalEmiColor[i] = MV1GetFrameEmiColorScale(this->iModelHandle, i);
-				vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
-			}
-
-			/* ターゲット以外の色を黒に設定 */
-			for (int i = 0; i < iBackUpFrames; i++)
-			{
-				/* 発光フレームではないか確認 */
-				if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end() == false)
-				{
-					// 発光フレームではない場合
-					/* フレームの色を黒色に設定 */
-					MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-					MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-					MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-					MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
-				}
-				else
-				{
-					// 発光フレームである場合
-					/* フレームの色を青色に設定 */
-					MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 1.f, 1.f));
-				}
-			}
-
-			/* モデル描写 */
-			MV1DrawModel(this->iModelHandle);
-
-			/* 元の色に戻す */
-			for (int i = 0; i < iBackUpFrames; i++)
-			{
-				/* フレームの色を元の色に設定 */
-				MV1SetFrameDifColorScale(this->iModelHandle, i, vecOriginalDifColor[i]);
-				MV1SetFrameSpcColorScale(this->iModelHandle, i, vecOriginalSpcColor[i]);
-				MV1SetFrameEmiColorScale(this->iModelHandle, i, vecOriginalEmiColor[i]);
-				MV1SetFrameAmbColorScale(this->iModelHandle, i, vecOriginalAmbColor[i]);
-			}
-		}
-	}
-	else
-	{
-		// アクティブ状態でない場合
-		/* 発光描写 */
-		// ※デフォルトの色(赤)で描写
 		PlatformBase::BloomDraw();
 	}
 }

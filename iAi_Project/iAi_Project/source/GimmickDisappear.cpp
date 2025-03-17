@@ -9,6 +9,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 	}
+
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */

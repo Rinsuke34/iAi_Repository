@@ -6,6 +6,7 @@
 
 /* データリスト */
 #include "DataList_Object.h"
+#include "DataList_Image.h"
 
 /* 中間ポイントクラスの宣言 */
 
@@ -33,6 +34,10 @@ class Gimmick_CheckPoint : public PlatformBase
 	private:
 		/* 使用するデータリスト */
 		DataList_Object* ObjectList;	// オブジェクト管理
+
+		/* 使用する画像のハンドル */
+		int* piGrHandle_NormalRight;			// 通常時(非アクティブ時)の発光色
+		int* piGrHandle_ActiveRight;			// アクティブ時の発光色
 
 		/* 変数 */
 		bool				bActiveFlg;			// アクティブフラグ(有効ならチェックポイントとして機能)
