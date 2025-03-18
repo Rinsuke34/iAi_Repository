@@ -9,7 +9,9 @@
 /* 2025.02.26 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.11 ‹e’r‰ë“¹ ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.12 ‹e’r‰ë“¹ ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
+/* 2025.03.17 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.18 ‹î‘ò•—• ˆÚ“®°ƒKƒ^ƒKƒ^‘Îô */
+/* 2025.03.18 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -39,7 +41,9 @@ static const float	PLAYER_TURN_LIMIT					= DX_PI_F * 2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Š
 static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 30.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚ÌˆÚ“®ƒtƒŒ[ƒ€”							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 80.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì‘¬“x(…•½¬•ª)							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_WALL_KICK_VERTICAL_SPEED		= -30.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì‘¬“x(‚’¼¬•ª)							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_WALL_KICK_INPUT_FLAME		= 20;					// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì“ü—Í—P—\ƒtƒŒ[ƒ€”						/* 2025.03.17 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_PLATFORM_RAND_CORRECTION		= -10.f;				// ƒvƒŒƒCƒ„[’…’nŽž‚Ì°‚Æ‚Ì•â³‹——£(ˆÚ“®°ã‚ÅƒKƒ^ƒKƒ^‚·‚é‘Îô)	/* 2025.03.18 ‹î‘ò•—• ˆÚ“®°ƒKƒ^ƒKƒ^‘Îô */
+static const int	PLAYER_JUMP_COOLTIME				= 10;					// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‚ÌƒN[ƒ‹ƒ^ƒCƒ€							/* 2025.03.18 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 // ‰ñ”ðŠÖŒW
 static const float	PLAYER_DODGE_SPEED					= 100.0f;				// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x											/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */

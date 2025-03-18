@@ -1,4 +1,5 @@
 /* 2025.03.13 菊池雅道 ファイル作成 */
+/* 2025.03.17 菊池雅道 ワープ処理修正 */
 
 #include "BulletPlayerKunaiWarp.h"
 
@@ -119,6 +120,7 @@ void BulletPlayerKunaiWarp::Update()
 	}
 }
 
+/* 2025.03.17 菊池雅道 ワープ処理修正 開始 */
 // ワープ処理
 void BulletPlayerKunaiWarp:: Warp()
 {
@@ -155,11 +157,47 @@ void BulletPlayerKunaiWarp:: Warp()
 			this->PlayerStatusList->SetPlayerAngleX(fEnemyRotate - PI);
 
 			/* プレイヤーのワープ位置を敵の後ろに設定 */
-			VECTOR vecPlayerWarpPotition = VScale(vecEnemyDirection, 250);
-			vecPlayerWarpPotition = VAdd(pTargetEnemy->vecGetPosition(), vecPlayerWarpPotition);
+			VECTOR vecPlayerWarpPosition = VScale(vecEnemyDirection, 250);
+
+			//ワープ後の座標に足場があるか確認し、プレイヤーが落ちないようにする処理
+			{
+				/* プレイヤーの足場を判定する線分 */
+				COLLISION_LINE stCollisionLine;
+
+				/* 足場を取得 */
+				auto& PlatformList = ObjectList->GetPlatformList();
+
+				/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
+				stCollisionLine.vecLineStart	= vecPlayerWarpPosition;
+				stCollisionLine.vecLineStart.y	+= PLAYER_HEIGHT;
+				stCollisionLine.vecLineEnd		= stCollisionLine.vecLineStart;
+				stCollisionLine.vecLineEnd.y	-= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
+
+				/* 足場と接触するか確認 */
+				for (auto* platform : PlatformList)
+				{
+					/* 足場と線分の接触判定を行う */
+					MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
+
+					/* 接触しているか確認 */
+					if (stHitPolyDim.HitFlag == 1)
+					{
+						// 接触している場合
+						/* 敵の後ろにワープする */
+						vecPlayerWarpPosition = VAdd(pTargetEnemy->vecGetPosition(), vecPlayerWarpPosition);
+
+					}
+					else
+					{
+						// 接触していない場合
+						/* 敵の位置にワープする */
+						vecPlayerWarpPosition = pTargetEnemy->vecGetPosition();
+					}
+				}
+			}
 
 			/* プレイヤーの座標をワープ位置に設定 */
-			this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPotition);
+			this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPosition);
 
 			/* プレイヤーの攻撃状態を取得 */
 			int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
@@ -305,3 +343,4 @@ void BulletPlayerKunaiWarp:: Warp()
 		}
 	}
 }
+/* 2025.03.17 菊池雅道 ワープ処理修正 終了 */

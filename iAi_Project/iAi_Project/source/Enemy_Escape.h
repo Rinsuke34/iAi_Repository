@@ -44,6 +44,7 @@ class Enemy_Escape : public Enemy_Basic
 	float fGravity;				// 重力
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool bDirectionFlg;										// 向き固定フラグ
+	int iWaitCount;				// 待機カウント
 
 	//モーション関係変数
 	int iWaitAttachIndex;			// 待機モーションアタッチインデックス

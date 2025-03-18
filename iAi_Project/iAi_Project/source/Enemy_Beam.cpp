@@ -69,6 +69,8 @@ void Enemy_Beam::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 // 敵を移動させる

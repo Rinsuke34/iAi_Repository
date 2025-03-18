@@ -218,8 +218,19 @@ void CharacterPlayer::Player_Shape()
 		if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
 		{
 			// HPが0以下(死亡状態)である場合
-			/* シェイプの適用率を最大にする */
-			this->fShapeRate = 1.f;
+			/* シェイプの適用率が最大値(100%)未満であるか確認 */
+			if (this->fShapeRate < 1.f)
+			{
+				// 超えていない場合
+				/* シェイプの適用率を上昇 */
+				this->fShapeRate += 0.05f;
+			}
+			else
+			{
+				// 超えている場合
+				/* シェイプの適用率を最大値(100%)に設定 */
+				this->fShapeRate = 1.f;
+			}
 		}
 	}
 }
@@ -264,6 +275,9 @@ void CharacterPlayer::FastMotion()
 
 			/* シェイプ適用率を初期化 */
 			this->fShapeRate = 0.f;
+
+			/* 発光停止フラグを無効化 */
+			this->bBloomStopFlg = false;
 		}
 	}
 }

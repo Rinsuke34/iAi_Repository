@@ -8,8 +8,9 @@
 bool gbEndFlg	= false;	// プログラム終了フラグ
 
 /* フォント関連 */
-int	giFontHandle_Normal	= 0;	// フォントハンドル(通常サイズ)
-int giFonthandle_Big	= 0;	// フォントハンドル(大サイズ)
+int	giFontHandle_Small	= 0;	// フォントハンドル(小サイズ(デフォルト))
+int	giFontHandle_Medium	= 0;	// フォントハンドル(中サイズ)
+int giFontHandle_Large	= 0;	// フォントハンドル(大サイズ)
 
 /* プレイヤーの入力情報 */
 Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド
@@ -28,7 +29,7 @@ int	giNowFps	= 0;						// 現在のフレームレート
 
 /* デバッグ用描写管理フラグ */
 bool gbDrawSceneListFlg		= false;		// シーンリストの描写
-bool gbDrawDatalistFlg		= true;			// データリストの描写
+bool gbDrawDatalistFlg		= false;		// データリストの描写
 bool gbDrawFpsFlg			= false;		// フレームレートの描写
 
 /* ローディング関連 */

@@ -30,7 +30,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->piGrHandle_SelectFrame	= ImageList->piGetImage("Test_Edit/Interface/SelectFrame");
 
 		/* "次へ"ボタン */
-		this->piGrHandle_SelectNext		= ImageList->piGetImage("Test_Edit/Interface/SelectNext");
+		this->piGrHandle_SelectNext		= ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
 
 		/* 選択項目の状態フレーム */
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_SET]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleSet");
@@ -44,14 +44,29 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		/* リザルトフレーム */
 		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
 
-		this->piGrHandle_EditLock			= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
-		this->piGrHandle_UnderExplain_Under	= ImageList->piGetImage("Edit/Scene/UI_NowEditExplain_Under");
-		this->piGrHandle_Delete				= ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
-		this->piGrHandle_New				= ImageList->piGetImage("Edit/Scene/UI_Moji_New");
-		this->piGrHandle_NewEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
-		this->piGrHandle_NextButton			= ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
+		/* 現在のエディット情報 */
 		this->piGrHandle_NowEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NowEdit_Under");
 
+		/* 現在のエディット情報の説明欄 */
+		this->piGrHandle_UnderExplain_Under	= ImageList->piGetImage("Edit/Scene/UI_NowEditExplain_Under");
+
+		/* 新規エディット情報 */
+		this->piGrHandle_NewEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
+
+		/* ロック */
+		this->piGrHandle_EditLock			= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
+
+		/* 削除 */
+		this->piGrHandle_Delete				= ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
+
+		/* NEW(文字) */
+		this->piGrHandle_New				= ImageList->piGetImage("Edit/Scene/UI_Moji_New");
+	
+		/* カスタム(文字) */
+		this->piGrHandle_Custom				= ImageList->piGetImage("Edit/Scene/UI_Moji_Custom");
+
+		/* ブラッドアイコン */
+		this->piGrHandle_Blood				= ImageList->piGetImage("Edit/Scene/Blood");
 	}
 
 	/* 初期化 */

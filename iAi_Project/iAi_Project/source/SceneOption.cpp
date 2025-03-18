@@ -251,7 +251,7 @@ void SceneOption::Draw()
 		}
 
 		/* オプション名を描写 */
-		DrawStringToHandle(iDrawPosX + 50, iDrawPosY, this->astOptionNameList->at(i).Name.c_str(), iColor, giFontHandle_Normal);
+		DrawStringToHandle(iDrawPosX + 50, iDrawPosY, this->astOptionNameList->at(i).Name.c_str(), iColor, giFontHandle_Small);
 
 		/* オプションの設定値を描写 */
 		{
@@ -266,25 +266,25 @@ void SceneOption::Draw()
 				if (*static_cast<bool*>(this->astOptionNameList->at(i).pValue) == true)
 				{
 					// 有効である場合
-					DrawStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, "有効", iColor, giFontHandle_Normal);
+					DrawStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, "有効", iColor, giFontHandle_Small);
 				}
 				else
 				{
 					// 無効である場合
-					DrawStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, "無効", iColor, giFontHandle_Normal);
+					DrawStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, "無効", iColor, giFontHandle_Small);
 				}
 			}
 			else if (OptionType == DATA_TYPE_INT)
 			{
 				// 整数型の場合
 				/* 現在の値を描写する */
-				DrawFormatStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, iColor, giFontHandle_Normal, "%d", *static_cast<int*>(this->astOptionNameList->at(i).pValue));
+				DrawFormatStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, iColor, giFontHandle_Small, "%d", *static_cast<int*>(this->astOptionNameList->at(i).pValue));
 			}
 			else if (OptionType == DATA_TYPE_FLOAT)
 			{
 				// 浮動小数点型の場合
 				/* 現在の値を描写する */
-				DrawFormatStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, iColor, giFontHandle_Normal, "%.2f", *static_cast<float*>(this->astOptionNameList->at(i).pValue));
+				DrawFormatStringToHandle(iDrawPosX + OPTION_STATUS_DRAWPOS_X, iDrawPosY, iColor, giFontHandle_Small, "%.2f", *static_cast<float*>(this->astOptionNameList->at(i).pValue));
 			}
 		}
 	}

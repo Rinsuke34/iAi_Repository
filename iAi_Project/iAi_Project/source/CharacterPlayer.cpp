@@ -14,6 +14,7 @@
 /* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 */
+/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -24,15 +25,15 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* 初期化 */
 	{
 		/* オブジェクトのハンドル */
-		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
-		this->pBulletKunaiWarp		= nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
-		this->pBulletKunaiAttack	= nullptr;	// クナイ(攻撃)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletMeleeWeak		=	nullptr;	// 近接攻撃(弱)の弾
+		this->pBulletKunaiWarp		=	nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletKunaiExplosion	=	nullptr;	// クナイ(爆発)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 
 		/* エフェクトのハンドル */
-		this->pChargeEffect			=	nullptr;		//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
-		this->pChargeHoldEffect		=	nullptr;		//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
-		this->pDodgeEffect			=	nullptr;		//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		this->pChargeEffect			=	nullptr;	//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		this->pChargeHoldEffect		=	nullptr;	//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+		this->pDodgeEffect			=	nullptr;	//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 	
 
 		/* 変数 */
@@ -42,6 +43,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -122,6 +124,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* モーションブレンドレートを100%に設定 */
 		this->PlayerStatusList->SetNowMoveMotionBlendRate(1.f);
+
+		/* 発光停止フラグを有効化 */
+		this->bBloomStopFlg = true;
 	}
 
 	/* シェイプ設定 */
@@ -202,6 +207,12 @@ void CharacterPlayer::Update()
 		/* プレイヤーのモーションを"死亡"に設定 */
 		this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DIE);
 		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+
+		/* 発光停止フラグを有効化 */
+		this->bBloomStopFlg = true;
+
+		/* 特殊発光色使用フラグを有効化 */
+		this->bSpBloomCollorFlg = true;
 	}
 
 	/* 攻撃系アクション処理 */
@@ -436,6 +447,8 @@ void CharacterPlayer::PlayerHitCheck()
 void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 {
 	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
+	while (fRadian > PLAYER_TURN_LIMIT || fRadian < 0)
+	{
 	/* 2πを超えた場合 */
 	if (fRadian > PLAYER_TURN_LIMIT)
 	{
@@ -448,6 +461,7 @@ void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 		/* 角度を一周(2π)分補正する */
 		fRadian += PLAYER_TURN_LIMIT;
 	}
+}
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
 
@@ -473,6 +487,8 @@ void CharacterPlayer::UpdateCooldownTime()
 	UpdateCooldownTime(this->iProjectileCoolTime);
 	/* 回避のクールタイム更新 */
 	UpdateCooldownTime(this->iDodgeCoolTime);
+	/* ジャンプのクールタイムを更新 */
+	UpdateCooldownTime(this->iJumpCoolTime);
 }
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 

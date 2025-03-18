@@ -23,6 +23,7 @@ Enemy_Basic::Enemy_Basic() : EnemyBase()
 	this->iPlayerLockOnType	= PLAYER_LOCKON_NONE;	// ロックオンされていない状態にする
 	this->iCoreFrameNo		= -1;					// コアフレーム番号を初期化
 	this->bDeadFlg			= false;				// 死亡フラグ
+	this->iBloodAmount		= 0;					// ブラッド量
 }
 
 // 発光描写
@@ -77,17 +78,17 @@ void Enemy_Basic::Reset()
 // 敵撃破時の処理
 void Enemy_Basic::Defeat()
 {
+	/* データリスト取得 */
+	DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+	/* データリストが存在しない(強制終了された)場合は処理を終了する */
+	if (PlayerStatusList == nullptr)
+	{
+		return;
+	}
+
 	/* プレイヤーのコンボ数加算＆継続時間リセット */
 	{
-		/* データリスト取得 */
-		DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
-
-		/* データリストが存在しない(強制終了された)場合は処理を終了する */
-		if (PlayerStatusList == nullptr)
-		{
-			return;
-		}
-
 		/* プレイヤーのコンボ数加算 */
 		PlayerStatusList->SetPlayerComboNowCount(PlayerStatusList->iGetPlayerComboNowCount() + 1);
 
@@ -110,7 +111,7 @@ void Enemy_Basic::Defeat()
 		AddEffect->SetRotation(this->vecRotation);
 
 		/* エフェクトの削除されるまでの時間を設定 */
-		AddEffect->SetDeleteCount(30);
+		AddEffect->SetDeleteCount(75);
 
 		/* エフェクトの初期化 */
 		AddEffect->Initialization();
@@ -129,7 +130,25 @@ void Enemy_Basic::Defeat()
 		/* "オブジェクト管理"データリストを取得 */
 		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
-		for (int i = 0; i < 10; i++)
+		/* プレイヤーのコンボランクを取得 */
+		int iComboRank = PlayerStatusList->iGetPlayerComboRunk();
+
+		/* ブラッドの生成数を算出 */
+		// 基本のブラッド生成数
+		int iBloodAmount = this->iBloodAmount;
+		// プレイヤーのエディットによるブラッド生成数の加算
+		iBloodAmount += PlayerStatusList->iGetAddBlood();
+
+		/* コンボランクが"無し"以外であるか確認 */
+		if (iComboRank != COMBO_RANK_NONE)
+		{
+			// コンボランクが"無し"以外である場合
+			// コンボランクに応じたブラッド生成数を乗算
+			iBloodAmount *= COMBO_RANK_MAX - iComboRank;
+		}
+
+		/* ブラッドの生成 */
+		for (int i = 0; i < iBloodAmount; i++)
 		{
 			/* 時間経過で削除されるアイテムを追加 */
 			EffectItemBase* AddItem = new EffectItem_Blood();

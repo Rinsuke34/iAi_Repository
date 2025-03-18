@@ -457,6 +457,12 @@
     <Filter Include="ソース ファイル\画面エフェクト\集中線">
       <UniqueIdentifier>{940980e8-073c-478f-a3ca-47d7ec9235fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定">
+      <UniqueIdentifier>{7f3574b5-3bc7-44c5-b532-04eb975664fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定">
+      <UniqueIdentifier>{76578b09-b5b3-4bb8-aed8-9d075286c209}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -699,7 +705,7 @@
     <ClCompile Include="source\BulletPlayerKunai.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="source\BulletPlayerKunaiAttack.cpp">
+    <ClCompile Include="source\BulletPlayerKunaiExplosion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
     <ClCompile Include="source\BulletPlayerKunaiWarp.cpp">
@@ -722,6 +728,12 @@
     </ClCompile>
     <ClCompile Include="source\ScreenEffect_ConcentrationLine.cpp">
       <Filter>ソース ファイル\画面エフェクト\集中線</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Fixed.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Enemy_Fixed_Turret.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -995,7 +1007,7 @@
     <ClInclude Include="source\Enemy_Missile_Air.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\BulletPlayerKunaiAttack.h">
+    <ClInclude Include="source\BulletPlayerKunaiExplosion.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
     <ClInclude Include="source\BulletPlayerKunaiWarp.h">
@@ -1021,6 +1033,12 @@
     </ClInclude>
     <ClInclude Include="source\ScreenEffect_ConcentrationLine.h">
       <Filter>ヘッダー ファイル\画面エフェクト\集中線</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Fixed_Turret.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Enemy_Fixed.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

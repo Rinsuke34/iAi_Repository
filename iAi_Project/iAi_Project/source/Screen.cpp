@@ -26,8 +26,8 @@ Screen::Screen() : PlatformBase()
 		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//タイトル
 		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
 		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
-		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Date");				//データ
-		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Config");			//コンフィグ
+		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");				//コンフィグ
+		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Date");				//データ
 		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
 	}
 
@@ -136,10 +136,6 @@ void Screen::Process()
 			case CAMERA_FIXED_POSITION_A:
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
-				//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-				//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
 				//ホームフラグが有効か確認
 				if (this->bHomeFlg == FALSE)
 				{
@@ -157,6 +153,27 @@ void Screen::Process()
 				//ホームフラグを有効化
 				this->bHomeFlg = TRUE;
 				break;
+				//データホーム画面
+			case CAMERA_FIXED_POSITION_C:
+
+				if (iUICount == CAMERA_FIXED_POSITION_C)
+				{
+					//現在のカメラポジションが設定画面であるか確認
+					this->iUICount = CAMERA_FIXED_POSITION_C;
+					this->bHomeFlg = TRUE;
+				}
+				break;
+				//設定ホーム画面
+			case CAMERA_FIXED_POSITION_D:
+				
+				if (iUICount == CAMERA_FIXED_POSITION_D)
+				{
+					iUICount = CAMERA_FIXED_POSITION_D;
+					this->bHomeFlg = TRUE;
+				}
+				break;
+
+			
 			}
 		}
 

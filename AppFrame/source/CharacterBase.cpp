@@ -38,6 +38,7 @@ void CharacterBase::BloomDraw()
 		vecOriginalAmbColor[i] = MV1GetFrameAmbColorScale(this->iModelHandle, i);
 	}
 
+	// 発光停止フラグが無効である場合
 	/* ライトフレームNoに設定された番号以外を黒色でに設定 */
 	for (int i = 0; i < iBackUpFrames; i++)
 	{
@@ -45,7 +46,27 @@ void CharacterBase::BloomDraw()
 		if (std::find(aiLightFrameNo.begin(), aiLightFrameNo.end(), i) != aiLightFrameNo.end())
 		{
 			// 発光フレームである場合
-			/* 色は変更しない */
+			/* 発光停止フラグが有効であるか確認 */
+			if (this->bBloomStopFlg == true)
+			{
+				// 発光停止フラグが有効である場合
+				/* 対象フレームを黒色で描写 */
+				MV1SetFrameDifColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+				MV1SetFrameSpcColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+				MV1SetFrameEmiColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+				MV1SetFrameAmbColorScale(this->iModelHandle, i, GetColorF(0.f, 0.f, 0.f, 1.f));
+			}
+
+			/* 特殊発光色使用フラグを確認 */
+			if (this->bSpBloomCollorFlg == true)
+			{
+				// 特殊発光色使用フラグが有効である場合
+				/* 対象フレームを特殊発光色で描写 */
+				MV1SetFrameDifColorScale(this->iModelHandle, i, stSpBloomColor);
+				MV1SetFrameSpcColorScale(this->iModelHandle, i, stSpBloomColor);
+				MV1SetFrameEmiColorScale(this->iModelHandle, i, stSpBloomColor);
+				MV1SetFrameAmbColorScale(this->iModelHandle, i, stSpBloomColor);
+			}
 		}
 		else
 		{

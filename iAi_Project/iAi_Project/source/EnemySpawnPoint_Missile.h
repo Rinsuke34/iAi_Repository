@@ -6,6 +6,8 @@
 /* オブジェクト */
 #include "SpawnPoint_Base.h"
 #include "Enemy_Missile.h"
+#include "Enemy_Fixed.h"
+#include "Enemy_Fixed_Turret.h"
 
 /* エネミー(ミサイル)スポナークラスの宣言 */
 

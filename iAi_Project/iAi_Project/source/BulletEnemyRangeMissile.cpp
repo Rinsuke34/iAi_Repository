@@ -90,7 +90,7 @@ void BulletEnemyRangeMissile::Initialization()
 		this->pEffectGuidance->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_contrail/FX_e_missile_contrail")));
 
 		/* エフェクトの座標設定 */
-		this->pEffectGuidance->SetPosition(this->vecPosition);
+		this->pEffectGuidance->SetPosition(VGet(vecPosition.x, vecPosition.y, vecPosition.z));
 
 		/* エフェクトの回転量設定 */
 		this->pEffectGuidance->SetRotation(this->vecRotation);
@@ -131,6 +131,11 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		// ミサイルの移動座標と移動速度を更新
 		this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
 
+		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
+		static const float delayTime = 5.0f; // 数秒後の時間
+		VECTOR delayedPosition = VAdd(VGet(vecPosition.x,vecPosition.y+600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+		this->pEffectGuidance->SetPosition(delayedPosition);
+
 	}
 	// 持続カウントが打ち下げカウントを超えているか確認
 	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_DOWN_COUNT)
@@ -142,6 +147,11 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 		// 再度ミサイルの移動速度を更新
 		//this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 30));
+
+		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
+		static const float delayTime = 5.0f; // 数秒後の時間
+		VECTOR delayedPosition = VAdd(VGet(vecPosition.x,vecPosition.y-600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+		this->pEffectGuidance->SetPosition(delayedPosition);
 	}
 	// 持続カウントが誘導カウントを超えているか確認
 	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_GUIDANCE_COUNT)
@@ -156,6 +166,11 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 
 		// ミサイルの移動座標と移動速度を更新
 		this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 25));
+
+		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
+		static const float delayTime = 5.0f; // 数秒後の時間
+		VECTOR delayedPosition = VAdd(VGet(vecPosition.x, vecPosition.y - 600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+		this->pEffectGuidance->SetPosition(delayedPosition);
 	}
 
 	// ミサイルの座標を更新
@@ -170,10 +185,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	// ミサイルの誘導エフェクト座標をミサイルエフェクトの座標の少し後ろに設定
 	this->pEffectGuidance->SetPosition(this->vecPosition);
 
-	// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
-	static const float delayTime = 10.0f; // 数秒後の時間
-	VECTOR delayedPosition = VAdd(this->vecPosition, VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
-	this->pEffectGuidance->SetPosition(delayedPosition);
+
 
 	// ミサイルの誘導エフェクトの向きを設定
 	VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);

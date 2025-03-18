@@ -4,21 +4,20 @@
 /* オブジェクト */
 #include "BulletPlayerKunai.h"
 
-/* クナイ(攻撃)クラスの宣言 */
+/* クナイ(爆発)クラスの宣言 */
 
-// クナイ(攻撃)
-class BulletPlayerKunaiAttack : public BulletPlayerKunai
+// クナイ(爆発)
+class BulletPlayerKunaiExplosion : public BulletPlayerKunai
 {
 public:
-	BulletPlayerKunaiAttack();				// コンストラクタ
-	virtual ~BulletPlayerKunaiAttack();		// デストラクタ
+	BulletPlayerKunaiExplosion();				// コンストラクタ
+	virtual ~BulletPlayerKunaiExplosion();		// デストラクタ
 
 	virtual void	Initialization()	override;			// 初期化
 	virtual void	Update()			override;			// 更新
 	virtual void	Draw()				override;			// 描画	
 
-	void	Attack();								// 攻撃処理
-	
+	void	Explosion();								// 爆発処理
 
 private:
 	

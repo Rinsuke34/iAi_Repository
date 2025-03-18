@@ -120,6 +120,9 @@ void SceneUi_Combo::Process()
 			this->iPlayerComboRank = COMBO_RANK_D;
 		}
 	}
+
+	/* Œ»Ý‚ÌƒRƒ“ƒ{ƒ‰ƒ“ƒN‚ðÝ’è */
+	this->PlayerStatusList->SetPlayerComboRunk(this->iPlayerComboRank);
 }
 
 // •`‰æ

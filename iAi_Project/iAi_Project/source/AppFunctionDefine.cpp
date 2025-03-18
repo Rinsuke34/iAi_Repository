@@ -81,11 +81,14 @@ namespace PROJECT_INIT
 
 		/* フォント設定 */
 		{
-			/* フォントハンドルを取得(通常サイズとする) */
-			giFontHandle_Normal = LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
+			/* フォントハンドルを取得(最小サイズとする) */
+			giFontHandle_Small	= LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
 
-			/* フォントハンドルを取得(大きいサイズとする) */
-			giFonthandle_Big	= CreateFontToHandle(NULL, 90, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Normal);
+			/* フォントハンドルを取得(中サイズとする) */
+			giFontHandle_Medium	= CreateFontToHandle(NULL, 60, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
+
+			/* フォントハンドルを取得(大サイズとする) */
+			giFontHandle_Large	= CreateFontToHandle(NULL, 90, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
 		}
 
 		/* シェーダー読み込み */

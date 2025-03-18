@@ -142,8 +142,9 @@ void Main::MainEnd()
 	delete gpDataListServer;
 
 	/* フォントデータを削除する */
-	DeleteFontToHandle(giFontHandle_Normal);
-	DeleteFontToHandle(giFonthandle_Big);
+	DeleteFontToHandle(giFontHandle_Small);
+	DeleteFontToHandle(giFontHandle_Medium);
+	DeleteFontToHandle(giFontHandle_Large);
 
 	/* Effkseerの使用を終了する */
 	Effkseer_End();

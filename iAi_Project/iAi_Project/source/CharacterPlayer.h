@@ -11,6 +11,7 @@
 /* 2025.03.08 駒沢風助 新モデル対応 */
 /* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 /* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+/* 2025.03.17 菊池雅道 クールタイム関連の関数・変数追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -27,7 +28,7 @@
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
-#include "BulletPlayerKunaiAttack.h"
+#include "BulletPlayerKunaiExplosion.h"
 #include "BulletPlayerKunaiWarp.h"
 #include "EffectSelfDelete.h"
 #include "EffectSelfDelete_PlayerFollow.h"
@@ -107,7 +108,7 @@ class CharacterPlayer : public CharacterBase
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 		BulletPlayerKunaiWarp* 		pBulletKunaiWarp;			// クナイ(ワープ)の弾			/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
-		BulletPlayerKunaiAttack*	pBulletKunaiAttack;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+		BulletPlayerKunaiExplosion*	pBulletKunaiExplosion;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
 		EffectManualDelete_PlayerFollow_Frame*	pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
@@ -140,4 +141,5 @@ class CharacterPlayer : public CharacterBase
 		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iProjectileCoolTime;	// 遠距離攻撃クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iDodgeCoolTime;			// 回避クールタイム				/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iJumpCoolTime;			// ジャンプクールタイム			/* 2025.03.17 菊池雅道 クールタイム関連の変数追加 */
 };

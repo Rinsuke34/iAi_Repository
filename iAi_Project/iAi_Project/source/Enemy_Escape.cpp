@@ -35,6 +35,7 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bEscapeEffectGenerated = true;	// 逃走エフェクト生成フラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
+	this->iWaitCount = 5;
 }
 
 // デストラクタ
@@ -53,6 +54,8 @@ void Enemy_Escape::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 void Enemy_Escape::MoveEnemy()
@@ -79,6 +82,9 @@ void Enemy_Escape::MoveEnemy()
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
 	{
+		this->iWaitCount--;
+		if (this->iWaitCount <= 0)
+		{
 		//待機モーションをデタッチする
 		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
 
@@ -134,7 +140,7 @@ void Enemy_Escape::MoveEnemy()
 		VECTOR directionAwayFromPlayer = VNorm(VSub(VGet(this->vecPosition.x, 0, this->vecPosition.z), VGet(playerPos.x, 0, playerPos.z)));
 
 		// プレイヤーから逃げる方向と速度を設定
-		this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, static_cast<float>(this->iEscapespeed)));
+				this->vecPosition = VAdd(this->vecPosition, VScale(directionAwayFromPlayer, this->iEscapespeed));
 
 		// エネミーの向きを初期化する
 		VRot = VGet(0, 0, 0);
@@ -151,15 +157,53 @@ void Enemy_Escape::MoveEnemy()
 	}
 }
 }
+	}
 	else
 	{
 		// 探知範囲外にいる場合
+		
+		this->iWaitCount = 5;
+		
+		// 走るモーションをデタッチする
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+
+		// 待機モーションをアタッチする
+		this->iWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 3, -1, FALSE);
+
+		// 待機モーションの総再生時間を取得する	
+		this->fWaitTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iWaitAttachIndex);
+
+		//再生速度を加算
+		this->fWaitPlayTime += 1.0f;
+
+		//再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iWaitAttachIndex, this->fWaitPlayTime);
+
+		//再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fWaitPlayTime >= this->fWaitTotalTime)
+		{
+			//アニメーションの再生時間が総再生時間に達した場合
+			//再生時間を初期化する
+			this->fWaitPlayTime = 0.0f;
+		}
+
 		// プレイヤーの方向を向くようにエネミーの向きを定義
 		VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
+		if (VRot.y <= vecRotation.y)
+		{
+			this->vecRotation = VGet(vecRotation.x, vecRotation.y - 0.2, vecRotation.z);
+		}
+		if (VRot.y >= vecRotation.y)
+		{
+			this->vecRotation = VGet(vecRotation.x, vecRotation.y + 0.2, vecRotation.z);
+		}
+		if (VRot.x == vecRotation.x && VRot.y == vecRotation.y)
+		{
 		//エネミーの向きを設定
 		this->vecRotation = VRot;
 	}
+}
 }
 
 //コリジョン描写

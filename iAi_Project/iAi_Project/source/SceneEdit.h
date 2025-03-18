@@ -30,20 +30,19 @@ class SceneEdit : public SceneBase
 		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
-		int* piGrHandle_ResultBackGround;					// リザルト画面背景(流用)
-		int* piGrHandle_EditLock;							// ロック
-		int* piGrHandle_UnderExplain_Under;
-		int* piGrHandle_Delete;
-		int* piGrHandle_New;
-		int* piGrHandle_NewEdit_Under;
-		int* piGrHandle_NextButton;
-		int* piGrHandle_NowEdit_Under;
-
-		int* piGrHandle_ResultFrame;						// リザルトフレーム
-
 		int* piGrHandle_SelectFrame;						// 選択フレーム
-		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム
+		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
+		int* piGrHandle_ResultFrame;						// リザルトフレーム
+		int* piGrHandle_ResultBackGround;					// リザルト画面背景(流用)
+		int* piGrHandle_NowEdit_Under;						// 現在のエディット情報
+		int* piGrHandle_UnderExplain_Under;					// 現在のエディット情報の説明欄
+		int* piGrHandle_NewEdit_Under;						// 新規エディット情報の説明欄
+		int* piGrHandle_EditLock;							// ロック
+		int* piGrHandle_Delete;								// 削除
+		int* piGrHandle_New;								// NEW(文字)
+		int* piGrHandle_Custom;								// カスタム(文字)
+		int* piGrHandle_Blood;								// ブラッド
 
 		/* 関数 */
 		void	Process_Main();				// メイン処理

@@ -14,20 +14,33 @@ void SceneEdit::Draw()
 	/* 画面の背景描写 */
 	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
 
-	/* NEW */
+	/* Custom(文字) */
+	DrawGraph(80, 30, *this->piGrHandle_Custom, TRUE);
+	DrawBox(65, 140, 1810, 145, GetColor(255, 255, 255), TRUE);
+
+	/* NEW(文字) */
 	DrawGraph(290, 180, *this->piGrHandle_New, TRUE);
 
 	/* 背景 */
 	DrawGraph(350, 885, *this->piGrHandle_UnderExplain_Under, TRUE);
 
 	/* エディット背景 */
-	DrawGraph(350, 250, *this->piGrHandle_NewEdit_Under, TRUE);
-	DrawGraph(625, 250, *this->piGrHandle_NewEdit_Under, TRUE);
-	DrawGraph(900, 250, *this->piGrHandle_NewEdit_Under, TRUE);
-	DrawGraph(1175, 250, *this->piGrHandle_NewEdit_Under, TRUE);
-	DrawGraph(1450, 250, *this->piGrHandle_NewEdit_Under, TRUE);
+	// 新規エディット部分
+	for (int i = 0; i < 6; i++)
+	{
+		int iX = (i * 275) + 35;
+		int iY = 250;
+		DrawGraph(iX, iY, *this->piGrHandle_NewEdit_Under, TRUE);
+	}
+	// 現在エディット部分
+	DrawGraph(350,	695, *this->piGrHandle_NowEdit_Under, TRUE);
 
-	DrawGraph(350, 695, *this->piGrHandle_NowEdit_Under, TRUE);
+	/* 所持ブラッド描写 */
+	DrawGraph(630, 170, *this->piGrHandle_Blood, TRUE);
+	DrawFormatStringToHandle(700, 150, GetColor(255, 255, 255), giFontHandle_Large, "%d", this->GameResourceList->iGetHaveBlood());
+
+	/* 所持ブラッド下線 */
+	DrawBox(645, 235, 1275, 240, GetColor(255, 255, 255), TRUE);
 
 	/* 各項目の描写 */
 	for (int i = 0; i < SELECT_ITEM_MAX; i++)
@@ -37,7 +50,7 @@ void SceneEdit::Draw()
 		{
 			// "次へ"である場合
 			/* "次へ"ボタン描写 */
-			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->piGrHandle_NextButton, TRUE);
+			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->piGrHandle_SelectNext, TRUE);
 		}
 		else
 		{
@@ -47,6 +60,73 @@ void SceneEdit::Draw()
 
 			/* エディット効果描写 */
 			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->GameResourceList->piGetGrHandle_EditEffect(this->astSelectItemList[i].pstEditData->iEditEffect), TRUE);
+
+			/* 選択項目の種類を取得 */
+			int iSelectItemType = this->astSelectItemList[i].iSelectItemType;
+
+			/* 選択項目の種類に応じた処理 */
+			switch (iSelectItemType)
+			{
+				/* キープ中のエディット */
+				/* 新規のエディット */
+				case SELECT_TYPE_KEEP_EDIT:
+				case SELECT_TYPE_NEW_EDIT:
+					/* エディットランクが"無し"以外であるか */
+					if (this->astSelectItemList[i].pstEditData->iEditRank != EDIT_RANK_NONE)
+					{
+						// "無し"以外である場合
+						/* 必要ブラッドを描写 */
+						int iX = (i * 280) + 30;
+						int iY = 420;
+						DrawGraph(iX, iY, *this->piGrHandle_Blood, TRUE);
+						DrawFormatStringToHandle(iX + 70, iY, GetColor(255, 255, 255), giFontHandle_Medium, "%d", this->astSelectItemList[i].pstEditData->iEditCost);
+
+						/* キープ中のエディットであるか確認 */
+						if (iSelectItemType == SELECT_TYPE_KEEP_EDIT)
+						{
+							// キープ中のエディットである場合
+							/* キープアイコン(鍵)を描写 */
+							DrawExtendGraph(30 + 128, 210 + 128, 30 + 255, 210 + 255, *this->piGrHandle_EditLock, TRUE);
+						}
+					}
+					else
+					{
+						// "無し"である場合
+						/* キープ中のエディットであるか確認 */
+						if (iSelectItemType == SELECT_TYPE_KEEP_EDIT)
+						{
+							// キープ中のエディットである場合
+							/* キープアイコン(鍵)を描写 */
+							DrawGraph(30, 210, *this->piGrHandle_EditLock, TRUE);
+						}
+					}
+					break;
+
+				/* 削除 */
+				case SELECT_TYPE_DELETE_EDIT:
+					/* エディットランクが"無し"以外であるか */
+					if (this->astSelectItemList[i].pstEditData->iEditRank != EDIT_RANK_NONE)
+					{
+						// "無し"以外である場合
+						/* 削除アイコン(ゴミ箱)を描写 */
+						DrawExtendGraph(30 + 128, 650 + 128, 30 + 255, 650 + 255, *this->piGrHandle_Delete, TRUE);
+					}
+					else
+					{
+						// "無し"である場合
+						/* 削除アイコン(ゴミ箱)を描写 */
+						DrawGraph(30, 650, *this->piGrHandle_Delete, TRUE);
+					}
+					break;
+
+				/* 現在のエディット */
+				case SELECT_TYPE_NOW_EDIT:
+					break;
+
+				/* 次へ */
+				case SELECT_TYPE_NEXT:
+					break;
+			}
 		}
 
 		/* 選択フレームの状態が設定されているか確認 */
@@ -75,13 +155,4 @@ void SceneEdit::Draw()
 		/* エディット効果描写 */
 		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix + 20, this->astSelectItemList[this->iSelectItem].stDrawPos.iy - 20, *this->GameResourceList->piGetGrHandle_EditEffect(this->HoldEditData.iEditEffect), TRUE);
 	}
-
-	/* 所持ブラッド描写 */
-	DrawFormatStringToHandle(500, 200, GetColor(255, 0, 0),	giFontHandle_Normal, "所持BLOOD : %d", this->GameResourceList->iGetHaveBlood());
-
-	/* 鍵アイコン */
-	DrawGraph(30, 210, *this->piGrHandle_EditLock, TRUE);
-
-	/* ゴミ箱アイコン */
-	DrawGraph(30, 650, *this->piGrHandle_Delete, TRUE);
 }

@@ -1,23 +1,23 @@
 /* 2025.03.13 菊池雅道 ファイル作成 */
 
-#include "BulletPlayerKunaiAttack.h"
+#include "BulletPlayerKunaiExplosion.h"
 
-/* クナイ(攻撃)クラスの定義 */
+/* クナイ(爆発)クラスの定義 */
 
 // コンストラクタ
-BulletPlayerKunaiAttack::BulletPlayerKunaiAttack() 
+BulletPlayerKunaiExplosion::BulletPlayerKunaiExplosion() 
 {
 	
 }
 
 // デストラクタ
-BulletPlayerKunaiAttack::~BulletPlayerKunaiAttack()
+BulletPlayerKunaiExplosion::~BulletPlayerKunaiExplosion()
 {
 
 }
 
 // 初期化
-void BulletPlayerKunaiAttack::Initialization()
+void BulletPlayerKunaiExplosion::Initialization()
 {
 	/* クナイの生成地点からターゲットまでのベクトルをクナイの移動ベクトルに設定 */
 	this->vecKunaiMoveDirection = VSub(this->vecKunaiTargetPosition, this->vecPosition);
@@ -90,7 +90,7 @@ void BulletPlayerKunaiAttack::Initialization()
 }
 
 // 描画
-void BulletPlayerKunaiAttack::Draw()
+void BulletPlayerKunaiExplosion::Draw()
 {
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
@@ -103,7 +103,7 @@ void BulletPlayerKunaiAttack::Draw()
 }
 
 // 更新
-void BulletPlayerKunaiAttack::Update()
+void BulletPlayerKunaiExplosion::Update()
 {
 	/* クナイの移動ベクトルをスケールして移動 */
 	this->vecPosition = VAdd(this->vecPosition, VScale(vecKunaiMoveDirection, KUNAI_SPEED));;
@@ -115,13 +115,13 @@ void BulletPlayerKunaiAttack::Update()
 	if (this->fKunaiMoveDistance >= this->fKunaiTargetDistance)
 	{
 		/* 攻撃処理を行う */
-		this->Attack();
+		this->Explosion();
 
 	}
 }
 
 // 攻撃処理
-void BulletPlayerKunaiAttack::Attack()
+void BulletPlayerKunaiExplosion::Explosion()
 {
 	// 攻撃時の設定を行う
 	/* クナイの攻撃フラグを確認 */

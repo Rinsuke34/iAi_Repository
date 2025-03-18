@@ -63,6 +63,8 @@ void Enemy_Normal_Air::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 // 敵を移動させる

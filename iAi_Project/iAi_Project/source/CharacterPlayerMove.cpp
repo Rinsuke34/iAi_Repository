@@ -17,6 +17,7 @@
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.11 菊池雅道	回避の処理修正 */
 /* 2025.03.12 菊池雅道	スローモーション処理追加 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -25,6 +26,7 @@ void CharacterPlayer::Player_Move()
 {
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
+	/* 2025.03.18 菊池雅道	エディットによる処理追加 開始 */
 
 	/* プレイヤー移動量取得 */
 	float fStickTiltMagnitude	= this->InputList->fGetGameInputMove();				// スティックを倒した強さ
@@ -37,6 +39,7 @@ void CharacterPlayer::Player_Move()
 
 	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
 	float	fMoveSpeedRatio		= 1.f;		// 移動速度(倍率)
+	float	fEditAddSpeed		= this->PlayerStatusList->fGetAddMoveSpeedUp();		// エディットによる移動速度加算値
 	bool	bPlayerAngleSetFlg	= true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
 	bool	bPlayerMoveFlg		= true;		// プレイヤーの移動を行うかのフラグ	
 	
@@ -140,7 +143,7 @@ void CharacterPlayer::Player_Move()
 		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 
 		/* 移動速度を設定 */
-		fSpeed = PLAER_DASH_SPEED * fMoveSpeedRatio;
+		fSpeed = (PLAER_DASH_SPEED + fEditAddSpeed) * fMoveSpeedRatio;
 
 		/* モーションが"ジャンプ(開始)"以外であるか確認 */
 		if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
@@ -160,6 +163,7 @@ void CharacterPlayer::Player_Move()
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
 		/* 2025.03.08 菊池雅道	移動処理修正 終了 */
+	/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
 
 		/* 現在速度を更新 */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
@@ -174,7 +178,7 @@ void CharacterPlayer::Player_Move()
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
 		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
-		/* 2025.02.14 菊池雅道	振り向き処理修正 開始 */
+		/* 2025.03.14 菊池雅道	振り向き処理修正 開始 */
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
 		{
@@ -225,7 +229,7 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
 			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
-			/* 2025.02.14 菊池雅道	振り向き処理修正 終了 */
+			/* 2025.03.14 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
 	else
@@ -311,12 +315,17 @@ void CharacterPlayer::Player_Move()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始*/
+/* 2025.03.18 菊池雅道	エディットによる処理追加	開始 */
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
-	/* プレイヤーの移動を取得 */
+	/* プレイヤーの状態を取得 */
 	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
 	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
+
+	/* エディットによるジャンプ回数加算数を取得 */
+	int iEditAddJumpCount	= this->PlayerStatusList->iGetAddJumpCount();
+	
 	/* ジャンプ処理を行うかのフラグ */
 	bool bJumpFlag = true;
 
@@ -396,11 +405,23 @@ void CharacterPlayer::Player_Jump()
 	if (bJumpFlag == true)
 	{
 		// ジャンプ処理を行う場合
-		/* ジャンプ回数が最大数を超えていないか確認 */
+		/* ジャンプのクールタイムが残っているか確認 */
+		if (this->iJumpCoolTime > 0)
+		{
+			// クールタイムが残っている場合
+			/* ジャンプを行わない */
+			return;
+		}
+		/* 現在のジャンプ回数を取得 */
 		int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
-		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount();
+		
+		/* 最大ジャンプ回数を取得 */
+		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount() + iEditAddJumpCount;
+
+		/* ジャンプ回数が最大数を超えていないか確認 */
 		if (iNowJumpCount < iMaxJumpCount)
 		{
+			// ジャンプ回数が最大数を超えていない場合
 			/* ジャンプ入力がされているか確認 */
 			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
 			{
@@ -469,6 +490,9 @@ void CharacterPlayer::Player_Jump()
 
 					/* モーションを"ジャンプ(開始)"に設定 */
 					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
+					/* ジャンプのクールタイムを設定 */
+					this->iJumpCoolTime = PLAYER_JUMP_COOLTIME;
 				}
 				else
 				{ 
@@ -486,6 +510,7 @@ void CharacterPlayer::Player_Jump()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
+/* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
@@ -1065,6 +1090,14 @@ void CharacterPlayer::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					// 1つ以上のポリゴンが接触している場合
+					if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+					{
+						/* 壁キックフラグを解除 */
+						this->PlayerStatusList->SetPlayerKickWallFlg(false);
+						
+						/* 経過フレーム数をリセット */
+						this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
+					}
 
 						/* 接触したポリゴンから法線ベクトルを取得し加算する */
 						for (int j = 0; j < stHitPolyDim.HitNum; j++)
@@ -1088,6 +1121,12 @@ void CharacterPlayer::Movement_Horizontal()
 						/* 取得した法線ベクトルを正規化 */
 						// ※ 取得した法線ベクトルの平均を取得
 						vecNormalSum = VNorm(vecNormalSum);
+
+					/* 壁の接触フラグを設定 */
+					this->PlayerStatusList->SetPlayerWallTouchFlg(true);
+
+					/* 壁に接触してからの経過フレーム数をリセット */
+					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
 
 					// プレイヤーが移動しているかによって処理を分岐
 					/* プレイヤーの移動量を分割して判定する回数を確認 */
@@ -1125,16 +1164,9 @@ void CharacterPlayer::Movement_Horizontal()
 						{
 							break;
 						}
-					}
 
-					//壁キック処理
-					/* オブジェクトと接触している状態でジャンプボタンを押した場合 */
-					if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
-					{
-						/* 壁キックフラグを有効にする */
-						this->PlayerStatusList->SetPlayerKickWallFlg(true);
-					}
 					
+					}
 					}
 					else
 					{
@@ -1146,6 +1178,85 @@ void CharacterPlayer::Movement_Horizontal()
 				
 			}	
 		}
+	}
+
+	/* 壁との接触フラグを取得 */
+	bool bWallTouch = this->PlayerStatusList->bGetPlayerWallTouchFlg();	
+
+	// 壁と接触していた場合、条件を満たしたら壁キックを行う
+	/* 壁との接触フラグを確認 */
+	if (bWallTouch == true)
+	{	
+		// 壁との接触フラグが有効の場合
+		/* 壁に接触してからの経過フレーム数を取得 */
+		int iNowAfterWallTouchCount = this->PlayerStatusList->iGetPlayerAfterWallTouchCount();
+
+		/* 壁に接触してからの経過フレーム数を加算 */
+		this->PlayerStatusList->SetPlayerAfterWallTouchCount(iNowAfterWallTouchCount + 1);
+
+		/* 壁に接触してからの経過フレーム数が一定値以下か確認する */
+		if (iNowAfterWallTouchCount <= PLAYER_WALL_KICK_INPUT_FLAME)
+		{
+			//壁に接触してからの経過フレーム数が一定値以下の場合
+
+			/* スティックの入力を取得 */
+			VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+
+			/* スティック入力方向を求める */
+			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
+
+			/* カメラの水平方向の向きを取得 */
+			float fAngleX = this->StageStatusList->fGetCameraAngleX();
+
+			/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
+			this->RadianLimitAdjustment(fAngleX);
+
+			/* 補正したカメラ角度を設定 */
+			this->StageStatusList->SetCameraAngleX(fAngleX);
+
+			/* 入力方向とカメラの向きを合成し移動方向とする */
+			fMoveAngle = fAngleX - fMoveAngle;
+
+			/* スティック入力方向 */
+			VECTOR vecInputDerection = VGet(0.0f, 0.0f, 0.0f);
+
+			/* スティック入力に方向を設定 */
+			vecInputDerection.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
+			vecInputDerection.y = 0.0f;
+			vecInputDerection.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+
+			/* 壁の法線ベクトルとスティック入力方向の内積を求める */
+			float fWallInputDot = VDot(vecNormalSum, vecInputDerection);
+
+			/* 壁の法線ベクトルとスティック入力方向の内積が正(同じ向き)か確認する */
+			if (fWallInputDot > 0)
+			{
+				// 壁の法線ベクトルとスティック入力方向の内積が正(同じ向き)の場合
+				/* ジャンプボタンを押したか確認する */
+				if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+				{
+					// ジャンプボタンを押した場合
+					/* 壁キックフラグを有効にする */
+					this->PlayerStatusList->SetPlayerKickWallFlg(true);
+					
+					/* 壁との接触フラグを解除する */
+					this->PlayerStatusList->SetPlayerWallTouchFlg(false);
+
+					/* 壁に接触してからの経過フレーム数をリセット */
+					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
+				}
+			}
+		}
+		else
+		{
+			//壁に接触してからの経過フレーム数が一定値以上の場合
+			/* 壁との接触フラグを解除する */
+			this->PlayerStatusList->SetPlayerWallTouchFlg(false);
+
+			/* 壁に接触してからの経過フレーム数をリセット */
+			this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
+		}
+		
 	}
 
 	/* プレイヤーの座標を移動させる */

@@ -65,6 +65,8 @@ void Enemy_Normal::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 // 敵を移動させる
@@ -136,16 +138,6 @@ void Enemy_Normal::MoveEnemy()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(this->pEffectWarning);
 				}
-			}
-		}
-		}
-	}
-	//エフェクトがnullptrでないか確認
-	if (this->pEffectWarning != nullptr)
-		{
-		// エフェクトが再生中かどうか確認
-		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
-		{
 			if (this->bShotFlg == true)
 			{
 				// エフェクトが再生終了している場合
@@ -158,8 +150,8 @@ void Enemy_Normal::MoveEnemy()
 			this->bShotFlg = false;
 		}
 	}
-
-
+		}
+	}
 }
 
 // ノーマル弾の発射

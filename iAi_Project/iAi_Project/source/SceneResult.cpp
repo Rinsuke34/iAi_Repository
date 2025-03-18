@@ -87,16 +87,16 @@ void SceneResult::Draw()
 	DrawBox(RESULT_STRING_RANK_LINE_LU, RESULT_STRING_RANK_LINE_LD, RESULT_STRING_RANK_LINE_RU, RESULT_STRING_RANK_LINE_RD, GetColor(255, 255, 255), TRUE);
 
 	/* 文字(マキナスフォント使用部分) */
-	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFonthandle_Big,	"CLEAR TIME");
-	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFonthandle_Big,	"%d s", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
+	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFontHandle_Large,	"CLEAR TIME");
+	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%d s", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
 
-	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFonthandle_Big,	"MAX COMBO");
-	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFonthandle_Big, "%d COMBO", PlayerStatusList->iGetPlayerComboMaxCount());
+	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFontHandle_Large,	"MAX COMBO");
+	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFontHandle_Large, "%d COMBO", PlayerStatusList->iGetPlayerComboMaxCount());
 
-	DrawFormatStringToHandle(80, 560, GetColor(0, 0, 0), giFonthandle_Big,	"TAKE DAMAGE");
-	DrawFormatStringToHandle(80 + 600, 560, GetColor(0, 0, 0), giFonthandle_Big, "%d DAMAGE", PlayerStatusList->iGetPlayerDamageCount());
+	DrawFormatStringToHandle(80, 560, GetColor(0, 0, 0), giFontHandle_Large,	"TAKE DAMAGE");
+	DrawFormatStringToHandle(80 + 600, 560, GetColor(0, 0, 0), giFontHandle_Large, "%d DAMAGE", PlayerStatusList->iGetPlayerDamageCount());
 
-	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFonthandle_Big,	"GET BLOOD");
+	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFontHandle_Large,	"GET BLOOD");
 
 
 	//DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：エディット画面へ");

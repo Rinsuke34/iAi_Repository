@@ -22,12 +22,16 @@
 /* 2025.03.13 駒沢風助	クナイ弾数設定 */
 /* 2025.03.13 菊池雅道	クナイ処理変更 */
 /* 2025.03.17 駒沢風助	画面エフェクト追加 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加 */
+/* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 */
 
 #include "CharacterPlayer.h"
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 開始 */
 /* 2025.03.04 菊池雅道	スローモーション処理追加	開始 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加	開始 */
 // 攻撃状態遷移管理
 void CharacterPlayer::Player_Attack_Transition()
 {
@@ -52,6 +56,63 @@ void CharacterPlayer::Player_Attack_Transition()
 				// 攻撃入力がされている場合
 				/* プレイヤー状態を"近接攻撃構え中"に設定 */
 				this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_POSTURE);
+			}
+
+			// 近接攻撃(強)で敵を倒した後、次の敵を攻撃できる場合エフェクトとSEを出す 
+			/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
+			if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
+			{
+				/* プレイヤーが近距離攻撃(強)を連続で行えるかのフラグを確認 */
+				if (this->PlayerStatusList->bGetPlayerMeleeStrongContinuousFlg() == true)
+				{
+					//近距離攻撃(強)を連続で行える場合
+					/* プレイヤーが近接攻撃(強)で敵を倒した後のカウントを取得 */
+					int iPlayerMeleeStrongAfterCount = this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount();
+					
+					/* 近接攻撃(強)で敵を倒した後のカウントが0か確認 */
+					if (iPlayerMeleeStrongAfterCount == 0)
+					{
+						// カウントが0の場合
+						/* 溜め居合チャージ完了のSEを再生 */
+						gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE_COMPLETE);
+
+						/* 溜め完了エフェクトを生成 */
+						EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+
+						/* 溜め完了エフェクトの読み込み */
+						pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
+
+						/* 溜め完了エフェクトの初期化 */
+						pAddEffect->Initialization();
+
+						/* 溜め完了エフェクトの時間を設定 */
+						pAddEffect->SetDeleteCount(20);
+
+						/* 溜め完了エフェクトをリストに登録 */
+						{
+							/* 溜め完了エフェクトをリストに登録 */
+							this->ObjectList->SetEffect(pAddEffect);
+						}
+
+						/* 溜め完了後エフェクトを生成 */
+						this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
+
+						/* 溜め完了後エフェクトの読み込み */
+						this->pChargeHoldEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_hold/FX_charge_hold")));
+
+						/* 溜め完了後エフェクトの回転量設定 */
+						this->pChargeHoldEffect->SetRotation(this->vecRotation);
+
+						/* 溜め完了後エフェクトの初期化 */
+						this->pChargeHoldEffect->Initialization();
+
+						/* 溜め完了後エフェクトをリストに登録 */
+						{
+							/* 溜め完了後エフェクトをリストに登録 */
+							this->ObjectList->SetEffect(this->pChargeHoldEffect);
+						}
+					}
+				}	
 			}
 			/* エイム(構え)入力がされているか確認 */
 			else if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
@@ -97,6 +158,15 @@ void CharacterPlayer::Player_Attack_Transition()
 
 					/* 近距離攻撃(強)で敵を倒した後のフラグを解除 */
 					this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+
+					/* 溜め完了エフェクトが存在しているか確認 */
+					if (this->pChargeHoldEffect != nullptr)
+					{
+						// 溜め完了エフェクトが存在している場合
+						/* 溜め完了後エフェクトを削除 */
+						this->pChargeHoldEffect->SetDeleteFlg(true);
+						this->pChargeHoldEffect = nullptr;
+					}
 				}
 			}
 			break;
@@ -141,6 +211,7 @@ void CharacterPlayer::Player_Attack_Transition()
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 終了 */
 /* 2025.03.04 菊池雅道	スローモーション処理追加	終了 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加	終了 */
 
 	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
@@ -150,12 +221,15 @@ void CharacterPlayer::Player_Attack_Transition()
 	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	開始 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 開始 */
-
+/* 2025.03.18 菊池雅道	エディットによる処理追加 開始 */
 // 近接攻撃(構え)
 void CharacterPlayer::Player_Melee_Posture()
 {
+	/* エディットによる攻撃チャージフレームの短縮値を取得 */
+	int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
+
 	/* プレイヤーの現在の攻撃チャージフレームの取得 */
-	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
+	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() + iEditChargeFlameShortening;
 
 	/* プレイヤーの空中での近接攻撃(強)の回数を取得 */
 	int iNowMeleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
@@ -241,9 +315,14 @@ void CharacterPlayer::Player_Melee_Posture()
 					/* 溜め居合チャージ完了のSEを再生 */
 					gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE_COMPLETE);
 
+					/* 溜めエフェクトが存在するか確認 */
+					if (this->pChargeEffect != nullptr)
+					{
+						// 溜めエフェクトが存在する場合
 					/* 溜めエフェクトは削除 */
 					this->pChargeEffect->SetDeleteFlg(true);
 					this->pChargeEffect = nullptr;
+					}
 
 					/* 溜め完了エフェクトを生成 */
 					EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
@@ -348,8 +427,14 @@ void CharacterPlayer::Player_Melee_Posture()
 		else
 		{
 			// 強攻撃になる場合
+			/* プレイヤーの空中での近接攻撃(強)最大数を取得 */
+			int iMeleeStrongAirMaxCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount();
+
+			/* エディットによる空中での近接攻撃(強)最大数の加算数を取得 */
+			int iEditAddMeleeStrongAirMaxCount = this->PlayerStatusList->iGetAddMeleeStrongAirMaxCount();
+
 			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
-			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
+			if (iNowMeleeStrongAirCount >= iMeleeStrongAirMaxCount + iEditAddMeleeStrongAirMaxCount)
 			{
 				// 超えている場合
 				/*近接攻撃(強)の処理を行わない */
@@ -399,6 +484,7 @@ void CharacterPlayer::Player_Melee_Posture()
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
 /* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	終了 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -480,6 +566,7 @@ void CharacterPlayer::Player_Melee_Weak()
 /* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		開始 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正		開始 */
 /* 2025.03.17 駒沢風助	画面エフェクト追加			開始 */
+/* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正		開始 */
 
 // 近距離攻撃(強)
 void CharacterPlayer::Player_Charge_Attack()
@@ -528,7 +615,6 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* 空中での近接攻撃(強)の回数をリセット */
 			this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 
-			// 存在する場合
 			/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
 			vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
 
@@ -538,21 +624,70 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* 敵を攻撃したフラグを設定 */
 			this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
 
-			/* 近接攻撃(強)による移動量を取得 */
+			/* 現在の近接攻撃(強)での撃破数を取得 */
+			int iNowMeleeStrongDestroyCount = this->PlayerStatusList->iGetiMeleeStrongDestroyCount();
+
+			/* 近接攻撃(強)での撃破数を加算 */
+			this->PlayerStatusList->SetMeleeStrongDestroyCount(iNowMeleeStrongDestroyCount + 1);
+
+			//移動後の座標に足場があるか確認し、プレイヤーが落ちないようにする処理
+			{
+				/* プレイヤーの足場を判定する線分 */
+				COLLISION_LINE stCollisionLine;
+
+				/* 移動後のプレイヤーの頂点から下方向へ向けた線分を作成 */
+				stCollisionLine.vecLineStart = VAdd(this->vecGetPosition(), vecMoveDirection);
+				stCollisionLine.vecLineStart.y += PLAYER_HEIGHT;
+				stCollisionLine.vecLineEnd = stCollisionLine.vecLineStart;
+				stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
+
+				/* 足場を取得 */
+				auto& PlatformList = ObjectList->GetPlatformList();
+
+				/* 足場とプレイヤーが接触するか確認する処理 */
+				for (auto* platform : PlatformList)
+				{
+					/* 足場と線分の接触判定を行う */
+					MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
+
+					/* 足場と線分が接触しているか確認 */
+					if (stHitPolyDim.HitFlag == 1)
+					{
+						// 接触している場合
+						/* 移動量をプレイヤーの現在位置からロックオン中のエネミーの位置に修正 */
+						vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+
+						/* エネミーの位置から追加で移動(突き抜ける感じを出すため) */
+						vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
+						
+						/* 処理を終了する */
+						break;
+					}
+					else
+					{
+						// 接触していない場合
+						/* エネミーの位置に移動する */
+						vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+					}
+				}
+
+			}
+
+			/* 近接攻撃(強)による移動量を設定 */
 			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(vecMoveDirection);
 		}
-
-		/* 画面エフェクト(集中線)作成 */
-		// ※持続時間は回避と同じとする
-		ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
-		this->StageStatusList->SetScreenEffect(pScreenEffect);
-		pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
-	}
-	else
-	{
-		// 1以上である場合
-		/* 攻撃＆移動処理 */
+			/* 画面エフェクト(集中線)作成 */
+			// ※持続時間は回避と同じとする
+			ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
+			this->StageStatusList->SetScreenEffect(pScreenEffect);
+			pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
+		
+		}
+		else
 		{
+			// 1以上である場合
+			/* 攻撃＆移動処理 */
+			
 			/* 近接攻撃(強)による移動量を取得 */
 			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 
@@ -643,143 +778,162 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->ObjectList->SetEffect(pAddEffect);
 			}
 		}
-	}
 
-	// 近接攻撃(強)で敵を倒した後、次の敵を探す
-	/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
-	if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
-	{
-		// 近接攻撃(強)で敵を倒した後の場合
-		// 次の敵を探す処理
-		/* プレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする */ 
-		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+		// 近接攻撃(強)で敵を倒した後、次の敵を探す
+		/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
+		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 		{
-			// モーションが"近距離攻撃(強)(終了)"になった場合
-			/* 索敵範囲を設定 */
-			COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
-
-			/* プレイヤーに近いエネミーを取得する */
-			NearEnemy stNearEnemy = { nullptr, 0.f };
-
-			/* エネミーリストを取得 */
-			auto& EnemyList = ObjectList->GetEnemyList();
-
-			/* プレイヤーからエネミーの最小ベクトルを保持する変数 */
-			VECTOR vecMinDirection = VGet(PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE);
-
-			/* プレイヤーからエネミーの最小距離を保持する変数 */
-			float fMinDistance = VSize(vecMinDirection);
-
-			/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
-			for (auto* enemy : EnemyList)
+			// 近接攻撃(強)で敵を倒した後の場合
+			// 次の敵を探す処理
+			/* プレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする */
+			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 			{
-				/* 対象のエネミーの死亡フラグが有効であるか確認 */
-				if (enemy->bGetDeadFlg() == true)
+				// モーションが"近距離攻撃(強)(終了)"になった場合
+				/* 索敵範囲を設定 */
+				COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
+
+				/* プレイヤーに近いエネミーを取得する */
+				NearEnemy stNearEnemy = { nullptr, 0.f };
+
+				/* エネミーリストを取得 */
+				auto& EnemyList = ObjectList->GetEnemyList();
+
+				/* プレイヤーからエネミーの最小ベクトルを保持する変数 */
+				VECTOR vecMinDirection = VGet(PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE);
+
+				/* プレイヤーからエネミーの最小距離を保持する変数 */
+				float fMinDistance = VSize(vecMinDirection);
+
+				/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
+				for (auto* enemy : EnemyList)
 				{
-					// 有効である場合
-					/* 判定の対象外とする */
-					continue;
-				}
-
-				/* 索敵範囲に接触しているか確認 */
-				if (enemy->HitCheck(stSearchSqere) == true)
-				{
-					// 索敵範囲内である場合
-					/* コアのワールド座標を取得 */
-					VECTOR vecCoreWorld = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
-
-					/* プレイヤーとエネミーの間を確認する線分コリジョンを設定 */
-					COLLISION_LINE stCollisionLine;
-
-					/* 線分コリジョンの開始点を設定(プレイヤー) */
-					stCollisionLine.vecLineStart = this->vecPosition;
-
-					/* 開始点の高さをプレイヤーの高さとする */
-					stCollisionLine.vecLineStart.y = this->vecPosition.y + PLAYER_HEIGHT;
-
-					/* 線分コリジョン終了点を設定(エネミー) */
-					stCollisionLine.vecLineEnd = vecCoreWorld;
-
-					/* プラットフォームを取得 */
-					auto& PlatformList = ObjectList->GetPlatformList();
-
-					/* プラットフォームとの接触フラグ */
-					bool bPlatformHitFlag = false;
-
-					// 射線上にプラットフォームが存在するか確認する
-					for (auto* platform : PlatformList)
+					/* 対象のエネミーの死亡フラグが有効であるか確認 */
+					if (enemy->bGetDeadFlg() == true)
 					{
-						/* プラットフォームと接触しているか確認 */
-						MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
-
-						/* 接触している場合 */
-						if (stHitPoly.HitFlag == true)
-						{
-							/* プラットフォームとの接触フラグを設定 */
-							bPlatformHitFlag = true;
-
-							/* ループを抜ける(次の敵に移る) */
-							break;						
-						}
-
+						// 有効である場合
+						/* 判定の対象外とする */
+						continue;
 					}
 
-					// プレイヤーとエネミーの間にプラットフォームが存在しない場合、距離を確認する
-					/* プラットフォームとの接触フラグが立っていないか確認 */
-					if (bPlatformHitFlag == false)
+					/* 索敵範囲に接触しているか確認 */
+					if (enemy->HitCheck(stSearchSqere) == true)
 					{
-						// 接触フラグが立っていない場合
-						/* プレイヤーからエネミーのベクトルを設定 */
-						VECTOR vecDirection = VSub(vecCoreWorld, this->vecPosition);
+						// 索敵範囲内である場合
+						/* コアのワールド座標を取得 */
+						VECTOR vecCoreWorld = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
 
-						/* プレイヤーからエネミーの距離を設定 */
-						float fDistance = VSize(vecDirection);
+						/* プレイヤーとエネミーの間を確認する線分コリジョンを設定 */
+						COLLISION_LINE stCollisionLine;
+
+						/* 線分コリジョンの開始点を設定(プレイヤー) */
+						stCollisionLine.vecLineStart = this->vecPosition;
+
+						/* 開始点の高さをプレイヤーの高さとする */
+						stCollisionLine.vecLineStart.y = this->vecPosition.y + PLAYER_HEIGHT;
+
+						/* 線分コリジョン終了点を設定(エネミー) */
+						stCollisionLine.vecLineEnd = vecCoreWorld;
+
+						/* プラットフォームを取得 */
+						auto& PlatformList = ObjectList->GetPlatformList();
+
+						/* プラットフォームとの接触フラグ */
+						bool bPlatformHitFlag = false;
+
+						// 射線上にプラットフォームが存在するか確認する
+						for (auto* platform : PlatformList)
+						{
+							/* プラットフォームと接触しているか確認 */
+							MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
+
+							/* 接触している場合 */
+							if (stHitPoly.HitFlag == true)
+							{
+								/* プラットフォームとの接触フラグを設定 */
+								bPlatformHitFlag = true;
+
+								/* ループを抜ける(次の敵に移る) */
+								break;
+							}
+						}
+
+						// プレイヤーとエネミーの間にプラットフォームが存在しない場合、距離を確認する
+						/* プラットフォームとの接触フラグが立っていないか確認 */
+						if (bPlatformHitFlag == false)
+						{
+							// 接触フラグが立っていない場合
+							/* プレイヤーからエネミーのベクトルを設定 */
+							VECTOR vecDirection = VSub(vecCoreWorld, this->vecPosition);
+
+							/* プレイヤーからエネミーの距離を設定 */
+							float fDistance = VSize(vecDirection);
 
 							/* 現在の最もプレイヤーから近いエネミーよりもプレイヤーに近いか確認 */
-						if (fMinDistance >= fDistance)
-						{
-							// 近い場合
-							/* プレイヤーから近いエネミーを更新 */
-							stNearEnemy.pEnemy = enemy;
-							stNearEnemy.fDistance = fDistance;
+							if (fMinDistance >= fDistance)
+							{
+								// 近い場合
+								/* プレイヤーから近いエネミーを更新 */
+								stNearEnemy.pEnemy = enemy;
+								stNearEnemy.fDistance = fDistance;
 
-							/* プレイヤーからエネミーの最小距離を更新 */
-							fMinDistance = fDistance;
-						}	
+								/* プレイヤーからエネミーの最小距離を更新 */
+								fMinDistance = fDistance;
+							}
+						}
+					}
 				}
-			}
+
+				/* 最もプレイヤー近いエネミーを対象に指定 */
+				if (stNearEnemy.pEnemy != nullptr)
+				{
+					//対象が存在する場合
+					/* プレイヤーから見た敵の向きを取得 */
+					VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
+
+					/* プレイヤーから見た敵の向きを正規化 */
+					vecNearEnemy = VNorm(vecNearEnemy);
+
+					/* プレイヤーから見た敵の角度を取得 */
+					float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
+
+					/* プレイヤーの向きを設定 */
+					this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
+
+					/* プレイヤーの向きにカメラの向きを固定 */
+					this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
+
+					/* プレイヤーが近距離攻撃(強)を連続で行えるフラグを設定 */
+					this->PlayerStatusList->SetPlayerMeleeStrongContinuousFlg(true);
+				}
+				else
+				{
+					// 対象が存在しない場合
+					/* 敵を攻撃したフラグを解除 */
+					this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
+
+					/* プレイヤーが近距離攻撃(強)を連続で行えるフラグを解除 */
+					this->PlayerStatusList->SetPlayerMeleeStrongContinuousFlg(true);
+
+					/* 攻撃後ボイスを再生 */
+					//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
+
+					/* 現在の近接攻撃(強)での撃破数を取得 */
+					int iNowMeleeStrongDestroyCount = this->PlayerStatusList->iGetiMeleeStrongDestroyCount();
+
+					/* 現在の近接攻撃(強)での撃破数が一定数以上か確認する */
+					if (iNowMeleeStrongDestroyCount >= 3)
+					{
+						// 一定数以上の場合
+						/* プラットフォームとの接触フラグを確認 */
+						//if (bPlatformHitFlag == true)
+						//{
+						//	//プラットフォームとの接触フラグが有効(地面に接している)場合
+						//	/* 特別なカメラワークを行う() */
+						//}
+					}
+				}
+
 		}
-
-		/* 最もプレイヤー近いエネミーを対象に指定 */
-		if (stNearEnemy.pEnemy != nullptr)
-		{
-			//対象が存在する場合
-			/* プレイヤーから見た敵の向きを取得 */
-			VECTOR vecNearEnemy = VSub(this->vecPosition, stNearEnemy.pEnemy->vecGetPosition());
-
-			/* プレイヤーから見た敵の向きを正規化 */
-			vecNearEnemy = VNorm(vecNearEnemy);
-
-			/* プレイヤーから見た敵の角度を取得 */
-			float fNearEnemyRotate = -atan2f(vecNearEnemy.x, vecNearEnemy.z);
-
-			/* プレイヤーの向きを設定 */
-			this->PlayerStatusList->SetPlayerAngleX(fNearEnemyRotate);
-
-			/* プレイヤーの向きにカメラの向きを固定 */
-				this->StageStatusList->SetCameraAngleX(fNearEnemyRotate);
-		}
-			else
-			{
-				// 対象が存在しない場合
-				/* 敵を攻撃したフラグを解除 */
-				this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(false);
-
-				/* 攻撃後ボイスを再生 */
-				//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
-			}
-
-	}
 	}
 	/* 溜め攻撃のチャージフレーム数を+1する */
 	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(iMeleeStrongChargeCount + 1);
@@ -793,6 +947,7 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.03.04 菊池雅道	近距離攻撃(強)処理修正		終了 */
 /* 2025.03.06 菊池雅道	近距離攻撃(強)処理修正		終了 */
 /* 2025.03.17 駒沢風助	画面エフェクト追加			終了 */
+/* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正		終了 */
 
 /* 2025.02.12 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
@@ -983,6 +1138,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
 /* 2025.03.13 菊池雅道	クナイ処理変更 開始 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加	開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -992,15 +1148,59 @@ void CharacterPlayer::Player_Projectile()
 	/* カメラモードを"構え(クナイ攻撃)"に変更 */
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 	
+	/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
+	VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
+
+	/* ベクトルを正規化 */
+	vecKunaiTarget = VNorm(vecKunaiTarget);
+
+	/* ベクトルを射程距離までスケーリング */
+	vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
+
+	/* ターゲット座標の座標ベクトルを取得 */
+	vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
+
+	/* ロックオン中のエネミーを取得 */
+	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+
+	// エディットの内容よって処理を変える
+	/* クナイ爆発化フラグが有効か確認する */
+	if (this->PlayerStatusList->bGetKunaiExplosion() == true)
+	{
+		// クナイ爆発化フラグが有効である場合
+		/* クナイ(爆発)を作成 */
+		this->pBulletKunaiExplosion = new BulletPlayerKunaiExplosion;
+
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合
+			/* クナイ(爆発)のターゲット座標をロックオン中のエネミーに設定 */
+			this->pBulletKunaiExplosion->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+		}
+		else
+		{
+			// 存在しない場合
+			// クナイ(爆発)のターゲット座標をカメラの注視点の先に設定
+			/* クナイ(爆発)にターゲット座標を設定 */
+			this->pBulletKunaiExplosion->SetKunaiTargetPosition(vecKunaiTarget);
+		}
+
+		/* 初期化を行う */
+		this->pBulletKunaiExplosion->Initialization();
+
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletKunaiExplosion);
+	}
+	else
+	{
+		// クナイ爆発化フラグが有効でない場合
 	/* クナイ(ワープ)を作成 */
 	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
 	/* クナイ(ワープ)生成座標を設定 */
 	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
-	/* ロックオン中のエネミーを取得 */
-	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
-
 	/* ロックオン中のエネミーが存在するか */
 	if (pLockOnEnemy != nullptr)
 	{
@@ -1015,19 +1215,6 @@ void CharacterPlayer::Player_Projectile()
 	{
 		// 存在しない場合
 		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
-
-		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
-		VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
-		
-		/* ベクトルを正規化 */
-		vecKunaiTarget = VNorm(vecKunaiTarget);
-
-		/* ベクトルを射程距離までスケーリング */
-		vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
-
-		/* ターゲット座標の座標ベクトルを取得 */
-		vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
-
 		// クナイ(ワープ)にターゲット座標を設定
 		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
 
@@ -1038,6 +1225,7 @@ void CharacterPlayer::Player_Projectile()
 	
 	/* バレットリストに追加 */
 	ObjectList->SetBullet(this->pBulletKunaiWarp);
+	}
 
 	/* 遠距離攻撃のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
@@ -1079,4 +1267,5 @@ void CharacterPlayer::Player_Projectile()
 /* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */
-/* 2025.03.13 菊池雅道	クナイ処理変更			終了 */
+/* 2025.03.13 菊池雅道	クナイ処理変更				終了 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */

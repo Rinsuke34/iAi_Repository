@@ -62,6 +62,8 @@ void Enemy_Explosion::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 void Enemy_Explosion::MoveEnemy()
@@ -213,6 +215,9 @@ void Enemy_Explosion::MoveEnemy()
 					//プレイヤーが爆風範囲内にいる場合
 				//プレイヤーを吹き飛ばす
 				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+
+				//プレイヤーのHPを減少
+				this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
 				}
 			}
 		}

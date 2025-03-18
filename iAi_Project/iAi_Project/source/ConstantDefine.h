@@ -104,6 +104,7 @@ static const int    COMBO_RANK_A        = 1;    // Aランク
 static const int    COMBO_RANK_B        = 2;    // Bランク
 static const int    COMBO_RANK_C        = 3;    // Cランク
 static const int    COMBO_RANK_D        = 4;    // Dランク
+static const int    COMBO_RANK_MAX      = 5;	// コンボランクの総数
 static const int    COMBO_RANK_NONE     = -1;   // 無し
 // ボーダーライン
 // ※コンボ数がこの値を超えていればそのコンボランク

@@ -34,13 +34,16 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	//ギミックのスポーンカウント
 	this->iSpawnCount = GIMMICK_SPAWN_COUNT;
 
+	//ギミックの消滅時間カウント
+	this->iDisappearTimeCount = GIMMICK_BLINK_TIME;
+
 	/* データリスト"画像ハンドル管理"を取得 */
 	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	// テクスチャの読み込み
-	this->textureOrangeHandle = *ImageList->piGetImage("DisappearFloor/Orange");
+	this->iTextureOrangeHandle = *ImageList->piGetImage("DisappearFloor/Orange");
 
 	// テクスチャの読み込み
-	this->textureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
+	this->iTextureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
 
 	//消滅フラグ
 	this->bDisappearFlg = false;
@@ -57,17 +60,11 @@ void GimmickDisappear::ProcessGimmick()
 {
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
-
-	////プレイヤーがギミックの上に乗っているかをモデルのフレーム0番の座標を取得して確認
-	//VECTOR vecFramePos = MV1GetFramePosition(iModelHandle, 0);
-	//if (playerPos.x >= vecFramePos.x - 200 && playerPos.x <= vecFramePos.x + 200 &&
-	//	playerPos.y >= vecFramePos.y - 50 && playerPos.y <= vecFramePos.y + 55 &&
-	//	playerPos.z >= vecFramePos.z - 300 && playerPos.z <= vecFramePos.z + 300)
 		if (this->bRidePlayerFlg == true)
 	{
 		//プレイヤーがギミックの上に乗っている場合
 		//テクスチャの変更カウントを減らす
-		iTextureFirstChangeCount--;
+		iTextureFirstChangeCount = 0;
 ;
 
 		//テクスチャの変更カウントが0以下になったか確認
@@ -75,8 +72,8 @@ void GimmickDisappear::ProcessGimmick()
 		{
 			//テクスチャの変更カウントが0以下になった場合
 			// 0番のテクスチャをオレンジテクスチャに変更
-			MV1SetTextureGraphHandle(iModelHandle, 0, textureOrangeHandle, true);
-			MV1SetTextureGraphHandle(iModelHandle, 1, textureOrangeHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 0, iTextureOrangeHandle, true);
+			MV1SetTextureGraphHandle(iModelHandle, 1, iTextureOrangeHandle, true);
 
 			//セカンドテクスチャの変更カウントを減らす
 			iTextureSecondChangeCount--;
@@ -90,12 +87,14 @@ void GimmickDisappear::ProcessGimmick()
 				iDisappearTimeCount++;
 
 				// 0番のテクスチャを赤テクスチャに変更
-				MV1SetTextureGraphHandle(iModelHandle, 0, textureRedHandle, true);
-				MV1SetTextureGraphHandle(iModelHandle, 1, textureRedHandle, true);
+				MV1SetTextureGraphHandle(iModelHandle, 0, iTextureRedHandle, true);
+				MV1SetTextureGraphHandle(iModelHandle, 1, iTextureRedHandle, true);
+
+				
 			
 
 				//ギミックの消滅時間カウントが一定数になったか確認
-				if (iDisappearTimeCount == GIMMICK_DISAPPEAR_TIME)
+				if (iDisappearTimeCount >= GIMMICK_DISAPPEAR_TIME)
 				{
 					//ギミックの消滅時間カウントが一定数になった場合
 				
@@ -107,6 +106,28 @@ void GimmickDisappear::ProcessGimmick()
 					//コリジョンを削除
 					MV1TerminateCollInfo(this->iModelHandle, 0);
 
+					//スポーンカウントを減らす
+					this->iSpawnCount--;
+
+
+				}
+				else if (iDisappearTimeCount <= GIMMICK_DISAPPEAR_TIME && iDisappearTimeCount >= GIMMICK_DISAPPEAR_TIME/2)
+				{
+					//点滅処理
+					this->iBlinkTime--;
+					if (this->iBlinkTime <= 4)
+					{
+						//点滅時間が0以下になった場合
+						//ギミックを点滅させる
+						MV1SetVisible(this->iModelHandle, FALSE);
+						this->iBlinkTime = GIMMICK_BLINK_TIME;
+					}
+					else
+					{
+						//点滅時間が0以下になっていない場合
+						//ギミックを点滅させない
+						MV1SetVisible(this->iModelHandle, TRUE);
+					}
 				}
 			}
 		}

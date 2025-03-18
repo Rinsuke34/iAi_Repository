@@ -33,23 +33,14 @@ private:
 
 
 	//ギミックの消滅時間
-	int iDisappearTime;
-
-	//ギミックスポーンカウント
-	int iSpawnCount;
-
-	//ギミックの消滅時間カウント
-	int iDisappearTimeCount;
-
-	//ギミックテクスチャ変更カウント	
-	int iTextureFirstChangeCount;
-
-	int iTextureSecondChangeCount;
-
-	// テクスチャハンドルを追加
-	int textureRedHandle;
-
-	int textureOrangeHandle;
+	int iDisappearTime;					// 消滅時間
+	int iSpawnCount;					// 出現カウント
+	int iDisappearTimeCount;			// 消滅時間カウント
+	int iTextureFirstChangeCount;		// テクスチャ変更時間
+	int iTextureSecondChangeCount;		// テクスチャ変更時間
+	int iTextureRedHandle;				// テクスチャハンドル
+	int iTextureOrangeHandle;			// テクスチャハンドル
+	int iBlinkTime;						// 点滅時間
 
 	bool bDisappearFlg;	// 消滅フラグ
 

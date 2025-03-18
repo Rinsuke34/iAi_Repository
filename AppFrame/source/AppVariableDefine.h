@@ -16,8 +16,9 @@
 extern bool gbEndFlg;	// プログラム終了フラグ
 
 /* フォント関連 */
-extern int giFontHandle_Normal;	// フォントハンドル(通常サイズ)
-extern int giFonthandle_Big;	// フォントハンドル(大サイズ)
+extern int giFontHandle_Small;	// フォントハンドル(通常サイズ)
+extern int giFontHandle_Medium;	// フォントハンドル(中サイズ)
+extern int giFontHandle_Large;	// フォントハンドル(大サイズ)
 
 /* プレイヤーの入力情報 */
 extern Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;			// ジョイパッド

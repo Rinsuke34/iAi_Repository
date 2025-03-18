@@ -63,6 +63,8 @@ void Enemy_Missile::Initialization()
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
+
+	UpdataLightFrame();
 }
 
 // 敵を移動させる
@@ -123,7 +125,7 @@ void Enemy_Missile::MoveEnemy()
 					this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 					/* エフェクトの座標設定 */
-					this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
+					this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT-20, vecPosition.z));
 
 					/* エフェクトの回転量設定 */
 					this->pEffectWarning->SetRotation(this->vecRotation);
@@ -138,18 +140,6 @@ void Enemy_Missile::MoveEnemy()
 						/* エフェクトをリストに登録 */
 						ObjectListHandle->SetEffect(this->pEffectWarning);
 					}
-				}
-			}
-		
-		}
-	}
-
-	//エフェクトがnullptrでないか確認
-	if (this->pEffectWarning != nullptr)
-	{
-		// エフェクトが再生中かどうか確認
-		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
-		{
 			if (this->bShotFlg == true)
 			{
 				// エフェクトが再生終了している場合
@@ -162,6 +152,9 @@ void Enemy_Missile::MoveEnemy()
 				this->bWarningEffectFlg = true;
 			}
 			this->bShotFlg = false;
+				}
+			}
+		
 		}
 	}
 }

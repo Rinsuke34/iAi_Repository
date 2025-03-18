@@ -62,7 +62,7 @@ class Enemy_Basic : public EnemyBase
 		/* 使用するデータリスト */
 		DataList_StageStatus*	StageStatusList;	// ステージ状態
 		DataList_Option*		OptionList;			// オプション
-	DataList_Object* ObjectList;			// オブジェクト管理
+		DataList_Object*		ObjectList;			// オブジェクト管理
 		/* 変数 */
 		int		iPlayerLockOnType;	// プレイヤー視点でのロックオン状態
 		int		iCoreFrameNo;		// コアとなるフレーム番号

@@ -33,12 +33,12 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 		this->iImageContinueChoiceHandle = *ImageList->piGetImage("Home/UIContinue_Choice");
 
 		/* データ */
-		this->iImageDateHandle = *ImageList->piGetImage("Home/UIGameend");
-		this->iImageDateChoiceHandle = *ImageList->piGetImage("Home/UIGameend_Choice");
+		this->iImageDateHandle = *ImageList->piGetImage("Home/UIConfig");
+		this->iImageDateChoiceHandle = *ImageList->piGetImage("Home/UIConfig_Choice");
 
 		/* コンフィグ */
-		this->iImageConfigHandle = *ImageList->piGetImage("Home/UIConfig");
-		this->iImageConfigChoiceHandle = *ImageList->piGetImage("Home/UIConfig_Choice");
+		this->iImageConfigHandle = *ImageList->piGetImage("Home/UIGameend"); 
+		this->iImageConfigChoiceHandle = *ImageList->piGetImage("Home/UIGameend_Choice"); 
 
 	}
 
@@ -146,19 +146,19 @@ void SceneTitle::Process()
 
 			//データホーム画面
 		case CAMERA_FIXED_POSITION_C:
-		{
-			gbEndFlg = true;
-		}
-			//設定ホーム画面
-		case CAMERA_FIXED_POSITION_D:
+
 			/* 現在のカメラポジションが設定画面であるか確認 */
-			if (this->iUICount == CAMERA_FIXED_POSITION_D)
+			if (this->iUICount == CAMERA_FIXED_POSITION_C)
 			{
 				/* シーン"オプション"を追加 */
 				gpSceneServer->AddSceneReservation(new SceneOption());
 			}
 			//ホームフラグを無効化
 			this->bHomeFlg = FALSE;
+			break;
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+			gbEndFlg = true;
 			break;
 			}
 	}
@@ -174,18 +174,11 @@ void SceneTitle::Process()
 		case CAMERA_FIXED_POSITION_B:
 			//データホーム画面
 		case CAMERA_FIXED_POSITION_C:
-			//UIカウント(カメラ)をタイトルに設定
-			iUICount = CAMERA_FIXED_POSITION_START;
-			break;
-
-
-			//設定ホーム画面
-		case CAMERA_FIXED_POSITION_D:
 			//ホームフラグが有効か確認
 			if (this->bHomeFlg == FALSE)
 			{
 				//UIカウント(カメラ)をはじめからホーム画面に設定
-				iUICount = CAMERA_FIXED_POSITION_D;
+				iUICount = CAMERA_FIXED_POSITION_C;
 			}
 			if (this->bHomeFlg == TRUE)
 				{
@@ -193,6 +186,14 @@ void SceneTitle::Process()
 				iUICount = CAMERA_FIXED_POSITION_START;
 				}
 			this->bHomeFlg = TRUE;
+
+			break;
+
+
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+			//UIカウント(カメラ)をタイトルに設定
+			iUICount = CAMERA_FIXED_POSITION_START;
 			break;
 
 			//確認画面
@@ -332,5 +333,21 @@ void SceneTitle::Draw()
 		DrawGraph(100, 795, this->iImageDateHandle, TRUE);
 		DrawGraph(100, 900, this->iImageConfigChoiceHandle, TRUE);
 		break;
+	case CAMERA_FIXED_POSITION_E:
+		/* 画面全体を暗くする */
+	{
+		/* 描写ブレンドモードを"アルファブレンド"に設定 */
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, PAUSE_BLACK_ALPHA);
+
+		/* 画面全体を黒色で描写 */
+		DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(0, 0, 0), TRUE);
+
+		/* 描写ブレンドモードを"ノーブレンド"に設定 */
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+	//最終確認
+	//画面中央に文字列を描写
+	DrawString(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 50, "本当に始めますか？", GetColor(255, 255, 255));
+	break;
 	}
 }

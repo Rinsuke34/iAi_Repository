@@ -242,19 +242,59 @@ void SceneStage::SetCamera_Free()
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
-	/* カメラ注視点設定 */
+	/* カメラ注視点算出 */
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
+
+	/* カメラ座標算出 */
+	VECTOR vecCameraPosition;
+	float fRadius		= this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
+	vecCameraTarget.y	+= 20.f;
+	vecCameraPosition.x	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
+	vecCameraPosition.y	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
+	vecCameraPosition.z	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
+
+	/* カメラ注視点からカメラ座標までの線分をコリジョンとして作成 */
+	COLLISION_LINE stVerticalCollision;
+	stVerticalCollision.vecLineStart	= vecCameraTarget;
+	stVerticalCollision.vecLineEnd		= vecCameraPosition;
+
+	/* 最長距離 */
+	// カメラ注視点からカメラ座標までの距離
+	float fDistance = VSize(VSub(vecCameraPosition, vecCameraTarget));
+
+	/* プラットフォームと接触するか確認 */
+	for (auto* platform : ObjectList->GetPlatformList())
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
+
+		/* 接触しているか確認 */
+		if (stHitPolyDim.HitFlag == TRUE)
+		{
+			// 接触している場合
+			/* 接触した座標を取得 */
+			VECTOR vecHitPosition = stHitPolyDim.HitPosition;
+
+			/* カメラ注視点から接触した座標までの距離を取得 */
+			float fHitDistance = VSize(VSub(vecHitPosition, vecCameraTarget));
+
+			/* 接触した座標までの距離が最長距離より短いか確認 */
+			if (fHitDistance < fDistance)
+			{
+				// 接触した座標までの距離が最長距離より短い場合
+				/* カメラ座標を接触した座標に設定 */
+				vecCameraPosition = vecHitPosition;
+
+				/* 最長距離を更新 */
+				fDistance = fHitDistance;
+			}
+		}
+	}
+
+	/* カメラ注視点を設定 */
 	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
-	vecCameraTarget.y += 20.f;
-
-	/* カメラ座標設定 */
-	float fRadius	= this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
-	float fCameraX	= fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-	float fCameraY	= fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-	float fCameraZ	= fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
-
-	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+	/* カメラ座標を設定 */
+	this->StageStatusList->SetCameraPosition_Target(vecCameraPosition);
 }
 
 // カメラ設定(構え(近接攻撃構え))
@@ -274,7 +314,6 @@ void SceneStage::SetCamera_Aim_Melee()
 	vecCameraTarget.y += 20.f;
 
 	/* カメラ座標設定 */
-	//float fRadius = this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
 	float fRadius = 200.f;			// 注視点からの距離
 	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
 	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標

@@ -8,13 +8,16 @@
 ObjectBase::ObjectBase()
 {
 	/* 初期化 */
-	this->bDeleteFlg			= false;				// 削除フラグ
-	this->vecPosition			= VGet(0.f, 0.f, 0.f);	// オブジェクト座標
-	this->vecRotation			= VGet(0.f, 0.f, 0.f);	// オブジェクトの回転量
-	this->vecScale				= VGet(1.f, 1.f, 1.f);	// オブジェクトの拡大率
-	this->vecPosition_Initial	= VGet(0.f, 0.f, 0.f);	// 初期状態でのオブジェクトの座標
-	this->vecRotation_Initial	= VGet(0.f, 0.f, 0.f);	// 初期状態でのオブジェクトの回転量
-	this->vecScale_Initial		= VGet(1.f, 1.f, 1.f);	// 初期状態でのオブジェクトの拡大率(x,y,z方向それぞれの拡大倍率)
+	this->bDeleteFlg			= false;							// 削除フラグ
+	this->vecPosition			= VGet(0.f, 0.f, 0.f);				// オブジェクト座標
+	this->vecRotation			= VGet(0.f, 0.f, 0.f);				// オブジェクトの回転量
+	this->vecScale				= VGet(1.f, 1.f, 1.f);				// オブジェクトの拡大率
+	this->vecPosition_Initial	= VGet(0.f, 0.f, 0.f);				// 初期状態でのオブジェクトの座標
+	this->vecRotation_Initial	= VGet(0.f, 0.f, 0.f);				// 初期状態でのオブジェクトの回転量
+	this->vecScale_Initial		= VGet(1.f, 1.f, 1.f);				// 初期状態でのオブジェクトの拡大率(x,y,z方向それぞれの拡大倍率)
+	this->bBloomStopFlg			= false;							// 発光停止フラグ
+	this->bSpBloomCollorFlg		= false;							// 特殊発光色仕様フラグ
+	this->stSpBloomColor		= GetColorF(0.f, 0.f, 0.f, 0.f);	// 特殊発光色
 }
 
 // 初期位置設定
