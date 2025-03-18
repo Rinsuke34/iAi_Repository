@@ -7,6 +7,9 @@
 /* シーン */
 #include "SceneTitle.h"
 
+/* データリスト */
+#include "DataList_StageStatus.h"
+
 /* シーン"タイトル"追加セットアップの宣言 */
 
 // シーン "タイトル"追加セットアップ

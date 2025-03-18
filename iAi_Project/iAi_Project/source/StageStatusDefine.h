@@ -63,6 +63,7 @@ static const int	CAMERA_FIXED_POSITION_E					= 5;				// カメラ固定座標(E地点)
 static const int	CAMERA_FIXED_POSITION_MAX				= 6;				// カメラ固定座標の最大数
 // クローズアップ関連定数
 static const int	CAMERA_CLOSEUP_COUNT_MAX				= 180;				// クローズアップカウントの最大値
+static const int	CAMERA_CLOSEUP_POSITION_HEIGHT			= 100;				// クローズアップ時のカメラの高さ(プレイヤーを基準に)
 
 /* カメラ固定座標情報 */
 struct CAMERA_FIXED_POSITION_INFO

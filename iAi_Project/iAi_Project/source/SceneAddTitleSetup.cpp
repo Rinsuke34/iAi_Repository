@@ -12,6 +12,12 @@ SceneAddTitleSetup::SceneAddTitleSetup() : SceneBase("AddSceneTitleSetup", 10, t
 // 計算
 void SceneAddTitleSetup::Process()
 {
+	/* データリスト"ステージ状態管理"を取得 */
+	DataList_StageStatus* StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+
+	/* "ステージ状態管理"を初期化する */
+	StageStatusList->Initialization();
+
 	/* 現行シーン削除フラグを有効化 */
 	gpSceneServer->SetDeleteCurrentSceneFlg(true);
 

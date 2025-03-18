@@ -16,6 +16,8 @@ class DataList_StageStatus : public DataListBase
 		DataList_StageStatus();				// コンストラクタ
 		virtual ~DataList_StageStatus();	// デストラクタ
 
+		void	Initialization();			// 初期化
+
 		/* データ取得 */
 		// リスト
 		std::vector<ScreenEffect_Base*>&	GetScreenEffectList()		{ return this->pScreenEffectList; }			// 画面エフェクトリスト取得

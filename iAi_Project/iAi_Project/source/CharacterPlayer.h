@@ -100,6 +100,9 @@ class CharacterPlayer : public CharacterBase
 		// モーション関連
 		void	Player_Motion_Transition();			// モーション遷移管理　2025.01.30 菊池雅道 関数追加 
 
+		// シェイプ関連
+		void	Player_Shape();						// シェイプ処理
+
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾

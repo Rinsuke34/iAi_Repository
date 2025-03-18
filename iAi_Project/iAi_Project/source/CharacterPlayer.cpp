@@ -241,6 +241,9 @@ void CharacterPlayer::Update()
 	/* モーション遷移管理 */
 	Player_Motion_Transition();
 
+	/* シェイプ処理 */
+	Player_Shape();
+
 	/* 座標設定 */
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
@@ -414,6 +417,9 @@ void CharacterPlayer::PlayerHitCheck()
 							
 							/* 画面エフェクト(被ダメージ)作成 */
 							this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+
+							/* シェイプ(瞬き)を適用状態にする */
+							this->fShapeRate = 1.f;
 						}
 					}
 				}

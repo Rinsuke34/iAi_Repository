@@ -120,9 +120,6 @@ void SceneStage::Initialization()
 
 	/* ステージ開始時の時間を設定 */
 	this->StageStatusList->SetStartTime(GetNowCount());
-
-	/* カメラモードを"フリーモード"に設定 */
-	this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
 }
 
 // 計算

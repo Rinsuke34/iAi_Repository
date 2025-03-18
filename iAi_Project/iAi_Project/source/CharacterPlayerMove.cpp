@@ -798,6 +798,7 @@ void CharacterPlayer::Player_Dodg()
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	開始 */
 /* 2025.03.10 駒沢風助	移動床実装						開始 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加		開始 */
+/* 2025.03.18 駒沢風助	移動床ガタガタ対策				開始 */
 
 // 移動処理(垂直方向)
 void CharacterPlayer::Movement_Vertical()
@@ -838,7 +839,8 @@ void CharacterPlayer::Movement_Vertical()
 		{
 			// 接触している場合
 			/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
-			if (stHitPolyDim.HitPosition.y >= fStandPosY)
+			// ※判定値は少し余裕を持たせる(移動床に搭乗中に床から離れないようにするため)
+			if (stHitPolyDim.HitPosition.y >= fStandPosY + PLAYER_PLATFORM_RAND_CORRECTION)
 			{
 				// 現在の着地座標より高い位置である場合
 				/* 落下の加速度を初期化 */
@@ -1009,6 +1011,7 @@ void CharacterPlayer::Movement_Vertical()
 /* 2025.02.26 菊池雅道	近距離攻撃(強)関連の処理追加	終了 */
 /* 2025.03.10 駒沢風助	移動床実装						終了 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加		終了 */
+/* 2025.03.18 駒沢風助	移動床ガタガタ対策				終了 */
 
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */

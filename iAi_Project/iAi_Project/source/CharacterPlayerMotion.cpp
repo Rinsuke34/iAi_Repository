@@ -192,6 +192,38 @@ void CharacterPlayer::Player_Motion_Transition()
 	}
 }
 
+// シェイプ処理
+void CharacterPlayer::Player_Shape()
+{
+	/* シェイプの適用率軽減処理 */
+	{
+		/* シェイプが適用されているか確認 */
+		if (this->fShapeRate > 0.f)
+		{
+			// 適用されている場合
+			/* シェイプ適用率を減らす */
+			this->fShapeRate -= 0.05f;
+		}
+		else
+		{
+			// 適用されていない場合
+			/* シェイプ適用率を初期化 */
+			this->fShapeRate = 0.f;
+		}
+	}
+
+	/* プレイヤー死亡処理 */
+	{
+		/* プレイヤーの現在HPが0以下(死亡状態)であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
+		{
+			// HPが0以下(死亡状態)である場合
+			/* シェイプの適用率を最大にする */
+			this->fShapeRate = 1.f;
+		}
+	}
+}
+
 // ゲーム開始時のモーション
 void CharacterPlayer::FastMotion()
 {

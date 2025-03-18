@@ -98,6 +98,9 @@ void SceneGame::Process()
 
 					/* ステージの読み込みを開始 */
 					dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+
+					/* 初期化処理を実行する */
+					pAddScene->Initialization();
 				}
 				else
 				{
@@ -115,9 +118,6 @@ void SceneGame::Process()
 					gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
 				}
 			}
-
-			/* ゲーム状態を"ゲーム実行"に変更する */
-			this->StageStatusList->SetGameStatus(GAMESTATUS_PLAY_GAME);
 			break;
 
 		/* "ステージジャンプ"状態 */

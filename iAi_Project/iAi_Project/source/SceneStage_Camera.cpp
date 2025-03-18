@@ -415,20 +415,10 @@ void SceneStage::SetCamera_StageStart_CloseUp()
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
 	/* カメラ注視点設定 */
-	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT - 40, 0));
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, CAMERA_CLOSEUP_POSITION_HEIGHT, 0));
 	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
-	/* カメラ座標設定 */
-	float fRadius	= 0.f;			// 注視点からの距離
-	if (this->StageStatusList->iGetCloseUpCount() >= 90)
-	{
-		fRadius = 150.f;
-	}
-	else
-	{
-		fRadius = 200.f;
-	}
-
+	float fRadius = 200.f;
 	float fCameraX	= fRadius * +sinf(0) + vecCameraTarget.x;	// X座標
 	float fCameraY	= fRadius * -sinf(0) + vecCameraTarget.y;	// Y座標
 	float fCameraZ	= fRadius * -cosf(0) + vecCameraTarget.z;	// Z座標
