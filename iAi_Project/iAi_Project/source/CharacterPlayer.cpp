@@ -116,11 +116,22 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		/* モーションをアタッチする */
 		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
 
-		/* アニメーションタイマーを初期化値に設定する */
+		/* アニメーションタイマーを初期値に設定する */
+		// ※着地した状態を初期値とする
 		this->PlayerStatusList->SetMotionCount_Move(6.f);
 
 		/* モーションブレンドレートを100%に設定 */
 		this->PlayerStatusList->SetNowMoveMotionBlendRate(1.f);
+	}
+
+	/* シェイプ設定 */
+	{
+		/* シェイプ番号取得 */
+		this->iShapeNo_Blink = MV1SearchShape(this->iModelHandle, "Face_Blink");	// 瞬き
+
+		/* シェイプ適用率を設定 */
+		this->fShapeRate = 1.f;
+		MV1SetShapeRate(this->iModelHandle, this->iShapeNo_Blink, this->fShapeRate);
 	}
 }
 
