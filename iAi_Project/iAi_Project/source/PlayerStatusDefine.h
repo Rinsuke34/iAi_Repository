@@ -11,6 +11,7 @@
 /* 2025.03.12 菊池雅道 スローモーション関連の定数追加 */
 /* 2025.03.17 菊池雅道 移動関連の定数追加 */
 /* 2025.03.18 駒沢風助 移動床ガタガタ対策 */
+/* 2025.03.18 菊池雅道 クールタイム関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -41,6 +42,8 @@ static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 30.0f;				// プレイヤーの壁キ
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 80.0f;				// プレイヤーの壁キックの速度(水平成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_WALL_KICK_VERTICAL_SPEED		= -30.0f;				// プレイヤーの壁キックの速度(垂直成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 static const int	PLAYER_WALL_KICK_INPUT_FLAME		= 20;					// プレイヤーの壁キックの入力猶予フレーム数						/* 2025.03.17 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_PLATFORM_RAND_CORRECTION		= -10.f;				// プレイヤー着地時の床との補正距離(移動床上でガタガタする対策)	/* 2025.03.18 駒沢風助 移動床ガタガタ対策 */
+static const int	PLAYER_JUMP_COOLTIME				= 10;					// プレイヤーのジャンプのクールタイム							/* 2025.03.18 菊池雅道 クールタイム関連の定数追加 */
 
 // 回避関係
 static const float	PLAYER_DODGE_SPEED					= 100.0f;				// プレイヤーの回避速度											/* 2025.01.09 菊池雅道 移動関連の定数追加 */

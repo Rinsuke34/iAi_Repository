@@ -10,8 +10,6 @@
 /* 2025.03.12 菊池雅道 スローモーション関連の変数・関数追加 */
 /* 2025.03.17 菊池雅道 移動・攻撃関連の変数・関数追加 */
 
-
-
 #pragma once
 #include <vector>
 #include "AppFrame.h"
@@ -65,7 +63,8 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerMeleeStrongAirMaxCount()		{ return this->iPlayerMeleeStrongAirMaxCount; }		// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を取得		/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		int		iGetPlayerMeleeStrongAirCount()			{ return this->iPlayerMeleeStrongAirCount; }		// プレイヤーが空中で近距離攻撃(強)を行った回数を取得								/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerMeleeStrongEnemyAttackFlg()	{ return this->bPlayerMeleeStrongEnemyAttackFlg; }	// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグを取得							/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
-		int		iGetPlayerMeleeStrongAfterCount()		{ return this->iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウントを取得						/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMeleeStrongAfterCount()		{ return this->iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数を取得						/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
+		int		iGetiMeleeStrongDestroyCount()			{ return this->iMeleeStrongDestroyCount; }			// 近距離攻撃(強)で撃破した敵の数を取得												/* 2025.03.18 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerMeleeStrongContinuousFlg()	{ return this->bPlayerMeleeStrongContinuousFlg; }	// プレイヤーが近距離攻撃(強)を連続で行えるかのフラグを取得			/* 2025.03.17 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerWallTouchFlg()				{ return this->bPlayerWallTouchFlg; }				// プレイヤーが壁に接触したかのフラグを取得							/* 2025.03.17 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerAfterWallTouchCount()			{ return this->iPlayerAfterWallTouchCount; }		// プレイヤーが壁に接触した後の経過フレーム数を取得					/* 2025.03.17 菊池雅道 移動関連の関数追加 */
@@ -149,7 +148,8 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerNowAttakChargeFlame(int iPlayerNowAttakChargeFlame)				{ this->iPlayerNowAttakChargeFlame			= iPlayerNowAttakChargeFlame; }			// プレイヤーの現在の攻撃チャージフレーム数設定
 		void	SetPlayerMeleeStrongAirCount(int iPlayerMeleeStrongAirCount)				{ this->iPlayerMeleeStrongAirCount			= iPlayerMeleeStrongAirCount; }			// プレイヤーが空中で近距離攻撃(強)を行った回数を設定		/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongEnemyAttackFlg(bool bPlayerMeleeStrongEnemyAttackFlg)	{ this->bPlayerMeleeStrongEnemyAttackFlg	= bPlayerMeleeStrongEnemyAttackFlg; }	// プレイヤーが近距離攻撃(強)でエネミーを攻撃したかのフラグを設定		/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMeleeStrongAfterCount(int iPlayerMeleeStrongAfterCount)			{ this->iPlayerMeleeStrongAfterCount		= iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)でエネミーを攻撃した後のカウントを設定		/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongAfterCount(int iPlayerMeleeStrongAfterCount)			{ this->iPlayerMeleeStrongAfterCount		= iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)でエネミーを攻撃した後のフレーム数を設定	/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
+		void	SetMeleeStrongDestroyCount(int iMeleeStrongDestroyCount)					{ this->iMeleeStrongDestroyCount = iMeleeStrongDestroyCount; }						// 近距離攻撃(強)で撃破した敵の数を設定									/* 2025.03.18 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongContinuousFlg(bool bPlayerMeleeStrongContinuousFlg)		{ this->bPlayerMeleeStrongContinuousFlg		= bPlayerMeleeStrongContinuousFlg; }	// プレイヤーが近距離攻撃(強)を連続で行えるかのフラグを設定				/* 2025.03.17 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerSlowMotionCount(int iPlayerSlowMotionCount)						{ this->iPlayerSlowMotionCount				= iPlayerSlowMotionCount; }				// プレイヤーのスローモーションのカウントを設定							/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
 		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)						{ this->fPlayerNowMotionCount				= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
@@ -257,7 +257,8 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerMeleeStrongChargeCount;		// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数
 		int		iPlayerMeleeStrongAirCount;			// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerMeleeStrongEnemyAttackFlg;	// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
-		int		iPlayerMeleeStrongAfterCount;		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMeleeStrongAfterCount;		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数						/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
+		int		iMeleeStrongDestroyCount;			// プレイヤーが近距離攻撃(強)で撃破した敵の数									/* 2025.03.18 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerMeleeStrongContinuousFlg;	// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerSlowMotionCount;				// プレイヤーのスローモーションフレーム数カウント								/* 2025.03.12 菊池雅道 スローモーション関連の変数追加 */
 		Enemy_Basic* pLockOnEnemy;				// ロックオン対象のエネミー

@@ -22,13 +22,16 @@
 /* 2025.03.13 駒沢風助	クナイ弾数設定 */
 /* 2025.03.13 菊池雅道	クナイ処理変更 */
 /* 2025.03.17 駒沢風助	画面エフェクト追加 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加 */
 /* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 */
 
 #include "CharacterPlayer.h"
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 開始 */
 /* 2025.03.04 菊池雅道	スローモーション処理追加	開始 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加	開始 */
 // 攻撃状態遷移管理
 void CharacterPlayer::Player_Attack_Transition()
 {
@@ -208,6 +211,7 @@ void CharacterPlayer::Player_Attack_Transition()
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 終了 */
 /* 2025.03.04 菊池雅道	スローモーション処理追加	終了 */
+/* 2025.03.17 菊池雅道	エフェクト処理追加	終了 */
 
 	/* 2025.01.24 菊池雅道	攻撃処理追加		開始 */
 	/* 2025.01.26 駒沢風助	コード修正		開始*/
@@ -217,12 +221,15 @@ void CharacterPlayer::Player_Attack_Transition()
 	/* 2025.02.19 菊池雅道	エフェクト処理修正 開始 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	開始 */
 /* 2025.03.03 菊池雅道	近距離攻撃(強)処理修正 開始 */
-
+/* 2025.03.18 菊池雅道	エディットによる処理追加 開始 */
 // 近接攻撃(構え)
 void CharacterPlayer::Player_Melee_Posture()
 {
+	/* エディットによる攻撃チャージフレームの短縮値を取得 */
+	int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
+
 	/* プレイヤーの現在の攻撃チャージフレームの取得 */
-	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
+	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() + iEditChargeFlameShortening;
 
 	/* プレイヤーの空中での近接攻撃(強)の回数を取得 */
 	int iNowMeleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
@@ -419,8 +426,14 @@ void CharacterPlayer::Player_Melee_Posture()
 		else
 		{
 			// 強攻撃になる場合
+			/* プレイヤーの空中での近接攻撃(強)最大数を取得 */
+			int iMeleeStrongAirMaxCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount();
+
+			/* エディットによる空中での近接攻撃(強)最大数の加算数を取得 */
+			int iEditAddMeleeStrongAirMaxCount = this->PlayerStatusList->iGetAddMeleeStrongAirMaxCount();
+
 			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
-			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
+			if (iNowMeleeStrongAirCount >= iMeleeStrongAirMaxCount + iEditAddMeleeStrongAirMaxCount)
 			{
 				// 超えている場合
 				/*近接攻撃(強)の処理を行わない */
@@ -470,6 +483,7 @@ void CharacterPlayer::Player_Melee_Posture()
 /* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
 /* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
 /* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	終了 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -608,6 +622,12 @@ void CharacterPlayer::Player_Charge_Attack()
 
 			/* 敵を攻撃したフラグを設定 */
 			this->PlayerStatusList->SetPlayerMeleeStrongEnemyAttackFlg(true);
+
+			/* 現在の近接攻撃(強)での撃破数を取得 */
+			int iNowMeleeStrongDestroyCount = this->PlayerStatusList->iGetiMeleeStrongDestroyCount();
+
+			/* 近接攻撃(強)での撃破数を加算 */
+			this->PlayerStatusList->SetMeleeStrongDestroyCount(iNowMeleeStrongDestroyCount + 1);
 
 			//移動後の座標に足場があるか確認し、プレイヤーが落ちないようにする処理
 			{
@@ -890,7 +910,22 @@ void CharacterPlayer::Player_Charge_Attack()
 				this->PlayerStatusList->SetPlayerMeleeStrongContinuousFlg(true);
 
 				/* 攻撃後ボイスを再生 */
-				//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
+				//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);
+
+				/* 現在の近接攻撃(強)での撃破数を取得 */
+				int iNowMeleeStrongDestroyCount = this->PlayerStatusList->iGetiMeleeStrongDestroyCount();
+
+				/* 現在の近接攻撃(強)での撃破数が一定数以上か確認する */
+				if (iNowMeleeStrongDestroyCount >= 3)
+				{
+					// 一定数以上の場合
+					/* プラットフォームとの接触フラグを確認 */
+					//if (bPlatformHitFlag == true)
+					//{
+					//	//プラットフォームとの接触フラグが有効(地面に接している)場合
+					//	/* 特別なカメラワークを行う() */
+					//}
+				}
 			}
 
 		}
@@ -946,7 +981,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 
 				/* スローモーションフラグを有効化 */
 				this->StageStatusList->SetGameSlowFlg(true);
-			}
+				}
 			}
 
 			/* スローモーションカウントが一定値を超えているか確認 */
@@ -959,7 +994,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 					// 有効である場合
 				/* スローモーションフラグを無効化 */
 				this->StageStatusList->SetGameSlowFlg(false);	
-			}
+				}
 			}
 
 			/* スローモーションカウントを加算する */
@@ -974,7 +1009,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 				// 有効である場合
 				/* スローモーションフラグを無効化 */
 			this->StageStatusList->SetGameSlowFlg(false);
-		}
+			}
 		}
 
 		/* プレイヤーのモーションが投擲でないか確認 */
@@ -1097,6 +1132,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.02.26 菊池雅道	クールタイム処理追加	開始 */
 /* 2025.03.10 菊池雅道	エフェクト処理追加		開始 */
 /* 2025.03.13 菊池雅道	クナイ処理変更 開始 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加	開始 */
 // 遠距離攻撃
 void CharacterPlayer::Player_Projectile()
 {
@@ -1105,53 +1141,84 @@ void CharacterPlayer::Player_Projectile()
 
 	/* カメラモードを"構え(クナイ攻撃)"に変更 */
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
-	
-	/* クナイ(ワープ)を作成 */
-	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-	/* クナイ(ワープ)生成座標を設定 */
-	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
-	
+	/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
+	VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
+
+	/* ベクトルを正規化 */
+	vecKunaiTarget = VNorm(vecKunaiTarget);
+
+	/* ベクトルを射程距離までスケーリング */
+	vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
+
+	/* ターゲット座標の座標ベクトルを取得 */
+	vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
+
 	/* ロックオン中のエネミーを取得 */
 	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
-	/* ロックオン中のエネミーが存在するか */
-	if (pLockOnEnemy != nullptr)
+	// エディットの内容よって処理を変える
+	/* クナイ爆発化フラグが有効か確認する */
+	if (this->PlayerStatusList->bGetKunaiExplosion() == true)
 	{
-		// 存在する場合
-		/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+		// クナイ爆発化フラグが有効である場合
+		/* クナイ(爆発)を作成 */
+		this->pBulletKunaiExplosion = new BulletPlayerKunaiExplosion;
 
-		/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
-		this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
-}
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合
+			/* クナイ(爆発)のターゲット座標をロックオン中のエネミーに設定 */
+			this->pBulletKunaiExplosion->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+		}
+		else
+		{
+			// 存在しない場合
+			// クナイ(爆発)のターゲット座標をカメラの注視点の先に設定
+			/* クナイ(爆発)にターゲット座標を設定 */
+			this->pBulletKunaiExplosion->SetKunaiTargetPosition(vecKunaiTarget);
+		}
+
+		/* 初期化を行う */
+		this->pBulletKunaiExplosion->Initialization();
+
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletKunaiExplosion);
+	}
 	else
 	{
-		// 存在しない場合
-		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
+		// クナイ爆発化フラグが有効でない場合
+		/* クナイ(ワープ)を作成 */
+		this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-		/* カメラ座標からカメラの注視点に向かうベクトルを取得 */
-		VECTOR vecKunaiTarget = VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition());
-		
-		/* ベクトルを正規化 */
-		vecKunaiTarget = VNorm(vecKunaiTarget);
+		/* クナイ(ワープ)生成座標を設定 */
+		this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 
-		/* ベクトルを射程距離までスケーリング */
-		vecKunaiTarget = VScale(vecKunaiTarget, KUNAI_RANGE);
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合
+			/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
 
-		/* ターゲット座標の座標ベクトルを取得 */
-		vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
+			/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
+			this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
+		}
+		else
+		{
+			// 存在しない場合
+			// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
+			// クナイ(ワープ)にターゲット座標を設定
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+		}
 
-		// クナイ(ワープ)にターゲット座標を設定
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+		/* 初期化を行う */
+		this->pBulletKunaiWarp->Initialization();
 
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletKunaiWarp);
 	}
-
-	/* 初期化を行う */
-	this->pBulletKunaiWarp->Initialization();
-	
-	/* バレットリストに追加 */
-	ObjectList->SetBullet(this->pBulletKunaiWarp);
 
 	/* 遠距離攻撃のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI);
@@ -1189,8 +1256,9 @@ void CharacterPlayer::Player_Projectile()
 	/* 遠距離攻撃構え状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);
 }
-/* 2025.02.14 菊池雅道	遠距離攻撃処理追加 終了 */
-/* 2025.02.21 菊池雅道	遠距離攻撃修正			終了 */
-/* 2025.02.26 菊池雅道	クールタイム処理追加	終了 */
-/* 2025.03.10 菊池雅道	エフェクト処理追加		終了 */
-/* 2025.03.13 菊池雅道	クナイ処理変更			終了 */
+/* 2025.02.14 菊池雅道	遠距離攻撃処理追加			終了 */
+/* 2025.02.21 菊池雅道	遠距離攻撃修正				終了 */
+/* 2025.02.26 菊池雅道	クールタイム処理追加		終了 */
+/* 2025.03.10 菊池雅道	エフェクト処理追加			終了 */
+/* 2025.03.13 菊池雅道	クナイ処理変更				終了 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */

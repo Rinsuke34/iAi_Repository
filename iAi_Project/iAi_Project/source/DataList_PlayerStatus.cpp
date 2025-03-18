@@ -47,7 +47,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMeleeStrongChargeCount		= 0;								// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数
 	this->iPlayerMeleeStrongAirCount		= 0;								// プレイヤーが空中で近距離攻撃(強)を行った回数(※敵を攻撃していない場合)		/* 2025.02.26 菊池雅道 初期化処理追加 */
 	this->bPlayerMeleeStrongEnemyAttackFlg	= false;							// プレイヤーが近距離攻撃(強)で敵を攻撃したかのフラグ							/* 2025.03.03 菊池雅道 初期化処理追加 */
-	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のカウント							/* 2025.03.03 菊池雅道 初期化処理追加 */
+	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数						/* 2025.03.03 菊池雅道 初期化処理追加 */
+	this->iMeleeStrongDestroyCount			= 0;								// プレイヤーが近距離攻撃(強)で撃破した敵の数									/* 2025.03.18 菊池雅道 初期化処理追加 */
 	this->bPlayerMeleeStrongContinuousFlg	= false;							// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 初期化処理追加 */
 	this->iPlayerSlowMotionCount			= 0;								// プレイヤーのスローモーションカウント											/* 2025.03.11 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー

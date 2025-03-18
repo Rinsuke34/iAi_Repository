@@ -699,7 +699,7 @@
     <ClCompile Include="source\BulletPlayerKunai.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
-    <ClCompile Include="source\BulletPlayerKunaiAttack.cpp">
+    <ClCompile Include="source\BulletPlayerKunaiExplosion.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClCompile>
     <ClCompile Include="source\BulletPlayerKunaiWarp.cpp">
@@ -995,7 +995,7 @@
     <ClInclude Include="source\Enemy_Missile_Air.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\ミサイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\BulletPlayerKunaiAttack.h">
+    <ClInclude Include="source\BulletPlayerKunaiExplosion.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\バレット\プレイヤー</Filter>
     </ClInclude>
     <ClInclude Include="source\BulletPlayerKunaiWarp.h">

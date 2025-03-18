@@ -17,6 +17,7 @@
 /* 2025.03.11 菊池雅道	モーション関連の処理追加 */
 /* 2025.03.11 菊池雅道	回避の処理修正 */
 /* 2025.03.12 菊池雅道	スローモーション処理追加 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -25,6 +26,7 @@ void CharacterPlayer::Player_Move()
 {
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
+	/* 2025.03.18 菊池雅道	エディットによる処理追加 開始 */
 
 	/* プレイヤー移動量取得 */
 	float fStickTiltMagnitude	= this->InputList->fGetGameInputMove();				// スティックを倒した強さ
@@ -36,9 +38,10 @@ void CharacterPlayer::Player_Move()
 	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* プレイヤーの状態に応じて移動速度の倍率等を設定 */
-	float	fMoveSpeedRatio		= 1.f;		// 移動速度(倍率)
-	bool	bPlayerAngleSetFlg	= true;		// プレイヤーの向きを移動方向に合わせるかのフラグ
-	bool	bPlayerMoveFlg		= true;		// プレイヤーの移動を行うかのフラグ	
+	float	fMoveSpeedRatio		= 1.f;												// 移動速度(倍率)
+	float	fEditAddSpeed		= this->PlayerStatusList->fGetAddMoveSpeedUp();		// エディットによる移動速度加算値
+	bool	bPlayerAngleSetFlg	= true;												// プレイヤーの向きを移動方向に合わせるかのフラグ
+	bool	bPlayerMoveFlg		= true;												// プレイヤーの移動を行うかのフラグ	
 	
 	/* プレイヤーの移動状態が移動処理を行う状態であるか確認 */
 	switch (iPlayerMoveState)
@@ -140,7 +143,7 @@ void CharacterPlayer::Player_Move()
 		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 
 		/* 移動速度を設定 */
-		fSpeed = PLAER_DASH_SPEED * fMoveSpeedRatio;
+		fSpeed = (PLAER_DASH_SPEED + fEditAddSpeed) * fMoveSpeedRatio;
 
 		/* モーションが"ジャンプ(開始)"以外であるか確認 */
 		if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
@@ -160,7 +163,8 @@ void CharacterPlayer::Player_Move()
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
 		/* 2025.03.08 菊池雅道	移動処理修正 終了 */
-
+	/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
+		
 		/* 現在速度を更新 */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
 
@@ -174,7 +178,7 @@ void CharacterPlayer::Player_Move()
 		vecAddMove = VScale(vecAddMove, fSpeed);
 
 		/* 2025.02.10 菊池雅道	振り向き処理修正 開始*/
-		/* 2025.02.14 菊池雅道	振り向き処理修正 開始 */
+		/* 2025.03.14 菊池雅道	振り向き処理修正 開始 */
 		/* プレイヤーの向きを移動方向に合わせるか確認 */
 		if (bPlayerAngleSetFlg == true)
 		{
@@ -225,7 +229,7 @@ void CharacterPlayer::Player_Move()
 			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
 
 			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
-			/* 2025.02.14 菊池雅道	振り向き処理修正 終了 */
+			/* 2025.03.14 菊池雅道	振り向き処理修正 終了 */
 		}
 	}
 	else
@@ -311,12 +315,17 @@ void CharacterPlayer::Player_Move()
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始*/
+/* 2025.03.18 菊池雅道	エディットによる処理追加	開始 */
 // ジャンプ
 void CharacterPlayer::Player_Jump()
 {
-	/* プレイヤーの移動を取得 */
+	/* プレイヤーの状態を取得 */
 	int iPlayerMoveState	= this->PlayerStatusList->iGetPlayerMoveState();
 	int iPlayerAttackState	= this->PlayerStatusList->iGetPlayerAttackState();
+
+	/* エディットによるジャンプ回数加算数を取得 */
+	int iEditAddJumpCount	= this->PlayerStatusList->iGetAddJumpCount();
+	
 	/* ジャンプ処理を行うかのフラグ */
 	bool bJumpFlag = true;
 
@@ -396,11 +405,23 @@ void CharacterPlayer::Player_Jump()
 	if (bJumpFlag == true)
 	{
 		// ジャンプ処理を行う場合
-		/* ジャンプ回数が最大数を超えていないか確認 */
+		/* ジャンプのクールタイムが残っているか確認 */
+		if (this->iJumpCoolTime > 0)
+		{
+			// クールタイムが残っている場合
+			/* ジャンプを行わない */
+			return;
+		}
+		/* 現在のジャンプ回数を取得 */
 		int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
-		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount();
+		
+		/* 最大ジャンプ回数を取得 */
+		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount() + iEditAddJumpCount;
+
+		/* ジャンプ回数が最大数を超えていないか確認 */
 		if (iNowJumpCount < iMaxJumpCount)
 		{
+			// ジャンプ回数が最大数を超えていない場合
 			/* ジャンプ入力がされているか確認 */
 			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
 			{
@@ -469,6 +490,9 @@ void CharacterPlayer::Player_Jump()
 
 					/* モーションを"ジャンプ(開始)"に設定 */
 					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
+					/* ジャンプのクールタイムを設定 */
+					this->iJumpCoolTime = PLAYER_JUMP_COOLTIME;
 				}
 				else
 				{ 
@@ -486,6 +510,7 @@ void CharacterPlayer::Player_Jump()
 }
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
+/* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 /* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */

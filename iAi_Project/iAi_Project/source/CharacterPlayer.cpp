@@ -25,9 +25,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* 初期化 */
 	{
 		/* オブジェクトのハンドル */
-		this->pBulletMeleeWeak	=	nullptr;	// 近接攻撃(弱)の弾
-		this->pBulletKunaiWarp		= nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
-		this->pBulletKunaiAttack	= nullptr;	// クナイ(攻撃)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletMeleeWeak		=	nullptr;	// 近接攻撃(弱)の弾
+		this->pBulletKunaiWarp		=	nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+		this->pBulletKunaiExplosion	=	nullptr;	// クナイ(爆発)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 
 		/* エフェクトのハンドル */
@@ -43,6 +43,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -477,6 +478,8 @@ void CharacterPlayer::UpdateCooldownTime()
 	UpdateCooldownTime(this->iProjectileCoolTime);
 	/* 回避のクールタイム更新 */
 	UpdateCooldownTime(this->iDodgeCoolTime);
+	/* ジャンプのクールタイムを更新 */
+	UpdateCooldownTime(this->iJumpCoolTime);
 }
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 

@@ -28,7 +28,7 @@
 /* オブジェクト */
 #include "BulletPlayerMeleeWeak.h"
 #include "BulletPlayerMeleeStrong.h"
-#include "BulletPlayerKunaiAttack.h"
+#include "BulletPlayerKunaiExplosion.h"
 #include "BulletPlayerKunaiWarp.h"
 #include "EffectSelfDelete.h"
 #include "EffectSelfDelete_PlayerFollow.h"
@@ -108,7 +108,7 @@ class CharacterPlayer : public CharacterBase
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
 		BulletPlayerKunaiWarp* 		pBulletKunaiWarp;			// クナイ(ワープ)の弾			/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
-		BulletPlayerKunaiAttack*	pBulletKunaiAttack;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+		BulletPlayerKunaiExplosion*	pBulletKunaiExplosion;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
 		EffectManualDelete_PlayerFollow_Frame*	pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
