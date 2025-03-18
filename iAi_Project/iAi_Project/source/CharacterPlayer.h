@@ -118,6 +118,10 @@ class CharacterPlayer : public CharacterBase
 		int		iUpperBodyFrameNo;			// 上半身のフレーム番号							/* 2025.03.08 駒沢風助 新モデル対応 */
 		int		iKunaiHandFrameNo;			// クナイを持つ手のフレーム番号					/* 2025.03.10 菊池雅道 フレーム関連の変数追加 */
 
+		/* シェイプ関連 */
+		int		iShapeNo_Blink;				// シェイプ番号(瞬き)
+		float	fShapeRate;					// シェイプ適用率
+
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
 		VECTOR				vecNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計			/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */

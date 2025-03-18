@@ -80,6 +80,9 @@ void CharacterPlayer::Draw()
 		MV1SetAttachAnimBlendRateToFrame(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Attack(), this->iUpperBodyFrameNo, fUpperAttackBlendRate, TRUE);
 	}
 
+	/* シェイプを適用 */
+	MV1SetShapeRate(this->iModelHandle, this->iShapeNo_Blink, this->fShapeRate);
+
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
 

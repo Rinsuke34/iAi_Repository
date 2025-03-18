@@ -202,6 +202,12 @@ void CharacterPlayer::FastMotion()
 		/* 開始時モーションカウントを取得 */
 		int iFastMotionCount = this->PlayerStatusList->iGetFastMotionCount();
 
+		/* 開始時モーションカウントを減少 */
+		iFastMotionCount--;
+
+		/* モーションカウントを設定 */
+		this->PlayerStatusList->SetFastMotionCount(iFastMotionCount);
+
 		/* アニメーションタイマーを取得する */
 		float fMotionCount = this->PlayerStatusList->fGetMotionTimer_Move();
 
@@ -211,11 +217,8 @@ void CharacterPlayer::FastMotion()
 		/* アニメーションタイマーを設定 */
 		this->PlayerStatusList->SetMotionCount_Move(fMotionCount);
 
-		/* モーションカウントを減少 */
-		iFastMotionCount--;
-
-		/* モーションカウントを設定 */
-		this->PlayerStatusList->SetFastMotionCount(iFastMotionCount);
+		/* シェイプ適用率を変更 */
+		this->fShapeRate = 1.f - (static_cast<float>(CAMERA_CLOSEUP_COUNT_MAX - iFastMotionCount) / static_cast<float>(CAMERA_CLOSEUP_COUNT_MAX));
 
 		/* 開始時モーションカウントが無効(0以下)であるか確認 */
 		if (iFastMotionCount <= 0)
@@ -226,6 +229,9 @@ void CharacterPlayer::FastMotion()
 
 			/* モーション初期化 */
 			MotionReset();
+
+			/* シェイプ適用率を初期化 */
+			this->fShapeRate = 0.f;
 		}
 	}
 }
