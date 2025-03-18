@@ -14,7 +14,6 @@
 /* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 */
-/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -437,20 +436,17 @@ void CharacterPlayer::PlayerHitCheck()
 void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 {
 	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
-	while (fRadian > PLAYER_TURN_LIMIT || fRadian < 0)
+	/* 2πを超えた場合 */
+	if (fRadian > PLAYER_TURN_LIMIT)
 	{
-		/* 2πを超えた場合 */
-		if (fRadian > PLAYER_TURN_LIMIT)
-		{
-			/* 角度を一周(2π)分補正する */
-			fRadian -= PLAYER_TURN_LIMIT;
-		}
-		/* 0を下回った場合 */
-		else if (fRadian < 0)
-		{
-			/* 角度を一周(2π)分補正する */
-			fRadian += PLAYER_TURN_LIMIT;
-		}
+		/* 角度を一周(2π)分補正する */
+		fRadian -= PLAYER_TURN_LIMIT;
+	}
+	/* 0を下回った場合 */
+	else if (fRadian < 0)
+	{
+		/* 角度を一周(2π)分補正する */
+		fRadian += PLAYER_TURN_LIMIT;
 	}
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
