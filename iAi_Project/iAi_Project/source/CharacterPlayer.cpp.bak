@@ -43,6 +43,7 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -424,6 +425,7 @@ void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 			fRadian += PLAYER_TURN_LIMIT;
 		}
 	}
+	
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
 

@@ -1,5 +1,4 @@
 /* 2025.03.13 菊池雅道 ファイル作成 */
-/* 2025.03.17 菊池雅道 ワープ処理修正 */
 
 #include "BulletPlayerKunaiWarp.h"
 
@@ -165,7 +164,7 @@ void BulletPlayerKunaiWarp:: Warp()
 				COLLISION_LINE stCollisionLine;
 
 				/* 足場を取得 */
-				auto& PlatformList = ObjectList->GetPlatformList();
+				auto& PlatformList = ObjectList->GetCollisionList();
 
 				/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
 				stCollisionLine.vecLineStart	= vecPlayerWarpPosition;
