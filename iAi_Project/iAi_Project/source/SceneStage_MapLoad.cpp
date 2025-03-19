@@ -13,18 +13,21 @@
 #include "EnemySpawnPoint_Missile.h"
 #include "EnemySpawnPoint_Beam.h"
 #include "EnemySpawnPoint_Explosion.h"
+// ギミック(スポーンポイント)
+#include "GimmickDisappearSpawnPoint.h"
 // スポーンポイント
 #include "SpawnPoint_Blood_PickupItem.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
 // ギミック
-#include "GimmickDisappear.h"
 #include "Gimmick_ForcedJump_Spawn.h"
 #include "Screen.h"
 #include "LargeScreen.h"
 #include "Gimmick_FallJudgment.h"
 #include "Gimmick_MoveFloor.h"
 #include "Gimmick_CheckPoint.h"
+// タイトルプレイヤー
+#include "Scene_Title_Player.h"
 // 霧
 #include "FallFog.h"
 
@@ -388,6 +391,19 @@ void SceneStage::LoadMapData()
 					/* 拡大率設定*/
 					pLargeScreen->SetScale(vecScale);
 				}
+				else if (name == "TitlePlayer")
+				{
+					// タイトルプレイヤーの場合
+					/* "オブジェクト管理"にタイトルプレイヤーを追加 */
+					TitlePlayer* pTitlePlayer = new TitlePlayer();
+					ObjectList->SetPlatform(pTitlePlayer);
+					/* 座標設定 */
+					pTitlePlayer->SetPosition(vecPos);
+					/* 回転量設定 */
+					pTitlePlayer->SetRotation(vecRot);
+					/* 拡大率設定 */
+					pTitlePlayer->SetScale(vecScale);
+				}
 				else if (name == "FallJudgment")
 				{
 					// 落下判定の場合
@@ -479,8 +495,8 @@ void SceneStage::LoadMapData()
 				{
 					// 床消失の場合
 					/* "オブジェクト管理"に床消失を追加 */
-					PlatformBase* pPlatform = new GimmickDisappear();
-					this->ObjectList->SetPlatform(pPlatform);
+					SpawnPoint_Base* pPlatform = new GimmickDisappearSpawnPoint();
+					ObjectList->SetSpawnPoint(pPlatform);
 
 					/* 座標 */
 					pPlatform->SetPosition(vecPos);

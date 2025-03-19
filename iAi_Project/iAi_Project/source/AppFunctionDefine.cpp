@@ -81,14 +81,20 @@ namespace PROJECT_INIT
 
 		/* フォント設定 */
 		{
-			/* フォントハンドルを取得(最小サイズとする) */
-			giFontHandle_Small	= LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
+			/* フォントハンドルを取得(マキナス/通常サイズ) */
+			giFontHandle_Small					= LoadFontDataToHandle("resource/FontData/Makinas-4-Flat.dft", 0);
 
-			/* フォントハンドルを取得(中サイズとする) */
-			giFontHandle_Medium	= CreateFontToHandle(NULL, 60, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
+			/* フォントハンドルを取得(マキナス/中サイズ) */
+			giFontHandle_Medium					= CreateFontToHandle(NULL, 60, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
 
-			/* フォントハンドルを取得(大サイズとする) */
-			giFontHandle_Large	= CreateFontToHandle(NULL, 90, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
+			/* フォントハンドルを取得(マキナス/大サイズ) */
+			giFontHandle_Large					= CreateFontToHandle(NULL, 90, 9, DX_FONTTYPE_ANTIALIASING, -1, giFontHandle_Small);
+
+			/* フォントハンドルを取得(のとせりふ/セリフテキスト用) */
+			giFontHandle_NotoSerifJP_Medium		= LoadFontDataToHandle("resource/FontData/NotoSerifJP-Medium.dft", 0);
+
+			/* フォントハンドルを取得(のとせりふ/ネームタグ、オプション用) */
+			giFontHandle_NotoSerifJP_SemiBold	= LoadFontDataToHandle("resource/FontData/NotoSerifJP-SemiBold.dft", 0);
 		}
 
 		/* シェーダー読み込み */

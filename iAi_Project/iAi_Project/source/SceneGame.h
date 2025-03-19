@@ -12,6 +12,7 @@
 /* シーン */
 #include "SceneStage.h"
 #include "SceneAddTitleSetup.h"
+#include "SceneConversation.h"
 
 /* シーン「ゲーム」の宣言 */
 

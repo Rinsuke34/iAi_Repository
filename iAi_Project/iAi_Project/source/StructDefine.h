@@ -22,3 +22,14 @@ struct NearEnemy
 	Enemy_Basic* pEnemy;		// エネミーのポインタ
 	float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
 };
+
+// 会話パート用のテキストデータ
+struct TEXT_DATA
+{
+	std::string	aText;				// 文章
+	int			iFocusCharacter;	// 立ち絵を手前に持ってくるキャラクター(0:どちらも持ってこない / 1:左 / 2:右 / 3:両方 )
+	int			iLeftCharactorCg;	// 左のキャラクターの立ち絵No
+	int			iRightCharactorCg;	// 右のキャラクターの立ち絵No
+	int			iSpeed;				// 描写速度
+	int			iVoiceNo;			// ボイス番号
+};

@@ -11,6 +11,10 @@
 #include "EffectManualDelete.h"
 #include "PlayerStatusDefine.h"
 #include "GimmickDefine.h"
+#include "GimmickDisappearSpawnPoint.h"
+
+/* 先行定義 */
+class GimmickDisappearSpawnPoint;
 
 /* テスト用敵クラス */
 
@@ -22,6 +26,9 @@ public:
 	virtual ~GimmickDisappear();		// デストラクタ
 
 	virtual void	Update()			override;		// 更新
+	virtual void	Reset()				override;	// リセット処理
+
+	void	SetSpawnPoint(GimmickDisappearSpawnPoint* pGimmickDisappearSpawnPoint) { this->pGimmickDisappearSpawnPoint = pGimmickDisappearSpawnPoint; }	// 紐づいたスポナーの設定
 
 private:
 
@@ -40,9 +47,11 @@ private:
 	int iTextureSecondChangeCount;		// テクスチャ変更時間
 	int iTextureRedHandle;				// テクスチャハンドル
 	int iTextureOrangeHandle;			// テクスチャハンドル
+	int iTextureYellowHandle;			// テクスチャハンドル
 	int iBlinkTime;						// 点滅時間
 
-	bool bDisappearFlg;	// 消滅フラグ
+	/* スポナーのポインタ */
+	GimmickDisappearSpawnPoint* pGimmickDisappearSpawnPoint;	// 消失ギミックスポナー
 
 protected:
 };

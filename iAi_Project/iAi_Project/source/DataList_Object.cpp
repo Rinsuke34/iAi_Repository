@@ -165,6 +165,7 @@ void DataList_Object::UpdateAll()
 	UpdatePlatform();
 	UpdateEffectItem();
 	UpdatePickUpItem();
+	UpdateEnemySpawnPoint();
 }
 
 // プレイヤー更新
@@ -244,6 +245,16 @@ void DataList_Object::UpdatePickUpItem()
 	for (auto& pPickUpItem : this->pPickUpItemList)
 	{
 		pPickUpItem->Update();
+	}
+}
+
+// エネミースポナーリセット更新
+void DataList_Object::UpdateEnemySpawnPoint()
+{
+	/* すべてのエネミースポナーの更新を呼ぶ */
+	for (auto& pEnemySpawnPoint : this->pEnemySpawnPointList)
+	{
+		pEnemySpawnPoint->Update();
 	}
 }
 

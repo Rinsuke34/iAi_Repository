@@ -158,3 +158,71 @@ COLOR_F	PUBLIC_PROCESS::stAddCollorF(COLOR_F vecColorF_A, COLOR_F vecColorF_B)
 
 	return stReturn;
 }
+
+// UTF-8 → Shift-JIS 変換
+std::string	PUBLIC_PROCESS::aUtf8ToShiftJIS(std::string Utf8)
+{
+	// 引数
+	// Utf8		<- Shift-Jisに変換予定のUTF8文字列
+
+	/* UTF-8 → UTF-16(ワイド文字) */
+	int	iWideSize = MultiByteToWideChar(CP_UTF8, 0, Utf8.c_str(), -1, NULL, 0);
+
+	if (iWideSize == 0) return "";
+
+	std::wstring wideStr(iWideSize, L'\0');
+	MultiByteToWideChar(CP_UTF8, 0, Utf8.c_str(), -1, &wideStr[0], iWideSize);
+
+	/* UTF-16 → Shift-JIS */
+	int iSjisSize = WideCharToMultiByte(CP_ACP, 0, wideStr.c_str(), -1, NULL, 0, NULL, NULL);
+	if (iSjisSize == 0) return "";
+
+	std::string aSjisStr(iSjisSize, '\0');
+	WideCharToMultiByte(CP_ACP, 0, wideStr.c_str(), -1, &aSjisStr[0], iSjisSize, NULL, NULL);
+
+	return aSjisStr;
+}
+
+// Shift-JIS文字列を指定文字数でカット
+std::string	PUBLIC_PROCESS::aCutShitfJisString(std::string ShiftJis, int iLength)
+{
+	// 引数
+	// ShiftJis		<- カットするShift-JIS文字列
+	// iLength		<- カットする文字数
+
+	int iCount = 0;
+	int iPossition = 0;
+
+	while (iPossition < ShiftJis.size() && iCount < iLength)
+	{
+		/* Shift-JIS の先頭バイトを取得 */
+		unsigned char ch = static_cast<unsigned char>(ShiftJis[iPossition]);
+
+		/* 文字のバイト数を取得 */
+		if (ch <= 0x7F || (ch >= 0xA1 && ch <= 0xDF))
+		{
+			// 半角文字(1バイト)である場合
+			iPossition += 1;
+		}
+		else
+		{
+			// 全角文字(2バイト)である場合
+			/* 文字が最後まで記述されているか確認 */
+			if (iPossition + 1 < ShiftJis.size())
+			{
+				// 文字が最後まで記述されている場合
+				iPossition += 2;
+			}
+			else
+			{
+				// 文字が途中で途切れている場合
+				break;
+			}
+		}
+
+		/* カウントを加算する */
+		iCount++;
+	}
+
+	return ShiftJis.substr(0, iPossition);
+}

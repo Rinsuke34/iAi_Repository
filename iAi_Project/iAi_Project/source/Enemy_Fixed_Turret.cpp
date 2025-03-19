@@ -145,9 +145,9 @@ void Enemy_Fixed_Turret::MoveEnemy()
 			{
 				this->bWarningEffectFlg = false;
 
-				this->bShotFlg = true;
 
-				this->bUpFlg = true;
+
+
 			
 
 				/* 攻撃予告エフェクト追加 */
@@ -158,7 +158,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 					/* エフェクトの読み込み */
 					this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
-					this->vecEffectPos = MV1GetFramePosition(this->iModelHandle, 1);
+					this->vecEffectPos = MV1GetFramePosition(this->iModelHandle, 2);
 
 					/* エフェクトの座標設定 */
 					this->pEffectWarning->SetPosition(VGet(vecEffectPos.x, vecEffectPos.y, vecEffectPos.z));
@@ -178,28 +178,45 @@ void Enemy_Fixed_Turret::MoveEnemy()
 					}
 				}
 			}
-		}
-	}
-	//エフェクトがnullptrでないか確認
-	if (this->pEffectWarning != nullptr)
-	{
-		// エフェクトが再生中かどうか確認
-		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
+
+			if (this->bTestFlg = true)
 		{
-			if (this->bShotFlg == true)
+				//維持カウントを減算
+				this->iMaintainCount--;
+
+				if (iMaintainCount <= 0)
 			{
-				// エフェクトが再生終了している場合
-			// ノーマル弾を発射する
-				Player_Range_Normal_Shot();
+					this->bShotFlg = true;
 
-				this->bDownFlg = true;
+					this->bUpFlg = true;
 
-				// 発射カウントを初期化
-				this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+					this->bTestFlg = false;
+
+					this->iMaintainCount = 60;
+				}
 			}
-			this->bShotFlg = false;
 		}
 	}
+	////エフェクトがnullptrでないか確認
+	//if (this->pEffectWarning != nullptr)
+	//{
+	//	// エフェクトが再生中かどうか確認
+	//	if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
+	//	{
+	//		if (this->bShotFlg == true)
+	//		{
+	//			// エフェクトが再生終了している場合
+	//		// ノーマル弾を発射する
+	//			Player_Range_Normal_Shot();
+
+	//			this->bDownFlg = true;
+
+	//			// 発射カウントを初期化
+	//			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+	//		}
+	//		this->bShotFlg = false;
+	//	}
+	//}
 
 	if (bUpFlg == true)
 	{
@@ -247,44 +264,107 @@ void Enemy_Fixed_Turret::MoveEnemy()
 				ObjectList->SetBullet(this->pBulletRangeMissile);
 
 				this->bMissile = false;
-			}
 
-			//維持カウントを減算
-			this->iMaintainCount--;
-
-			if (iMaintainCount <= 0)
-			{
 				this->bUpFlg = false;
 
-				this->bDownFlg = true;
-
-				this->iMaintainCount = 60;
+				this->bTestFlg2 = true;
 			}
 		}
 	}
 
-	if (this->bDownFlg = true && this->bUpFlg == false)
+	if (this->bTestFlg2 == true)
 	{
-		if (VRot.x <= vecRotation.x)
+		this->vecRotation = VGet(vecRotation.x - 0.1, vecRotation.y, vecRotation.z);
+
+		//エネミーのｘ向きがプレイヤーのｘ向きが誤差が0.1以上または0.1以下か確認
+		if (vecRotation.x < VRot.x)
+		{
+			this->vecRotation = VGet(VRot.x, vecRotation.y, vecRotation.z);
+
+			this->bTestFlg3 = true;
+
+			this->bTestFlg2 = false;
+
+		}
+		}
+
+	if (this->bTestFlg3 == true)
+		{
+		this->vecRotation = VGet(vecRotation.x, vecRotation.y - 0.1, vecRotation.z);
+
+		if (vecRotation.y < VRot.y)
+			{
+			this->bTestFlg3 = false;
+			this->bWarningEffectFlg = true;
+			this->bShotFlg = false;
+			}
+	}
+}
+		
+
+		////エネミーのｘ向きがプレイヤーのｘ向きが誤差が0.1以上または0.1以下か確認
+		//if (VRot.x < vecRotation.x)
+		//{
+		//	this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
+		//}
+		/*if (vecRotation.x < 0)
+		{
+			this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
+		}*/
+		//if (/*VRot.x == vecRotation.x &&*/ VRot.y == vecRotation.y)
+		//	{
+		//		this->bDownFlg = false;
+
+		//		 bTestFlg = true;
+		//	}
+		/*if (VRot.x > 0.9 && VRot.x > 0)
+		{
+			this->vecRotation = VGet(vecRotation.x + 0.05, vecRotation.y, vecRotation.z);
+}
+		if (VRot.x < -0.5 && VRot.x < 0)
 		{
 			this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
+		}*/
+		//if (VRot.x >= vecRotation.x && VRot.y == vecRotation.y)
+		//{
+		//	this->bWarningEffectFlg = true;
 
-		}
-		if (VRot.y <= vecRotation.y)
-		{
-			this->vecRotation = VGet(vecRotation.x, vecRotation.y - 0.2, vecRotation.z);
-		}
-		if (VRot.y >= vecRotation.y)
-		{
-			this->vecRotation = VGet(vecRotation.x, vecRotation.y + 0.2, vecRotation.z);
-		}
-		if (VRot.x == vecRotation.x && VRot.y == vecRotation.y)
-			{
-				this->bDownFlg = false;
-			}
-	}
+		//	this->vecRotation = VGet(vecRotation.x, vecRotation.y, vecRotation.z);
 
-}
+		//	this->bTestFlg2 = false;
+		//}
+		//else if (vecRotation.x < -0.5)
+		//{
+		//	this->bWarningEffectFlg = true;
+
+		//	this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
+
+		//	this->bTestFlg2 = false;
+		//	//this->bTestFlg = true;
+		//}
+
+		////エネミーがプレイヤーの方向の誤差が0.1以上または0.1以下か確認
+		//if (VRot.x > 0.9 && VRot.y == vecRotation.y)
+		//{
+		//	this->bWarningEffectFlg = true;
+		//	this->vecRotation = VGet(vecRotation.x, vecRotation.y, vecRotation.z);
+		//	this->bTestFlg2 = false;
+		//}
+		/*else if (vecRotation.x < -0.5 && VRot.y == vecRotation.y)
+		{
+			this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
+			this->bWarningEffectFlg = true;
+			this->bTestFlg2 = false;
+		}*/
+
+	//if (bTestFlg == true)
+	//{	
+	//	/*if (VRot.x >= -0.5)
+	//	{
+	//		this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
+	//	}*/
+	//}
+
 
 // ノーマル弾の発射
 void Enemy_Fixed_Turret::Player_Range_Normal_Shot()

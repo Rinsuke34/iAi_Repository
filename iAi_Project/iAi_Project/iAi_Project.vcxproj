@@ -205,6 +205,7 @@
     <ClCompile Include="source\Enemy_Normal_Air.cpp" />
     <ClCompile Include="source\FallFog.cpp" />
     <ClCompile Include="source\GimmickDisappear.cpp" />
+    <ClCompile Include="source\GimmickDisappearSpawnPoint.cpp" />
     <ClCompile Include="source\Gimmick_CheckPoint.cpp" />
     <ClCompile Include="source\Gimmick_FallJudgment.cpp" />
     <ClCompile Include="source\Gimmick_ForcedJump_Spawn.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="source\PickUpItem_Blood.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
     <ClCompile Include="source\SceneAddTitleSetup.cpp" />
+    <ClCompile Include="source\SceneConversation.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
     <ClCompile Include="source\SceneAddGameSetup.cpp" />
@@ -220,6 +222,7 @@
     <ClCompile Include="source\SceneStageClear.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StageJump.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp" />
+    <ClCompile Include="source\Scene_Title_Player.cpp" />
     <ClCompile Include="source\Screen.cpp" />
     <ClCompile Include="source\ScreenEffect_ConcentrationLine.cpp" />
     <ClCompile Include="source\ScreenEffect_Damage.cpp" />
@@ -293,6 +296,7 @@
     <ClInclude Include="source\Enemy_Explosion.h" />
     <ClInclude Include="source\Enemy_Normal_Air.h" />
     <ClInclude Include="source\FallFog.h" />
+    <ClInclude Include="source\GimmickDisappearSpawnPoint.h" />
     <ClInclude Include="source\Gimmick_CheckPoint.h" />
     <ClInclude Include="source\Gimmick_FallJudgment.h" />
     <ClInclude Include="source\Gimmick_MoveFloor.h" />
@@ -302,6 +306,7 @@
     <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\SceneAddGameSetup.h" />
     <ClInclude Include="source\SceneAddTitleSetup.h" />
+    <ClInclude Include="source\SceneConversation.h" />
     <ClInclude Include="source\SceneOptionDefine.h" />
     <ClInclude Include="source\ScenePause.h" />
     <ClInclude Include="source\ScenePauseDefine.h" />
@@ -309,6 +314,7 @@
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
     <ClInclude Include="source\SceneUi_Debug_StatusSetup.h" />
+    <ClInclude Include="source\Scene_Title_Player.h" />
     <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\ScreenEffect_ConcentrationLine.h" />
     <ClInclude Include="source\SpawnPoint_Base.h" />

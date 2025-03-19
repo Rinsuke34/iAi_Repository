@@ -51,6 +51,7 @@ private:
 	int		iModelturretHandle;	// モデルハンドル
 	int		iModelscaffoldHandle;	// モデルハンドル
 	int		iMaintainCount;	// 維持カウント
+	int		iEffectWaitCount;	// エフェクト待機カウント
 
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
@@ -60,6 +61,9 @@ private:
 	bool	bUpFlg;										// 上フラグ
 	bool	bDownFlg;									// 下フラグ
 	bool	bMissile;									// ミサイルフラグ
+	bool bTestFlg;									// テストフラグ
+	bool bTestFlg2;									// テストフラグ2
+	bool bTestFlg3;									// テストフラグ3
 
 
 

@@ -463,6 +463,24 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定">
       <UniqueIdentifier>{76578b09-b5b3-4bb8-aed8-9d075286c209}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\会話シーン">
+      <UniqueIdentifier>{61ba4c3d-fef9-43fd-a1d0-aafea7fd8bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\会話パート">
+      <UniqueIdentifier>{ef1043b4-a9a7-46f2-8791-a1b610279c50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\消える床%28ギミック%29">
+      <UniqueIdentifier>{0b87cbd2-534b-48a0-b4e6-0bb7bd3537f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\消える床">
+      <UniqueIdentifier>{d1934403-4996-4a81-bf3c-40fb7b559c3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー">
+      <UniqueIdentifier>{d880e9fb-b69f-4f77-9e4b-977670dab5c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー">
+      <UniqueIdentifier>{00a898e5-8d27-41ae-9ff4-1a674976d164}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -734,6 +752,15 @@
     </ClCompile>
     <ClCompile Include="source\Enemy_Fixed_Turret.cpp">
       <Filter>ソース ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneConversation.cpp">
+      <Filter>ソース ファイル\シーン\会話パート</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GimmickDisappearSpawnPoint.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\消える床%28ギミック%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene_Title_Player.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1039,6 +1066,15 @@
     </ClInclude>
     <ClInclude Include="source\Enemy_Fixed.h">
       <Filter>ヘッダー ファイル\オブジェクト\アクタ\キャラクター\エネミー\固定</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneConversation.h">
+      <Filter>ヘッダー ファイル\シーン\会話シーン</Filter>
+    </ClInclude>
+    <ClInclude Include="source\GimmickDisappearSpawnPoint.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\消える床</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene_Title_Player.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

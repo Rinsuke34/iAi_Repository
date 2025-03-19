@@ -8,9 +8,11 @@
 bool gbEndFlg	= false;	// プログラム終了フラグ
 
 /* フォント関連 */
-int	giFontHandle_Small	= 0;	// フォントハンドル(小サイズ(デフォルト))
-int	giFontHandle_Medium	= 0;	// フォントハンドル(中サイズ)
-int giFontHandle_Large	= 0;	// フォントハンドル(大サイズ)
+int giFontHandle_Small					= 0;	// フォントハンドル(マキナス/通常サイズ)
+int giFontHandle_Medium					= 0;	// フォントハンドル(マキナス/中サイズ)
+int giFontHandle_Large					= 0;	// フォントハンドル(マキナス/大サイズ)
+int giFontHandle_NotoSerifJP_Medium		= 0;	// フォントハンドル(のとせりふ/セリフテキスト用)
+int giFontHandle_NotoSerifJP_SemiBold	= 0;	// フォントハンドル(のとせりふ/ネームタグ、オプション用)
 
 /* プレイヤーの入力情報 */
 Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド

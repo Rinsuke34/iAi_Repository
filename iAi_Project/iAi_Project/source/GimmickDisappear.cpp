@@ -37,6 +37,8 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	//ギミックの消滅時間カウント
 	this->iDisappearTimeCount = GIMMICK_BLINK_TIME;
 
+	this->bRidePlayerFlg = false;
+
 	/* データリスト"画像ハンドル管理"を取得 */
 	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 	// テクスチャの読み込み
@@ -45,14 +47,17 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	// テクスチャの読み込み
 	this->iTextureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
 
-	//消滅フラグ
-	this->bDisappearFlg = false;
+	this->iTextureYellowHandle = *ImageList->piGetImage("DisappearFloor/Yellow");
+
+	MV1SetTextureGraphHandle(iModelHandle, 0, iTextureYellowHandle, true);
+	MV1SetTextureGraphHandle(iModelHandle, 1, iTextureYellowHandle, true);
 }
 
 // デストラクタ
 GimmickDisappear::~GimmickDisappear()
 {
 	/* 紐づいているエフェクトの削除フラグを有効化 */
+	this->pGimmickDisappearSpawnPoint->SetAddobjectFlg(false);
 }
 
 //ギミックの処理
@@ -98,13 +103,11 @@ void GimmickDisappear::ProcessGimmick()
 				{
 					//ギミックの消滅時間カウントが一定数になった場合
 				
-					this->bDisappearFlg = true;
-				
 					//ギミックを消す
 					MV1SetVisible(this->iModelHandle, FALSE);
 
 					//コリジョンを削除
-					MV1TerminateCollInfo(this->iModelHandle, 0);
+					this->bDeleteFlg = true;
 
 					//スポーンカウントを減らす
 					this->iSpawnCount--;
@@ -132,6 +135,12 @@ void GimmickDisappear::ProcessGimmick()
 			}
 		}
 	}
+
+		//スポーンカウントが0以下になったか確認
+		if (this->iSpawnCount <= 0)
+		{
+			//this->bDeleteFlg = true;
+		}
 }
 
 // 更新
@@ -139,4 +148,30 @@ void GimmickDisappear::Update()
 {
 	//ギミックの処理
 	ProcessGimmick();
+}
+
+// リセット処理
+void GimmickDisappear::Reset()
+{
+	//ギミックの消滅時間
+	this->iDisappearTime = GIMMICK_DISAPPEAR_TIME;
+
+	//ギミックテクスチャ変更カウント
+	this->iTextureFirstChangeCount = GIMMICK_TEXTURE_CHANGE_FIRST_COUNT;
+
+	//ギミックテクスチャ変更カウント
+	this->iTextureSecondChangeCount = GIMMICK_TEXTURE_CHANGE_SECOND_COUNT;
+
+	//ギミックのスポーンカウント
+	this->iSpawnCount = GIMMICK_SPAWN_COUNT;
+
+	//ギミックの消滅時間カウント
+	this->iDisappearTimeCount = GIMMICK_BLINK_TIME;
+
+	this->bRidePlayerFlg = false;
+
+	
+
+	MV1SetTextureGraphHandle(iModelHandle, 0, iTextureYellowHandle, true);
+	MV1SetTextureGraphHandle(iModelHandle, 1, iTextureYellowHandle, true);
 }

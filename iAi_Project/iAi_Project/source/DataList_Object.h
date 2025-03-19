@@ -36,15 +36,16 @@ class DataList_Object : public DataListBase
 		void	InitializationEnemySpawnPoint();	// エネミースポナー初期化
 
 		/* リスト内オブジェクト更新 */
-		void	UpdateAll();			// 全オブジェクト更新
-		void	UpdatePlayer();			// プレイヤー更新
-		void	UpdateSkySqhere();		// スカイスフィア更新
-		void	UpdateEnemy();			// エネミー更新
-		void	UpdateEffect();			// エフェクト更新
-		void	UpdateBullet();			// 弾更新
-		void	UpdatePlatform();		// プラットフォーム更新
-		void	UpdateEffectItem();		// アイテム(実体なし)更新
-		void	UpdatePickUpItem();		// アイテム(実体あり)更新
+		void	UpdateAll();				// 全オブジェクト更新
+		void	UpdatePlayer();				// プレイヤー更新
+		void	UpdateSkySqhere();			// スカイスフィア更新
+		void	UpdateEnemy();				// エネミー更新
+		void	UpdateEffect();				// エフェクト更新
+		void	UpdateBullet();				// 弾更新
+		void	UpdatePlatform();			// プラットフォーム更新
+		void	UpdateEffectItem();			// アイテム(実体なし)更新
+		void	UpdatePickUpItem();			// アイテム(実体あり)更新
+		void	UpdateEnemySpawnPoint();	// エネミースポナーリセット更新
 
 		/* リスト内オブジェクト描写 */
 		void	DrawAll();				// 全オブジェクト描写(エフェクトを除く)

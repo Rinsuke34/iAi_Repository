@@ -154,6 +154,9 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 					/* 配列に追加 */
 					aEditLotteryList.push_back(stEditLottery);
 				}
+
+				/* ファイルを閉じる */
+				inputFile.close();
 			}
 
 			/* エディット数分ランダムなエディットを選択 */

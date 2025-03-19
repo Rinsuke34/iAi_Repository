@@ -50,6 +50,12 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* 初期化処理を実行する */
 	pAddScene->Initialization();
+
+	/* 会話パートを生成 */
+	SceneConversation* pAddConversation = new SceneConversation();
+	gpSceneServer->AddSceneReservation(pAddConversation);
+	pAddConversation->Initialization();
+	
 }
 
 // デストラクタ
