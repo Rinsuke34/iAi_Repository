@@ -228,8 +228,14 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* エディットによる攻撃チャージフレームの短縮値を取得 */
 	int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
 
-	/* プレイヤーの現在の攻撃チャージフレームの取得 */
+	/* 近接攻撃(強)の切り替えフレーム数を取得 */
+	int iMeleeStrongChangeFrame = this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame();
+
+	/* プレイヤーの現在の攻撃チャージフレームを取得 */
 	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() + iEditChargeFlameShortening;
+
+	/* 近接攻撃(強)チャージ最大フレーム数を取得 */
+	int iMeleeChargeMaxFlame = this->PlayerStatusList->iGetPlayerKickWallInputMaxFlame();
 
 	/* プレイヤーの空中での近接攻撃(強)の回数を取得 */
 	int iNowMeleeStrongAirCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirCount();
@@ -245,11 +251,15 @@ void CharacterPlayer::Player_Melee_Posture()
 		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 		{
 			// 近接攻撃(強)で敵を倒した後の場合
+
+			// 近接攻撃(強)で連続できる最大フレーム数を取得
+			int iMeleeStrongContinuosMaxFrame = this->PlayerStatusList->iGetPlayerMeleeStrongContinusMaxFrame();
+			
 			/* 近接攻撃(強)で敵を倒した後のカウントが一定値以下か確認 */
-			if (iPlayerMeleeStrongAfterCount <= PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
+			if (iPlayerMeleeStrongAfterCount <= iMeleeStrongContinuosMaxFrame)
 			{
 					/* 近接攻撃(強)の攻撃チャージフレーム数を最大に設定 */
-					this->PlayerStatusList->SetPlayerNowAttakChargeFlame(PLAYER_MELEE_CHARGE_MAX);
+					this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iMeleeChargeMaxFlame);
 
 					/* 現在の攻撃チャージフレームを取得 */
 					iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
@@ -264,7 +274,7 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 
 		// 攻撃チャージフレームが強攻撃の切り替わりに達したら
-		if (iNowAttakChargeFlame == PLAYER_CHARGE_TO_STRONG_TIME)
+		if (iNowAttakChargeFlame == iMeleeStrongChangeFrame)
 		{
 			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
 			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
@@ -302,14 +312,14 @@ void CharacterPlayer::Player_Melee_Posture()
 		/* 近接攻撃(強)チャージ処理 */
 		{
 			/* チャージフレームが最大値を超えていないか確認 */
-			if (iNowAttakChargeFlame <= PLAYER_MELEE_CHARGE_MAX)
+			if (iNowAttakChargeFlame <= iMeleeChargeMaxFlame)
 			{
 				// 超えていない場合
 				/* プレイヤーの現在の攻撃チャージフレームを加算 */
 				PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
 
 				/* 加算によりチャージフレームが最大値に達したか確認 */
-				if ((iNowAttakChargeFlame + 1) == PLAYER_MELEE_CHARGE_MAX)
+				if ((iNowAttakChargeFlame + 1) == iMeleeChargeMaxFlame)
 				{
 					// 最大値に達した場合
 					/* 溜め居合チャージ完了のSEを再生 */
@@ -361,21 +371,24 @@ void CharacterPlayer::Player_Melee_Posture()
 					}
 				}
 			}
+
+			/* 近距離攻撃(強)による移動距離のスケールを求める */
+			float fMoveScale = this->PlayerStatusList->fGetPlayerMelleStrongMoveScale();
 		
-			/* 移動量算出 */
-			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 2.7f;
-			// 臨時でちょっと長めにする
-			//float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f;
-			float fMove = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * 5.f * 3.f;
+			/* チャージフレーム数に移動距離のスケールを乗算し移動量を算出する */
+			float fMoveDistance = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() * fMoveScale;
 
 			/* 移動方向算出 */
 			VECTOR vecMoveDirection = VNorm(VSub(this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraPosition()));
 
 			/* 近接攻撃(強)による移動量を設定 */
-			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMove));
+			this->PlayerStatusList->SetPlayerChargeAttakTargetMove(VScale(vecMoveDirection, fMoveDistance));
+
+			/* 近接攻撃(強)への切り替えフレーム数を取得 */
+			int MelleStrongChangeFrame = this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame();
 
 			/* 攻撃チャージフレームが強攻撃に派生しているか確認 */
-			if (iNowAttakChargeFlame >= PLAYER_CHARGE_TO_STRONG_TIME)
+			if (iNowAttakChargeFlame >= MelleStrongChangeFrame)
 			{
 				/* カメラモードを"構え(近接攻撃構え)"に変更 */
 				this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
@@ -408,8 +421,8 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* デバッグ用処理 */
 			{
 				/* デバッグ用移動後座標を設定 */
-				this->stMeleeStrongMoveCollsion.vecCapsuleTop = VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
-				this->stMeleeStrongMoveCollsion.vecCapsuleBottom = VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMove));
+				this->stMeleeStrongMoveCollsion.vecCapsuleTop = VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT - PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMoveDistance));
+				this->stMeleeStrongMoveCollsion.vecCapsuleBottom = VAdd(VAdd(this->vecPosition, VGet(0, PLAYER_WIDE, 0)), VScale(vecMoveDirection, fMoveDistance));
 				this->stMeleeStrongMoveCollsion.fCapsuleRadius = PLAYER_WIDE;
 			}
 		}
@@ -418,7 +431,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	{
 		// 攻撃入力がされていない場合
 		/* 攻撃チャージフレームに応じて処理を変更 */
-		if (iNowAttakChargeFlame < PLAYER_CHARGE_TO_STRONG_TIME)
+		if (iNowAttakChargeFlame < iMeleeStrongChangeFrame)
 		{
 			// 強攻撃に切り替わる前の場合
 			/* プレイヤーの状態を"近接攻撃中(弱)"に設定 */
@@ -680,7 +693,7 @@ void CharacterPlayer::Player_Charge_Attack()
 			// ※持続時間は回避と同じとする
 			ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
 			this->StageStatusList->SetScreenEffect(pScreenEffect);
-			pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
+			pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
 		
 		}
 		else
@@ -691,6 +704,9 @@ void CharacterPlayer::Player_Charge_Attack()
 			/* 近接攻撃(強)による移動量を取得 */
 			VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 
+			/* 近接攻撃(強)の移動速度を取得 */
+			float fMoveSpeed = this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed();
+
 			/* 移動量をfloat型で取得 */
 			float fMove = VSize(vecMoveDirection);
 			
@@ -698,20 +714,20 @@ void CharacterPlayer::Player_Charge_Attack()
 			int iCount = iMeleeStrongChargeCount;
 
 			/* 移動量を移動速度で割ってこの処理を行う回数を算出する */
-			int	iMoveCount = (int)(fMove / PLAYER_MELEE_STRONG_MOVESPEED);
+			int	iMoveCount = (int)(fMove / fMoveSpeed);
 
 			/* プレイヤー移動 */
 			if (iCount <= iMoveCount)
 			{
 				// 現在のカウントが移動回数以下である場合
 				/* 移動量分プレイヤーを移動させる */
-				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), PLAYER_MELEE_STRONG_MOVESPEED));
+				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), fMoveSpeed));
 			}
 			else
 			{
 				// 最後の移動の場合
 				/* 最後の移動量を取得 */
-				float	iLastMove = fMove - (iMoveCount * PLAYER_MELEE_STRONG_MOVESPEED);
+				float	iLastMove = fMove - (iMoveCount * fMoveSpeed);
 
 				/* 最後の移動量分プレイヤーを移動させる */
 				this->vecMove = VAdd(this->vecMove, VScale(VNorm(vecMoveDirection), iLastMove));
@@ -789,8 +805,12 @@ void CharacterPlayer::Player_Charge_Attack()
 			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 			{
 				// モーションが"近距離攻撃(強)(終了)"になった場合
+				
+				/* プレイヤーのロックオン範囲を取得 */
+				float fRockOnRadius = this->PlayerStatusList->fGetPlayerRockOnRadius();
+
 				/* 索敵範囲を設定 */
-				COLLISION_SQHERE stSearchSqere{ this->vecPosition, PLAYER_SEARCH_RANGE_AFTER_MELEE };
+				COLLISION_SQHERE stSearchSqere{ this->vecPosition, fRockOnRadius };
 
 				/* プレイヤーに近いエネミーを取得する */
 				NearEnemy stNearEnemy = { nullptr, 0.f };
@@ -799,7 +819,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				auto& EnemyList = ObjectList->GetEnemyList();
 
 				/* プレイヤーからエネミーの最小ベクトルを保持する変数 */
-				VECTOR vecMinDirection = VGet(PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE, PLAYER_SEARCH_RANGE_AFTER_MELEE);
+				VECTOR vecMinDirection = VGet(fRockOnRadius, fRockOnRadius, fRockOnRadius);
 
 				/* プレイヤーからエネミーの最小距離を保持する変数 */
 				float fMinDistance = VSize(vecMinDirection);
