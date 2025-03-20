@@ -37,7 +37,17 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 
 		/* リザルトフレーム */
 		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
+
+		/* アルファベット(コンボ用の物を流用) */
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_S");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_A");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_C");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_D");
 	}
+
+	/* 初期化 */
+	this->iAddTextNo	= -1;
 
 	/* 各評価基準を取得 */
 	ResultCalculation_JsonLoad();
@@ -98,20 +108,17 @@ void SceneResult::Draw()
 
 	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFontHandle_Large,	"GET BLOOD");
 
-
-	//DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "決定			：エディット画面へ");
-
-	///* 評価描写(仮) */
-	//DrawFormatStringToHandle(500, 32 * 2, GetColor(255, 255, 255),	giFontHandle, "クリアタイム");
-	//DrawFormatStringToHandle(500, 32 * 3, GetColor(255, 255, 255), giFontHandle, "記録：%d", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
-	//DrawFormatStringToHandle(500, 32 * 4, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Time);
-	//DrawFormatStringToHandle(500, 32 * 5, GetColor(255, 255, 255),	giFontHandle, "最大コンボ");
-	//DrawFormatStringToHandle(500, 32 * 6, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerComboMaxCount());
-	//DrawFormatStringToHandle(500, 32 * 7, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Combo);
-	//DrawFormatStringToHandle(500, 32 * 8, GetColor(255, 255, 255),	giFontHandle, "被ダメージ");
-	//DrawFormatStringToHandle(500, 32 * 9, GetColor(255, 255, 255), giFontHandle, "記録：%d", PlayerStatusList->iGetPlayerDamageCount());
-	//DrawFormatStringToHandle(500, 32 * 10, GetColor(255, 255, 255), giFontHandle, "評価：%d", this->iClearEvaluation_Damage);
-	//DrawFormatStringToHandle(500, 32 * 11, GetColor(255, 255, 255), giFontHandle, "総合評価：%d", this->iClearEvaluation_Total);
+	/* 評価描写 */
+	{
+		/* 評価(クリアタイム) */
+		DrawGraph(1500, 200, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Time], TRUE);
+		/* 評価(最大コンボ) */
+		DrawGraph(1500, 360, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Combo], TRUE);
+		/* 評価(被ダメージ) */
+		DrawGraph(1500, 540, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Damage], TRUE);
+		/* 評価(総合) */
+		DrawGraph(1600, 720, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Total], TRUE);
+	}
 }
 
 // メイン処理
@@ -126,6 +133,21 @@ void SceneResult::Process_Main()
 
 		/* 各評価の総合値をゲーム内リソースサーバーに登録 */
 		this->GameResourceList->SetClearEvaluation(this->iClearEvaluation_Total);
+
+		/* テキスト番号が無効(-1)以外であるか確認 */
+		if (this->iAddTextNo != -1)
+		{
+			// テキスト番号が有効な場合
+			/* シーン"会話パート"を追加 */
+			SceneConversation* pAddScene = new SceneConversation();
+			gpSceneServer->AddSceneReservation(pAddScene);
+
+			/* シーン"会話パート"にテキスト番号を設定 */
+			pAddScene->SetTextFileNo(this->iAddTextNo);
+
+			/* 初期化処理を実施 */
+			pAddScene->Initialization();
+		}
 	}
 }
 
@@ -136,8 +158,8 @@ void SceneResult::ResultCalculation_JsonLoad()
 	// jsonファイルから各評価の基準点を取得
 
 	/* パスとファイル名の設定 */
-	std::string FilePath		= "resource/SetupData/";		// 保存場所
-	std::string jsonFileName	= "CalculationStandard.json";	// ファイル名
+	std::string FilePath		= "resource/SetupData/";	// 保存場所
+	std::string jsonFileName	= "StageDataBase.json";		// ファイル名
 
 	/* ファイル展開 */
 	std::ifstream inputFile(FilePath + jsonFileName);
@@ -190,6 +212,19 @@ void SceneResult::ResultCalculation_JsonLoad()
 				this->Calculation_Damage[i] = Data.at(i);
 			}
 		}
+
+		/* 会話パート番号を取得 */
+		{
+			/* jsonファイルから読み込み */
+			std::string GetName = "Conversation";
+			nlohmann::json Data = json.at(StageName).at(GetName);
+
+			/* 読み込んだ値を変数に保存 */
+			this->iAddTextNo = Data;
+		}
+
+		/* ファイルを閉じる */
+		inputFile.close();
 	}
 }
 

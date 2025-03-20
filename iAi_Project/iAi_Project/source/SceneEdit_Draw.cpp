@@ -81,6 +81,10 @@ void SceneEdit::Draw()
 						DrawGraph(iX, iY, *this->piGrHandle_Blood, TRUE);
 						DrawFormatStringToHandle(iX + 70, iY, GetColor(255, 255, 255), giFontHandle_Medium, "%d", this->astSelectItemList[i].pstEditData->iEditCost);
 
+						/* 説明文を描写 */
+						std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[i].pstEditData->aText, 6);
+						DrawFormatStringToHandle(iX + 20, iY + 70, GetColor(255, 255, 255), giFontHandle_Small,	"%s", formattedText.c_str());
+
 						/* キープ中のエディットであるか確認 */
 						if (iSelectItemType == SELECT_TYPE_KEEP_EDIT)
 						{
@@ -154,5 +158,19 @@ void SceneEdit::Draw()
 
 		/* エディット効果描写 */
 		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix + 20, this->astSelectItemList[this->iSelectItem].stDrawPos.iy - 20, *this->GameResourceList->piGetGrHandle_EditEffect(this->HoldEditData.iEditEffect), TRUE);
+	}
+
+	/* 現在の選択カーソルが"削除","現在のエディット"になっているか */
+	if ((SELECT_ITEM_DELETE <= this->iSelectItem) && (this->iSelectItem <= SELECT_ITEM_NOW_EDIT_END))
+	{
+		// "削除","現在のエディット"である場合
+		/* カーソルが合わさっている項目に項目が設定されているか確認 */
+		if (this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect != EDIT_EFFECT_NONE)
+		{
+			// 設定されている場合
+			/* 説明文を描写 */
+			std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[this->iSelectItem].pstEditData->aText, 14);
+			DrawFormatStringToHandle(350, 895, GetColor(255, 255, 255), giFontHandle_Small, "%s", formattedText.c_str());
+		}
 	}
 }

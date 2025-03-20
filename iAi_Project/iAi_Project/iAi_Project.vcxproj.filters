@@ -301,12 +301,6 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\クナイ関連">
       <UniqueIdentifier>{e81cb358-8bfc-42b9-8161-ff17c2759099}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\シーン\ゲームメイン\エディット\終了確認画面">
-      <UniqueIdentifier>{714935a6-4531-4b5d-8b61-82661505af2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\エディット\終了確認画面">
-      <UniqueIdentifier>{9c4a05f7-f839-479f-ad4d-ebe635132a95}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\シーン\ゲームメイン\リザルト">
       <UniqueIdentifier>{7216cb09-6638-44bb-aa4d-ec65f22a5724}</UniqueIdentifier>
     </Filter>

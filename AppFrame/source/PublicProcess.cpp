@@ -226,3 +226,52 @@ std::string	PUBLIC_PROCESS::aCutShitfJisString(std::string ShiftJis, int iLength
 
 	return ShiftJis.substr(0, iPossition);
 }
+
+// Shift-JIS文字列を指定文字数で改行
+std::string PUBLIC_PROCESS::aInsertNewLine(std::string ShiftJis, int iLength)
+{
+	// 引数
+	// ShiftJis		<- 改行するShift-JIS文字列
+	// iLength		<- 改行する文字数
+
+	int iPossition = 0;  // 現在の位置
+	int iCount = 0;      // 文字数カウント
+
+	while (iPossition < ShiftJis.size())
+	{
+		/* Shift-JIS の先頭バイトを取得 */
+		unsigned char ch = static_cast<unsigned char>(ShiftJis[iPossition]);
+
+		/* 文字のバイト数を取得 */
+		if (ch <= 0x7F || (ch >= 0xA1 && ch <= 0xDF))
+		{
+			// 半角文字 (1バイト)
+			iPossition += 1;
+		}
+		else
+		{
+			// 全角文字 (2バイト)
+			if (iPossition + 1 < ShiftJis.size())
+			{
+				iPossition += 2;
+			}
+			else
+			{
+				break; // 文字が途中で途切れている場合
+			}
+		}
+
+		iCount++;
+
+		// 指定文字数に達したら改行を挿入
+		if (iCount >= iLength)
+		{
+			ShiftJis.insert(iPossition, "\n");
+			iPossition += 1; // 改行の分だけ位置をずらす
+			iCount = 0;       // カウントをリセット
+		}
+	}
+
+	return ShiftJis;
+}
+

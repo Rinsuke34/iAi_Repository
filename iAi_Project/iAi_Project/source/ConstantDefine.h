@@ -106,12 +106,6 @@ static const int    COMBO_RANK_C        = 3;    // Cランク
 static const int    COMBO_RANK_D        = 4;    // Dランク
 static const int    COMBO_RANK_MAX      = 5;	// コンボランクの総数
 static const int    COMBO_RANK_NONE     = -1;   // 無し
-// ボーダーライン
-// ※コンボ数がこの値を超えていればそのコンボランク
-static const int    COMBO_RANK_BORDER_S = 21;   // Sランク
-static const int    COMBO_RANK_BORDER_A = 11;   // Aランク
-static const int    COMBO_RANK_BORDER_B = 5;    // Bランク
-static const int    COMBO_RANK_BORDER_C = 2;    // Cランク
 
 /* スロー関連 */
 static const int	SLOW_SPEED = 1;				// スロー状態での速度(何フレームに一度実行されるか)

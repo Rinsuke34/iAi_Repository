@@ -20,21 +20,30 @@ SceneConversation::SceneConversation() : SceneBase("Conversation", 400, true)
 		/* データリスト"画像ハンドル管理"を取得 */
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
-		/* 画像ハンドル */
-		//this->piGrHandle = ImageList->piGetImage("");
+		/* スキップ確認ウィンドウ */
+		this->piGrHandle_SkipWindow			= ImageList->piGetImage("Conversation/SkipWindow/UI_Window_Skip");
+
+		/* スキップ確認ウィンドウ_ボタン */
+		this->apiGrHandle_SkipWindow_Yes[0]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_Selected");
+		this->apiGrHandle_SkipWindow_Yes[1]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_NotSelected");
+		this->apiGrHandle_SkipWindow_No[0]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_Selected");
+		this->apiGrHandle_SkipWindow_No[1]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_NotSelected");
+
+		/* Aボタンアイコン */
+		this->piGrHandle_Icon_Button_A	= ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
+
+		/* ホールドアイコン */
+		this->piGrHandle_Icon_Hold		= ImageList->piGetImage("Conversation/HoldTimer");
 	}
 
 	/* 初期化 */
-	this->iTextFileNo	=	0;	// テキストファイル番号
-	this->iDrawText		=	0;	// テキストの描写量
-	this->iNowTextNo	=	0;	// 現在のテキスト番号
-	this->iHoldTimer	=	0;	// 長押し時間
-}
-
-// デストラクタ
-SceneConversation::~SceneConversation()
-{
-
+	this->iTextFileNo		=	-1;		// テキストファイル番号
+	this->iTextDrawDelay	=	0;		// テキスト更新待機時間
+	this->iDrawText			=	0;		// テキストの描写量
+	this->iNowTextNo		=	0;		// 現在のテキスト番号
+	this->iHoldTimer		=	0;		// 長押し時間
+	this->bAddSkipCheckFlg	=	false;	// スキップ確認画面を描写中であるか
+	this->bSelectYes		=	false;	// YESを選択中であるか(スキップ画面)
 }
 
 // 初期化
@@ -47,82 +56,52 @@ void SceneConversation::Initialization()
 // 計算
 void SceneConversation::Process()
 {
-	/* 現在のテキスト番号のテキスト情報を取得 */
-	TEXT_DATA stTextData = this->astTextDataList[this->iNowTextNo];
-
-	/* テキスト描写量を加算 */
-	this->iDrawText += stTextData.iSpeed;
-
-	/* テキスト描写量が総量を超えたか確認 */
-	if (this->iDrawText >= static_cast<int>(stTextData.aText.size()))
+	/* テキストファイル番号が無効(-1)であるか確認 */
+	if (this->iTextFileNo == -1)
 	{
-		// 一定量を超えた場合
-		/* テキスト描写量をテキスト総量に設定 */
-		this->iDrawText = static_cast<int>(stTextData.aText.size());
-
-		/* "決定"がトリガ入力されているか */
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
-		{
-			// 入力されている場合
-			/* テキスト番号を加算 */
-			this->iNowTextNo += 1;
-
-			/* テキスト描写量をリセット */
-			this->iDrawText = 0;
-
-			/* テキスト番号が総量を超えたか確認 */
-			if (this->iNowTextNo >= static_cast<int>(this->astTextDataList.size()))
-			{
-				// 総量を超えた場合
-				/* シーンの削除フラグを有効にする */
-				this->bDeleteFlg = true;
-			}
-		}
+		// 無効である場合
+		/* このシーンの削除フラグを有効にする */
+		this->bDeleteFlg = true;
+		return;
 	}
 
-	/* "決定"がホールド入力されているか */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_DECID))
+	/* スキップ確認画面を描写中であるか確認 */
+	if (this->bAddSkipCheckFlg == true)
 	{
-		// 入力されている場合
-		/* 長押し時間を加算 */
-		this->iHoldTimer += 1;
-
-		/* 長押し時間が一定時間を超えたか確認 */
-		if (this->iHoldTimer >= 60)
-		{
-			// 一定時間を超えた場合
-			/* スキップ確認画面を描写 */
-		}
+		// 描写中である場合
+		/* スキップ確認画面の描写処理 */
+		Process_SkipCheck();
 	}
 	else
 	{
-		// 入力されていない場合
-		/* 長押し時間をリセット */
-		this->iHoldTimer = 0;
+		// 描写中でない場合
+		/* 会話パートの描写処理 */
+		Process_Conversation();
 	}
 }
 
 // 描画
 void SceneConversation::Draw()
 {
+	/* 背景描写(テスト) */
+	DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(0, 0, 0), TRUE);
+
 	/* 現在のテキスト情報から描写テキスト内容を作成 */
 	std::string	aDrawText = PUBLIC_PROCESS::aCutShitfJisString(this->astTextDataList[this->iNowTextNo].aText, this->iDrawText);
 	
-	/* 現在のテキスト情報に応じた発言者の名称を描写 */
-
 	/* 立ち絵を手前に持ってくるキャラクターに応じてネームプレートの名称を変更 */
 	switch (this->astTextDataList[this->iNowTextNo].iFocusCharacter)
 	{
 		/* 左のキャラクター */
 		case 1:
 			/* 名称"シロ" */
-			DrawFormatStringToHandle(100, 500, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_SemiBold, "シロ");
+			DrawFormatStringToHandle(200, 850, GetColor(0, 0, 255), giFontHandle_NotoSerifJP_SemiBold, "シロ");
 			break;
 
 		/* 右のキャラクター */
 		case 2:
 			/* 名称"サエジマ" */
-			DrawFormatStringToHandle(100, 500, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_SemiBold, "サエジマ");
+			DrawFormatStringToHandle(200, 850, GetColor(0, 0, 255), giFontHandle_NotoSerifJP_SemiBold, "サエジマ");
 			break;
 
 		/* 無し */
@@ -133,7 +112,42 @@ void SceneConversation::Draw()
 	}
 
 	/* テキスト描写 */
-	DrawFormatStringToHandle(100, 600, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_Medium, aDrawText.c_str());
+	DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_Medium, aDrawText.c_str());
+
+	/* スキップ確認画面を描写中であるか確認 */
+	if (this->bAddSkipCheckFlg == true)
+	{
+		// 描写中である場合
+		/* スキップ確認画面を描写 */
+		DrawGraph(570, 270, *this->piGrHandle_SkipWindow, TRUE);
+
+		/* YESが選択中であるか確認 */
+		if (this->bSelectYes == true)
+		{
+			// YESが選択中の場合
+			/* YESを選択中として描写 */
+			DrawGraph(690, 560, *this->apiGrHandle_SkipWindow_Yes[0], TRUE);
+
+			/* NOを非選択中として描写 */
+			DrawGraph(1020, 560, *this->apiGrHandle_SkipWindow_No[1], TRUE);
+		}
+		else
+		{
+			// YESが選択中でない場合
+			/* YESを非選択中として描写 */
+			DrawGraph(690, 560, *this->apiGrHandle_SkipWindow_Yes[1], TRUE);
+
+			/* NOを選択中として描写 */
+			DrawGraph(1020, 560, *this->apiGrHandle_SkipWindow_No[0], TRUE);
+		}
+	}
+
+	/* Aボタン描写 */
+	DrawGraph(1820, 980, *this->piGrHandle_Icon_Button_A, TRUE);
+
+	double dComboTimerPercent = (static_cast<double>(this->iHoldTimer / 60.f) * 100.0);
+	DrawCircleGauge(1820 + 32, 980 + 32, dComboTimerPercent, *this->piGrHandle_Icon_Hold);
+
 }
 
 // テキストデータ読み込み
@@ -173,5 +187,145 @@ void SceneConversation::LoadTextData()
 
 		/* ファイルを閉じる */
 		inputFile.close();
+	}
+	else
+	{
+		// ファイルが存在しない場合
+		/* シーンの削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
+}
+
+// 計算(スキップ画面描写中)
+void SceneConversation::Process_SkipCheck()
+{
+	/* "決定"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+	{
+		// 入力されている場合
+		/* YESが選択中であるか確認 */
+		if (this->bSelectYes == true)
+		{
+			// 選択中である場合
+			/* 削除フラグを有効にする */
+			this->bDeleteFlg = true;
+		}
+		else
+		{
+			// 選択中でない場合
+			/* スキップ確認画面を非描写中にする */
+			this->bAddSkipCheckFlg = false;
+		}
+	}
+
+	/* "キャンセル"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
+	{
+		// 入力されている場合
+		/* スキップ確認画面を非描写中にする */
+		this->bAddSkipCheckFlg = false;
+	}
+
+	/* "左"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
+	{
+		// 入力されている場合
+		/* YESを選択中とする */
+		this->bSelectYes = true;
+	}
+
+	/* "右"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
+	{
+		// 入力されている場合
+		/* Noを選択中とする */
+		this->bSelectYes = false;
+	}
+}
+
+// 計算(会話パート描写中)
+void SceneConversation::Process_Conversation()
+{
+	/* 現在のテキスト番号のテキスト情報を取得 */
+	TEXT_DATA stTextData = this->astTextDataList[this->iNowTextNo];
+
+	/* テキスト更新待機時間を加算 */
+	this->iTextDrawDelay += 1;
+
+	/* テキスト更新待機時間が設定された時間を超えたか確認 */
+	if (this->iTextDrawDelay > stTextData.iSpeed)
+	{
+		// 超えた場合
+		/* テキスト更新待機時間をリセット */
+		this->iTextDrawDelay = 0;
+
+		/* テキスト描写量を加算 */
+		this->iDrawText += 1;
+	}
+
+	/* テキスト描写量が総量を超えたか確認 */
+	if (this->iDrawText >= static_cast<int>(stTextData.aText.size()))
+	{
+		// 一定量を超えた場合
+		/* テキスト描写量をテキスト総量に設定 */
+		this->iDrawText = static_cast<int>(stTextData.aText.size());
+
+		/* "決定"がトリガ入力されているか確認 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+		{
+			// 入力されている場合
+			/* テキスト番号を加算 */
+			this->iNowTextNo += 1;
+
+			/* テキスト更新待機時間をリセット */
+			this->iTextDrawDelay = 0;
+
+			/* テキスト描写量をリセット */
+			this->iDrawText = 0;
+
+			/* テキスト番号が総量を超えたか確認 */
+			if (this->iNowTextNo >= static_cast<int>(this->astTextDataList.size()))
+			{
+				// 総量を超えた場合
+				/* シーンの削除フラグを有効にする */
+				this->bDeleteFlg = true;
+			}
+		}
+	}
+	else
+	{
+		// 総量を超えていない場合
+		/* "決定"がトリガ入力されているか確認 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+		{
+			// 入力されている場合
+			/* テキスト描写量をテキスト総量に設定 */
+			this->iDrawText = static_cast<int>(stTextData.aText.size());
+		}
+	}
+
+	/* "決定"がホールド入力されているか */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_DECID))
+	{
+		// 入力されている場合
+		/* 長押し時間を加算 */
+		this->iHoldTimer += 1;
+
+		/* 長押し時間が一定時間を超えたか確認 */
+		if (this->iHoldTimer >= 60)
+		{
+			// 一定時間を超えた場合
+			/* 長押し時間をリセット */
+			this->iHoldTimer = 0;
+
+			/* スキップ確認画面を描写中にする */
+			this->bAddSkipCheckFlg = true;
+		}
+	}
+	else
+	{
+		// 入力されていない場合
+		/* 長押し時間をリセット */
+		this->iHoldTimer = 0;
 	}
 }

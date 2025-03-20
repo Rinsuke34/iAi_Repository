@@ -23,7 +23,7 @@ Enemy_Basic::Enemy_Basic() : EnemyBase()
 	this->iPlayerLockOnType	= PLAYER_LOCKON_NONE;	// ロックオンされていない状態にする
 	this->iCoreFrameNo		= -1;					// コアフレーム番号を初期化
 	this->bDeadFlg			= false;				// 死亡フラグ
-	this->iBloodAmount		= 0;					// ブラッド量
+	this->iBloodAmount		= 10;					// ブラッド量
 }
 
 // 発光描写
@@ -144,7 +144,7 @@ void Enemy_Basic::Defeat()
 		{
 			// コンボランクが"無し"以外である場合
 			// コンボランクに応じたブラッド生成数を乗算
-			iBloodAmount *= COMBO_RANK_MAX - iComboRank;
+			iBloodAmount += iBloodAmount * (COMBO_RANK_MAX - iComboRank);
 		}
 
 		/* ブラッドの生成 */

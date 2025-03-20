@@ -31,4 +31,5 @@ namespace PUBLIC_PROCESS
 	COLOR_F		stAddCollorF(COLOR_F vecColorF_A, COLOR_F vecColorF_B);																	// 2つの色(COLOR_F型)を合成
 	std::string	aUtf8ToShiftJIS(std::string Utf8);																						// UTF-8 → Shift-JIS 変換
 	std::string	aCutShitfJisString(std::string ShiftJis, int iLength);																	// Shift-JIS文字列を指定文字数でカット
+	std::string aInsertNewLine(std::string ShiftJis, int iLength);																		// Shift-JIS文字列を指定文字数で改行
 }

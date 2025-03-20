@@ -1,6 +1,8 @@
 /* 2025.01.28 ファイル作成 駒沢風助 */
 
 #include "SceneUi_Combo.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
 
 /* UI(コンボ)クラスの定義 */
 
@@ -37,12 +39,51 @@ SceneUi_Combo::SceneUi_Combo() : SceneBase("UI_Combo", 103, false)
 
 	/* 初期化 */
 	this->iPlayerComboRank = COMBO_RANK_NONE;
+
+	/* ランク基準取得 */
+	RankBorder_JsonLoad();
 }
 
-// デストラクタ
-SceneUi_Combo::~SceneUi_Combo()
+// ランク基準取得
+void SceneUi_Combo::RankBorder_JsonLoad()
 {
+	/* Jsonファイルの読み込み */
+	// jsonファイルから各評価の基準点を取得
 
+	/* パスとファイル名の設定 */
+	std::string FilePath = "resource/SetupData/";	// 保存場所
+	std::string jsonFileName = "StageDataBase.json";		// ファイル名
+
+	/* ファイル展開 */
+	std::ifstream inputFile(FilePath + jsonFileName);
+
+	/* ファイルの展開が成功したか確認 */
+	if (inputFile.is_open())
+	{
+		// ファイルが存在する場合
+		/* 現在のステージ名を取得 */
+		std::string StageName = STAGE_NAME[StageStatusList->iGetNowStageNo()];
+
+		/* 現在のステージの各評価の基準値を取得する */
+		nlohmann::json	json;
+		inputFile >> json;
+
+		/* 評価基準(コンボ数)取得 */
+		{
+			/* jsonファイルから読み込み */
+			std::string GetName = "Combo";
+			nlohmann::json Data = json.at(StageName).at(GetName);
+
+			/* 読み込んだ値を配列に代入 */
+			for (int i = 0; i < COMBO_RANK_MAX; i++)
+			{
+				this->iComboBorder[i] = Data.at(i);
+			}
+		}
+
+		/* ファイルを閉じる */
+		inputFile.close();
+	}
 }
 
 // 計算
@@ -89,25 +130,25 @@ void SceneUi_Combo::Process()
 	{
 		// 1以上である場合
 		/* 現在のコンボ数からランクを設定する */
-		if (iNowCombo >= COMBO_RANK_BORDER_S)
+		if (iNowCombo >= this->iComboBorder[COMBO_RANK_S])
 		{
 			// Sランク
 			/* ランクを"Sランク"に設定 */
 			this->iPlayerComboRank = COMBO_RANK_S;
 		}
-		else if (iNowCombo >= COMBO_RANK_BORDER_A)
+		else if (iNowCombo >= this->iComboBorder[COMBO_RANK_A])
 		{
 			// Aランク
 			/* ランクを"Aランク"に設定 */
 			this->iPlayerComboRank = COMBO_RANK_A;
 		}
-		else if (iNowCombo >= COMBO_RANK_BORDER_B)
+		else if (iNowCombo >= this->iComboBorder[COMBO_RANK_B])
 		{
 			// Bランク
 			/* ランクを"Bランク"に設定 */
 			this->iPlayerComboRank = COMBO_RANK_B;
 		}
-		else if (iNowCombo >= COMBO_RANK_BORDER_C)
+		else if (iNowCombo >= this->iComboBorder[COMBO_RANK_C])
 		{
 			// Cランク
 			/* ランクを"Cランク"に設定 */

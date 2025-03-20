@@ -54,6 +54,7 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* 会話パートを生成 */
 	SceneConversation* pAddConversation = new SceneConversation();
 	gpSceneServer->AddSceneReservation(pAddConversation);
+	pAddConversation->SetTextFileNo(0);
 	pAddConversation->Initialization();
 	
 }

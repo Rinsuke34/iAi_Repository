@@ -45,6 +45,7 @@ struct EDIT_DATA
 	int			iEditRank;				// エディットのランク
 	int			iEditEffect;			// エディットの効果
 	int			iEditCost;				// エディットの価格(新規、ホールド中のエディットで使用)
+	std::string	aText;					// 説明文
 };
 
 /* 名称管理用構造体 */

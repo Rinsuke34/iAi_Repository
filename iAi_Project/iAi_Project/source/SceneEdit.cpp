@@ -77,6 +77,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->NewEditData[i].iEditRank		= EDIT_RANK_NONE;
 		this->NewEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
 		this->NewEditData[i].iEditCost		= 0;
+		this->NewEditData[i].aText			= "";
 	}
 
 	/* ホールド中のエディットの情報 */
@@ -84,6 +85,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 	this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
 	this->HoldEditData.iEditCost	= 0;
+	this->HoldEditData.aText		= "";
 	this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 	this->iHoldSelectItemNo			= 0;
 
@@ -150,6 +152,10 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 					data.at("Rank").get_to(stEditLottery.iRank);
 					data.at("IncidenceRate").get_to(stEditLottery.iIncidenceRate);
 					data.at("Cost").get_to(stEditLottery.iCost);
+					data.at("Text").get_to(stEditLottery.aText);
+
+					/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
+					stEditLottery.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stEditLottery.aText);
 
 					/* 配列に追加 */
 					aEditLotteryList.push_back(stEditLottery);
@@ -190,6 +196,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 							this->NewEditData[i].iEditEffect	= edit.iEffect;
 							this->NewEditData[i].iEditRank		= edit.iRank;
 							this->NewEditData[i].iEditCost		= edit.iCost;
+							this->NewEditData[i].aText			= edit.aText;
 							break;
 						}
 					}
@@ -350,11 +357,13 @@ void SceneEdit::Process_Decid()
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= this->HoldEditData.iEditCost;
+					this->astSelectItemList[this->iSelectItem].pstEditData->aText		= this->HoldEditData.aText;
 
 					/* ホールド中のエディット情報を初期化する */
 					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
 					this->HoldEditData.iEditCost	= 0;
+					this->HoldEditData.aText		= "";
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 					break;
 
@@ -375,6 +384,7 @@ void SceneEdit::Process_Decid()
 					this->HoldEditData.iEditEffect	= EDIT_EFFECT_NONE;
 					this->HoldEditData.iEditRank	= EDIT_RANK_NONE;
 					this->HoldEditData.iEditCost	= 0;
+					this->HoldEditData.aText		= "";
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
 					break;
 
@@ -388,6 +398,7 @@ void SceneEdit::Process_Decid()
 						this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= this->HoldEditData.iEditEffect;
 						this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= this->HoldEditData.iEditRank;
 						this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= this->HoldEditData.iEditCost;
+						this->astSelectItemList[this->iSelectItem].pstEditData->aText		= this->HoldEditData.aText;
 
 						/* 変数に保存したエディット情報をホールド中のエディット情報に設定する */
 						this->HoldEditData			= stEditData;
@@ -441,6 +452,7 @@ void SceneEdit::Process_Decid()
 					this->HoldEditData.iEditEffect	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect;
 					this->HoldEditData.iEditRank	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank;
 					this->HoldEditData.iEditCost	= this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost;
+					this->HoldEditData.aText		= this->astSelectItemList[this->iSelectItem].pstEditData->aText;
 
 					/* 選択項目の種類を設定する */
 					this->iHoldSelectItemType = this->astSelectItemList[this->iSelectItem].iSelectItemType;
@@ -449,6 +461,7 @@ void SceneEdit::Process_Decid()
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect	= EDIT_EFFECT_NONE;
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditRank	= EDIT_RANK_NONE;
 					this->astSelectItemList[this->iSelectItem].pstEditData->iEditCost	= 0;
+					this->astSelectItemList[this->iSelectItem].pstEditData->aText		= "";
 				}
 			}
 		}

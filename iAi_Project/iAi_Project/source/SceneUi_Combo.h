@@ -16,7 +16,7 @@ class SceneUi_Combo : public SceneBase
 {
 	public:
 		SceneUi_Combo();					// コンストラクタ
-		virtual ~SceneUi_Combo();			// デストラクタ
+		virtual ~SceneUi_Combo() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
@@ -27,10 +27,14 @@ class SceneUi_Combo : public SceneBase
 		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
-		int* piGrHandle_Combo_Frame;			// コンボフレーム
-		int* piGrHandle_Combo_Timer;			// コンボタイマー
-		int* piGrHandle_Combo_Alphabet[5];		// コンボアルファベット
+		int* piGrHandle_Combo_Frame;					// コンボフレーム
+		int* piGrHandle_Combo_Timer;					// コンボタイマー
+		int* piGrHandle_Combo_Alphabet[COMBO_RANK_MAX];	// コンボアルファベット
+
+		/* 関数 */
+		void	RankBorder_JsonLoad();			// ランク基準取得
 
 		/* 変数 */
 		int iPlayerComboRank;					// 現在のコンボランク
+		int iComboBorder[COMBO_RANK_MAX];		// コンボランク基準
 };
