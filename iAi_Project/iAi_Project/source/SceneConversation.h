@@ -41,6 +41,10 @@ class SceneConversation : public SceneBase
 		int* apiGrHandle_SkipWindow_No[2];		// スキップ確認NO(0:選択中/1:非選択中)
 		int* piGrHandle_Icon_Button_A;			// Aボタンアイコン
 		int* piGrHandle_Icon_Hold;				// ホールドアイコン
+		int* piGrhandle_BackGround;				// 背景
+		int* piGrHandle_TextBackGround;			// テキスト背景
+		int* apiGrHandle_Standing_Player[3];	// プレイヤー立ち絵
+		int* apiGrHandle_Standing_Doctor[3];	// 博士(サエジマ)立ち絵
 
 		/* 変数 */
 		std::vector<TEXT_DATA>		astTextDataList;	// 会話パート用のテキストデータリスト

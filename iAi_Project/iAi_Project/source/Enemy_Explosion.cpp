@@ -44,6 +44,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	this->bBlastFlg = false;
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
+	this->bChaseFlg = true;						// 追跡フラグ
 }
 
 // デストラクタ
@@ -68,6 +69,10 @@ void Enemy_Explosion::Initialization()
 
 void Enemy_Explosion::MoveEnemy()
 {
+	this->stHorizontalCollision.fCapsuleRadius = 50;
+	this->stHorizontalCollision.vecCapsuleTop = VAdd(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z), VGet(0, 50, 0));
+	this->stHorizontalCollision.vecCapsuleBottom = VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z);
+
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
@@ -114,6 +119,9 @@ void Enemy_Explosion::MoveEnemy()
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
+
+	if (bChaseFlg == TRUE)
+	{
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE && this->bStopFlg == true)  // x軸とz軸の距離が1000未満y軸距離が500未満の場合
@@ -196,6 +204,9 @@ void Enemy_Explosion::MoveEnemy()
                     ObjectListHandle->SetEffect(pEffectDetonation);
                 }
 
+				//起爆SE再生
+				gpDataList_Sound->SE_PlaySound(SE_ENEMY_WARNING_EXPLOSION);
+
                 // エフェクト生成フラグを設定
                 bEffectGenerated = true;
 			}
@@ -221,6 +232,7 @@ void Enemy_Explosion::MoveEnemy()
 				}
 			}
 		}
+	}
 	
 }
 
@@ -262,13 +274,62 @@ void Enemy_Explosion::Enemy_Gravity()
 		if (!bHitFlg)
 		{
 			//接触フラグが無効の場合
-			//接触フラグが無効の場合
 			this->fGravity = 0;
 			this->vecMove.y = 0;
 			this->bFallFlg = false;
 			this->bStopFlg = false;
 			}
 		}
+}
+
+// エネミーの水平処理
+void Enemy_Explosion::Movement_Horizontal()
+{
+	/* 移動後の座標を取得(水平方向) */
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x + this->vecMove.x;
+	vecNextPosition.y = this->vecPosition.y;
+	vecNextPosition.z = this->vecPosition.z + this->vecMove.z;
+
+	/* 1フレームでの移動量を分割して判定する回数 */
+	/* ※移動量に応じて分割を設定する */
+	int iMoveHitCheckCount = (int)VSize(VGet(this->vecMove.x, 0, this->vecMove.z));
+
+	/* 分割した移動量 */
+	VECTOR vecDevisionMove = VScale(this->vecMove, 1.0f / iMoveHitCheckCount);
+
+	/* 分割して移動した先の座標 */
+	VECTOR vecDevisionMovePosition = this->vecPosition;
+
+	/* 道中でオブジェクトに接触しているか判定 */
+
+	{
+
+		/* 足場を取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
+
+		/* 足場と接触するか確認 */
+		for (auto* platform : PlatformList)
+		{
+			/* 足場との接触判定 */
+			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
+			{
+				/* オブジェクトと接触しているか確認 */
+				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision);
+
+				/* 接触しているか確認 */
+				if (stHitPolyDim.HitNum > 0)
+				{
+					// 接触している場合
+					this->bChaseFlg = false;
+					break;
+				}
+			}
+		}
+	}
+
+	/* プレイヤーの座標を移動させる */
+	this->vecPosition = vecNextPosition;
 }
 
 // 更新
@@ -403,8 +464,24 @@ void Enemy_Explosion::Update()
 
 	Enemy_Gravity();
 
+	Movement_Horizontal();
+
+	CollisionDraw();
+
 	// コリジョンセット
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
+}
+
+
+
+//コリジョン描写
+void Enemy_Explosion::CollisionDraw()
+{
+	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
+
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 32, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
+
+	DrawCapsule3D(this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius, 32, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
 }

@@ -53,4 +53,12 @@ class SceneResult : public SceneBase
 		int		Calculation_Time[RESULT_EVALUATION_MAX];	// 評価基準(クリアタイム)
 		int		Calculation_Damage[RESULT_EVALUATION_MAX];	// 評価基準(被ダメージ数)
 		int		iAddTextNo;									// 追加するテキスト番号
+		int		iDrawFaze;									// 描写フェーズ
+		int		iDrawTimeMinute;							// クリアタイム(分)(描写用)
+		int		iDrawTimeSecond;							// クリアタイム(秒)(描写用)
+		int		iDrawTimeFractionalSecond;					// クリアタイム(少数秒)(描写用)
+		int		iDrawMaxCombo;								// 最大コンボ(描写用)
+		int		iDrawTakeDamage;							// 被ダメージ(描写用)
+		int		iDrawTotalGetBlood;							// 獲得ブラッド(描写用)
+		int		iDrawDelayTime;								// 描写遅延時間
 };

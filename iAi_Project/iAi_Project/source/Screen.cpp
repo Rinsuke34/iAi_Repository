@@ -125,6 +125,10 @@ void Screen::Process()
 				this->bHomeFlg = FALSE;
 				break;
 			}
+			if (this->bHomeFlg == FALSE)
+			{
+				this->bHomeFlg = TRUE;
+			}
 		}
 
 		// キャンセルボタンが押されたか確認
@@ -156,20 +160,36 @@ void Screen::Process()
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
 
+				if (this->bHomeFlg == FALSE)
+				{
 				if (iUICount == CAMERA_FIXED_POSITION_C)
 				{
 					//現在のカメラポジションが設定画面であるか確認
 					this->iUICount = CAMERA_FIXED_POSITION_C;
 					this->bHomeFlg = TRUE;
 				}
+				}
+				else
+				{
+					//UIカウント(カメラ)をタイトルに設定
+					iUICount = CAMERA_FIXED_POSITION_START;
+				}
 				break;
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 				
+				if (this->bHomeFlg == FALSE)
+				{
 				if (iUICount == CAMERA_FIXED_POSITION_D)
 				{
 					iUICount = CAMERA_FIXED_POSITION_D;
 					this->bHomeFlg = TRUE;
+				}
+				}
+				else
+				{
+					//UIカウント(カメラ)をタイトルに設定
+					iUICount = CAMERA_FIXED_POSITION_START;
 				}
 				break;
 
@@ -303,6 +323,29 @@ void Screen::Process()
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
 				break;
+			}
+		}
+
+		// 左ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_LEFT))
+		{
+			// 左ボタンが押された場合
+			//カメラの位置が最終確認画面か確認
+			if (iUICount == CAMERA_FIXED_POSITION_E)
+			{
+				//最終確認画面の場合
+				// 「はい」を選択
+				this->bGameStartFlg = TRUE;
+			}
+		}
+
+		// 右ボタンが押されたか確認
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_RIGHT))
+		{
+			if (iUICount == CAMERA_FIXED_POSITION_E)
+			{
+				// 「いいえ」を選択
+				this->bGameStartFlg = FALSE;
 			}
 		}
 

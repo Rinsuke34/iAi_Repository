@@ -22,7 +22,8 @@ class DataList_GameResource : public DataListBase
 
 		/* データ取得 */
 		// ブラッド(ゲーム内通過)関連
-		int		iGetHaveBlood() { return this->iHaveBlood; }		// 所持ブラッド取得
+		int		iGetHaveBlood()		{ return this->iHaveBlood; }		// 所持ブラッド取得
+		int		iGetStartBlood()	{ return this->iStartBlood; }		// ゲーム開始時のブラッド取得
 
 		// エディット関連
 		int* piGetGrHandle_EditEffect(int iEditEffect)			{ return this->pGrHandle_EditEffectList[iEditEffect]; }		// エディット効果画像ハンドル取得
@@ -39,6 +40,7 @@ class DataList_GameResource : public DataListBase
 		/* データ設定 */
 		// ブラッド(ゲーム内通過)関連
 		void	SetHaveBlood(int iBlood)	{ this->iHaveBlood	= iBlood; }			// 所持ブラッド設定
+		void	SetStartBlood(int iBlood)	{ this->iStartBlood = iBlood; }			// ゲーム開始時のブラッド設定
 
 		// エディット関連
 		void	SetNowEditData(int iEditNum, int iEditEffect, int iEditRank);								// 現在のエディット情報設定
@@ -53,11 +55,12 @@ class DataList_GameResource : public DataListBase
 		std::map<int, int*>	pGrHandle_EditFrameList;	// エディット情報リスト
 
 		/* 関数 */
-		void	JsonLoadEditEffectValue();			// エディット効果量読み込み
+		void	JsonLoadEditEffectValue();				// エディット効果量読み込み
 
 		/* 変数 */
 		/* ブラッド(ゲーム内通貨)関連 */
         int iHaveBlood;									// 所持ブラッド
+		int iStartBlood;								// ゲーム開始時のブラッド
 
 		/* エディット関連 */
 		EDIT_DATA						NowEditData[EDIT_MAX];	// 現在のエディット情報

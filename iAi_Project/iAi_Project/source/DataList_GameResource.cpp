@@ -33,7 +33,8 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 		/* 初期値設定 */
 
 		/* ブラッド(ゲーム内通貨)関連 */
-		this->iHaveBlood = 0;
+		this->iHaveBlood	= 0;
+		this->iStartBlood	= 0;
 
 		/* エディット関連 */
 		for (int i = 0; i < EDIT_MAX; i++)
@@ -49,7 +50,6 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 		this->KeepEditData.iEditRank	= EDIT_RANK_NONE;
 		this->KeepEditData.iEditCost	= 0;
 	
-
 		/* スコア関連 */
 		this->iClearTotalEvaluation = 0;
 	}

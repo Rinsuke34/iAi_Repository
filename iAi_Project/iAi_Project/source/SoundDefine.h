@@ -45,8 +45,17 @@ static  const int   SE_ENEMY_IKURA_ATTACK       = 18;   // いくら攻撃
 static  const int   SE_ENEMY_BEAM_CHARGE        = 19;   // ビームチャージ
 static  const int   SE_ENEMY_BEAM_SHOT          = 20;   // ビームショット
 static  const int   SE_ENEMY_DAMAGE             = 21;   // 撃破
+static  const int   SE_ENEMY_WARNING            = 22;   // 通常攻撃予告
+static  const int   SE_ENEMY_WARNING_EXPLOSION  = 23;   // 自爆予告
+static  const int   SE_ENEMY_MISSILE_SHOT       = 24;   // ミサイル発射
+static  const int   SE_ENEMY_MISSILE_DOWN       = 25;   // ミサイル下降
+static  const int   SE_ENEMY_MISSILE_HIT        = 26;   // ミサイルヒット
+static  const int   SE_ENEMY_MISSILE_EXPLOSION  = 27;   // ミサイル爆発
 
-static  const int   SE_MAX                      = 22;   // SE総数
+
+// SE番号(ギミック)
+static  const int   SE_GIMMIC_JUMPEXPLP         = 28;   // 強制ジャンプ
+static  const int   SE_MAX                      = 29;   // SE総数
 
 // SE名称
 static const std::string SE_NAME[SE_MAX] =
@@ -75,7 +84,15 @@ static const std::string SE_NAME[SE_MAX] =
     "SE_Ikura_Attack",              // いくら攻撃
     "SE_Beam_Charge",               // ビームチャージ
 	"SE_Beam_Shot",                 // ビームショット
-    "SE_Enemy_Damage"               // 撃破
+    "SE_Enemy_Damage",              // 撃破
+	"SE_Warning",                   // 通常攻撃予告
+	"SE_Warning_Jibaku",            // 自爆予告
+	"SE_Missile_shot",              // ミサイル発射
+	"SE_Missile_fall",              // ミサイル下降
+	"SE_Missile_hit",               // ミサイルヒット
+	"SE_Missile_elec",              // ミサイル爆発
+	// ギミック
+	"SE_Gimmic_JumpExplo"           // 強制ジャンプ
 };
 
 /* ボイス関連 */

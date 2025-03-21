@@ -21,19 +21,35 @@ SceneConversation::SceneConversation() : SceneBase("Conversation", 400, true)
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* スキップ確認ウィンドウ */
-		this->piGrHandle_SkipWindow			= ImageList->piGetImage("Conversation/SkipWindow/UI_Window_Skip");
+		this->piGrHandle_SkipWindow				= ImageList->piGetImage("Conversation/SkipWindow/UI_Window_Skip");
 
 		/* スキップ確認ウィンドウ_ボタン */
-		this->apiGrHandle_SkipWindow_Yes[0]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_Selected");
-		this->apiGrHandle_SkipWindow_Yes[1]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_NotSelected");
-		this->apiGrHandle_SkipWindow_No[0]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_Selected");
-		this->apiGrHandle_SkipWindow_No[1]	= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_NotSelected");
+		this->apiGrHandle_SkipWindow_Yes[0]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_Selected");
+		this->apiGrHandle_SkipWindow_Yes[1]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_NotSelected");
+		this->apiGrHandle_SkipWindow_No[0]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_Selected");
+		this->apiGrHandle_SkipWindow_No[1]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_NotSelected");
 
 		/* Aボタンアイコン */
-		this->piGrHandle_Icon_Button_A	= ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
+		this->piGrHandle_Icon_Button_A			= ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
 
 		/* ホールドアイコン */
-		this->piGrHandle_Icon_Hold		= ImageList->piGetImage("Conversation/HoldTimer");
+		this->piGrHandle_Icon_Hold				= ImageList->piGetImage("Conversation/HoldTimer");
+
+		/* 背景 */
+		this->piGrhandle_BackGround				= ImageList->piGetImage("Conversation/Bg_Dialogue_Op");
+
+		/* テキスト背景 */
+		this->piGrHandle_TextBackGround			= ImageList->piGetImage("Conversation/UI_Dialogue_Frame");
+
+		/* プレイヤー立ち絵 */
+		this->apiGrHandle_Standing_Player[0]	= ImageList->piGetImage("Conversation/Standing/Player/stand_player_01");
+		this->apiGrHandle_Standing_Player[1]	= ImageList->piGetImage("Conversation/Standing/Player/stand_player_02");
+		this->apiGrHandle_Standing_Player[2]	= ImageList->piGetImage("Conversation/Standing/Player/stand_player_03");
+
+		/* 博士(サエジマ)立ち絵 */
+		this->apiGrHandle_Standing_Doctor[0]	= ImageList->piGetImage("Conversation/Standing/Doctor/stand_doctor_01");
+		this->apiGrHandle_Standing_Doctor[1]	= ImageList->piGetImage("Conversation/Standing/Doctor/stand_doctor_02");
+		this->apiGrHandle_Standing_Doctor[2]	= ImageList->piGetImage("Conversation/Standing/Doctor/stand_doctor_03");
 	}
 
 	/* 初期化 */
@@ -83,8 +99,15 @@ void SceneConversation::Process()
 // 描画
 void SceneConversation::Draw()
 {
-	/* 背景描写(テスト) */
-	DrawBox(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, GetColor(0, 0, 0), TRUE);
+	/* 背景描写 */
+	DrawGraph(0, 0, *this->piGrhandle_BackGround, TRUE);
+
+	/* 立ち絵描写 */
+	DrawGraph(0,	0, *this->apiGrHandle_Standing_Player[this->astTextDataList[this->iNowTextNo].iLeftCharactorCg], TRUE);
+	DrawGraph(840,	0, *this->apiGrHandle_Standing_Doctor[this->astTextDataList[this->iNowTextNo].iRightCharactorCg], TRUE);
+
+	/* 会話ウィンドウ背景描写 */
+	DrawGraph(0, 715, *this->piGrHandle_TextBackGround, TRUE);
 
 	/* 現在のテキスト情報から描写テキスト内容を作成 */
 	std::string	aDrawText = PUBLIC_PROCESS::aCutShitfJisString(this->astTextDataList[this->iNowTextNo].aText, this->iDrawText);
@@ -147,7 +170,6 @@ void SceneConversation::Draw()
 
 	double dComboTimerPercent = (static_cast<double>(this->iHoldTimer / 60.f) * 100.0);
 	DrawCircleGauge(1820 + 32, 980 + 32, dComboTimerPercent, *this->piGrHandle_Icon_Hold);
-
 }
 
 // テキストデータ読み込み
@@ -248,6 +270,19 @@ void SceneConversation::Process_Conversation()
 {
 	/* 現在のテキスト番号のテキスト情報を取得 */
 	TEXT_DATA stTextData = this->astTextDataList[this->iNowTextNo];
+
+	/* テキストが描写された直後であるか */
+	if (this->iDrawText == 0)
+	{
+		// 描写された直後である場合
+		/* ボイス番号が有効であるか確認 */
+		if (stTextData.iVoiceNo != -1)
+		{
+			// 有効である場合
+			/* ボイス再生 */
+			gpDataList_Sound->VOICE_PlaySound(stTextData.iVoiceNo);
+		}
+	}
 
 	/* テキスト更新待機時間を加算 */
 	this->iTextDrawDelay += 1;

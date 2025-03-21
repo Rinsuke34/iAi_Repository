@@ -18,6 +18,17 @@ TitlePlayer::TitlePlayer() : PlatformBase()
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 	}
 
+	/* 開始時モーション設定 */
+	{
+		//モデルに着地モーションをアタッチする
+		this->iTitlePlayerWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 2, -1, FALSE);
+
+		// 再生時間を初期化する
+		this->fTitlePlayerWaitTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex);
+
+		///* 発光停止フラグを有効化 */
+		this->bBloomStopFlg = true;
+	}
 }
 
 // デストラクタ
@@ -38,4 +49,19 @@ void TitlePlayer::Update()
 {
 	//処理
 	Process();
+
+	//アニメーション更新
+	// アタッチした待機モーションを再生する
+	MV1SetAttachAnimTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex, this->fTitlePlayerWaitNowTime);
+
+	//待機モーションの再生時間を加算
+	this->fTitlePlayerWaitNowTime += 2.0f;
+
+	//待機モーションの再生時間が終了したか確認
+	if (this->fTitlePlayerWaitNowTime >= this->fTitlePlayerWaitTotalTime)
+	{
+		//待機モーションの再生時間を初期化
+		this->fTitlePlayerWaitNowTime = 0.0f;
+	}
+
 }

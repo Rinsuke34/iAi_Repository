@@ -32,6 +32,9 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 
 		/* "オプション設定管理"を取得 */
 		this->OptionList		= dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+
+		/* "ゲーム内リソース管理"を取得 */
+		this->GameResourceList	= dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
 	/* マップハンドル作成 */
@@ -58,6 +61,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iMaxCameraFixedPositionNo		= CAMERA_FIXED_POSITION_START;	// カメラ固定座標番号総数
 	this->iBlendAlpha_StageClear_Fadein	= 0;							// ステージクリア時のフェードインのアルファ値
 	this->iStageClear_Count				= 0;							// ステージクリア時の処理で使用するカウント
+	this->iPlayerSlowTime				= 1;							// プレイヤーのスローモーション速度
 }
 
 // デストラクタ
@@ -120,11 +124,18 @@ void SceneStage::Initialization()
 
 	/* ステージ開始時の時間を設定 */
 	this->StageStatusList->SetStartTime(GetNowCount());
+
+	/* ステージ開始時の所持ブラッド数を設定 */
+	this->GameResourceList->SetStartBlood(this->GameResourceList->iGetHaveBlood());
 }
 
 // 計算
 void SceneStage::Process()
 {
+	/* エフェクト共通処理更新フラグ */
+	// ※有効なら共通処理でエフェクト更新を行う
+	bool bGrobalEffectUpdateFlg	= true;
+
 	/* ゲーム状態を確認 */
 	int iGameStatus = this->StageStatusList->iGetGameStatus();
 
@@ -139,6 +150,9 @@ void SceneStage::Process()
 		/* "ステージクリア準備"状態 */
 		case GAMESTATUS_STAGE_CLEAR_SETUP:
 			Process_StageClear();
+
+			/* エフェクト更新フラグを無効にする */
+			bGrobalEffectUpdateFlg = false;
 			break;
 
 		/* "ステージクリア"状態 */
@@ -196,6 +210,9 @@ void SceneStage::Process()
 			/* すべてのオブジェクトのリセット処理を実行する */
 			ObjectList->ResetAll();
 
+			/* 所持ブラッドをステージ開始時の設定に戻す */
+			this->GameResourceList->SetHaveBlood(this->GameResourceList->iGetStartBlood());
+
 			/* ステージ状態を初期化する */
 			Initialization();
 			break;
@@ -215,8 +232,13 @@ void SceneStage::Process()
 	/* カメラ設定準備 */
 	SetCamera_Setup();
 
-	/* エフェクト更新 */
-	UpdateEffekseer3D();
+	/* エフェクト共通処理更新フラグが有効であるか確認 */
+	if (bGrobalEffectUpdateFlg == true)
+	{
+		// 有効である場合
+		/* エフェクト更新 */
+		UpdateEffekseer3D();
+	}
 }
 
 // 計算(メインの処理)
@@ -315,6 +337,24 @@ void SceneStage::Process_StageClear()
 
 	/* ステージクリアのカウントを加算 */
 	this->iStageClear_Count += 1;
+
+	/* アイテムの更新処理 */
+	ObjectList->UpdateEffectItem();
+	ObjectList->DeleteEffectItem();
+
+	/* プレイヤーの更新処理(少しづつプレイヤーのスローモーション速度を上げる) */
+	if (((this->iStageClear_Count % this->iPlayerSlowTime) == 0) && (this->iPlayerSlowTime < 120))
+	{
+		// スローモーション速度のカウントが一定値に達している場合
+		/* プレイヤーの更新処理 */
+		ObjectList->UpdatePlayer();
+
+		/* エフェクト更新 */
+		UpdateEffekseer3D();
+
+		/* スローモーション速度を加算 */
+		this->iPlayerSlowTime = static_cast<int>(this->iPlayerSlowTime * 1.2f) + 1;
+	}
 }
 
 // 計算(ステージ開始時の処理)

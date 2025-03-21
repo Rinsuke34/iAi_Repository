@@ -43,7 +43,6 @@ private:
 
 	//関数
 	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
 
 	//変数
 	int		iFiringCount;	// 発射カウント
@@ -52,6 +51,10 @@ private:
 	int		iModelscaffoldHandle;	// モデルハンドル
 	int		iMaintainCount;	// 維持カウント
 	int		iEffectWaitCount;	// エフェクト待機カウント
+
+	float fTargetAngle;	// ターゲットの角度
+	float fCurrentAngle;	// 現在の角度
+	float fAngleDifference;	// 角度の差
 
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ

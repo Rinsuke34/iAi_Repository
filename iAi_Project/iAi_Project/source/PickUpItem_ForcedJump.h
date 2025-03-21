@@ -45,6 +45,7 @@ class PickUpItem_ForcedJump : public PickUpItemBase
 
 	//エフェクト
 	EffectManualDelete* pEffectExplosion;	// 爆発エフェクト
+	EffectManualDelete* pEffectLight;		// 光エフェクト
 
 };
 

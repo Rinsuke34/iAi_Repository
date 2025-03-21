@@ -26,8 +26,8 @@ LargeScreen::LargeScreen() : PlatformBase()
 		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//タイトル
 		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
 		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
-		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Date");				//データ
-		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Config");			//コンフィグ
+		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");				//データ
+		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Date");			//コンフィグ
 		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
 	}
 

@@ -36,4 +36,14 @@ private:
 
 	//変数
 
+	//モーション関係変数
+	int		iTitlePlayerWaitAttachIndex;	// 待機モーションアタッチインデックス
+	int		iTitlePlayerLandingAttachIndex;	// 着地モーションアタッチインデックス
+	bool	bTitlePlayerWaitFlg;			// 待機フラグ
+	bool	bTitlePlayerLandingFlg;			// 着地フラグ
+	float	fTitlePlayerWaitTotalTime;		// 待機モーションの総再生時間
+	float	fTitlePlayerLandingTotalTime;	// 着地モーションの総再生時間
+	float	fTitlePlayerWaitNowTime;		// 待機モーションの現在の再生時間
+	float	fTitlePlayerLandingNowTime;		// 着地モーションの現在の再生時間
+
 };

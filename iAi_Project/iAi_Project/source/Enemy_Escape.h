@@ -41,10 +41,13 @@ class Enemy_Escape : public Enemy_Basic
 
 	int iZescapedistance;			// Z軸の距離
 	int iEscapespeed;			// 移動速度
+	int iWaitCount;					// 待機カウント
 	float fGravity;				// 重力
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool bDirectionFlg;										// 向き固定フラグ
-	int iWaitCount;				// 待機カウント
+	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ
+	bool bWallHitFlg;				// 壁に当たったフラグ
+	bool bWallFlg;					// 壁フラグ
 
 	//モーション関係変数
 	int iWaitAttachIndex;			// 待機モーションアタッチインデックス
@@ -56,7 +59,6 @@ class Enemy_Escape : public Enemy_Basic
 	float fWaitPlayTime;			// 待機再生時間
 	float fDiePlayTime;				// 死亡再生時間
 	float fRunPlayTime;			// 走り再生時間
-	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ
 
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標

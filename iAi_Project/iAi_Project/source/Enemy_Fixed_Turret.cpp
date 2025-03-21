@@ -178,9 +178,6 @@ void Enemy_Fixed_Turret::MoveEnemy()
 					}
 				}
 			}
-
-			if (this->bTestFlg = true)
-		{
 				//維持カウントを減算
 				this->iMaintainCount--;
 
@@ -196,27 +193,6 @@ void Enemy_Fixed_Turret::MoveEnemy()
 				}
 			}
 		}
-	}
-	////エフェクトがnullptrでないか確認
-	//if (this->pEffectWarning != nullptr)
-	//{
-	//	// エフェクトが再生中かどうか確認
-	//	if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
-	//	{
-	//		if (this->bShotFlg == true)
-	//		{
-	//			// エフェクトが再生終了している場合
-	//		// ノーマル弾を発射する
-	//			Player_Range_Normal_Shot();
-
-	//			this->bDownFlg = true;
-
-	//			// 発射カウントを初期化
-	//			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
-	//		}
-	//		this->bShotFlg = false;
-	//	}
-	//}
 
 	if (bUpFlg == true)
 	{
@@ -290,90 +266,44 @@ void Enemy_Fixed_Turret::MoveEnemy()
 
 	if (this->bTestFlg3 == true)
 		{
-		this->vecRotation = VGet(vecRotation.x, vecRotation.y - 0.1, vecRotation.z);
+		// プレイヤーの座標を取得
+		VECTOR playerPos = pPlayer->vecGetPosition();
 
-		if (vecRotation.y < VRot.y)
-			{
-			this->bTestFlg3 = false;
-			this->bWarningEffectFlg = true;
-			this->bShotFlg = false;
-			}
-	}
-}
+		// プレイヤーの方向を向くための角度を計算
+		this->fTargetAngle = atan2f(playerPos.x - this->vecPosition.x, playerPos.z - this->vecPosition.z);
+
+		// 180度反対を向くように角度を調整
+		this->fTargetAngle += DX_PI_F;
+
+		// 現在のエネミーの向き
+		this->fCurrentAngle = this->vecRotation.y;
 		
+		// 回転方向を決定
+		this->fAngleDifference = this->fTargetAngle - this->fCurrentAngle;
+		if (this->fAngleDifference > DX_PI_F) this->fAngleDifference -= 2 * DX_PI_F;
+		if (this->fAngleDifference < -DX_PI_F) this->fAngleDifference += 2 * DX_PI_F;
 
-		////エネミーのｘ向きがプレイヤーのｘ向きが誤差が0.1以上または0.1以下か確認
-		//if (VRot.x < vecRotation.x)
-		//{
-		//	this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
-		//}
-		/*if (vecRotation.x < 0)
+		// 右回りか左回りかを判断して回転
+		if (this->fAngleDifference > 0)
 		{
-			this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
-		}*/
-		//if (/*VRot.x == vecRotation.x &&*/ VRot.y == vecRotation.y)
-		//	{
-		//		this->bDownFlg = false;
-
-		//		 bTestFlg = true;
-		//	}
-		/*if (VRot.x > 0.9 && VRot.x > 0)
-		{
-			this->vecRotation = VGet(vecRotation.x + 0.05, vecRotation.y, vecRotation.z);
+			this->vecRotation.y += 0.1f; // 右回り
 }
-		if (VRot.x < -0.5 && VRot.x < 0)
+		else
 		{
-			this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
-		}*/
-		//if (VRot.x >= vecRotation.x && VRot.y == vecRotation.y)
-		//{
-		//	this->bWarningEffectFlg = true;
+			this->vecRotation.y -= 0.1f; // 左回り
+		}
 
-		//	this->vecRotation = VGet(vecRotation.x, vecRotation.y, vecRotation.z);
-
-		//	this->bTestFlg2 = false;
-		//}
-		//else if (vecRotation.x < -0.5)
-		//{
-		//	this->bWarningEffectFlg = true;
-
-		//	this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
-
-		//	this->bTestFlg2 = false;
-		//	//this->bTestFlg = true;
-		//}
-
-		////エネミーがプレイヤーの方向の誤差が0.1以上または0.1以下か確認
-		//if (VRot.x > 0.9 && VRot.y == vecRotation.y)
-		//{
-		//	this->bWarningEffectFlg = true;
-		//	this->vecRotation = VGet(vecRotation.x, vecRotation.y, vecRotation.z);
-		//	this->bTestFlg2 = false;
-		//}
-		/*else if (vecRotation.x < -0.5 && VRot.y == vecRotation.y)
-		{
-			this->vecRotation = VGet(-0.5, vecRotation.y, vecRotation.z);
-			this->bWarningEffectFlg = true;
-			this->bTestFlg2 = false;
-		}*/
-
-	//if (bTestFlg == true)
-	//{	
-	//	/*if (VRot.x >= -0.5)
-	//	{
-	//		this->vecRotation = VGet(vecRotation.x - 0.2, vecRotation.y, vecRotation.z);
-	//	}*/
-	//}
-
-
-// ノーマル弾の発射
-void Enemy_Fixed_Turret::Player_Range_Normal_Shot()
+		// エネミーがプレイヤーの方向を完全に向いたか確認
+		if (fabs(this->fAngleDifference) < 0.1f)
 {
-	// プレイヤーの座標を取得
-	VECTOR playerPos = pPlayer->vecGetPosition();
-
+			this->vecRotation.y = fTargetAngle;
+			this->bTestFlg3 = false;
 	this->bWarningEffectFlg = true;
+			this->bShotFlg = false;
+		}
 }
+}
+
 
 // 更新
 void Enemy_Fixed_Turret::Update()

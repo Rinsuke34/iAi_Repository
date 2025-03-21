@@ -36,6 +36,7 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 	this->bEscapeEffectGenerated = true;	// 逃走エフェクト生成フラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
 	this->iWaitCount = 5;
+	this->bWallHitFlg = false;
 }
 
 // デストラクタ
@@ -204,6 +205,67 @@ void Enemy_Escape::MoveEnemy()
 		this->vecRotation = VRot;
 	}
 }
+	// 壁に当たった際の処理
+	if (this->bWallHitFlg == true)
+	{
+		//プレイヤーが探知範囲内にいるか確認
+		if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
+		{
+			// プレイヤーの位置を取得
+			VECTOR playerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+			// 壁の法線ベクトルを取得
+			VECTOR wallNormal = VGet(0, 0, 0); // ここで実際の壁の法線ベクトルを取得する必要があります
+
+			// 壁の法線ベクトルを正規化
+			wallNormal = VNorm(wallNormal);
+
+			// 壁から離れる方向を計算
+			VECTOR escapeDirection = VScale(wallNormal, this->iEscapespeed);
+
+			// エネミーの位置を更新
+			this->vecPosition = VAdd(this->vecPosition, escapeDirection);
+
+			// エネミーの向きを更新
+			this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
+
+			// エネミーの向きを１８０度修正
+			this->vecRotation = VGet(0, this->vecRotation.y + DX_PI_F, 0);
+			MV1SetRotationXYZ(iModelHandle, this->vecRotation);
+
+			//プレイヤーがエネミーの右側にいるか確認
+			if (playerPos.x > this->vecPosition.x)
+			{
+				//プレイヤーがエネミーの右側にいる場合
+				// カプセルの壁に当たっていない所を算出
+				VECTOR vecNoHitWall = VAdd(this->vecPosition, VGet(0, 0, 0));
+
+				// エネミーの位置を更新
+				this->vecPosition = vecNoHitWall;
+
+				// エネミーの向きを更新
+				this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
+				
+			}
+			//プレイヤーがエネミーの左側にいるか確認
+			if (playerPos.x < this->vecPosition.x)
+			{
+				//プレイヤーがエネミーの左側にいる場合
+				// カプセルの壁に当たっていない所を算出
+				VECTOR vecNoHitWall = VGet(this->vecPosition.x, this->vecPosition.y, this->vecPosition.z + this->stHorizontalCollision.fCapsuleRadius);
+
+				// エネミーの位置を更新
+				this->vecPosition = vecNoHitWall;
+
+				//エネミーの向きを更新
+				this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
+			}
+
+			this->bWallHitFlg = false;	
+
+			this->bEscapeEffectGenerated = true;
+		}
+	}
 }
 
 //コリジョン描写
@@ -272,6 +334,8 @@ void Enemy_Escape::Movement_Horizontal()
 				if (stHitPolyDim.HitNum > 0)
 				{
 					this->bEscapeEffectGenerated = false;
+
+					this->bWallHitFlg = true;
 				}
 			}
 		}

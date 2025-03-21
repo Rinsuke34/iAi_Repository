@@ -190,7 +190,7 @@ void Enemy_Missile::Enemy_Model_Animation()
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
 	//Œø‰Ê‰¹Ä¶
-	gpDataList_Sound->SE_PlaySound(SE_ENEMY_IKURA_ATTACK);
+	gpDataList_Sound->SE_PlaySound(SE_ENEMY_MISSILE_SHOT);
 
 	/* UŒ‚‚Ì¶¬•ûŒü‚ÌÝ’è */
 	/* UŒ‚À•W‚ðŽZo */

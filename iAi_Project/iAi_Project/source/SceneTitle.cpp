@@ -40,6 +40,17 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 		this->iImageConfigHandle = *ImageList->piGetImage("Home/UIGameend"); 
 		this->iImageConfigChoiceHandle = *ImageList->piGetImage("Home/UIGameend_Choice"); 
 
+		/* 最終確認背景 */
+		this->iImageFinalCheckHandle = *ImageList->piGetImage("Home/UI_Window_GameStart");
+
+		/* yes */
+		this->iImageYesHandle = *ImageList->piGetImage("Home/UI_Moji_Yes_NotSelected");
+		this->iImageYesChoiceHandle = *ImageList->piGetImage("Home/UI_Moji_Yes_Selected");
+
+		/* no */
+		this->iImageNoHandle = *ImageList->piGetImage("Home/UI_Moji_No_NotSelected");
+		this->iImageNoChoiceHandle = *ImageList->piGetImage("Home/UI_Moji_No_Selected");
+
 	}
 
 	/* BGMを設定 */
@@ -93,7 +104,7 @@ void SceneTitle::Initialization()
 	
 }
 
-// 計算
+// 処理
 void SceneTitle::Process()
 {
 	// 決定ボタンが押されたか確認
@@ -112,8 +123,6 @@ void SceneTitle::Process()
 			break;
 			//はじめからホーム画面
         case CAMERA_FIXED_POSITION_A:
-			//つづきからホーム画面
-        case CAMERA_FIXED_POSITION_B:
 			//Uiカウント(カメラ)を確認画面に変更
 	            iUICount = CAMERA_FIXED_POSITION_E;
 
@@ -127,6 +136,24 @@ void SceneTitle::Process()
 			this->bHomeFlg = FALSE;
 			break;
 
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+			//Uiカウント(カメラ)を確認画面に変更
+			iUICount = CAMERA_FIXED_POSITION_E;
+
+			//カメラ固定位置をUIカウント(カメラ)に設定
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+
+			// シーンの追加を設定
+			gpSceneServer->SetAddLoadSceneFlg(true);
+
+			// シーンの削除を設定
+			gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+			// シーン"ゲームセットアップ"を追加
+			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+			
+			break;
 			//確認画面
 		case CAMERA_FIXED_POSITION_E:
 			if (this->bGameStartFlg == TRUE)
@@ -139,9 +166,12 @@ void SceneTitle::Process()
 	
 				// シーン"ゲームセットアップ"を追加
 				gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
-				return;
+
 			}
-			this->bGameStartFlg = TRUE;
+			// はじめからホーム画面に戻る
+			iUICount = CAMERA_FIXED_POSITION_A;
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			this->bGameStartFlg = FALSE;
 			break;
 
 			//データホーム画面
@@ -200,6 +230,7 @@ void SceneTitle::Process()
 		case CAMERA_FIXED_POSITION_E:
 			//UIカウントをはじめからホーム画面に設定
 			iUICount = CAMERA_FIXED_POSITION_A;
+			this->bGameStartFlg = FALSE;
 			break;
 		}
 
@@ -274,6 +305,29 @@ void SceneTitle::Process()
 				//カメラ固定位置をUIカウントに設定
 			    pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 	}
+
+	// 左ボタンが押されたか確認
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_LEFT))
+	{
+		// 左ボタンが押された場合
+		//カメラの位置が最終確認画面か確認
+		if (iUICount == CAMERA_FIXED_POSITION_E)
+		{
+			//最終確認画面の場合
+			// 「はい」を選択
+			this->bGameStartFlg = TRUE;
+		}
+	}
+
+	// 右ボタンが押されたか確認
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_RIGHT))
+	{
+		if (iUICount == CAMERA_FIXED_POSITION_E)
+		{
+			// 「いいえ」を選択
+			this->bGameStartFlg = FALSE;
+		}
+	}
 }
 
 // 描画
@@ -345,9 +399,21 @@ void SceneTitle::Draw()
 		/* 描写ブレンドモードを"ノーブレンド"に設定 */
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
-	//最終確認
-	//画面中央に文字列を描写
-	DrawString(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 50, "本当に始めますか？", GetColor(255, 255, 255));
-	break;
+
+	//最終確認背景
+	DrawGraph(570, 270, this->iImageFinalCheckHandle, TRUE);
+
+	//yes
+	if (this->bGameStartFlg)
+	{
+		DrawGraph(690, 560, this->iImageYesChoiceHandle, TRUE);
+		DrawGraph(1020, 560, this->iImageNoHandle, TRUE);
 	}
+	else
+	{
+		DrawGraph(690, 560, this->iImageYesHandle, TRUE);
+		DrawGraph(1020, 560, this->iImageNoChoiceHandle, TRUE);
+	}
+	break;
+}
 }

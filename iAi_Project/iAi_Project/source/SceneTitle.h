@@ -45,6 +45,12 @@ class SceneTitle : public SceneBase
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_TitleLogo;		// タイトルロゴ
+		int iImageFinalCheckHandle;		// 最終確認背景
+		int iImageYesHandle;			// yes
+		int iImageYesChoiceHandle;	// yes選択
+		int iImageNoHandle;			// no
+		int iImageNoChoiceHandle;	// no選択
+
 		//変数
 		int iUICount;	//UIのカウント
 		//UIの画像Handle

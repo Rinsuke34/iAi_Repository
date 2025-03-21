@@ -67,7 +67,7 @@ void EffectItem_Blood::Update()
 			this->vecPosition = VAdd(this->vecPosition, VScale(VNorm(VSub(vecPlayerPos, this->vecPosition)), MOVE_SPEED_PLAYER));
 
 			/* プレイヤーの座標に到達した場合 */
-			if (VSize(VSub(vecPlayerPos, this->vecPosition)) < MOVE_SPEED_PLAYER)
+			if (VSize(VSub(vecPlayerPos, this->vecPosition)) <= MOVE_SPEED_PLAYER * 1.5f)
 			{
 				/* 削除フラグを有効化 */
 				this->bDeleteFlg = true;
@@ -76,6 +76,7 @@ void EffectItem_Blood::Update()
 				{
 					/* データリスト取得 */
 					DataList_GameResource* GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+
 					/* ブラッドをプレイヤーに加算 */
 					int iNowBlood = GameResourceList->iGetHaveBlood();
 					GameResourceList->SetHaveBlood(iNowBlood + 1);

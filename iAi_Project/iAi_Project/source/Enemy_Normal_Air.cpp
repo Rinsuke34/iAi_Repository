@@ -133,6 +133,8 @@ void Enemy_Normal_Air::MoveEnemy()
 					/* ƒGƒtƒFƒNƒg‚ðƒŠƒXƒg‚É“o˜^ */
 					ObjectListHandle->SetEffect(this->pEffectWarning);
 				}
+				//UŒ‚—\SEÄ¶
+				gpDataList_Sound->SE_PlaySound(SE_ENEMY_WARNING);
 			}
 		}
 		}

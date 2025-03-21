@@ -12,6 +12,7 @@
 #include "DataList_Model.h"
 #include "DataList_StageStatus.h"
 #include "DataList_Option.h"
+#include "DataList_GameResource.h"
 
 /* シーン */
 #include "SceneGameOver.h"
@@ -61,6 +62,7 @@ class SceneStage : public SceneBase
 		DataList_Model*			ModelList;			// 3Dモデル管理
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 		DataList_Option*		OptionList;			// オプション設定管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 
 		/* 関数 */
 		void	Process_Main();			// 計算(メインの処理)
@@ -111,5 +113,6 @@ class SceneStage : public SceneBase
 		/* その他 */
 		int							iStageClear_Count;									// ステージクリア時の処理で使用するカウント
 		int							iBlendAlpha_StageClear_Fadein;						// ステージクリア時のフェードインのアルファ値(0～255)
+		int							iPlayerSlowTime;									// プレイヤーのスローモーション速度
 };
 

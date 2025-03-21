@@ -138,6 +138,9 @@ void Enemy_Normal::MoveEnemy()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(this->pEffectWarning);
 				}
+				
+				//攻撃予告SE再生
+				gpDataList_Sound->SE_PlaySound(SE_ENEMY_WARNING);
 			if (this->bShotFlg == true)
 			{
 				// エフェクトが再生終了している場合

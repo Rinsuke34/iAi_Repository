@@ -24,6 +24,7 @@ public:
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
+	virtual void	CollisionDraw()		override;	// 当たり判定描写
 
 private:
 	/* エフェクト */
@@ -38,6 +39,7 @@ private:
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
 	void CliffFallCheck();	// 崖に落ちるかどうかの判定メソッドを追加
 	void Enemy_Gravity();									// 重力処理メソッドを追加
+	void Movement_Horizontal();		// 水平移動
 
 
 
@@ -59,6 +61,7 @@ private:
 	bool bBlastFlg;			//爆発フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool bDirectionFlg;								// 向き固定フラグ
+	bool bChaseFlg;								// 追跡フラグ
 
 	//モーション関連変数
 	int iWaitAttachIndex;						// 待機モーションアタッチインデックス
@@ -77,5 +80,5 @@ private:
 
 	VECTOR vecLastRotation;	// 最後の回転量
 protected:
-
+	COLLISION_CAPSULE		stHorizontalCollision;			// 水平方向のコリジョン
 };

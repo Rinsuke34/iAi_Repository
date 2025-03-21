@@ -47,7 +47,15 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 	}
 
 	/* 初期化 */
-	this->iAddTextNo	= -1;
+	this->iAddTextNo					= -1;
+	this->iDrawFaze						= RESULT_DRAW_FAZE_CLEAR_TIME;
+	this->iDrawTimeMinute				= 0;
+	this->iDrawTimeSecond				= 0;
+	this->iDrawTimeFractionalSecond		= 0;
+	this->iDrawMaxCombo					= 0;
+	this->iDrawTakeDamage				= 0;
+	this->iDrawTotalGetBlood			= 0;
+	this->iDrawDelayTime				= RESULT_DRAW_FAZE_DELAY_TIME;
 
 	/* 各評価基準を取得 */
 	ResultCalculation_JsonLoad();
@@ -98,32 +106,126 @@ void SceneResult::Draw()
 
 	/* 文字(マキナスフォント使用部分) */
 	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFontHandle_Large,	"CLEAR TIME");
-	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%d s", (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000);
+	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%2d'%2d''%2d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
 
 	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFontHandle_Large,	"MAX COMBO");
-	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFontHandle_Large, "%d COMBO", PlayerStatusList->iGetPlayerComboMaxCount());
+	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFontHandle_Large, "%d COMBO", this->iDrawMaxCombo);
 
 	DrawFormatStringToHandle(80, 560, GetColor(0, 0, 0), giFontHandle_Large,	"TAKE DAMAGE");
-	DrawFormatStringToHandle(80 + 600, 560, GetColor(0, 0, 0), giFontHandle_Large, "%d DAMAGE", PlayerStatusList->iGetPlayerDamageCount());
+	DrawFormatStringToHandle(80 + 600, 560, GetColor(0, 0, 0), giFontHandle_Large, "%d DAMAGE", this->iDrawTakeDamage);
 
 	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFontHandle_Large,	"GET BLOOD");
+	DrawFormatStringToHandle(80 + 600, 720, GetColor(0, 0, 0), giFontHandle_Large, "%d BLOOD", this->iDrawTotalGetBlood);
 
 	/* 評価描写 */
 	{
-		/* 評価(クリアタイム) */
-		DrawGraph(1500, 200, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Time], TRUE);
-		/* 評価(最大コンボ) */
-		DrawGraph(1500, 360, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Combo], TRUE);
-		/* 評価(被ダメージ) */
-		DrawGraph(1500, 540, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Damage], TRUE);
-		/* 評価(総合) */
-		DrawGraph(1600, 720, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Total], TRUE);
+		/* 描写フェーズが"クリアタイム評価描写"以降であるか */
+		if (this->iDrawFaze >= RESULT_DRAW_FAZE_CREAR_TIME_EVALUATION)
+		{
+			/* 評価(クリアタイム) */
+			DrawGraph(1500, 200, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Time], TRUE);
+		}
+
+		/* 描写フェーズが"コンボ評価描写"以降であるか */
+		if (this->iDrawFaze >= RESULT_DRAW_FAZE_COMBO_EVALUATION)
+		{
+			/* 評価(最大コンボ) */
+			DrawGraph(1500, 360, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Combo], TRUE);
+		}
+
+		/* 描写フェーズが"ダメージ評価描写"以降であるか */
+		if (this->iDrawFaze >= RESULT_DRAW_FAZE_DAMAGE_EVALUATION)
+		{
+			/* 評価(被ダメージ) */
+			DrawGraph(1500, 540, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Damage], TRUE);
+		}
+
+		/* 描写フェーズが"総合評価描写"以降であるか */
+		if (this->iDrawFaze >= RESULT_DRAW_FAZE_TOTAL_EVALUATION)
+		{
+			/* 評価(総合) */
+			DrawGraph(1600, 720, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Total], TRUE);
+		}
 	}
 }
 
 // メイン処理
 void SceneResult::Process_Main()
 {
+	/* 描写遅延時間を減少 */
+	this->iDrawDelayTime -= 1;
+
+	/* 現在の描写遅延時間割合を取得 */
+	float fDrawDelayTimePercent = (static_cast<float>(RESULT_DRAW_FAZE_DELAY_TIME) - static_cast<float>(this->iDrawDelayTime)) / static_cast<float>(RESULT_DRAW_FAZE_DELAY_TIME);
+
+	/* フェーズに応じて描写用の数値を設定 */
+	switch (this->iDrawFaze)
+	{
+		/* クリアタイム描写 */
+		case RESULT_DRAW_FAZE_CLEAR_TIME:
+			{
+				/* クリアタイムの分の値を取得 */
+				int iTimeMinute = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000 / 60;
+
+				/* クリアタイムの秒の値を取得 */
+				int iTimeSecond = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000 % 60;
+
+				/* クリアタイムの少数秒の値を取得 */
+				int iTimeFractionalSecond = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) % 1000 / 10;
+
+				/* 取得した値の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
+				this->iDrawTimeMinute			= iTimeMinute * fDrawDelayTimePercent;
+				this->iDrawTimeSecond			= iTimeSecond * fDrawDelayTimePercent;
+				this->iDrawTimeFractionalSecond	= iTimeFractionalSecond * fDrawDelayTimePercent;
+			}
+			break;
+
+		/* クリアタイム評価描写 */
+		case RESULT_DRAW_FAZE_CREAR_TIME_EVALUATION:
+			break;
+
+		/* コンボ描写 */
+		case RESULT_DRAW_FAZE_COMBO:
+			/* コンボ数の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
+			this->iDrawMaxCombo = static_cast<int>(PlayerStatusList->iGetPlayerComboMaxCount() * fDrawDelayTimePercent);
+			break;
+
+		/* コンボ評価描写 */
+		case RESULT_DRAW_FAZE_COMBO_EVALUATION:
+			break;
+
+		/* ダメージ描写 */
+		case RESULT_DRAW_FAZE_DAMAGE:
+			/* ダメージ数の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
+			this->iDrawTakeDamage = static_cast<int>(PlayerStatusList->iGetPlayerDamageCount() * fDrawDelayTimePercent);
+			break;
+
+		/* ダメージ評価描写 */
+		case RESULT_DRAW_FAZE_DAMAGE_EVALUATION:
+			break;
+
+		/* 取得ブラッド描写 */
+		case RESULT_DRAW_FAZE_GETBLOOD:
+			/* 獲得ブラッド数の(描写遅延時間/描写遅延時間最大値)の値を描写値として設定 */
+			this->iDrawTotalGetBlood = static_cast<int>((this->GameResourceList->iGetHaveBlood() - this->GameResourceList->iGetStartBlood()) * fDrawDelayTimePercent);
+			break;
+
+		/* 総合評価描写 */
+		case RESULT_DRAW_FAZE_TOTAL_EVALUATION:
+			break;
+	}
+
+	/* 描写遅延時間が0以下であるか確認 */
+	if (this->iDrawDelayTime <= 0)
+	{
+		// 0以下である場合
+		/* 描写遅延時間をリセット */
+		this->iDrawDelayTime = RESULT_DRAW_FAZE_DELAY_TIME;
+
+		/* 描写フェーズを進める */
+		this->iDrawFaze += 1;
+	}
+
 	/* "決定"が入力されているか */
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{

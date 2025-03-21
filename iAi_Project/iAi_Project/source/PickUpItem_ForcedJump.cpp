@@ -29,6 +29,9 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/ForcedJump/ForcedJump");
+
+		// ３Ｄモデルのスケールを調整
+		MV1SetScale(this->iModelHandle, VGet(0.25f, 0.25f, 0.25f));
 	}
 }
 
@@ -37,9 +40,35 @@ void PickUpItem_ForcedJump::Initialization()
 {
 	/* コリジョン設定 */
 	{
-		this->stCollisionCapsule.fCapsuleRadius		= 100.0f;
-		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 400.0f, 0.0f));
-		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
+		this->stCollisionCapsule.fCapsuleRadius		= 25.0f;
+		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
+		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 25.0f, 0.0f));
+	}
+
+	//光エフェクトを生成
+	this->pEffectLight = new EffectManualDelete();
+
+	/* エフェクトの読み込み */
+	this->pEffectLight->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_sine/FX_g_mine_sine")));
+
+	/* エフェクトの座標設定 */
+	this->pEffectLight->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + 118.0f, this->vecPosition.z));
+
+	/* エフェクトの回転量設定 */
+	this->pEffectLight->SetRotation(this->vecRotation);
+
+	/*エフェクトの拡大率設定*/
+	this->pEffectLight->SetScale(VGet(6.0f, 6.0f, 6.0f));
+
+	/* エフェクトの初期化 */
+	this->pEffectLight->Initialization();
+
+	/* エフェクトをリストに登録 */
+	{
+		/* "オブジェクト管理"データリストを取得 */
+		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		/* エフェクトをリストに登録 */
+		ObjectListHandle->SetEffect(this->pEffectLight);
 	}
 }
 
@@ -63,6 +92,9 @@ void PickUpItem_ForcedJump::Update()
 		/* エフェクトの回転量設定 */
 		this->pEffectExplosion->SetRotation(this->vecRotation);
 
+		/*エフェクトの拡大率設定*/
+		this->pEffectExplosion->SetScale(VGet(4.5f, 4.5f, 4.5f));
+
 		/* エフェクトの初期化 */
 		this->pEffectExplosion->Initialization();
 
@@ -73,6 +105,9 @@ void PickUpItem_ForcedJump::Update()
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}
+
+		//爆発SE再生
+		gpDataList_Sound->SE_PlaySound(SE_GIMMIC_JUMPEXPLP);
 
 		/* プレイヤーが接触している場合 */
 		//プレイヤーを吹き飛ばす
@@ -86,6 +121,9 @@ void PickUpItem_ForcedJump::Update()
 
 		/* 生成元のスポーンフラグを有効にする */
 		this->pGimmick_ForcedJump_Spawn->SetSpawnObjectFlg(true);
+
+		//光エフェクトを削除
+		this->pEffectLight->SetDeleteFlg(true);
 	}
 }
 

@@ -239,6 +239,14 @@ std::string PUBLIC_PROCESS::aInsertNewLine(std::string ShiftJis, int iLength)
 
 	while (iPossition < ShiftJis.size())
 	{
+		/* 改行があったらカウントをリセット */
+		if (ShiftJis[iPossition] == '\n')
+		{
+			iCount = 0;
+			iPossition += 1;
+			continue;
+		}
+
 		/* Shift-JIS の先頭バイトを取得 */
 		unsigned char ch = static_cast<unsigned char>(ShiftJis[iPossition]);
 
