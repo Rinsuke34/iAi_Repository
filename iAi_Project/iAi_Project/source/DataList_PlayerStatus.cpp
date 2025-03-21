@@ -8,6 +8,7 @@
 /* 2025.03.03 菊池雅道 初期化処理追加 */
 /* 2025.03.11 菊池雅道 初期化処理追加 */
 /* 2025.03.17 菊池雅道 初期化処理追加 */
+/* 2025.03.19 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
 #include <vector>
@@ -31,10 +32,8 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerNowJumpCount				= 0;								// プレイヤーのジャンプ回数(現在数)
 	this->bPlayerJumpingFlag				= false;							//プレイヤーがジャンプ中かのフラグ									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerJumpCount					= 0;								//プレイヤーの現在のジャンプ回数									/* 2025.01.10 菊池雅道 初期化処理追加 */
-	this->fPlayerDodgeProgress				= 0.0f;								//プレイヤー回避モーション進行度									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->vecPlayerDodgeDirection			= { 0, 0, 0 };						//プレイヤー回避方向												/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerDodgeWhileJumpingCount		= 0;								//プレイヤージャンプ中の回避回数									/* 2025.01.10 菊池雅道 初期化処理追加 */
-	this->fPlayerJumpSpeed					= 0;								//プレイヤージャンプ速度											/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerNowDodgeFlame				= 0;								//プレイヤーの現在の回避フレーム数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->fPlayerDodgeSpeed					= 0;								//プレイヤー回避速度												/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->bPlayerWallTouchFlg				= false;							//プレイヤーが壁に接触したかのフラグ								/* 2025.03.17 菊池雅道 初期化処理追加 */
@@ -91,12 +90,16 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 
 	/* 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス))*/
 	this->fPlayerMoveAcceleration			= 0;	// プレイヤーの移動加速度
-	this->fPlayerMaxMoveSpeed				= 0;	// プレイヤーの最大移動速度
+	this->fPlayerJumpSpeed					= 0;	// プレイヤージャンプ速度
 	this->fPlayerFallAcceleration			= 0;	// プレイヤーの落下加速度
 	this->fPlayerMaxFallSpeed				= 0;	// プレイヤーの最大落下速度
 	this->iPlayerMaxJumpCount				= 0;	// プレイヤーのジャンプ回数(最大数)
-	this->fPlayerJumpSpeed					= 0;	// プレイヤージャンプ速度
-	this->fPlayerDodgeSpeed					= 0;	// プレイヤー回避速度
+	this->fPlayerDodgeSpeed					= 0;	// プレイヤー回避速度															/* 2025.01.10 菊池雅道 初期化処理追加  */
+	this->iPlayerMaxDodgeFlame				= 0;	// プレイヤーの回避最大フレーム数												/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->fPlayerKickWallHorizontalSpeed	= 0;	// プレイヤーの壁キック速度(水平成分)											/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->fPlayerKickWallVerticalSpeed		= 0;	// プレイヤーの壁キック速度(垂直成分)											/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->iPlayerKickWallFlame				= 0;	// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->iPlayerKickWallInputMaxFlame		= 0;	// プレイヤーの壁キック入力猶予フレーム数
 	this->fPlayerRockOnRadius				= 0;	// ロックオン範囲の半径
 	this->iPlayerMaxHp						= 0;	// プレイヤーの最大HP
 	this->iPlayerMaxInvincibleTime			= 0;	// プレイヤーの最大無敵時間
@@ -245,7 +248,6 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 			case EDIT_EFFECT_NORMAL_MOVE_SPEED_UP:
 				/* 効果量分加算する */
 				this->fAddMoveSpeedUp += static_cast<float>(iEffectValue);
-				this->fPlayerMaxMoveSpeed += this->fAddMoveSpeedUp;
 				break;
 
 			// ブラッド取得量アップ

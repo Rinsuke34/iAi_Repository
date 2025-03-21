@@ -9,6 +9,7 @@
 /* 2025.03.03 菊池雅道 攻撃関連の変数・関数追加 */
 /* 2025.03.12 菊池雅道 スローモーション関連の変数・関数追加 */
 /* 2025.03.17 菊池雅道 移動・攻撃関連の変数・関数追加 */
+/* 2025.03.19 菊池雅道 移動・攻撃関連の変数・関数追加 */
 
 #pragma once
 #include <vector>
@@ -54,10 +55,9 @@ class DataList_PlayerStatus : public DataListBase
 		float	fGetPlayerNowMotionCount()				{ return this->fPlayerNowMotionCount; };			// プレイヤーのモーションの現在のカウント
 		int		iGetPlayerJumpCount()					{ return this->iPlayerJumpCount; }					// プレイヤーの現在のジャンプ回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		bool	bGetPlayerJumpingFlag()					{ return this->bPlayerJumpingFlag; }				// プレイヤーがジャンプ中かのフラグを取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerDodgeProgress()				{ return this->fPlayerDodgeProgress; }				// プレイヤー回避モーション進行率を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
+		
 		VECTOR	vecGetPlayerDodgeDirection()			{ return this->vecPlayerDodgeDirection; }			// プレイヤー回避方向を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerDodgeWhileJumpingCount()		{ return this->iPlayerDodgeWhileJumpingCount; }		// プレイヤージャンプ中の回避回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		float	fGetPlayerDodgeSpeed()					{ return this->fPlayerDodgeSpeed; }					// プレイヤー回避速度を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerNowDodgeFlame()				{ return this->iPlayerNowDodgeFlame; }				// プレイヤーの現在の回避フレーム数を取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		VECTOR	vecGetPlayerChargeAttakTargetMove()		{ return this->vecPlayerChargeAttakTargetMove; }	// プレイヤー溜め攻撃の移動量を取得									/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
 		int		iGetPlayerMeleeStrongAirMaxCount()		{ return this->iPlayerMeleeStrongAirMaxCount; }		// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を取得		/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
@@ -114,15 +114,26 @@ class DataList_PlayerStatus : public DataListBase
 
 		// 能力値関連(※調整を行えるステータス)
 		float	fGetPlayerMoveAcceleration()	{ return this->fPlayerMoveAcceleration; }	// プレイヤーの移動加速度取得
-		float	fGetPlayerMaxMoveSpeed()		{ return this->fPlayerMaxMoveSpeed; }		// プレイヤーの最大移動速度取得
+		float	fGetPlayerJumpSpeed()			{ return this->fPlayerJumpSpeed; }			// プレイヤーのジャンプ速度取得
 		float	fGetPlayerFallAcceleration()	{ return this->fPlayerFallAcceleration; }	// プレイヤーの落下加速度取得
-		float	fGetPlayerMaxFallSpeed()		{ return this->fPlayerMaxFallSpeed; }		// プレイヤーの最大落下速度取得
+		float	fGetPlayerMaxFallSpeed()		{ return this->fPlayerMaxFallSpeed; }		// プレイヤーの最大落下速度取得	
 		int		iGetPlayerMaxJumpCount()		{ return this->iPlayerMaxJumpCount; }		// プレイヤーのジャンプ回数(最大数)取得
+		float	fGetPlayerDodgeSpeed()			{ return this->fPlayerDodgeSpeed; }			// プレイヤー回避速度を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
+		int		iGetPlayerMaxDodgeFlame()		{ return this->iPlayerMaxDodgeFlame; }		// プレイヤーの最大回避フレーム数を取得								/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		float	fGetPlayerKickWallHorizontalSpeed()			{ return this->fPlayerKickWallHorizontalSpeed; }			// プレイヤーの壁キック速度(水平成分)を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		float	fGetPlayerKickWallVerticalSpeed()			{ return this->fPlayerKickWallVerticalSpeed; }				// プレイヤーの壁キック速度(垂直成分)を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		int		iGetPlayerKickWallFlame()					{ return this->iPlayerKickWallFlame; }						// プレイヤーの壁キック継続フレーム数を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		int		iGetPlayerKickWallInputMaxFlame()			{ return this->iPlayerKickWallInputMaxFlame; }				// プレイヤーの壁キック入力猶予フレーム数を取得							/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		int		iGetPlayerMelleStrongChangeChargeFrame()	{ return this->iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)状態になるチャージフレーム数を取得			/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMelleStrongMaxChargeFrame()		{ return this->iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を取得				/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		float	fGetPlayerMelleStrongMoveScale()			{ return this->fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを取得					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		float	fGetPlayerMeleeStrongMoveSpeed()			{ return this->fPlayerMeleeStrongMoveSpeed; }				// プレイヤーの近距離攻撃(強)の移動速度を取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMeleeStrongContinusMaxFrame()		{ return this->iPlayerMeleeStrongContinusMaxFrame; }		// プレイヤーの近距離攻撃(強)で連続攻撃できる最大フレーム数を取得		/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ロックオン範囲の半径を設定
-		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// プレイヤーの最大HP取得
-		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// プレイヤーの最大無敵時間取得
 		int		iGetStartHaveKunai()			{ return this->iStartHaveKunai; }			// 初期状態で持っているクナイの数
 		int		iGetMaxhaveKunai()				{ return this->iMaxhaveKunai; }				// 最大で持てるクナイの数
+		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// プレイヤーの最大HP取得
+		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// プレイヤーの最大無敵時間取得
 
 		/* プレイヤーバフ関連(エディット周り) */
 		float	fGetAddMoveSpeedUp()					{ return this->fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
@@ -144,9 +155,11 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerNowMoveSpeed(float fPlayerNowMoveSpeed)							{ this->fPlayerNowMoveSpeed					= fPlayerNowMoveSpeed; }				// プレイヤーの現在の移動速度設定
 		void	SetPlayerAngleX(float fPlayerAngleX)										{ this->fPlayerAngleX						= fPlayerAngleX; }						// プレイヤーのX軸回転量(ラジアン)取得
 		void	SetPlayerTurnSpeed(float fPlayerTurnSpeed)									{ this->fPlayerTurnSpeed					= fPlayerTurnSpeed; }					// プレイヤーの回転速度設定					/* 2025.02.10 菊池雅道 移動関連の関数追加 */
+		void	SetplayerJumpSpeed(float fPlayerJumpSpeed)									{ this->fPlayerJumpSpeed					= fPlayerJumpSpeed; }					// プレイヤーのジャンプ速度設定
 		void	SetPlayerNowFallSpeed(float fPlayerNowFallSpeed)							{ this->fPlayerNowFallSpeed					= fPlayerNowFallSpeed; }				// プレイヤーの現在の落下速度設定
 		void	SetPlayerNowJumpCount(int iPlayerNowJumpCount)								{ this->iPlayerNowJumpCount					= iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)設定
 		void	SetPlayerNowAttakChargeFlame(int iPlayerNowAttakChargeFlame)				{ this->iPlayerNowAttakChargeFlame			= iPlayerNowAttakChargeFlame; }			// プレイヤーの現在の攻撃チャージフレーム数設定
+		void	SetPlayerMeleeStrongChargeCount(int iPlayerMeleeStrongChargeCount)			{ this->iPlayerMeleeStrongChargeCount		= iPlayerMeleeStrongChargeCount; }		// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数を設定
 		void	SetPlayerMeleeStrongAirCount(int iPlayerMeleeStrongAirCount)				{ this->iPlayerMeleeStrongAirCount			= iPlayerMeleeStrongAirCount; }			// プレイヤーが空中で近距離攻撃(強)を行った回数を設定		/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongEnemyAttackFlg(bool bPlayerMeleeStrongEnemyAttackFlg)	{ this->bPlayerMeleeStrongEnemyAttackFlg	= bPlayerMeleeStrongEnemyAttackFlg; }	// プレイヤーが近距離攻撃(強)でエネミーを攻撃したかのフラグを設定		/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongAfterCount(int iPlayerMeleeStrongAfterCount)			{ this->iPlayerMeleeStrongAfterCount		= iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)でエネミーを攻撃した後のフレーム数を設定	/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
@@ -156,7 +169,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)						{ this->fPlayerNowMotionCount				= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
 		void	SetPlayerJumpCount(int iPlayerJumpCount)									{ this->iPlayerJumpCount					= iPlayerJumpCount; }					// プレイヤージャンプ回数を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag)								{ this->bPlayerJumpingFlag					= bPlayerJumpingFlag; }					// プレイヤーがジャンプ中かのフラグを設定	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeProgress(float fPlayerDodgeProgress)							{ this->fPlayerDodgeProgress				= fPlayerDodgeProgress; }				// プレイヤー回避モーション進行率を設定		/* 2025.01.10 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerNowDodgeFlame(int iPlayerNowDodgeFlame)							{ this->iPlayerNowDodgeFlame				= iPlayerNowDodgeFlame; }				// プレイヤーの現在の回避時間を設定			/* 2025.01.10 菊池雅道 移動関連の関数追加 */		
 		void	SetPlayerDodgeDirection(VECTOR vecPlayerDodgeDirection)						{ this->vecPlayerDodgeDirection				= vecPlayerDodgeDirection; }			// プレイヤー回避方向を設定					/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerDodgeWhileJumpingCount(int iPlayerDodgeWhileJumpingCount)			{ this->iPlayerDodgeWhileJumpingCount		= iPlayerDodgeWhileJumpingCount; }		// プレイヤージャンプ中の回避回数を設定		/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerWallTouchFlg(bool bPlayerWallTouchFlg)								{ this->bPlayerWallTouchFlg					= bPlayerWallTouchFlg; }				// プレイヤーが壁に接触したかのフラグを設定								/* 2025.03.17 菊池雅道 移動関連の関数追加 */
@@ -205,21 +218,29 @@ class DataList_PlayerStatus : public DataListBase
 
 		// 能力値関連(※調整を行えるステータス)
 		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)						{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// プレイヤーの移動加速度設定
-		void	SetPlayerMaxMoveSpeed(float fPlayerMaxMoveSpeed)								{ this->fPlayerMaxMoveSpeed				= fPlayerMaxMoveSpeed; }			// プレイヤーの最大移動速度設定
 		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)						{ this->fPlayerFallAcceleration			= fPlayerFallAcceleration; }		// プレイヤーの落下加速度設定
+		void	SetPlayerJumpSpeed(float fPlayerJumpSpeed)										{ this->fPlayerJumpSpeed				= fPlayerJumpSpeed; }				// プレイヤーのジャンプ速度設定
 		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)								{ this->fPlayerMaxFallSpeed				= fPlayerMaxFallSpeed; }			// プレイヤーの最大落下速度設定
 		void	SetPlayerMaxJumpCount(int iPlayerMaxJumpCount)									{ this->iPlayerMaxJumpCount				= iPlayerMaxJumpCount; }			// プレイヤーのジャンプ回数(最大数)設定
-		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)									{ this->fPlayerDodgeSpeed				= fPlayerDodgeSpeed; }				// プレイヤー回避速度を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerNowDodgeFlame(int iPlayerNowDodgeFlame)								{ this->iPlayerNowDodgeFlame			= iPlayerNowDodgeFlame; }			// プレイヤー回避時間を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */		
-		void	SetPlayerChargeAttakTargetMove(VECTOR vecPlayerChargeAttakTargetMove)			{ this->vecPlayerChargeAttakTargetMove	= vecPlayerChargeAttakTargetMove; }	// プレイヤー溜め攻撃の移動量を設定		/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
-		void	SetPlayerMeleeStrongAirMaxCount(int iPlayerMeleeStrongAirMaxCount)				{ this->iPlayerMeleeStrongAirMaxCount	= iPlayerMeleeStrongAirMaxCount; }	// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を設定				/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMeleeStrongChargeCount(int iPlayerMeleeStrongChargeCount)				{ this->iPlayerMeleeStrongChargeCount	= iPlayerMeleeStrongChargeCount; }	// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数を設定
+		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)									{ this->fPlayerDodgeSpeed				= fPlayerDodgeSpeed; }				// プレイヤー回避速度を設定																	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerMaxDodgeFlame(int iPlayerMaxDodgeFlame)								{ this->iPlayerMaxDodgeFlame			= iPlayerMaxDodgeFlame; }			// プレイヤーの最大回避フレーム数を設定														/* 2025.03.19 菊池雅道 移動関連の変数・関数追加 */
+		void	SetPlayerKickWallHorizontalSpeed(float fPlayerKickWallHorizontalSpeed)			{ this->fPlayerKickWallHorizontalSpeed	= fPlayerKickWallHorizontalSpeed; }	// プレイヤーの壁キック速度(水平成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerKickWallVerticalSpeed(float fPlayerKickWallVerticalSpeed)				{ this->fPlayerKickWallVerticalSpeed	= fPlayerKickWallVerticalSpeed; }	// プレイヤーの壁キック速度(垂直成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerKickWallFlame(int iPlayerKickWallFlame)								{ this->iPlayerKickWallFlame			= iPlayerKickWallFlame; }			// プレイヤーの壁キック継続フレーム数を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlyerKickWallInputMaxFrame(int iPlayerKickWallInputMaxFrame)					{ this->iPlayerKickWallInputMaxFlame	= iPlayerKickWallInputMaxFrame; }	// プレイヤーの壁キックの入力猶予フレーム数を設定											/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerChargeAttakTargetMove(VECTOR vecPlayerChargeAttakTargetMove)			{ this->vecPlayerChargeAttakTargetMove	= vecPlayerChargeAttakTargetMove; }	// プレイヤー溜め攻撃の移動量を設定															/* 2025.01.22 菊池雅道 攻撃関連の変数追加 */	/* 2025.01.26 駒沢風助 コード修正 */
+		void	SetPlayerMelleStrongChangeChargeFrame(int iPlayerMelleStrongChangeChargeFrame)	{ this->iPlayerMelleStrongChangeChargeFrame		= iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数を設定					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMelleStrongMaxChargeFrame(int iPlayerMelleStrongMaxChargeFrame)		{ this->iPlayerMelleStrongMaxChargeFrame		= iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を設定							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMelleStrongMoveScale(float fPlayerMelleStrongMoveScale)				{ this->fPlayerMelleStrongMoveScale				= fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを設定								/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongMoveSpeed(float fPlayerMeleeStrongMoveSpeed)				{ this->fPlayerMeleeStrongMoveSpeed				= fPlayerMeleeStrongMoveSpeed; }				// プレイヤー近距離攻撃(強)の移動速度を設定											/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongContinusMaxFrame(int iPlayerMeleeStrongContinusMaxFrame)	{ this->iPlayerMeleeStrongContinusMaxFrame		= iPlayerMeleeStrongContinusMaxFrame; }			// プレイヤー近距離攻撃(強)で連続攻撃できる最大フレーム数を設定						/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongAirMaxCount(int iPlayerMeleeStrongAirMaxCount)				{ this->iPlayerMeleeStrongAirMaxCount	= iPlayerMeleeStrongAirMaxCount; }				// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を設定				/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)								{ this->fPlayerRockOnRadius				= fPlayerRockOnRadius; }			// ロックオン範囲の半径を設定
-		void	SetPlayerMaxHp(int iPlayerMaxHp)												{ this->iPlayerMaxHp					= iPlayerMaxHp; }					// プレイヤーの最大HP設定
-		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)						{ this->iPlayerMaxInvincibleTime		= iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
 		void	SetStartHaveKunai(int iStartHaveKunai)											{ this->iStartHaveKunai					= iStartHaveKunai; }				// 初期状態で持っているクナイの数
 		void	SetMaxhaveKunai(int iMaxhaveKunai)												{ this->iMaxhaveKunai					= iMaxhaveKunai; }					// 最大で持てるクナイの数
-
+		void	SetPlayerMaxHp(int iPlayerMaxHp) { this->iPlayerMaxHp = iPlayerMaxHp; }					// プレイヤーの最大HP設定
+		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime) { this->iPlayerMaxInvincibleTime = iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
+		
 		/* プレイヤーバフ関連(エディット周り) */
 		void	SetAddMoveSpeedUp(float fAddMoveSpeedUp)										{ this->fAddMoveSpeedUp					= fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
 		void	SetAddBlood(int iAddBlood)														{ this->iAddBlood						= iAddBlood; }							// ブラッド(ゲーム内通貨)の入手量(個)
@@ -246,7 +267,6 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerJumpingFlag;					// プレイヤーがジャンプ中かのフラグ												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerJumpCount;					// プレイヤーの現在のジャンプ回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerNowDodgeFlame;				// プレイヤーの現在の回避フレーム数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerDodgeProgress;				// プレイヤー回避モーション進行率 (範囲：0.0～1.0)								/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		VECTOR	vecPlayerDodgeDirection;			// プレイヤー回避方向															/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerDodgeWhileJumpingCount;		// プレイヤージャンプ中の回避回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		bool	bPlayerWallTouchFlg;				// プレイヤーが壁に接触したかのフラグ											/* 2025.03.17 菊池雅道 移動関連の変数追加 */
@@ -303,19 +323,29 @@ class DataList_PlayerStatus : public DataListBase
 		bool				bMeleeSearchCollisionUseFlg;	// 近接攻撃(強)のロックオン範囲コリジョン使用フラグ
 		
 		/* 能力値関連(※プレイヤーの装備等によって上下する可能性のあるステータス))*/
-		float	fPlayerMoveAcceleration;		// プレイヤーの移動加速度
-		float	fPlayerMaxMoveSpeed;			// プレイヤーの最大移動速度
-		float	fPlayerFallAcceleration;		// プレイヤーの落下加速度
-		float	fPlayerMaxFallSpeed;			// プレイヤーの最大落下速度
-		int		iPlayerMaxJumpCount;			// プレイヤーのジャンプ回数(最大数)
-		float	fPlayerJumpSpeed;				// プレイヤージャンプ速度				/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerDodgeSpeed;				// プレイヤー回避速度					/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	fPlayerRockOnRadius;			// ロックオン範囲の半径
-		int		iPlayerMaxHp;					// プレイヤーの最大HP
-		int		iPlayerMaxInvincibleTime;		// プレイヤーの最大無敵時間
-		int		iPlayerMeleeStrongAirMaxCount;	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
-		int		iStartHaveKunai;				// 初期状態で持っているクナイの数
-		int		iMaxhaveKunai;					// 最大で持てるクナイの数
+		float	fPlayerMoveAcceleration;				// プレイヤーの移動加速度
+		float	fPlayerJumpSpeed;						// プレイヤージャンプ速度														/* 2025.01.09 菊池雅道 移動関連の変数追加 */
+		float	fPlayerFallAcceleration;				// プレイヤーの落下加速度
+		float	fPlayerMaxFallSpeed;					// プレイヤーの最大落下速度
+		int		iPlayerMaxJumpCount;					// プレイヤーのジャンプ回数(最大数)
+		float	fPlayerDodgeSpeed;						// プレイヤー回避速度															/* 2025.01.09 菊池雅道 移動関連の変数追加 */
+		int		iPlayerMaxDodgeFlame;					// プレイヤーの最大回避フレーム数												/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		float	fPlayerKickWallHorizontalSpeed;			// プレイヤーの壁キック速度(水平成分)											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		float	fPlayerKickWallVerticalSpeed;			// プレイヤーの壁キック速度(垂直成分)											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		int		iPlayerKickWallFlame;					// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		int		iPlayerKickWallInputMaxFlame;			// プレイヤーの壁キック入力猶予フレーム数										/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		int		iPlayerMelleStrongChangeChargeFrame;	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数						/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMelleStrongMaxChargeFrame;		// プレイヤーの近距離攻撃(強)の最大チャージフレーム数							/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		float	fPlayerMelleStrongMoveScale;			// プレイヤーの近距離攻撃(強)の移動距離のスケール								/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		float	fPlayerMeleeStrongMoveSpeed;			// プレイヤーの近距離攻撃(強)の移動速度											/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMeleeStrongContinusMaxFrame;		// プレイヤーが近距離攻撃(強)で連続攻撃できる最大フレーム数						/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMeleeStrongAirMaxCount;			// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
+		float	fPlayerRockOnRadius;					// ロックオン範囲の半径
+		int		iStartHaveKunai;						// 初期状態で持っているクナイの数
+		int		iMaxhaveKunai;							// 最大で持てるクナイの数
+		int		iPlayerMaxHp;							// プレイヤーの最大HP
+		int		iPlayerMaxInvincibleTime;				// プレイヤーの最大無敵時間
+
 
 		/* プレイヤーバフ関連(エディット周り) */
 		float	fAddMoveSpeedUp;					// 移動速度上昇値(速度/フレーム)
@@ -332,17 +362,28 @@ class DataList_PlayerStatus : public DataListBase
 		/* Jsonファイルでのオプション名と変数の対応表 */
 		std::vector<PLAYER_STATUS_LIST> astPlayerStatusList =
 		{
-			// 能力値名称(Json内),							対応した変数(ポインタ),			データ型
-			{ BASE_STATUS_NAME_MOVE_ACCELERATION,			&fPlayerMoveAcceleration,		DATA_TYPE_FLOAT	},	// プレイヤーの移動加速度
-			{ BASE_STATUS_NAME_MOVE_SPEED_MAX,				&fPlayerMaxMoveSpeed,			DATA_TYPE_FLOAT	},	// プレイヤーの最大移動速度
-			{ BASE_STATUS_NAME_FALL_ACCELERATION,			&fPlayerFallAcceleration,		DATA_TYPE_FLOAT	},	// プレイヤーの落下加速度
-			{ BASE_STATUS_NAME_FALL_SPEED_MAX,				&fPlayerMaxFallSpeed,			DATA_TYPE_FLOAT	},	// プレイヤーの最大落下速度
-			{ BASE_STATUS_NAME_JUMP_COUNT_MAX,				&iPlayerMaxJumpCount,			DATA_TYPE_INT	},	// プレイヤーのジャンプ回数(最大数)
-			{ BASE_STATUS_NAME_ROCK_ON_RADIUS,				&fPlayerRockOnRadius,			DATA_TYPE_FLOAT	},	// ロックオン範囲の半径
-			{ BASE_STATUS_NAME_HP_MAX,						&iPlayerMaxHp,					DATA_TYPE_INT	},	// プレイヤーの最大HP
-			{ BASE_STATUS_NAME_INVINCIBLE_TIME_MAX,			&iPlayerMaxInvincibleTime,		DATA_TYPE_INT	},	// プレイヤーの最大無敵時間
-			{ BASE_STATUS_NAME_MELEE_STRONG_AIR_COUNT_MAX,	&iPlayerMeleeStrongAirMaxCount,	DATA_TYPE_INT	},	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
-			{ BASE_STATUS_NAME_START_HAVE_KUNAI,			&iStartHaveKunai,				DATA_TYPE_INT	},	// 初期状態で持っているクナイの個数
-			{ BASE_STATUS_NAME_MAX_HAVE_KUNAI,				&iMaxhaveKunai,					DATA_TYPE_INT	}	// 最大で持てるクナイの個数
+			// 能力値名称(Json内),									対応した変数(ポインタ),						データ型
+			{ BASE_STATUS_NAME_MOVE_ACCELERATION,					&fPlayerMoveAcceleration,					DATA_TYPE_FLOAT	},	// プレイヤーの移動加速度
+			{ BASE_STATUS_NAME_JUMP_SPEED,							&fPlayerJumpSpeed,							DATA_TYPE_FLOAT	},	// プレイヤーのジャンプ回数(最大数)
+			{ BASE_STATUS_NAME_FALL_ACCELERATION,					&fPlayerFallAcceleration,					DATA_TYPE_FLOAT	},	// プレイヤーの落下加速度
+			{ BASE_STATUS_NAME_FALL_SPEED_MAX,						&fPlayerMaxFallSpeed,						DATA_TYPE_FLOAT	},	// プレイヤーの最大落下速度			
+			{ BASE_STATUS_NAME_JUMP_COUNT_MAX,						&iPlayerMaxJumpCount,						DATA_TYPE_INT	},	// プレイヤーのジャンプ回数(最大数)
+			{ BASE_STATUS_NAME_DODGE_SPEED,							&fPlayerDodgeSpeed,							DATA_TYPE_FLOAT	},	// プレイヤーの回避速度													/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_DODGE_FRAME,							&iPlayerMaxDodgeFlame,						DATA_TYPE_INT	},	// プレイヤーの回避フレーム数											/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED,			&fPlayerKickWallHorizontalSpeed,			DATA_TYPE_FLOAT },	// プレイヤーの壁キック速度(水平成分)									/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED,				&fPlayerKickWallVerticalSpeed,				DATA_TYPE_FLOAT },	// プレイヤーの壁キック速度(垂直成分)									/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_KICKWALL_FLAME,						&iPlayerKickWallFlame,						DATA_TYPE_INT	},	// プレイヤーの壁キック継続フレーム数									/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME,			&iPlayerKickWallInputMaxFlame,				DATA_TYPE_INT	},	// プレイヤーの壁キック入力猶予フレーム数								/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME,	&iPlayerMelleStrongChangeChargeFrame,		DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数				/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME,		&iPlayerMelleStrongMaxChargeFrame,			DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)の最大チャージフレーム数					/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SCALE,				&fPlayerMelleStrongMoveScale,				DATA_TYPE_FLOAT	},	// プレイヤーの近距離攻撃(強)の移動距離のスケール						/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED,				&fPlayerMeleeStrongMoveSpeed,				DATA_TYPE_FLOAT	},	// プレイヤー近距離攻撃(強)の移動速度									/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_CONTINUS_MAX_FRAME,		&iPlayerMeleeStrongContinusMaxFrame,		DATA_TYPE_INT	},	// プレイヤー近距離攻撃(強)で連続攻撃できる最大フレーム数				/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_AIR_MAX_COUNT,			&iPlayerMeleeStrongAirMaxCount,				DATA_TYPE_INT	},	// プレイヤーが空中で近距離攻撃(強)を行える最大回数(※敵を攻撃していない場合)
+			{ BASE_STATUS_NAME_ROCK_ON_RADIUS,						&fPlayerRockOnRadius,						DATA_TYPE_FLOAT	},	// ロックオン範囲の半径
+			{ BASE_STATUS_NAME_HP_MAX,								&iPlayerMaxHp,								DATA_TYPE_INT	},	// プレイヤーの最大HP
+			{ BASE_STATUS_NAME_INVINCIBLE_TIME_MAX,					&iPlayerMaxInvincibleTime,					DATA_TYPE_INT	},	// プレイヤーの最大無敵時間
+			{ BASE_STATUS_NAME_START_HAVE_KUNAI,					&iStartHaveKunai,							DATA_TYPE_INT	},	// 初期状態で持っているクナイの個数
+			{ BASE_STATUS_NAME_MAX_HAVE_KUNAI,						&iMaxhaveKunai,								DATA_TYPE_INT	}	// 最大で持てるクナイの個数
 		};
 };

@@ -81,6 +81,7 @@ void CharacterPlayer::Player_Move()
 
 			/* 移動処理を通常通りに行う状態 */
 			case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
+			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
 
 				/* 移動速度補正無しにする */
 				fMoveSpeedRatio = 1.f;
@@ -122,10 +123,11 @@ void CharacterPlayer::Player_Move()
 			break;
 
 			/* 移動処理を行わない状態 */
-			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
 			case PLAYER_ATTACKSTATUS_MELEE_STRONG:		// 近接攻撃中(強)
 			case PLAYER_ATTACKSTATUS_PROJECTILE:		// 遠距離攻撃中
-				break;
+			// 移動処理を行わない
+			bPlayerMoveFlg = false;
+			break;
 		}
 	}
 	/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
@@ -142,8 +144,11 @@ void CharacterPlayer::Player_Move()
 		/* 現在の移動速度取得 */
 		float fSpeed = this->PlayerStatusList->fGetPlayerNowMoveSpeed();
 
-		/* 移動速度を設定 */
-		fSpeed = (PLAER_DASH_SPEED + fEditAddSpeed) * fMoveSpeedRatio;
+		/* 移動速度の設定値を取得 */
+		float fBaseSpeed = this->PlayerStatusList->fGetPlayerMoveAcceleration();
+
+		/* 最終的な移動速度を計算 */
+		fSpeed = (fBaseSpeed + fEditAddSpeed) * fMoveSpeedRatio;
 
 		/* モーションが"ジャンプ(開始)"以外であるか確認 */
 		if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
@@ -277,20 +282,26 @@ void CharacterPlayer::Player_Move()
 	{
 		// 壁キックフラグが有効な場合
 		/* 壁キックしてからの経過フレーム数を取得 */
-		int iNowAfterKickWallCount = this->PlayerStatusList->iGetPlayerAfterKickWallCount();
+		int iNowAfterKickWallFlame = this->PlayerStatusList->iGetPlayerAfterKickWallCount();
 
+		/* 壁キックの横移動速度を取得 */
+		float fKickWallHorizontalSpeed = this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed();	
+
+		/* 壁キック継続フレーム数を取得 */
+		int iKickWallFlame = this->PlayerStatusList->iGetPlayerKickWallFlame();
+		
 		/* 経過フレーム数を確認 */
-		if (iNowAfterKickWallCount <= PLAYER_WALL_KICK_MOVE_FLAME)
+		if (iNowAfterKickWallFlame <= iKickWallFlame)
 		{
 			// 経過フレーム数が設定フレーム数を超えていない場合
 
 			/* 壁キックの横移動速度を設定 */
 			/* 経過フレーム数に応じて、速度が減衰する(1.0fを最大として減衰していく) */
-			float fWallKickSpeed = PLAYER_WALL_KICK_HORIZONTAL_SPEED * (1.0f - (float)(iNowAfterKickWallCount / PLAYER_WALL_KICK_MOVE_FLAME));
+			float fKickWallSpeed = fKickWallHorizontalSpeed * (1.0f - (float)(iNowAfterKickWallFlame / iKickWallFlame));
 			
 			/* 壁の法線方向(水平成分のみ)へ移動する */
-			this->vecMove.x += vecNormalSum.x * fWallKickSpeed;
-			this->vecMove.z += vecNormalSum.z * fWallKickSpeed;
+			this->vecMove.x += vecNormalSum.x * fKickWallSpeed;
+			this->vecMove.z += vecNormalSum.z * fKickWallSpeed;
 
 		}
 		else
@@ -383,8 +394,11 @@ void CharacterPlayer::Player_Jump()
 		/* 壁キック後の経過フレーム数が0の場合 */
 		if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
 		{
+			/* 壁キックの移動速度(垂直成分)を取得 */
+			float fKickWallVerticalSpeed = this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed();
+
 			/*上方向に移動 */
-			this->PlayerStatusList->SetPlayerNowFallSpeed(PLAYER_WALL_KICK_VERTICAL_SPEED);
+			this->PlayerStatusList->SetPlayerNowFallSpeed(-fKickWallVerticalSpeed);
 			
 			/* SEを再生 */
 			gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
@@ -431,9 +445,11 @@ void CharacterPlayer::Player_Jump()
 				{ 
 					// 壁キック後のフラグが有効ではない場合
 					/* ジャンプ処理 */
-					// 仮で落下速度を-にする処理を行う
-					//this->PlayerStatusList->SetPlayerNowFallSpeed(-20.0f);
-					this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+					/* ジャンプ速度を取得 */
+					float fJumpSpeed = this->PlayerStatusList->fGetPlayerJumpSpeed();
+					
+					/* ジャンプ速度を設定(マイナスの値を設定する) */
+					this->PlayerStatusList->SetPlayerNowFallSpeed(-fJumpSpeed);
 
 					/* ジャンプ回数を更新 */
 					this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
@@ -576,14 +592,30 @@ void CharacterPlayer::Player_Gravity()
 		// 重力処理を行う場合
 		/* 落下量取得 */
 		float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
-		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();	// 加速度を加算
+		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();			// 加速度を加算
+
+		/* 最大落下速度を取得 */
+		float fFallSpeedMax = this->PlayerStatusList->fGetPlayerMaxFallSpeed();		// 最大落下速度取得
+
+		/* 現在の落下速度が最大落下速度を超えているか(下回っているか)確認 */
+		if (fFallSpeedMax < fFallSpeed)
+		{
+			// 超えている場合
+			/* 最大落下速度に設定 */
+			fFallSpeed = fFallSpeedMax;	
+		}
 
 		/* スローモーション中か確認 */
 		if (this->StageStatusList->bGetGameSlowFlg() == true)
 		{
 			// スローモーション中の場合
-			/* 加速度を少なくする */
-			fFallSpeed = fFallSpeed * 0.5f;
+			/* 落下中か確認する */
+			if (fFallSpeed > 0)
+			{
+				// 落下中の場合
+				/* 加速度を少なくする */
+				fFallSpeed = fFallSpeed * 0.5f;
+			}
 		}
 
 		/* 落下の加速度を更新 */
@@ -647,8 +679,14 @@ void CharacterPlayer::Player_Dodg()
 		if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
 		{
 			// 回避中である場合
+			/* 回避状態の最大フレーム数を取得 */
+			int iDodgeMaxFrame = this->PlayerStatusList->iGetPlayerMaxDodgeFlame();
+
+			/* 現在の回避状態フレーム数を取得 */
+			int NowDodgeFrame = this->PlayerStatusList->iGetPlayerNowDodgeFlame();
+
 			/* 回避状態が維持される時間を超えていないか確認 */
-			if (this->PlayerStatusList->iGetPlayerNowDodgeFlame() <= PLAYER_DODGE_FLAME)
+			if (NowDodgeFrame <= iDodgeMaxFrame)
 			{
 				// 超えていない(回避状態を継続する)場合
 				/* プレイヤーの攻撃状態が近距離攻撃(強)中か確認 */
@@ -659,12 +697,15 @@ void CharacterPlayer::Player_Dodg()
 					return;
 				}
 
+				/* 回避速度を取得 */
+				float fPlayerDodgeSpeed = this->PlayerStatusList->fGetPlayerDodgeSpeed();
+
 				/* 回避による移動方向を設定し、移動する */
 				/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
-				this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), PLAYER_DODGE_SPEED * (1.0f - (float)this->PlayerStatusList->iGetPlayerNowDodgeFlame() / (float)PLAYER_DODGE_FLAME));
+				this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), fPlayerDodgeSpeed * (1.0f - (float)NowDodgeFrame / (float)iDodgeMaxFrame));
 
 				/* 回避の経過時間を進める */
-				this->PlayerStatusList->SetPlayerNowDodgeFlame(this->PlayerStatusList->iGetPlayerNowDodgeFlame() + 1);
+				this->PlayerStatusList->SetPlayerNowDodgeFlame(NowDodgeFrame + 1);
 
 			}
 			else
@@ -708,7 +749,7 @@ void CharacterPlayer::Player_Dodg()
 						/* 画面エフェクト(集中線)作成 */
 						ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
 						this->StageStatusList->SetScreenEffect(pScreenEffect);
-						pScreenEffect->SetDeleteTime(PLAYER_DODGE_FLAME);
+						pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
 
 						/* 回避方向設定 */
 						{
@@ -750,9 +791,6 @@ void CharacterPlayer::Player_Dodg()
 							/* 現在の回避方向をセットする */
 							this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
 						}
-
-						/* 回避状態の進行率をリセット */
-						this->PlayerStatusList->SetPlayerDodgeProgress(0.0f);
 
 						/* 落下の加速度を初期化 */
 						this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
@@ -1194,8 +1232,11 @@ void CharacterPlayer::Movement_Horizontal()
 		/* 壁に接触してからの経過フレーム数を加算 */
 		this->PlayerStatusList->SetPlayerAfterWallTouchCount(iNowAfterWallTouchCount + 1);
 
+		/* 壁キックの入力猶予フレーム数を取得 */
+		int iWallKickInputMaxFlame = this->PlayerStatusList->iGetPlayerKickWallInputMaxFlame();
+
 		/* 壁に接触してからの経過フレーム数が一定値以下か確認する */
-		if (iNowAfterWallTouchCount <= PLAYER_WALL_KICK_INPUT_FLAME)
+		if (iNowAfterWallTouchCount <= iWallKickInputMaxFlame)
 		{
 			//壁に接触してからの経過フレーム数が一定値以下の場合
 
