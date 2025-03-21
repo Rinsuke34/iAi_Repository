@@ -15,7 +15,6 @@
 /* 2025.03.14 菊池雅道	エフェクト処理追加 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 */
 /* 2025.03.17 菊池雅道	クールタイムの処理追加 */
-/* 2025.03.21 菊池雅道	落下復帰処理追加 */
 
 #include "CharacterPlayer.h"
 
@@ -544,9 +543,6 @@ void CharacterPlayer::PlayerFallRecovery()
 
 	/* 落下フラグを無効にする */
 	this->PlayerStatusList->SetFallFlg(false);
-
-	/* 近距離攻撃(強)のチャージフレーム数をリセット */ 
-	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(0);
 
 	/* 復帰エフェクトを生成 */
 	EffectSelfDelete_PlayerFollow* pRecoveryEffect = new EffectSelfDelete_PlayerFollow(true);
