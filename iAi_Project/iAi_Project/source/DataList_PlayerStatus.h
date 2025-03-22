@@ -329,7 +329,7 @@ class DataList_PlayerStatus : public DataListBase
 		float	fPlayerMaxFallSpeed;					// プレイヤーの最大落下速度
 		int		iPlayerMaxJumpCount;					// プレイヤーのジャンプ回数(最大数)
 		float	fPlayerDodgeSpeed;						// プレイヤー回避速度															/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		float	iPlayerMaxDodgeFlame;					// プレイヤーの最大回避フレーム数												/* 2025.03.19 菊池雅道 移動関連の変数追加 */
+		int		iPlayerMaxDodgeFlame;					// プレイヤーの最大回避フレーム数												/* 2025.03.19 菊池雅道 移動関連の変数追加 */
 		float	fPlayerKickWallHorizontalSpeed;			// プレイヤーの壁キック速度(水平成分)											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
 		float	fPlayerKickWallVerticalSpeed;			// プレイヤーの壁キック速度(垂直成分)											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
 		int		iPlayerKickWallFlame;					// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
