@@ -27,6 +27,7 @@
 #include "SceneUi_Debug.h"
 #include "SceneUi_Blood.h"
 #include "SceneUi_Edit.h"
+#include "SceneUi_Time.h"
 
 /* 画面エフェクト */
 #include "ScreenEffect_Damage.h"
@@ -85,6 +86,7 @@ class SceneStage : public SceneBase
 		void	SetCamera_StageClear();					// カメラ設定(ステージクリア)
 		void	SetCamera_StageStart();					// カメラ設定(ステージ開始)
 		void	SetCamera_StageStart_CloseUp();			// カメラ設定(ステージ開始(プレイヤークローズアップ))
+		void	SetCamera_Fall();						// カメラ設定(プレイヤー落下時)
 		void	CameraSmoothing(int iCameraPositionLeapCountMax);	// カメラ補正						/* 2025.03.06 菊池雅道	カメラ制御処理修正 */
 
 		/* デバッグ関連 */
@@ -114,5 +116,6 @@ class SceneStage : public SceneBase
 		int							iStageClear_Count;									// ステージクリア時の処理で使用するカウント
 		int							iBlendAlpha_StageClear_Fadein;						// ステージクリア時のフェードインのアルファ値(0～255)
 		int							iPlayerSlowTime;									// プレイヤーのスローモーション速度
+		bool						bPlayBgmFlg;										// BGMを再生済みかのフラグ
 };
 

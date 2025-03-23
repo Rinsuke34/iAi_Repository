@@ -1,0 +1,68 @@
+{
+    "DodgeFlame": {
+        "value": 1106247680
+    },
+    "DodgeSpeed": {
+        "value": 100.0
+    },
+    "FallAcceleration": {
+        "value": 1.0
+    },
+    "FallSpeed_Max": {
+        "value": 30.0
+    },
+    "Hp_Max": {
+        "value": 10
+    },
+    "InvincibleTime_Max": {
+        "value": 60
+    },
+    "JumpCount_Max": {
+        "value": 5
+    },
+    "JumpSeepd": {
+        "value": 30.0
+    },
+    "KickWallFlame": {
+        "value": 30
+    },
+    "KickWallHorizontalSpeed": {
+        "value": 60.00030517578125
+    },
+    "KickWallInputMaxFlame": {
+        "value": 30
+    },
+    "KickWallVerticalSpeed": {
+        "value": 30.0
+    },
+    "MaxHaveKunai": {
+        "value": 20
+    },
+    "MeleeStrongAirMaxCount": {
+        "value": 2
+    },
+    "MeleeStrongChangeChargeFrame": {
+        "value": 30
+    },
+    "MeleeStrongContinusMaxFrame": {
+        "value": 120
+    },
+    "MeleeStrongMaxChargeFrame": {
+        "value": 150
+    },
+    "MeleeStrongMoveScale": {
+        "value": 15.000001907348633
+    },
+    "MeleeStrongMoveSpeed": {
+        "value": 100.0
+    },
+    "MoveAcceleration": {
+        "value": 57.99964904785156
+    },
+    "RockOnRadius": {
+        "value": 2000.0
+    },
+    "StartHaveKunai": {
+        "value": 20
+    }
+}

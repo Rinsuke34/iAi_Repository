@@ -6,93 +6,149 @@
 
 /* BGM関係 */
 // BGM番号
-static  const int	BGM_STAGE		= 0;	// ステージ
-static  const int	BGM_TITLE		= 1;	// タイトル
-static  const int	BGM_HOME		= 2;	// ホーム
-static  const int	BGM_MAX			= 3;	// BGM総数
+static  const int	BGM_TITLE		    = 0;	// タイトル
+static  const int	BGM_HOME		    = 1;	// ホーム
+static  const int   BGM_CONVERSATION_0  = 2;    // 会話0
+static  const int   BGM_CONVERSATION_1  = 3;    // 会話1
+static  const int   BGM_CONVERSATION_2  = 4;    // 会話2
+static  const int   BGM_CONVERSATION_3  = 5;    // 会話3
+static  const int   BGM_CONVERSATION_4  = 6;    // 会話4(エンディング)
+static  const int   BGM_STAGE_0         = 7;    // ステージ0(1_1 ～ 1_3)
+static  const int   BGM_STAGE_1         = 8;    // ステージ1(2_1 ～ 2_3)
+static  const int   BGM_STAGE_2         = 9;    // ステージ2(3_1 ～ 3_2)
+static  const int   BGM_STAGE_3         = 10;   // ステージ3(3_3)
+static  const int   BGM_EDIT            = 11;   // エディット 
+static  const int	BGM_MAX			    = 12;	// BGM総数
 
 // BGM名称
 static const std::string BGM_NAME[BGM_MAX] =
 {
-    "BGM_Stage",    // ステージ
-    "BGM_Title",    // タイトル
-    "BGM_Home"      // ホーム
+    "Title/BGM_Title",                  // タイトル
+    "Home/BGM_Home" ,                   // ホーム
+    "Conversation/BGM_Conv_0",          // 会話0
+    "Conversation/BGM_Conv_1",          // 会話1
+    "Conversation/BGM_Conv_2",          // 会話2
+    "Conversation/BGM_Conv_3",          // 会話3
+	"Conversation/BGM_Conv_4_Ending",   // 会話4(エンディング)
+    "Stage/BGM_Stage_1-1_1-3",          // ステージ0(1_1 ～ 1_3)
+    "Stage/BGM_Stage_2-1_2-3",          // ステージ1(2_1 ～ 2_3)
+    "Stage/BGM_Stage_3-1_3-2",          // ステージ2(3_1 ～ 3_2)
+    "Stage/BGM_Stage_3-3",              // ステージ3(3_3)
+    "Edit/BGM_Edit"                     // エディット
 };
 
 /* SE関係 */
+// SEの情報用構造体
+struct SE_INFO
+{
+	std::string     aSeName;    // SE名
+	int             iSeType;    // SEの種類(FALSE:通常 / TRUE:3Dサウンド)
+};
+
+// 3Dサウンドが聞こえる範囲
+static  const float SE_3D_SOUND_RADIUS          = 5000.f;
+
 // SE番号(システム関係)
 static  const int   SE_SYSTEM_MOVECURSOR        = 0;    // カーソル移動
 static  const int   SE_SYSTEM_DICISION          = 1;    // 決定
 static  const int   SE_SYSTEM_CANCEL            = 2;    // キャンセル
+static  const int   SE_SYSTEM_BEEP              = 3;    // 失敗
+static  const int   SE_SYSTEM_POSEMENU          = 4;    // ポーズメニュー
+static  const int   SE_SYSTEM_STAGECLEAR        = 5;    // ステージクリア
+static  const int   SE_SYSTEM_RESULT_COUNT      = 6;    // リザルトカウント
+static  const int   SE_SYSTEM_RESULT_RANK_SMALL = 7;    // リザルト小評価
+static  const int   SE_SYSTEM_RESULT_RANK_BIG   = 8;    // リザルト大評価
+
 // SE番号(プレイヤー関係)
-static  const int   SE_PLAYER_WALK              = 3;    // 歩く
-static  const int   SE_PLAYER_RUN               = 4;    // 走る
-static  const int   SE_PLAYER_RUN_SP            = 5;    // 高速ダッシュ
-static  const int   SE_PLAYER_JUMP              = 6;    // ジャンプ
-static  const int   SE_PLAYER_LANDING           = 7;    // 着地
-static  const int   SE_PLAYER_KUNAI_GET         = 8;    // クナイ入手
-static  const int   SE_PLAYER_KUNAI             = 9;    // クナイ投擲
-static  const int   SE_PLAYER_DODGE             = 10;   // 回避
-static  const int   SE_PLAYER_ABSORB            = 11;   // 攻撃吸収
-static  const int   SE_PLAYER_NIAI              = 12;   // 通常居合攻撃
-static  const int   SE_PLAYER_DOWN              = 13;   // 倒れる
-static  const int   SE_PLAYER_DAMAGE            = 14;   // 被ダメージ
-static  const int   SE_PLAYER_CHARGE            = 15;   // 溜め居合チャージ
-static  const int   SE_PLAYER_CHARGE_COMPLETE   = 16;   // 溜め居合チャージ完了
-static  const int   SE_PLAYER_SPIAI             = 17;   // 溜め居合攻撃
+static  const int   SE_PLAYER_RUN               = 9;    // 走る
+static  const int   SE_PLAYER_JUMP              = 10;   // ジャンプ
+static  const int   SE_PLAYER_LANDING           = 11;   // 着地
+static  const int   SE_PLAYER_KUNAI_GET         = 12;   // クナイ入手
+static  const int   SE_PLAYER_KUNAI             = 13;   // クナイ投擲
+static  const int   SE_PLAYER_DODGE             = 14;   // 回避
+static  const int   SE_PLAYER_ABSORB            = 15;   // 攻撃吸収
+static  const int   SE_PLAYER_NIAI              = 16;   // 通常居合攻撃
+static  const int   SE_PLAYER_SLASH_HIT         = 17;   // 攻撃ヒット音
+static  const int   SE_PLAYER_DOWN              = 18;   // 倒れる
+static  const int   SE_PLAYER_DAMAGE            = 19;   // 被ダメージ
+static  const int   SE_PLAYER_DAMAGE_ELEC       = 20;   // 被ダメージビリビリ
+static  const int   SE_PLAYER_CHARGE            = 21;   // 溜め居合チャージ
+static  const int   SE_PLAYER_CHARGE_COMPLETE   = 22;   // 溜め居合チャージ完了
+static  const int   SE_PLAYER_CHARGE_HOLD       = 23;   // 溜めチャージホールド
+static  const int   SE_PLAYER_SPIAI             = 24;   // 溜め居合攻撃
+static  const int   SE_PLAYER_GET_BLOOD         = 25;   // ブラッド取得
+static  const int   SE_PLAYER_SPIAI_ELEC        = 26;   // 溜め居合放電
+
 // SE番号(エネミー関係)
-static  const int   SE_ENEMY_IKURA_ATTACK       = 18;   // いくら攻撃
-static  const int   SE_ENEMY_BEAM_CHARGE        = 19;   // ビームチャージ
-static  const int   SE_ENEMY_BEAM_SHOT          = 20;   // ビームショット
-static  const int   SE_ENEMY_DAMAGE             = 21;   // 撃破
-static  const int   SE_ENEMY_WARNING            = 22;   // 通常攻撃予告
-static  const int   SE_ENEMY_WARNING_EXPLOSION  = 23;   // 自爆予告
-static  const int   SE_ENEMY_MISSILE_SHOT       = 24;   // ミサイル発射
-static  const int   SE_ENEMY_MISSILE_DOWN       = 25;   // ミサイル下降
-static  const int   SE_ENEMY_MISSILE_HIT        = 26;   // ミサイルヒット
-static  const int   SE_ENEMY_MISSILE_EXPLOSION  = 27;   // ミサイル爆発
+static  const int   SE_ENEMY_IKURA_ATTACK       = 27;   // ノーマル攻撃音
+static  const int   SE_ENEMY_DAMAGE             = 28;   // 撃破音
+static  const int   SE_ENEMY_BEAM_CHARGE        = 29;   // ビームチャージ音
+static  const int   SE_ENEMY_BEAM_SHOT          = 30;   // ビーム発射音
+static  const int   SE_ENEMY_WARNING            = 31;   // 攻撃予告音
+static  const int   SE_ENEMY_MISSILE_SHOT       = 32;   // ミサイル発射音
+static  const int   SE_ENEMY_MISSILE_HIT        = 33;   // ミサイル発射音
+static  const int   SE_ENEMY_MISSILE_EXPLOSION  = 34;   // ミサイル着弾ビリビリ音
+static  const int   SE_ENEMY_WARNING_EXPLOSION  = 35;   // 自爆予告音
+static  const int   SE_ENEMY_RUN                = 36;   // 逃走キラキラ音
 
+// SE番号(オブジェクト関係)
+static  const int   SE_GIMMIC_JUMPEXPLP         = 37;   // 強制ジャンプ
+static  const int   SE_RESPAWN_ACTIVATE         = 38;   // リスポーン地点起動
+static  const int   SE_GOAL_SHUTTER             = 39;   // ゴール演出(シャッター音)
+static  const int   SE_GOAL_SHINE               = 40;   // ゴール演出(光あふれる)
+static  const int   SE_GOAL                     = 41;   // ゴールが発する音
 
-// SE番号(ギミック)
-static  const int   SE_GIMMIC_JUMPEXPLP         = 28;   // 強制ジャンプ
-static  const int   SE_MAX                      = 29;   // SE総数
+static  const int   SE_MAX                      = 42;   // SE総数
 
 // SE名称
-static const std::string SE_NAME[SE_MAX] =
+static const SE_INFO SE_NAME[SE_MAX] =
 {
     // システム関係
-    "SE_Movecursor",                // カーソル移動
-    "SE_Decision",                  // 決定
-    "SE_Cancel",                    // キャンセル
+    { "System/SE_Movecursor_ver2",       FALSE },     // カーソル移動
+    { "System/SE_Player_Niai",           FALSE },     // 決定
+    { "System/SE_Cancel",                FALSE },     // キャンセル
+    { "System/SE_Beep",                  FALSE },     // 失敗
+    { "System/SE_PoseMenu",              FALSE },     // ポーズメニュー
+    { "System/SE_StageClear",            FALSE },     // ステージクリア
+    { "System/SE_Result_Count",          FALSE },     // リザルトカウント
+    { "System/SE_Result_Rank_Small",     FALSE },     // リザルト小評価
+    { "System/SE_Result_Rank_Big",       FALSE },     // リザルト大評価
     // プレイヤー関係
-    "SE_Player_Walk",               // 歩く
-    "SE_Player_Run",                // 走る
-    "SE_Player_SPRun",              // 高速ダッシュ
-    "SE_Player_Jump",               // ジャンプ
-    "SE_Player_Landing",            // 着地
-    "SE_Player_Getkunai",           // クナイ入手
-    "SE_Player_Kunai",              // クナイ投擲
-    "SE_Player_Dodge",              // 回避
-    "SE_Player_Absorb",             // 攻撃吸収
-    "SE_Player_Niai",               // 通常居合攻撃
-    "SE_Player_Down",               // 倒れる
-    "SE_Player_Damage",             // 被ダメージ
-    "SE_Player_Charge",             // 溜め居合チャージ
-    "SE_Player_ChargeComplete",     // 溜め居合チャージ官僚
-    "SE_Player_SPiai",              // 溜め居合攻撃
+    { "Player/SE_Player_Run_ver2",       FALSE },     // 走る
+    { "Player/SE_Player_Jump_ver2",      FALSE },     // ジャンプ
+    { "Player/SE_Player_Landing",	     FALSE },     // 着地
+    { "Player/SE_Player_Getkunai",       FALSE },     // クナイ入手
+    { "Player/SE_Kunai_ver2",            FALSE },     // クナイ投擲
+    { "Player/SE_Player_Dodge_ver2",     FALSE },	  // 回避
+    { "Player/SE_Player_Absorb",         FALSE },     // 攻撃吸収
+    { "Player/SE_Player_Niai",           FALSE },     // 通常居合
+    { "Player/SE_Slash_Hit",             FALSE },     // 攻撃ヒット音
+    { "Player/SE_Player_Down",           FALSE },     // 倒れる
+    { "Player/SE_Player_Damagehit",      FALSE },     // 被ダメージ
+    { "Player/SE_Player_Damage_Elec",    FALSE },     // 被ダメージビリビリ
+    { "Player/SE_Player_Charge_ver2",    FALSE },     // 溜め攻撃チャージ音
+    { "Player/SE_Player_ChargeComplete", FALSE },     // 溜め攻撃チャージ完了音
+    { "Player/SE_Player_Charge_Hold",    FALSE },     // 溜めチャージホールド
+    { "Player/SE_Player_SPiai",          FALSE },     // 溜め攻撃音
+    { "Player/SE_Player_GetBlood",       FALSE },     // ブラッド取得
+    { "Player/SE_Player_SPiaiElec",	     FALSE },	  // 溜め攻撃放電
     // エネミー関係
-    "SE_Ikura_Attack",              // いくら攻撃
-    "SE_Beam_Charge",               // ビームチャージ
-	"SE_Beam_Shot",                 // ビームショット
-    "SE_Enemy_Damage",              // 撃破
-	"SE_Warning",                   // 通常攻撃予告
-	"SE_Warning_Jibaku",            // 自爆予告
-	"SE_Missile_shot",              // ミサイル発射
-	"SE_Missile_fall",              // ミサイル下降
-	"SE_Missile_hit",               // ミサイルヒット
-	"SE_Missile_elec",              // ミサイル爆発
-	// ギミック
-	"SE_Gimmic_JumpExplo"           // 強制ジャンプ
+    { "Enemy/SE_Ikura_Attack",           TRUE },      // ノーマル攻撃音
+    { "Enemy/SE_Enemy_Dmage",            TRUE },      // 撃破音
+    { "Enemy/SE_Beam_Charge",            TRUE },      // ビームチャージ音
+    { "Enemy/SE_Beam_Shot",              TRUE },      // ビーム発射音
+    { "Enemy/SE_Warning",                TRUE },      // 攻撃予告音
+    { "Enemy/SE_Missile_shot",           TRUE },      // ミサイル発射音
+    { "Enemy/SE_Missile_hit",            TRUE },      // ミサイル着弾音
+    { "Enemy/SE_Missile_elec",           TRUE },      // ミサイル着弾ビリビリ音
+    { "Enemy/SE_Warning_Jibaku",         TRUE },      // 自爆予告音
+    { "Enemy/SE_Nige_Shining",           TRUE },      // 逃走キラキラ音
+    // オブジェクト関係
+    { "Object/SE_Gimmic_JumpExplo",      TRUE },      // 強制ジャンプ音
+    { "Object/SE_RespownActivate",       TRUE },      // リスポーン地点起動
+    { "Object/SE_Goal_Shutter",          FALSE},      // ゴール演出(シャッター音)
+    { "Object/SE_Goal_Shine",            TRUE },      // ゴール演出(光あふれる)
+    { "Object/SE_Goal",                  TRUE }       // ゴールが発する音
 };
 
 /* ボイス関連 */

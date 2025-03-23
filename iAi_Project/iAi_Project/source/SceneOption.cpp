@@ -47,6 +47,9 @@ void SceneOption::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 		/* 選択状態フラグを有効にする */
 		this->bSelectFlg = true;
 
@@ -57,6 +60,9 @@ void SceneOption::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 	{
 		// 入力されている場合
+		/* "キャンセル"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 		/* 選択状態フラグを確認 */
 		if (this->bSelectFlg == true)
 		{
@@ -78,6 +84,9 @@ void SceneOption::Process()
 	if ((gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_RIGHT) == true))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択状態フラグを確認 */
 		if (this->bSelectFlg == true)
 		{
@@ -143,6 +152,9 @@ void SceneOption::Process()
 	if ((gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_LEFT) == true))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択状態フラグを確認 */
 		if (this->bSelectFlg == true)
 		{

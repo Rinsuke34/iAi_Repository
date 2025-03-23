@@ -131,7 +131,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerMeleeStrongContinusMaxFrame()		{ return this->iPlayerMeleeStrongContinusMaxFrame; }		// プレイヤーの近距離攻撃(強)で連続攻撃できる最大フレーム数を取得		/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ロックオン範囲の半径を設定
 		int		iGetStartHaveKunai()			{ return this->iStartHaveKunai; }			// 初期状態で持っているクナイの数
-		int		iGetMaxhaveKunai()				{ return this->iMaxhaveKunai; }				// 最大で持てるクナイの数
+		int		iGetMaxHaveKunai()				{ return this->iMaxhaveKunai; }				// 最大で持てるクナイの数
 		int		iGetPlayerMaxHp()				{ return this->iPlayerMaxHp; }				// プレイヤーの最大HP取得
 		int		iGetPlayerMaxInvincibleTime()	{ return this->iPlayerMaxInvincibleTime; }	// プレイヤーの最大無敵時間取得
 

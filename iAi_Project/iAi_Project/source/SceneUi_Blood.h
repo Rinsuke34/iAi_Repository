@@ -14,7 +14,7 @@ class SceneUi_Blood : public SceneBase
 {
 	public:
 		SceneUi_Blood();					// コンストラクタ
-		virtual ~SceneUi_Blood();			// デストラクタ
+		virtual ~SceneUi_Blood() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
@@ -25,5 +25,6 @@ class SceneUi_Blood : public SceneBase
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 
 		/* 使用する画像のハンドル */
-
+		int* piGrHandle_Blood_Icon;					// ブラッドアイコン
+		int* piGrHandle_Text_Frame;					// テキストフレーム
 };

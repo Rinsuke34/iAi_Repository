@@ -143,7 +143,7 @@ void BulletPlayerKunaiExplosion::Explosion()
 		}
 
 		/* 爆発SE再生 */
-		gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 		/* 爆発エフェクト生成 */
 		{

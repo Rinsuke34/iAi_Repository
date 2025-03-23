@@ -46,6 +46,7 @@ static const int	CAMERA_MODE_TITLE						= 4;				// タイトル
 static const int	CAMERA_MODE_STAGECLEAR					= 5;				// ステージクリア
 static const int	CAMERA_MODE_STAGESTART					= 6;				// ステージ開始
 static const int	CAMERA_MODE_STAGESTART_CLOSE_UP			= 7;				// ステージ開始(プレイヤークローズアップ)
+static const int	CAMERA_MODE_FALL						= 8;				// 落下
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL		= 30 * 1;		// カメラ座標の線形保管用カウントの最大値(フリー)				/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_CONT_MAX_TITLE			= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(タイトル)				/* 2025.03.06 菊池雅道 定数追加 */

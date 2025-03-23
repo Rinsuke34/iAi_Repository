@@ -32,4 +32,5 @@ struct TEXT_DATA
 	int			iRightCharactorCg;	// 右のキャラクターの立ち絵No
 	int			iSpeed;				// 描写速度
 	int			iVoiceNo;			// ボイス番号
+	int			iBgmNo;				// BGM番号
 };

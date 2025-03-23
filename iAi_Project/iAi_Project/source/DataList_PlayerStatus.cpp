@@ -120,12 +120,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 
 	/* ステータスデータの読み込み */
 	LoadPlayerStatuxData();
-
-	/* HP現在値をHP最大値に設定 */
-	this->iPlayerNowHp = this->iPlayerMaxHp;
-
-	/* クナイ本数を初期状態でのクナイ本数に設定 */
-	this->iNowHaveKunai = this->iStartHaveKunai;
 }
 
 // デストラクタ
@@ -168,6 +162,12 @@ void DataList_PlayerStatus::LoadPlayerStatuxData()
 			}
 		}
 	}
+
+	/* HP現在値をHP最大値に設定 */
+	this->iPlayerNowHp = this->iPlayerMaxHp;
+
+	/* クナイ本数を初期状態でのクナイ本数に設定 */
+	this->iNowHaveKunai = this->iStartHaveKunai;
 }
 
 // ステータスデータ保存

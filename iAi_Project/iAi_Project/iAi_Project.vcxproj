@@ -213,6 +213,7 @@
     <ClCompile Include="source\LargeScreen.cpp" />
     <ClCompile Include="source\PickUpItem_Blood.cpp" />
     <ClCompile Include="source\PickUpItem_ForcedJump.cpp" />
+    <ClCompile Include="source\PickUpItem_Kunai.cpp" />
     <ClCompile Include="source\SceneAddTitleSetup.cpp" />
     <ClCompile Include="source\SceneConversation.cpp" />
     <ClCompile Include="source\SceneEdit.cpp" />
@@ -222,6 +223,7 @@
     <ClCompile Include="source\SceneStageClear.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StageJump.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp" />
+    <ClCompile Include="source\SceneUi_Time.cpp" />
     <ClCompile Include="source\Scene_Title_Player.cpp" />
     <ClCompile Include="source\Screen.cpp" />
     <ClCompile Include="source\ScreenEffect_ConcentrationLine.cpp" />
@@ -249,6 +251,7 @@
     <ClCompile Include="source\SpawnPoint_Base.cpp" />
     <ClCompile Include="source\EnemySpawnPoint_Normal.cpp" />
     <ClCompile Include="source\SpawnPoint_Blood_PickupItem.cpp" />
+    <ClCompile Include="source\SpawnPoint_Kunai_PickupItem.cpp" />
     <ClCompile Include="source\VariableDefine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -314,6 +317,7 @@
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
     <ClInclude Include="source\SceneUi_Debug_StatusSetup.h" />
+    <ClInclude Include="source\SceneUi_Time.h" />
     <ClInclude Include="source\Scene_Title_Player.h" />
     <ClInclude Include="source\Screen.h" />
     <ClInclude Include="source\ScreenEffect_ConcentrationLine.h" />
@@ -321,6 +325,7 @@
     <ClInclude Include="source\EnemySpawnPoint_Normal.h" />
     <ClInclude Include="source\ScreenEffect_SlowMotion.h" />
     <ClInclude Include="source\SpawnPoint_Blood_PickupItem.h" />
+    <ClInclude Include="source\SpawnPoint_Kunai_PickupItem.h" />
     <ClInclude Include="source\StageStatusDefine.h" />
     <ClInclude Include="source\GimmickDefine.h" />
     <ClInclude Include="source\GimmickDisappear.h" />
@@ -356,6 +361,7 @@
     <ClInclude Include="source\SceneLoad.h" />
     <ClInclude Include="source\SceneOption.h" />
     <ClInclude Include="source\SceneTitle.h" />
+    <ClInclude Include="source\PickUpItem_Kunai.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

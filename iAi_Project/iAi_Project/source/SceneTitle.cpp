@@ -110,6 +110,9 @@ void SceneTitle::Process()
 	// 決定ボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
     switch (iUICount)
 	{
 		case CAMERA_FIXED_POSITION_START:
@@ -158,6 +161,18 @@ void SceneTitle::Process()
 		case CAMERA_FIXED_POSITION_E:
 			if (this->bGameStartFlg == TRUE)
 			{
+				/* セーブデータ(中断時)のパス設定 */
+				std::string SaveDataFileName = "resource/SaveData/SuspensionSaveData.json";
+
+				/* 対象のファイルを削除 */
+				while (std::remove(SaveDataFileName.c_str()) == 0)
+				{
+					// 削除が成功した場合
+					/* 完全に削除が完了するまで待機 */
+					// ※10ミリ秒ずつ
+					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				}
+
 				// シーンの追加を設定
 				gpSceneServer->SetAddLoadSceneFlg(true);
 	
@@ -196,6 +211,9 @@ void SceneTitle::Process()
 	// キャンセルボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
 	{
+		/* "キャンセル"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 		switch (iUICount)
 		{
 			//はじめからホーム画面
@@ -241,6 +259,9 @@ void SceneTitle::Process()
 			//上ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		switch (iUICount)
 		{
 			//タイトル画面
@@ -275,6 +296,8 @@ void SceneTitle::Process()
 			//下ボタンが押されたか確認
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
 		switch (iUICount)
 		{
 			//タイトル画面
@@ -310,6 +333,9 @@ void SceneTitle::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_LEFT))
 	{
 		// 左ボタンが押された場合
+		// /* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		//カメラの位置が最終確認画面か確認
 		if (iUICount == CAMERA_FIXED_POSITION_E)
 		{
@@ -322,6 +348,10 @@ void SceneTitle::Process()
 	// 右ボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_RIGHT))
 	{
+		// 右ボタンが押された場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		if (iUICount == CAMERA_FIXED_POSITION_E)
 		{
 			// 「いいえ」を選択

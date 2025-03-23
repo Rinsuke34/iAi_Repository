@@ -56,6 +56,7 @@ void DataList_StageStatus::Initialization()
 	this->fCameraAngleLimitUp				= INIT_CAMERA_ANGLE_LIMIT_UP;				// カメラの回転角度制限(上)
 	this->fCameraAngleLimitDown				= INIT_CAMERA_ANGLE_LIMIT_DOWN;				// カメラの回転角度制限(下)
 	this->iCloseUpCount						= 0;										// クローズアップカウント
+	this->iStopTotalTime					= 0;										// ストップ時の合計時間
 
 	/* 画面エフェクトリストのクリア */
 	for (auto& pScreenEffect : this->pScreenEffectList)

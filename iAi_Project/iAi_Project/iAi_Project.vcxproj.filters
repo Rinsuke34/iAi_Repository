@@ -475,6 +475,18 @@
     <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー">
       <UniqueIdentifier>{00a898e5-8d27-41ae-9ff4-1a674976d164}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\クナイ%28アイテム%29">
+      <UniqueIdentifier>{2643b38e-f091-4bc3-b48e-a0d899ec057f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\クナイ%28アイテム%29">
+      <UniqueIdentifier>{6f01a865-419e-4d82-aa0d-9cef5e0367a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間表示">
+      <UniqueIdentifier>{81eaab28-7c92-4769-8686-beb5bfe14a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間">
+      <UniqueIdentifier>{514a6072-5879-4980-98dd-273b3060ae51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -755,6 +767,15 @@
     </ClCompile>
     <ClCompile Include="source\Scene_Title_Player.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PickUpItem_Kunai.cpp">
+      <Filter>ソース ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SpawnPoint_Kunai_PickupItem.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\クナイ%28アイテム%29</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Time.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間表示</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1069,6 +1090,15 @@
     </ClInclude>
     <ClInclude Include="source\Scene_Title_Player.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\タイトルプレイヤー</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PickUpItem_Kunai.h">
+      <Filter>ヘッダー ファイル\オブジェクト\アクタ\アイテム\実体あり</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SpawnPoint_Kunai_PickupItem.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\スポーンポイント\クナイ%28アイテム%29</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Time.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

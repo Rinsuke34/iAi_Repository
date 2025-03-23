@@ -59,15 +59,13 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 
 /* データ設定 */
 // 現在のエディット情報設定
-void DataList_GameResource::SetNowEditData(int iEditNum, int iEditEffect, int iEditRank)
+void DataList_GameResource::SetNowEditData(int iEditNum, EDIT_DATA EditData)
 {
 	// 引数
 	// iEditNum		<-	番号(最大数未満)
-	// iEditEffect	<-	エディット効果ID
-	// iEditRank	<-	エディットランクID
+	// EditData		<-	エディットの情報
 
-	this->NowEditData[iEditNum].iEditEffect	= iEditEffect;
-	this->NowEditData[iEditNum].iEditRank	= iEditRank;
+	this->NowEditData[iEditNum] = EditData;
 }
 
 // エディット効果量読み込み

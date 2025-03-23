@@ -158,9 +158,6 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	{
 		// 持続カウントが誘導カウントを超えている場合
 
-		//効果音再生
-		gpDataList_Sound->SE_PlaySound(SE_ENEMY_MISSILE_DOWN);
-
 		// プレイヤーの高さの半分のy座標を取得
 		playerPos.y += PLAYER_HEIGHT / 2.f;
 
@@ -254,10 +251,10 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
 	if (bSaveFlg == FALSE)
 	{
 		//効果音再生
-		gpDataList_Sound->SE_PlaySound(SE_ENEMY_MISSILE_HIT);
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_MISSILE_HIT, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 		//効果音再生
-		gpDataList_Sound->SE_PlaySound(SE_ENEMY_MISSILE_EXPLOSION);
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_MISSILE_EXPLOSION, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 		//ミサイルエフェクトを削除
 		this->pEffect->SetDeleteFlg(true);

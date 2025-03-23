@@ -25,7 +25,11 @@ void SceneAddSceneGameSetup::Process()
 	gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 	/* シーン"ゲーム"を追加 */
-	gpSceneServer->AddSceneReservation(new SceneGame());
+	SceneGame* pAddScene = new SceneGame();
+	gpSceneServer->AddSceneReservation(pAddScene);
+
+	/* シーン"ゲーム"の初期化 */
+	pAddScene->Initialization();
 }
 
 // 全エフェクトの事前読み込み

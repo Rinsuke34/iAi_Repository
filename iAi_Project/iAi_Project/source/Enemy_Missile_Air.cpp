@@ -159,7 +159,7 @@ void Enemy_Missile_Air::Player_Range_Missile_Shot()
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
 	//Œø‰Ê‰¹Ä¶
-	gpDataList_Sound->SE_PlaySound(SE_ENEMY_IKURA_ATTACK);
+	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 	/* UŒ‚‚Ì¶¬•ûŒü‚ÌÝ’è */
 	/* UŒ‚À•W‚ðŽZo */
@@ -276,7 +276,7 @@ void Enemy_Missile_Air::Update()
 			Defeat();
 
 			//”š”­SEÄ¶
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

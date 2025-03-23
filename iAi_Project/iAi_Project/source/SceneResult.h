@@ -61,4 +61,5 @@ class SceneResult : public SceneBase
 		int		iDrawTakeDamage;							// 被ダメージ(描写用)
 		int		iDrawTotalGetBlood;							// 獲得ブラッド(描写用)
 		int		iDrawDelayTime;								// 描写遅延時間
+		bool	bPlaySoundCount;							// SE"リザルトカウント"が再生中であるかのフラグ
 };

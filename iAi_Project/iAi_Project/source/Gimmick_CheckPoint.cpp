@@ -87,6 +87,9 @@ void Gimmick_CheckPoint::Update()
 
 			/* 発光フレームをアクティブ時の発光色に設定する */
 			MV1SetTextureGraphHandle(this->iModelHandle, this->aiLightFrameNo[0], *this->piGrHandle_ActiveRight, true);
+
+			/* "リスポーン地点起動"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound_3D(SE_RESPAWN_ACTIVATE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 	}
 }

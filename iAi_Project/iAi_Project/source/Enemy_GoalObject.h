@@ -37,7 +37,8 @@ class Enemy_GoalObject : public Enemy_Basic
 		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
 
 		/* 変数 */
-		bool	bStageChangeFlg;	/* 次のステージに遷移するかのフラグ */
+		bool	bStageChangeFlg;	// 次のステージに遷移するかのフラグ
+		bool	bPlayeSeFlg;		// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
 
 		/* エフェクト */
 		EffectManualDelete* pEffect_Glory;		// 発光エフェクト

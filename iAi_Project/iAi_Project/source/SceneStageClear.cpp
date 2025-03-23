@@ -19,6 +19,9 @@ SceneGameClear::SceneGameClear() : SceneBase("GameClear", 200, true)
 		/* 画像取得 */
 		this->piGrHandle_GameClear = ImageList->piGetImage_Movie("GameClear/UI_GameClear");
 	}
+
+	/* "ステージクリア"のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_SYSTEM_STAGECLEAR);
 }
 
 // デストラクタ
@@ -75,6 +78,9 @@ void SceneGameClear::Process_Main()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 		/* ゲーム状態を"リザルト"に変更する */
 		this->StageStatusList->SetGameStatus(GAMESTATUS_RESULT);
 	}

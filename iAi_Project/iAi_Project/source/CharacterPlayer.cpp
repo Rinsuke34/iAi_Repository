@@ -16,6 +16,8 @@
 /* 2025.03.16 駒沢風助	落下復帰処理更新 */
 /* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 /* 2025.03.21 菊池雅道	落下復帰処理追加 */
+/* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
+/* 2025.03.25 駒沢風助	サウンド追加 */
 
 #include "CharacterPlayer.h"
 
@@ -45,6 +47,9 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
+		this->iFallRecoveryDelayTime	= 0;					// 落下時の復帰までの待機時間								/* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
+		this->bPlayRunSound				= false;				// サウンド"走る"が再生中かのフラグ							/* 2025.03.25 駒沢風助	サウンド追加 */
+		this->bPlayChargeSound			= false;				// サウンド"溜め居合チャージ"が再生中かのフラグ				/* 2025.03.25 駒沢風助	サウンド追加 */
 
 		/* 変数(デバッグ用) */
 		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
@@ -125,9 +130,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 
 		/* モーションブレンドレートを100%に設定 */
 		this->PlayerStatusList->SetNowMoveMotionBlendRate(1.f);
-
-		/* 発光停止フラグを有効化 */
-		this->bBloomStopFlg = true;
 	}
 
 	/* シェイプ設定 */
@@ -139,6 +141,15 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->fShapeRate = 1.f;
 		MV1SetShapeRate(this->iModelHandle, this->iShapeNo_Blink, this->fShapeRate);
 	}
+}
+
+// デストラクタ
+CharacterPlayer::~CharacterPlayer()
+{
+	/* ループする恐れのあるSEを停止する */
+	gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_RUN);
+	gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE_HOLD);
+	gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE);
 }
 
 // 初期化
@@ -162,6 +173,16 @@ void CharacterPlayer::Reset()
 // 更新
 void CharacterPlayer::Update()
 {
+	/* ゲーム状態が"ゲーム実行中"以外であるか確認 */
+	if (StageStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
+	{
+		// ゲーム実行中でない場合
+		/* ループする恐れのあるSEを停止する */
+		gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_RUN);
+		gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE_HOLD);
+		gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_RUN);
+	}
+
 	/* 開始時モーションカウントが有効(1以上)であるか確認 */
 	if (this->PlayerStatusList->iGetFastMotionCount() > 0)
 	{
@@ -192,8 +213,24 @@ void CharacterPlayer::Update()
 	if (PlayerStatusList->bGetFallFlg() == true)
 	{
 		// 落下している場合
-		/* 落下復帰処理 */
-		PlayerFallRecovery();
+		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 開始 */
+		/* 落下時の復帰までの待機時間を進める */
+		this->iFallRecoveryDelayTime++;
+
+		/* カメラモードを"落下"に設定する */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_FALL);
+
+		/* 復帰時間が指定の時間を超えているか確認 */
+		if (this->iFallRecoveryDelayTime >= PLAYER_FALL_DELAY)
+		{
+			// 超えている場合
+			/* 落下復帰処理 */
+			PlayerFallRecovery();
+
+			/* 復帰時間を初期化 */
+			this->iFallRecoveryDelayTime = 0;
+		}
+		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 終了 */
 	}
 	/* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 
@@ -208,12 +245,6 @@ void CharacterPlayer::Update()
 		/* プレイヤーのモーションを"死亡"に設定 */
 		this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DIE);
 		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
-
-		/* 発光停止フラグを有効化 */
-		this->bBloomStopFlg = true;
-
-		/* 特殊発光色使用フラグを有効化 */
-		this->bSpBloomCollorFlg = true;
 	}
 
 	/* 攻撃系アクション処理 */
@@ -376,8 +407,11 @@ void CharacterPlayer::PlayerHitCheck()
 						/* 弾の削除フラグを有効にする */
 						bullet->SetDeleteFlg(true);
 
-						/* 被ダメージのSEを再生 */
+						/* "被ダメージ"のSEを再生 */
 						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+						/* "被ダメージビリビリ"のSEを再生 */
+						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE_ELEC);
 
 						/* 被ダメージボイスを再生 */
 						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);

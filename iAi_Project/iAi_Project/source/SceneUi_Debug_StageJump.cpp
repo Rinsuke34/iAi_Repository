@@ -23,6 +23,9 @@ void SceneUi_Debug_StageJump::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 	{
 		// 押されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* ステージ番号を+1する */
 		this->iJumpStageNo += 1;
 	}
@@ -31,6 +34,9 @@ void SceneUi_Debug_StageJump::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 	{
 		// 押されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* ステージ番号を-1する */
 		this->iJumpStageNo -= 1;
 	}
@@ -39,6 +45,9 @@ void SceneUi_Debug_StageJump::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 押されている場合
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 		/* ステージ状態を"ステージジャンプ"に設定 */
 		this->StageStatusList->SetGameStatus(GAMESTATUS_STAGE_JUMP);
 
@@ -53,6 +62,9 @@ void SceneUi_Debug_StageJump::Process()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 	{
 		// 押されている場合
+		/* "キャンセル"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 		/* シーンを削除する */
 		this->bDeleteFlg = true;
 	}

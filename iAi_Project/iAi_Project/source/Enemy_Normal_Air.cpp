@@ -134,7 +134,7 @@ void Enemy_Normal_Air::MoveEnemy()
 					ObjectListHandle->SetEffect(this->pEffectWarning);
 				}
 				//UŒ‚—\SEÄ¶
-				gpDataList_Sound->SE_PlaySound(SE_ENEMY_WARNING);
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_WARNING, this->vecPosition, SE_3D_SOUND_RADIUS);
 			}
 		}
 		}
@@ -164,7 +164,8 @@ void Enemy_Normal_Air::Player_Range_Normal_Shot()
 	this->pBulletRangeNormal = new BulletEnemyRangeNormal;
 
 	//Œø‰Ê‰¹Ä¶
-	gpDataList_Sound->SE_PlaySound(SE_ENEMY_IKURA_ATTACK);
+	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
+
 	/* UŒ‚‚Ì¶¬•ûŒü‚ÌÝ’è */
 	/* UŒ‚À•W‚ðŽZo */
 
@@ -277,7 +278,7 @@ void Enemy_Normal_Air::Update()
 			Defeat();
 
 			//”š”­SEÄ¶
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

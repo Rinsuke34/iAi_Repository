@@ -8,6 +8,7 @@
 /* データリスト */
 #include "DataList_Image.h"
 #include "DataList_StageStatus.h"
+#include "DataList_GameResource.h"
 
 /* シーン */
 #include "SceneOption.h"
@@ -19,19 +20,24 @@
 class ScenePause : public SceneBase
 {
 	public:
-		ScenePause();					// コンストラクタ
-		virtual ~ScenePause() {};		// デストラクタ
+		ScenePause();				// コンストラクタ
+		virtual ~ScenePause();		// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ステージ状態管理
+		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Arrow;		// 矢印
 
 		/* 変数 */
 		int	iSelectItem;			// 選択中の項目の番号
+		int iStopStartTime;			// 停止開始時の時間
+
+		/* 関数 */
+		void	SaveDataCreate();	// セーブデータ作成
 };

@@ -62,6 +62,7 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	this->iBlendAlpha_StageClear_Fadein	= 0;							// ステージクリア時のフェードインのアルファ値
 	this->iStageClear_Count				= 0;							// ステージクリア時の処理で使用するカウント
 	this->iPlayerSlowTime				= 1;							// プレイヤーのスローモーション速度
+	this->bPlayBgmFlg					= false;						// BGMを再生済みかのフラグ
 }
 
 // デストラクタ
@@ -111,6 +112,9 @@ void SceneStage::Initialization()
 
 			/* エディット */
 			gpSceneServer->AddSceneReservation(new SceneUi_Edit());
+
+			/* 経過時間 */
+			gpSceneServer->AddSceneReservation(new SceneUi_Time());
 		}
 	}
 
@@ -120,13 +124,60 @@ void SceneStage::Initialization()
 		// 追加する場合
 		/* ゲーム状態を"エディット"状態に変更 */
 		this->StageStatusList->SetGameStatus(GAMESTATUS_EDIT);
+
+		return;
 	}
 
 	/* ステージ開始時の時間を設定 */
 	this->StageStatusList->SetStartTime(GetNowCount());
 
+	/* ストップ時の合計時間を初期化 */
+	this->StageStatusList->SetStopTotalTime(0);
+
 	/* ステージ開始時の所持ブラッド数を設定 */
 	this->GameResourceList->SetStartBlood(this->GameResourceList->iGetHaveBlood());
+
+	/* プレイヤーのステータスを更新 */
+	this->PlayerStatusList->StatusBuffUpdate();
+
+	/* BGMを再生していない状態であるか確認 */
+	if (this->bPlayBgmFlg == false)
+	{
+		// 再生していない場合
+		/* 再生するBGM番号を取得 */
+		int iBgmNo = BGM_STAGE_0;
+
+		/* ステージ番号に応じて再生するBGMを変更する */
+		switch (this->StageStatusList->iGetNowStageNo())
+		{
+			case STAGE_NO_1_1:
+			case STAGE_NO_1_2:
+			case STAGE_NO_1_3:
+				iBgmNo = BGM_STAGE_0;
+				break;
+
+			case STAGE_NO_2_1:
+			case STAGE_NO_2_2:
+			case STAGE_NO_2_3:
+				iBgmNo = BGM_STAGE_1;
+				break;
+
+			case STAGE_NO_3_1:
+			case STAGE_NO_3_2:
+				iBgmNo = BGM_STAGE_2;
+				break;
+				
+			case STAGE_NO_3_3:
+				iBgmNo = BGM_STAGE_3;
+				break;
+		}
+
+		/* BGMを再生 */
+		gpDataList_Sound->BGM_SetHandle(iBgmNo);
+
+		/* BGMを再生済みに設定 */
+		this->bPlayBgmFlg = true;
+	}	
 }
 
 // 計算
@@ -213,6 +264,12 @@ void SceneStage::Process()
 			/* 所持ブラッドをステージ開始時の設定に戻す */
 			this->GameResourceList->SetHaveBlood(this->GameResourceList->iGetStartBlood());
 
+			/* 所持クナイ数をステージ開始時の設定に戻す */
+			this->PlayerStatusList->SetNowHaveKunai(this->PlayerStatusList->iGetStartHaveKunai());
+
+			/* プレイヤーHPをステージ開始時の設定に戻す */
+			this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerMaxHp());
+
 			/* ステージ状態を初期化する */
 			Initialization();
 			break;
@@ -244,32 +301,6 @@ void SceneStage::Process()
 // 計算(メインの処理)
 void SceneStage::Process_Main()
 {
-	/* 2025.03.12 コメントアウト 菊池雅道 */
-	/* スローモーションフラグが有効であるか確認 */
-	//if (StageStatusList->bGetGameSlowFlg() == true)
-	//{
-	//	// 有効である場合
-	//	/* スローモーションカウントを取得 */
-	//	int iSlowCount = StageStatusList->iGetSlowCount();
-
-	//	/* スローモーションのカウントが0であるか確認 */
-	//	if (iSlowCount <= 0)
-	//	{
-	//		// 0である場合
-	//		/* カウントを初期化する */
-	//		StageStatusList->SetSlowCount(SLOW_SPEED);
-	//	}
-	//	else
-	//	{
-	//		// 0でない場合
-	//		/* カウントを-1する */
-	//		StageStatusList->SetSlowCount(iSlowCount - 1);
-
-	//		/* 計算処理を終了する */
-	//		return;
-	//	}
-	//}
-
 	/* すべてのオブジェクトの更新 */
 	ObjectList->UpdateAll();
 
@@ -294,6 +325,9 @@ void SceneStage::Process_Main()
 			// 押されている場合
 			/* シーン"一時停止"を追加 */
 			gpSceneServer->AddSceneReservation(new ScenePause());
+
+			/* "ポーズメニュー開閉"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_POSEMENU);
 		}
 
 		/* エンターキーを入力されたか確認 */
@@ -360,6 +394,14 @@ void SceneStage::Process_StageClear()
 // 計算(ステージ開始時の処理)
 void SceneStage::Process_StageStart()
 {
+	/* "決定"がトリガ入力されたか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID) == true)
+	{
+		// 入力された場合
+		/* カメラ固定座標の値を最大値に設定 */
+		this->iNowCameraFixedPositionNo = this->iMaxCameraFixedPositionNo - 1;
+	}
+
 	/* カメラ固定座標の値が最大値を超えているか確認 */
 	if (this->iNowCameraFixedPositionNo >= this->iMaxCameraFixedPositionNo - 1)
 	{

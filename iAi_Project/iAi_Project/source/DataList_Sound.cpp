@@ -120,8 +120,11 @@ void DataList_Sound::SE_AllSetHandle()
 	/* リソースファイルから全てのSEを取得 */
 	for (int i = 0; i < SE_MAX; i++)
 	{
+		/* 3Dサウンドであるかを設定 */
+		SetCreate3DSoundFlag(SE_NAME[i].iSeType);
+
 		/* ファイル名を取得 */
-		std::string	FileName	= SE_NAME[i];
+		std::string	FileName	= SE_NAME[i].aSeName;
 		
 		/* 対象のSEファイルのパスを取得 */
 		std::string FilePath	= "resource/SoundData/SE/" + FileName + ".wav";
@@ -132,6 +135,9 @@ void DataList_Sound::SE_AllSetHandle()
 		/* SEをリストに追加 */
 		this->pSeHandleList[FileName] = iAddSoundHandle;
 	}
+
+	/* 今後読み込むサウンドを2Dサウンドに設定*/
+	SetCreate3DSoundFlag(FALSE);
 }
 
 // SEを再生
@@ -141,10 +147,75 @@ void DataList_Sound::SE_PlaySound(int iSeNo)
 	// iSeNo		<- 読み込むSEの番号
 
 	/* SEの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo]]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 
 	/* SEを再生する */
-	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo]], DX_PLAYTYPE_BACK);
+	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_BACK);
+}
+
+// サウンドをループ再生
+void DataList_Sound::SE_PlaySound_Loop(int iSeNo)
+{
+	// 引数
+	// iSeNo		<- 読み込むSEの番号
+
+	/* SEの音量を設定 */
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* SEをループ再生する */
+	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_LOOP);
+}
+
+// 3Dサウンドを再生
+void DataList_Sound::SE_PlaySound_3D(int iSeNo, VECTOR vecPos, float fRadius)
+{
+	// 引数
+	// iSeNo		<- 読み込むSEの番号
+	// vecPos		<- 再生する位置
+	// fRadius		<- 音の聞こえる半径
+
+	/* SEの音量を設定 */
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* サウンドの再生位置を設定 */
+	SetNextPlay3DPositionSoundMem(vecPos, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* 3Dサウンドの聞こえる範囲を設定 */
+	SetNextPlay3DRadiusSoundMem(fRadius, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* SEを再生する */
+	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_BACK);
+}
+
+// サウンドをループ再生
+void DataList_Sound::SE_PlaySound_Loop_3D(int iSeNo, VECTOR vecPos, float fRadius)
+{
+	// 引数
+	// iSeNo		<- 読み込むSEの番号
+	// vecPos		<- 再生する位置
+	// fRadius		<- 音の聞こえる半径
+
+	/* SEの音量を設定 */
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* サウンドの再生位置を設定 */
+	SetNextPlay3DPositionSoundMem(vecPos, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* 3Dサウンドの聞こえる範囲を設定 */
+	SetNextPlay3DRadiusSoundMem(fRadius, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+
+	/* SEをループ再生する */
+	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_LOOP);
+}
+
+// サウンドを停止(2D/3D共通)
+void DataList_Sound::SE_PlaySound_Stop(int iSeNo)
+{
+	// 引数
+	// iSeNo		<- 停止するSEの番号
+
+	/* SEを停止 */
+	StopSoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 }
 
 // 全てのボイスハンドルを取得

@@ -17,20 +17,100 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	{
 		/* "ステージ状態管理"を取得 */
 		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+
+		/* "ゲーム内リソース管理"を取得 */
+		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
-	/* BGMを設定 */
-	gpDataList_Sound->BGM_SetHandle(BGM_STAGE);
-
 	/* 初期化 */
-	/* 最初のステージ番号を設定 */
-	this->StageStatusList->SetNowStageNo(STAGE_START);
-
 	/* 最終ステージ番号を設定 */
-	this->StageStatusList->SetEndStageNo(STAGE_END);
+	this->StageStatusList->SetEndStageNo(STAGE_END);	
+}
 
-	/* カメラモードを"フリー"に設定 */
-	this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
+// デストラクタ
+SceneGame::~SceneGame()
+{
+	/* データリスト削除 */
+	{
+		/* ゲームリソース管理 */
+		gpDataListServer->DeleteDataList("DataList_StageResource");
+	}
+}
+
+// 初期化
+void SceneGame::Initialization()
+{
+	/* 最初のステージ番号を設定 */
+	int iStartStageNo = STAGE_START;
+
+	/* 中断データが残っているか確認 */
+	{
+		/* セーブデータ(中断時)のパス設定 */
+		std::string SaveDataFileName = "resource/SaveData/SuspensionSaveData.json";
+
+		/* ファイルの存在確認 */
+		std::ifstream inputFile(SaveDataFileName);
+
+		/* ファイルが存在するか確認 */
+		if (inputFile.is_open())
+		{
+			// 存在する場合
+			/* セーブデータ内の情報を取得する */
+			nlohmann::json	json;
+			inputFile >> json;
+
+			/* 所持ブラッドを読み込み */
+			int iBlood = 0;
+			json.at("Blood").get_to(iBlood);
+			this->GameResourceList->SetHaveBlood(iBlood);
+
+			/* ステージ番号を読み込み */
+			json.at("StageNo").get_to(iStartStageNo);
+
+			/* 現在のエディット情報を読み込み */
+			int iIndex = 0;
+			for (const auto& edit : json["EditData"])
+			{
+				/* エディット情報を取得 */
+				EDIT_DATA stEditData;
+				stEditData.iEditEffect	= edit["Effect"];
+				stEditData.iEditCost	= edit["Cost"];
+				stEditData.iEditRank	= edit["Rank"];
+				stEditData.aText		= edit["Text"];
+
+				/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
+				stEditData.aText = PUBLIC_PROCESS::aShiftJisToUtf8(stEditData.aText);
+
+				/* エディット情報を設定 */
+				this->GameResourceList->SetNowEditData(iIndex, stEditData);
+
+				/* インデックスを+1する */
+				iIndex++;
+			}
+
+			/* キープ中のエディット情報を読み込み */
+			EDIT_DATA stKeepEditData;
+			stKeepEditData.iEditCost	= json["KeepEditData"]["Cost"];
+			stKeepEditData.iEditEffect	= json["KeepEditData"]["Effect"];
+			stKeepEditData.iEditRank	= json["KeepEditData"]["Rank"];
+			stKeepEditData.aText		= json["KeepEditData"]["Text"];
+
+			/* キープ中のエディット情報を設定 */
+			this->GameResourceList->SetKeepEditData(stKeepEditData);
+		}
+		else
+		{
+			// 存在しない場合
+			/* 会話パート(オープニング)を生成 */
+			SceneConversation* pAddConversation = new SceneConversation();
+			gpSceneServer->AddSceneReservation(pAddConversation);
+			pAddConversation->SetTextFileNo(0);
+			pAddConversation->Initialization();
+		}
+	}
+
+	/* ステージ番号を設定 */
+	this->StageStatusList->SetNowStageNo(iStartStageNo);
 
 	/* UI追加フラグを有効化 */
 	this->StageStatusList->SetAddUiFlg(true);
@@ -50,23 +130,6 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 
 	/* 初期化処理を実行する */
 	pAddScene->Initialization();
-
-	/* 会話パートを生成 */
-	SceneConversation* pAddConversation = new SceneConversation();
-	gpSceneServer->AddSceneReservation(pAddConversation);
-	pAddConversation->SetTextFileNo(0);
-	pAddConversation->Initialization();
-	
-}
-
-// デストラクタ
-SceneGame::~SceneGame()
-{
-	/* データリスト削除 */
-	{
-		/* ゲームリソース管理 */
-		gpDataListServer->DeleteDataList("DataList_StageResource");
-	}
 }
 
 // 計算

@@ -101,6 +101,7 @@ static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// 近接攻撃(強)の移動速
 static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// 近接攻撃の最大溜め時間
 static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 10;		// 落下時ジャンプ下降モーションに切り替える際の猶予フレーム(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
 static const int	PLAYER_SLOWMOTION_COUNT_MAX				= 120;		// スローモーションの最大フレーム数																	/* 2025.03.12 菊池雅道 スローモーション関連の定数追加 */
+static const int	PLAYER_FALL_DELAY						= 60 * 2;	// 落下時の待機フレーム数																			/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
 
 /* プレイヤー能力値リスト */
 struct PLAYER_STATUS_LIST

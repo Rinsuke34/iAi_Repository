@@ -36,7 +36,7 @@ SceneConversation::SceneConversation() : SceneBase("Conversation", 400, true)
 		this->piGrHandle_Icon_Hold				= ImageList->piGetImage("Conversation/HoldTimer");
 
 		/* 背景 */
-		this->piGrhandle_BackGround				= ImageList->piGetImage("Conversation/Bg_Dialogue_Op");
+		this->piGrhandle_BackGround				= ImageList->piGetImage("Conversation/Bg_Dialogue_Stage");
 
 		/* テキスト背景 */
 		this->piGrHandle_TextBackGround			= ImageList->piGetImage("Conversation/UI_Dialogue_Frame");
@@ -65,6 +65,21 @@ SceneConversation::SceneConversation() : SceneBase("Conversation", 400, true)
 // 初期化
 void SceneConversation::Initialization()
 {
+	/* テキストファイル番号が0(オープニング会話)であるか確認 */
+	if (this->iTextFileNo == 0)
+	{
+		// オープニング会話である場合
+		/* 背景を別の物に変更する */
+		/* 画像ハンドル取得 */
+		{
+			/* データリスト"画像ハンドル管理"を取得 */
+			DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+			/* 背景 */
+			this->piGrhandle_BackGround = ImageList->piGetImage("Conversation/Bg_Dialogue_Op");
+		}
+	}
+
 	/* 現在のテキストファイル番号のテキストを読み込む */
 	LoadTextData();
 }
@@ -199,6 +214,7 @@ void SceneConversation::LoadTextData()
 			data.at("RightCharaCg").get_to(stTextData.iRightCharactorCg);
 			data.at("Speed").get_to(stTextData.iSpeed);
 			data.at("VoiceNo").get_to(stTextData.iVoiceNo);
+			data.at("BgmNo").get_to(stTextData.iBgmNo);
 
 			/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
 			stTextData.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stTextData.aText);
@@ -225,6 +241,9 @@ void SceneConversation::Process_SkipCheck()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 		/* YESが選択中であるか確認 */
 		if (this->bSelectYes == true)
 		{
@@ -252,6 +271,9 @@ void SceneConversation::Process_SkipCheck()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* YESを選択中とする */
 		this->bSelectYes = true;
 	}
@@ -260,6 +282,9 @@ void SceneConversation::Process_SkipCheck()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* Noを選択中とする */
 		this->bSelectYes = false;
 	}
@@ -272,7 +297,7 @@ void SceneConversation::Process_Conversation()
 	TEXT_DATA stTextData = this->astTextDataList[this->iNowTextNo];
 
 	/* テキストが描写された直後であるか */
-	if (this->iDrawText == 0)
+	if ((this->iDrawText == 0) && (this->iTextDrawDelay == 0))
 	{
 		// 描写された直後である場合
 		/* ボイス番号が有効であるか確認 */
@@ -281,6 +306,14 @@ void SceneConversation::Process_Conversation()
 			// 有効である場合
 			/* ボイス再生 */
 			gpDataList_Sound->VOICE_PlaySound(stTextData.iVoiceNo);
+		}
+
+		/* BGM番号が有効であるか確認 */
+		if (stTextData.iBgmNo != -1)
+		{
+			// 有効である場合
+			/* BGM再生 */
+			gpDataList_Sound->BGM_SetHandle(stTextData.iBgmNo);
 		}
 	}
 
@@ -309,6 +342,9 @@ void SceneConversation::Process_Conversation()
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			// 入力されている場合
+			/* "決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 			/* テキスト番号を加算 */
 			this->iNowTextNo += 1;
 
@@ -334,6 +370,9 @@ void SceneConversation::Process_Conversation()
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			// 入力されている場合
+			/* "決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 			/* テキスト描写量をテキスト総量に設定 */
 			this->iDrawText = static_cast<int>(stTextData.aText.size());
 		}

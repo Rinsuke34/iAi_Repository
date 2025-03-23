@@ -23,12 +23,14 @@ class SceneGame : public SceneBase
 		SceneGame();							// コンストラクタ
 		virtual ~SceneGame();					// デストラクタ
 
+		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
 
 	private:
 		/* 使用するデータリスト */
 		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
+		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 
 	protected:
 };

@@ -52,7 +52,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	MV1SetTextureGraphHandle(iModelHandle, 0, iTextureYellowHandle, true);
 	MV1SetTextureGraphHandle(iModelHandle, 1, iTextureYellowHandle, true);
 }
-
+ 
 // デストラクタ
 GimmickDisappear::~GimmickDisappear()
 {

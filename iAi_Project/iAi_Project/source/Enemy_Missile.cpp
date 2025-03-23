@@ -190,7 +190,7 @@ void Enemy_Missile::Enemy_Model_Animation()
 	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
 	//Œø‰Ê‰¹Ä¶
-	gpDataList_Sound->SE_PlaySound(SE_ENEMY_MISSILE_SHOT);
+	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_MISSILE_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 	/* UŒ‚‚Ì¶¬•ûŒü‚ÌÝ’è */
 	/* UŒ‚À•W‚ðŽZo */
@@ -382,7 +382,7 @@ void Enemy_Missile::Update()
 		Defeat();
 
 			//”š”­SEÄ¶
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

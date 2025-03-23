@@ -14,6 +14,16 @@ Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBase()
 		/* "プレイヤー状態管理"を取得 */
 		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
+
+	/* モデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/FallJudgment/FallJudgment");
+	}	
 }
 
 // 更新

@@ -38,6 +38,9 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 // 初期化
 void PickUpItem_ForcedJump::Initialization()
 {
+	/* 発光するフレームを取得 */
+	UpdataLightFrame();
+
 	/* コリジョン設定 */
 	{
 		this->stCollisionCapsule.fCapsuleRadius		= 25.0f;
@@ -106,8 +109,8 @@ void PickUpItem_ForcedJump::Update()
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}
 
-		//爆発SE再生
-		gpDataList_Sound->SE_PlaySound(SE_GIMMIC_JUMPEXPLP);
+		/* "ジャンプギミック爆発"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound_3D(SE_GIMMIC_JUMPEXPLP, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 		/* プレイヤーが接触している場合 */
 		//プレイヤーを吹き飛ばす

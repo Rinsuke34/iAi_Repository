@@ -329,7 +329,7 @@ void Screen::Process()
 		// 左ボタンが押されたか確認
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_LEFT))
 		{
-			// 左ボタンが押された場合
+			// 左ボタンが押された場合			
 			//カメラの位置が最終確認画面か確認
 			if (iUICount == CAMERA_FIXED_POSITION_E)
 			{

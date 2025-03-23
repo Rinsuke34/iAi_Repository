@@ -43,7 +43,7 @@ class DataList_GameResource : public DataListBase
 		void	SetStartBlood(int iBlood)	{ this->iStartBlood = iBlood; }			// ゲーム開始時のブラッド設定
 
 		// エディット関連
-		void	SetNowEditData(int iEditNum, int iEditEffect, int iEditRank);								// 現在のエディット情報設定
+		void	SetNowEditData(int iEditNum, EDIT_DATA EditData);											// 現在のエディット情報設定
 		void	SetKeepEditData(EDIT_DATA KeepEditData)			{ this->KeepEditData = KeepEditData; };		// キープ中のエディット情報取得
 
 		// スコア関連

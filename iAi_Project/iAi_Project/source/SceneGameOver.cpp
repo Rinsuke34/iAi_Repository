@@ -49,6 +49,9 @@ void SceneGameOver::Process()
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 		{
 			// "決定"が入力されたならば
+			/* "決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 			/* ロードシーン追加フラグを有効化 */
 			gpSceneServer->SetAddLoadSceneFlg(true);
 

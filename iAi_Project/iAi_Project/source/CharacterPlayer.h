@@ -12,6 +12,8 @@
 /* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 /* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 /* 2025.03.17 菊池雅道 クールタイム関連の関数・変数追加 */
+/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
+/* 2025.03.25 駒沢風助 サウンド追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -56,7 +58,7 @@ class CharacterPlayer : public CharacterBase
 {
 	public:
 		CharacterPlayer();				// コンストラクタ
-		virtual ~CharacterPlayer() {};	// デストラクタ
+		virtual ~CharacterPlayer();		// デストラクタ
 
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
@@ -138,8 +140,13 @@ class CharacterPlayer : public CharacterBase
 		int					iFallingFrame;					// 落下状態になってからのフレーム数(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 
 		/* クールタイム関連 */
-		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
-		int		iProjectileCoolTime;	// 遠距離攻撃クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
-		int		iDodgeCoolTime;			// 回避クールタイム				/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
-		int		iJumpCoolTime;			// ジャンプクールタイム			/* 2025.03.17 菊池雅道 クールタイム関連の変数追加 */
+		int		iMeleeWeakCoolTime;		// 近接攻撃(弱)クールタイム			/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iProjectileCoolTime;	// 遠距離攻撃クールタイム			/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iDodgeCoolTime;			// 回避クールタイム					/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
+		int		iJumpCoolTime;			// ジャンプクールタイム				/* 2025.03.17 菊池雅道 クールタイム関連の変数追加 */
+		int		iFallRecoveryDelayTime;	// 落下時の復帰までの待機時間		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
+
+		/* サウンド関連 */
+		bool	bPlayRunSound;			// サウンド"走る"が再生中であるか
+		bool	bPlayChargeSound;		// サウンド"溜め居合チャージ"が再生中であるか
 };

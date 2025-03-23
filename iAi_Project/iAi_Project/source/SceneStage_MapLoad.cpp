@@ -17,6 +17,7 @@
 #include "GimmickDisappearSpawnPoint.h"
 // スポーンポイント
 #include "SpawnPoint_Blood_PickupItem.h"
+#include "SpawnPoint_Kunai_PickupItem.h"
 // スカイスフィア
 #include "SkySqhereBasic.h"
 // ギミック
@@ -465,10 +466,6 @@ void SceneStage::LoadMapData()
 					PlatformBase* pPlatform = new Gimmick_FallJudgment();
 					this->ObjectList->SetPlatform(pPlatform);
 
-					/* モデル */
-					std::string Path = "Object/" + name + "/" + name;
-					pPlatform->SetModelHandle(this->ModelList->iGetModel(Path));
-
 					/* 座標 */
 					pPlatform->SetPosition(vecPos);
 
@@ -633,6 +630,19 @@ void SceneStage::LoadMapData()
 
 					/* 回転量設定 */
 					pBlood->SetRotation(vecRot);
+				}
+				else if (name == "Kunai")
+				{
+					// クナイ(ピックアップアイテム)スポナーの場合
+					/* "オブジェクト管理"にクナイ(ピックアップアイテム)スポナーを追加 */
+					SpawnPoint_Kunai_PickupItem* pKunai = new SpawnPoint_Kunai_PickupItem();
+					ObjectList->SetSpawnPoint(pKunai);
+
+					/* 座標設定 */
+					pKunai->SetPosition(vecPos);
+
+					/* 回転量設定 */
+					pKunai->SetRotation(vecRot);
 				}
 			}
 		}

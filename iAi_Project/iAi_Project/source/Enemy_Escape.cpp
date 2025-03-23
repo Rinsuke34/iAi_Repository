@@ -435,11 +435,11 @@ void Enemy_Escape::Update()
 		// 死亡モーションの再生時間が総再生時間に達したか確認
 		if (this->fDiePlayTime >= this->fDieTotalTime)
 		{
-		/* 撃破時の処理を実行 */
-		Defeat();
+			/* 撃破時の処理を実行 */
+			Defeat();
 
 			//爆発SE再生
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

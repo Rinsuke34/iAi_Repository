@@ -14,6 +14,8 @@ Enemy_GoalObject::Enemy_GoalObject() : Enemy_Basic()
 	this->bStageChangeFlg	= false;
 	this->pEffect_Glory		= nullptr;		// 発光エフェクト
 	this->pEffect_Clear		= nullptr;		// 撃破時エフェクト
+	this->bPlayeSeFlg		= false;		// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
+
 
 	/* データリスト取得 */
 	{
@@ -43,6 +45,9 @@ Enemy_GoalObject::~Enemy_GoalObject()
 		if (this->pEffect_Glory != nullptr)	{ this->pEffect_Glory->SetDeleteFlg(true); }
 		if (this->pEffect_Clear != nullptr) { this->pEffect_Clear->SetDeleteFlg(true); }
 	}
+
+	/* ループする恐れのあるSEを停止する */
+	gpDataList_Sound->SE_PlaySound_Stop(SE_GOAL);
 }
 
 // 初期化
@@ -86,6 +91,17 @@ void Enemy_GoalObject::Initialization()
 // 更新
 void Enemy_GoalObject::Update()
 {
+	/* SEを再生開始したかの確認 */
+	if (this->bPlayeSeFlg == false)
+	{
+		// 再生していない場合
+		/* "ゴールが発する音"のSEをループ再生 */
+		gpDataList_Sound->SE_PlaySound_Loop_3D(SE_GOAL, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+		/* 再生フラグを有効にする */
+		this->bPlayeSeFlg = true;
+	}
+
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
 
@@ -136,5 +152,11 @@ void Enemy_GoalObject::Update()
 				ObjectListHandle->SetEffect(pEffect_Clear);
 			}
 		}
+
+		/* "ゴールが発する音"のSEを停止 */
+		gpDataList_Sound->SE_PlaySound_Stop(SE_GOAL);
+
+		/* "ゴール演出(光あふれる)"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound_3D(SE_GOAL_SHINE, this->vecPosition, SE_3D_SOUND_RADIUS);
 	}
 }

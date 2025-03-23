@@ -208,8 +208,8 @@ void Enemy_Fixed_Turret::MoveEnemy()
 				// ƒ~ƒTƒCƒ‹‚ð¶¬
 				this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
-				//Œø‰Ê‰¹Ä¶
-				gpDataList_Sound->SE_PlaySound(SE_ENEMY_IKURA_ATTACK);
+				// Œø‰Ê‰¹Ä¶
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 				/* UŒ‚‚Ì¶¬•ûŒü‚ÌÝ’è */
 				/* UŒ‚À•W‚ðŽZo */
@@ -375,7 +375,7 @@ void Enemy_Fixed_Turret::Update()
 		Defeat();
 
 		//”š”­SEÄ¶
-		gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 	}
 
 

@@ -114,6 +114,15 @@ void SceneStage::SetCamera_Setup()
 			/* カメラ設定 */
 			SetCamera_StageStart_CloseUp();
 			break;
+
+		/* 落下 */
+		case CAMERA_MODE_FALL:
+			/* カメラ移動タイプを"無し"に設定 */
+			iCameraType = INPUT_CAMERA_NONE;
+
+			/* カメラ設定 */
+			SetCamera_Fall();
+			break;
 	}
 
 	// 反映する場合
@@ -150,6 +159,9 @@ void SceneStage::SetCmaera()
 
 	/* カメラ設定 */
 	SetCameraPositionAndTargetAndUpVec(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget(), this->StageStatusList->vecGetCameraUp());
+
+	/* 3Dサウンドのリスナー位置とリスナー前方位置を設定 */
+	Set3DSoundListenerPosAndFrontPos_UpVecY(this->StageStatusList->vecGetCameraPosition(), this->StageStatusList->vecGetCameraTarget());
 }
 
 // 入力によるカメラ回転量取得
@@ -499,7 +511,20 @@ void SceneStage::SetCamera_StageStart_CloseUp()
 	float fCameraY	= fRadius * -sinf(0) + vecCameraTarget.y;	// Y座標
 	float fCameraZ	= fRadius * -cosf(0) + vecCameraTarget.z;	// Z座標
 
+	/* カメラ座標設定 */
 	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
+}
+
+// カメラ設定(プレイヤー落下時)
+void SceneStage::SetCamera_Fall()
+{
+	/* プレイヤー座標取得 */
+	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+
+	/* カメラ注視点算出 */
+	// ※カメラ座標の変更は行わない
+	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
+	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 }
 
 /* 2025.03.06 菊池雅道	カメラ制御処理修正 開始 */

@@ -20,6 +20,9 @@ SceneUi_Kunai::SceneUi_Kunai() : SceneBase("UI_Kunai", 102, false)
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+
+		/* クナイフレーム */
+		this->piGrHandle_Kunai_Frame = ImageList->piGetImage("UI_Player_Kunai/UI_Player_Kunai");
 	}
 }
 
@@ -44,7 +47,9 @@ void SceneUi_Kunai::Process()
 // 描画
 void SceneUi_Kunai::Draw()
 {
-	/* 現在のクナイの本数を描写 */
-	DrawFormatString(0, 700, GetColor(255, 255, 255), "クナイ現在数:%d", this->PlayerStatusList->iGetNowHaveKunai());
-	DrawFormatString(0, 716, GetColor(255, 255, 255), "クナイ最大数:%d", this->PlayerStatusList->iGetMaxhaveKunai());
+	/* クナイフレーム描写 */
+	DrawGraph(60, 765, *this->piGrHandle_Kunai_Frame, true);
+
+	/* 現在のクナイの所持本数を描写 */
+	DrawFormatStringToHandle(95, 785, GetColor(0, 0, 0), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
 }

@@ -29,7 +29,7 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood");
+		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood/Blood");
 
 		/* モデル縮小 */
 		MV1SetScale(this->iModelHandle, VGet(0.2f, 0.2f, 0.2f));
@@ -81,6 +81,9 @@ void EffectItem_Blood::Update()
 					int iNowBlood = GameResourceList->iGetHaveBlood();
 					GameResourceList->SetHaveBlood(iNowBlood + 1);
 				}
+
+				/* "ブラッド取得"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_GET_BLOOD);
 			}
 			break;
 	}

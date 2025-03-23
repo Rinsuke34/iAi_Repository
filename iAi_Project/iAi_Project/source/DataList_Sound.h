@@ -25,8 +25,12 @@ class DataList_Sound : public DataListBase
 		void BGM_StopSound();					// BGMを停止
 
 		/* SE関係 */
-		void SE_AllSetHandle();					// 全てのサウンドハンドルを取得
-		void SE_PlaySound(int iSeNo);			// サウンドを再生
+		void	SE_AllSetHandle();											// 全てのサウンドハンドルを取得
+		void	SE_PlaySound(int iSeNo);									// サウンドを再生
+		void	SE_PlaySound_Loop(int iSeNo);								// サウンドをループ再生
+		void	SE_PlaySound_3D(int iSeNo, VECTOR vecPos, float fRadius);	// 3Dサウンドを再生
+		void	SE_PlaySound_Loop_3D(int iSeNo, VECTOR vecPos, float fRadius);	// サウンドをループ再生
+		void	SE_PlaySound_Stop(int iSeNo);								// サウンドを停止(2D/3D共通)
 
 		/* ボイス関係 */
 		void VOICE_AllSetHandle();				// 全てのボイスハンドルを取得

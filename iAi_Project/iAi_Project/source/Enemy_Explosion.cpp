@@ -205,7 +205,7 @@ void Enemy_Explosion::MoveEnemy()
                 }
 
 				//起爆SE再生
-				gpDataList_Sound->SE_PlaySound(SE_ENEMY_WARNING_EXPLOSION);
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_WARNING_EXPLOSION, this->vecPosition, SE_3D_SOUND_RADIUS);
 
                 // エフェクト生成フラグを設定
                 bEffectGenerated = true;
@@ -454,7 +454,7 @@ void Enemy_Explosion::Update()
 			Defeat();
 
 			//爆発SE再生
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

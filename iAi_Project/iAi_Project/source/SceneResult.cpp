@@ -56,6 +56,7 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 	this->iDrawTakeDamage				= 0;
 	this->iDrawTotalGetBlood			= 0;
 	this->iDrawDelayTime				= RESULT_DRAW_FAZE_DELAY_TIME;
+	this->bPlaySoundCount				= false;
 
 	/* 各評価基準を取得 */
 	ResultCalculation_JsonLoad();
@@ -106,7 +107,7 @@ void SceneResult::Draw()
 
 	/* 文字(マキナスフォント使用部分) */
 	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFontHandle_Large,	"CLEAR TIME");
-	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%2d'%2d''%2d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
+	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%02d'%02d''%02d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
 
 	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFontHandle_Large,	"MAX COMBO");
 	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFontHandle_Large, "%d COMBO", this->iDrawMaxCombo);
@@ -152,6 +153,9 @@ void SceneResult::Draw()
 // メイン処理
 void SceneResult::Process_Main()
 {
+	/* 現時点で"リザルト"SEを再生中であるかを保持 */
+	bool bPlaySound = this->bPlaySoundCount;
+
 	/* 描写遅延時間を減少 */
 	this->iDrawDelayTime -= 1;
 
@@ -164,55 +168,124 @@ void SceneResult::Process_Main()
 		/* クリアタイム描写 */
 		case RESULT_DRAW_FAZE_CLEAR_TIME:
 			{
+				/* 総合クリアタイムを取得 */
+				int iClearTime = StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime() - StageStatusList->iGetStopTotalTime();
+
 				/* クリアタイムの分の値を取得 */
-				int iTimeMinute = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000 / 60;
+				int iTimeMinute = iClearTime / 1000 / 60;
 
 				/* クリアタイムの秒の値を取得 */
-				int iTimeSecond = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) / 1000 % 60;
+				int iTimeSecond = iClearTime / 1000 % 60;
 
 				/* クリアタイムの少数秒の値を取得 */
-				int iTimeFractionalSecond = (StageStatusList->iGetClearTime() - StageStatusList->iGetStartTime()) % 1000 / 10;
+				int iTimeFractionalSecond = iClearTime % 1000 / 10;
 
 				/* 取得した値の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
 				this->iDrawTimeMinute			= iTimeMinute * fDrawDelayTimePercent;
 				this->iDrawTimeSecond			= iTimeSecond * fDrawDelayTimePercent;
 				this->iDrawTimeFractionalSecond	= iTimeFractionalSecond * fDrawDelayTimePercent;
+
+				/* "リザルト"のSEを再生中に設定 */
+				this->bPlaySoundCount = true;
 			}
 			break;
 
 		/* クリアタイム評価描写 */
 		case RESULT_DRAW_FAZE_CREAR_TIME_EVALUATION:
+			/* "リザルト"のSEを非再生中に設定 */
+			this->bPlaySoundCount = false;
+
+			/* 描写開始直後であるか */
+			if (this->iDrawDelayTime == RESULT_DRAW_FAZE_DELAY_TIME)
+			{
+				// 開始直後である場合
+				/* "リザルト小評価"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+			}
 			break;
 
 		/* コンボ描写 */
 		case RESULT_DRAW_FAZE_COMBO:
 			/* コンボ数の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
 			this->iDrawMaxCombo = static_cast<int>(PlayerStatusList->iGetPlayerComboMaxCount() * fDrawDelayTimePercent);
+
+			/* "リザルト"のSEを再生中に設定 */
+			this->bPlaySoundCount = true;
 			break;
 
 		/* コンボ評価描写 */
 		case RESULT_DRAW_FAZE_COMBO_EVALUATION:
+			/* "リザルト"のSEを非再生中に設定 */
+			this->bPlaySoundCount = false;
+
+			/* 描写開始直後であるか */
+			if (this->iDrawDelayTime == RESULT_DRAW_FAZE_DELAY_TIME)
+			{
+				// 開始直後である場合
+				/* "リザルト小評価"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+			}
 			break;
 
 		/* ダメージ描写 */
 		case RESULT_DRAW_FAZE_DAMAGE:
 			/* ダメージ数の(描写遅延時間最大値/描写遅延時間)の値を描写値として設定 */
 			this->iDrawTakeDamage = static_cast<int>(PlayerStatusList->iGetPlayerDamageCount() * fDrawDelayTimePercent);
+
+			/* "リザルト"のSEを再生中に設定 */
+			this->bPlaySoundCount = true;
 			break;
 
 		/* ダメージ評価描写 */
 		case RESULT_DRAW_FAZE_DAMAGE_EVALUATION:
+			/* "リザルト"のSEを非再生中に設定 */
+			this->bPlaySoundCount = false;
+
+			/* 描写開始直後であるか */
+			if (this->iDrawDelayTime == RESULT_DRAW_FAZE_DELAY_TIME)
+			{
+				// 開始直後である場合
+				/* "リザルト小評価"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+			}
 			break;
 
 		/* 取得ブラッド描写 */
 		case RESULT_DRAW_FAZE_GETBLOOD:
 			/* 獲得ブラッド数の(描写遅延時間/描写遅延時間最大値)の値を描写値として設定 */
 			this->iDrawTotalGetBlood = static_cast<int>((this->GameResourceList->iGetHaveBlood() - this->GameResourceList->iGetStartBlood()) * fDrawDelayTimePercent);
+
+			/* "リザルト"のSEを再生中に設定 */
+			this->bPlaySoundCount = true;
 			break;
 
 		/* 総合評価描写 */
 		case RESULT_DRAW_FAZE_TOTAL_EVALUATION:
+			/* "リザルト"のSEを再生中に設定 */
+			this->bPlaySoundCount = false;
+
+			/* 描写開始直後であるか */
+			if (this->iDrawDelayTime == RESULT_DRAW_FAZE_DELAY_TIME)
+			{
+				// 開始直後である場合
+				/* "リザルト小評価"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_BIG);
+			}
 			break;
+	}
+
+	/* "リザルト"のSEを再生開始するか確認 */
+	if ((bPlaySound == false) && (this->bPlaySoundCount == true))
+	{
+		// 再生開始する場合
+		/* "リザルト"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_COUNT);
+	}
+	else if ((bPlaySound == true) && (this->bPlaySoundCount == false))
+	{
+		// 再生停止する場合
+		/* "リザルト"のSEを停止 */
+		gpDataList_Sound->SE_PlaySound_Stop(SE_SYSTEM_RESULT_COUNT);
 	}
 
 	/* 描写遅延時間が0以下であるか確認 */
@@ -230,25 +303,39 @@ void SceneResult::Process_Main()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 	{
 		// 入力されている場合
-		/* ゲーム状態を"エディット"に変更する */
-		this->StageStatusList->SetGameStatus(GAMESTATUS_EDIT);
+		/* "決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 
-		/* 各評価の総合値をゲーム内リソースサーバーに登録 */
-		this->GameResourceList->SetClearEvaluation(this->iClearEvaluation_Total);
-
-		/* テキスト番号が無効(-1)以外であるか確認 */
-		if (this->iAddTextNo != -1)
+		/* 総合評価描写が終了しているか確認 */
+		if (this->iDrawFaze > RESULT_DRAW_FAZE_TOTAL_EVALUATION)
 		{
-			// テキスト番号が有効な場合
-			/* シーン"会話パート"を追加 */
-			SceneConversation* pAddScene = new SceneConversation();
-			gpSceneServer->AddSceneReservation(pAddScene);
+			// 終了している場合
+			/* ゲーム状態を"エディット"に変更する */
+			this->StageStatusList->SetGameStatus(GAMESTATUS_EDIT);
 
-			/* シーン"会話パート"にテキスト番号を設定 */
-			pAddScene->SetTextFileNo(this->iAddTextNo);
+			/* 各評価の総合値をゲーム内リソースサーバーに登録 */
+			this->GameResourceList->SetClearEvaluation(this->iClearEvaluation_Total);
 
-			/* 初期化処理を実施 */
-			pAddScene->Initialization();
+			/* テキスト番号が無効(-1)以外であるか確認 */
+			if (this->iAddTextNo != -1)
+			{
+				// テキスト番号が有効な場合
+				/* シーン"会話パート"を追加 */
+				SceneConversation* pAddScene = new SceneConversation();
+				gpSceneServer->AddSceneReservation(pAddScene);
+
+				/* シーン"会話パート"にテキスト番号を設定 */
+				pAddScene->SetTextFileNo(this->iAddTextNo);
+
+				/* 初期化処理を実施 */
+				pAddScene->Initialization();
+			}
+		}
+		else
+		{
+			// 終了していない場合
+			/* 描写フェーズを"総合評価描写"まで進める */
+			this->iDrawFaze = RESULT_DRAW_FAZE_TOTAL_EVALUATION;
 		}
 	}
 }

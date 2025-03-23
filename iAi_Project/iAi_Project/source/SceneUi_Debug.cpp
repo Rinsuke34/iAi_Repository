@@ -37,6 +37,9 @@ void SceneUi_Debug::Process()
 			// 上入力
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 				this->iSelectNo -= 1;
 				if (this->iSelectNo < 0)
 				{
@@ -47,6 +50,9 @@ void SceneUi_Debug::Process()
 			// 下入力
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 				this->iSelectNo += 1;
 				if (this->iSelectNo > pDebugManu.size())
 				{
@@ -57,6 +63,9 @@ void SceneUi_Debug::Process()
 			// 決定
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 			{
+				/* "決定"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 				*pDebugManu[this->iSelectNo] = bToggleFlg(*pDebugManu[this->iSelectNo]);
 			}
 			break;
@@ -68,6 +77,9 @@ void SceneUi_Debug::Process()
 			// 上入力
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 				this->iSelectNo -= 1;
 				if (this->iSelectNo < 0)
 				{
@@ -78,6 +90,9 @@ void SceneUi_Debug::Process()
 			// 下入力
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 			{
+				/* "カーソル移動"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 				this->iSelectNo += 1;
 				if (this->iSelectNo > DEBUG_OPERATION_MAX)
 				{
@@ -88,6 +103,9 @@ void SceneUi_Debug::Process()
 			// 決定
 			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 			{
+				/* "決定"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 				switch (this->iSelectNo)
 				{
 					/* ステージジャンプ */
@@ -119,6 +137,9 @@ void SceneUi_Debug::Process()
 	// 左入力
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 	{
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		this->iSelectNo = 0;
 
 		this->iSelectMode += 1;
@@ -131,6 +152,9 @@ void SceneUi_Debug::Process()
 	// 右入力
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 	{
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		this->iSelectNo = 0;
 
 		this->iSelectMode -= 1;
@@ -144,6 +168,9 @@ void SceneUi_Debug::Process()
 	{
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 		{
+			/* "キャンセル"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 			this->bDeleteFlg = true;
 		}
 	}

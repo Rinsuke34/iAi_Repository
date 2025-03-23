@@ -135,12 +135,18 @@ void BulletPlayerMeleeWeak::Update()
 						/* ƒIƒuƒWƒFƒNƒgƒŠƒXƒg‚É“o˜^ */
 						this->ObjectList->SetEffect(pDamageEffect);
 					}
+
+					/* UŒ‚ƒqƒbƒg‚ÌSE‚ðÄ¶ */
+					gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 				}
 				else
 				{
 					// –³Œø‚Å‚ ‚éê‡
 					/* íœƒtƒ‰ƒO‚ð—LŒø‚É‚·‚é */
 					bullet->SetDeleteFlg(true);
+
+					/* UŒ‚‹zŽû‚ÌSE‚ðÄ¶ */
+					gpDataList_Sound->SE_PlaySound(SE_PLAYER_ABSORB);
 				}
 			}
 		}

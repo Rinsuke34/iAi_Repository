@@ -38,6 +38,9 @@ void SceneUi_Debug_StatusSetup::Process()
 		// 上入力
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 		{
+			/* "カーソル移動"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 			this->iSelectItem -= 1;
 			if (this->iSelectItem < 0)
 			{
@@ -48,6 +51,9 @@ void SceneUi_Debug_StatusSetup::Process()
 		// 下入力
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 		{
+			/* "カーソル移動"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 			this->iSelectItem += 1;
 			if (this->iSelectItem >= 22)
 			{
@@ -58,6 +64,9 @@ void SceneUi_Debug_StatusSetup::Process()
 		// 決定
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
+			/* "決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 			/* 選択状態にする */
 			this->bSelectFlg = true;
 		}
@@ -65,6 +74,9 @@ void SceneUi_Debug_StatusSetup::Process()
 		// キャンセル
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 		{
+			/* "キャンセル"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 			/* シーンを削除する */
 			this->bDeleteFlg = true;
 		}
@@ -166,7 +178,7 @@ void SceneUi_Debug_StatusSetup::Process()
 				break;
 			case 19:
 				// 最大クナイ所持数
-				fValue = static_cast<float>(this->PlayerStatusList->iGetMaxhaveKunai());
+				fValue = static_cast<float>(this->PlayerStatusList->iGetMaxHaveKunai());
 				bIntFlg = true;
 				break;
 			case 20:
@@ -306,6 +318,9 @@ void SceneUi_Debug_StatusSetup::Process()
 		// キャンセル
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 		{
+			/* "キャンセル"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
+
 			/* 選択状態を解除 */
 			this->bSelectFlg = false;
 		}
@@ -356,7 +371,7 @@ void SceneUi_Debug_StatusSetup::Draw()
 	DrawFormatString(870, 350 + 16 * 18, GetColor(255, 255, 255), "初期状態クナイ数所持数");
 	DrawFormatString(1400, 350 + 16 * 18, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetStartHaveKunai());
 	DrawFormatString(870, 350 + 16 * 19, GetColor(255, 255, 255), "最大クナイ所持数");
-	DrawFormatString(1400, 350 + 16 * 19, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetMaxhaveKunai());
+	DrawFormatString(1400, 350 + 16 * 19, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetMaxHaveKunai());
 	DrawFormatString(870, 350 + 16 * 20, GetColor(255, 255, 255), "最大HP");
 	DrawFormatString(1400, 350 + 16 * 20, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxHp());
 	DrawFormatString(870, 350 + 16 * 21, GetColor(255, 255, 255), "最大無敵時間");

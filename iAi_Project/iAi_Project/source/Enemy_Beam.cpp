@@ -182,7 +182,7 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 	this->pBulletRangeBeam = new BulletEnemyRangeBeam;
 
 	//効果音再生
-	gpDataList_Sound->SE_PlaySound(SE_ENEMY_BEAM_CHARGE);
+	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_CHARGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 	//チャージフラグを有効化
 	this->bChargeFlg = true;
@@ -250,7 +250,7 @@ void Enemy_Beam::Charge()
 		if (this->bBeamSEFlg == TRUE)
 		{
 			//効果音再生
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_BEAM_SHOT);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
 
 			this->bBeamSEFlg = false;
 		}
@@ -463,7 +463,7 @@ void Enemy_Beam::Update()
 			Defeat();
 
 			//爆発SE再生
-			gpDataList_Sound->SE_PlaySound(SE_ENEMY_DAMAGE);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}

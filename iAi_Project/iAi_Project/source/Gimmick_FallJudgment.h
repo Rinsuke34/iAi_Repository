@@ -18,6 +18,8 @@ class Gimmick_FallJudgment : public PlatformBase
 		virtual ~Gimmick_FallJudgment() {};	// デストラクタ
 
 		virtual void	Update()			override;	// 更新
+		virtual void	Draw()				override {};	// 描写
+		virtual void	BloomDraw()			override {};	// 発光描写
 
 	private:
 		/* 使用するデータリスト */

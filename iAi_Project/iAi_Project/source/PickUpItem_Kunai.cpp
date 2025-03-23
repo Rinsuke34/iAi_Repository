@@ -1,18 +1,18 @@
-/* 2025.03.14 駒沢風助 ファイル作成 */
+/* 2025.03.22 駒沢風助 ファイル作成 */
 
-#include "PickUpItem_Blood.h"
+#include "PickUpItem_Kunai.h"
 
-/* ブラッド(ゲーム内通貨/ピックアップアイテム)クラスの定義 */
+/* クナイ(ピックアップアイテム)クラスの定義 */
 // コンストラクタ
-PickUpItem_Blood::PickUpItem_Blood() : PickUpItemBase()
+PickUpItem_Kunai::PickUpItem_Kunai() : PickUpItemBase()
 {
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
-		/* "ゲームリソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		/* "プレイヤー状態管理"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* オブジェクト取得 */
@@ -28,18 +28,18 @@ PickUpItem_Blood::PickUpItem_Blood() : PickUpItemBase()
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood/Blood");
+		this->iModelHandle = ModelListHandle->iGetModel("Item/Kunai/Kunai");
 
 		/* モデル縮小 */
 		MV1SetScale(this->iModelHandle, VGet(0.2f, 0.2f, 0.2f));
 	}
 
 	/* 初期化 */
-	this->iAddEffectDelay	= 0;			// エフェクト追加待機時間
+	this->iAddEffectDelay = 0;			// エフェクト追加待機時間
 }
 
 // 初期化
-void PickUpItem_Blood::Initialization()
+void PickUpItem_Kunai::Initialization()
 {
 	/* 発光するフレームを取得 */
 	UpdataLightFrame();
@@ -53,7 +53,7 @@ void PickUpItem_Blood::Initialization()
 }
 
 // 更新
-void PickUpItem_Blood::Update()
+void PickUpItem_Kunai::Update()
 {
 	/* プレイヤーとこのオブジェクトが接触しているか確認 */
 	if (this->pPlayer->HitCheck(this->stCollisionCapsule))
@@ -61,17 +61,28 @@ void PickUpItem_Blood::Update()
 		/* このオブジェクトの削除フラグを有効にする */
 		this->bDeleteFlg = true;
 
-		/* プレイヤーの所持ブラッドを取得 */
-		int iHaveBlood = this->GameResourceList->iGetHaveBlood();
+		/* プレイヤーの最大クナイ所持本数を取得 */
+		int iMaxKunai = this->PlayerStatusList->iGetMaxHaveKunai();
 
-		/* プレイヤーの所持ブラッドを加算 */
-		iHaveBlood += 10;
+		/* プレイヤーの所持クナイ数を取得 */
+		int iHaveKunai = this->PlayerStatusList->iGetNowHaveKunai();
 
-		/* プレイヤーの所持ブラッドを設定 */
-		this->GameResourceList->SetHaveBlood(iHaveBlood);
+		/* プレイヤーの所持クナイ数を加算 */
+		iHaveKunai += 1;
 
-		/* "ブラッド取得"のSEを再生 */
-		gpDataList_Sound->SE_PlaySound(SE_PLAYER_GET_BLOOD);
+		/* プレイヤーの所持クナイ数が最大所持数を超えているか確認 */
+		if (iHaveKunai > iMaxKunai)
+		{
+			// 超えている場合
+			/* プレイヤーの所持クナイ数を最大所持数に設定 */
+			iHaveKunai = iMaxKunai;
+		}
+
+		/* プレイヤーの所持クナイ数を設定 */
+		this->PlayerStatusList->SetNowHaveKunai(iHaveKunai);
+
+		/* クナイ取得のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_KUNAI_GET);
 	}
 
 	/* エフェクト待機時間を更新 */
@@ -108,8 +119,9 @@ void PickUpItem_Blood::Update()
 }
 
 // リセット処理
-void PickUpItem_Blood::Reset()
+void PickUpItem_Kunai::Reset()
 {
 	/* このオブジェクトの削除フラグを有効にする */
 	this->bDeleteFlg = true;
 }
+

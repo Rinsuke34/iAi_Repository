@@ -3,6 +3,7 @@
 #pragma once
 
 #include "AppFunctionDefine.h"
+#include <algorithm>
 
 /* 汎用的に使用できる計算式の定義 */
 
@@ -181,6 +182,31 @@ std::string	PUBLIC_PROCESS::aUtf8ToShiftJIS(std::string Utf8)
 	WideCharToMultiByte(CP_ACP, 0, wideStr.c_str(), -1, &aSjisStr[0], iSjisSize, NULL, NULL);
 
 	return aSjisStr;
+}
+
+// Shift-JIS → UTF-8 変換
+std::string	PUBLIC_PROCESS::aShiftJisToUtf8(std::string ShiftJis)
+{
+	// 入力が空または空白のみの場合、半角スペースを返す
+	if (ShiftJis.empty()) {
+		return "";
+	}
+
+	// Shift-JIS から UTF-16 に変換
+	int wideSize = MultiByteToWideChar(CP_ACP, 0, ShiftJis.c_str(), -1, NULL, 0);
+	if (wideSize == 0) return "";
+
+	std::wstring wideStr(wideSize, 0);
+	MultiByteToWideChar(CP_ACP, 0, ShiftJis.c_str(), -1, &wideStr[0], wideSize);
+
+	// UTF-16 から UTF-8 に変換
+	int utf8Size = WideCharToMultiByte(CP_UTF8, 0, wideStr.c_str(), -1, NULL, 0, NULL, NULL);
+	if (utf8Size == 0) return "";
+
+	std::string utf8Str(utf8Size - 1, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wideStr.c_str(), -1, &utf8Str[0], utf8Size, NULL, NULL);
+
+	return utf8Str;
 }
 
 // Shift-JIS文字列を指定文字数でカット

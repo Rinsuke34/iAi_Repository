@@ -66,7 +66,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->piGrHandle_Custom				= ImageList->piGetImage("Edit/Scene/UI_Moji_Custom");
 
 		/* ブラッドアイコン */
-		this->piGrHandle_Blood				= ImageList->piGetImage("Edit/Scene/Blood");
+		this->piGrHandle_Blood				= ImageList->piGetImage("UI_Player_Blood/Blood");
 	}
 
 	/* 初期化 */
@@ -279,6 +279,9 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			}
 		}
 	}
+
+	/* BGMを設定 */
+	gpDataList_Sound->BGM_SetHandle(BGM_EDIT);
 }
 
 // デストラクタ
@@ -338,11 +341,6 @@ void SceneEdit::Process_Decid()
 			/* 対象の選択項目の状態に応じて処理を変更する */
 			switch (this->astSelectItemList[this->iSelectItem].iSelectStatus)
 			{
-				/* 状態なし */
-				case SELECT_STATUS_NONE:
-					/* ホールド中は"状態なし"にならないはずなのでここを通ったらエラー */
-					break;
-
 				/* セット可能 */
 				case SELECT_STATUS_POSSIBLE_SET:
 					/* ホールド中のエディットが"キープ中のエディット"あるいは"新規のエディット"であるか確認 */
@@ -365,6 +363,9 @@ void SceneEdit::Process_Decid()
 					this->HoldEditData.iEditCost	= 0;
 					this->HoldEditData.aText		= "";
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
+
+					/* "決定"のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 					break;
 
 				/* 強化可能 */
@@ -386,6 +387,9 @@ void SceneEdit::Process_Decid()
 					this->HoldEditData.iEditCost	= 0;
 					this->HoldEditData.aText		= "";
 					this->iHoldSelectItemType		= SELECT_TYPE_NONE;
+
+					/* "決定"のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 					break;
 
 				/* 交換可能 */
@@ -404,11 +408,16 @@ void SceneEdit::Process_Decid()
 						this->HoldEditData			= stEditData;
 						this->iHoldSelectItemType	= this->astSelectItemList[this->iSelectItem].iSelectItemType;
 					}
+					/* "決定"のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 					break;
 
 				/* 選択不可 */
 				case SELECT_STATUS_IMPOSSIBLE:
 					/* 処理を行わない(音を出す) */
+					/* "キャンセル"のSEを再生 */
+					gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
 					break;
 			}
 		}
@@ -419,6 +428,9 @@ void SceneEdit::Process_Decid()
 			if (this->iSelectItem == SELECT_ITEM_NEXT)
 			{
 				// "次へ"である場合
+				/* "決定"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+
 				/* 最初にエディット画面を追加するか確認 */
 				if (this->StageStatusList->bGetFastEditFlg() == true)
 				{
@@ -442,9 +454,11 @@ void SceneEdit::Process_Decid()
 			else
 			{
 				// "次へ"でない場合
-				/* 登録されているエディットの取得処理を実施 */
+				/* "決定"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 
-				/* 対象のエディットが存在するか確認 */
+				/* 登録されているエディットの取得処理を実施 */
+				// 対象のエディットが存在するか確認
 				if (this->astSelectItemList[this->iSelectItem].pstEditData->iEditEffect != EDIT_EFFECT_NONE)
 				{
 					// 存在する場合
@@ -475,6 +489,9 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択項目を上に進める */
 		this->iSelectItem -= 6;
 	}
@@ -483,6 +500,9 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択項目を下に進める */
 		this->iSelectItem += 6;
 	}
@@ -491,6 +511,9 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択項目を左に進める */
 		this->iSelectItem -= 1;
 	}
@@ -499,6 +522,9 @@ void SceneEdit::Process_Select()
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 	{
 		// 入力されている場合
+		/* "カーソル移動"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
 		/* 選択項目を右に進める */
 		this->iSelectItem += 1;
 	}

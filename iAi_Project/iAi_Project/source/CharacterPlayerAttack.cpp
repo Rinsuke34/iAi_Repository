@@ -670,8 +670,11 @@ void CharacterPlayer::Player_Charge_Attack()
 		/* プレイヤーのモーションを近接攻撃(強)に変更する */
 		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG);
 
-		/* 溜め居合攻撃のSEを再生 */
+		/* "溜め居合攻撃"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI);
+
+		/* "溜め居合放電"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SPIAI_ELEC);
 
 		/* 近距離攻撃(強)ボイスを再生 */
 		gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_STRONG_MELEE);

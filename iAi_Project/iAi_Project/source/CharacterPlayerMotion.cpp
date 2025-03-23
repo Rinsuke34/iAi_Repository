@@ -72,6 +72,9 @@ void CharacterPlayer::Player_Motion_Transition()
 				/* 再生時間を最後の時間で停止 */
 				fNowMotionTime_Move -= 1.f;
 
+				/* "倒れる"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DOWN);
+
 				/* 死亡フラグを有効にする */
 				this->PlayerStatusList->SetPlayerDeadFlg(true);
 			}
@@ -108,6 +111,36 @@ void CharacterPlayer::Player_Motion_Transition()
 		/* モーションの再生時間を設定 */
 		this->PlayerStatusList->SetMotionCount_Move(fNowMotionTime_Move);
 		this->PlayerStatusList->SetMotionCount_Move_Old(fNowMotionTime_Move_Old);
+
+		/* 現在のモーションが"歩行"であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Move() == MOTION_ID_MOVE_WALK)
+		{
+			// "歩行"である場合
+			/* サウンド"走る"が再生中でないか確認 */
+			if (this->bPlayRunSound == false)
+			{
+				// 再生中である場合
+				/* サウンド"走る"を再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_PLAYER_RUN);
+
+				/* サウンドを再生中に設定 */
+				this->bPlayRunSound = true;
+			}
+		}
+		else
+		{
+			// "歩行"でない場合
+			/* サウンド"走る"が再生中であるか確認 */
+			if (this->bPlayRunSound == true)
+			{
+				// 再生中である場合
+				/* サウンド"走る"を停止 */
+				gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_RUN);
+
+				/* サウンドポインタを非再生中に設定 */
+				this->bPlayRunSound = false;
+			}
+		}
 	}
 
 	/* 攻撃系モーション */
@@ -155,6 +188,38 @@ void CharacterPlayer::Player_Motion_Transition()
 
 		/* モーションの再生時間を設定 */
 		this->PlayerStatusList->SetMotionCount_Attack(fNowMotionTime_Attack);
+
+		/* 現在のモーションが"溜め"であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_CHARGE)
+		{
+			// "溜め"である場合
+			/* サウンド"溜め居合チャージ"が再生中でないか確認 */
+			if (this->bPlayChargeSound == false)
+			{
+				// 再生中である場合
+				/* サウンド"溜め居合チャージ"を再生 */
+				gpDataList_Sound->SE_PlaySound_Loop(SE_PLAYER_CHARGE);
+				gpDataList_Sound->SE_PlaySound_Loop(SE_PLAYER_CHARGE_HOLD);
+
+				/* サウンドを再生中に設定 */
+				this->bPlayChargeSound = true;
+			}
+		}
+		else
+		{
+			// "溜め"でない場合
+			/* サウンド"溜め居合チャージ"が再生中であるか確認 */
+			if (this->bPlayChargeSound == true)
+			{
+				// 再生中である場合
+				/* サウンド"溜め居合チャージ"を停止 */
+				gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE);
+				gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE_HOLD);
+
+				/* サウンドを非再生中に設定 */
+				this->bPlayChargeSound = false;
+			}
+		}
 	}
 
 	/* 現在のモーションの武器を手に持っているかのフラグを確認 */
@@ -311,6 +376,7 @@ void CharacterPlayer::MotionReset()
 
 		// 初期モーション番号を保存
 		this->PlayerStatusList->SetPlayerMotion_Move(iInitialMotionNo_Move);
+		this->PlayerStatusList->SetPlayerMotion_Move_Old(MOTION_ID_MOVE_LAND);
 		this->PlayerStatusList->SetPlayerMotion_Attack(iInitialMotionNo_Attack);
 	}
 }
