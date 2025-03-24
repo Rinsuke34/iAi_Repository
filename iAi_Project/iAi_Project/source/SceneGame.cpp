@@ -79,7 +79,7 @@ void SceneGame::Initialization()
 				stEditData.aText		= edit["Text"];
 
 				/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
-				stEditData.aText = PUBLIC_PROCESS::aShiftJisToUtf8(stEditData.aText);
+				stEditData.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stEditData.aText);
 
 				/* エディット情報を設定 */
 				this->GameResourceList->SetNowEditData(iIndex, stEditData);
@@ -94,6 +94,9 @@ void SceneGame::Initialization()
 			stKeepEditData.iEditEffect	= json["KeepEditData"]["Effect"];
 			stKeepEditData.iEditRank	= json["KeepEditData"]["Rank"];
 			stKeepEditData.aText		= json["KeepEditData"]["Text"];
+
+			/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
+			stKeepEditData.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stKeepEditData.aText);
 
 			/* キープ中のエディット情報を設定 */
 			this->GameResourceList->SetKeepEditData(stKeepEditData);

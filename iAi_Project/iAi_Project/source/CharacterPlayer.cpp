@@ -43,10 +43,10 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
 		this->vecNormalSum				= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
 		this->iObjectType				= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
-		this->iMeleeWeakCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iProjectileCoolTime		= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iDodgeCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iJumpCoolTime				= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
+		this->iMeleeWeakNowCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iProjectileNowCoolTime	= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iDodgeNowCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+		this->iJumpNowCoolTime			= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
 		this->iFallRecoveryDelayTime	= 0;					// 落下時の復帰までの待機時間								/* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
 		this->bPlayRunSound				= false;				// サウンド"走る"が再生中かのフラグ							/* 2025.03.25 駒沢風助	サウンド追加 */
 		this->bPlayChargeSound			= false;				// サウンド"溜め居合チャージ"が再生中かのフラグ				/* 2025.03.25 駒沢風助	サウンド追加 */
@@ -208,32 +208,6 @@ void CharacterPlayer::Update()
 	/* 当たり判定処理 */
 	PlayerHitCheck();
 
-	/* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
-	/* プレイヤーが落下したか確認 */
-	if (PlayerStatusList->bGetFallFlg() == true)
-	{
-		// 落下している場合
-		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 開始 */
-		/* 落下時の復帰までの待機時間を進める */
-		this->iFallRecoveryDelayTime++;
-
-		/* カメラモードを"落下"に設定する */
-		this->StageStatusList->SetCameraMode(CAMERA_MODE_FALL);
-
-		/* 復帰時間が指定の時間を超えているか確認 */
-		if (this->iFallRecoveryDelayTime >= PLAYER_FALL_DELAY)
-		{
-			// 超えている場合
-			/* 落下復帰処理 */
-			PlayerFallRecovery();
-
-			/* 復帰時間を初期化 */
-			this->iFallRecoveryDelayTime = 0;
-		}
-		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 終了 */
-	}
-	/* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
-
 	/* プレイヤーの現在HPが0以下(死亡状態)であるか確認 */
 	if (this->PlayerStatusList->iGetPlayerNowHp() <= 0)
 	{
@@ -295,6 +269,32 @@ void CharacterPlayer::Update()
 
 	/* クールタイムの更新 */
 	UpdateCooldownTime();
+
+	/* 2025.03.02 駒沢風助 落下復帰処理作成 開始 */
+	/* プレイヤーが落下したか確認 */
+	if (PlayerStatusList->bGetFallFlg() == true)
+	{
+		// 落下している場合
+		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 開始 */
+		/* 落下時の復帰までの待機時間を進める */
+		this->iFallRecoveryDelayTime++;
+
+		/* カメラモードを"落下"に設定する */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_FALL);
+
+		/* 復帰時間が指定の時間を超えているか確認 */
+		if (this->iFallRecoveryDelayTime >= PLAYER_FALL_DELAY)
+		{
+			// 超えている場合
+			/* 落下復帰処理 */
+			PlayerFallRecovery();
+
+			/* 復帰時間を初期化 */
+			this->iFallRecoveryDelayTime = 0;
+		}
+		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 終了 */
+	}
+	/* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 }
 
 // コリジョン更新
@@ -517,19 +517,20 @@ void CharacterPlayer::UpdateCooldownTime()
 	};
 
 	/* 近接攻撃(弱)のクールタイム更新 */
-	UpdateCooldownTime(this->iMeleeWeakCoolTime);
+	UpdateCooldownTime(this->iMeleeWeakNowCoolTime);
 	/* 遠距離攻撃のクールタイム更新 */
-	UpdateCooldownTime(this->iProjectileCoolTime);
+	UpdateCooldownTime(this->iProjectileNowCoolTime);
 	/* 回避のクールタイム更新 */
-	UpdateCooldownTime(this->iDodgeCoolTime);
+	UpdateCooldownTime(this->iDodgeNowCoolTime);
 	/* ジャンプのクールタイムを更新 */
-	UpdateCooldownTime(this->iJumpCoolTime);
+	UpdateCooldownTime(this->iJumpNowCoolTime);
 }
 /* 2025.02.26 菊池雅道	クールタイムの処理追加 */
 
 /* 2025.03.02 駒沢風助	落下復帰処理作成 開始 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 追加 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 開始 */
+/* 2025.03.21 菊池雅道	落下復帰処理追加 開始 */
 // 落下からの復帰
 void CharacterPlayer::PlayerFallRecovery()
 {
@@ -580,7 +581,28 @@ void CharacterPlayer::PlayerFallRecovery()
 	this->PlayerStatusList->SetFallFlg(false);
 
 	/* 近距離攻撃(強)のチャージフレーム数をリセット */ 
-	this->PlayerStatusList->SetPlayerMeleeStrongChargeCount(0);
+	this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+
+	/* プレイヤーの状態を"自由"に設定 */
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
+	/* 溜めエフェクトが存在するか確認 */
+	if (this->pChargeEffect != nullptr)
+	{
+		// 溜めエフェクトが存在する場合
+		/* 溜めエフェクトは削除 */
+		this->pChargeEffect->SetDeleteFlg(true);
+		this->pChargeEffect = nullptr;
+	}
+
+	/* 溜め完了後エフェクトが存在するか確認 */
+	if (this->pChargeHoldEffect != nullptr)
+	{ 
+		// 溜め完了後エフェクトが存在する場合
+		/* 溜め完了後エフェクトを削除 */
+		this->pChargeHoldEffect->SetDeleteFlg(true);
+		this->pChargeHoldEffect = nullptr;
+	}
 
 	/* 復帰エフェクトを生成 */
 	EffectSelfDelete_PlayerFollow* pRecoveryEffect = new EffectSelfDelete_PlayerFollow(true);
@@ -603,4 +625,5 @@ void CharacterPlayer::PlayerFallRecovery()
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 終了 */
+/* 2025.03.21 菊池雅道	落下復帰処理追加 終了 */
 

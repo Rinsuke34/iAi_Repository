@@ -55,9 +55,9 @@ void SceneUi_Debug_StatusSetup::Process()
 			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
 
 			this->iSelectItem += 1;
-			if (this->iSelectItem >= 22)
+			if (this->iSelectItem >= 27)
 			{
-				this->iSelectItem = 22;
+				this->iSelectItem = 27;
 			}
 		}
 
@@ -113,80 +113,105 @@ void SceneUi_Debug_StatusSetup::Process()
 				bIntFlg = true;
 				break;
 			case 5:
+				// ジャンプクールタイム
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerJumpCoolTime());
+				bIntFlg = true;
+				break;
+			case 6:
 				// 回避速度
 				fValue = this->PlayerStatusList->fGetPlayerDodgeSpeed();
 				break;
-			case 6:
+			case 7:
 				// 回避フレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
 				bIntFlg = true;
 				break;
-			case 7:
+			case 8:
+				// 回避クールタイム
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerDodgeCoolTime());
+				bIntFlg = true;
+				break;
+			
+			case 9:
 				// 壁キック速度(水平成分)
 				fValue = this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed();
 				break;
-			case 8:
+			case 10:
 				// 壁キック速度(垂直成分)
 				fValue = this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed();
 				break;
-			case 9:
+			case 11:
 				// 壁キック継続フレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerKickWallFlame());
 				bIntFlg = true;
 				break;
-			case 10:
+			case 12:
 				// 壁キック入力猶予フレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerKickWallInputMaxFlame());
 				bIntFlg = true;
 				break;
-			case 11:
+			case 13:
+				// 近距離攻撃(弱)クールタイム
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMeleeWeakCoolTime());
+				bIntFlg = true;
+				break;
+			case 14:
 				// 近距離攻撃(強)に切り替わるチャージフレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame());
 				bIntFlg = true;
 				break;
-			case 12:
+			case 15:
 				// 近距離攻撃(強)の最大チャージフレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame());
 				bIntFlg = true;
 				break;
-			case 13:
+			case 16:
 				// 近距離攻撃(強)の移動スケール
 				fValue = this->PlayerStatusList->fGetPlayerMelleStrongMoveScale();
 				break;
-			case 14:
+			case 17:
 				// 近距離攻撃(強)の移動速度
 				fValue = this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed();
 				break;
-			case 15:
+			case 18:
 				// 近距離攻撃(強)の連続攻撃最大フレーム数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMeleeStrongContinusMaxFrame());
 				bIntFlg = true;
 				break;
-			case 16:
+			case 19:
 				// 空中での近接攻撃(強)回数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount());
 				bIntFlg = true;
 				break;
-			case 17:
+			case 20:
+				// 近接攻撃(強)後の索敵範囲
+				fValue = this->PlayerStatusList->fGetPlayerMeleeStrongNextSearchRange();
+				break;
+			case 21:
 				// ロックオン範囲の半径
 				fValue = this->PlayerStatusList->fGetPlayerRockOnRadius();
 				break;
-			case 18:
+			case 22:
 				// 初期状態クナイ数所持数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetStartHaveKunai());
 				bIntFlg = true;
 				break;
-			case 19:
+			case 23:
 				// 最大クナイ所持数
 				fValue = static_cast<float>(this->PlayerStatusList->iGetMaxHaveKunai());
 				bIntFlg = true;
 				break;
-			case 20:
+			case 24:
+				// クナイクールタイム
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerKunaiCoolTime());
+				bIntFlg = true;
+				break;
+			case 25:
 				// 最大HP
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMaxHp());
 				bIntFlg = true;
 				break;
-			case 21:
+			case 26:
 				// 最大無敵時間
 				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 				bIntFlg = true;
@@ -244,70 +269,91 @@ void SceneUi_Debug_StatusSetup::Process()
 				break;
 
 			case 5:
+				// ジャンプクールタイム
+				this->PlayerStatusList->SetPlayerJumpCoolTime(static_cast<int>(fValue));
+				break;
+
+			case 6:
 				// 回避速度
 				this->PlayerStatusList->SetPlayerDodgeSpeed(fValue);
 				break;
-			case 6:
+			case 7:
 				// 回避フレーム数
 				this->PlayerStatusList->SetPlayerMaxDodgeFlame(static_cast<int>(fValue));
 				break;
-			case 7:
+			case 8:
+				// 回避クールタイム
+				this->PlayerStatusList->SetPlayerDodgeCoolTime(static_cast<int>(fValue));
+				break;
+			case 9:
 				// 壁キック速度(水平成分)
 				this->PlayerStatusList->SetPlayerKickWallHorizontalSpeed(fValue);
 				break;
-			case 8:
+			case 10:
 				// 壁キック速度(垂直成分)
 				this->PlayerStatusList->SetPlayerKickWallVerticalSpeed(fValue);
 				break;
-			case 9:
+			case 11:
 				// 壁キック継続フレーム数
 				this->PlayerStatusList->SetPlayerKickWallFlame(static_cast<int>(fValue));
 				break;
-			case 10:
+			case 12:
 				// 壁キック入力猶予フレーム数
 				this->PlayerStatusList->SetPlyerKickWallInputMaxFrame(static_cast<int>(fValue));
 				break;
-			case 11:
+			case 13:
+				// 近距離攻撃(弱)クールタイム
+				this->PlayerStatusList->SetPlayerMeleeWeakCoolTime(static_cast<int>(fValue));
+				break;
+			case 14:
 				// 近距離攻撃(強)に切り替わるチャージフレーム数
 				this->PlayerStatusList->SetPlayerMelleStrongChangeChargeFrame(static_cast<int>(fValue));
 				break;
-			case 12:
+			case 15:
 				// 近距離攻撃(強)の最大チャージフレーム数
 				this->PlayerStatusList->SetPlayerMelleStrongMaxChargeFrame(static_cast<int>(fValue));
 				break;
-			case 13:
+			case 16:
 				// 近距離攻撃(強)の移動スケール
 				this->PlayerStatusList->SetPlayerMelleStrongMoveScale(fValue);
 				break;
-			case 14:
+			case 17:
 				// 近距離攻撃(強)の移動速度
 				this->PlayerStatusList->SetPlayerMeleeStrongMoveSpeed(fValue);
 				break;
-			case 15:
+			case 18:
 				// 近距離攻撃(強)の連続攻撃最大フレーム数
 				this->PlayerStatusList->SetPlayerMeleeStrongContinusMaxFrame(static_cast<int>(fValue));
 				break;
-			case 16:
+			case 19:
 				// 空中での近接攻撃(強)回数
 				this->PlayerStatusList->SetPlayerMeleeStrongAirMaxCount(static_cast<int>(fValue));
 				break;
-			case 17:
+			case 20:
+				// 近接攻撃(強)後の索敵範囲
+				this->PlayerStatusList->SetPlayerMeleeStrongNextSearchRange(fValue);
+				break;
+			case 21:
 				// ロックオン範囲の半径
 				this->PlayerStatusList->SetPlayerRockOnRadius(fValue);
 				break;
-			case 18:
+			case 22:
 				// 初期状態クナイ数所持数
 				this->PlayerStatusList->SetStartHaveKunai(static_cast<int>(fValue));
 				break;
-			case 19:
+			case 23:
 				// 最大クナイ所持数
 				this->PlayerStatusList->SetMaxhaveKunai(static_cast<int>(fValue));
 				break;
-			case 20:
+			case 24:
+				// クナイクールタイム
+				this->PlayerStatusList->SetPlayerKunaiCoolTime(static_cast<int>(fValue));
+				break;
+			case 25:
 				// 最大HP
 				this->PlayerStatusList->SetPlayerMaxHp(static_cast<int>(fValue));
 				break;
-			case 21:
+			case 26:
 				// 最大無敵時間
 				this->PlayerStatusList->SetPlayerMaxInvincibleTime(static_cast<int>(fValue));
 				break;
@@ -331,7 +377,7 @@ void SceneUi_Debug_StatusSetup::Process()
 // 描画
 void SceneUi_Debug_StatusSetup::Draw()
 {
-	DrawBox(850, 350, 1600, 350 + 16 * 21, GetColor(0, 0, 0), TRUE);
+	DrawBox(850, 350, 1600, 350 + 16 * 27, GetColor(0, 0, 0), TRUE);
 	DrawFormatString(870, 350 + 16 * 0, GetColor(255, 255, 255), "移動加速度");
 	DrawFormatString(1400, 350 + 16 * 0, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMoveAcceleration());
 	DrawFormatString(870, 350 + 16 * 1, GetColor(255, 255, 255), "ジャンプ速度");
@@ -342,40 +388,50 @@ void SceneUi_Debug_StatusSetup::Draw()
 	DrawFormatString(1400, 350 + 16 * 3, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMaxFallSpeed());
 	DrawFormatString(870, 350 + 16 * 4, GetColor(255, 255, 255), "ジャンプ回数");
 	DrawFormatString(1400, 350 + 16 * 4, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxJumpCount());
-	DrawFormatString(870, 350 + 16 * 5, GetColor(255, 255, 255), "回避速度");
-	DrawFormatString(1400, 350 + 16 * 5, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerDodgeSpeed());
-	DrawFormatString(870, 350 + 16 * 6, GetColor(255, 255, 255), "回避フレーム数");
-	DrawFormatString(1400, 350 + 16 * 6, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
-	DrawFormatString(870, 350 + 16 * 7, GetColor(255, 255, 255), "壁キック速度(水平成分)");
-	DrawFormatString(1400, 350 + 16 * 7, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed());
-	DrawFormatString(870, 350 + 16 * 8, GetColor(255, 255, 255), "壁キック速度(垂直成分)");
-	DrawFormatString(1400, 350 + 16 * 8, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed());
-	DrawFormatString(870, 350 + 16 * 9, GetColor(255, 255, 255), "壁キック継続フレーム数");
-	DrawFormatString(1400, 350 + 16 * 9, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerKickWallFlame());
-	DrawFormatString(870, 350 + 16 * 10, GetColor(255, 255, 255), "壁キック入力猶予フレーム数");
-	DrawFormatString(1400, 350 + 16 * 10, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerKickWallInputMaxFlame());
-	DrawFormatString(870, 350 + 16 * 11, GetColor(255, 255, 255), "近距離攻撃(強)に切り替わるチャージフレーム数");
-	DrawFormatString(1400, 350 + 16 * 11, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame());
-	DrawFormatString(870, 350 + 16 * 12, GetColor(255, 255, 255), "近距離攻撃(強)の最大チャージフレーム数");
-	DrawFormatString(1400, 350 + 16 * 12, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame());
-	DrawFormatString(870, 350 + 16 * 13, GetColor(255, 255, 255), "近距離攻撃(強)の移動スケール");
-	DrawFormatString(1400, 350 + 16 * 13, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMelleStrongMoveScale());
-	DrawFormatString(870, 350 + 16 * 14, GetColor(255, 255, 255), "近距離攻撃(強)の移動速度");
-	DrawFormatString(1400, 350 + 16 * 14, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed());
-	DrawFormatString(870, 350 + 16 * 15, GetColor(255, 255, 255), "近距離攻撃(強)の連続攻撃最大フレーム数");
-	DrawFormatString(1400, 350 + 16 * 15, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongContinusMaxFrame());
-	DrawFormatString(870, 350 + 16 * 16, GetColor(255, 255, 255), "空中での近接攻撃(強)回数");
-	DrawFormatString(1400, 350 + 16 * 16, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount());
-	DrawFormatString(870, 350 + 16 * 17, GetColor(255, 255, 255), "ロックオン範囲の半径");
-	DrawFormatString(1400, 350 + 16 * 17, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerRockOnRadius());
-	DrawFormatString(870, 350 + 16 * 18, GetColor(255, 255, 255), "初期状態クナイ数所持数");
-	DrawFormatString(1400, 350 + 16 * 18, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetStartHaveKunai());
-	DrawFormatString(870, 350 + 16 * 19, GetColor(255, 255, 255), "最大クナイ所持数");
-	DrawFormatString(1400, 350 + 16 * 19, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetMaxHaveKunai());
-	DrawFormatString(870, 350 + 16 * 20, GetColor(255, 255, 255), "最大HP");
-	DrawFormatString(1400, 350 + 16 * 20, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxHp());
-	DrawFormatString(870, 350 + 16 * 21, GetColor(255, 255, 255), "最大無敵時間");
-	DrawFormatString(1400, 350 + 16 * 21, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+	DrawFormatString(870, 350 + 16 * 5, GetColor(255, 255, 255), "ジャンプクールタイム");
+	DrawFormatString(1400, 350 + 16 * 5, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerJumpCoolTime());
+	DrawFormatString(870, 350 + 16 * 6, GetColor(255, 255, 255), "回避速度");
+	DrawFormatString(1400, 350 + 16 * 6, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerDodgeSpeed());
+	DrawFormatString(870, 350 + 16 * 7, GetColor(255, 255, 255), "回避フレーム数");
+	DrawFormatString(1400, 350 + 16 * 7, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
+	DrawFormatString(870, 350 + 16 * 8, GetColor(255, 255, 255), "回避クールタイム");
+	DrawFormatString(1400, 350 + 16 * 8, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerDodgeCoolTime());
+	DrawFormatString(870, 350 + 16 * 9, GetColor(255, 255, 255), "壁キック速度(水平成分)");
+	DrawFormatString(1400, 350 + 16 * 9, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed());
+	DrawFormatString(870, 350 + 16 * 10, GetColor(255, 255, 255), "壁キック速度(垂直成分)");
+	DrawFormatString(1400, 350 + 16 * 10, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed());
+	DrawFormatString(870, 350 + 16 * 11, GetColor(255, 255, 255), "壁キック継続フレーム数");
+	DrawFormatString(1400, 350 + 16 * 11, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerKickWallFlame());
+	DrawFormatString(870, 350 + 16 * 12, GetColor(255, 255, 255), "壁キック入力猶予フレーム数");
+	DrawFormatString(1400, 350 + 16 * 12, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerKickWallInputMaxFlame());
+	DrawFormatString(870, 350 + 16 * 13, GetColor(255, 255, 255), "近距離攻撃(弱)クールタイム");
+	DrawFormatString(1400, 350 + 16 * 13, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeWeakCoolTime());
+	DrawFormatString(870, 350 + 16 * 14, GetColor(255, 255, 255), "近距離攻撃(強)に切り替わるチャージフレーム数");
+	DrawFormatString(1400, 350 + 16 * 14, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame());
+	DrawFormatString(870, 350 + 16 * 15, GetColor(255, 255, 255), "近距離攻撃(強)の最大チャージフレーム数");
+	DrawFormatString(1400, 350 + 16 * 15, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame());
+	DrawFormatString(870, 350 + 16 * 16, GetColor(255, 255, 255), "近距離攻撃(強)の移動スケール");
+	DrawFormatString(1400, 350 + 16 * 16, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMelleStrongMoveScale());
+	DrawFormatString(870, 350 + 16 * 17, GetColor(255, 255, 255), "近距離攻撃(強)の移動速度");
+	DrawFormatString(1400, 350 + 16 * 17, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed());
+	DrawFormatString(870, 350 + 16 * 18, GetColor(255, 255, 255), "近距離攻撃(強)の連続攻撃最大フレーム数");
+	DrawFormatString(1400, 350 + 16 * 18, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongContinusMaxFrame());
+	DrawFormatString(870, 350 + 16 * 19, GetColor(255, 255, 255), "空中での近接攻撃(強)回数");
+	DrawFormatString(1400, 350 + 16 * 19, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount());
+	DrawFormatString(870, 350 + 16 * 20, GetColor(255, 255, 255), "近接攻撃(強)後の索敵範囲");
+	DrawFormatString(1400, 350 + 16 * 20, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMeleeStrongNextSearchRange());
+	DrawFormatString(870, 350 + 16 * 21, GetColor(255, 255, 255), "ロックオン範囲の半径");
+	DrawFormatString(1400, 350 + 16 * 21, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerRockOnRadius());
+	DrawFormatString(870, 350 + 16 * 22, GetColor(255, 255, 255), "初期状態クナイ数所持数");
+	DrawFormatString(1400, 350 + 16 * 22, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetStartHaveKunai());
+	DrawFormatString(870, 350 + 16 * 23, GetColor(255, 255, 255), "最大クナイ所持数");
+	DrawFormatString(1400, 350 + 16 * 23, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetMaxHaveKunai());
+	DrawFormatString(870, 350 + 16 * 24, GetColor(255, 255, 255), "クナイクールタイム");
+	DrawFormatString(1400, 350 + 16 * 24, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerKunaiCoolTime());
+	DrawFormatString(870, 350 + 16 * 25, GetColor(255, 255, 255), "最大HP");
+	DrawFormatString(1400, 350 + 16 * 25, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxHp());
+	DrawFormatString(870, 350 + 16 * 26, GetColor(255, 255, 255), "最大無敵時間");
+	DrawFormatString(1400, 350 + 16 * 26, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 
 	/* 矢印を描写 */
 	if (this->bSelectFlg == true)

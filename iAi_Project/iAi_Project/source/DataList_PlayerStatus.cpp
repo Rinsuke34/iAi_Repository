@@ -9,6 +9,7 @@
 /* 2025.03.11 菊池雅道 初期化処理追加 */
 /* 2025.03.17 菊池雅道 初期化処理追加 */
 /* 2025.03.19 菊池雅道 初期化処理追加 */
+/* 2025.03.23 菊池雅道 初期化処理追加 */
 
 #include "DataList_PlayerStatus.h"
 #include <vector>
@@ -94,18 +95,29 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerFallAcceleration			= 0;	// プレイヤーの落下加速度
 	this->fPlayerMaxFallSpeed				= 0;	// プレイヤーの最大落下速度
 	this->iPlayerMaxJumpCount				= 0;	// プレイヤーのジャンプ回数(最大数)
+	this->iPlayerJumpCoolTime					= 0;	// プレイヤーのジャンプのクールタイム											/* 2025.03.23 菊池雅道 初期化処理追加 */
 	this->fPlayerDodgeSpeed					= 0;	// プレイヤー回避速度															/* 2025.01.10 菊池雅道 初期化処理追加  */
+	this->iPlayerDodgeCoolTime					= 0;	// プレイヤーの回避のクールタイム												/* 2025.03.23 菊池雅道 初期化処理追加 */
 	this->iPlayerMaxDodgeFlame				= 0;	// プレイヤーの回避最大フレーム数												/* 2025.03.19 菊池雅道 初期化処理追加 */
 	this->fPlayerKickWallHorizontalSpeed	= 0;	// プレイヤーの壁キック速度(水平成分)											/* 2025.03.19 菊池雅道 初期化処理追加 */
 	this->fPlayerKickWallVerticalSpeed		= 0;	// プレイヤーの壁キック速度(垂直成分)											/* 2025.03.19 菊池雅道 初期化処理追加 */
 	this->iPlayerKickWallFlame				= 0;	// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 初期化処理追加 */
 	this->iPlayerKickWallInputMaxFlame		= 0;	// プレイヤーの壁キック入力猶予フレーム数
+	this->iPlayerMeleeWeakCoolTime				= 0;	// プレイヤーの近距離攻撃(弱)のクールタイム										/* 2025.03.23 菊池雅道 初期化処理追加 */
+	this->iPlayerMelleStrongChangeChargeFrame	= 0;	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数						/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->iPlayerMelleStrongMaxChargeFrame		= 0;	// プレイヤーの近距離攻撃(強)の最大チャージフレーム数							/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->fPlayerMelleStrongMoveScale			= 0;	// プレイヤーの近距離攻撃(強)の移動距離のスケール								/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->fPlayerMelleStrongMoveSpeed			= 0;	// プレイヤーの近距離攻撃(強)の移動速度											/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->iPlayerMeleeStrongContinusMaxFrame	= 0;	// プレイヤーの近距離攻撃(強)の連続最大フレーム数								/* 2025.03.19 菊池雅道 初期化処理追加 */
+	this->iPlayerMeleeStrongAirMaxCount			= 0;	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.26 菊池雅道 初期化処理追加 */
+	this->fPlayerMeleeStrongNextSearchRange		= 0;	// プレイヤーの近距離攻撃(強)語の索敵範囲										/* 2025.03.23 菊池雅道 初期化処理追加 */
 	this->fPlayerRockOnRadius				= 0;	// ロックオン範囲の半径
-	this->iPlayerMaxHp						= 0;	// プレイヤーの最大HP
-	this->iPlayerMaxInvincibleTime			= 0;	// プレイヤーの最大無敵時間
-	this->iPlayerMeleeStrongAirMaxCount		= 0;	// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
 	this->iStartHaveKunai					= 0;	// 初期状態で持っているクナイの数
 	this->iMaxhaveKunai						= 0;	// 最大で持てるクナイの数
+	this->iPlayerKunaiCoolTime					= 0;	// クナイのクールタイム															/* 2025.03.23 菊池雅道 初期化処理追加 */
+	this->iPlayerMaxHp							= 0;	// プレイヤーの最大HP
+	this->iPlayerMaxInvincibleTime				= 0;	// プレイヤーの最大無敵時間
+	
 
 	/* プレイヤーバフ関連(エディット周り) */
 	this->fAddMoveSpeedUp					= 0;		// 移動速度上昇値(速度/フレーム)

@@ -51,5 +51,5 @@ void SceneUi_Kunai::Draw()
 	DrawGraph(60, 765, *this->piGrHandle_Kunai_Frame, true);
 
 	/* 現在のクナイの所持本数を描写 */
-	DrawFormatStringToHandle(95, 785, GetColor(0, 0, 0), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
+	DrawFormatStringToHandle(95, 785, GetColor(255, 255, 255), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
 }
