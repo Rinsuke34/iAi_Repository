@@ -11,6 +11,7 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 10;					// ブラッド量
 
 	/* データリスト取得 */
 	{
@@ -103,7 +104,8 @@ void Enemy_Beam::MoveEnemy()
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
-	
+	if (this->iNowHp > 0)
+	{
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
@@ -169,12 +171,14 @@ void Enemy_Beam::MoveEnemy()
 		}
 	}
 
-
+	}
 }
 
 // ビームの発射
 void Enemy_Beam::Player_Range_Beam_Shot()
 {
+	if (this->iNowHp > 0)
+	{
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
@@ -211,12 +215,15 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeBeam);
+	}
 
 }
 
 //チャージ
 void Enemy_Beam::Charge()
 {
+	if (this->iNowHp > 0)
+	{
 	if (this->bChargeFlg == TRUE)
 	{
 		iChargeCount--;	// チャージカウントを減算
@@ -267,11 +274,13 @@ void Enemy_Beam::Charge()
 		}
 	}
 }
+}
 
 // エネミーモデルアニメーション
 void Enemy_Beam::Enemy_Model_Animation()
 {
-
+	if (this->iNowHp > 0)
+	{
 	// 攻撃モーションフラグが有効か確認
 	if (this->bBeamAttackMotionFlg)
 	{
@@ -360,6 +369,7 @@ void Enemy_Beam::Enemy_Model_Animation()
 		}
 	}
 }
+}
 
 // 更新
 void Enemy_Beam::Update()
@@ -427,6 +437,7 @@ void Enemy_Beam::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
+				DefeatAttack();
 
 				this->bHitEffectGenerated = TRUE;
 			}

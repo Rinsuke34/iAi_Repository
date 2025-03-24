@@ -77,13 +77,10 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	iChargeCount--;	// チャージカウントを減算
 	if (iChargeCount <= 0)
 	{
-        // エフェクトが再生中かどうか確認
-        if (IsEffekseer3DEffectPlaying(this->pEffect->iGetEffectHandle()))
-        {
-            // エフェクトが再生終了している場合
-            // エネミーの削除フラグを有効にする
-            this->bDeleteFlg = true;
-        }
+		// エフェクトの向きを設定
+		VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
+		this->pEffect->SetRotation(rotation);
+
 	// 持続カウントが発射カウントを超えているか確認
 	if (iEnemyBeamDurationCount >= ENEMY_NORMAL_BULLET_COUNT)
 	{

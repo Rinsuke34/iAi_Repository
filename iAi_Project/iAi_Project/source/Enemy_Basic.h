@@ -37,6 +37,7 @@ class Enemy_Basic : public EnemyBase
 		virtual void	Reset();						// リセット処理
 
 		void	Defeat();			// 敵撃破時の処理
+		void	DefeatAttack();		// 敵攻撃被弾時の処理	03/23石川追加
 		void	LoadCoreFrameNo();	// コアフレーム番号取得
 
 		/* データ取得 */
@@ -52,6 +53,7 @@ class Enemy_Basic : public EnemyBase
 	protected:
 		/* 変数 */
 		bool	bDeadFlg;			// 死亡フラグ
+		int		iBloodAmount;		// ブラッド量
 
 		//関数
 		void	Enemy_Gravity();	// 重力処理メソッドを追加
@@ -66,5 +68,4 @@ class Enemy_Basic : public EnemyBase
 		/* 変数 */
 		int		iPlayerLockOnType;	// プレイヤー視点でのロックオン状態
 		int		iCoreFrameNo;		// コアとなるフレーム番号
-		int		iBloodAmount;		// ブラッド量
 };

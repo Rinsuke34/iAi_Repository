@@ -53,6 +53,11 @@ class SceneTitle : public SceneBase
 
 		//変数
 		int iUICount;	//UIのカウント
+		int iTimer; // タイマーを追加
+		bool bTransition; // シーン遷移フラグを追加
+		bool bHideFinalCheck; // 最終確認画面を隠すフラグを追加
+		VECTOR	vecMovePos;
+
 		//UIの画像Handle
 		int iImageNewgameHandle;		// ニューゲーム
 		int iImageNewgameChoiceHandle;	// ニューゲーム選択

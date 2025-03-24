@@ -11,6 +11,7 @@ Enemy_Normal_Air::Enemy_Normal_Air() : Enemy_Basic()
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 10;					// ブラッド量
 
 	/* データリスト取得 */
 	{
@@ -92,6 +93,8 @@ void Enemy_Normal_Air::MoveEnemy()
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
+	if (this->iNowHp > 0)
+	{
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
@@ -150,13 +153,15 @@ void Enemy_Normal_Air::MoveEnemy()
 			this->bShotFlg = false;
 		}
 	}
-
+	}
 
 }
 
 // ノーマル弾の発射
 void Enemy_Normal_Air::Player_Range_Normal_Shot()
 {
+	if (this->iNowHp > 0)
+	{
 	// プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
 
@@ -190,6 +195,7 @@ void Enemy_Normal_Air::Player_Range_Normal_Shot()
 
 	//バレットリストに追加
 	ObjectList->SetBullet(this->pBulletRangeNormal);
+}
 }
 
 // 更新
@@ -251,6 +257,7 @@ void Enemy_Normal_Air::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
+				DefeatAttack();
 
 				this->bHitEffectGenerated = TRUE;
 			}

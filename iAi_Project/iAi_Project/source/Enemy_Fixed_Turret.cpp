@@ -11,6 +11,7 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 10;					// ブラッド量
 
 	/* データリスト取得 */
 	{
@@ -130,6 +131,8 @@ void Enemy_Fixed_Turret::MoveEnemy()
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
+	if (this->iNowHp > 0)
+	{
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
@@ -303,6 +306,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 		}
 }
 }
+}
 
 
 // 更新
@@ -366,6 +370,7 @@ void Enemy_Fixed_Turret::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
+				DefeatAttack();
 
 				this->bHitEffectGenerated = TRUE;
 			}
@@ -380,9 +385,9 @@ void Enemy_Fixed_Turret::Update()
 
 
 	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.fCapsuleRadius = 150;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
+	this->stCollisionCapsule.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0, -120, 0));
 }
 
 // 描写

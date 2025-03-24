@@ -75,8 +75,9 @@ void Enemy_Basic::Reset()
 	this->bDeleteFlg = true;
 }
 
-// 敵撃破時の処理
-void Enemy_Basic::Defeat()
+//03/23石川追加ここから
+// 敵攻撃被弾時の処理
+void Enemy_Basic::DefeatAttack()
 {
 	/* データリスト取得 */
 	DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
@@ -95,6 +96,14 @@ void Enemy_Basic::Defeat()
 		/* プレイヤーのコンボ継続時間リセット */
 		PlayerStatusList->SetPlayerComboDuration(INIT_ATTRIBUTES_COMBO_DURATION);
 	}
+
+}
+
+// 敵撃破時の処理
+void Enemy_Basic::Defeat()
+{
+	/* データリスト取得 */
+	DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* 爆発エフェクト生成 */
 	{

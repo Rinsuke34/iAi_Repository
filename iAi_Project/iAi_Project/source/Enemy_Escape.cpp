@@ -9,12 +9,15 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 	this->iZescapedistance = ENEMY_Z_ESCAPE_DISTANCE;		// Z軸の距離
 	this->iEscapespeed = ENEMY_ESCAPE_SPEED;			// 移動速度
 	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
+	this->bPlayeSeFlg	= false;		// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
+
 
 
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 20;					// ブラッド量
 
 	/* データリスト取得 */
 	{
@@ -79,6 +82,9 @@ void Enemy_Escape::MoveEnemy()
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
+
+	if (this->iNowHp > 0)
+	{
 
 	//プレイヤーが探知範囲内にいるか確認
 	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
@@ -205,67 +211,50 @@ void Enemy_Escape::MoveEnemy()
 		this->vecRotation = VRot;
 	}
 }
+}
 	// 壁に当たった際の処理
 	if (this->bWallHitFlg == true)
 	{
-		//プレイヤーが探知範囲内にいるか確認
-		if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
-		{
-			// プレイヤーの位置を取得
-			VECTOR playerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+		////プレイヤーが探知範囲内にいるか確認
+		//if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)
+		//{
+		//	// プレイヤーの位置を取得
+		//	VECTOR playerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 
-			// 壁の法線ベクトルを取得
-			VECTOR wallNormal = VGet(0, 0, 0); // ここで実際の壁の法線ベクトルを取得する必要があります
+		//	// 壁との衝突判定を行い、法線ベクトルを取得
+		//	MV1_COLL_RESULT_POLY_DIM collisionResult = MV1CollCheck_Capsule(this->iModelHandle, -1, this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius);
+		//	if (collisionResult.HitNum > 0)
+		//	{
+		//		// 最初の衝突ポリゴンの法線ベクトルを取得
+		//		VECTOR wallNormal = collisionResult.Dim[0].Normal;
 
-			// 壁の法線ベクトルを正規化
-			wallNormal = VNorm(wallNormal);
+		//	// 壁の法線ベクトルを正規化
+		//	wallNormal = VNorm(wallNormal);
 
-			// 壁から離れる方向を計算
-			VECTOR escapeDirection = VScale(wallNormal, this->iEscapespeed);
+		//		// 壁に沿う方向を計算
+		//		VECTOR wallParallel = VCross(wallNormal, VGet(0, 1, 0));
+		//		wallParallel = VNorm(wallParallel);
 
-			// エネミーの位置を更新
-			this->vecPosition = VAdd(this->vecPosition, escapeDirection);
+		//		// 壁に沿って移動
+		//		VECTOR escapeDirection = VScale(wallParallel, this->iEscapespeed);
+		//	this->vecPosition = VAdd(this->vecPosition, escapeDirection);
 
-			// エネミーの向きを更新
-			this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
+		//		// カプセルコリジョンが当たらない位置まで押し出し処理
+		//		while (MV1CollCheck_Capsule(this->iModelHandle, -1, this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius).HitNum > 0)
+		//	{
+		//			this->vecPosition = VAdd(this->vecPosition, VScale(wallNormal, 1.0f));
+		//	}
 
-			// エネミーの向きを１８０度修正
-			this->vecRotation = VGet(0, this->vecRotation.y + DX_PI_F, 0);
-			MV1SetRotationXYZ(iModelHandle, this->vecRotation);
+		//		//エネミーの向きを更新
+		//		this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
+		//		MV1SetRotationXYZ(iModelHandle, this->vecRotation);
 
-			//プレイヤーがエネミーの右側にいるか確認
-			if (playerPos.x > this->vecPosition.x)
-			{
-				//プレイヤーがエネミーの右側にいる場合
-				// カプセルの壁に当たっていない所を算出
-				VECTOR vecNoHitWall = VAdd(this->vecPosition, VGet(0, 0, 0));
+		//	this->bWallHitFlg = false;	
 
-				// エネミーの位置を更新
-				this->vecPosition = vecNoHitWall;
-
-				// エネミーの向きを更新
-				this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
-				
-			}
-			//プレイヤーがエネミーの左側にいるか確認
-			if (playerPos.x < this->vecPosition.x)
-			{
-				//プレイヤーがエネミーの左側にいる場合
-				// カプセルの壁に当たっていない所を算出
-				VECTOR vecNoHitWall = VGet(this->vecPosition.x, this->vecPosition.y, this->vecPosition.z + this->stHorizontalCollision.fCapsuleRadius);
-
-				// エネミーの位置を更新
-				this->vecPosition = vecNoHitWall;
-
-				//エネミーの向きを更新
-				this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
-			}
-
-			this->bWallHitFlg = false;	
-
-			this->bEscapeEffectGenerated = true;
-		}
-	}
+		//	this->bEscapeEffectGenerated = true;
+		//}
+	//}
+}
 }
 
 //コリジョン描写
@@ -281,7 +270,8 @@ void Enemy_Escape::CollisionDraw()
 // エネミーモデルアニメーション
 void Enemy_Escape::Enemy_Model_Animation()
 {
-
+	if (this->iNowHp > 0)
+	{
 	this->fRunPlayTime += 1.0f;
 	// 再生時間をセットする
 	MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
@@ -293,6 +283,7 @@ void Enemy_Escape::Enemy_Model_Animation()
 		// 再生時間を初期化する
 		this->fRunPlayTime = 0.0f;
 	}
+}
 }
 
 // 移動処理(水平方向)
@@ -348,6 +339,17 @@ void Enemy_Escape::Movement_Horizontal()
 // 更新
 void Enemy_Escape::Update()
 {
+	/* SEを再生開始したかの確認 */
+	if (this->bPlayeSeFlg == false)
+	{
+		// 再生していない場合
+		/* "逃走キラキラ音"のSEをループ再生 */
+		gpDataList_Sound->SE_PlaySound_Loop_3D(SE_ENEMY_RUN, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+		/* 再生フラグを有効にする */
+		this->bPlayeSeFlg = true;
+	}
+
 	/* バレットリストを取得 */
 	auto& BulletList = ObjectList->GetBulletList();
 
@@ -378,6 +380,9 @@ void Enemy_Escape::Update()
 	if (this->iNowHp <= 0)
 	{
 		// HPが0以下である場合
+		/* "逃走キラキラ音"のSEを停止 */
+		gpDataList_Sound->SE_PlaySound_Stop(SE_ENEMY_RUN);
+
 		/* 死亡フラグを有効化 */
 		this->bDeadFlg = true;
 
@@ -411,6 +416,7 @@ void Enemy_Escape::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
+				DefeatAttack();
 
 				this->bHitEffectGenerated = TRUE;
 			}

@@ -63,8 +63,10 @@ class Enemy_Escape : public Enemy_Basic
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
 protected:
-	COLLISION_CAPSULE		stHorizontalCollision;			// 水平方向のコリジョン
-	COLLISION_SQHERE stSphere;								// 球のコリジョン
+	COLLISION_CAPSULE			stHorizontalCollision;		// 水平方向のコリジョン
+	COLLISION_SQHERE			stSphere;					// 球のコリジョン
+	VECTOR						vecNormalSum;				// プレイヤーに接触するオブジェクトの法線ベクトルの合計
 
-	VECTOR				vecNormalSum;						// プレイヤーに接触するオブジェクトの法線ベクトルの合計
+	bool						bPlayeSeFlg;				// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
+
 };

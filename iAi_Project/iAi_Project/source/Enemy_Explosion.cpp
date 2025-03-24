@@ -17,6 +17,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 10;					// ブラッド量
 
 	/* データリスト取得 */
 	{
@@ -425,6 +426,7 @@ void Enemy_Explosion::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 		}
 
+				DefeatAttack();
 
 				this->bHitEffectGenerated = TRUE;
 			}

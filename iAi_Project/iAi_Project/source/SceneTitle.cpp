@@ -81,6 +81,12 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	//ホームフラグを無効化
 	this->bHomeFlg = false;
 
+	this->bTransition = false;
+
+	this->iTimer = 0;
+
+	this->bHideFinalCheck = false;
+
 
 	//UIカウントを初期化
 	this->iUICount = CAMERA_FIXED_POSITION_START;
@@ -107,6 +113,24 @@ void SceneTitle::Initialization()
 // 処理
 void SceneTitle::Process()
 {
+	// シーン遷移フラグが有効な場合、タイマーをカウント
+	if (this->bTransition == true)
+	{
+		this->iTimer++;
+		if (this->iTimer > 180) // 3秒後にシーンを変更
+		{
+			// シーンの追加を設定
+			gpSceneServer->SetAddLoadSceneFlg(true);
+
+			// シーンの削除を設定
+			gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+			// シーン"ゲームセットアップ"を追加
+			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+		}
+
+		return;
+	}
 	// 決定ボタンが押されたか確認
 	if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
 	{
@@ -161,32 +185,19 @@ void SceneTitle::Process()
 		case CAMERA_FIXED_POSITION_E:
 			if (this->bGameStartFlg == TRUE)
 			{
-				/* セーブデータ(中断時)のパス設定 */
-				std::string SaveDataFileName = "resource/SaveData/SuspensionSaveData.json";
-
-				/* 対象のファイルを削除 */
-				while (std::remove(SaveDataFileName.c_str()) == 0)
-				{
-					// 削除が成功した場合
-					/* 完全に削除が完了するまで待機 */
-					// ※10ミリ秒ずつ
-					std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				// シーン遷移フラグを有効化
+				bTransition = true;
+				// タイマーをリセット
+				iTimer = 0;
+				// 最終確認画面を隠すフラグを有効化
+				bHideFinalCheck = true;
 				}
-
-				// シーンの追加を設定
-				gpSceneServer->SetAddLoadSceneFlg(true);
-	
-				// シーンの削除を設定
-				gpSceneServer->SetDeleteCurrentSceneFlg(true);
-	
-				// シーン"ゲームセットアップ"を追加
-				gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
-
-			}
-			// はじめからホーム画面に戻る
+			else
+			{
+				// 「no」を選択した場合、はじめからホーム画面に戻る
 			iUICount = CAMERA_FIXED_POSITION_A;
 			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-			this->bGameStartFlg = FALSE;
+			}
 			break;
 
 			//データホーム画面
@@ -419,6 +430,9 @@ void SceneTitle::Draw()
 		break;
 	case CAMERA_FIXED_POSITION_E:
 		/* 画面全体を暗くする */
+		if (this->bHideFinalCheck == false)
+		{
+			/* 画面全体を暗くする */
 	{
 		/* 描写ブレンドモードを"アルファブレンド"に設定 */
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, PAUSE_BLACK_ALPHA);
@@ -444,6 +458,7 @@ void SceneTitle::Draw()
 		DrawGraph(690, 560, this->iImageYesHandle, TRUE);
 		DrawGraph(1020, 560, this->iImageNoChoiceHandle, TRUE);
 	}
+		}
 	break;
 }
 }
