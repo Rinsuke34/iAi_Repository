@@ -327,14 +327,12 @@ void CharacterPlayer::Player_Attack_Transition()
 // 近接攻撃(構え)
 void CharacterPlayer::Player_Melee_Posture()
 {
-	/* エディットによる攻撃チャージフレームの短縮値を取得 */
-	int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
 
 	/* 近接攻撃(強)の切り替えフレーム数を取得 */
 	int iMeleeStrongChangeFrame = this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame();
 
 	/* プレイヤーの現在の攻撃チャージフレームを取得 */
-	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() + iEditChargeFlameShortening;
+	int iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
 
 	/* 近接攻撃(強)チャージ最大フレーム数を取得 */
 	int iMeleeChargeMaxFlame = this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame();
@@ -346,7 +344,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	int iPlayerMeleeStrongAfterCount = this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount();
 
 	/* 攻撃入力がされているか確認 */
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK))
+	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
 		/* スローモーションが有効か確認する */
 		if (this->StageStatusList->bGetGameSlowFlg() == true)
@@ -427,6 +425,15 @@ void CharacterPlayer::Player_Melee_Posture()
 				return;
 			}
 
+			/* エディットによる攻撃チャージフレームの短縮値を取得 */
+			int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
+
+			/* エディットによる攻撃チャージフレームの短縮を適用 */
+			this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame - iEditChargeFlameShortening);
+
+			/* プレイヤーの現在の攻撃チャージフレームを取得 */
+			iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
+
 			/* プレイヤーモーションを"居合(溜め)"に変更 */
 			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_CHARGE);
 
@@ -459,7 +466,7 @@ void CharacterPlayer::Player_Melee_Posture()
 			{
 				// 超えていない場合
 				/* プレイヤーの現在の攻撃チャージフレームを加算 */
-				PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
+				this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame + 1);
 
 				/* 加算によりチャージフレームが最大値に達したか確認 */
 				if ((iNowAttakChargeFlame + 1) == iMeleeChargeMaxFlame)
@@ -736,9 +743,6 @@ void CharacterPlayer::Player_Charge_Attack()
 	/* 近距離攻撃(強)状態でのチャージフレーム数を取得 */
 	int iMeleeStrongChargeCount = this->PlayerStatusList->iGetPlayerMeleeStrongChargeCount();
 
-	/* 近距離攻撃(強)後に接地してるかのフラグ */
-	bool bLandingAfterMeleeStrongFlg = false;
-
 	/* カウントを確認 */
 	if (iMeleeStrongChargeCount == 0)
 	{
@@ -828,7 +832,7 @@ void CharacterPlayer::Player_Charge_Attack()
 						vecMoveDirection = VAdd(vecMoveDirection, VScale(VNorm(vecMoveDirection), 500.f));
 
 						/* 攻撃後の接地フラグを設定する */
-						bLandingAfterMeleeStrongFlg = true;
+						this->PlayerStatusList->SetPlayerLandingAfterMeleeStrongFlg(true);
 						
 						/* 処理を終了する */
 						break;
@@ -838,6 +842,9 @@ void CharacterPlayer::Player_Charge_Attack()
 						// 接触していない場合
 						/* エネミーの位置に移動する */
 						vecMoveDirection = VSub(pLockOnEnemy->vecGetPosition(), this->vecPosition);
+
+						/* 攻撃後の接地フラグを解除する */
+						this->PlayerStatusList->SetPlayerLandingAfterMeleeStrongFlg(false);
 					}
 				}
 
@@ -1125,6 +1132,9 @@ void CharacterPlayer::Player_Charge_Attack()
 					if (iNowMeleeStrongDestroyCount >= MELEE_STRONG_PERFORMANCE_DESTROY_NUM)
 					{
 						// 一定数以上の場合
+						/* 近距離攻撃(強)後に接地してるかのフラグを取得 */
+						bool bLandingAfterMeleeStrongFlg = this->PlayerStatusList->bGetPlayerLandingAfterMeleeStrongFlg();
+
 						/* 攻撃後の接地フラグを確認 */
 						if (bLandingAfterMeleeStrongFlg == true)
 						{
@@ -1135,12 +1145,15 @@ void CharacterPlayer::Player_Charge_Attack()
 							/* スティックの入力がないか確認 */
 							if (vecInput.x == 0 && vecInput.z == 0)
 							{
-								// 入力がない場合
-								/* プレイヤーの状態を"自由状態"に遷移 */
+								// スティックの入力がない場合
+								/* ボタンの入力がないか確認 */
+								if (this->InputList->bGetInterfaceInput(INPUT_TRG, UI_ANY) == false)
+								{
 								/* 特別なカメラワークを行う(仮) */
 							
 							}	
 						}
+					}
 					}
 
 					/* 近接攻撃(強)での撃破数をリセットする */

@@ -12,6 +12,7 @@
 #include "DataList_GameResource.h"
 #include "DataList_StageStatus.h"
 #include "DataList_Option.h"
+#include "DataList_PlayerStatus.h"
 
 /* エフェクト */
 #include "EffectSelfDelete.h"

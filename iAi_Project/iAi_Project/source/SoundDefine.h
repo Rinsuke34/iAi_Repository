@@ -12,13 +12,14 @@ static  const int   BGM_CONVERSATION_0  = 2;    // 会話0
 static  const int   BGM_CONVERSATION_1  = 3;    // 会話1
 static  const int   BGM_CONVERSATION_2  = 4;    // 会話2
 static  const int   BGM_CONVERSATION_3  = 5;    // 会話3
-static  const int   BGM_CONVERSATION_4  = 6;    // 会話4(エンディング)
-static  const int   BGM_STAGE_0         = 7;    // ステージ0(1_1 ～ 1_3)
-static  const int   BGM_STAGE_1         = 8;    // ステージ1(2_1 ～ 2_3)
-static  const int   BGM_STAGE_2         = 9;    // ステージ2(3_1 ～ 3_2)
-static  const int   BGM_STAGE_3         = 10;   // ステージ3(3_3)
-static  const int   BGM_EDIT            = 11;   // エディット 
-static  const int	BGM_MAX			    = 12;	// BGM総数
+static  const int   BGM_CONVERSATION_4  = 6;    // 会話4
+static  const int   BGM_CONVERSATION_5  = 7;    // 会話5(エンディング)
+static  const int   BGM_STAGE_0         = 8;    // ステージ0(1_1 ～ 1_3)
+static  const int   BGM_STAGE_1         = 9;    // ステージ1(2_1 ～ 2_3)
+static  const int   BGM_STAGE_2         = 10;   // ステージ2(3_1 ～ 3_2)
+static  const int   BGM_STAGE_3         = 11;   // ステージ3(3_3)
+static  const int   BGM_EDIT            = 12;   // エディット 
+static  const int	BGM_MAX			    = 13;	// BGM総数
 
 // BGM名称
 static const std::string BGM_NAME[BGM_MAX] =
@@ -29,7 +30,8 @@ static const std::string BGM_NAME[BGM_MAX] =
     "Conversation/BGM_Conv_1",          // 会話1
     "Conversation/BGM_Conv_2",          // 会話2
     "Conversation/BGM_Conv_3",          // 会話3
-	"Conversation/BGM_Conv_4_Ending",   // 会話4(エンディング)
+	"Conversation/BGM_Conv_4",          // 会話4
+    "Conversation/BGM_Conv_5_Ending",   // 会話5(エンディング)
     "Stage/BGM_Stage_1-1_1-3",          // ステージ0(1_1 ～ 1_3)
     "Stage/BGM_Stage_2-1_2-3",          // ステージ1(2_1 ～ 2_3)
     "Stage/BGM_Stage_3-1_3-2",          // ステージ2(3_1 ～ 3_2)

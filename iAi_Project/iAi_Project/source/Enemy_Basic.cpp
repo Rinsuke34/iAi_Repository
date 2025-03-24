@@ -93,8 +93,11 @@ void Enemy_Basic::DefeatAttack()
 		/* プレイヤーのコンボ数加算 */
 		PlayerStatusList->SetPlayerComboNowCount(PlayerStatusList->iGetPlayerComboNowCount() + 1);
 
+		/* プレイヤー状態を取得 */
+		DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
 		/* プレイヤーのコンボ継続時間リセット */
-		PlayerStatusList->SetPlayerComboDuration(INIT_ATTRIBUTES_COMBO_DURATION);
+		PlayerStatusList->SetPlayerComboDuration(INIT_ATTRIBUTES_COMBO_DURATION + PlayerStatusList->iGetAddComboTime());
 	}
 
 }

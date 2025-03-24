@@ -1,4 +1,5 @@
 /* 2025.02.28 石川智也 ファイル作成 */
+#include "SceneTitle.h" 
 #include "Scene_Title_Player.h"
 
 // コンストラクタ
@@ -21,10 +22,16 @@ TitlePlayer::TitlePlayer() : PlatformBase()
 	/* 開始時モーション設定 */
 	{
 		//モデルに着地モーションをアタッチする
-		this->iTitlePlayerWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 2, -1, FALSE);
+		this->iTitlePlayerWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 10, -1, FALSE);
 
 		// 再生時間を初期化する
 		this->fTitlePlayerWaitTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex);
+
+		// 6カウント分カットした状態でアタッチ
+		this->fTitlePlayerWaitNowTime = 6.0f;
+
+		// アタッチしたモーションの開始時間を設定
+		MV1SetAttachAnimTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex, this->fTitlePlayerWaitNowTime);
 
 		///* 発光停止フラグを有効化 */
 		this->bBloomStopFlg = true;
@@ -50,18 +57,15 @@ void TitlePlayer::Update()
 	//処理
 	Process();
 
+	if (g_bActiveFlg == true)
+	{
 	//アニメーション更新
 	// アタッチした待機モーションを再生する
 	MV1SetAttachAnimTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex, this->fTitlePlayerWaitNowTime);
 
 	//待機モーションの再生時間を加算
-	this->fTitlePlayerWaitNowTime += 2.0f;
+		this->fTitlePlayerWaitNowTime += 0.1f;
 
-	//待機モーションの再生時間が終了したか確認
-	if (this->fTitlePlayerWaitNowTime >= this->fTitlePlayerWaitTotalTime)
-	{
-		//待機モーションの再生時間を初期化
-		this->fTitlePlayerWaitNowTime = 0.0f;
 	}
 
 }

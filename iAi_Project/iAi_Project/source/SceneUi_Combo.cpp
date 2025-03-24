@@ -177,7 +177,7 @@ void SceneUi_Combo::Draw()
 		DrawGraph(100, 360, *this->piGrHandle_Combo_Frame, TRUE);
 
 		/* コンボタイマー描写 */
-		double dComboTimerPercent = (static_cast<double>(this->PlayerStatusList->iGetPlayerComboDuration()) / INIT_ATTRIBUTES_COMBO_DURATION) * 100.0;
+		double dComboTimerPercent = (static_cast<double>(this->PlayerStatusList->iGetPlayerComboDuration()) / (INIT_ATTRIBUTES_COMBO_DURATION + this->PlayerStatusList->iGetAddComboTime())) * 100.0;
 		DrawCircleGauge(189, 448, dComboTimerPercent, *this->piGrHandle_Combo_Timer);
 
 		/* ランクを描写 */

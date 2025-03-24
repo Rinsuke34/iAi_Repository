@@ -43,7 +43,7 @@ void PickUpItem_ForcedJump::Initialization()
 
 	/* コリジョン設定 */
 	{
-		this->stCollisionCapsule.fCapsuleRadius		= 25.0f;
+		this->stCollisionCapsule.fCapsuleRadius		= 65.0f;
 		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
 		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 25.0f, 0.0f));
 	}
@@ -114,7 +114,7 @@ void PickUpItem_ForcedJump::Update()
 
 		/* プレイヤーが接触している場合 */
 		//プレイヤーを吹き飛ばす
-		this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+		this->PlayerStatusList->SetPlayerNowFallSpeed(-40.0f);
 
 		//プレイヤーのジャンプ回数を1に設定
 		this->PlayerStatusList->SetPlayerNowJumpCount(1);

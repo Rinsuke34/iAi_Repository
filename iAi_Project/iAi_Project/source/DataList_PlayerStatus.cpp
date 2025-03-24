@@ -50,6 +50,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iPlayerMeleeStrongAfterCount		= 0;								// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数						/* 2025.03.03 菊池雅道 初期化処理追加 */
 	this->iMeleeStrongDestroyCount			= 0;								// プレイヤーが近距離攻撃(強)で撃破した敵の数									/* 2025.03.18 菊池雅道 初期化処理追加 */
 	this->bPlayerMeleeStrongContinuousFlg	= false;							// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 初期化処理追加 */
+	this->bPlayerLandingAfterMeleeStrongFlg = false;							// プレイヤーが近距離攻撃(強)後に着地しているかのフラグ							/* 2025.03.23 菊池雅道 初期化処理追加 */
 	this->iPlayerSlowMotionCount			= 0;								// プレイヤーのスローモーションカウント											/* 2025.03.11 菊池雅道 初期化処理追加 */
 	this->pLockOnEnemy						= nullptr;							// ロックオン対象のエネミー
 	this->iPlayerNowInvincibleTime			= 0;								// プレイヤーの現在の残り無敵時間
@@ -122,6 +123,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	/* プレイヤーバフ関連(エディット周り) */
 	this->fAddMoveSpeedUp					= 0;		// 移動速度上昇値(速度/フレーム)
 	this->iAddBlood							= 0;		// ブラッド(ゲーム内通貨)の入手量(個)
+	this->iAddComboTime						= 0;		// コンボ時間増加値(フレーム)
 	this->iAddAttackChargeFrameShortening	= 0;		// チャージ時間短縮値(フレーム)
 	this->iAddJumpCount						= 0;		// ジャンプ回数増加値(回)
 	this->iAddMeleeStrongAirMaxCount		= 0;		// 空中での近距離攻撃(強)回数増加値(回)
@@ -222,6 +224,7 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 	/* 全ステータス初期化 */
 	this->fAddMoveSpeedUp					= 0;		// 移動速度上昇値(速度/フレーム)
 	this->iAddBlood							= 0;		// ブラッド(ゲーム内通貨)の入手量(個)
+	this->iAddComboTime						= 0;		// コンボ時間増加値(フレーム)
 	this->iAddAttackChargeFrameShortening	= 0;		// チャージ時間短縮値(フレーム)
 	this->iAddJumpCount						= 0;		// ジャンプ回数増加値(回)
 	this->iAddMeleeStrongAirMaxCount		= 0;		// 空中での近距離攻撃(強)回数増加値(回)
@@ -271,7 +274,8 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 			// コンボ継続時間アップ
 			case EDIT_EFFECT_NORMAL_COMBO_DURATION_UP:
 				/* 効果量分加算する */
-
+				// ※単位を秒→フレームに変換
+				this->iAddComboTime += (iEffectValue * 60);
 				break;
 
 			// 近接攻撃溜め時間減少

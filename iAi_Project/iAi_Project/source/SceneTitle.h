@@ -20,6 +20,8 @@
 /* 循環参照対策 */
 class SceneStage;
 
+extern bool g_bActiveFlg;
+
 /* シーン「タイトル」の宣言 */
 
 // シーン "タイトル画面"

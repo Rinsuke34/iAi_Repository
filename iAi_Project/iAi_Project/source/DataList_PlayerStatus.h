@@ -67,6 +67,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerMeleeStrongAfterCount()		{ return this->iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数を取得						/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
 		int		iGetiMeleeStrongDestroyCount()			{ return this->iMeleeStrongDestroyCount; }			// 近距離攻撃(強)で撃破した敵の数を取得												/* 2025.03.18 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerMeleeStrongContinuousFlg()	{ return this->bPlayerMeleeStrongContinuousFlg; }	// プレイヤーが近距離攻撃(強)を連続で行えるかのフラグを取得			/* 2025.03.17 菊池雅道 攻撃関連の関数追加 */
+		bool	bGetPlayerLandingAfterMeleeStrongFlg() { return this->bPlayerLandingAfterMeleeStrongFlg; }	// プレイヤーが近距離攻撃(強)後に着地しているかのフラグを取得		/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
 		bool	bGetPlayerWallTouchFlg()				{ return this->bPlayerWallTouchFlg; }				// プレイヤーが壁に接触したかのフラグを取得							/* 2025.03.17 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerAfterWallTouchCount()			{ return this->iPlayerAfterWallTouchCount; }		// プレイヤーが壁に接触した後の経過フレーム数を取得					/* 2025.03.17 菊池雅道 移動関連の関数追加 */
 		bool	bGetPlayerKickWallFlg()					{ return this->bPlayerKickWallFlg; }				// プレイヤーが壁を蹴ったかのフラグを取得							/* 2025.02.22 菊池雅道 移動関連の関数追加 */
@@ -144,6 +145,7 @@ class DataList_PlayerStatus : public DataListBase
 		/* プレイヤーバフ関連(エディット周り) */
 		float	fGetAddMoveSpeedUp()					{ return this->fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
 		int		iGetAddBlood()							{ return this->iAddBlood; }							// ブラッド(ゲーム内通貨)の入手量(個)
+		int		iGetAddComboTime()						{ return this->iAddComboTime; }						// コンボ時間増加値(フレーム)
 		int		iGetAddAttackChargeFrameShortening()	{ return this->iAddAttackChargeFrameShortening; }	// チャージ時間短縮値(フレーム)
 		int		iGetAddJumpCount()						{ return this->iAddJumpCount; }						// ジャンプ回数増加値(回)
 		int		iGetAddMeleeStrongAirMaxCount()			{ return this->iAddMeleeStrongAirMaxCount; }		// 空中での近距離攻撃(強)回数増加値(回)
@@ -172,6 +174,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerMeleeStrongAfterCount(int iPlayerMeleeStrongAfterCount)			{ this->iPlayerMeleeStrongAfterCount		= iPlayerMeleeStrongAfterCount; }		// プレイヤーが近距離攻撃(強)でエネミーを攻撃した後のフレーム数を設定	/* 2025.03.03 菊池雅道 攻撃関連の関数追加 */
 		void	SetMeleeStrongDestroyCount(int iMeleeStrongDestroyCount)					{ this->iMeleeStrongDestroyCount = iMeleeStrongDestroyCount; }						// 近距離攻撃(強)で撃破した敵の数を設定									/* 2025.03.18 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongContinuousFlg(bool bPlayerMeleeStrongContinuousFlg)		{ this->bPlayerMeleeStrongContinuousFlg		= bPlayerMeleeStrongContinuousFlg; }	// プレイヤーが近距離攻撃(強)を連続で行えるかのフラグを設定				/* 2025.03.17 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerLandingAfterMeleeStrongFlg(bool bPlayerLandingAfterMeleeStrongFlg) { this->bPlayerLandingAfterMeleeStrongFlg = bPlayerLandingAfterMeleeStrongFlg; }	// プレイヤーが近距離攻撃(強)後に着地しているかのフラグを設定			/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerSlowMotionCount(int iPlayerSlowMotionCount)						{ this->iPlayerSlowMotionCount				= iPlayerSlowMotionCount; }				// プレイヤーのスローモーションのカウントを設定									/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
 		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)						{ this->fPlayerNowMotionCount				= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
 		void	SetPlayerJumpCount(int iPlayerJumpCount)									{ this->iPlayerJumpCount					= iPlayerJumpCount; }					// プレイヤージャンプ回数を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
@@ -255,13 +258,14 @@ class DataList_PlayerStatus : public DataListBase
 		/* プレイヤーバフ関連(エディット周り) */
 		void	SetAddMoveSpeedUp(float fAddMoveSpeedUp)										{ this->fAddMoveSpeedUp					= fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
 		void	SetAddBlood(int iAddBlood)														{ this->iAddBlood						= iAddBlood; }							// ブラッド(ゲーム内通貨)の入手量(個)
+		void	SetAddComboTime(int iAddComboTime)												{ this->iAddComboTime					= iAddComboTime; }						// コンボ時間増加値(フレーム)
 		void	SetAddAttackChargeFrameShortening(int iAddAttackChargeFrameShortening)			{ this->iAddAttackChargeFrameShortening	= iAddAttackChargeFrameShortening; }	// チャージ時間短縮値(フレーム)
 		void	SetAddJumpCount(int iAddJumpCount)												{ this->iAddJumpCount					= iAddJumpCount; }						// ジャンプ回数増加値(回)
 		void	SetAddMeleeStrongAirMaxCount(int iAddMeleeStrongAirMaxCount)					{ this->iAddMeleeStrongAirMaxCount		= iAddMeleeStrongAirMaxCount; }			// 空中での近距離攻撃(強)回数増加値(回)
 		void	SetAddKunaiKeepProbability(int iAddKunaiKeepProbability)						{ this->iAddKunaiKeepProbability		= iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		void	SetAddBarrier(int iAddBarrier)													{ this->iAddBarrier						= iAddBarrier; }						// バリア数(個)
 		void	SetAddCounter(bool bAddCounter)													{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		bool	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion					= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
+		bool	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion				= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
 		void	SetAddMaxHpOne(bool bAddMaxHpOne)												{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 
 	private:
@@ -293,6 +297,7 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerMeleeStrongAfterCount;		// プレイヤーが近距離攻撃(強)で敵を攻撃した後のフレーム数						/* 2025.03.03 菊池雅道 攻撃関連の変数追加 */
 		int		iMeleeStrongDestroyCount;			// プレイヤーが近距離攻撃(強)で撃破した敵の数									/* 2025.03.18 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerMeleeStrongContinuousFlg;	// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 攻撃関連の変数追加 */
+		bool	bPlayerLandingAfterMeleeStrongFlg;	// プレイヤーが近距離攻撃(強)後に着地しているかのフラグ							/* 2025.03.23 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerSlowMotionCount;				// プレイヤーのスローモーションフレーム数カウント								/* 2025.03.12 菊池雅道 スローモーション関連の変数追加 */
 		Enemy_Basic* pLockOnEnemy;				// ロックオン対象のエネミー
 		int		iPlayerNowHp;						// プレイヤーの現在のHP
@@ -366,6 +371,7 @@ class DataList_PlayerStatus : public DataListBase
 		/* プレイヤーバフ関連(エディット周り) */
 		float	fAddMoveSpeedUp;					// 移動速度上昇値(速度/フレーム)
 		int		iAddBlood;							// ブラッド(ゲーム内通貨)の入手量(個)
+		int		iAddComboTime;						// コンボ時間増加値(フレーム)
 		int		iAddAttackChargeFrameShortening;	// チャージ時間短縮値(フレーム)
 		int		iAddJumpCount;						// ジャンプ回数増加値(回)
 		int		iAddMeleeStrongAirMaxCount;			// 空中での近距離攻撃(強)回数増加値(回)

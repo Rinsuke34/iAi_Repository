@@ -3,6 +3,8 @@
 
 #include "SceneTitle.h"
 
+bool g_bActiveFlg = false; // 初期値を設定
+
 /* シーン「タイトル」の定義 */
 
 // コンストラクタ
@@ -116,8 +118,10 @@ void SceneTitle::Process()
 	// シーン遷移フラグが有効な場合、タイマーをカウント
 	if (this->bTransition == true)
 	{
+
+		g_bActiveFlg = true;
 		this->iTimer++;
-		if (this->iTimer > 180) // 3秒後にシーンを変更
+		if (this->iTimer > 90) // 3秒後にシーンを変更
 		{
 			// シーンの追加を設定
 			gpSceneServer->SetAddLoadSceneFlg(true);
@@ -127,8 +131,9 @@ void SceneTitle::Process()
 
 			// シーン"ゲームセットアップ"を追加
 			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
-		}
 
+			g_bActiveFlg = false;
+		}
 		return;
 	}
 	// 決定ボタンが押されたか確認

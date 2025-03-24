@@ -39,7 +39,7 @@ Enemy_Fixed::~Enemy_Fixed()
 void Enemy_Fixed::Initialization()
 {
 	/* コリジョンセット */
-	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.fCapsuleRadius = 0;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
@@ -97,7 +97,7 @@ void Enemy_Fixed::Update()
 
 
 	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 150;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 320, 0));
+	this->stCollisionCapsule.fCapsuleRadius = 1;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 560, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0, -120, 0));
 }

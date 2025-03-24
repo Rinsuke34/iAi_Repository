@@ -27,7 +27,7 @@ Screen::Screen() : PlatformBase()
 		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
 		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
 		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");				//コンフィグ
-		this->iTextureConfigHandle = *ImageList->piGetImage_Movie("Home/Date");				//データ
+		this->iTextureConfigHandle = *ImageList->piGetImage("Home/GameEnd");				//データ
 		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
 	}
 
@@ -90,6 +90,8 @@ Screen::~Screen()
 //処理
 void Screen::Process()
 {
+	if (g_bActiveFlg == false)
+	{
 	//現在のシーンがタイトルシーンか確認
 	if (gpSceneServer->GetScene("Title"))
 	{
@@ -123,12 +125,13 @@ void Screen::Process()
 			case CAMERA_FIXED_POSITION_D:
 				// Homeフラグを無効化
 				this->bHomeFlg = FALSE;
-				break;
-			}
 			if (this->bHomeFlg == FALSE)
 			{
 				this->bHomeFlg = TRUE;
 			}
+
+					break;
+				}
 		}
 
 		// キャンセルボタンが押されたか確認
@@ -545,6 +548,7 @@ void Screen::Process()
 
 		//スタートフラグを無効化
 		//this->bStartFlg = false;
+		}
 	}
 }
 

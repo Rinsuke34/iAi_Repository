@@ -385,8 +385,8 @@ void Enemy_Fixed_Turret::Update()
 
 
 	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 150;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+	this->stCollisionCapsule.fCapsuleRadius = 200;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 130, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0, -120, 0));
 }
 
