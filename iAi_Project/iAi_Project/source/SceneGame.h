@@ -11,7 +11,7 @@
 
 /* シーン */
 #include "SceneStage.h"
-#include "SceneAddTitleSetup.h"
+#include "SceneEndcredit.h"
 #include "SceneConversation.h"
 
 /* シーン「ゲーム」の宣言 */
@@ -25,7 +25,6 @@ class SceneGame : public SceneBase
 
 		void	Initialization()	override;	// 初期化
 		void	Process()			override;	// 計算
-		void	Draw()				override;	// 描画
 
 	private:
 		/* 使用するデータリスト */

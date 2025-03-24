@@ -30,7 +30,7 @@ class SceneEdit : public SceneBase
 		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
-		int* piGrHandle_SelectFrame;						// 選択フレーム
+		int* piGrHandle_SelectFrame[2];						// 選択フレーム(0:ホールド無し、 1:ホールドあり)
 		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム
 		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* piGrHandle_ResultFrame;						// リザルトフレーム

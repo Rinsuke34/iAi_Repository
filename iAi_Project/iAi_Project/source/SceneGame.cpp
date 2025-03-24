@@ -187,8 +187,8 @@ void SceneGame::Process()
 					/* 現行シーン削除フラグを有効化 */
 					gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
-					/* シーン"タイトル画面"を追加 */
-					gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
+					/* シーン"エンドクレジット"をシーンサーバーに追加 */
+					gpSceneServer->AddSceneReservation(new SceneEndcredit());
 				}
 			}
 			break;
@@ -219,14 +219,5 @@ void SceneGame::Process()
 			}
 			break;
 	}
-}
-
-// 描画
-void SceneGame::Draw()
-{
-	/* 現在のステージ番号を取得 */
-	int iNowStageNo = this->StageStatusList->iGetNowStageNo();
-
-	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "現在のステージ番号 ： %d", iNowStageNo);
 }
 

@@ -26,17 +26,19 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		/* データリスト"画像ハンドル管理"を取得 */
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
-		/* 選択フレーム */
-		this->piGrHandle_SelectFrame	= ImageList->piGetImage("Test_Edit/Interface/SelectFrame");
+		/* 選択フレーム(0:ホールド無し、 1:ホールドあり) */
+		this->piGrHandle_SelectFrame[0]	= ImageList->piGetImage("Conversation/SelectFlame");
+		this->piGrHandle_SelectFrame[1]	= ImageList->piGetImage("Conversation/SelectFlame_2");
+
 
 		/* "次へ"ボタン */
 		this->piGrHandle_SelectNext		= ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
 
 		/* 選択項目の状態フレーム */
-		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_SET]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleSet");
-		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_UPGRADE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_PossibleUpgrade");
-		this->apiGrHandle_SelectStatus[SELECT_STATUS_INTERCHANGEABLE]	= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Interchangeable");
-		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Test_Edit/Interface/SelectStatus_Impossible");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_SET]		= ImageList->piGetImage("Edit/Scene/UI_Edit_Set");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_POSSIBLE_UPGRADE]	= ImageList->piGetImage("Edit/Scene/UI_Edit_Reinforce");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_INTERCHANGEABLE]	= ImageList->piGetImage("Edit/Scene/UI_Edit_Trade");
+		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Edit/Scene/UI_Edit_Unselectable");
 
 		/* リザルト画面背景 */
 		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_ResultBackGround_mini");
@@ -265,7 +267,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 				{ 900, 650 },
 				{ 1175, 650 },
 				{ 1450, 650 },
-				{ 1515, 950 }
+				{ 1415, 850 }
 			};
 
 			/* 座標設定 */

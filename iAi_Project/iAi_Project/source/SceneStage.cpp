@@ -115,6 +115,9 @@ void SceneStage::Initialization()
 
 			/* 経過時間 */
 			gpSceneServer->AddSceneReservation(new SceneUi_Time());
+
+			/* 操作説明 */
+			gpSceneServer->AddSceneReservation(new SceneUi_OperationInstructions());
 		}
 	}
 
@@ -230,12 +233,18 @@ void SceneStage::Process()
 
 		/* "エディット"状態 */
 		case GAMESTATUS_EDIT:
-			/* シーン"エディット画面"を作成 */
+			/* 現在のステージ番号が最終ステージでないか確認 */
+			if (this->StageStatusList->iGetNowStageNo() < this->StageStatusList->iGetEndStageNo())
 			{
-				SceneBase* pAddScene = new SceneEdit();
-
+				// 最終ステージでない場合
 				/* シーン"エディット画面"をシーンサーバーに追加 */
-				gpSceneServer->AddSceneReservation(pAddScene);
+				gpSceneServer->AddSceneReservation(new SceneEdit());
+			}
+			else
+			{
+				// 最終ステージである場合
+				/* ステージ状態を"次のステージへ遷移"に設定 */
+				this->StageStatusList->SetGameStatus(GAMESTATUS_NEXTSTAGE);
 			}
 			break;
 
@@ -247,13 +256,8 @@ void SceneStage::Process()
 
 		/* "ゲームオーバー"状態 */
 		case GAMESTATUS_GAMEOVER:
-			{
-				/* シーン"ゲームオーバー"を作成 */
-				SceneBase* pAddScene = new SceneGameOver();
-
-				/* シーン"ゲームオーバー"をシーンサーバーに登録 */
-				gpSceneServer->AddSceneReservation(pAddScene);
-			}
+			/* シーン"ゲームオーバー"をシーンサーバーに追加 */
+			gpSceneServer->AddSceneReservation(new SceneGameOver());
 			break;
 
 		/* "リセット"状態 */

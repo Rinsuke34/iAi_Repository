@@ -487,6 +487,18 @@
     <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間">
       <UniqueIdentifier>{514a6072-5879-4980-98dd-273b3060ae51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\操作説明">
+      <UniqueIdentifier>{fdbafb70-a10d-4d25-8460-e65dc9540676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\操作説明">
+      <UniqueIdentifier>{74de9b00-ed4d-4915-8e4b-ca17ea4d8cdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\エンドクレジット">
+      <UniqueIdentifier>{d54649cb-5da1-4cdb-a899-2b5914f16f9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\エンドクレジット">
+      <UniqueIdentifier>{0df2d989-bf01-44a6-a356-68ee56933799}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -776,6 +788,12 @@
     </ClCompile>
     <ClCompile Include="source\SceneUi_Time.cpp">
       <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間表示</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_OperationInstructions.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\操作説明</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneEndcredit.cpp">
+      <Filter>ソース ファイル\シーン\エンドクレジット</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1099,6 +1117,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneUi_Time.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\時間</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_OperationInstructions.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\操作説明</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneEndcredit.h">
+      <Filter>ヘッダー ファイル\シーン\エンドクレジット</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

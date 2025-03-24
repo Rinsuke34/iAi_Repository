@@ -28,6 +28,7 @@
 #include "SceneUi_Blood.h"
 #include "SceneUi_Edit.h"
 #include "SceneUi_Time.h"
+#include "SceneUi_OperationInstructions.h"
 
 /* 画面エフェクト */
 #include "ScreenEffect_Damage.h"

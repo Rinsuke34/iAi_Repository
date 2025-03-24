@@ -15,10 +15,10 @@ class SceneUi_Hp : public SceneBase
 {
 	public:
 		SceneUi_Hp();					// コンストラクタ
-		virtual ~SceneUi_Hp();			// デストラクタ
+		virtual ~SceneUi_Hp() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
-		void	Draw()				override;	// 描画
+		void	Draw()				override ;	// 描画
 
 	private:
 		/* 使用するデータリスト */

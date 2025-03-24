@@ -32,7 +32,8 @@ const std::string OPTION_NAME_BGMVOLUME							= "Bgm_Volume";								// BGM‚Ì‰¹—
 const std::string OPTION_NAME_SEVOLUME							= "Se_Volume";								// SE‚Ì‰¹—Ê( 0 ` 255 )
 const std::string OPTION_NAME_VOICEVOLUME						= "Voice_Volume";							// ƒ{ƒCƒX‚Ì‰¹—Ê( 0 ` 255 )
 // ‚»‚Ì‘¼
-const std::string OPTION_NAME_TUTORIALMESSAGE					= "TutorialMassage";						// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦
+//const std::string OPTION_NAME_TUTORIALMESSAGE					= "TutorialMassage";						// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦
+const std::string OPTION_NAME_OPERATION_KEYBOARD				= "Operation_Keyboard";						// ‘€ìà–¾ƒL[ƒ{[ƒh•\¦
 
 /* ƒIƒvƒVƒ‡ƒ“–¼(“ú–{Œê) */
 // ƒJƒƒ‰Œn
@@ -50,7 +51,8 @@ const std::string OPTION_NAME_BGMVOLUME_JP							= "BGM‚Ì‰¹—Ê";									// BGM‚Ì
 const std::string OPTION_NAME_SEVOLUME_JP							= "SE‚Ì‰¹—Ê";									// SE‚Ì‰¹—Ê( 0 ` 255 )
 const std::string OPTION_NAME_VOICEVOLUME_JP						= "ƒ{ƒCƒX‚Ì‰¹—Ê";								// ƒ{ƒCƒX‚Ì‰¹—Ê( 0 ` 255 )
 // ‚»‚Ì‘¼
-const std::string OPTION_NAME_TUTORIALMESSAGE_JP					= "ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦";				// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦
+//const std::string OPTION_NAME_TUTORIALMESSAGE_JP					= "ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦";				// ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒƒbƒZ[ƒW•\¦
+const std::string OPTION_NAME_OPERATION_KEYBOARD_JP					= "‘€ìà–¾ƒL[ƒ{[ƒh•\¦";						// ‘€ìà–¾ƒL[ƒ{[ƒh•\¦
 
 /* ƒtƒ@ƒCƒ‹ƒpƒX */
 const std::string FILE_PATH_OPTION = "resource/SetupData/OptionData.json";

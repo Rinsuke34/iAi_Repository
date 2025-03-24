@@ -29,8 +29,9 @@ SceneConversation::SceneConversation() : SceneBase("Conversation", 400, true)
 		this->apiGrHandle_SkipWindow_No[0]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_Selected");
 		this->apiGrHandle_SkipWindow_No[1]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_NotSelected");
 
-		/* Aボタンアイコン */
-		this->piGrHandle_Icon_Button_A			= ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
+		/* 決定アイコン(0:コントローラー/1:キーボード) */
+		this->piGrHandle_Icon_Button_Select[0]	= ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
+		this->piGrHandle_Icon_Button_Select[1]	= ImageList->piGetImage("Input_Icon/Keyboard/keyboard_z");
 
 		/* ホールドアイコン */
 		this->piGrHandle_Icon_Hold				= ImageList->piGetImage("Conversation/HoldTimer");
@@ -180,9 +181,23 @@ void SceneConversation::Draw()
 		}
 	}
 
-	/* Aボタン描写 */
-	DrawGraph(1820, 980, *this->piGrHandle_Icon_Button_A, TRUE);
+	/* キーボード描写であるか確認 */
+	int iDrawTypeNo = 0;
+	if (OptionList->bGetOperation_Keyboard() == true)
+	{
+		// キーボード描写である場合
+		/* 描写タイプ番号をキーボード描写に設定 */
+		iDrawTypeNo = 1;
+	}
+	else
+	{
+		// キーボード描写でない場合
+		/* 描写タイプ番号をコントローラー描写に設定 */
+		iDrawTypeNo = 0;
+	}
 
+	/* Aボタン描写 */
+	DrawGraph(1820, 980, *this->piGrHandle_Icon_Button_Select[iDrawTypeNo], TRUE);
 	double dComboTimerPercent = (static_cast<double>(this->iHoldTimer / 60.f) * 100.0);
 	DrawCircleGauge(1820 + 32, 980 + 32, dComboTimerPercent, *this->piGrHandle_Icon_Hold);
 }

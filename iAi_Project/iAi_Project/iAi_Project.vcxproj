@@ -221,10 +221,12 @@
     <ClCompile Include="source\SceneEdit.cpp" />
     <ClCompile Include="source\SceneEdit_Draw.cpp" />
     <ClCompile Include="source\SceneAddGameSetup.cpp" />
+    <ClCompile Include="source\SceneEndcredit.cpp" />
     <ClCompile Include="source\ScenePause.cpp" />
     <ClCompile Include="source\SceneStageClear.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StageJump.cpp" />
     <ClCompile Include="source\SceneUi_Debug_StatusSetup.cpp" />
+    <ClCompile Include="source\SceneUi_OperationInstructions.cpp" />
     <ClCompile Include="source\SceneUi_Time.cpp" />
     <ClCompile Include="source\Scene_Title_Player.cpp" />
     <ClCompile Include="source\Screen.cpp" />
@@ -312,6 +314,7 @@
     <ClInclude Include="source\SceneAddGameSetup.h" />
     <ClInclude Include="source\SceneAddTitleSetup.h" />
     <ClInclude Include="source\SceneConversation.h" />
+    <ClInclude Include="source\SceneEndcredit.h" />
     <ClInclude Include="source\SceneOptionDefine.h" />
     <ClInclude Include="source\ScenePause.h" />
     <ClInclude Include="source\ScenePauseDefine.h" />
@@ -319,6 +322,7 @@
     <ClInclude Include="source\SceneStageClear.h" />
     <ClInclude Include="source\SceneUi_Debug_StageJump.h" />
     <ClInclude Include="source\SceneUi_Debug_StatusSetup.h" />
+    <ClInclude Include="source\SceneUi_OperationInstructions.h" />
     <ClInclude Include="source\SceneUi_Time.h" />
     <ClInclude Include="source\Scene_Title_Player.h" />
     <ClInclude Include="source\Screen.h" />

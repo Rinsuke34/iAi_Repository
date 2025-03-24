@@ -50,7 +50,7 @@ void SceneEdit::Draw()
 		{
 			// "次へ"である場合
 			/* "次へ"ボタン描写 */
-			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->piGrHandle_SelectNext, TRUE);
+			DrawGraph(1515, 950, *this->piGrHandle_SelectNext, TRUE);
 		}
 		else
 		{
@@ -131,14 +131,14 @@ void SceneEdit::Draw()
 				case SELECT_TYPE_NEXT:
 					break;
 			}
-		}
 
-		/* 選択フレームの状態が設定されているか確認 */
-		if (this->astSelectItemList[i].iSelectStatus != SELECT_STATUS_NONE)
-		{
-			// フレームの状態が設定されている場合
-			/* 選択項目の状態のフレームを描写 */
-			DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->apiGrHandle_SelectStatus[this->astSelectItemList[i].iSelectStatus], TRUE);
+			/* 選択フレームの状態が設定されているか確認 */
+			if (this->astSelectItemList[i].iSelectStatus != SELECT_STATUS_NONE)
+			{
+				// フレームの状態が設定されている場合
+				/* 選択項目の状態のフレームを描写 */
+				DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->apiGrHandle_SelectStatus[this->astSelectItemList[i].iSelectStatus], TRUE);
+			}
 		}
 	}
 
@@ -147,7 +147,7 @@ void SceneEdit::Draw()
 	{
 		// 何もホールドしていない場合
 		/* 選択中の項目に対して選択フレームを描写 */
-		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix, this->astSelectItemList[this->iSelectItem].stDrawPos.iy, *this->piGrHandle_SelectFrame, TRUE);
+		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix, this->astSelectItemList[this->iSelectItem].stDrawPos.iy, *this->piGrHandle_SelectFrame[0], TRUE);
 	}
 	else
 	{
@@ -155,6 +155,9 @@ void SceneEdit::Draw()
 		// ※選択中の項目の右上にホールド中のエディットを描写
 		/* エディットフレーム描写 */
 		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix + 20, this->astSelectItemList[this->iSelectItem].stDrawPos.iy - 20, *this->GameResourceList->piGetGrHandle_EditFrame(this->HoldEditData.iEditRank), TRUE);
+
+		/* 選択中の項目に対して選択フレームを描写 */
+		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix, this->astSelectItemList[this->iSelectItem].stDrawPos.iy, *this->piGrHandle_SelectFrame[1], TRUE);
 
 		/* エディット効果描写 */
 		DrawGraph(this->astSelectItemList[this->iSelectItem].stDrawPos.ix + 20, this->astSelectItemList[this->iSelectItem].stDrawPos.iy - 20, *this->GameResourceList->piGetGrHandle_EditEffect(this->HoldEditData.iEditEffect), TRUE);

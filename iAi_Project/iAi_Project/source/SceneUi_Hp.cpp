@@ -29,12 +29,6 @@ SceneUi_Hp::SceneUi_Hp() : SceneBase("UI_Hp", 101, false)
 	}
 }
 
-// デストラクタ
-SceneUi_Hp::~SceneUi_Hp()
-{
-
-}
-
 // 計算
 void SceneUi_Hp::Process()
 {

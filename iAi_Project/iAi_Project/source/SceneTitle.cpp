@@ -147,6 +147,8 @@ void SceneTitle::Process()
 			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 			this->bHomeFlg = TRUE;
 
+			/* BGM‚ðÝ’è */
+			gpDataList_Sound->BGM_SetHandle(BGM_HOME);
 			break;
 			//‚Í‚¶‚ß‚©‚çƒz[ƒ€‰æ–Ê
         case CAMERA_FIXED_POSITION_A:
@@ -245,6 +247,9 @@ void SceneTitle::Process()
 				iUICount = CAMERA_FIXED_POSITION_START;
 				}
 			this->bHomeFlg = TRUE;
+
+			/* BGM‚ðÝ’è */
+			gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
 
 			break;
 

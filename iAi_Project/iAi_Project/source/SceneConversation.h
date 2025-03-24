@@ -39,7 +39,7 @@ class SceneConversation : public SceneBase
 		int* piGrHandle_SkipWindow;				// スキップ確認画面ウィンドウ
 		int* apiGrHandle_SkipWindow_Yes[2];		// スキップ確認YES(0:選択中/1:非選択中)
 		int* apiGrHandle_SkipWindow_No[2];		// スキップ確認NO(0:選択中/1:非選択中)
-		int* piGrHandle_Icon_Button_A;			// Aボタンアイコン
+		int* piGrHandle_Icon_Button_Select[2];	// 決定アイコン(0:コントローラー/1:キーボード)
 		int* piGrHandle_Icon_Hold;				// ホールドアイコン
 		int* piGrhandle_BackGround;				// 背景
 		int* piGrHandle_TextBackGround;			// テキスト背景

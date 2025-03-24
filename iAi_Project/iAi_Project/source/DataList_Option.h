@@ -26,7 +26,8 @@ class DataList_Option : public DataListBase
 		int		iGetBgmVolume()										{ return this->iBgmVolume; }								// BGMの音量取得
 		int		iGetSeVolume()										{ return this->iSeVolume; }									// SEの音量取得
 		int		iGetVoiceVolume()									{ return this->iVoiceVolume; }								// ボイスの音量取得
-		bool	bGetTutorialMassage()								{ return this->bTutorialMassage; }							// チュートリアルメッセージ表示取得
+		//bool	bGetTutorialMassage()								{ return this->bTutorialMassage; }							// チュートリアルメッセージ表示取得
+		bool	bGetOperation_Keyboard()							{ return this->bOperation_Keyboard; }						// 操作説明キーボード表示取得
 
 		/* データ設定 */
 		void	SetCameraInversion(int iInputType, int iAxis, bool bCameraInversion)		{ this->abCameraInversion[iInputType][iAxis]	= bCameraInversion; }		// カメラ反転設定
@@ -35,7 +36,8 @@ class DataList_Option : public DataListBase
 		void	SetBgmVolume(int iBgmVolume)												{ this->iBgmVolume								= iBgmVolume; }				// BGMの音量設定
 		void	SetSeVolume(int iSeVolume)													{ this->iSeVolume								= iSeVolume; }				// SEの音量設定
 		void	SetVoiceVolume(int iVoiceVolume)											{ this->iVoiceVolume							= iVoiceVolume; }			// ボイスの音量設定
-		void	SetTutorialMassage(bool bTutorialMassage)									{ this->bTutorialMassage						= bTutorialMassage; }		// チュートリアルメッセージ表示設定
+		//void	SetTutorialMassage(bool bTutorialMassage)									{ this->bTutorialMassage						= bTutorialMassage; }		// チュートリアルメッセージ表示設定
+		void	SetOperation_Keyboard(bool bOperation_Keyboard)								{ this->bOperation_Keyboard						= bOperation_Keyboard; }	// 操作説明キーボード表示設定
 
 		/* オプションリストのポインタ取得 */
 		std::vector<OPTION_LIST>* stGetOptionNameList() { return &this->astOptionNameList; }						// オプション名リスト取得
@@ -45,13 +47,14 @@ class DataList_Option : public DataListBase
 		// 入力設定
 		bool	abCameraInversion[INPUT_TYPE_MAX][INPUT_CAMERA_MODE_MAX];		// カメラ反転設定(入力タイプ/カメラ状態)
 		float	afCameraSensitivity[INPUT_TYPE_MAX][AXIS_MAX];					// カメラ感度設定(倍率)(入力タイプ/軸)
-		float	fEnemyDrawDistance;
+		float	fEnemyDrawDistance;												// エネミー描写距離
 		// サウンド設定
 		int		iBgmVolume;			// BGMの音量(0 ～ 255)
 		int		iSeVolume;			// SEの音量(0 ～ 255)
 		int		iVoiceVolume;		// ボイスの音量(0 ～ 255)
 		// その他
-		bool	bTutorialMassage;	// チュートリアルメッセージ表示
+		//bool	bTutorialMassage;			// チュートリアルメッセージ表示
+		bool	bOperation_Keyboard;		// 操作説明キーボード表示
 
 		/* Jsonファイルでのオプション名と変数の対応表 */
 		// ※ オプション項目を追加する場合はここに追加する
@@ -73,6 +76,7 @@ class DataList_Option : public DataListBase
 			{ OPTION_NAME_SEVOLUME,								OPTION_NAME_SEVOLUME_JP,								&iSeVolume,																DATA_TYPE_INT,		OPTION_SOUND_VOLUME_MIN,		OPTION_SOUND_VOLUME_MAX,		OPTION_SOUND_VOLUME_STEP		},
 			{ OPTION_NAME_VOICEVOLUME,							OPTION_NAME_VOICEVOLUME_JP,								&iVoiceVolume,															DATA_TYPE_INT,		OPTION_SOUND_VOLUME_MIN,		OPTION_SOUND_VOLUME_MAX,		OPTION_SOUND_VOLUME_STEP		},
 			// その他
-			{ OPTION_NAME_TUTORIALMESSAGE,						OPTION_NAME_TUTORIALMESSAGE_JP,							&bTutorialMassage,														DATA_TYPE_BOOL,		0.f,							0.f,							0.f								}
+			//{ OPTION_NAME_TUTORIALMESSAGE,						OPTION_NAME_TUTORIALMESSAGE_JP,							&bTutorialMassage,														DATA_TYPE_BOOL,		0.f,							0.f,							0.f								}
+			{ OPTION_NAME_OPERATION_KEYBOARD,					OPTION_NAME_OPERATION_KEYBOARD_JP,						&bOperation_Keyboard,													DATA_TYPE_BOOL,		0.f,							0.f,							0.f								}
 		};
 };
