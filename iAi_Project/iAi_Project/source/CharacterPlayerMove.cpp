@@ -420,7 +420,7 @@ void CharacterPlayer::Player_Jump()
 	{
 		// ジャンプ処理を行う場合
 		/* ジャンプのクールタイムが残っているか確認 */
-		if (this->iJumpCoolTime > 0)
+		if (this->iJumpNowCoolTime > 0)
 		{
 			// クールタイムが残っている場合
 			/* ジャンプを行わない */
@@ -507,8 +507,11 @@ void CharacterPlayer::Player_Jump()
 					/* モーションを"ジャンプ(開始)"に設定 */
 					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
 
+					/* ジャンプのクールタイム設定値を取得 */
+					int iJumpCoolTime = this->PlayerStatusList->iGetPlayerJumpCoolTime();
+
 					/* ジャンプのクールタイムを設定 */
-					this->iJumpCoolTime = PLAYER_JUMP_COOLTIME;
+					this->iJumpNowCoolTime = iJumpCoolTime;
 				}
 				else
 				{ 
@@ -736,7 +739,7 @@ void CharacterPlayer::Player_Dodg()
 					if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
 					{
 						/* 回避のクールタイムが残っているか確認 */
-						if (this->iDodgeCoolTime > 0)
+						if (this->iDodgeNowCoolTime > 0)
 						{
 							// クールタイムが残っている場合
 							/* 回避を行わない */
@@ -835,8 +838,11 @@ void CharacterPlayer::Player_Dodg()
 								this->ObjectList->SetEffect(this->pDodgeEffect);
 							}
 						}
+						/* 回避クールタイムの設定値を取得 */
+						int iDodgeCoolTime = this->PlayerStatusList->iGetPlayerDodgeCoolTime();
+
 						/* 回避クールタイムを設定 */
-						this->iDodgeCoolTime = PLAYER_DODGE_COOLTIME;
+						this->iDodgeNowCoolTime = iDodgeCoolTime;
 					}
 				}
 			}

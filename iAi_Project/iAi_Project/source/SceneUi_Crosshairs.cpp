@@ -1,6 +1,7 @@
 /* 2025.01.27 ファイル作成 駒沢風助 */
 /* 2025.02.17 遠距離攻撃関連の処理追加 菊池雅道 */
 /* 2025.02.28 遠距離攻撃関連の処理追加 菊池雅道 */
+/* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
 
 #include "SceneUi_Crosshairs.h"
 
@@ -39,6 +40,7 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 開始 */
 /* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 開始 */
+/* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
 // 計算
 void SceneUi_Crosshairs::Process()
 {
@@ -60,6 +62,9 @@ void SceneUi_Crosshairs::Process()
 		/* エネミーリストを取得 */
 		auto& EnemyList = ObjectList->GetEnemyList();
 
+		/* プラットフォームを取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
+
 		/* ロックオン範囲内のエネミーのうち最も画面中央に近いエネミーをロックオン対象に設定 */
 		for (auto* enemy : EnemyList)
 		{
@@ -71,45 +76,80 @@ void SceneUi_Crosshairs::Process()
 				continue;
 			}
 
+			/* コアのワールド座標を取得 */
+			VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+
+			/* コアの座標をスクリーン座標に変換 */
+			VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
+
 			/* ロックオン範囲に接触しているか確認 */
 			if (enemy->HitCheck(this->PlayerStatusList->stGetMeleeSearchCollision()) == true)
 			{
 				// 接触している場合
-				/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
-				enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
+				// 敵との間に障害物が存在するか確認する
+				/* 障害物を確認する線分コリジョンを設定 */
+				COLLISION_LINE stCollisionLine;
+				
+				/* 線分の開始点を設定(プレイヤー位置) */
+				stCollisionLine.vecLineStart = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+				
+				/* 線分の開始点の高さはプレイヤーの身長の半分にする(足元だと接触判定が適切にできないため) */
+				stCollisionLine.vecLineStart.y += PLAYER_HEIGHT / 2;
 
-				// ロックオン範囲内である場合
-				/* コアのワールド座標を取得 */
-				VECTOR vecCoreWord = MV1GetFramePosition(enemy->iGetModelHandle(), enemy->iGetCoreFrameNo());
+				/* 線分の終了点を設定(敵の位置) */
+				stCollisionLine.vecLineEnd = vecCoreWord;
 
-				/* コアの座標をスクリーン座標に変換 */
-				VECTOR vecCoreScreen = ConvWorldPosToScreenPos(vecCoreWord);
-
-				/* スクリーン座標が有効であるか確認 */
-				// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
-				if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
+				 /* プラットフォームが存在するか確認する */
+				for (auto* platform : PlatformList)
 				{
-					// 有効である場合
-					/* 画面の中心との差を求める */
-					float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
-					float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
-					float fDistance = (fx * fx) + (fy * fy);
+					/* 線分プラットフォームと接触しているか確認 */
+					MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
 
-					/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
-					if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+					/* 接触フラグを確認する */
+					if (stHitPoly.HitFlag == true)
 					{
-						// 近い場合
-						/* 最も画面の中心点から近いエネミーを更新 */
-						stNearEnemy.pEnemy = enemy;
-						stNearEnemy.fDistance = fDistance;
+						// 接触している場合
+						/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+						enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+
+						/* ループを抜ける(次の敵へ) */
+						return;
+					}
+					else
+					{
+						
+						// 接触していない場合
+					/* プレイヤー視点でのロックオン状態を"ロックオン範囲内である"に設定 */
+						enemy->SetPlayerLockOnType(PLAYER_LOCKON_RANGE);
+
+						/* スクリーン座標が有効であるか確認 */
+						// ※スクリーン座標のZ軸が0.0f以下、あるいは1.0f以上であるならば無効となる
+						if (0.f < vecCoreScreen.z && vecCoreScreen.z < 1.f)
+						{
+							// 有効である場合
+							/* 画面の中心との差を求める */
+							float fx = vecCoreScreen.x - (SCREEN_SIZE_WIDE / 2.f);
+							float fy = vecCoreScreen.y - (SCREEN_SIZE_HEIGHT / 2.f);
+							float fDistance = (fx * fx) + (fy * fy);
+
+							/* 現在の最も画面の中心点から近いエネミーよりも画面中央に近いか確認 */
+							if (fDistance < stNearEnemy.fDistance || stNearEnemy.pEnemy == nullptr)
+							{
+								// 近い場合
+								/* 最も画面の中心点から近いエネミーを更新 */
+								stNearEnemy.pEnemy = enemy;
+								stNearEnemy.fDistance = fDistance;
+							}
+						}
+						else
+						{
+							// 無効である場合
+							/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+							enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+						}
 					}
 				}
-				else
-				{
-					// 無効である場合
-					/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
-					enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
-				}
+				
 			}
 			else
 			{
@@ -122,9 +162,10 @@ void SceneUi_Crosshairs::Process()
 		/* 最も画面の中心点から近いエネミーをロックオン対象に指定 */
 		if (stNearEnemy.pEnemy != nullptr)
 		{
-			// ロックオン対象が存在する場合
+			// ロックオン対象が存在する場合			
 			/* プレイヤー視点でのロックオン状態を"ロックオンされている"に設定 */
-			stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);
+			stNearEnemy.pEnemy->SetPlayerLockOnType(PLAYER_LOCKON_TARGET);		
+	
 		}
 	}
 	/* カメラモードが構え(クナイ構え)か確認 */
@@ -134,6 +175,9 @@ void SceneUi_Crosshairs::Process()
 		// 構え(クナイ構え)の場合
 		/* エネミーリストを取得 */
 		auto& EnemyList = ObjectList->GetEnemyList();
+
+		/* プラットフォームを取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* プレイヤーを取得 */
 		CharacterBase* pPlayer = (ObjectList->GetCharacterPlayer());
@@ -162,7 +206,6 @@ void SceneUi_Crosshairs::Process()
 			float fDistance = VSize(vecDistance);
 
 			/* スクリーンのロックオン範囲に接触しているか確認 */
-			/* ※範囲は仮設定 */
 			if (vecCoreScreen.x >= SCREEN_SIZE_WIDE / 2.f - 200 && vecCoreScreen.x <= SCREEN_SIZE_WIDE / 2.f + 200 && vecCoreScreen.y >= SCREEN_SIZE_HEIGHT / 2.f -200 && vecCoreScreen.y<= SCREEN_SIZE_HEIGHT / 2.f + 200)
 			{
 				// 接触している場合
@@ -173,9 +216,6 @@ void SceneUi_Crosshairs::Process()
 					// 敵との間に障害物が存在するか確認する
 					/* 障害物を確認する線分コリジョンを設定 */
 					COLLISION_LINE stCollisionLine;
-
-					/* プラットフォームを取得 */
-					auto& PlatformList = ObjectList->GetPlatformList();
 
 					/* 線分の開始点を設定(カメラ位置) */
 					stCollisionLine.vecLineStart = this->StageStatusList->vecGetCameraPosition();
@@ -277,6 +317,7 @@ void SceneUi_Crosshairs::Process()
 }
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 終了 */
 /* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 終了 */
+/* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
 
 // 描画
 void SceneUi_Crosshairs::Draw()

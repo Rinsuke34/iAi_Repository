@@ -52,6 +52,9 @@ void CharacterPlayer::Player_Attack_Transition()
 	{
 		/* 自由状態 */
 		case PLAYER_ATTACKSTATUS_FREE:
+
+
+			//近接攻撃(強)の処理
 			/* 攻撃入力がされているか確認 */
 			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 			{
@@ -129,8 +132,12 @@ void CharacterPlayer::Player_Attack_Transition()
 								// 無効である場合								
 								/* 画面エフェクト(被ダメージ)作成 */
 								this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+								
 								/* スローモーションフラグを有効化 */
 								this->StageStatusList->SetGameSlowFlg(true);
+
+								/* スローモーションカウントをリセットする */
+								this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 							}
 						}
 						else
@@ -142,6 +149,9 @@ void CharacterPlayer::Player_Attack_Transition()
 								// 有効である場合
 								/* スローモーションフラグを無効化 */
 								this->StageStatusList->SetGameSlowFlg(false);
+
+								/* スローモーションカウントをリセットする */
+								this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 							}
 						}
 					}
@@ -173,6 +183,9 @@ void CharacterPlayer::Player_Attack_Transition()
 							// 有効である場合
 							/* スローモーションフラグを無効化 */
 							this->StageStatusList->SetGameSlowFlg(false);
+
+							/* スローモーションカウントをリセットする */
+							this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 						}
 					}
 					/* 近距離攻撃(強)後のカウントを加算 */
@@ -199,9 +212,41 @@ void CharacterPlayer::Player_Attack_Transition()
 					// 有効である場合
 					/* スローモーションフラグを無効化 */
 					this->StageStatusList->SetGameSlowFlg(false);
+
+					/* スローモーションカウントをリセットする */
+					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 				}
 			}
 			
+			/* スローモーションが有効であるか確認 */
+			if (this->StageStatusList->bGetGameSlowFlg() == true)
+			{
+				// 有効である場合
+				/* スローモーションカウントを取得 */
+				int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
+
+				/* スローモーションカウントが一定値を超えているか確認 */
+				if (iNowSlowMotionCount > PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
+				{
+					// スローモーションカウントが一定値を超えている場合
+					/* スローモーションフラグが有効であるか確認 */
+					if (this->StageStatusList->bGetGameSlowFlg() == true)
+					{
+						// 有効である場合
+						/* スローモーションフラグを無効化 */
+						this->StageStatusList->SetGameSlowFlg(false);
+
+						/* スローモーションカウントをリセットする */
+						this->PlayerStatusList->SetPlayerSlowMotionCount(0);
+					}
+				}
+
+				/* スローモーションカウントを加算する */
+				this->PlayerStatusList->SetPlayerSlowMotionCount(iNowSlowMotionCount + 1);
+		
+			}
+			
+			// 遠距離攻撃の処理
 			/* エイム(構え)入力がされているか確認 */
 			if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
 			{
@@ -304,12 +349,38 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
+		/* スローモーションが有効か確認する */
+		if (this->StageStatusList->bGetGameSlowFlg() == true)
+		{
+			/* スローモーションカウントを取得 */
+			int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
+
+			/* スローモーションカウントが一定値を超えているか確認 */
+			if (iNowSlowMotionCount > PLAYER_SLOWMOTION_COUNT_MAX)
+			{
+				// スローモーションカウントが一定値を超えている場合
+				/* スローモーションフラグが有効であるか確認 */
+				if (this->StageStatusList->bGetGameSlowFlg() == true)
+				{
+					// 有効である場合
+					/* スローモーションフラグを無効化 */
+					this->StageStatusList->SetGameSlowFlg(false);
+
+					/* スローモーションカウントをリセットする */
+					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
+				}
+			}
+
+			/* スローモーションカウントを加算する */
+			this->PlayerStatusList->SetPlayerSlowMotionCount(iNowSlowMotionCount + 1);
+		
+		}
+		
 		// 近接攻撃(強)で敵を倒した後、一定時間内であれば攻撃チャージフレーム数を最大にする 
 		/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
 		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 		{
 			// 近接攻撃(強)で敵を倒した後の場合
-
 			// 近接攻撃(強)で連続できる最大フレーム数を取得
 			int iMeleeStrongContinuosMaxFrame = this->PlayerStatusList->iGetPlayerMeleeStrongContinusMaxFrame();
 			
@@ -338,8 +409,13 @@ void CharacterPlayer::Player_Melee_Posture()
 					// 有効である場合
 					/* スローモーションフラグを無効化 */
 					this->StageStatusList->SetGameSlowFlg(false);
+
+					/* スローモーションカウントをリセットする */
+					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 				}
 			}
+
+
 		}
 
 		// 攻撃チャージフレームが強攻撃の切り替わりに達したら
@@ -581,7 +657,7 @@ void CharacterPlayer::Player_Melee_Weak()
 
 	// クールタイムが残っている場合攻撃しない
 	/* 近接攻撃(弱)のクールタイムを確認 */
-	if (this->iMeleeWeakCoolTime > 0)
+	if (this->iMeleeWeakNowCoolTime > 0)
 	{
 		// クールタイムが残っている場合
 		/* 近距離攻撃(弱)処理を行わない */
@@ -629,8 +705,11 @@ void CharacterPlayer::Player_Melee_Weak()
 		this->ObjectList->SetEffect(pSeathEffect);
 	}
 
+	/* 近接攻撃(弱)のクールタイム設定値を取得 */
+	int iMeleeWeakCoolTime = this->PlayerStatusList->iGetPlayerMeleeWeakCoolTime();
+
 	/* 近接攻撃(弱)のクールタイム設定 */
-	this->iMeleeWeakCoolTime = PLAYER_MELEE_WEAK_COLLTIME;
+	this->iMeleeWeakNowCoolTime = iMeleeWeakCoolTime;
 
 	/* 自由状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
@@ -902,12 +981,12 @@ void CharacterPlayer::Player_Charge_Attack()
 			if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 			{
 				// モーションが"近距離攻撃(強)(終了)"になった場合
-				
-				/* プレイヤーのロックオン範囲を取得 */
-				float fRockOnRadius = this->PlayerStatusList->fGetPlayerRockOnRadius();
+
+				/* 索敵範囲の設定値を取得 */
+				float fSearchRange = this->PlayerStatusList->fGetPlayerMeleeStrongNextSearchRange();
 
 				/* 索敵範囲を設定 */
-				COLLISION_SQHERE stSearchSqere{ this->vecPosition, fRockOnRadius };
+				COLLISION_SQHERE stSearchSqere{ this->vecPosition, fSearchRange };
 
 				/* プレイヤーに近いエネミーを取得する */
 				NearEnemy stNearEnemy = { nullptr, 0.f };
@@ -916,7 +995,7 @@ void CharacterPlayer::Player_Charge_Attack()
 				auto& EnemyList = ObjectList->GetEnemyList();
 
 				/* プレイヤーからエネミーの最小ベクトルを保持する変数 */
-				VECTOR vecMinDirection = VGet(fRockOnRadius, fRockOnRadius, fRockOnRadius);
+				VECTOR vecMinDirection = VGet(fSearchRange, fSearchRange, fSearchRange);
 
 				/* プレイヤーからエネミーの最小距離を保持する変数 */
 				float fMinDistance = VSize(vecMinDirection);
@@ -1164,7 +1243,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
 		{
 			/* 遠距離攻撃のクールタイムを確認 */
-			if (this->iProjectileCoolTime == 0)
+			if (this->iProjectileNowCoolTime == 0)
 			{
 				// クールタイムが0の場合
 				/* 現在のクナイの所持数を取得 */
@@ -1390,8 +1469,11 @@ void CharacterPlayer::Player_Projectile()
 		this->ObjectList->SetEffect(pProjectileEffect);
 	}
 
+	/* 遠距離攻撃のクールタイム設定値を取得 */
+	int iProjectileCoolTime = this->PlayerStatusList->iGetPlayerKunaiCoolTime();
+
 	/* 遠距離攻撃のクールタイムを設定 */
-	this->iProjectileCoolTime = PLAYER_PROJECTILE_COLLTIME;
+	this->iProjectileNowCoolTime = iProjectileCoolTime;
 
 	/* 遠距離攻撃構え状態に戻す */
 	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE);

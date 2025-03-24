@@ -13,6 +13,7 @@
 /* 2025.03.18 ‹î‘ò•—• ˆÚ“®°ƒKƒ^ƒKƒ^‘Îô */
 /* 2025.03.18 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -25,23 +26,28 @@ const std::string	BASE_STATUS_NAME_JUMP_SPEED					= "JumpSeepd";				// ƒvƒŒƒCƒ„
 const std::string	BASE_STATUS_NAME_FALL_ACCELERATION			= "FallAcceleration";		// ƒvƒŒƒCƒ„[‚Ì—‰º‰Á‘¬“x
 const std::string	BASE_STATUS_NAME_FALL_SPEED_MAX				= "FallSpeed_Max";			// ƒvƒŒƒCƒ„[‚ÌÅ‘å—‰º‘¬“x
 const std::string	BASE_STATUS_NAME_JUMP_COUNT_MAX				= "JumpCount_Max";			// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Å‘å”)
+const std::string	BASE_STATUS_NAME_JUMP_COOL_TIME				= "JumpCoolTime";			// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒvƒN[ƒ‹ƒ^ƒCƒ€												/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_DODGE_SPEED				= "DodgeSpeed";				// ƒvƒŒƒCƒ„[‚Ì‰ñ”ğ‘¬“x															/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_DODGE_FRAME				= "DodgeFlame";				// ƒvƒŒƒCƒ„[‚Ì‰ñ”ğƒtƒŒ[ƒ€”													/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_DODGE_COOL_TIME			= "DodgeCoolTime";			// ƒvƒŒƒCƒ„[‚Ì‰ñ”ğƒN[ƒ‹ƒ^ƒCƒ€													/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED	= "KickWallHorizontalSpeed";// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(…•½¬•ª)											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED	= "KickWallVerticalSpeed";	// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(‚’¼¬•ª)											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_KICKWALL_FLAME				= "KickWallFlame";			// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒNŒp‘±ƒtƒŒ[ƒ€”											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME	= "KickWallInputMaxFlame";	// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN“ü—Í—P—\ƒtƒŒ[ƒ€”										/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_MELEE_WEAK_COOL_TIME				= "MeleeWeakCoolTime";				// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(ã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME	= "MeleeStrongChangeChargeFrame";	// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÉØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”							/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME		= "MeleeStrongMaxChargeFrame";		// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÌÅ‘å—­‚ßŠÔ											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_MOVE_SCALE			= "MeleeStrongMoveScale";			// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÌˆÚ“®‹——£‚ÌƒXƒP[ƒ‹									/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED			= "MeleeStrongMoveSpeed";			// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÌˆÚ“®‘¬“x												/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CONTINUS_MAX_FRAME	= "MeleeStrongContinusMaxFrame";	// ƒvƒŒƒCƒ„[‚ª‹ß‹——£UŒ‚(‹­)‚Å˜A‘±UŒ‚‚Å‚«‚éÅ‘åƒtƒŒ[ƒ€”							/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_AIR_MAX_COUNT			= "MeleeStrongAirMaxCount";			// ƒvƒŒƒCƒ„[‚Ì‹ó’†‚Å‚Ì‹ß‹——£UŒ‚(‹­)‰ñ”(¦“G‚ğUŒ‚‚µ‚Ä‚¢‚È‚¢ê‡‚ÌÅ‘å”)
-const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS				= "RockOnRadius";			// ƒƒbƒNƒIƒ“”ÍˆÍ‚Ì”¼Œa
-const std::string	BASE_STATUS_NAME_HP_MAX						= "Hp_Max";					// ƒvƒŒƒCƒ„[‚ÌÅ‘åHP
-const std::string	BASE_STATUS_NAME_INVINCIBLE_TIME_MAX		= "InvincibleTime_Max";		// ƒvƒŒƒCƒ„[‚ÌÅ‘å–³“GŠÔ
-const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI			= "StartHaveKunai";			// ‰Šúó‘Ô‚Å‚Á‚Ä‚¢‚éƒNƒiƒC‚ÌŒÂ”
-const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI				= "MaxHaveKunai";			// Å‘å‚Å‚Ä‚éƒNƒiƒC‚ÌŒÂ”
+const std::string	BASE_STATUS_NAME_MELEE_STRONG_NEXT_SEARCH_RANGE		= "MeleeStrongNextSearchRange";		// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)Œã‚ÌŸ‚Ìõ“G”ÍˆÍ										/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS						= "RockOnRadius";					// ƒƒbƒNƒIƒ“”ÍˆÍ‚Ì”¼Œa
+const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI					= "StartHaveKunai";					// ‰Šúó‘Ô‚Å‚Á‚Ä‚¢‚éƒNƒiƒC‚ÌŒÂ”
+const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI						= "MaxHaveKunai";					// Å‘å‚Å‚Ä‚éƒNƒiƒC‚ÌŒÂ”
+const std::string	BASE_STATUS_NAME_KUNAI_COOL_TIME					= "KunaiCoolTime";					// ƒNƒiƒC‚ÌƒN[ƒ‹ƒ^ƒCƒ€																/*2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_HP_MAX								= "Hp_Max";							// ƒvƒŒƒCƒ„[‚ÌÅ‘åHP
+const std::string	BASE_STATUS_NAME_INVINCIBLE_TIME_MAX				= "InvincibleTime_Max";				// ƒvƒŒƒCƒ„[‚ÌÅ‘å–³“GŠÔ
 
 /* ƒtƒ@ƒCƒ‹ƒpƒX */
 const std::string FILE_PATH_STATUS = "resource/SetupData/PlayerStatusData.json";
