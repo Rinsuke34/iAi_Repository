@@ -22,6 +22,7 @@ SceneUi_Debug::SceneUi_Debug() : SceneBase("UI_Debug", 200, true)
 	pDebugManu.push_back(&gbDrawDeleteBackGroundFlg);	// バックグランドオブジェクトの非表示
 	pDebugManu.push_back(&gbUseMouseFlg);				// マウス使用フラグの有効・無効の切り替え
 	pDebugManu.push_back(&gbDrawFpsFlg);				// フレームレートの描写
+	pDebugManu.push_back(&gbDrawInputTest);				// 入力テストの描写
 }
 
 // 計算
@@ -186,7 +187,7 @@ void SceneUi_Debug::Draw()
 		case DEBUG_MODE_OPTION:
 			DrawBox(780, 300, 1200, 300 - 16, GetColor(255, 0, 0), TRUE);
 			DrawFormatString(800, 300 - 16, GetColor(255, 255, 255), "デバッグオプション");
-			DrawBox(780, 300, 1200, 300 + 16 * 10, GetColor(0, 0, 0), TRUE);
+			DrawBox(780, 300, 1200, 300 + 16 * 11, GetColor(0, 0, 0), TRUE);
 			DrawFormatString(800, 300 + 16 * 0, GetColor(255, 255, 255), "シーンリストの描写");
 			DrawFormatString(800, 300 + 16 * 1, GetColor(255, 255, 255), "データリストの描写");
 			DrawFormatString(800, 300 + 16 * 2, GetColor(255, 255, 255), "シャドウマップの描写");
@@ -197,6 +198,7 @@ void SceneUi_Debug::Draw()
 			DrawFormatString(800, 300 + 16 * 7, GetColor(255, 255, 255), "バックグランドオブジェクトの非表示");
 			DrawFormatString(800, 300 + 16 * 8, GetColor(255, 255, 255), "マウス使用フラグ");
 			DrawFormatString(800, 300 + 16 * 9, GetColor(255, 255, 255), "フレームレートの描写");
+			DrawFormatString(800, 300 + 16 * 10, GetColor(255, 255, 255), "入力テストの描写");
 			break;
 
 		/* デバッグ操作 */

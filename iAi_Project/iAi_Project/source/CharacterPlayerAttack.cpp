@@ -56,7 +56,7 @@ void CharacterPlayer::Player_Attack_Transition()
 
 			//近接攻撃(強)の処理
 			/* 攻撃入力がされているか確認 */
-			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
+			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
 			{
 				// 攻撃入力がされている場合
 				/* プレイヤー状態を"近接攻撃構え中"に設定 */
@@ -247,7 +247,7 @@ void CharacterPlayer::Player_Attack_Transition()
 			
 			// 遠距離攻撃の処理
 			/* エイム(構え)入力がされているか確認 */
-			if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM) == true)
+			if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_AIM))
 			{
 				/* エイム(構え)キャンセルフラグが解除されている場合 */
 				if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == false)
@@ -262,7 +262,7 @@ void CharacterPlayer::Player_Attack_Transition()
 			else if (this->PlayerStatusList->bGetPlayerAimCancelledFlg() == true)
 			{
 				/* エイム(構え)ボタンを離したら */
-				if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) == false)
+				if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_AIM) != true)
 				{
 					/* エイム(構え)キャンセルフラグを解除 */
 					this->PlayerStatusList->SetPlayerAimCancelledFlg(false);
@@ -346,7 +346,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	int iPlayerMeleeStrongAfterCount = this->PlayerStatusList->iGetPlayerMeleeStrongAfterCount();
 
 	/* 攻撃入力がされているか確認 */
-	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
+	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK))
 	{
 		/* スローモーションが有効か確認する */
 		if (this->StageStatusList->bGetGameSlowFlg() == true)
@@ -1241,7 +1241,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 
 		//入力されたボタンに応じて処理を変える
 		/* 攻撃入力がされた場合 */
-		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK) == true)
+		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
 		{
 			/* 遠距離攻撃のクールタイムを確認 */
 			if (this->iProjectileNowCoolTime == 0)
@@ -1283,7 +1283,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 			}
 		}
 		/* ジャンプ入力がされた場合 */
-		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
+		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP))
 		{
 			// 遠距離攻撃構え状態をキャンセルする
 			/* 遠距離攻撃構え状態キャンセルフラグをたてる */
@@ -1304,7 +1304,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 			}
 		}
 		/* 回避入力がされた場合 */
-		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
+		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
 		{
 			// 遠距離攻撃構え状態をキャンセルする
 			/* 遠距離攻撃構え状態キャンセルフラグをたてる */

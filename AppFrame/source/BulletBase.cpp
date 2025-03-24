@@ -13,6 +13,7 @@ BulletBase::BulletBase() : ActorBase()
 	this->fMoveSpeed		= 0;		// 移動速度
 	this->iTargetObjectType	= 0;		// 接触する対象となるオブジェクトのタイプ
 	this->bParryFlg			= false;	// パリィフラグ(反射できるか)
+	this->iBulletType		= 0;		// 弾丸の種類(反射可能であるか)
 }
 
 // 当たり判定描写

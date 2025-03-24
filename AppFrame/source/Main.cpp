@@ -5,16 +5,11 @@
 #include "AppConstantDefine.h"
 #include "AppFunctionDefine.h"
 
-#define _CRTDG_MAP_ALLOC
-#include <crtdbg.h>
-
 /* プログラムのメインループ */
 
 // メインプログラム
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
 	/* 名前空間の省略 */
 	using namespace Main;	// WinMain関数で使用する関数、変数宣言
 

@@ -486,4 +486,93 @@ void SceneStage::DrawDebug()
 		DrawExtendGraph(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT * iDrawCount, SCREEN_SIZE_WIDE, DEBUG_MAP_HEIGHT * (iDrawCount + 1), this->iLightMapScreenHandle_Gauss, FALSE);
 		iDrawCount++;
 	}
+
+	/* 入力描写テスト */
+	if (gbDrawInputTest == true)
+	{
+		/* ジャンプ */
+		if (gpDataList_Input->bGetGameInputAction(INPUT_HOLD, GAME_JUMP))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "ジャンプ入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_TRG, GAME_JUMP))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "ジャンプトリガ入力", GetColor(255 ,0 ,0));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_REL, GAME_JUMP))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "ジャンプリリース入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		
+		/* 攻撃 */
+		if (gpDataList_Input->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "攻撃入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "攻撃トリガ入力", GetColor(255, 0, 0));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_REL, GAME_ATTACK))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "攻撃ホールド入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		/* エイム(構え) */
+		if (gpDataList_Input->bGetGameInputAction(INPUT_HOLD, GAME_AIM))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount,"エイム(構え)入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_TRG, GAME_AIM))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "エイム(構え)トリガ入力", GetColor(255, 0, 0));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_REL, GAME_AIM))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "エイム(構え)リリース入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		/* カメラリセット */
+		if (gpDataList_Input->bGetGameInputAction(INPUT_HOLD, GAME_RESET))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "カメラリセット入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_TRG, GAME_RESET))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "カメラリセットトリガ入力", GetColor(255, 0, 0));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_REL, GAME_RESET))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "カメラリセットリリース入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+
+		/* 回避 */
+		if (gpDataList_Input->bGetGameInputAction(INPUT_HOLD, GAME_DODGE))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "回避入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_TRG, GAME_DODGE))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "回避トリガ入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+		if (gpDataList_Input->bGetGameInputAction(INPUT_REL, GAME_DODGE))
+		{
+			DrawString(SCREEN_SIZE_WIDE - DEBUG_MAP_WIDTH, DEBUG_MAP_HEIGHT + 16 * iDrawCount, "回避リリース入力", GetColor(255, 255, 255));
+			iDrawCount++;
+		}
+	}
 }

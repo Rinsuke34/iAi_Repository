@@ -26,14 +26,15 @@ DataList_Object::~DataList_Object()
 {
 	/* メモリ解放 */
 	{
-		delete this->pCharacterPlayer;											// プレイヤー
-		delete this->pSkySqhere;												// スカイスフィア
-		for (auto& pEnemy : this->pEnemyList)			{ delete pEnemy; }		// エネミー
-		for (auto& pBullet : this->pBulletList)			{ delete pBullet; }		// 弾		
-		for (auto& pEffect : this->pEffectList)			{ delete pEffect; }		// エフェクト
-		for (auto& pPlatform : this->pPlatformList)		{ delete pPlatform; }	// プラットフォーム
-		for (auto& pEffectItem : this->pEffectItemList)	{ delete pEffectItem; }	// アイテム(実体なし)
-		for (auto& pPickUpItem : this->pPickUpItemList)	{ delete pPickUpItem; }	// アイテム(実体あり)
+		delete this->pCharacterPlayer;																		// プレイヤー
+		delete this->pSkySqhere;																			// スカイスフィア
+		for (auto& pEnemy : this->pEnemyList)							{ delete pEnemy; }					// エネミー
+		for (auto& pBullet : this->pBulletList)							{ delete pBullet; }					// 弾		
+		for (auto& pEffect : this->pEffectList)							{ delete pEffect; }					// エフェクト
+		for (auto& pPlatform : this->pPlatformList)						{ delete pPlatform; }				// プラットフォーム
+		for (auto& pEffectItem : this->pEffectItemList)					{ delete pEffectItem; }				// アイテム(実体なし)
+		for (auto& pPickUpItem : this->pPickUpItemList)					{ delete pPickUpItem; }				// アイテム(実体あり)
+		for (auto& pEnemySpawnPointList : this->pEnemySpawnPointList)	{ delete pEnemySpawnPointList; }	// エネミースポナー
 	}
 }
 
