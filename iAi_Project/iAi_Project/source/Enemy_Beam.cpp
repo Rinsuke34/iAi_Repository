@@ -44,7 +44,7 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 
 	/*モーション関連*/
 // エネミーモデルに攻撃のアニメーションをアタッチする
-	this->iBeamAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
+	this->iBeamAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
 	// アタッチした攻撃アニメーションの総再生時間を取得する
 	this->fBeamAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackAttachIndex);
 
@@ -281,32 +281,6 @@ void Enemy_Beam::Enemy_Model_Animation()
 {
 	if (this->iNowHp > 0)
 	{
-	// 攻撃モーションフラグが有効か確認
-	if (this->bBeamAttackMotionFlg)
-	{
-		// 攻撃モーションフラグが有効の場合
-		this->fBeamAttackPlayTime += 0.5f;
-		// 再生時間をセットする
-		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackAttachIndex, this->fBeamAttackPlayTime);
-
-		// 再生時間がアニメーションの総再生時間に達したか確認
-		if (this->fBeamAttackPlayTime >= this->fBeamAttackTotalTime)
-		{
-			// アニメーションの再生時間が総再生時間に達した場合
-			// アタッチした攻撃アニメーションをデタッチする
-			MV1DetachAnim(this->iModelHandle, iBeamAttackAttachIndex);
-			// 再生時間を初期化する
-			this->fBeamAttackPlayTime = 0.0f;
-			// エネミーモデルに攻撃のアニメーションをアタッチする
-			this->iBeamAttackNowAttachIndex = MV1AttachAnim(this->iModelHandle, 1, -1, FALSE);
-			// アタッチした攻撃アニメーションの総再生時間を取得する
-			this->fBeamAttackNowTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackNowAttachIndex);
-
-			this->bBeamAttackNowMotionFlg = true;
-			// 攻撃モーションフラグを無効化
-			this->bBeamAttackMotionFlg = false;
-		}
-	}
 
 	if (this->bBeamAttackNowMotionFlg)
 	{
@@ -330,42 +304,6 @@ void Enemy_Beam::Enemy_Model_Animation()
 
 				
 			}
-		}
-	}
-
-	if (this->bBeamAttackEndMotionFlg)
-	{
-		this->fBeamAttackEndPlayTime += 0.5f;
-		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackEndAttachIndex, this->fBeamAttackEndPlayTime);
-
-		if (this->fBeamAttackEndPlayTime >= this->fBeamAttackEndTotalTime)
-		{
-			// アタッチしたアニメーションをデタッチする
-			MV1DetachAnim(this->iModelHandle, iBeamAttackEndAttachIndex);
-			this->fBeamAttackEndPlayTime = 0.0f;
-			// エネミーモデルに攻撃のアニメーションをアタッチする
-			this->iBeamAttackEndLoopAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, TRUE);
-			// アタッチした攻撃アニメーションの総再生時間を取得する
-			this->fBeamAttackEndLoopTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackEndLoopAttachIndex);
-
-			this->bBeamAttackEndMotionFlg = false;
-			this->bBeamAttackEndLoopMotionFlg = true;
-
-			this->bDirectionFlg = true;
-		}
-	}
-
-	if (this->bBeamAttackEndLoopMotionFlg)
-	{
-		this->fBeamAttackEndLoopPlayTime += 0.5f;
-		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackEndLoopAttachIndex, this->fBeamAttackEndPlayTime);
-
-		if (this->fBeamAttackEndPlayTime >= this->fBeamAttackEndLoopTotalTime)
-		{
-			this->fBeamAttackEndLoopPlayTime = 0.0f;
-			this->bBeamAttackEndLoopMotionFlg = false;
-			// アニメーションのループが終了したら、最初の攻撃モーションフラグを再度有効化
-			this->bBeamAttackMotionFlg = true;
 		}
 	}
 }

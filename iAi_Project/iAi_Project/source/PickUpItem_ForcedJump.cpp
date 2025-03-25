@@ -43,7 +43,7 @@ void PickUpItem_ForcedJump::Initialization()
 
 	/* コリジョン設定 */
 	{
-		this->stCollisionCapsule.fCapsuleRadius		= 65.0f;
+		this->stCollisionCapsule.fCapsuleRadius = 180.0f;
 		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
 		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 25.0f, 0.0f));
 	}
@@ -134,5 +134,7 @@ void PickUpItem_ForcedJump::Update()
 void PickUpItem_ForcedJump::Reset()
 {
 	/* このオブジェクトの削除フラグを有効にする */
-	this->bDeleteFlg = true;
+	//this->bDeleteFlg = true;
+
+
 }

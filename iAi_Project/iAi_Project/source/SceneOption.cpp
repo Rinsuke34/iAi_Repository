@@ -22,7 +22,7 @@ SceneOption::SceneOption() : SceneBase("Option", 500, true)
 		this->piGrHandle_ResultFrame	= ImageList->piGetImage("Result/UI_Result_Frame");
 
 		/* 矢印 */
-		this->piGrHandle_Arrow			= ImageList->piGetImage("Test/Sign");
+		this->piGrHandle_Arrow			= ImageList->piGetImage("Input_Icon/Sign");
 	}
 
 	/* オプション名リストのポインタを取得 */
@@ -236,7 +236,7 @@ void SceneOption::Draw()
 {
 	/* リザルト用のフレームを描写する */
 	// ※リザルト用のフレームを流用する
-	DrawExtendGraph(0 + FRAME_SIZE_REDUCTION_AMOUNT, 0 + FRAME_SIZE_REDUCTION_AMOUNT, SCREEN_SIZE_WIDE - FRAME_SIZE_REDUCTION_AMOUNT, SCREEN_SIZE_HEIGHT - FRAME_SIZE_REDUCTION_AMOUNT, *this->piGrHandle_ResultFrame, FALSE);
+	DrawExtendGraph(0 + FRAME_SIZE_REDUCTION_AMOUNT, 0 + FRAME_SIZE_REDUCTION_AMOUNT, SCREEN_SIZE_WIDE - FRAME_SIZE_REDUCTION_AMOUNT, SCREEN_SIZE_HEIGHT - FRAME_SIZE_REDUCTION_AMOUNT, *this->piGrHandle_ResultFrame, TRUE);
 
 	/* オプションの最大数を取得 */
 	int iOptionMax = this->astOptionNameList->size();

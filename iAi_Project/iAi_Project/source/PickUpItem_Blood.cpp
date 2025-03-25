@@ -103,7 +103,7 @@ void PickUpItem_Blood::Update()
 		this->ObjectList->SetEffect(pAddEffect);
 
 		/* エフェクト待機時間をリセット */
-		this->iAddEffectDelay = 10;
+		this->iAddEffectDelay = 100;
 	}
 }
 

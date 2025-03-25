@@ -124,11 +124,12 @@ void Screen::Process()
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 				// Homeフラグを無効化
-				this->bHomeFlg = FALSE;
+
 			if (this->bHomeFlg == FALSE)
 			{
 				this->bHomeFlg = TRUE;
 			}
+					this->bHomeFlg = FALSE;
 
 					break;
 				}
