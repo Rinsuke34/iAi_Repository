@@ -29,10 +29,13 @@ class SceneGameOver : public SceneBase
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_GameOver;				// ゲームオーバー
-
-		/* 関数 */
-		void	Process_Main();					// メイン処理
+		int* piGrHandle_Window_GameOver;		// ウィンドウ(リトライ)
+		int* piGrHandle_Window_GameOverCheck;	// ウィンドウ(リトライ警告)
+		int* apiGrHandle_SkipWindow_Yes[2];		// スキップ確認YES(0:選択中/1:非選択中)
+		int* apiGrHandle_SkipWindow_No[2];		// スキップ確認NO(0:選択中/1:非選択中)
 
 		/* 変数 */
 		int		iBlendAlpha;					// 描写する画像のアルファ値(0～255)
+		int		iDrawPhase;						// 描写フェイズ(0:ゲームオーバー, 1:リトライ確認, 2:リトライ最終確認)
+		bool	bSelectYes;						// YESを選択中であるか(スキップ画面)
 };

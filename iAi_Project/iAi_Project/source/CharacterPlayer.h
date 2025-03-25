@@ -83,6 +83,7 @@ class CharacterPlayer : public CharacterBase
 		void	PlayerFallRecovery();					// 落下からの復帰				/* 2025.03.02 駒沢風助 落下復帰処理作成 */
 		void	FastMotion();							// ゲーム開始時のモーション
 		void	MotionReset();							// モーション初期化
+		void	StartMotionSet();						// 開始時のモーション設定
 
 		// 移動アクション
 		void	Player_Jump();				// ジャンプ

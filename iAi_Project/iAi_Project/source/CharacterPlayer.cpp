@@ -107,40 +107,8 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* モーション初期化 */
 	MotionReset();
 
-	/* 開始時モーション設定 */
-	{
-		/* 現在のモーションをデタッチする */
-		MV1DetachAnim(this->iModelHandle, this->PlayerStatusList->iGetPlayerMotionAttachIndex_Move());
-
-		/* 開始時モーション開始フラグを無効化 */
-		this->PlayerStatusList->SetStartFastMotion(false);
-
-		/* 開始時モーションカウントを初期化 */
-		this->PlayerStatusList->SetFastMotionCount(CAMERA_CLOSEUP_COUNT_MAX);
-
-		/* 着地モーションのモーション番号を取得 */
-		int iMotionIndex = MV1GetAnimIndex(this->iModelHandle, MOTION_LIST[MOTION_ID_MOVE_LAND].strMotionName.c_str());
-
-		/* モーションをアタッチする */
-		this->PlayerStatusList->SetPlayerMotionAttachIndex_Move(MV1AttachAnim(this->iModelHandle, iMotionIndex, -1));
-
-		/* アニメーションタイマーを初期値に設定する */
-		// ※着地した状態を初期値とする
-		this->PlayerStatusList->SetMotionCount_Move(6.f);
-
-		/* モーションブレンドレートを100%に設定 */
-		this->PlayerStatusList->SetNowMoveMotionBlendRate(1.f);
-	}
-
-	/* シェイプ設定 */
-	{
-		/* シェイプ番号取得 */
-		this->iShapeNo_Blink = MV1SearchShape(this->iModelHandle, "Face_Blink");	// 瞬き
-
-		/* シェイプ適用率を設定 */
-		this->fShapeRate = 1.f;
-		MV1SetShapeRate(this->iModelHandle, this->iShapeNo_Blink, this->fShapeRate);
-	}
+	/* 開始時のモーション設定 */
+	StartMotionSet();
 }
 
 // デストラクタ
@@ -168,6 +136,20 @@ void CharacterPlayer::Reset()
 	this->vecPosition	= this->vecPosition_Initial;
 	this->vecScale		= this->vecScale_Initial;
 	this->vecRotation	= this->vecRotation_Initial;
+
+	/* モーション初期化設定 */
+	this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
+	this->PlayerStatusList->SetPlayerMotion_Move_Old(MOTION_ID_MOVE_WALK);
+	this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+	this->PlayerStatusList->SetPlayerMotion_Attack_Old(MOTION_ID_ATTACK_NONE);
+
+
+	/* プレイヤー状態初期化 */
+	this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
+	/* 死亡フラグを無効にする */
+	this->PlayerStatusList->SetPlayerDeadFlg(false);
 }
 
 // 更新

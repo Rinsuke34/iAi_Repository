@@ -16,14 +16,28 @@ SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList	= dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		DataList_Image* ImageList				= dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 画像取得 */
-		this->piGrHandle_GameOver	= ImageList->piGetImage_Movie("GameOver/UI_GameOver");
+		this->piGrHandle_GameOver				= ImageList->piGetImage_Movie("GameOver/UI_GameOver");
+
+		/* ウィンドウ(リトライ) */
+		this->piGrHandle_Window_GameOver		= ImageList->piGetImage("GameOver/UI_Window_GameOver");
+
+		/* ウィンドウ(リトライ警告) */
+		this->piGrHandle_Window_GameOverCheck	= ImageList->piGetImage("GameOver/UI_Window_GameOver_Check");
+
+		/* スキップ確認ウィンドウ_ボタン */
+		this->apiGrHandle_SkipWindow_Yes[0]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_Selected");
+		this->apiGrHandle_SkipWindow_Yes[1]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_Yes_NotSelected");
+		this->apiGrHandle_SkipWindow_No[0]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_Selected");
+		this->apiGrHandle_SkipWindow_No[1]		= ImageList->piGetImage("Conversation/SkipWindow/UI_Moji_No_NotSelected");
 	}
 
 	/* 初期化 */
-	this->iBlendAlpha	= 0;	// 描写する画像のアルファ値(0～255)
+	this->iBlendAlpha	= 0;		// 描写する画像のアルファ値(0～255)
+	this->iDrawPhase	= 0;		// 描写フェイズ(0:ゲームオーバー, 1:リトライ確認, 2:リトライ最終確認)
+	this->bSelectYes	= false;	// YESを選択中であるか(スキップ画面)
 }
 
 // 計算
@@ -46,15 +60,83 @@ void SceneGameOver::Process()
 			/* "決定"のSEを再生 */
 			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 
-			/* ロードシーン追加フラグを有効化 */
-			gpSceneServer->SetAddLoadSceneFlg(true);
+			/* 描写フェイズに応じた処理 */
+			switch (this->iDrawPhase)
+			{
+				/* ゲームオーバー */
+				case 0:
+					/* 描写フェイズを"リトライ確認"に設定 */
+					this->iDrawPhase = 1;
+					break;
 
-			/* 現行シーン削除フラグを有効化 */
-			gpSceneServer->SetDeleteCurrentSceneFlg(true);
+				/* リトライ確認 */
+				case 1:
+					/* YESを選択中であるか確認 */
+					if (this->bSelectYes == true)
+					{
+						// YESを選択中である場合
+						/* ゲーム状態を"リセット"に設定 */
+						this->StageStatusList->SetGameStatus(GAMESTATUS_RESET);
 
-			/* シーン"タイトル"を追加 */
-			gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
-			return;
+						/* このシーンの削除フラグを有効にする */
+						this->bDeleteFlg = true;
+					}
+					else
+					{
+						// YESを選択中でない場合
+						/* 描写フェイズを"リトライ最終確認"に設定 */
+						this->iDrawPhase = 2;
+
+						/* NOを選択中の状態にする */
+						this->bSelectYes = false;
+					}
+					break;
+
+				/* リトライ最終確認 */
+				case 2:
+					/* YESを選択中であるか確認 */
+					if (this->bSelectYes == true)
+					{
+						// YESを選択中である場合
+						/* ロードシーン追加フラグを有効化 */
+						gpSceneServer->SetAddLoadSceneFlg(true);
+
+						/* 現行シーン削除フラグを有効化 */
+						gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+						/* シーン"タイトル"を追加 */
+						gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
+					}
+					else
+					{
+						// YESを選択中でない場合
+						/* 描写フェイズを"リトライ確認"に設定 */
+						this->iDrawPhase = 1;
+					}
+					break;
+			}
+		}
+
+		/* "左"が入力されたか確認 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
+		{
+			// 入力された場合
+			/* "カーソル移動"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
+			/* YESを選択中の状態にする */
+			this->bSelectYes = true;
+		}
+
+		/* "右"が入力されたか確認 */
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
+		{
+			// 入力された場合
+			/* "カーソル移動"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
+
+			/* NOを選択中の状態にする */
+			this->bSelectYes = false;
 		}
 	}
 }
@@ -88,12 +170,51 @@ void SceneGameOver::Draw()
 			/* ムービーの再生時間を初期化する */
 			SeekMovieToGraph(*this->piGrHandle_GameOver, 0);
 		}
-
 	}
-}
 
-// メイン処理
-void SceneGameOver::Process_Main()
-{
+	/* 描写フェイズに応じた処理 */
+	switch (this->iDrawPhase)
+	{
+		/* ゲームオーバー */
+		case 0:
+			/* 追加描写は無し */
+			break;
 
+		/* リトライ確認 */
+		case 1:
+			/* "リトライ確認"を描写 */
+			DrawGraph(570, 270, *this->piGrHandle_Window_GameOver, TRUE);
+			break;
+
+		/* リトライ最終確認 */
+		case 2:
+			/* "リトライ最終確認"を描写 */
+			DrawGraph(570, 270, *this->piGrHandle_Window_GameOverCheck, TRUE);
+			break;
+	}
+
+	/* 描写フェイズが"ゲームオーバー"以外であるか確認 */
+	if (this->iDrawPhase != 0)
+	{
+		// "ゲームオーバー"以外である場合
+		/* YESが選択中であるか確認 */
+		if (this->bSelectYes == true)
+		{
+			// YESが選択中の場合
+			/* YESを選択中として描写 */
+			DrawGraph(690, 560, *this->apiGrHandle_SkipWindow_Yes[0], TRUE);
+
+			/* NOを非選択中として描写 */
+			DrawGraph(1020, 560, *this->apiGrHandle_SkipWindow_No[1], TRUE);
+		}
+		else
+		{
+			// YESが選択中でない場合
+			/* YESを非選択中として描写 */
+			DrawGraph(690, 560, *this->apiGrHandle_SkipWindow_Yes[1], TRUE);
+
+			/* NOを選択中として描写 */
+			DrawGraph(1020, 560, *this->apiGrHandle_SkipWindow_No[0], TRUE);
+		}
+	}
 }
