@@ -117,7 +117,6 @@ void CharacterPlayer::Player_Move()
 				fMoveSpeedRatio = 0.5f;
 			}
 				
-
 			/* プレイヤーの向きを移動方向に合わせない */
 			bPlayerAngleSetFlg = false;
 			break;
@@ -1037,10 +1036,10 @@ void CharacterPlayer::Movement_Vertical()
 					if(this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_THROW_READY)
 					{
 						// 攻撃モーションが投げ(準備)でない場合
-					/* モーションが"ジャンプ(開始)"でないことを確認 */
-					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
-					{
-						/* モーションを"ジャンプ(上昇)"に設定 */
+						/* モーションが"ジャンプ(開始)"でないことを確認 */
+						if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
+						{
+							/* モーションを"ジャンプ(上昇)"に設定 */
 							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
 						}
 					}
@@ -1143,28 +1142,28 @@ void CharacterPlayer::Movement_Horizontal()
 						this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
 					}
 
-						/* 接触したポリゴンから法線ベクトルを取得し加算する */
-						for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					/* 接触したポリゴンから法線ベクトルを取得し加算する */
+					for (int j = 0; j < stHitPolyDim.HitNum; j++)
+					{
+						/* 法線ベクトルを取得 */
+						// ※ 法線ベクトルが0であるならば、加算しない
+						if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
 						{
-							/* 法線ベクトルを取得 */
-							// ※ 法線ベクトルが0であるならば、加算しない
-							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
-							{
-								// 法線ベクトルが0でない場合
-								/* 法線ベクトルのY軸を初期化 */
-								stHitPolyDim.Dim[j].Normal.y = 0.f;
+							// 法線ベクトルが0でない場合
+							/* 法線ベクトルのY軸を初期化 */
+							stHitPolyDim.Dim[j].Normal.y = 0.f;
 
-								/* 法線ベクトルを正規化 */
-								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+							/* 法線ベクトルを正規化 */
+							VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
 
-								/* 法線ベクトルを合計に加算 */
-								vecNormalSum = VAdd(vecNormalSum, vecNormal);
-							}
+							/* 法線ベクトルを合計に加算 */
+							vecNormalSum = VAdd(vecNormalSum, vecNormal);
 						}
+					}
 
-						/* 取得した法線ベクトルを正規化 */
-						// ※ 取得した法線ベクトルの平均を取得
-						vecNormalSum = VNorm(vecNormalSum);
+					/* 取得した法線ベクトルを正規化 */
+					// ※ 取得した法線ベクトルの平均を取得
+					vecNormalSum = VNorm(vecNormalSum);
 
 					/* 壁の接触フラグを設定 */
 					this->PlayerStatusList->SetPlayerWallTouchFlg(true);
@@ -1183,42 +1182,42 @@ void CharacterPlayer::Movement_Horizontal()
 							/* 移動後座標に球体ポリゴンを作成 */
 							vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
 
-						/* 移動後座標に球体ポリゴンを作成 */
-						COLLISION_SQHERE stSphere;
-						stSphere.vecSqhere = vecDevisionMovePosition;
-						stSphere.fSqhereRadius = PLAYER_WIDE;
+							/* 移動後座標に球体ポリゴンを作成 */
+							COLLISION_SQHERE stSphere;
+							stSphere.vecSqhere = vecDevisionMovePosition;
+							stSphere.fSqhereRadius = PLAYER_WIDE;
 
-						/* 法線の方向にプレイヤーを押し出す */
-						// ※ 対象のコリジョンと接触しなくなるまで押し出す
-						bool bHitFlag = true;
-						while (bHitFlag)
-						{
-							/* 球体ポリゴンを法線ベクトルの方向へ移動 */
-							stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
+							/* 法線の方向にプレイヤーを押し出す */
+							// ※ 対象のコリジョンと接触しなくなるまで押し出す
+							bool bHitFlag = true;
+							while (bHitFlag)
+							{
+								/* 球体ポリゴンを法線ベクトルの方向へ移動 */
+								stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
 
-							/* 球体とポリゴンの接触判定 */
-							bHitFlag = platform->HitCheck(stSphere);
-						}
+								/* 球体とポリゴンの接触判定 */
+								bHitFlag = platform->HitCheck(stSphere);
+							}
 
-						/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
-						vecNextPosition = stSphere.vecSqhere;
+							/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
+							vecNextPosition = stSphere.vecSqhere;
 
-						// 球体コリジョンと衝突があった場合、分割移動処理を終了する
-						if (stHitPolyDim.HitNum > 0)
-						{
-							break;
-						}
+							// 球体コリジョンと衝突があった場合、分割移動処理を終了する
+							if (stHitPolyDim.HitNum > 0)
+							{
+								break;
+							}
 
 					
-					}
+						}
 					}
 					else
 					{
 						// 移動量を分割して判定する回数が0の場合(移動していない場合)
 						/* 法線ベクトルの方向へ押し出し処理を行う */
 						vecNextPosition = VAdd(this->vecPosition, VScale(vecNormalSum, 1.f));
+					}
 				}
-			}
 				
 			}	
 		}

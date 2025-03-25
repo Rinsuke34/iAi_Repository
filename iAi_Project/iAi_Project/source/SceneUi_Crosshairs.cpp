@@ -402,31 +402,6 @@ void SceneUi_Crosshairs::Draw_RockOn_Melee()
 	DrawGraph((SCREEN_SIZE_WIDE / 2) - (iCgSizeX / 2), (SCREEN_SIZE_HEIGHT / 2) - (iCgSizeY / 2), *this->piGrHandle_Flont, TRUE);
 }
 
-// 描写(溜め攻撃の移動後座標)
-void SceneUi_Crosshairs::Draw_Move()
-{
-	///* プレイヤーの座標を取得 */
-	//VECTOR vecPlayer = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
-
-	///* 移動後の座標の座標を取得 */
-	//VECTOR vecTarget = VAdd(this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove(), vecPlayer);
-
-	///* 現在の座標と移動後の座標間の四角形を描写 */
-	//// ※仮作成(ポリゴンにする予定)
-	//VECTOR Pos[4];
-
-	//Pos[0] = VAdd(vecPlayer, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
-	//Pos[1] = VAdd(vecPlayer, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
-
-	//Pos[2] = VAdd(vecTarget, VGet(PLAYER_WIDE, 0, PLAYER_WIDE));
-	//Pos[3] = VAdd(vecTarget, VGet(-PLAYER_WIDE, 0, -PLAYER_WIDE));
-
-	//DrawTriangle3D(Pos[0], Pos[1], Pos[2], GetColor(255, 255, 255), TRUE);
-	//DrawTriangle3D(Pos[3], Pos[2], Pos[1], GetColor(255, 255, 255), TRUE);
-
-	//DrawLine3D(vecPlayer, vecTarget, GetColor(255, 255, 255));
-}
-
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 開始 */
 // 描写(遠距離攻撃の溜め時のロックオンエネミー)
 void SceneUi_Crosshairs::Draw_RockOn_Kunai()

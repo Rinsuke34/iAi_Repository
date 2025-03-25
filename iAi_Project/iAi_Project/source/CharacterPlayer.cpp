@@ -433,7 +433,6 @@ void CharacterPlayer::PlayerHitCheck()
 								pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
 								/* 削除カウントを設定 */
-								// ※仮で1秒間
 								pDamageEffect->SetDeleteCount(60);
 
 								/* エフェクト初期化処理 */
@@ -484,19 +483,19 @@ void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
 	while (fRadian > PLAYER_TURN_LIMIT || fRadian < 0)
 	{
-	/* 2πを超えた場合 */
-	if (fRadian > PLAYER_TURN_LIMIT)
-	{
-		/* 角度を一周(2π)分補正する */
-		fRadian -= PLAYER_TURN_LIMIT;
+		/* 2πを超えた場合 */
+		if (fRadian > PLAYER_TURN_LIMIT)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian -= PLAYER_TURN_LIMIT;
+		}
+		/* 0を下回った場合 */
+		else if (fRadian < 0)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian += PLAYER_TURN_LIMIT;
+		}
 	}
-	/* 0を下回った場合 */
-	else if (fRadian < 0)
-	{
-		/* 角度を一周(2π)分補正する */
-		fRadian += PLAYER_TURN_LIMIT;
-	}
-}
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
 

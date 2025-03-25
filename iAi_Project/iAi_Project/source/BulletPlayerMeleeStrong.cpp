@@ -9,15 +9,13 @@ BulletPlayerMeleeStrong::BulletPlayerMeleeStrong() : BulletBase()
 	this->iObjectType			= OBJECT_TYPE_MELEE_PLAYER;	// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
 	this->stCollisionCapsule	= {};
 
-	/* 仮追加 */
+	/*  */
 	iDeleteCount = 30;
 }
 
 // 更新
 void BulletPlayerMeleeStrong::Update()
-{
-	/* 仮処理 */
-	// 本来はプレイヤー側で削除フラグを設定する予定
+{ 
 	if (iDeleteCount > 0)
 	{
 		iDeleteCount--;

@@ -1122,42 +1122,6 @@ void CharacterPlayer::Player_Charge_Attack()
 					/* プレイヤーが近距離攻撃(強)を連続で行えるフラグを解除 */
 					this->PlayerStatusList->SetPlayerMeleeStrongContinuousFlg(false);
 
-					/* 攻撃後ボイスを再生 */
-					//gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_KILL_ENEMY);	
-
-					/* 現在の近接攻撃(強)での撃破数を取得 */
-					int iNowMeleeStrongDestroyCount = this->PlayerStatusList->iGetiMeleeStrongDestroyCount();
-
-					/* 現在の近接攻撃(強)での撃破数が一定数以上か確認する */
-					if (iNowMeleeStrongDestroyCount >= MELEE_STRONG_PERFORMANCE_DESTROY_NUM)
-					{
-						// 一定数以上の場合
-						/* 近距離攻撃(強)後に接地してるかのフラグを取得 */
-						bool bLandingAfterMeleeStrongFlg = this->PlayerStatusList->bGetPlayerLandingAfterMeleeStrongFlg();
-
-						/* 攻撃後の接地フラグを確認 */
-						if (bLandingAfterMeleeStrongFlg == true)
-						{
-							//攻撃後に設置している場合
-							/* スティックの入力を取得 */
-							VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
-
-							/* スティックの入力がないか確認 */
-							if (vecInput.x == 0 && vecInput.z == 0)
-							{
-								// スティックの入力がない場合
-								/* ボタンの入力がないか確認 */
-								if (this->InputList->bGetInterfaceInput(INPUT_TRG, UI_ANY) == false)
-								{
-								/* 特別なカメラワークを行う(仮) */
-							
-							}	
-						}
-					}
-					}
-
-					/* 近接攻撃(強)での撃破数をリセットする */
-					this->PlayerStatusList->SetMeleeStrongDestroyCount(0);
 				}
 			}
 		}
@@ -1208,12 +1172,12 @@ void CharacterPlayer::Player_Projectile_Posture()
 				if (iNowSlowMotionCount <= PLAYER_SLOWMOTION_COUNT_MAX)
 				{
 					//スローモーションカウントが一定値以下の場合
-				/* 画面エフェクト(被ダメージ)作成 */
-				this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+					/* 画面エフェクト(被ダメージ)作成 */
+					this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 
-				/* スローモーションフラグを有効化 */
-				this->StageStatusList->SetGameSlowFlg(true);
-			}
+					/* スローモーションフラグを有効化 */
+					this->StageStatusList->SetGameSlowFlg(true);
+				}
 			}
 
 			/* スローモーションカウントが一定値を超えているか確認 */
@@ -1224,9 +1188,9 @@ void CharacterPlayer::Player_Projectile_Posture()
 				if (this->StageStatusList->bGetGameSlowFlg() == true)
 				{
 					// 有効である場合
-				/* スローモーションフラグを無効化 */
-				this->StageStatusList->SetGameSlowFlg(false);	
-			}
+					/* スローモーションフラグを無効化 */
+					this->StageStatusList->SetGameSlowFlg(false);	
+				}
 			}
 
 			/* スローモーションカウントを加算する */
@@ -1240,8 +1204,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 			{
 				// 有効である場合
 				/* スローモーションフラグを無効化 */
-			this->StageStatusList->SetGameSlowFlg(false);
-		}
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
 		}
 
 		/* プレイヤーのモーションが投擲でないか確認 */
@@ -1313,7 +1277,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 			{
 				// 有効である場合
 				/* スローモーションフラグを無効化 */
-			this->StageStatusList->SetGameSlowFlg(false);
+				this->StageStatusList->SetGameSlowFlg(false);
 			}
 		}
 		/* 回避入力がされた場合 */
@@ -1334,8 +1298,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 			{
 				// 有効である場合
 				/* スローモーションフラグを無効化 */
-			this->StageStatusList->SetGameSlowFlg(false);
-		}
+				this->StageStatusList->SetGameSlowFlg(false);
+			}
 		}
 		
 	}
@@ -1421,36 +1385,36 @@ void CharacterPlayer::Player_Projectile()
 	else
 	{
 		// クナイ爆発化フラグが有効でない場合
-	/* クナイ(ワープ)を作成 */
-	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
+		/* クナイ(ワープ)を作成 */
+		this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-	/* クナイ(ワープ)生成座標を設定 */
-	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
+		/* クナイ(ワープ)生成座標を設定 */
+		this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
-	/* ロックオン中のエネミーが存在するか */
-	if (pLockOnEnemy != nullptr)
-	{
-		// 存在する場合
-		/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
-
-		/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
-		this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
-}
-	else
-	{
-		// 存在しない場合
-		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
-		// クナイ(ワープ)にターゲット座標を設定
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
-
-	}
-
-	/* 初期化を行う */
-	this->pBulletKunaiWarp->Initialization();
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合
+			/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
 	
-	/* バレットリストに追加 */
-	ObjectList->SetBullet(this->pBulletKunaiWarp);
+			/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
+			this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
+		}
+		else
+		{
+			// 存在しない場合
+			// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
+			// クナイ(ワープ)にターゲット座標を設定
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+
+		}
+
+		/* 初期化を行う */
+		this->pBulletKunaiWarp->Initialization();
+	
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletKunaiWarp);
 	}
 
 	/* 遠距離攻撃のSEを再生 */

@@ -401,31 +401,6 @@ void SceneStage::SetCamera_Title()
 // カメラ設定(ステージクリア)
 void SceneStage::SetCamera_StageClear()
 {
-	///* クリア時カウントが"カメラ回転"に設定されたカウントであるか確認 */
-	//if ((this->iStageClear_Count == STAGECLEAR_COUNT_CAMERA_TRUN_FAST))
-	//{
-	//	/* 現在のカメラ座標を取得 */
-	//	VECTOR vecCameraPosition = this->StageStatusList->vecGetCameraPosition();
-	//	VECTOR vecCameraTarget = this->StageStatusList->vecGetCameraTarget();
-
-	//	/* 現在の回転量等を取得 */
-	//	float fCameraAngleX = this->StageStatusList->fGetCameraAngleX();						// X軸回転量
-	//	float fCameraAngleY = this->StageStatusList->fGetCameraAngleY();						// Y軸回転量
-
-	//	fCameraAngleX += 120.f;
-
-	//	/* 更新したカメラアングルを設定 */
-	//	this->StageStatusList->SetCameraAngleX(fCameraAngleX);
-
-	//	/* カメラ座標設定 */
-	//	float fRadius = this->StageStatusList->fGetCameraRadius();			// 注視点からの距離
-	//	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-	//	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
-	//	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
-
-	//	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
-	//}
-
 	/* プレイヤー座標取得 */
 	VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
 

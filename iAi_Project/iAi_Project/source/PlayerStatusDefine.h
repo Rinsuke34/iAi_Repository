@@ -21,19 +21,19 @@
 /* プレイヤー状態管理の構造体や定数の宣言を行う */
 
 /* 能力値名称(json) */
-const std::string	BASE_STATUS_NAME_MOVE_ACCELERATION			= "MoveAcceleration";		// プレイヤーの移動加速度
-const std::string	BASE_STATUS_NAME_JUMP_SPEED					= "JumpSeepd";				// プレイヤーのジャンプ力
-const std::string	BASE_STATUS_NAME_FALL_ACCELERATION			= "FallAcceleration";		// プレイヤーの落下加速度
-const std::string	BASE_STATUS_NAME_FALL_SPEED_MAX				= "FallSpeed_Max";			// プレイヤーの最大落下速度
-const std::string	BASE_STATUS_NAME_JUMP_COUNT_MAX				= "JumpCount_Max";			// プレイヤーのジャンプ回数(最大数)
-const std::string	BASE_STATUS_NAME_JUMP_COOL_TIME				= "JumpCoolTime";			// プレイヤーのジャンプクールタイム												/* 2025.03.23 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_DODGE_SPEED				= "DodgeSpeed";				// プレイヤーの回避速度															/* 2025.03.19 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_DODGE_FRAME				= "DodgeFlame";				// プレイヤーの回避フレーム数													/* 2025.03.19 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_DODGE_COOL_TIME			= "DodgeCoolTime";			// プレイヤーの回避クールタイム													/* 2025.03.23 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED	= "KickWallHorizontalSpeed";// プレイヤーの壁キック速度(水平成分)											/* 2025.03.19 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED	= "KickWallVerticalSpeed";	// プレイヤーの壁キック速度(垂直成分)											/* 2025.03.19 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_KICKWALL_FLAME				= "KickWallFlame";			// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 定数追加 */
-const std::string	BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME	= "KickWallInputMaxFlame";	// プレイヤーの壁キック入力猶予フレーム数										/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_MOVE_ACCELERATION					= "MoveAcceleration";				// プレイヤーの移動加速度
+const std::string	BASE_STATUS_NAME_JUMP_SPEED							= "JumpSeepd";						// プレイヤーのジャンプ力
+const std::string	BASE_STATUS_NAME_FALL_ACCELERATION					= "FallAcceleration";				// プレイヤーの落下加速度
+const std::string	BASE_STATUS_NAME_FALL_SPEED_MAX						= "FallSpeed_Max";					// プレイヤーの最大落下速度
+const std::string	BASE_STATUS_NAME_JUMP_COUNT_MAX						= "JumpCount_Max";					// プレイヤーのジャンプ回数(最大数)
+const std::string	BASE_STATUS_NAME_JUMP_COOL_TIME						= "JumpCoolTime";					// プレイヤーのジャンプクールタイム													/* 2025.03.23 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_DODGE_SPEED						= "DodgeSpeed";						// プレイヤーの回避速度																/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_DODGE_FRAME						= "DodgeFlame";						// プレイヤーの回避フレーム数														/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_DODGE_COOL_TIME					= "DodgeCoolTime";					// プレイヤーの回避クールタイム														/* 2025.03.23 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED			= "KickWallHorizontalSpeed";		// プレイヤーの壁キック速度(水平成分)												/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED			= "KickWallVerticalSpeed";			// プレイヤーの壁キック速度(垂直成分)												/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STATUS_NAME_KICKWALL_FLAME						= "KickWallFlame";					// プレイヤーの壁キック継続フレーム数												/* 2025.03.19 菊池雅道 定数追加 */
+const std::string	BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME			= "KickWallInputMaxFlame";			// プレイヤーの壁キック入力猶予フレーム数											/* 2025.03.19 菊池雅道 定数追加 */
 const std::string	BASE_STATUS_NAME_MELEE_WEAK_COOL_TIME				= "MeleeWeakCoolTime";				// プレイヤーの近距離攻撃(弱)のクールタイム											/* 2025.03.23 菊池雅道 定数追加 */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME	= "MeleeStrongChangeChargeFrame";	// プレイヤーの近距離攻撃(強)に切り替わるまでのフレーム数							/* 2025.03.19 菊池雅道 定数追加 */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME		= "MeleeStrongMaxChargeFrame";		// プレイヤーの近距離攻撃(強)の最大溜め時間											/* 2025.03.19 菊池雅道 定数追加 */
@@ -42,9 +42,9 @@ const std::string	BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED			= "MeleeStrongMoveS
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CONTINUS_MAX_FRAME	= "MeleeStrongContinusMaxFrame";	// プレイヤーが近距離攻撃(強)で連続攻撃できる最大フレーム数							/* 2025.03.19 菊池雅道 定数追加 */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_AIR_MAX_COUNT			= "MeleeStrongAirMaxCount";			// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_NEXT_SEARCH_RANGE		= "MeleeStrongNextSearchRange";		// プレイヤーの近距離攻撃(強)後の次の索敵範囲										/* 2025.03.23 菊池雅道 定数追加 */
-const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS				= "RockOnRadius";			// ロックオン範囲の半径
-const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI			= "StartHaveKunai";			// 初期状態で持っているクナイの個数
-const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI				= "MaxHaveKunai";			// 最大で持てるクナイの個数
+const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS						= "RockOnRadius";					// ロックオン範囲の半径
+const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI					= "StartHaveKunai";					// 初期状態で持っているクナイの個数
+const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI						= "MaxHaveKunai";					// 最大で持てるクナイの個数
 const std::string	BASE_STATUS_NAME_KUNAI_COOL_TIME					= "KunaiCoolTime";					// クナイのクールタイム																/*2025.03.23 菊池雅道 定数追加 */
 const std::string	BASE_STATUS_NAME_HP_MAX								= "Hp_Max";							// プレイヤーの最大HP
 const std::string	BASE_STATUS_NAME_INVINCIBLE_TIME_MAX				= "InvincibleTime_Max";				// プレイヤーの最大無敵時間
@@ -54,7 +54,7 @@ const std::string FILE_PATH_STATUS = "resource/SetupData/PlayerStatusData.json";
 
 // 移動関係
 static const float	PLAER_DASH_SPEED					= 20.0f;				// プレイヤーの走り（通常）の移動速度							/* 2025.01.09 菊池雅道 移動関連の定数追加 */
-static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0?1.0）				/* 2025.02.10 菊池雅道 移動関連の定数追加 */
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// プレイヤーの方向転換の速度（範囲：0.0?1.0）					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_TURN_LIMIT					= DX_PI_F * 2.0f;		// プレイヤーの回転角度制限(ラジアン)							/* 2025.02.10 菊池雅道 移動関連の定数追加 */	/* 2025.02.13 菊池雅道 定数修正 */
 static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 30.0f;				// プレイヤーの壁キックの移動フレーム数							/* 2025.02.22 菊池雅道 移動関連の定数追加 */
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 80.0f;				// プレイヤーの壁キックの速度(水平成分)							/* 2025.02.22 菊池雅道 移動関連の定数追加 */

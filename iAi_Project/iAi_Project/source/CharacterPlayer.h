@@ -109,7 +109,7 @@ class CharacterPlayer : public CharacterBase
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
 		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
-		BulletPlayerKunaiWarp* 		pBulletKunaiWarp;			// クナイ(ワープ)の弾			/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+		BulletPlayerKunaiWarp* 		pBulletKunaiWarp;			// クナイ(ワープ)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 		BulletPlayerKunaiExplosion*	pBulletKunaiExplosion;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
@@ -137,14 +137,14 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
 		VECTOR				vecMoveSize;					// 移動量(デバッグ用)		<- ※この変数がないとパッケージ化する際にキーボードでの移動の不具合が発生する(駒沢)
-		int					iFallingFrame;					// 落下状態になってからのフレーム数(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
+		int					iFallingFrame;					// 落下状態になってからのフレーム数(意図しないモーション切り替えを防止するために使用)								/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 
 		/* クールタイム関連 */
 		int		iMeleeWeakNowCoolTime;		// 近接攻撃(弱)クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iProjectileNowCoolTime;		// 遠距離攻撃クールタイム		/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iDodgeNowCoolTime;			// 回避クールタイム				/* 2025.02.26 菊池雅道 クールタイム関連の変数追加 */
 		int		iJumpNowCoolTime;			// ジャンプクールタイム			/* 2025.03.17 菊池雅道 クールタイム関連の変数追加 */
-		int		iFallRecoveryDelayTime;	// 落下時の復帰までの待機時間		/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
+		int		iFallRecoveryDelayTime;		// 落下時の復帰までの待機時間	/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
 
 		/* サウンド関連 */
 		bool	bPlayRunSound;			// サウンド"走る"が再生中であるか
