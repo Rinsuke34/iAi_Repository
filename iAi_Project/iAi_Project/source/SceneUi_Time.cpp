@@ -53,5 +53,5 @@ void SceneUi_Time::Draw()
 	DrawGraph(60, 35, *this->piGrHandle_Text_Frame, true);
 
 	/* Œ»Ý‚ÌŒo‰ßŽžŠÔ‚ð•`ŽÊ */
-	DrawFormatStringToHandle(60, 35, GetColor(0, 0, 0), giFontHandle_Medium, "%02d'%02d''%02d", this->iTimeMinute, this->iTimeSecond, this->iTimeFractionalSecond);
+	DrawFormatStringToHandle(60, 35, GetColor(255, 255, 255), giFontHandle_Medium, "%02d'%02d''%02d", this->iTimeMinute, this->iTimeSecond, this->iTimeFractionalSecond);
 }

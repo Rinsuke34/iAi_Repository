@@ -34,3 +34,9 @@ namespace PUBLIC_PROCESS
 	std::string	aCutShitfJisString(std::string ShiftJis, int iLength);																	// Shift-JIS文字列を指定文字数でカット
 	std::string aInsertNewLine(std::string ShiftJis, int iLength);																		// Shift-JIS文字列を指定文字数で改行
 }
+
+// 汎用機能系
+namespace PUBLIC_FUNCTION
+{
+	void		FileDeletesAndStand(const std::string& filename);																				// 指定ファイルを完全に削除するまで待機
+}

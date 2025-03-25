@@ -40,6 +40,9 @@ SceneGame::~SceneGame()
 // 初期化
 void SceneGame::Initialization()
 {
+	/* ゲームリソース管理の初期化 */
+	this->GameResourceList->Initialization();
+
 	/* 最初のステージ番号を設定 */
 	int iStartStageNo = STAGE_START;
 

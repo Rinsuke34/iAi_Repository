@@ -38,7 +38,9 @@ class SceneEdit : public SceneBase
 		int* piGrHandle_NowEdit_Under;						// 現在のエディット情報
 		int* piGrHandle_UnderExplain_Under;					// 現在のエディット情報の説明欄
 		int* piGrHandle_NewEdit_Under;						// 新規エディット情報の説明欄
-		int* piGrHandle_EditLock;							// ロック
+		int* piGrHandle_KeepEdit_Under;						// キープエディット情報の説明欄
+		int* piGrHandle_KeepIcon;							// キープアイコン
+		int* piGrHandle_Keep;								// キープ(文字)
 		int* piGrHandle_Delete;								// 削除
 		int* piGrHandle_New;								// NEW(文字)
 		int* piGrHandle_Custom;								// カスタム(文字)

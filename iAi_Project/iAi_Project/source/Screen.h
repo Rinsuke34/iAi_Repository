@@ -35,6 +35,7 @@ class Screen : public PlatformBase
 
 		/* 関数 */
 		void	Process();				// 更新
+		void	Draw();					// 描画
 
 		/* テクスチャハンドル */
 		int iTextureTitleHandle;		// タイトル

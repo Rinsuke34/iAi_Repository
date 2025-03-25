@@ -94,7 +94,7 @@ void LargeScreen::Process()
 	if (gpSceneServer->GetScene("Title"))
 	{
 		// 決定ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			switch (iUICount)
 			{
@@ -103,6 +103,8 @@ void LargeScreen::Process()
 				// 何かボタンが押された場合
 				// Homeフラグを有効化
 				this->bHomeFlg = TRUE;
+
+				this->bStartFlg = TRUE;
 
 				//UIカウントをポジションAに変更
 				iUICount = CAMERA_FIXED_POSITION_A;
@@ -116,6 +118,8 @@ void LargeScreen::Process()
 
 				//ホームフラグを無効化
 				this->bHomeFlg = FALSE;
+
+				this->bStartFlg = TRUE;
 				break;
 
 				//データホーム画面
@@ -124,12 +128,14 @@ void LargeScreen::Process()
 			case CAMERA_FIXED_POSITION_D:
 				// Homeフラグを無効化
 				this->bHomeFlg = FALSE;
+
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
 
 		// キャンセルボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 		{
 			switch (iUICount)
 			{
@@ -151,18 +157,22 @@ void LargeScreen::Process()
 				}
 				//ホームフラグを有効化
 				this->bHomeFlg = TRUE;
+
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
 
 		// 上ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 		{
 			switch (iUICount)
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
 				iUICount = 0;
+
+				this->bStartFlg = TRUE;
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
@@ -181,18 +191,22 @@ void LargeScreen::Process()
 					//カメラ固定位置を設定ホーム画面に設定
 					iUICount = CAMERA_FIXED_POSITION_D;
 				}
+
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
 
 		// 下ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 		{
 			switch (iUICount)
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
 				iUICount = 0;
+
+				this->bStartFlg = TRUE;
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
@@ -211,6 +225,8 @@ void LargeScreen::Process()
 					// カメラ固定位置をはじめからに設定
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
+
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
@@ -226,16 +242,15 @@ void LargeScreen::Process()
 				//スタートフラグが有効な場合
 				//タイトル映像の再生位置を0に設定
 				SeekMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
 			}
 
 			//モデルのテクスチャをタイトルテクスチャに設定
 			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureTitleHandle, true);
 
-			//タイトル映像の再生
-			PlayMovieToGraph(this->iTextureTitleHandle);
-
-			//タイトル映像の描写
-			DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
 
 			//タイトル映像の再生が終了しているか確認
 			if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
@@ -251,22 +266,21 @@ void LargeScreen::Process()
 
 			// ポジションAか確認
 		case CAMERA_FIXED_POSITION_A:
-			//スタートフラグが有効か確認
+			//スタートフラグを有効化か確認
 			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
-				//ニューゲーム映像の再生位置を0に設定
+				//タイトル映像の再生位置を0に設定
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
 				SeekMovieToGraph(this->iTextureNewgameHandle, 0);
 			}
 
 			//モデルのテクスチャをニューゲームテクスチャに設定
 			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureNewgameHandle, true);
 
-			//ニューゲーム映像の再生
-			PlayMovieToGraph(this->iTextureNewgameHandle);
-
-			//ニューゲーム映像の描写
-			DrawGraph(100, -100, this->iTextureNewgameHandle, TRUE);
 
 			//ニューゲーム映像の再生が終了しているか確認
 			if (GetMovieStateToGraph(this->iTextureNewgameHandle) == FALSE)
@@ -282,22 +296,21 @@ void LargeScreen::Process()
 
 			// ポジションBか確認
 		case CAMERA_FIXED_POSITION_B:
-			//スタートフラグが有効か確認
+			//スタートフラグを有効化か確認
 			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
-				//コンティニュー映像の再生位置を0に設定
+				//タイトル映像の再生位置を0に設定
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
 				SeekMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
 			}
 
 			//モデルのテクスチャをコンティニューテクスチャに設定
 			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureContinueHandle, true);
 
-			//コンティニュー映像の再生
-			PlayMovieToGraph(this->iTextureContinueHandle);
-
-			//コンティニュー映像の描写
-			DrawGraph(100, -100, this->iTextureContinueHandle, TRUE);
 
 			//コンティニュー映像の再生が終了しているか確認
 			if (GetMovieStateToGraph(this->iTextureContinueHandle) == FALSE)
@@ -313,22 +326,20 @@ void LargeScreen::Process()
 
 			// ポジションCか確認
 		case CAMERA_FIXED_POSITION_C:
-			//スタートフラグが有効か確認
+			//スタートフラグを有効化か確認
 			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
-				//データ映像の再生位置を0に設定
+				//タイトル映像の再生位置を0に設定
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
 				SeekMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
 			}
 
 			//モデルのテクスチャをデータテクスチャに設定
 			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureDateHandle, true);
-
-			//データ映像の再生
-			PlayMovieToGraph(this->iTextureDateHandle);
-
-			//データ映像の描写
-			DrawGraph(100, -100, this->iTextureDateHandle, TRUE);
 
 			//データ映像の再生が終了しているか確認
 			if (GetMovieStateToGraph(this->iTextureDateHandle) == FALSE)
@@ -344,22 +355,21 @@ void LargeScreen::Process()
 
 			// ポジションDか確認
 		case CAMERA_FIXED_POSITION_D:
-			//スタートフラグが有効か確認
+			//スタートフラグを有効化か確認
 			if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
-				//コンフィグ映像の再生位置を0に設定
+				//タイトル映像の再生位置を0に設定
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
 				SeekMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
 			}
 
 			//モデルのテクスチャをコンフィグテクスチャに設定
 			MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureConfigHandle, true);
 
-			//コンフィグ映像の再生
-			PlayMovieToGraph(this->iTextureConfigHandle);
-
-			//コンフィグ映像の描写
-			DrawGraph(100, -100, this->iTextureConfigHandle, TRUE);
 
 			//コンフィグ映像の再生が終了しているか確認
 			if (GetMovieStateToGraph(this->iTextureConfigHandle) == FALSE)
@@ -372,18 +382,6 @@ void LargeScreen::Process()
 			//スタートフラグを無効化
 			this->bStartFlg = false;
 			break;
-		}
-	}
-	else if (gpSceneServer->GetScene("Stage"))
-	{
-		// 現在のシーンがステージシーンの場合
-		MV1SetTextureGraphHandle(iModelHandle, 0, this->iTextureStageHandle, true);
-		PlayMovieToGraph(this->iTextureStageHandle);
-		DrawGraph(100, -100, this->iTextureStageHandle, TRUE);
-
-		if (GetMovieStateToGraph(this->iTextureStageHandle) == FALSE)
-		{
-			SeekMovieToGraph(this->iTextureStageHandle, 1);
 		}
 	}
 }

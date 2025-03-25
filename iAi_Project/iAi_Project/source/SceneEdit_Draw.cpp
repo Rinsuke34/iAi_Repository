@@ -21,19 +21,21 @@ void SceneEdit::Draw()
 	/* NEW(文字) */
 	DrawGraph(290, 180, *this->piGrHandle_New, TRUE);
 
-	/* 背景 */
-	DrawGraph(350, 885, *this->piGrHandle_UnderExplain_Under, TRUE);
+	/* 現在エディット情報の説明欄 */
+	DrawGraph(430, 885, *this->piGrHandle_UnderExplain_Under, TRUE);
 
 	/* エディット背景 */
+	// キープエディット部分
+	DrawGraph(155, 250, *this->piGrHandle_KeepEdit_Under, TRUE);
 	// 新規エディット部分
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		int iX = (i * 275) + 35;
+		int iX = ((i + 1) * 275) + 155;
 		int iY = 250;
 		DrawGraph(iX, iY, *this->piGrHandle_NewEdit_Under, TRUE);
 	}
 	// 現在エディット部分
-	DrawGraph(350,	695, *this->piGrHandle_NowEdit_Under, TRUE);
+	DrawGraph(430, 695, *this->piGrHandle_NowEdit_Under, TRUE);
 
 	/* 所持ブラッド描写 */
 	DrawGraph(630, 170, *this->piGrHandle_Blood, TRUE);
@@ -76,21 +78,21 @@ void SceneEdit::Draw()
 					{
 						// "無し"以外である場合
 						/* 必要ブラッドを描写 */
-						int iX = (i * 280) + 30;
+						int iX = (i * 275) + 155;
 						int iY = 420;
 						DrawGraph(iX, iY, *this->piGrHandle_Blood, TRUE);
 						DrawFormatStringToHandle(iX + 70, iY, GetColor(255, 255, 255), giFontHandle_Medium, "%d", this->astSelectItemList[i].pstEditData->iEditCost);
 
 						/* 説明文を描写 */
-						std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[i].pstEditData->aText, 6);
+						std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[i].pstEditData->aText, 7);
 						DrawFormatStringToHandle(iX + 20, iY + 70, GetColor(255, 255, 255), giFontHandle_Small,	"%s", formattedText.c_str());
 
 						/* キープ中のエディットであるか確認 */
 						if (iSelectItemType == SELECT_TYPE_KEEP_EDIT)
 						{
 							// キープ中のエディットである場合
-							/* キープアイコン(鍵)を描写 */
-							DrawExtendGraph(30 + 128, 210 + 128, 30 + 255, 210 + 255, *this->piGrHandle_EditLock, TRUE);
+							/* キープ(文字)を描写 */
+							DrawGraph(280, 328, *this->piGrHandle_Keep, TRUE);
 						}
 					}
 					else
@@ -100,8 +102,8 @@ void SceneEdit::Draw()
 						if (iSelectItemType == SELECT_TYPE_KEEP_EDIT)
 						{
 							// キープ中のエディットである場合
-							/* キープアイコン(鍵)を描写 */
-							DrawGraph(30, 210, *this->piGrHandle_EditLock, TRUE);
+							/* キープアイコン(箱)を描写 */
+							DrawGraph(160, 210, *this->piGrHandle_KeepIcon, TRUE);
 						}
 					}
 					break;
@@ -113,7 +115,7 @@ void SceneEdit::Draw()
 					{
 						// "無し"以外である場合
 						/* 削除アイコン(ゴミ箱)を描写 */
-						DrawExtendGraph(30 + 128, 650 + 128, 30 + 255, 650 + 255, *this->piGrHandle_Delete, TRUE);
+						DrawExtendGraph(160, 778, 285, 905, *this->piGrHandle_Delete, TRUE);
 					}
 					else
 					{
@@ -172,8 +174,8 @@ void SceneEdit::Draw()
 		{
 			// 設定されている場合
 			/* 説明文を描写 */
-			std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[this->iSelectItem].pstEditData->aText, 14);
-			DrawFormatStringToHandle(350, 895, GetColor(255, 255, 255), giFontHandle_Small, "%s", formattedText.c_str());
+			std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->astSelectItemList[this->iSelectItem].pstEditData->aText, 13);
+			DrawFormatStringToHandle(445, 895, GetColor(255, 255, 255), giFontHandle_Small, "%s", formattedText.c_str());
 		}
 	}
 }

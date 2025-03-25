@@ -30,7 +30,7 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	}
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
-	this->iFiringCount = ENEMY_BEAM_INTERVAL;	// 発射カウント
+	this->iFiringCount = ENEMY_MISSILE_INTERVAL;	// 発射カウント
 	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;			// ビームチャージカウント
 	this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;	//ビームの持続カウント
 	this->bEffectGenerated		 = false;					// 警告エフェクト生成フラグ

@@ -61,17 +61,55 @@ void PickUpItem_Blood::Update()
 		/* このオブジェクトの削除フラグを有効にする */
 		this->bDeleteFlg = true;
 
-		/* プレイヤーの所持ブラッドを取得 */
-		int iHaveBlood = this->GameResourceList->iGetHaveBlood();
-
-		/* プレイヤーの所持ブラッドを加算 */
-		iHaveBlood += 10;
-
-		/* プレイヤーの所持ブラッドを設定 */
-		this->GameResourceList->SetHaveBlood(iHaveBlood);
-
 		/* "ブラッド取得"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_GET_BLOOD);
+
+		/* ダメージ発生時エフェクト */
+		{
+			/* "エフェクトリソース管理"データリストを取得 */
+			DataList_Effect* EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+
+			/* 被ダメージの瞬間に発生するエフェクトを追加 */
+			EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+
+			/* 座標を設定 */
+			pDamageEffect->SetPosition(this->vecPosition);
+
+			/* エフェクトを取得 */
+			pDamageEffect->SetEffectHandle(EffectList->iGetEffect("FX_damaged/FX_damaged"));
+
+			/* 拡大率を設定 */
+			pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+
+			/* 削除カウントを設定 */
+			// ※仮で1秒間
+			pDamageEffect->SetDeleteCount(60);
+
+			/* エフェクト初期化処理 */
+			pDamageEffect->Initialization();
+
+			/* オブジェクトリストに登録 */
+			this->ObjectList->SetEffect(pDamageEffect);
+		}
+
+		/* ブラッド(ゲーム内通貨)を作成 */
+		{
+			/* "オブジェクト管理"データリストを取得 */
+			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+			/* ブラッドの生成 */
+			for (int i = 0; i < 10; i++)
+			{
+				/* 時間経過で削除されるアイテムを追加 */
+				EffectItemBase* AddItem = new EffectItem_Blood();
+
+				/* エフェクトの座標設定 */
+				AddItem->SetPosition(this->vecPosition);
+
+				/* エフェクトをリストに登録 */
+				ObjectListHandle->SetEffectItem(AddItem);
+			}
+		}
 	}
 
 	/* エフェクト待機時間を更新 */

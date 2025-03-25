@@ -44,10 +44,10 @@ void SceneUi_Blood::Process()
 void SceneUi_Blood::Draw()
 {
 	/* テキストフレームを描写 */
-	DrawGraph(1470, 35, *this->piGrHandle_Text_Frame, true);
+	DrawGraph(1470, 35, *this->piGrHandle_Text_Frame, TRUE);
 
 	/* ブラッドアイコンを描写 */
-	DrawGraph(1470, 35, *this->piGrHandle_Blood_Icon, true);
+	DrawGraph(1470, 35, *this->piGrHandle_Blood_Icon, TRUE);
 
 	/* 現在のブラッドを描写 */
 	DrawFormatStringToHandle(1470 + 64, 35, GetColor(255, 255, 255), giFontHandle_Medium, "%d", this->GameResourceList->iGetHaveBlood());

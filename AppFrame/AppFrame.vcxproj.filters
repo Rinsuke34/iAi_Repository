@@ -210,6 +210,9 @@
     <ClCompile Include="source\PickUpItemBase.cpp">
       <Filter>ソース ファイル\オブジェクト\ベース\アクタ\アイテム\実体あり</Filter>
     </ClCompile>
+    <ClCompile Include="source\PublicFunction.cpp">
+      <Filter>ソース ファイル\汎用計算</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Main.h">

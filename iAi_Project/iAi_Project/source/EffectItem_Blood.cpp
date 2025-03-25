@@ -13,8 +13,8 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 
 	/* 初期化 */
 	{
-		this->iMoveCount = 30;
-		this->iMoveFaze = MOVE_FAZE_RUNDOM;
+		this->iMoveCount	= FAST_MOVE_COUNT;
+		this->iMoveFaze		= MOVE_FAZE_RUNDOM;
 	}
 
 	/* 移動方向をランダム方向に設定 */
@@ -32,7 +32,7 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood/Blood");
 
 		/* モデル縮小 */
-		MV1SetScale(this->iModelHandle, VGet(0.2f, 0.2f, 0.2f));
+		MV1SetScale(this->iModelHandle, VGet(0.1f, 0.1f, 0.1f));
 
 		UpdataLightFrame();
 	}
@@ -46,28 +46,39 @@ void EffectItem_Blood::Update()
 	{
 		/* ランダム方向へ移動 */
 		case MOVE_FAZE_RUNDOM:
-			/* 移動方向に設定された方向へ移動 */
-			this->vecPosition = VAdd(this->vecPosition, VScale(this->vecMoveDirection, MOVE_SPEED_RUNDOM));
+			{
+				/* 進行度を0.0～1.0範囲に設定 */
+				float progress = (float)this->iMoveCount / FAST_MOVE_COUNT;
+
+				/* sinカーブを適用して速度を変化(sin(0) = 0, sin(π/2) = 1) */
+				float speedFactor = sinf(progress * DX_PI_F / 2.0f);
+
+				// 速度を適用
+				this->vecPosition = VAdd(this->vecPosition, VScale(this->vecMoveDirection, MOVE_SPEED_RUNDOM * speedFactor));
+			}
 
 			/* 移動カウントが以下になった場合 */
 			if (this->iMoveCount < 0)
 			{
 				/* プレイヤーに向かって移動するフェーズへ移行 */
 				this->iMoveFaze = MOVE_FAZE_PLAYER;
+
+				/* 移動カウントを初期化 */
+				this->iMoveCount = 0;
 			}
 			break;
 
 		/* プレイヤーに向かって移動 */
 		case MOVE_FAZE_PLAYER:
 			/* プレイヤーの中心座標を取得 */
-			VECTOR vecPlayerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
-			vecPlayerPos.y += PLAYER_HEIGHT / 2;
+			VECTOR vecPlayerPos	= this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+			vecPlayerPos.y		+= PLAYER_HEIGHT / 2;
 
 			/* プレイヤーの座標に向かって移動 */
 			this->vecPosition = VAdd(this->vecPosition, VScale(VNorm(VSub(vecPlayerPos, this->vecPosition)), MOVE_SPEED_PLAYER));
 
 			/* プレイヤーの座標に到達した場合 */
-			if (VSize(VSub(vecPlayerPos, this->vecPosition)) <= MOVE_SPEED_PLAYER * 1.5f)
+			if (VSize(VSub(vecPlayerPos, this->vecPosition)) <= MOVE_SPEED_PLAYER)
 			{
 				/* 削除フラグを有効化 */
 				this->bDeleteFlg = true;

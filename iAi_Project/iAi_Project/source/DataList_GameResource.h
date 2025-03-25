@@ -20,6 +20,8 @@ class DataList_GameResource : public DataListBase
 		DataList_GameResource();				// コンストラクタ
 		virtual ~DataList_GameResource() {};	// デストラクタ
 
+		void	Initialization();				// 初期化
+
 		/* データ取得 */
 		// ブラッド(ゲーム内通過)関連
 		int		iGetHaveBlood()		{ return this->iHaveBlood; }		// 所持ブラッド取得

@@ -1,7 +1,5 @@
 /* 2024.12.25 ‹î‘ò•—• ƒtƒ@ƒCƒ‹ì¬ */
 
-#pragma once
-
 #include "AppFunctionDefine.h"
 #include <algorithm>
 

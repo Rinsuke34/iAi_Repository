@@ -96,7 +96,7 @@ void Screen::Process()
 	if (gpSceneServer->GetScene("Title"))
 	{
 		// 決定ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DECID))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			switch (iUICount)
 			{
@@ -117,6 +117,8 @@ void Screen::Process()
 				this->bGameStartFlg = FALSE;
 				//ホームフラグを無効化
 				this->bHomeFlg = FALSE;
+
+				this->bStartFlg = TRUE;
 				break;
 
 				//データホーム画面
@@ -131,12 +133,13 @@ void Screen::Process()
 			}
 					this->bHomeFlg = FALSE;
 
+					this->bStartFlg = TRUE;
 					break;
 				}
 		}
 
 		// キャンセルボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_CANCEL))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 		{
 			switch (iUICount)
 			{
@@ -160,6 +163,8 @@ void Screen::Process()
 
 				//ホームフラグを有効化
 				this->bHomeFlg = TRUE;
+
+				this->bStartFlg = TRUE;
 				break;
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
@@ -178,6 +183,8 @@ void Screen::Process()
 					//UIカウント(カメラ)をタイトルに設定
 					iUICount = CAMERA_FIXED_POSITION_START;
 				}
+
+				this->bStartFlg = TRUE;
 				break;
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
@@ -195,6 +202,8 @@ void Screen::Process()
 					//UIカウント(カメラ)をタイトルに設定
 					iUICount = CAMERA_FIXED_POSITION_START;
 				}
+
+				this->bStartFlg = TRUE;
 				break;
 
 			
@@ -202,13 +211,15 @@ void Screen::Process()
 		}
 
 		// 上ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_UP))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 		{
 			switch (iUICount)
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
 				iUICount = 0;
+
+				this->bStartFlg = TRUE;
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
@@ -229,6 +240,7 @@ void Screen::Process()
 						iUICount = CAMERA_FIXED_POSITION_D;
 					}
 				}
+				this->bStartFlg = TRUE;
 				break;
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
@@ -248,6 +260,8 @@ void Screen::Process()
 						iUICount = CAMERA_FIXED_POSITION_D;
 					}
 				}
+
+				this->bStartFlg = TRUE;
 				break;
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
@@ -262,18 +276,21 @@ void Screen::Process()
 					//カメラ固定位置を設定ホーム画面に設定
 					iUICount = CAMERA_FIXED_POSITION_D;
 				}
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
 
 		// 下ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_DOWN))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 		{
 			switch (iUICount)
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
 				iUICount = 0;
+
+				this->bStartFlg = TRUE;
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
@@ -293,6 +310,7 @@ void Screen::Process()
 						iUICount = CAMERA_FIXED_POSITION_A;
 					}
 				}
+				this->bStartFlg = TRUE;
 				break;
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
@@ -312,6 +330,7 @@ void Screen::Process()
 						iUICount = CAMERA_FIXED_POSITION_A;
 					}
 				}
+				this->bStartFlg = TRUE;
 				break;
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
@@ -326,12 +345,13 @@ void Screen::Process()
 					// カメラ固定位置をはじめからに設定
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
+				this->bStartFlg = TRUE;
 				break;
 			}
 		}
 
 		// 左ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_LEFT))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 		{
 			// 左ボタンが押された場合			
 			//カメラの位置が最終確認画面か確認
@@ -341,184 +361,21 @@ void Screen::Process()
 				// 「はい」を選択
 				this->bGameStartFlg = TRUE;
 			}
+			this->bStartFlg = TRUE;
 		}
 
 		// 右ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_REL, UI_RIGHT))
+		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 		{
 			if (iUICount == CAMERA_FIXED_POSITION_E)
 			{
 				// 「いいえ」を選択
 				this->bGameStartFlg = FALSE;
 			}
+			this->bStartFlg = TRUE;
 		}
 
-        //UIカウントによって処理を分岐
-		switch (iUICount)
-        {
-			// カメラ固定位置がタイトルか確認
-        case CAMERA_FIXED_POSITION_START:
-
-			//スタートフラグを有効化か確認
-            if (this->bStartFlg == TRUE)
-		{
-				//スタートフラグが有効な場合
-				//タイトル映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureTitleHandle, 0);
-            }
-
-			//モデルのテクスチャをタイトルテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureTitleHandle, true);
-
-			//タイトル映像の再生
-            PlayMovieToGraph(this->iTextureTitleHandle);
-
-			//タイトル映像の描写
-            DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
-
-			//タイトル映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
-            {
-				//タイトル映像の再生が終了している場合
-				//タイトル映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureTitleHandle, 0);
-            }
-
-			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
-
-			// はじめからか確認
-        case CAMERA_FIXED_POSITION_A:
-			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
-            {
-				//スタートフラグが有効な場合
-				//ニューゲーム映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
-            }
-
-			//モデルのテクスチャをニューゲームテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureNewgameHandle, true);
-
-			/* 描画ブレンドモードを減算にする */
-			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
-
-			//ニューゲーム映像の再生
-            PlayMovieToGraph(this->iTextureNewgameHandle);
-
-			//ニューゲーム映像の描写
-            DrawGraph(100, -100, this->iTextureNewgameHandle, TRUE);
-
-			//ニューゲーム映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureNewgameHandle) == FALSE)
-            {
-				//ニューゲーム映像の再生が終了している場合
-				//ニューゲーム映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
-            }
-
-			/* 描画ブレンドモードをブレンド無しに戻す */
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
-
-			// つづきからか確認
-        case CAMERA_FIXED_POSITION_B:
-			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
-			{
-				//スタートフラグが有効な場合
-				//コンティニュー映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureContinueHandle, 0);
-	}
-
-			//モデルのテクスチャをコンティニューテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureContinueHandle, true);
-
-			//コンティニュー映像の再生
-            PlayMovieToGraph(this->iTextureContinueHandle);
-
-			//コンティニュー映像の描写
-            DrawGraph(100, -100, this->iTextureContinueHandle, TRUE);
-
-			//コンティニュー映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureContinueHandle) == FALSE)
-            {
-				//コンティニュー映像の再生が終了している場合
-				//コンティニュー映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureContinueHandle, 0);
-		}
-
-			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
-
-			// データか確認
-        case CAMERA_FIXED_POSITION_C:
-			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
-			{
-				//スタートフラグが有効な場合
-				//データ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureDateHandle, 0);
-			}
-
-			//モデルのテクスチャをデータテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureDateHandle, true);
-
-			//データ映像の再生
-            PlayMovieToGraph(this->iTextureDateHandle);
-
-			//データ映像の描写
-            DrawGraph(100, -100, this->iTextureDateHandle, TRUE);
-
-			//データ映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureDateHandle) == FALSE)
-            {
-				//データ映像の再生が終了している場合
-				//データ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureDateHandle, 0);
-		}
-
-			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
-
-			// 設定か確認
-        case CAMERA_FIXED_POSITION_D:
-
-			//スタートフラグが有効か確認
-            if (this->bStartFlg == TRUE)
-			{
-				//スタートフラグが有効な場合
-				//コンフィグ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureConfigHandle, 0);
-            }
-
-			//モデルのテクスチャをコンフィグテクスチャに設定
-            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureConfigHandle, true);
-
-			//コンフィグ映像の再生
-            PlayMovieToGraph(this->iTextureConfigHandle);
-
-			//コンフィグ映像の描写
-            DrawGraph(100, -100, this->iTextureConfigHandle, TRUE);
-
-			//コンフィグ映像の再生が終了しているか確認
-            if (GetMovieStateToGraph(this->iTextureConfigHandle) == FALSE)
-            {
-				//コンフィグ映像の再生が終了している場合
-				//コンフィグ映像の再生位置を0に設定
-                SeekMovieToGraph(this->iTextureConfigHandle, 0);
-			}
-
-			//スタートフラグを無効化
-            this->bStartFlg = false;
-            break;
-		}
+      
 	}
 	else if (gpSceneServer->GetScene("Stage"))
 	{
@@ -553,10 +410,215 @@ void Screen::Process()
 	}
 }
 
+// 描画
+void Screen::Draw()
+{
+	//UIカウントによって処理を分岐
+	switch (iUICount)
+    {
+		// カメラ固定位置がタイトルか確認
+        case CAMERA_FIXED_POSITION_START:
+
+			//スタートフラグを有効化か確認
+            if (this->bStartFlg == TRUE)
+			{
+				//スタートフラグが有効な場合
+				//タイトル映像の再生位置を0に設定
+                SeekMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
+            }
+
+			//モデルのテクスチャをタイトルテクスチャに設定
+            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureTitleHandle, true);
+
+			/* 描画ブレンドモードを減算にする */
+			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+
+			//タイトル映像の再生
+            PlayMovieToGraph(this->iTextureTitleHandle);
+
+			//タイトル映像の描写
+            DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
+
+			//タイトル映像の再生が終了しているか確認
+            if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
+            {
+				//タイトル映像の再生が終了している場合
+				//タイトル映像の再生位置を0に設定
+                SeekMovieToGraph(this->iTextureTitleHandle, 0);
+            }
+			/* 描画ブレンドモードをブレンド無しに戻す */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+			//スタートフラグを無効化
+            this->bStartFlg = false;
+            break;
+
+			// はじめからか確認
+        case CAMERA_FIXED_POSITION_A:
+			//スタートフラグが有効か確認
+            if (this->bStartFlg == TRUE)
+            {
+				//スタートフラグが有効な場合
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
+            }
+
+			//モデルのテクスチャをニューゲームテクスチャに設定
+			MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureNewgameHandle, false);
+
+			/* 描画ブレンドモードを減算にする */
+			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+
+			//ニューゲーム映像の再生
+            PlayMovieToGraph(this->iTextureNewgameHandle);
+
+			//ニューゲーム映像の再生が終了しているか確認
+            if (GetMovieStateToGraph(this->iTextureNewgameHandle) == FALSE)
+            {
+				//ニューゲーム映像の再生が終了している場合
+				//ニューゲーム映像の再生位置を0に設定
+                SeekMovieToGraph(this->iTextureNewgameHandle, 0);
+            }
+			/* 描画ブレンドモードをブレンド無しに戻す */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+			/* 描画ブレンドモードをブレンド無しに戻す */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+			//スタートフラグを無効化
+            this->bStartFlg = false;
+            break;
+
+			// つづきからか確認
+        case CAMERA_FIXED_POSITION_B:
+			//スタートフラグが有効か確認
+            if (this->bStartFlg == TRUE)
+			{
+				//スタートフラグが有効な場合
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+                SeekMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
+			}
+
+			//モデルのテクスチャをコンティニューテクスチャに設定
+            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureContinueHandle, true);
+
+
+
+			//スタートフラグを無効化
+            this->bStartFlg = false;
+            break;
+
+			// データか確認
+        case CAMERA_FIXED_POSITION_C:
+			//スタートフラグが有効か確認
+            if (this->bStartFlg == TRUE)
+			{
+				//スタートフラグが有効な場合
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+				PauseMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+                SeekMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
+			}
+
+			//モデルのテクスチャをデータテクスチャに設定
+            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureDateHandle, true);
+
+			/* 描画ブレンドモードを減算にする */
+			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+
+			//データ映像の再生
+            PlayMovieToGraph(this->iTextureDateHandle);
+
+			//データ映像の再生が終了しているか確認
+            if (GetMovieStateToGraph(this->iTextureDateHandle) == FALSE)
+            {
+				//データ映像の再生が終了している場合
+				//データ映像の再生位置を0に設定
+                SeekMovieToGraph(this->iTextureDateHandle, 0);
+			}
+			/* 描画ブレンドモードをブレンド無しに戻す */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+			//スタートフラグを無効化
+            this->bStartFlg = false;
+            break;
+
+			// 設定か確認
+        case CAMERA_FIXED_POSITION_D:
+
+			//スタートフラグが有効か確認
+            if (this->bStartFlg == TRUE)
+			{
+				//スタートフラグが有効な場合
+				PauseMovieToGraph(this->iTextureTitleHandle, 0);
+                SeekMovieToGraph(this->iTextureConfigHandle, 0);
+				PauseMovieToGraph(this->iTextureContinueHandle, 0);
+				PauseMovieToGraph(this->iTextureDateHandle, 0);
+				PauseMovieToGraph(this->iTextureNewgameHandle, 0);
+            }
+
+			//モデルのテクスチャをコンフィグテクスチャに設定
+            MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureConfigHandle, true);
+
+			/* 描画ブレンドモードを減算にする */
+			SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+
+			//コンフィグ映像の再生
+			PauseMovieToGraph(this->iTextureConfigHandle);
+
+			//コンフィグ映像の再生が終了しているか確認
+            if (GetMovieStateToGraph(this->iTextureConfigHandle) == FALSE)
+            {
+				//コンフィグ映像の再生が終了している場合
+				//コンフィグ映像の再生位置を0に設定
+                SeekMovieToGraph(this->iTextureConfigHandle, 0);
+			}
+			/* 描画ブレンドモードをブレンド無しに戻す */
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+			//スタートフラグを無効化
+            this->bStartFlg = false;
+            break;
+	}
+	// モデルの描画
+	MV1DrawModel(iModelHandle);
+
+	/* 描画ブレンドモードを減算にする */
+	SetDrawBlendMode(DX_BLENDMODE_SUB, 0);
+
+	//コンティニュー映像の再生
+	PlayMovieToGraph(this->iTextureContinueHandle);
+
+	//コンティニュー映像の再生が終了しているか確認
+	if (GetMovieStateToGraph(this->iTextureContinueHandle) == FALSE)
+    {
+		//コンティニュー映像の再生が終了している場合
+		//コンティニュー映像の再生位置を0に設定
+		SeekMovieToGraph(this->iTextureContinueHandle, 0);
+	}
+	/* 描画ブレンドモードをブレンド無しに戻す */
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+}
+
 
 // 更新
 void Screen::Update()
 {
 	//処理
 	Process();
+
+	//描画
+	Draw();
+
 }

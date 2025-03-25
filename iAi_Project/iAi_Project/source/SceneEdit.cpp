@@ -30,7 +30,6 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->piGrHandle_SelectFrame[0]	= ImageList->piGetImage("Conversation/SelectFlame");
 		this->piGrHandle_SelectFrame[1]	= ImageList->piGetImage("Conversation/SelectFlame_2");
 
-
 		/* "次へ"ボタン */
 		this->piGrHandle_SelectNext		= ImageList->piGetImage("Edit/Scene/UI_Nextbutton");
 
@@ -55,8 +54,14 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		/* 新規エディット情報 */
 		this->piGrHandle_NewEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_NewEdit_Under");
 
-		/* ロック */
-		this->piGrHandle_EditLock			= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock");
+		/* キープエディット情報 */
+		this->piGrHandle_KeepEdit_Under		= ImageList->piGetImage("Edit/Scene/UI_Edit_Keep_Under");
+
+		/* キープアイコン */
+		this->piGrHandle_KeepIcon			= ImageList->piGetImage("Edit/Scene/UI_Edit_Keep");
+
+		/* キープ(文字) */
+		this->piGrHandle_Keep				= ImageList->piGetImage("Edit/Scene/UI_Moji_Keep");
 
 		/* 削除 */
 		this->piGrHandle_Delete				= ImageList->piGetImage("Edit/Scene/UI_Edit_Delete");
@@ -252,21 +257,21 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 
 		/* 描写座標一括登録 */
 		{
-			/* 描写座標設定(仮) */
+			/* 描写座標設定 */
 			st2DPosition stSelectItemPos[SELECT_ITEM_MAX] =
 			{
-				{ 30, 210 },
-				{ 310, 210 },
-				{ 590, 210 },
-				{ 870, 210 },
-				{ 1150, 210 },
-				{ 1430, 210 },
-				{ 30, 650 },
-				{ 350, 650 },
-				{ 625, 650 },
-				{ 900, 650 },
-				{ 1175, 650 },
-				{ 1450, 650 },
+				{ 160, 210 },
+				{ 435, 210 },
+				{ 710, 210 },
+				{ 985, 210 },
+				{ 1260, 210 },
+				{ 1535, 210 },
+				{ 160, 650 },
+				{ 435, 650 },
+				{ 710, 650 },
+				{ 985, 650 },
+				{ 1260, 650 },
+				{ 1535, 650 },
 				{ 1415, 850 }
 			};
 

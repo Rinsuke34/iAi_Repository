@@ -32,7 +32,7 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
 
-	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
+	this->iFiringCount = 0;	// 発射カウント
 	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
@@ -44,7 +44,7 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 	this->bMissile = false;						// ミサイルフラグ
 
 	//維持カウントを初期化
-	this->iMaintainCount = 60;
+	this->iMaintainCount = 30;
 }
 
 // デストラクタ
@@ -135,7 +135,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 	{
 
 	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
+		if (distanceToPlayerX < ENEMY_Missile_X_DISTANCE && distanceToPlayerY < ENEMY_Missile_Y_DISTANCE && distanceToPlayerZ < ENEMY_Missile_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
 	{
 		// プレイヤーが探知範囲内にいる場合
 		iFiringCount--;	// 発射カウントを減少
@@ -192,7 +192,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 
 					this->bTestFlg = false;
 
-					this->iMaintainCount = 60;
+					this->iMaintainCount = 30;
 				}
 			}
 		}
@@ -206,7 +206,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 			this->vecRotation = VGet(1.5, vecRotation.y, vecRotation.z);
 
 			this->bMissile = true;
-			if (this->bMissile == true && iMaintainCount == 60)
+				if (this->bMissile == true && iMaintainCount == 30)
 			{
 				// ミサイルを生成
 				this->pBulletRangeMissile = new BulletEnemyRangeMissile;
@@ -303,6 +303,8 @@ void Enemy_Fixed_Turret::MoveEnemy()
 			this->bTestFlg3 = false;
 	this->bWarningEffectFlg = true;
 			this->bShotFlg = false;
+
+				this -> iFiringCount = ENEMY_MISSILE_INTERVAL;
 		}
 }
 }

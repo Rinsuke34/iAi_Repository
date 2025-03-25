@@ -34,6 +34,7 @@
     <ClCompile Include="source\PickUpItemBase.cpp" />
     <ClCompile Include="source\PlatformBase.cpp" />
     <ClCompile Include="source\PlayerInput.cpp" />
+    <ClCompile Include="source\PublicFunction.cpp" />
     <ClCompile Include="source\PublicProcess.cpp" />
     <ClCompile Include="source\SceneBase.cpp" />
     <ClCompile Include="source\SceneServer.cpp" />

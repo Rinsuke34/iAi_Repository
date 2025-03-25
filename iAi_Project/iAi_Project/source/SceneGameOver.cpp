@@ -26,12 +26,6 @@ SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 	this->iBlendAlpha	= 0;	// 描写する画像のアルファ値(0～255)
 }
 
-// デストラクタ
-SceneGameOver::~SceneGameOver()
-{
-
-}
-
 // 計算
 void SceneGameOver::Process()
 {

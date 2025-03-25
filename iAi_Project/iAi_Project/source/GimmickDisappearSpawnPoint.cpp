@@ -51,7 +51,7 @@ void GimmickDisappearSpawnPoint::Update()
 
 				this->bAddObjectFlg = true;
 
-				this->iRespawnDelay = 60 * 5;
+				this->iRespawnDelay = 60 * 3;
 			}
 		}
 		else

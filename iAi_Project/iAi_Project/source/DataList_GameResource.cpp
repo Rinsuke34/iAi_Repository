@@ -30,31 +30,36 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 			}
 		}
 
-		/* 初期値設定 */
-
-		/* ブラッド(ゲーム内通貨)関連 */
-		this->iHaveBlood	= 0;
-		this->iStartBlood	= 0;
-
-		/* エディット関連 */
-		for (int i = 0; i < EDIT_MAX; i++)
-		{
-			/* 現在のエディット情報初期化 */
-			this->NowEditData[i].iEditEffect	= EDIT_EFFECT_NONE;
-			this->NowEditData[i].iEditRank		= EDIT_RANK_NONE;
-			this->NowEditData[i].iEditCost		= 0;
-		}
-
-		// キープ中エディット情報初期化
-		this->KeepEditData.iEditEffect	= EDIT_EFFECT_NONE;
-		this->KeepEditData.iEditRank	= EDIT_RANK_NONE;
-		this->KeepEditData.iEditCost	= 0;
-	
-		/* スコア関連 */
-		this->iClearTotalEvaluation = 0;
+		/* 初期化処理 */
+		Initialization();
 	}
 
 	JsonLoadEditEffectValue();
+}
+
+// 初期化
+void DataList_GameResource::Initialization()
+{
+	/* ブラッド(ゲーム内通貨)関連 */
+	this->iHaveBlood	= 0;
+	this->iStartBlood	= 0;
+
+	/* エディット関連 */
+	for (int i = 0; i < EDIT_MAX; i++)
+	{
+		/* 現在のエディット情報初期化 */
+		this->NowEditData[i].iEditEffect = EDIT_EFFECT_NONE;
+		this->NowEditData[i].iEditRank = EDIT_RANK_NONE;
+		this->NowEditData[i].iEditCost = 0;
+	}
+
+	// キープ中エディット情報初期化
+	this->KeepEditData.iEditEffect = EDIT_EFFECT_NONE;
+	this->KeepEditData.iEditRank = EDIT_RANK_NONE;
+	this->KeepEditData.iEditCost = 0;
+
+	/* スコア関連 */
+	this->iClearTotalEvaluation = 0;
 }
 
 /* データ設定 */

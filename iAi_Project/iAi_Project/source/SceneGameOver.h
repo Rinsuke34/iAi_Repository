@@ -18,7 +18,7 @@ class SceneGameOver : public SceneBase
 {
 	public:
 		SceneGameOver();						// コンストラクタ
-		virtual ~SceneGameOver();				// デストラクタ
+		virtual ~SceneGameOver() {};			// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
