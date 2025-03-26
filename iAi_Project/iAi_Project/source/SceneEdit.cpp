@@ -74,10 +74,14 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 
 		/* ブラッドアイコン */
 		this->piGrHandle_Blood				= ImageList->piGetImage("UI_Player_Blood/Blood");
+
+		/* エディットロック文字(0:Bランク, 1:Aランク) */
+		this->apiGrHandle_EditLock[0]		= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock_B");
+		this->apiGrHandle_EditLock[1]		= ImageList->piGetImage("Edit/Scene/UI_Edit_Lock_A");
 	}
 
 	/* 初期化 */
-	this->iSelectItem	= 0;					// 選択中の項目の番号
+	this->iSelectItem		= 0;					// 選択中の項目の番号
 	// 新規のエディット情報
 	for (int i = 0; i < EDIT_UPGRADE_MAX; i++)
 	{
@@ -102,31 +106,31 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		int	iClearEvaluation_Total = this->GameResourceList->iGetClearEvaluation();
 
 		/* 総合評価に応じた取得 */
-		int		iNewEditNumber = 0;		// エディット数
+		this->iNewEditNumber = 0;						// 新規エディット数
 		bool	bGoaldConfirmed = false;	// 金枠確定
 
 		/* ランクに応じて設定する */
 		switch (iClearEvaluation_Total)
 		{
 			case RESULT_EVALUATION_S:
-				iNewEditNumber	= NEW_EDIT_NO_RANK_S;
+				this->iNewEditNumber	= NEW_EDIT_NO_RANK_S;
 				bGoaldConfirmed	= true;
 				break;
 
 			case RESULT_EVALUATION_A:
-				iNewEditNumber = NEW_EDIT_NO_RANK_A;
+				this->iNewEditNumber = NEW_EDIT_NO_RANK_A;
 				break;
 
 			case RESULT_EVALUATION_B:
-				iNewEditNumber = NEW_EDIT_NO_RANK_B;
+				this->iNewEditNumber = NEW_EDIT_NO_RANK_B;
 				break;
 
 			case RESULT_EVALUATION_C:
-				iNewEditNumber = NEW_EDIT_NO_RANK_C;
+				this->iNewEditNumber = NEW_EDIT_NO_RANK_C;
 				break;
 
 			case RESULT_EVALUATION_D:
-				iNewEditNumber = NEW_EDIT_NO_RANK_D;
+				this->iNewEditNumber = NEW_EDIT_NO_RANK_D;
 				break;
 		}
 
@@ -183,7 +187,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 				}
 
 				/* 出現率に基づき、ランダムなエディットを選出 */
-				for (int i = 0; i < iNewEditNumber; i++)
+				for (int i = 0; i < this->iNewEditNumber; i++)
 				{
 					/* ランダムな値を取得する */
 					int iRandomValue	= GetRand(iTotalRarity - 1);
@@ -217,7 +221,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			// 有効である場合
 			/* NONE以外のランダムなエディットのランクを金にする */
 			// ※最低1枠であるため、金枠のエディットが抽選対象となっても仕様上は問題ない
-			this->NewEditData[GetRand(iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
+			this->NewEditData[GetRand(this->iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
 		}
 	}
 
@@ -678,6 +682,28 @@ void SceneEdit::Process_NowEditUpdate()
 
 				/* 次へを選択不可とする */
 				this->astSelectItemList[SELECT_ITEM_NEXT].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				break;
+		}
+
+		/* ロック数に応じて対象のエディット個所を選択不可に設定 */
+		switch (this->iNewEditNumber)
+		{
+			/* 新規エディット数が"5個"の場合 */
+			case NEW_EDIT_NO_RANK_S:
+				/* ロックは設定しない */
+				break;
+
+			/* 新規エディット数が"4個"の場合 */
+			case NEW_EDIT_NO_RANK_B:
+				/* 新規のエディットの5個目を設定不可に */
+				this->astSelectItemList[SELECT_ITEM_NEW_EDIT_END].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				break;
+
+			/* 新規エディット数が"3個"の場合 */
+			case NEW_EDIT_NO_RANK_C:
+				/* 新規のエディットの5個目と4個目を設定不可に */
+				this->astSelectItemList[SELECT_ITEM_NEW_EDIT_END].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
+				this->astSelectItemList[SELECT_ITEM_NEW_EDIT_END - 1].iSelectStatus = SELECT_STATUS_IMPOSSIBLE;
 				break;
 		}
 	}

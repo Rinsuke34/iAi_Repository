@@ -45,6 +45,7 @@ class SceneEdit : public SceneBase
 		int* piGrHandle_New;								// NEW(文字)
 		int* piGrHandle_Custom;								// カスタム(文字)
 		int* piGrHandle_Blood;								// ブラッド
+		int* apiGrHandle_EditLock[2];						// エディットロック文字(0:Bランク, 1:Aランク)
 
 		/* 関数 */
 		void	Process_Main();				// メイン処理
@@ -60,4 +61,5 @@ class SceneEdit : public SceneBase
 		EDIT_DATA			HoldEditData;							// ホールド中のエディット情報
 		EDIT_DATA			NewEditData[EDIT_UPGRADE_MAX];			// 新規のエディット情報
 		EDIT_DATA			DeleteEditData;							// 削除予定のエディット情報
+		int					iNewEditNumber;							// 新規エディット数
 };
