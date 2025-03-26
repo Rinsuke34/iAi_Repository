@@ -499,6 +499,24 @@
     <Filter Include="ヘッダー ファイル\シーン\エンドクレジット">
       <UniqueIdentifier>{0df2d989-bf01-44a6-a356-68ee56933799}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ジャンプ回数">
+      <UniqueIdentifier>{1bbbb49a-fc76-4d7d-b185-e3cd265b8178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ジャンプ回数">
+      <UniqueIdentifier>{cb1b7c10-0725-4c05-b7e9-eceb0c0612a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\オブジェクト\プラットフォーム\ギミック\チュートリアル描写地点">
+      <UniqueIdentifier>{c2533383-aa8b-42c6-a3a4-72c2fd1cbe82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\チュートリアル描写地点">
+      <UniqueIdentifier>{85e980ea-785f-48a2-b073-96baecc9f9e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル">
+      <UniqueIdentifier>{09cf3784-e53a-4d93-8b98-97f88bf3fd51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル">
+      <UniqueIdentifier>{8ff9a977-076a-42ad-a7ec-37e1c8079104}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -794,6 +812,15 @@
     </ClCompile>
     <ClCompile Include="source\SceneEndcredit.cpp">
       <Filter>ソース ファイル\シーン\エンドクレジット</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Jump.cpp">
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ジャンプ回数</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Gimmick_TutorialDraw.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\チュートリアル描写地点</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneUi_Tutorial.cpp">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1123,6 +1150,15 @@
     </ClInclude>
     <ClInclude Include="source\SceneEndcredit.h">
       <Filter>ヘッダー ファイル\シーン\エンドクレジット</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Jump.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\ジャンプ回数</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Gimmick_TutorialDraw.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\チュートリアル描写地点</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneUi_Tutorial.h">
+      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,12 +18,12 @@ class SceneUi_Hp : public SceneBase
 		virtual ~SceneUi_Hp() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
-		void	Draw()				override ;	// 描画
+		void	Draw()				override;	// 描画
 
 	private:
 		/* 使用するデータリスト */
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
-		DataList_StageStatus*	StatusStatusList;	// ステージ状態管理
+		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Hp_Frame;		// HPフレーム

@@ -118,6 +118,9 @@ void SceneStage::Initialization()
 
 			/* ‘€ìà–¾ */
 			gpSceneServer->AddSceneReservation(new SceneUi_OperationInstructions());
+
+			/* ƒWƒƒƒ“ƒv */
+			gpSceneServer->AddSceneReservation(new SceneUi_Jump());
 		}
 	}
 

@@ -54,7 +54,6 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerNowJumpCount()				{ return this->iPlayerNowJumpCount; }				// プレイヤーのジャンプ回数(現在数)取得
 		int		iGetPlayerNowAttakChargeFlame()			{ return this->iPlayerNowAttakChargeFlame; }		// プレイヤーの現在の攻撃チャージフレーム数取得
 		float	fGetPlayerNowMotionCount()				{ return this->fPlayerNowMotionCount; };			// プレイヤーのモーションの現在のカウント
-		int		iGetPlayerJumpCount()					{ return this->iPlayerJumpCount; }					// プレイヤーの現在のジャンプ回数を取得								/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		bool	bGetPlayerJumpingFlag()					{ return this->bPlayerJumpingFlag; }				// プレイヤーがジャンプ中かのフラグを取得							/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		
 		VECTOR	vecGetPlayerDodgeDirection()			{ return this->vecPlayerDodgeDirection; }			// プレイヤー回避方向を取得											/* 2025.01.10 菊池雅道 移動関連の関数追加 */
@@ -178,7 +177,6 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerLandingAfterMeleeStrongFlg(bool bPlayerLandingAfterMeleeStrongFlg) { this->bPlayerLandingAfterMeleeStrongFlg = bPlayerLandingAfterMeleeStrongFlg; }	// プレイヤーが近距離攻撃(強)後に着地しているかのフラグを設定			/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerSlowMotionCount(int iPlayerSlowMotionCount)						{ this->iPlayerSlowMotionCount				= iPlayerSlowMotionCount; }				// プレイヤーのスローモーションのカウントを設定									/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
 		void	SetPlayerNowMotionCount(float fPlayerNowMotionCount)						{ this->fPlayerNowMotionCount				= fPlayerNowMotionCount; };				// プレイヤーのモーションの現在のカウント
-		void	SetPlayerJumpCount(int iPlayerJumpCount)									{ this->iPlayerJumpCount					= iPlayerJumpCount; }					// プレイヤージャンプ回数を設定				/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerJumpingFlag(bool bPlayerJumpingFlag)								{ this->bPlayerJumpingFlag					= bPlayerJumpingFlag; }					// プレイヤーがジャンプ中かのフラグを設定	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerNowDodgeFlame(int iPlayerNowDodgeFlame)							{ this->iPlayerNowDodgeFlame				= iPlayerNowDodgeFlame; }				// プレイヤーの現在の回避時間を設定			/* 2025.01.10 菊池雅道 移動関連の関数追加 */		
 		void	SetPlayerDodgeDirection(VECTOR vecPlayerDodgeDirection)						{ this->vecPlayerDodgeDirection				= vecPlayerDodgeDirection; }			// プレイヤー回避方向を設定					/* 2025.01.10 菊池雅道 移動関連の関数追加 */
@@ -282,7 +280,6 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerNowJumpCount;				// プレイヤーのジャンプ回数(現在数)
 		float	fPlayerNowMotionCount;				// プレイヤーのモーションの現在のカウント
 		bool	bPlayerJumpingFlag;					// プレイヤーがジャンプ中かのフラグ												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
-		int		iPlayerJumpCount;					// プレイヤーの現在のジャンプ回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerNowDodgeFlame;				// プレイヤーの現在の回避フレーム数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		VECTOR	vecPlayerDodgeDirection;			// プレイヤー回避方向															/* 2025.01.09 菊池雅道 移動関連の変数追加 */
 		int		iPlayerDodgeWhileJumpingCount;		// プレイヤージャンプ中の回避回数												/* 2025.01.09 菊池雅道 移動関連の変数追加 */

@@ -23,7 +23,7 @@ ScenePause::ScenePause() : SceneBase("Pause", 450, true)
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* –îˆó */
-		this->piGrHandle_Arrow = ImageList->piGetImage("Input_Icon//Sign");
+		this->piGrHandle_Arrow = ImageList->piGetImage("Input_Icon/Sign");
 	}
 
 	/* ‰Šú‰» */

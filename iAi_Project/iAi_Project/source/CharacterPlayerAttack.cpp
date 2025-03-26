@@ -1289,14 +1289,8 @@ void CharacterPlayer::Player_Projectile_Posture()
 						/* クナイ消費無効率(%)を取得 */
 						int iKeepProbability = this->PlayerStatusList->iGetAddKunaiKeepProbability();
 
-						/* ランダム(0～100)な値を取得し、クナイ消費無効率よりも小さい値であるか確認 */
-						if (GetRand(100) <= iKeepProbability)
-						{
-							// 小さい場合
-							/* クナイを消費しない */
-							iNowKunaiCount = 0;
-						}
-						else
+						/* ランダム(0～100)な値を取得し、クナイ消費無効率よりも大きい値であるか確認 */
+						if (GetRand(100) > iKeepProbability)
 						{
 							// 大きい場合
 							/* クナイを消費する */

@@ -26,12 +26,6 @@ SceneUi_Kunai::SceneUi_Kunai() : SceneBase("UI_Kunai", 102, false)
 	}
 }
 
-// デストラクタ
-SceneUi_Kunai::~SceneUi_Kunai()
-{
-
-}
-
 // 計算
 void SceneUi_Kunai::Process()
 {

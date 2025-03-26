@@ -13,7 +13,7 @@ SceneUi_Hp::SceneUi_Hp() : SceneBase("UI_Hp", 101, false)
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "ステージ状態管理"を取得 */
-		this->StatusStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像読み込み */
@@ -33,7 +33,7 @@ SceneUi_Hp::SceneUi_Hp() : SceneBase("UI_Hp", 101, false)
 void SceneUi_Hp::Process()
 {
 	/* ゲーム状態が"ゲーム実行"以外であるならシーンを削除 */
-	if (this->StatusStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
+	if (this->StageStatusList->iGetGameStatus() != GAMESTATUS_PLAY_GAME)
 	{
 		/* シーンの削除フラグを有効にする */
 		this->bDeleteFlg = true;

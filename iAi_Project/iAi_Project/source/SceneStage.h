@@ -29,6 +29,7 @@
 #include "SceneUi_Edit.h"
 #include "SceneUi_Time.h"
 #include "SceneUi_OperationInstructions.h"
+#include "SceneUi_Jump.h"
 
 /* 画面エフェクト */
 #include "ScreenEffect_Damage.h"

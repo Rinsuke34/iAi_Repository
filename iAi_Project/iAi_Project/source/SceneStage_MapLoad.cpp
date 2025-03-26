@@ -27,6 +27,7 @@
 #include "Gimmick_FallJudgment.h"
 #include "Gimmick_MoveFloor.h"
 #include "Gimmick_CheckPoint.h"
+#include "Gimmick_TutorialDraw.h"
 // タイトルプレイヤー
 #include "Scene_Title_Player.h"
 // 霧
@@ -178,6 +179,19 @@ void SceneStage::LoadMapData()
 
 					/* チェックポイントを初期地点として設定 */
 					dynamic_cast<Gimmick_CheckPoint*>(pCheckPoint)->SetStartPositionFlg(true);
+
+
+					/* チュートリアル描写ポイント追加(仮) */
+					{
+						/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
+						Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+						ObjectList->SetPlatform(pTutorialDraw);
+
+						/* 座標 */
+						pTutorialDraw->SetPosition(VAdd(vecPos, VGet(1000, 0, 0)));
+
+						pTutorialDraw->SetDrawTutorialNo(1);
+					}
 				}
 				else if (name == "Marker_Goal_Object")
 				{

@@ -32,7 +32,6 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->fPlayerNowFallSpeed				= 0;								// プレイヤーの現在の落下速度
 	this->iPlayerNowJumpCount				= 0;								// プレイヤーのジャンプ回数(現在数)
 	this->bPlayerJumpingFlag				= false;							//プレイヤーがジャンプ中かのフラグ									/* 2025.01.10 菊池雅道 初期化処理追加 */
-	this->iPlayerJumpCount					= 0;								//プレイヤーの現在のジャンプ回数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->vecPlayerDodgeDirection			= { 0, 0, 0 };						//プレイヤー回避方向												/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerDodgeWhileJumpingCount		= 0;								//プレイヤージャンプ中の回避回数									/* 2025.01.10 菊池雅道 初期化処理追加 */
 	this->iPlayerNowDodgeFlame				= 0;								//プレイヤーの現在の回避フレーム数									/* 2025.01.10 菊池雅道 初期化処理追加 */

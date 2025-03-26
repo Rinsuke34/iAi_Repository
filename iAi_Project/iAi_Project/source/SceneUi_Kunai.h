@@ -15,7 +15,7 @@ class SceneUi_Kunai : public SceneBase
 {
 	public:
 		SceneUi_Kunai();					// コンストラクタ
-		virtual ~SceneUi_Kunai();			// デストラクタ
+		virtual ~SceneUi_Kunai() {};		// デストラクタ
 
 		void	Process()			override;	// 計算
 		void	Draw()				override;	// 描画
