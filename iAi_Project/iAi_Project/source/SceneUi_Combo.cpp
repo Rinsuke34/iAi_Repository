@@ -51,8 +51,8 @@ void SceneUi_Combo::RankBorder_JsonLoad()
 	// jsonファイルから各評価の基準点を取得
 
 	/* パスとファイル名の設定 */
-	std::string FilePath = "resource/SetupData/";	// 保存場所
-	std::string jsonFileName = "StageDataBase.json";		// ファイル名
+	std::string FilePath = "resource/SetupData/";		// 保存場所
+	std::string jsonFileName = "StageDataBase.json";	// ファイル名
 
 	/* ファイル展開 */
 	std::ifstream inputFile(FilePath + jsonFileName);

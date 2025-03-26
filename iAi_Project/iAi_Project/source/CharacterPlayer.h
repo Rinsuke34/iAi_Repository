@@ -64,6 +64,7 @@ class CharacterPlayer : public CharacterBase
 		virtual void	Update()			override;		// 更新
 		virtual void	Draw()				override;		// 描写
 		virtual void	CollisionDraw()		override;		// 当たり判定描写
+		virtual void	BloomDraw()			override;		// 発光描写
 		virtual void	Reset()				override;		// リセット処理
 
 	private:
@@ -137,7 +138,6 @@ class CharacterPlayer : public CharacterBase
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
 		COLLISION_CAPSULE	stHorizontalCollision[2];		// 水平方向コリジョン(0:上側, 1:下側)
 		COLLISION_CAPSULE	stMeleeStrongMoveCollsion;		// 近接攻撃(強)のコリジョン(移動後の座標)
-		VECTOR				vecMoveSize;					// 移動量(デバッグ用)		<- ※この変数がないとパッケージ化する際にキーボードでの移動の不具合が発生する(駒沢)
 		int					iFallingFrame;					// 落下状態になってからのフレーム数(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の変数追加 */
 
 		/* クールタイム関連 */

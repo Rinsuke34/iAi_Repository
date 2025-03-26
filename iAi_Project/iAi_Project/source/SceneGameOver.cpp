@@ -157,40 +157,38 @@ void SceneGameOver::Draw()
 	if (this->iBlendAlpha >= ALPHA_MAX)
 	{
 		// 最大値を超えている場合
-		/* ゲームオーバー画面を再生 */
-		PlayMovieToGraph(*this->piGrHandle_GameOver);
-
-		/* "ゲームオーバー"を描写 */
-		DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_GameOver, TRUE);
-
-		/* 再生が終了しているか確認 */
-		if (GetMovieStateToGraph(*this->piGrHandle_GameOver) == FALSE)
+		/* 描写フェイズに応じた処理 */
+		switch (this->iDrawPhase)
 		{
-			// 再生が終了している場合
-			/* ムービーの再生時間を初期化する */
-			SeekMovieToGraph(*this->piGrHandle_GameOver, 0);
+			/* ゲームオーバー */
+			case 0:
+				/* ゲームオーバー画面を再生 */
+				PlayMovieToGraph(*this->piGrHandle_GameOver);
+
+				/* "ゲームオーバー"を描写 */
+				DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_GameOver, TRUE);
+
+				/* 再生が終了しているか確認 */
+				if (GetMovieStateToGraph(*this->piGrHandle_GameOver) == FALSE)
+				{
+					// 再生が終了している場合
+					/* ムービーの再生時間を初期化する */
+					SeekMovieToGraph(*this->piGrHandle_GameOver, 0);
+				}
+				break;
+
+			/* リトライ確認 */
+			case 1:
+				/* "リトライ確認"を描写 */
+				DrawGraph(570, 270, *this->piGrHandle_Window_GameOver, TRUE);
+				break;
+
+			/* リトライ最終確認 */
+			case 2:
+				/* "リトライ最終確認"を描写 */
+				DrawGraph(570, 270, *this->piGrHandle_Window_GameOverCheck, TRUE);
+				break;
 		}
-	}
-
-	/* 描写フェイズに応じた処理 */
-	switch (this->iDrawPhase)
-	{
-		/* ゲームオーバー */
-		case 0:
-			/* 追加描写は無し */
-			break;
-
-		/* リトライ確認 */
-		case 1:
-			/* "リトライ確認"を描写 */
-			DrawGraph(570, 270, *this->piGrHandle_Window_GameOver, TRUE);
-			break;
-
-		/* リトライ最終確認 */
-		case 2:
-			/* "リトライ最終確認"を描写 */
-			DrawGraph(570, 270, *this->piGrHandle_Window_GameOverCheck, TRUE);
-			break;
 	}
 
 	/* 描写フェイズが"ゲームオーバー"以外であるか確認 */

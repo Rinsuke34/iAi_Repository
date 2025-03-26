@@ -31,13 +31,14 @@ static const int	EDIT_EFFECT_NORMAL_JUMP_COUNT_UP				= 5;	// ジャンプ回数アップ
 static const int	EDIT_EFFECT_NORMAL_AIR_MELEE_COUNT_UP			= 6;	// 空中居合攻撃回数アップ
 static const int	EDIT_EFFECT_NORMAL_KUNAI_KEEP					= 7;	// クナイ消費確率無効
 static const int	EDIT_EFFECT_NORMAL_BARIER_COUNT_UP				= 8;	// バリア回数アップ
+static const int	EDIT_EFFECT_NORMAL_GET_KUNAI_UP					= 12;	// クナイ取得量アップ
 // 特殊
 static const int	EDIT_EFFECT_SPECIAL_COUNTER						= 9;	// カウンターアクション追加
 static const int	EDIT_EFFECT_KUNAI_EXPLOSION						= 11;	// クナイ爆発
 // 呪い
 static const int	EDIT_EFFECT_CURCE_LIMIT_HP_ONE					= 10;	// HP1制限
 // その他
-static const int	EDIT_EFFECT_MAX									= 12;	// エディット効果の最大数
+static const int	EDIT_EFFECT_MAX									= 13;	// エディット効果の最大数
 
 /* エディット情報用の構造体 */
 struct EDIT_DATA
@@ -80,7 +81,8 @@ static const std::array<EDIT_NAME, EDIT_EFFECT_MAX> EDIT_EFFECT_NAME =
 	{ "バリア回数アップ",			"BarierCountUp",			"Edit/UI_Edit_Barrier" },
 	{ "カウンターアクション追加",	"Counter",					"Edit/UI_Edit_Parry" },
 	{ "HP1制限",					"LimitHpOne",				"Edit/UI_Edit_HpOne" },
-	{ "クナイ爆発",					"KunaiExplosion",			"Edit/UI_Edit_KunaiBomb" }
+	{ "クナイ爆発",					"KunaiExplosion",			"Edit/UI_Edit_KunaiBomb" },
+	{ "クナイ取得量アップ",			"GetKunaiUp",				"Edit/UI_Edit_KunaiPlus" }
 } };
 
 /* エディット管理用の構造体 */

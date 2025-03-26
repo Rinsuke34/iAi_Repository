@@ -154,6 +154,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bGetAddCounter()						{ return this->bAddCounter; }						// カウンター追加フラグ(有効/無効)
 		bool	bGetKunaiExplosion()					{ return this->bAddKunaiExplosion; }				// クナイ爆発化フラグ(有効/無効)
 		bool	bGetAddMaxHpOne()						{ return this->bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
+		int		iGetAddKunai()							{ return this->iAddKunai; }							// クナイ追加数(個)
 
 		/* データ設定 */
 		// プレイヤー状態関連
@@ -265,8 +266,9 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetAddKunaiKeepProbability(int iAddKunaiKeepProbability)						{ this->iAddKunaiKeepProbability		= iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		void	SetAddBarrier(int iAddBarrier)													{ this->iAddBarrier						= iAddBarrier; }						// バリア数(個)
 		void	SetAddCounter(bool bAddCounter)													{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		bool	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion				= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
+		void	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion				= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
 		void	SetAddMaxHpOne(bool bAddMaxHpOne)												{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
+		void	SetAddKunai(int iAddKunai)														{ this->iAddKunai						= iAddKunai; }							// クナイ追加数(個)
 
 	private:
 		/* プレイヤー状態関連 */
@@ -380,6 +382,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bAddCounter;						// カウンター追加フラグ(有効/無効)
 		bool	bAddKunaiExplosion;					// クナイ爆発化フラグ(有効/無効)
 		bool	bAddMaxHpOne;						// 最大HP1化フラグ(有効/無効)
+		int		iAddKunai;							// クナイ追加数(個)
 		
 		/* Jsonファイルでのオプション名と変数の対応表 */
 		std::vector<PLAYER_STATUS_LIST> astPlayerStatusList =

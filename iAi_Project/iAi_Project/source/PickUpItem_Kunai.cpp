@@ -68,7 +68,7 @@ void PickUpItem_Kunai::Update()
 		int iHaveKunai = this->PlayerStatusList->iGetNowHaveKunai();
 
 		/* プレイヤーの所持クナイ数を加算 */
-		iHaveKunai += 1;
+		iHaveKunai += 1 + this->PlayerStatusList->iGetAddKunai();
 
 		/* プレイヤーの所持クナイ数が最大所持数を超えているか確認 */
 		if (iHaveKunai > iMaxKunai)

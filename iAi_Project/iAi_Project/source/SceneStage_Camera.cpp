@@ -323,14 +323,39 @@ void SceneStage::SetCamera_Aim_Melee()
 	VECTOR vecCameraTarget = VAdd(vecPlayerPos, VGet(0, PLAYER_HEIGHT, 0));
 	this->StageStatusList->SetCameraTarget_Target(vecCameraTarget);
 
-	vecCameraTarget.y += 20.f;
-
 	/* カメラ座標設定 */
 	float fRadius = 200.f;			// 注視点からの距離
+
+	/* カメラ線形補間用カウントを取得 */
+	int iCameraPositionLeapCount = this->StageStatusList->iGetCameraPositionLeapCount();
+
+	/* カメラ座標のX,Z軸を設定 */
 	float fCameraX = fRadius * -sinf(fCameraAngleX) + vecCameraTarget.x;	// X座標
-	float fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;	// Y座標
 	float fCameraZ = fRadius * +cosf(fCameraAngleX) + vecCameraTarget.z;	// Z座標
 
+	float fCameraY = 0;
+
+	/* カメラY座標を設定 */
+	{
+		/* カメラ線形補完用カウントが最大値に達しているか確認 */
+		if (iCameraPositionLeapCount < CAMERA_POSITION_LEAP_COUNT_MAX_MELEE)
+		{
+			// 達していない場合
+			/* Y座標を固定の値に設定 */
+			fCameraY = vecCameraTarget.y;
+
+			/* Y軸の回転量を初期化 */
+			this->StageStatusList->SetCameraAngleY(0.f);
+		}
+		else
+		{
+			// 達している場合
+			/* Y座標を回転量に合わせて設定 */
+			fCameraY = fRadius * -sinf(fCameraAngleY) + vecCameraTarget.y;
+		}
+	}
+
+	/* カメラ座標設定 */
 	this->StageStatusList->SetCameraPosition_Target(VGet(fCameraX, fCameraY, fCameraZ));
 }
 

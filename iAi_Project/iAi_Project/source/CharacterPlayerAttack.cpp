@@ -956,26 +956,30 @@ void CharacterPlayer::Player_Charge_Attack()
 
 			/* エフェクト追加 */
 			{
-				/* 近距離攻撃(強)のエフェクトを生成 */
-				EffectSelfDelete* pAddEffect = new EffectSelfDelete();
+				for (int i = 0; i < 2; i++)
+				{
+					/* 近距離攻撃(強)のエフェクトを生成 */
+					EffectSelfDelete* pAddEffect = new EffectSelfDelete();
 
-				/* 近距離攻撃(強)エフェクトの読み込み */
-				pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_iai_dash/FX_iai_dash")));
+					/* 近距離攻撃(強)エフェクトの読み込み */
+					pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_iai_dash/FX_iai_dash")));
 
-				/* 近距離攻撃(強)エフェクトの再生時間を設定 */
-				pAddEffect->SetDeleteCount(30);
+					/* 近距離攻撃(強)エフェクトの再生時間を設定 */
+					pAddEffect->SetDeleteCount(60);
 
-				/* 近距離攻撃(強)エフェクトの座標設定 */
-				pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
+					/* 近距離攻撃(強)エフェクトの座標設定 */
+					pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
 
-				/* 近距離攻撃(強)エフェクトの回転量設定 */
-				pAddEffect->SetRotation(VGet(this->vecRotation.x, this->vecRotation.y, this->vecRotation.z * -1));
+					/* 近距離攻撃(強)エフェクトの回転量設定 */
+					pAddEffect->SetRotation(VGet(this->vecRotation.x, this->vecRotation.y, this->vecRotation.z * -1));
 
-				/*近距離攻撃(強) エフェクトの初期化 */
-				pAddEffect->Initialization();
+					/*近距離攻撃(強) エフェクトの初期化 */
+					pAddEffect->Initialization();
 
-				/* 近距離攻撃(強)エフェクトをリストに登録 */
-				this->ObjectList->SetEffect(pAddEffect);
+					/* 近距離攻撃(強)エフェクトをリストに登録 */
+					this->ObjectList->SetEffect(pAddEffect);
+				}
+				
 			}
 		}
 

@@ -6,6 +6,7 @@
 /* データリスト */
 #include "DataList_Object.h"
 #include "DataList_GameResource.h"
+#include "DataList_PlayerStatus.h"
 
 /* オブジェクト */
 #include "CharacterPlayer.h"
@@ -27,6 +28,7 @@ class PickUpItem_Blood : public PickUpItemBase
 		/* データリスト */
 		DataList_Object*		ObjectList;			// オブジェクト管理
 		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
+		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
 
 		/* 変数 */
 		CharacterPlayer*	pPlayer;					// プレイヤー

@@ -131,6 +131,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->iAddBarrier						= 0;		// バリア数(個)
 	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
 	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
+	this->iAddKunai							= 0;		// クナイ本数増加値(個)
 
 	/* ステータスデータの読み込み */
 	LoadPlayerStatuxData();
@@ -232,6 +233,7 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 	this->iAddBarrier						= 0;		// バリア数(個)
 	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
 	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
+	this->iAddKunai							= 0;		// クナイ本数増加値(個)
 
 	/* "ゲーム内リソース管理"を取得 */
 	DataList_GameResource* GameResource = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
@@ -306,6 +308,12 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 			case EDIT_EFFECT_NORMAL_BARIER_COUNT_UP:
 				/* 効果量分加算する */
 				this->iAddBarrier += iEffectValue;
+				break;
+
+
+			// クナイ本数増加
+			case EDIT_EFFECT_NORMAL_GET_KUNAI_UP:
+				this->iAddKunai	+= iEffectValue;
 				break;
 
 			/* 特殊 */

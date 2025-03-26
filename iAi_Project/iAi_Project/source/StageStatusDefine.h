@@ -50,7 +50,7 @@ static const int	CAMERA_MODE_FALL						= 8;				// 落下
 // 線形補間
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_NORMAL		= 30 * 1;		// カメラ座標の線形保管用カウントの最大値(フリー)				/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_CONT_MAX_TITLE			= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(タイトル)				/* 2025.03.06 菊池雅道 定数追加 */
-static const int	CAMERA_POSITION_LEAP_COUNT_MAX_MELEE		= 60 * 1;		// カメラ座標の線形保管用カウントの最大値(近距離攻撃(強))		/* 2025.03.06 菊池雅道 定数追加 */
+static const int	CAMERA_POSITION_LEAP_COUNT_MAX_MELEE		= 40 * 1;		// カメラ座標の線形保管用カウントの最大値(近距離攻撃(強))		/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_PROJECTILE	= 30 * 1;		// カメラ座標の線形保管用カウントの最大値(遠距離攻撃)			/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_STAGECLEAR	= 60 * 2;		// カメラ座標の線形保管用カウントの最大値(ステージクリア)		/* 2025.03.06 菊池雅道 定数追加 */
 static const int	CAMERA_POSITION_LEAP_COUNT_MAX_STAGESTART	= 60 * 4;		// カメラ座標の線形保管用カウントの最大値(ステージ開始/区間)

@@ -319,9 +319,6 @@ void CharacterPlayer::Player_Move()
 
 	/* 移動量を加算 */
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
-
-	/* デバッグ描写用の移動量を設定 */
-	this->vecMoveSize = vecAddMove;
 }
 
 /* 2025.02.05 菊池雅道	ステータス関連修正 開始 */

@@ -13,6 +13,9 @@ PickUpItem_Blood::PickUpItem_Blood() : PickUpItemBase()
 
 		/* "ゲームリソース管理"を取得 */
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* オブジェクト取得 */
@@ -109,6 +112,30 @@ void PickUpItem_Blood::Update()
 				/* エフェクトをリストに登録 */
 				ObjectListHandle->SetEffectItem(AddItem);
 			}
+		}
+
+		/* コンボ継続時間を延長 */
+		// デフォルトの継続時間の半分の時間を加算
+		{
+			/* プレイヤーのコンボ継続時間を取得 */
+			int iComboDuration		= PlayerStatusList->iGetPlayerComboDuration();
+
+			/* プレイヤーの最大コンボ継続時間を取得 */
+			int iMaxComboDuration	= INIT_ATTRIBUTES_COMBO_DURATION + PlayerStatusList->iGetAddComboTime();
+
+			/* プレイヤーのコンボ継続時間を加算 */
+			iComboDuration			+= INIT_ATTRIBUTES_COMBO_DURATION / 2;
+
+			/* プレイヤーのコンボ継続時間が最大コンボ継続時間を超えているか確認 */
+ 			if (iComboDuration > iMaxComboDuration)
+			{
+				// 超えている場合
+				/* プレイヤーのコンボ継続時間を最大コンボ継続時間に設定 */
+				iComboDuration = iMaxComboDuration;
+			}
+
+			/* プレイヤーのコンボ継続時間を設定 */
+			PlayerStatusList->SetPlayerComboDuration(iComboDuration);
 		}
 	}
 

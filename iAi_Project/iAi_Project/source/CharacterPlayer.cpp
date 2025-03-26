@@ -56,7 +56,6 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};				// 水平方向コリジョン(上側)
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};				// 水平方向コリジョン(下側)
 		this->stMeleeStrongMoveCollsion							= {};				// 近接攻撃(強)のコリジョン(移動後の座標)
-		this->vecMoveSize										= VGet(0, 0, 0);	// 移動量
 		this->iFallingFrame										= 0;				// 落下状態になってからのフレーム数		/* 2025.03.11 菊池雅道 モーション関連の処理追加 */
 	}
 
@@ -449,6 +448,8 @@ void CharacterPlayer::PlayerHitCheck()
 							/* シェイプ(瞬き)を適用状態にする */
 							this->fShapeRate = 1.f;
 						}
+
+						break;
 					}
 				}
 			}

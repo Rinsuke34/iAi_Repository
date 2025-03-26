@@ -115,14 +115,14 @@ void SceneEdit::Draw()
 					{
 						// "無し"以外である場合
 						/* 削除アイコン(ゴミ箱)を描写 */
-						DrawExtendGraph(160, 778, 285, 905, *this->piGrHandle_Delete, TRUE);
+						DrawExtendGraph(288, 778, 288, 905, *this->piGrHandle_Delete, TRUE);
 					}
 					else
 					{
 						// "無し"である場合
 						/* 削除アイコン(ゴミ箱)を描写 */
-						DrawGraph(30, 650, *this->piGrHandle_Delete, TRUE);
-					}
+						DrawGraph(160, 650, *this->piGrHandle_Delete, TRUE);
+					} 
 					break;
 
 				/* 現在のエディット */
@@ -140,6 +140,28 @@ void SceneEdit::Draw()
 				// フレームの状態が設定されている場合
 				/* 選択項目の状態のフレームを描写 */
 				DrawGraph(this->astSelectItemList[i].stDrawPos.ix, this->astSelectItemList[i].stDrawPos.iy, *this->apiGrHandle_SelectStatus[this->astSelectItemList[i].iSelectStatus], TRUE);
+			}
+
+			/* 新規のエディット数に応じてロックを描写 */
+			switch (this->iNewEditNumber)
+			{
+				/* 新規エディット数が"5個"の場合 */
+				case NEW_EDIT_NO_RANK_S:
+					/* ロックは描写しない */
+					break;
+
+				/* 新規エディット数が"4個"の場合 */
+				case NEW_EDIT_NO_RANK_B:
+					/* ロックを描写 */
+					DrawGraph(1535, 210, *this->apiGrHandle_EditLock[1], TRUE);
+					break;
+
+				/* 新規エディット数が"3個"の場合 */
+				case NEW_EDIT_NO_RANK_C:
+					/* ロックを描写 */
+					DrawGraph(1260, 210, *this->apiGrHandle_EditLock[0], TRUE);
+					DrawGraph(1535, 210, *this->apiGrHandle_EditLock[1], TRUE);
+					break;
 			}
 		}
 	}
