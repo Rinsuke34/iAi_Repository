@@ -2,6 +2,7 @@
 /* 2025.02.17 遠距離攻撃関連の処理追加 菊池雅道 */
 /* 2025.02.28 遠距離攻撃関連の処理追加 菊池雅道 */
 /* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
+/* 2025.03.26  ロックオン処理修正 菊池雅道 */
 
 #include "SceneUi_Crosshairs.h"
 
@@ -40,7 +41,8 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 開始 */
 /* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 開始 */
-/* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
+/* 2025.03.23 菊池雅道 プラットフォームの判定追加 開始 */
+/* 2025.03.26 菊池雅道 ロックオン処理修正 開始 */
 // 計算
 void SceneUi_Crosshairs::Process()
 {
@@ -72,6 +74,9 @@ void SceneUi_Crosshairs::Process()
 			if (enemy->bGetDeadFlg() == true)
 			{
 				// 有効である場合
+				/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+				enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
+
 				/* 判定の対象外とする */
 				continue;
 			}
@@ -188,6 +193,8 @@ void SceneUi_Crosshairs::Process()
 			if (enemy->bGetDeadFlg() == true)
 			{
 				// 有効である場合
+				/* プレイヤー視点でのロックオン状態を"ロックオンされていない"に設定 */
+				enemy->SetPlayerLockOnType(PLAYER_LOCKON_NONE);
 				/* 判定の対象外とする */
 				continue;
 			}
@@ -316,7 +323,8 @@ void SceneUi_Crosshairs::Process()
 }
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 終了 */
 /* 2025.02.28 菊池雅道 遠距離攻撃関連の処理追加 終了 */
-/* 2025.03.23 プラットフォームの判定追加 菊池雅道 */
+/* 2025.03.23 菊池雅道 プラットフォームの判定追加 終了 */
+/* 2025.03.26 菊池雅道 ロックオン処理修正 終了 */
 
 // 描画
 void SceneUi_Crosshairs::Draw()

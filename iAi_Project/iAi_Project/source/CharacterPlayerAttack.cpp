@@ -26,6 +26,7 @@
 /* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正 */
 /* 2025.03.18 菊池雅道	エディットによる処理追加 */
 /* 2025.03.21 菊池雅道	スローモーション処理追加 */
+/* 2025.03.26 菊池雅道	クールタイム・遠距離攻撃処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -659,12 +660,16 @@ void CharacterPlayer::Player_Melee_Weak()
 	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
 	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
 	/* 2025.03.06 菊池雅道	エフェクト処理追加		開始 */
+	/* 2025.03.26 菊池雅道	攻撃処理追加			開始 */
 
 	// クールタイムが残っている場合攻撃しない
 	/* 近接攻撃(弱)のクールタイムを確認 */
 	if (this->iMeleeWeakNowCoolTime > 0)
 	{
 		// クールタイムが残っている場合
+		/* プレイヤー攻撃状態を"自由状態"に設定 */
+		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
 		/* 近距離攻撃(弱)処理を行わない */
 		return;
 	}
@@ -724,6 +729,7 @@ void CharacterPlayer::Player_Melee_Weak()
 /* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
 /* 2025.02.26 菊池雅道	クールタイム処理追加 終了 */
 /* 2025.03.06 菊池雅道	エフェクト処理追加		終了 */
+/* 2025.03.26 菊池雅道	攻撃処理追加			終了 */
 
 /* 2025.01.22 菊池雅道	攻撃処理追加		開始 */
 /* 2025.01.26 駒沢風助	コード修正		開始 */
@@ -1185,6 +1191,7 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.03.06 菊池雅道	スローモーション処理修正	開始 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正	開始 */
 /* 2025.03.13 駒沢風助	クナイ弾数設定				開始 */
+/* 2025.03.26 菊池雅道	遠距離攻撃処理修正			開始 */
 // 遠距離攻撃(構え)
 void CharacterPlayer::Player_Projectile_Posture()
 {
@@ -1260,44 +1267,56 @@ void CharacterPlayer::Player_Projectile_Posture()
 		/* 攻撃入力がされた場合 */
 		if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_ATTACK))
 		{
-			/* 遠距離攻撃のクールタイムを確認 */
-			if (this->iProjectileNowCoolTime == 0)
+			// カメラ補完中であれば処理を行わない
+			/* カメラの補完カウントを取得 */
+			int CameraLeapCount = this->StageStatusList->iGetCameraTargetLeapCount();
+
+			/* カメラの補完カウントが一定数以上(補完が完了している)か確認 */
+			if (CameraLeapCount >= CAMERA_POSITION_LEAP_COUNT_MAX_PROJECTILE)
 			{
-				// クールタイムが0の場合
-				/* 現在のクナイの所持数を取得 */
-				int iNowKunaiCount = this->PlayerStatusList->iGetNowHaveKunai();
-
-				/* クナイを所持しているかを確認 */
-				if (iNowKunaiCount > 0)
+				// カメラ補完が完了している場合
+				/* 遠距離攻撃のクールタイムを確認 */
+				if (this->iProjectileNowCoolTime == 0)
 				{
-					// 所持している場合
-					/* クナイ消費無効率(%)を取得 */
-					int iKeepProbability = this->PlayerStatusList->iGetAddKunaiKeepProbability();
+					// クールタイムが0の場合
+					/* 現在のクナイの所持数を取得 */
+					int iNowKunaiCount = this->PlayerStatusList->iGetNowHaveKunai();
 
-					/* ランダム(0～100)な値を取得し、クナイ消費無効率よりも小さい値であるか確認 */
-					if (GetRand(100) <= iKeepProbability)
+					/* クナイを所持しているかを確認 */
+					if (iNowKunaiCount > 0)
 					{
-						// 小さい場合
-						/* クナイを消費しない */
-						iNowKunaiCount = 0;
+						// 所持している場合
+						/* クナイ消費無効率(%)を取得 */
+						int iKeepProbability = this->PlayerStatusList->iGetAddKunaiKeepProbability();
+
+						/* ランダム(0～100)な値を取得し、クナイ消費無効率よりも小さい値であるか確認 */
+						if (GetRand(100) <= iKeepProbability)
+						{
+							// 小さい場合
+							/* クナイを消費しない */
+							iNowKunaiCount = 0;
+						}
+						else
+						{
+							// 大きい場合
+							/* クナイを消費する */
+							iNowKunaiCount--;
+						}
+
+						/* クナイの所持数を設定 */
+						this->PlayerStatusList->SetNowHaveKunai(iNowKunaiCount);
+
+
+						/* プレイヤーのモーションを投擲に設定 */
+						this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_THROW);
+
+						/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
+						this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
 					}
-					else
-					{
-						// 大きい場合
-						/* クナイを消費する */
-						iNowKunaiCount--;
-					}
 
-					/* クナイの所持数を設定 */
-					this->PlayerStatusList->SetNowHaveKunai(iNowKunaiCount);
-
-					/* プレイヤーのモーションを投擲に設定 */
-					this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_THROW);
-
-					/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
-					this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
 				}
 			}
+
 		}
 		/* ジャンプ入力がされた場合 */
 		else if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP))
@@ -1362,6 +1381,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 /* 2025.03.06 菊池雅道	スローモーション処理修正	終了 */
 /* 2025.03.12 菊池雅道	スローモーション処理修正	終了 */
 /* 2025.03.13 駒沢風助	クナイ弾数設定				終了 */
+/* 2025.03.26 菊池雅道	遠距離攻撃処理修正			終了 */
 
 /* 2025.02.14 菊池雅道	遠距離攻撃処理追加 開始 */
 /* 2025.02.21 菊池雅道	遠距離攻撃修正 開始 */
