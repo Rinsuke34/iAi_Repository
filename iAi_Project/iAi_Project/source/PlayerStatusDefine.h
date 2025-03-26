@@ -98,7 +98,7 @@ static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// 死亡状態(操作不可)
 /* プレイヤー処理用定数 */
 static const float	PLAYER_HEIGHT							= 160.f;	// 高さ(当たり判定)
 static const float	PLAYER_WIDE								= 15.f;		// 幅(当たり判定)
-static const float	PLAYER_CLIMBED_HEIGHT					= 10.f;		// 歩きで登れる高さ
+static const float	PLAYER_CLIMBED_HEIGHT					= 20.f;		// 歩きで登れる高さ
 static const int	PLAYER_CHARGE_TO_STRONG_TIME			= 30;		// 近接攻撃が強攻撃に切り替わるまでのフレーム数
 static const int	PLAYER_MOVE_COLLISION_UP				= 0;		// プレイヤーの移動用コリジョン上側
 static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// プレイヤーの移動用コリジョン下側
