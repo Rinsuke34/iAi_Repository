@@ -15,18 +15,18 @@ ScreenArrowRight::ScreenArrowRight() : PlatformBase()
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Object/LargeScreen/LargeScreen");
+		this->iModelHandle = ModelListHandle->iGetModel("Object/SignBoard/SignBoard");
 	}
 
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
-		this->iTextureArrowRightHandle1 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Left_1");	// 左矢印1
-		this->iTextureArrowRightHandle2 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Left_2");	// 左矢印2
-		this->iTextureArrowRightHandle3 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Left_3");	// 左矢印3
-		this->iTextureArrowRightHandle4 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Left_4");	// 左矢印4
-		this->iTextureArrowRightHandle5 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Left_5");	// 左矢印5
+		this->iTextureArrowRightHandle1 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Right_1");	// 右矢印1
+		this->iTextureArrowRightHandle2 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Right_2");	// 右矢印2
+		this->iTextureArrowRightHandle3 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Right_3");	// 右矢印3
+		this->iTextureArrowRightHandle4 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Right_4");	// 右矢印4
+		this->iTextureArrowRightHandle5 = *ImageList->piGetImage("SignBoardArrow/Signboard_Arrow_Right_5");	// 右矢印5
 
 	}
 
@@ -43,7 +43,7 @@ ScreenArrowRight::ScreenArrowRight() : PlatformBase()
 			const char* cFrameName = MV1GetFrameName(this->iModelHandle, i);
 
 			/* 最初の6文字が"Screen"であるか確認 */
-			if (strncmp(cFrameName, "Large", 5) == 0)
+			if (strncmp(cFrameName, "Screen", 5) == 0)
 			{
 				/* 発光フレーム番号を取得 */
 				this->aiLightFrameNo.push_back(i);
@@ -89,57 +89,53 @@ ScreenArrowRight::~ScreenArrowRight()
 //処理
 void ScreenArrowRight::Process()
 {
-	// 現在のシーンがタイトルシーンか確認
-	if (g_bActiveFlg == false)
+	// 1秒後にSceneをAに変更
+	if (this->iUICount == CAMERA_FIXED_POSITION_START)
 	{
-		// 1秒後にSceneをAに変更
-		if (this->iUICount == CAMERA_FIXED_POSITION_START)
+		if (++iFirstCount >= 20)
 		{
-			if (++iFirstCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_A;
-				iFirstCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_A;
+			iFirstCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをBに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_A)
+	// 1秒後にSceneをBに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_A)
+	{
+		if (++iSecondCount >= 20)
 		{
-			if (++iSecondCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_B;
-				iSecondCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_B;
+			iSecondCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをCに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_B)
+	// 1秒後にSceneをCに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_B)
+	{
+		if (++iThirdCount >= 20)
 		{
-			if (++iThirdCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_C;
-				iThirdCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_C;
+			iThirdCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをDに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_C)
+	// 1秒後にSceneをDに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_C)
+	{
+		if (++iFourthCount >= 20)
 		{
-			if (++iFourthCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_D;
-				iFourthCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_D;
+			iFourthCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをEに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_D)
+	// 1秒後にSceneをEに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_D)
+	{
+		if (++iFifthCount >= 20)
 		{
-			if (++iFifthCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_START;
-				iFifthCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_START;
+			iFifthCount = 0;
 		}
 	}
 }
@@ -148,7 +144,7 @@ void ScreenArrowRight::Process()
 // 描画
 void ScreenArrowRight::Draw()
 {
-	static int currentTextureHandle = -1;
+	int currentTextureHandle = -1;
 	int newTextureHandle = -1;
 
 	// UIカウントによって処理を分岐

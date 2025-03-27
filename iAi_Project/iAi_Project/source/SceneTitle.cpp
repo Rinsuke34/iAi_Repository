@@ -54,6 +54,9 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 		this->iImageNoHandle = *ImageList->piGetImage("Home/UI_Moji_No_NotSelected");
 		this->iImageNoChoiceHandle = *ImageList->piGetImage("Home/UI_Moji_No_Selected");
 
+		/* aボタンスタート */
+		this->iImageAButtonStartHandle = *ImageList->piGetImage("Home/UI_Title_PressA");
+
 	}
 
 	/* BGMを設定 */
@@ -89,6 +92,14 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	this->iTimer = 0;
 
 	this->bHideFinalCheck = false;
+
+	this->iAlphaCount = 0;
+
+	this->bAlphaFlg = false;
+
+	this->bConfigFlg = false;
+
+	this->bSettingFlg = false;
 
 
 	//UIカウントを初期化
@@ -226,8 +237,7 @@ void SceneTitle::Process()
 					/* シーン"オプション"を追加 */
 					gpSceneServer->AddSceneReservation(new SceneOption());
 				}
-				//ホームフラグを無効化
-				this->bHomeFlg = FALSE;
+
 				break;
 
 			//設定ホーム画面
@@ -392,6 +402,42 @@ void SceneTitle::Process()
 			this->bGameStartFlg = FALSE;
 		}
 	}
+	//ボタンスタートの明度を変更
+	if (iUICount == CAMERA_FIXED_POSITION_START)
+	{
+		if (this->bAlphaFlg == false)
+		{
+			if (this->iAlphaCount > 0)
+			{
+				this->iAlphaCount -= 5;
+			}
+			else
+			{
+				this->bAlphaFlg = true;
+			}
+		}
+		else
+		{
+			if (this->iAlphaCount < 255)
+			{
+				this->iAlphaCount += 5;
+			}
+			else
+			{
+				this->bAlphaFlg = false;
+			}
+		}
+	}
+	////現在のシーンがTitleか確認
+	//if (gpSceneServer->GetScene("Title"))
+	//{
+	//	if (this->bConfigFlg == TRUE)
+	//	{
+	//		this->bHomeFlg = TRUE;
+
+	//		this->bConfigFlg = FALSE;
+	//	}
+	//}
 }
 
 // 描画
@@ -425,6 +471,13 @@ void SceneTitle::Draw()
 
 	switch (iUICount)
 	{
+	case CAMERA_FIXED_POSITION_START:
+		/* タイトル画面 */
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, iAlphaCount);
+		DrawGraph(680, 800, this->iImageAButtonStartHandle, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+		break;
 		case CAMERA_FIXED_POSITION_A:
 			/* ニューゲーム */
 			DrawGraph(100, 589, this->iImageNewgameChoiceHandle, TRUE);

@@ -39,9 +39,6 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_INTERCHANGEABLE]	= ImageList->piGetImage("Edit/Scene/UI_Edit_Trade");
 		this->apiGrHandle_SelectStatus[SELECT_STATUS_IMPOSSIBLE]		= ImageList->piGetImage("Edit/Scene/UI_Edit_Unselectable");
 
-		/* リザルト画面背景 */
-		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_ResultBackGround_mini");
-
 		/* リザルトフレーム */
 		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
 

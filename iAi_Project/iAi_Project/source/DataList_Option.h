@@ -23,9 +23,9 @@ class DataList_Option : public DataListBase
 		bool	bGetCameraInversion(int iInputType, int iAxis)		{ return this->abCameraInversion[iInputType][iAxis]; }		// カメラ反転設定取得
 		float	fGetCameraSensitivity(int iInputType, int iAxis)	{ return this->afCameraSensitivity[iInputType][iAxis]; }	// カメラ感度設定取得
 		float	fGetEnemyDrawDistance()								{ return this->fEnemyDrawDistance; }						// エネミー描写距離取得
-		int		iGetBgmVolume()										{ return this->iBgmVolume; }								// BGMの音量取得
-		int		iGetSeVolume()										{ return this->iSeVolume; }									// SEの音量取得
-		int		iGetVoiceVolume()									{ return this->iVoiceVolume; }								// ボイスの音量取得
+		int		iGetBgmVolume()										{ return this->iBgmVolume; }								// BGMの音量取得(※16倍して使用する)
+		int		iGetSeVolume()										{ return this->iSeVolume; }									// SEの音量取得(※16倍して使用する)
+		int		iGetVoiceVolume()									{ return this->iVoiceVolume; }								// ボイスの音量取得(※16倍して使用する)
 		//bool	bGetTutorialMassage()								{ return this->bTutorialMassage; }							// チュートリアルメッセージ表示取得
 		bool	bGetOperation_Keyboard()							{ return this->bOperation_Keyboard; }						// 操作説明キーボード表示取得
 
@@ -49,9 +49,9 @@ class DataList_Option : public DataListBase
 		float	afCameraSensitivity[INPUT_TYPE_MAX][AXIS_MAX];					// カメラ感度設定(倍率)(入力タイプ/軸)
 		float	fEnemyDrawDistance;												// エネミー描写距離
 		// サウンド設定
-		int		iBgmVolume;			// BGMの音量(0 ～ 255)
-		int		iSeVolume;			// SEの音量(0 ～ 255)
-		int		iVoiceVolume;		// ボイスの音量(0 ～ 255)
+		int		iBgmVolume;			// BGMの音量(0 ～ 16)
+		int		iSeVolume;			// SEの音量(0 ～ 16)
+		int		iVoiceVolume;		// ボイスの音量(0 ～ 16)
 		// その他
 		//bool	bTutorialMassage;			// チュートリアルメッセージ表示
 		bool	bOperation_Keyboard;		// 操作説明キーボード表示

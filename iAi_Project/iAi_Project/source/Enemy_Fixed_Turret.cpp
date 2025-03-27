@@ -134,8 +134,19 @@ void Enemy_Fixed_Turret::MoveEnemy()
 	if (this->iNowHp > 0)
 	{
 
-	//プレイヤーが探知範囲内にいるか確認
-		if (distanceToPlayerX < ENEMY_Missile_X_DISTANCE && distanceToPlayerY < ENEMY_Missile_Y_DISTANCE && distanceToPlayerZ < ENEMY_Missile_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
+		// プレイヤーとエネミーの距離の平方を計算
+		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
+		(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
+		(this->vecPosition.z - playerPos.z) * (this->vecPosition.z - playerPos.z);
+
+		// 索敵範囲の半径の平方
+		float detectionRadiusSquared = ENEMY_Missile_X_DISTANCE * ENEMY_Missile_X_DISTANCE;
+
+
+		iFiringCount--;	// 発射カウントを減少
+
+		// プレイヤーが索敵範囲内にいるか確認
+		if (distanceToPlayerSquared < detectionRadiusSquared)
 	{
 		// プレイヤーが探知範囲内にいる場合
 		iFiringCount--;	// 発射カウントを減少
@@ -371,6 +382,8 @@ void Enemy_Fixed_Turret::Update()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}
+				/* 攻撃ヒットのSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
 				DefeatAttack();
 

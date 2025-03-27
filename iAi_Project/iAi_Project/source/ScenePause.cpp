@@ -17,20 +17,14 @@ ScenePause::ScenePause() : SceneBase("Pause", 450, true)
 		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
-	/* 画像読み込み */
-	{
-		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
-
-		/* 矢印 */
-		this->piGrHandle_Arrow = ImageList->piGetImage("Input_Icon/Sign");
-	}
-
 	/* 初期化 */
 	this->iSelectItem	= PAUSE_MANU_CONTINUE;
 
 	/* 停止開始時の時間を取得 */
 	this->iStopStartTime	= GetNowCount();
+
+	/* マウスを使用可能に設定 */
+	gbUseMouseFlg = true;
 }
 
 // デストラクタ
@@ -48,6 +42,8 @@ ScenePause::~ScenePause()
 	/* "ポーズメニュー開閉"のSEを再生 */
 	gpDataList_Sound->SE_PlaySound(SE_SYSTEM_POSEMENU);
 
+	/* マウスを使用不可に設定 */
+	gbUseMouseFlg = false;
 }
 
 // 計算
@@ -166,23 +162,33 @@ void ScenePause::Draw()
 
 	/* 選択肢描写 */
 	{
-		/* 続ける */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 100, GetColor(255, 255, 255), giFontHandle_Small, "続ける");
+		/* 描写文字列 */
+		std::vector<std::string> options = { "続ける", "最初から", "オプション", "タイトルへ" };
 
-		/* 最初から */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 - 50, GetColor(255, 255, 255), giFontHandle_Small, "最初から");
+		/* 座標データ */
+		// 最も上の項目の描写座標
+		const int iX		= SCREEN_SIZE_WIDE / 2 - 100;
+		const int iY		= SCREEN_SIZE_HEIGHT / 2 - 100;
+		// 選択肢の間隔
+		const int iOffsetY	= 50;
 
-		/* オプション */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2, GetColor(255, 255, 255), giFontHandle_Small, "オプション");
+		/* 各項目を描写 */
+		for (size_t i = 0; i < options.size(); ++i)
+		{
+			/* 描写色(白) */
+			int iColor = GetColor(255, 255, 255);
 
-		/* タイトルへ */
-		DrawFormatStringToHandle(SCREEN_SIZE_WIDE / 2 - 100, SCREEN_SIZE_HEIGHT / 2 + 50, GetColor(255, 255, 255), giFontHandle_Small, "タイトルへ");
-	}
+			/* 現在の選択項目であるか確認 */
+			if (i == this->iSelectItem)
+			{
+				// 現在の選択項目である場合
+				/* 描写色を黄色に設定 */
+				iColor = GetColor(255, 255, 0);
+			}
 
-	/* 矢印描写 */
-	{
-		/* 矢印の描写 */
-		DrawGraph(SCREEN_SIZE_WIDE / 2 - 150, SCREEN_SIZE_HEIGHT / 2 - 100 + this->iSelectItem * 50, *this->piGrHandle_Arrow, TRUE);
+			/* 文字列描写 */
+			DrawFormatStringToHandle(iX, iY + static_cast<int>(i) * iOffsetY, iColor, giFontHandle_Small, options[i].c_str());
+		}
 	}
 }
 

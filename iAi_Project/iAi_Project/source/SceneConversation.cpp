@@ -357,8 +357,8 @@ void SceneConversation::Process_Conversation()
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			// 入力されている場合
-			/* "決定"のSEを再生 */
-			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+			/* "会話シーン決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CONV_DICISION);
 
 			/* テキスト番号を加算 */
 			this->iNowTextNo += 1;
@@ -385,8 +385,8 @@ void SceneConversation::Process_Conversation()
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 		{
 			// 入力されている場合
-			/* "決定"のSEを再生 */
-			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
+			/* "会話シーン決定"のSEを再生 */
+			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CONV_DICISION);
 
 			/* テキスト描写量をテキスト総量に設定 */
 			this->iDrawText = static_cast<int>(stTextData.aText.size());

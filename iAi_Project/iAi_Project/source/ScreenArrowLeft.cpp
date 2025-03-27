@@ -15,7 +15,7 @@ ScreenArrowLeft::ScreenArrowLeft() : PlatformBase()
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Object/LargeScreen/LargeScreen");
+		this->iModelHandle = ModelListHandle->iGetModel("Object/SignBoard/SignBoard");
 	}
 
 	{
@@ -43,7 +43,7 @@ ScreenArrowLeft::ScreenArrowLeft() : PlatformBase()
 			const char* cFrameName = MV1GetFrameName(this->iModelHandle, i);
 
 			/* 最初の6文字が"Screen"であるか確認 */
-			if (strncmp(cFrameName, "Large", 5) == 0)
+			if (strncmp(cFrameName, "Screen", 5) == 0)
 			{
 				/* 発光フレーム番号を取得 */
 				this->aiLightFrameNo.push_back(i);
@@ -89,57 +89,53 @@ ScreenArrowLeft::~ScreenArrowLeft()
 //処理
 void ScreenArrowLeft::Process()
 {
-	// 現在のシーンがタイトルシーンか確認
-	if (g_bActiveFlg == false)
+	// 1秒後にSceneをAに変更
+	if (this->iUICount == CAMERA_FIXED_POSITION_START)
 	{
-		// 1秒後にSceneをAに変更
-		if (this->iUICount == CAMERA_FIXED_POSITION_START)
+		if (++iFirstCount >= 20)
 		{
-			if (++iFirstCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_A;
-				iFirstCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_A;
+			iFirstCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをBに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_A)
+	// 1秒後にSceneをBに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_A)
+	{
+		if (++iSecondCount >= 20)
 		{
-			if (++iSecondCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_B;
-				iSecondCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_B;
+			iSecondCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをCに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_B)
+	// 1秒後にSceneをCに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_B)
+	{
+		if (++iThirdCount >= 20)
 		{
-			if (++iThirdCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_C;
-				iThirdCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_C;
+			iThirdCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをDに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_C)
+	// 1秒後にSceneをDに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_C)
+	{
+		if (++iFourthCount >= 20)
 		{
-			if (++iFourthCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_D;
-				iFourthCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_D;
+			iFourthCount = 0;
 		}
+	}
 
-		// 1秒後にSceneをEに変更
-		else if (this->iUICount == CAMERA_FIXED_POSITION_D)
+	// 1秒後にSceneをEに変更
+	else if (this->iUICount == CAMERA_FIXED_POSITION_D)
+	{
+		if (++iFifthCount >= 20)
 		{
-			if (++iFifthCount >= 60)
-			{
-				iUICount = CAMERA_FIXED_POSITION_START;
-				iFifthCount = 0;
-			}
+			iUICount = CAMERA_FIXED_POSITION_START;
+			iFifthCount = 0;
 		}
 	}
 }
@@ -148,7 +144,7 @@ void ScreenArrowLeft::Process()
 // 描画
 void ScreenArrowLeft::Draw()
 {
-	static int currentTextureHandle = -1;
+	int currentTextureHandle = -1;
 	int newTextureHandle = -1;
 
 	// UIカウントによって処理を分岐

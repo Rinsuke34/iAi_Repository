@@ -27,23 +27,21 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* リザルト画面背景 */
-		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_ResultBackGround_mini");
+		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_Result");
 
-		/* リザルト画面の文字(リザルト) */
-		this->piGrHandle_String_Result		= ImageList->piGetImage("Result/UI_Moji_Result");
+		/* 各評価のアルファベット */
+		this->apiGrHandle_Alphabet_Section[RESULT_EVALUATION_S] = ImageList->piGetImage("Result/UI_Player_Grade_S_150");
+		this->apiGrHandle_Alphabet_Section[RESULT_EVALUATION_A] = ImageList->piGetImage("Result/UI_Player_Grade_A_150");
+		this->apiGrHandle_Alphabet_Section[RESULT_EVALUATION_B] = ImageList->piGetImage("Result/UI_Player_Grade_B_150");
+		this->apiGrHandle_Alphabet_Section[RESULT_EVALUATION_C] = ImageList->piGetImage("Result/UI_Player_Grade_C_150");
+		this->apiGrHandle_Alphabet_Section[RESULT_EVALUATION_D] = ImageList->piGetImage("Result/UI_Player_Grade_D_150");
 
-		/* リザルト画面の文字(ランク) */
-		this->piGrHandle_String_Rank		= ImageList->piGetImage("Result/UI_Moji_Rank");
-
-		/* リザルトフレーム */
-		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
-
-		/* アルファベット(コンボ用の物を流用) */
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_S_256");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_A_256");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_B_256");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_C_256");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_D_256");
+		/* 総合評価アルファベット(コンボ用の物を流用) */
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_S]	= ImageList->piGetImage("Result/UI_Player_RankGrade_S_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_A]	= ImageList->piGetImage("Result/UI_Player_RankGrade_A_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_B]	= ImageList->piGetImage("Result/UI_Player_RankGrade_B_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_C]	= ImageList->piGetImage("Result/UI_Player_RankGrade_C_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_D]	= ImageList->piGetImage("Result/UI_Player_RankGrade_D_256");
 	}
 
 	/* 初期化 */
@@ -92,31 +90,59 @@ void SceneResult::Process()
 void SceneResult::Draw()
 {
 	/* リザルト用のフレームを描写 */
-	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
-
-	/* 画面の背景描写 */
-	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
-
-	/* 文字描写(画像部分) */
-	DrawGraph(RESULT_STRING_RESULT_POSITION_X, RESULT_STRING_RESULT_POSITION_Y, *this->piGrHandle_String_Result, TRUE);
-	DrawGraph(RESULT_STRING_RANK_POSITION_X, RESULT_STRING_RANK_POSITION_Y, *this->piGrHandle_String_Rank, TRUE);
-	
-	/* 白線 */
-	DrawBox(RESULT_STRING_RESULT_LINE_LU, RESULT_STRING_RESULT_LINE_LD, RESULT_STRING_RESULT_LINE_RU, RESULT_STRING_RESULT_LINE_RD, GetColor(255, 255, 255), TRUE);
-	DrawBox(RESULT_STRING_RANK_LINE_LU, RESULT_STRING_RANK_LINE_LD, RESULT_STRING_RANK_LINE_RU, RESULT_STRING_RANK_LINE_RD, GetColor(255, 255, 255), TRUE);
+	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultBackGround, FALSE);
 
 	/* 文字(マキナスフォント使用部分) */
-	DrawFormatStringToHandle(80, 240, GetColor(0, 0, 0), giFontHandle_Large,	"CLEAR TIME");
-	DrawFormatStringToHandle(80 + 600, 240, GetColor(0, 0, 0), giFontHandle_Large,	"%02d'%02d''%02d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
+	int iColorWhite = GetColor(255, 255, 255);
+	int iColorBlack = GetColor(50, 50, 50);
 
-	DrawFormatStringToHandle(80, 400, GetColor(0, 0, 0), giFontHandle_Large,	"MAX COMBO");
-	DrawFormatStringToHandle(80 + 600, 400, GetColor(0, 0, 0), giFontHandle_Large, "%d COMBO", this->iDrawMaxCombo);
+	/* 文字の描写座標 */
+	st2DPosition astStringPos[8];
+	for (int i = 0; i < 4; ++i)
+	{
+		astStringPos[i * 2] = { 80, 240 + i * 160 };
+		astStringPos[i * 2 + 1] = { 80 + 600, 240 + i * 160 };
+	}
 
-	DrawFormatStringToHandle(80, 560, GetColor(0, 0, 0), giFontHandle_Large,	"TAKE DAMAGE");
-	DrawFormatStringToHandle(80 + 600, 560, GetColor(0, 0, 0), giFontHandle_Large, "%d DAMAGE", this->iDrawTakeDamage);
+	/* 文字枠の補正座標 */
+	st2DPosition astStringCorrectionPos[8];
+	astStringCorrectionPos[0] = { -2,	-2	};
+	astStringCorrectionPos[1] = { 0,	-2	};
+	astStringCorrectionPos[2] = { +2,	-2	};
+	astStringCorrectionPos[3] = { -2,	0	};
+	astStringCorrectionPos[4] = { +2,	0	};
+	astStringCorrectionPos[5] = { -2,	+2	};
+	astStringCorrectionPos[6] = { 0,	+2	};
+	astStringCorrectionPos[7] = { +2,	+2	};
 
-	DrawFormatStringToHandle(80, 720, GetColor(0, 0, 0), giFontHandle_Large,	"GET BLOOD");
-	DrawFormatStringToHandle(80 + 600, 720, GetColor(0, 0, 0), giFontHandle_Large, "%d BLOOD", this->iDrawTotalGetBlood);
+	/* 文字描写(枠) */
+	for (int i = 0; i < 8; i++)
+	{
+		DrawFormatStringToHandle(astStringPos[0].ix + astStringCorrectionPos[i].ix, astStringPos[0].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "CLEAR TIME");
+		DrawFormatStringToHandle(astStringPos[1].ix + astStringCorrectionPos[i].ix, astStringPos[1].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "%02d'%02d''%02d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
+
+		DrawFormatStringToHandle(astStringPos[2].ix + astStringCorrectionPos[i].ix, astStringPos[2].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "MAX COMBO");
+		DrawFormatStringToHandle(astStringPos[3].ix + astStringCorrectionPos[i].ix, astStringPos[3].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "%d COMBO", this->iDrawMaxCombo);
+
+		DrawFormatStringToHandle(astStringPos[4].ix + astStringCorrectionPos[i].ix, astStringPos[4].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "TAKE DAMAGE");
+		DrawFormatStringToHandle(astStringPos[5].ix + astStringCorrectionPos[i].ix, astStringPos[5].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "%d DAMAGE", this->iDrawTakeDamage);
+
+		DrawFormatStringToHandle(astStringPos[6].ix + astStringCorrectionPos[i].ix, astStringPos[6].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "GET BLOOD");
+		DrawFormatStringToHandle(astStringPos[7].ix + astStringCorrectionPos[i].ix, astStringPos[7].iy + astStringCorrectionPos[i].iy, iColorWhite, giFontHandle_Large, "%d BLOOD", this->iDrawTotalGetBlood);
+	}
+
+	/* 文字描写(中心) */
+	DrawFormatStringToHandle(astStringPos[0].ix, astStringPos[0].iy, iColorBlack, giFontHandle_Large,	"CLEAR TIME");
+	DrawFormatStringToHandle(astStringPos[1].ix, astStringPos[1].iy, iColorBlack, giFontHandle_Large,	"%02d'%02d''%02d", this->iDrawTimeMinute, this->iDrawTimeSecond, iDrawTimeFractionalSecond);
+
+	DrawFormatStringToHandle(astStringPos[2].ix, astStringPos[2].iy, iColorBlack, giFontHandle_Large,	"MAX COMBO");
+	DrawFormatStringToHandle(astStringPos[3].ix, astStringPos[3].iy, iColorBlack, giFontHandle_Large, "%d COMBO", this->iDrawMaxCombo);
+
+	DrawFormatStringToHandle(astStringPos[4].ix, astStringPos[4].iy, iColorBlack, giFontHandle_Large, "TAKE DAMAGE");
+	DrawFormatStringToHandle(astStringPos[5].ix, astStringPos[5].iy, iColorBlack, giFontHandle_Large, "%d DAMAGE", this->iDrawTakeDamage);
+
+	DrawFormatStringToHandle(astStringPos[6].ix, astStringPos[6].iy, iColorBlack, giFontHandle_Large,	"GET BLOOD");
+	DrawFormatStringToHandle(astStringPos[7].ix, astStringPos[7].iy, iColorBlack, giFontHandle_Large, "%d BLOOD", this->iDrawTotalGetBlood);
 
 	/* 評価描写 */
 	{
@@ -124,28 +150,28 @@ void SceneResult::Draw()
 		if (this->iDrawFaze >= RESULT_DRAW_FAZE_CREAR_TIME_EVALUATION)
 		{
 			/* 評価(クリアタイム) */
-			DrawGraph(1500, 200, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Time], TRUE);
+			DrawGraph(1500, 200, *this->apiGrHandle_Alphabet_Section[this->iClearEvaluation_Time], TRUE);
 		}
 
 		/* 描写フェーズが"コンボ評価描写"以降であるか */
 		if (this->iDrawFaze >= RESULT_DRAW_FAZE_COMBO_EVALUATION)
 		{
 			/* 評価(最大コンボ) */
-			DrawGraph(1500, 360, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Combo], TRUE);
+			DrawGraph(1500, 360, *this->apiGrHandle_Alphabet_Section[this->iClearEvaluation_Combo], TRUE);
 		}
 
 		/* 描写フェーズが"ダメージ評価描写"以降であるか */
 		if (this->iDrawFaze >= RESULT_DRAW_FAZE_DAMAGE_EVALUATION)
 		{
 			/* 評価(被ダメージ) */
-			DrawGraph(1500, 540, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Damage], TRUE);
+			DrawGraph(1500, 540, *this->apiGrHandle_Alphabet_Section[this->iClearEvaluation_Damage], TRUE);
 		}
 
 		/* 描写フェーズが"総合評価描写"以降であるか */
 		if (this->iDrawFaze >= RESULT_DRAW_FAZE_TOTAL_EVALUATION)
 		{
 			/* 評価(総合) */
-			DrawGraph(1600, 720, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Total], TRUE);
+			DrawGraph(1550, 685, *this->apiGrHandle_Alphabet[this->iClearEvaluation_Total], TRUE);
 		}
 	}
 }
@@ -511,12 +537,12 @@ void SceneResult::ClearEvaluation()
 			// A
 			this->iClearEvaluation_Total = RESULT_EVALUATION_A;
 		}
-		else if (iEvaluationTotal >= 6)
+		else if (iEvaluationTotal <= 6)
 		{
 			// B
 			this->iClearEvaluation_Total = RESULT_EVALUATION_B;
 		}
-		else if (iEvaluationTotal >= 9)
+		else if (iEvaluationTotal <= 9)
 		{
 			// C
 			this->iClearEvaluation_Total = RESULT_EVALUATION_C;

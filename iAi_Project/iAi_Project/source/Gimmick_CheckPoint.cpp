@@ -8,7 +8,11 @@ Gimmick_CheckPoint::Gimmick_CheckPoint() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
+		/* "オブジェクト管理"を取得 */
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+		/* "プレイヤー状態管理"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* モデル取得 */
@@ -90,6 +94,9 @@ void Gimmick_CheckPoint::Update()
 
 			/* "リスポーン地点起動"のSEを再生 */
 			gpDataList_Sound->SE_PlaySound_3D(SE_RESPAWN_ACTIVATE, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+			/* プレイヤーのHPを最大値に設定する */
+			this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerMaxHp());
 		}
 	}
 }

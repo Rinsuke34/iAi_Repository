@@ -51,6 +51,11 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bDirectionFlg = true;					// 向き固定フラグ
 	this->bChaseFlg = true;						// 追跡フラグ
+	this->bSavePositionFlg = true;				// 座標保存フラグ
+	this->iReturnCount = ENEMY_RETURN_TIME;		// リターンカウント
+
+	//エネミーの初期座標を保存
+	this->vecStartPosition = this->vecPosition;
 }
 
 // デストラクタ
@@ -78,6 +83,13 @@ void Enemy_Explosion::MoveEnemy()
 	this->stHorizontalCollision.fCapsuleRadius = 50;
 	this->stHorizontalCollision.vecCapsuleTop = VAdd(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z), VGet(0, 50, 0));
 	this->stHorizontalCollision.vecCapsuleBottom = VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z);
+
+	//エネミーの座標を保存
+	if (this->bSavePositionFlg == true)
+	{
+		this->vecStartPosition = this->vecPosition;
+		this->bSavePositionFlg = false;
+	}
 
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
@@ -308,6 +320,70 @@ void Enemy_Explosion::MoveEnemy()
 			}
 		}
 	}
+	if (this->bChaseFlg == false)
+	{
+		iReturnCount--;
+
+		if (this->iReturnCount <= 0)
+		{
+
+			//エネミーの座標を初期座標に戻す
+			// プレイヤーに向かう方向と速度を取得
+			VECTOR direction = VNorm(VSub(this->vecStartPosition, this->vecPosition));
+
+			// プレイヤーに向かう方向と速度を設定
+			this->vecPosition = VAdd(this->vecPosition, VScale(direction, 5));
+
+			//エネミーの向きを初期化する
+			VECTOR VRot = VGet(0, 0, 0);
+
+			//エネミーの向きを初期座標に向ける
+			VRot.y = atan2f(this->vecPosition.x - this->vecStartPosition.x, this->vecPosition.z - this->vecStartPosition.z);
+
+			//エネミーの向きを設定
+			this->vecRotation = VRot;
+
+			//すべてのアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+			//走りモーションをアタッチする
+			this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+			//走りモーションの総再生時間を取得する
+			this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+			//再生速度を加算
+			this->fRunPlayTime += 1.0f;
+
+			//再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+			//再生時間がアニメーションの総再生時間に達したか確認
+			if (this->fRunPlayTime >= this->fRunTotalTime)
+			{
+				//アニメーションの再生時間が総再生時間に達した場合
+				//再生時間を初期化する
+				this->fRunPlayTime = 0.0f;
+			}
+		}
+	}
+	//エネミーの座標が初期座標に戻ったかどうかを確認
+	if (VSize(VSub(this->vecStartPosition, this->vecPosition)) < 10)
+	{
+		this->bChaseFlg = true;
+
+		//すべてのアニメーションをデタッチする
+		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+		//待機モーションをアタッチする
+		this->iWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		this->iReturnCount = ENEMY_RETURN_TIME;
+	}
 	
 }
 
@@ -499,6 +575,8 @@ void Enemy_Explosion::Update()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 		}
+				/* 攻撃ヒットのSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
 				DefeatAttack();
 

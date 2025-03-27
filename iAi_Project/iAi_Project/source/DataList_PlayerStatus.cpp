@@ -131,6 +131,7 @@ DataList_PlayerStatus::DataList_PlayerStatus() : DataListBase("DataList_PlayerSt
 	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
 	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
 	this->iAddKunai							= 0;		// クナイ本数増加値(個)
+	this->iAddFallSpeedDown					= 0;		// 落下速度上限値(速度/フレーム)
 
 	/* ステータスデータの読み込み */
 	LoadPlayerStatuxData();
@@ -233,6 +234,7 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 	this->bAddCounter						= false;	// カウンター追加フラグ(有効/無効)
 	this->bAddMaxHpOne						= false;	// 最大HP1化フラグ(有効/無効)
 	this->iAddKunai							= 0;		// クナイ本数増加値(個)
+	this->iAddFallSpeedDown					= 0;		// 落下速度上限値(速度/フレーム)
 
 	/* "ゲーム内リソース管理"を取得 */
 	DataList_GameResource* GameResource = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
@@ -322,9 +324,17 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 				this->bAddCounter = true;
 				break;
 
-			case EDIT_EFFECT_KUNAI_EXPLOSION:
+			// クナイワープ化
+			case EDIT_EFFECT_KUNAI_WARP:
 				/* 有効に設定する */
-				this->bAddKunaiExplosion = true;
+				this->bAddKunaiWarp = true;
+				break;
+
+			// 落下速度低下
+			case EDIT_EFFECT_FALL_SPEED_DOWN:
+				/* 効果量に設定する */
+				// ※加算はしない
+				this->iAddFallSpeedDown = iEffectValue;
 				break;
 
 			/* 呪い */

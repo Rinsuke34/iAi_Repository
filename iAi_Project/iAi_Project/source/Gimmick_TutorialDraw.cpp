@@ -20,7 +20,7 @@ void Gimmick_TutorialDraw::Initialization()
 {
 	/* コリジョンをセット */
 	this->stCollisionSqhere.vecSqhere		= this->vecPosition;
-	this->stCollisionSqhere.fSqhereRadius	= 800.0f;
+	this->stCollisionSqhere.fSqhereRadius	= 800.0f * this->vecScale.x;
 }
 
 // 更新

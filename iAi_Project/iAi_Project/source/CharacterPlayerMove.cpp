@@ -597,6 +597,16 @@ void CharacterPlayer::Player_Gravity()
 		/* 最大落下速度を取得 */
 		float fFallSpeedMax = this->PlayerStatusList->fGetPlayerMaxFallSpeed();		// 最大落下速度取得
 
+		/* 落下速度低下値を取得 */
+		int iFallSpeedDown = this->PlayerStatusList->iGetAddFallSpeedDown();
+
+		/* 落下速度低下値が設定されているか確認 */
+		if (iFallSpeedDown != 0)
+		{
+			/* 最大落下速度を落下速度低下値に設定 */
+			fFallSpeedMax = static_cast<float>(iFallSpeedDown);
+		}
+
 		/* 現在の落下速度が最大落下速度を超えているか(下回っているか)確認 */
 		if (fFallSpeedMax < fFallSpeed)
 		{

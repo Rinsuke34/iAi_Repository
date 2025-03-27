@@ -7,6 +7,7 @@
 /* データリスト */
 #include "DataList_Object.h"
 #include "DataList_Image.h"
+#include "DataList_PlayerStatus.h"
 
 /* 中間ポイントクラスの宣言 */
 
@@ -33,7 +34,8 @@ class Gimmick_CheckPoint : public PlatformBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Object* ObjectList;	// オブジェクト管理
+		DataList_Object*		ObjectList;			// オブジェクト管理
+		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_NormalRight;			// 通常時(非アクティブ時)の発光色

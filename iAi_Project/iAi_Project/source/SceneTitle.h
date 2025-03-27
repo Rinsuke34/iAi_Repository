@@ -52,12 +52,17 @@ class SceneTitle : public SceneBase
 		int iImageYesChoiceHandle;	// yes選択
 		int iImageNoHandle;			// no
 		int iImageNoChoiceHandle;	// no選択
+	int iImageAButtonStartHandle;		// aボタンスタート
 
 		//変数
 		int iUICount;	//UIのカウント
 		int iTimer; // タイマーを追加
+	int iAlphaCount; // アルファカウントを追加
 		bool bTransition; // シーン遷移フラグを追加
 		bool bHideFinalCheck; // 最終確認画面を隠すフラグを追加
+	bool bAlphaFlg; // アルファフラグを追加
+	bool bConfigFlg; // コンフィグフラグを追加
+	bool bSettingFlg; // 設定フラグを追加
 		VECTOR	vecMovePos;
 
 		//UIの画像Handle

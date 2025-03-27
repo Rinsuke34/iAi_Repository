@@ -30,11 +30,11 @@ SceneUi_Combo::SceneUi_Combo() : SceneBase("UI_Combo", 103, false)
 		this->piGrHandle_Combo_Timer	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/UI_Player_ComboTimer");
 
 		/* コンボアルファベット */
-		this->piGrHandle_Combo_Alphabet[COMBO_RANK_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_S_256");
-		this->piGrHandle_Combo_Alphabet[COMBO_RANK_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_A_256");
-		this->piGrHandle_Combo_Alphabet[COMBO_RANK_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_B_256");
-		this->piGrHandle_Combo_Alphabet[COMBO_RANK_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_C_256");
-		this->piGrHandle_Combo_Alphabet[COMBO_RANK_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_D_256");
+		this->piGrHandle_Combo_Alphabet[COMBO_RANK_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_S_128");
+		this->piGrHandle_Combo_Alphabet[COMBO_RANK_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_A_128");
+		this->piGrHandle_Combo_Alphabet[COMBO_RANK_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_B_128");
+		this->piGrHandle_Combo_Alphabet[COMBO_RANK_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_C_128");
+		this->piGrHandle_Combo_Alphabet[COMBO_RANK_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_D_128");
 	}
 
 	/* 初期化 */

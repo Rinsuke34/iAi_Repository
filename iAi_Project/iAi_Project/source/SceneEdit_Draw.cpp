@@ -11,9 +11,6 @@ void SceneEdit::Draw()
 	/* リザルト用のフレームを描写 */
 	DrawExtendGraph(0, 0, SCREEN_SIZE_WIDE, SCREEN_SIZE_HEIGHT, *this->piGrHandle_ResultFrame, FALSE);
 
-	/* 画面の背景描写 */
-	DrawExtendGraph(0 + RESULT_BACKGROUND_POSITION_REDUCTION, 0 + RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_WIDE - RESULT_BACKGROUND_POSITION_REDUCTION, SCREEN_SIZE_HEIGHT - RESULT_BACKGROUND_POSITION_REDUCTION, *this->piGrHandle_ResultBackGround, TRUE);
-
 	/* Custom(文字) */
 	DrawGraph(80, 30, *this->piGrHandle_Custom, TRUE);
 	DrawBox(65, 140, 1810, 145, GetColor(255, 255, 255), TRUE);
@@ -104,6 +101,9 @@ void SceneEdit::Draw()
 							// キープ中のエディットである場合
 							/* キープアイコン(箱)を描写 */
 							DrawGraph(160, 210, *this->piGrHandle_KeepIcon, TRUE);
+
+							/* キープ(文字)を描写 */
+							DrawGraph(280, 328, *this->piGrHandle_Keep, TRUE);
 						}
 					}
 					break;
@@ -153,14 +153,14 @@ void SceneEdit::Draw()
 				/* 新規エディット数が"4個"の場合 */
 				case NEW_EDIT_NO_RANK_B:
 					/* ロックを描写 */
-					DrawGraph(1535, 210, *this->apiGrHandle_EditLock[1], TRUE);
+					DrawGraph(1535 + 20, 210 + 10, *this->apiGrHandle_EditLock[1], TRUE);
 					break;
 
 				/* 新規エディット数が"3個"の場合 */
 				case NEW_EDIT_NO_RANK_C:
 					/* ロックを描写 */
-					DrawGraph(1260, 210, *this->apiGrHandle_EditLock[0], TRUE);
-					DrawGraph(1535, 210, *this->apiGrHandle_EditLock[1], TRUE);
+					DrawGraph(1260 + 20, 210 + 10, *this->apiGrHandle_EditLock[0], TRUE);
+					DrawGraph(1535 + 20, 210 + 10, *this->apiGrHandle_EditLock[1], TRUE);
 					break;
 			}
 		}

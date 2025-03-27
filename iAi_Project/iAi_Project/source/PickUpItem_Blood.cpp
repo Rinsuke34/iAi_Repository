@@ -49,9 +49,9 @@ void PickUpItem_Blood::Initialization()
 
 	/* ƒRƒŠƒWƒ‡ƒ“Ý’è */
 	{
-		this->stCollisionCapsule.fCapsuleRadius = 100.0f;
-		this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0.0f, 400.0f, 0.0f));
-		this->stCollisionCapsule.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
+		this->stCollisionCapsule.fCapsuleRadius		= 200.0f;
+		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, +50.0f, 0.0f));
+		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, -50.0f, 0.0f));
 	}
 }
 

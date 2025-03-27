@@ -60,47 +60,47 @@ static  const int   SE_SYSTEM_STAGECLEAR        = 5;    // ステージクリア
 static  const int   SE_SYSTEM_RESULT_COUNT      = 6;    // リザルトカウント
 static  const int   SE_SYSTEM_RESULT_RANK_SMALL = 7;    // リザルト小評価
 static  const int   SE_SYSTEM_RESULT_RANK_BIG   = 8;    // リザルト大評価
+static  const int   SE_SYSTEM_CONV_DICISION     = 9;    // 会話シーン決定
 
 // SE番号(プレイヤー関係)
-static  const int   SE_PLAYER_RUN               = 9;    // 走る
-static  const int   SE_PLAYER_JUMP              = 10;   // ジャンプ
-static  const int   SE_PLAYER_LANDING           = 11;   // 着地
-static  const int   SE_PLAYER_KUNAI_GET         = 12;   // クナイ入手
-static  const int   SE_PLAYER_KUNAI             = 13;   // クナイ投擲
-static  const int   SE_PLAYER_DODGE             = 14;   // 回避
-static  const int   SE_PLAYER_ABSORB            = 15;   // 攻撃吸収
-static  const int   SE_PLAYER_NIAI              = 16;   // 通常居合攻撃
-static  const int   SE_PLAYER_SLASH_HIT         = 17;   // 攻撃ヒット音
-static  const int   SE_PLAYER_DOWN              = 18;   // 倒れる
-static  const int   SE_PLAYER_DAMAGE            = 19;   // 被ダメージ
-static  const int   SE_PLAYER_DAMAGE_ELEC       = 20;   // 被ダメージビリビリ
-static  const int   SE_PLAYER_CHARGE            = 21;   // 溜め居合チャージ
-static  const int   SE_PLAYER_CHARGE_COMPLETE   = 22;   // 溜め居合チャージ完了
-static  const int   SE_PLAYER_CHARGE_HOLD       = 23;   // 溜めチャージホールド
-static  const int   SE_PLAYER_SPIAI             = 24;   // 溜め居合攻撃
-static  const int   SE_PLAYER_GET_BLOOD         = 25;   // ブラッド取得
-static  const int   SE_PLAYER_SPIAI_ELEC        = 26;   // 溜め居合放電
+static  const int   SE_PLAYER_RUN               = 10;    // 走る
+static  const int   SE_PLAYER_JUMP              = 11;   // ジャンプ
+static  const int   SE_PLAYER_LANDING           = 12;   // 着地
+static  const int   SE_PLAYER_KUNAI_GET         = 13;   // クナイ入手
+static  const int   SE_PLAYER_KUNAI             = 14;   // クナイ投擲
+static  const int   SE_PLAYER_DODGE             = 15;   // 回避
+static  const int   SE_PLAYER_ABSORB            = 16;   // 攻撃吸収
+static  const int   SE_PLAYER_NIAI              = 17;   // 通常居合攻撃
+static  const int   SE_PLAYER_SLASH_HIT         = 18;   // 攻撃ヒット音
+static  const int   SE_PLAYER_DOWN              = 19;   // 倒れる
+static  const int   SE_PLAYER_DAMAGE            = 20;   // 被ダメージ
+static  const int   SE_PLAYER_DAMAGE_ELEC       = 21;   // 被ダメージビリビリ
+static  const int   SE_PLAYER_CHARGE            = 22;   // 溜め居合チャージ
+static  const int   SE_PLAYER_CHARGE_COMPLETE   = 23;   // 溜め居合チャージ完了
+static  const int   SE_PLAYER_CHARGE_HOLD       = 24;   // 溜めチャージホールド
+static  const int   SE_PLAYER_SPIAI             = 25;   // 溜め居合攻撃
+static  const int   SE_PLAYER_GET_BLOOD         = 26;   // ブラッド取得
+static  const int   SE_PLAYER_SPIAI_ELEC        = 27;   // 溜め居合放電
 
 // SE番号(エネミー関係)
-static  const int   SE_ENEMY_IKURA_ATTACK       = 27;   // ノーマル攻撃音
-static  const int   SE_ENEMY_DAMAGE             = 28;   // 撃破音
-static  const int   SE_ENEMY_BEAM_CHARGE        = 29;   // ビームチャージ音
-static  const int   SE_ENEMY_BEAM_SHOT          = 30;   // ビーム発射音
-static  const int   SE_ENEMY_WARNING            = 31;   // 攻撃予告音
-static  const int   SE_ENEMY_MISSILE_SHOT       = 32;   // ミサイル発射音
-static  const int   SE_ENEMY_MISSILE_HIT        = 33;   // ミサイル発射音
-static  const int   SE_ENEMY_MISSILE_EXPLOSION  = 34;   // ミサイル着弾ビリビリ音
-static  const int   SE_ENEMY_WARNING_EXPLOSION  = 35;   // 自爆予告音
-static  const int   SE_ENEMY_RUN                = 36;   // 逃走キラキラ音
-
+static  const int   SE_ENEMY_IKURA_ATTACK       = 28;   // ノーマル攻撃音
+static  const int   SE_ENEMY_DAMAGE             = 29;   // 撃破音
+static  const int   SE_ENEMY_BEAM_CHARGE        = 30;   // ビームチャージ音
+static  const int   SE_ENEMY_BEAM_SHOT          = 31;   // ビーム発射音
+static  const int   SE_ENEMY_WARNING            = 32;   // 攻撃予告音
+static  const int   SE_ENEMY_MISSILE_SHOT       = 33;   // ミサイル発射音
+static  const int   SE_ENEMY_MISSILE_HIT        = 34;   // ミサイル発射音
+static  const int   SE_ENEMY_MISSILE_EXPLOSION  = 35;   // ミサイル着弾ビリビリ音
+static  const int   SE_ENEMY_WARNING_EXPLOSION  = 36;   // 自爆予告音
+static  const int   SE_ENEMY_RUN                = 37;   // 逃走キラキラ音
 // SE番号(オブジェクト関係)
-static  const int   SE_GIMMIC_JUMPEXPLP         = 37;   // 強制ジャンプ
-static  const int   SE_RESPAWN_ACTIVATE         = 38;   // リスポーン地点起動
-static  const int   SE_GOAL_SHUTTER             = 39;   // ゴール演出(シャッター音)
-static  const int   SE_GOAL_SHINE               = 40;   // ゴール演出(光あふれる)
-static  const int   SE_GOAL                     = 41;   // ゴールが発する音
+static  const int   SE_GIMMIC_JUMPEXPLP         = 38;   // 強制ジャンプ
+static  const int   SE_RESPAWN_ACTIVATE         = 39;   // リスポーン地点起動
+static  const int   SE_GOAL_SHUTTER             = 40;   // ゴール演出(シャッター音)
+static  const int   SE_GOAL_SHINE               = 41;   // ゴール演出(光あふれる)
+static  const int   SE_GOAL                     = 42;   // ゴールが発する音
 
-static  const int   SE_MAX                      = 42;   // SE総数
+static  const int   SE_MAX                      = 43;   // SE総数
 
 // SE名称
 static const SE_INFO SE_NAME[SE_MAX] =
@@ -115,6 +115,7 @@ static const SE_INFO SE_NAME[SE_MAX] =
     { "System/SE_Result_Count",          FALSE },     // リザルトカウント
     { "System/SE_Result_Rank_Small",     FALSE },     // リザルト小評価
     { "System/SE_Result_Rank_Big",       FALSE },     // リザルト大評価
+    { "System/SE_Conv_Button",           FALSE },     // 会話シーン決定
     // プレイヤー関係
     { "Player/SE_Player_Run_ver2",       FALSE },     // 走る
     { "Player/SE_Player_Jump_ver2",      FALSE },     // ジャンプ

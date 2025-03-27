@@ -97,7 +97,7 @@ void DataList_Sound::BGM_VolumeChange()
 	{
 		// 設定されているなら
 		/* BGMの音量を変更する */
-		ChangeVolumeSoundMem(this->OptionList->iGetBgmVolume(), this->iBgmHandle);
+		ChangeVolumeSoundMem(this->OptionList->iGetBgmVolume() * 16, this->iBgmHandle);
 	}
 }
 
@@ -147,7 +147,7 @@ void DataList_Sound::SE_PlaySound(int iSeNo)
 	// iSeNo		<- 読み込むSEの番号
 
 	/* SEの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume() * 16, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 
 	/* SEを再生する */
 	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_BACK);
@@ -160,7 +160,7 @@ void DataList_Sound::SE_PlaySound_Loop(int iSeNo)
 	// iSeNo		<- 読み込むSEの番号
 
 	/* SEの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume() * 16, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 
 	/* SEをループ再生する */
 	PlaySoundMem(this->pSeHandleList[SE_NAME[iSeNo].aSeName], DX_PLAYTYPE_LOOP);
@@ -175,7 +175,7 @@ void DataList_Sound::SE_PlaySound_3D(int iSeNo, VECTOR vecPos, float fRadius)
 	// fRadius		<- 音の聞こえる半径
 
 	/* SEの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume() * 16, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 
 	/* サウンドの再生位置を設定 */
 	SetNextPlay3DPositionSoundMem(vecPos, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
@@ -196,7 +196,7 @@ void DataList_Sound::SE_PlaySound_Loop_3D(int iSeNo, VECTOR vecPos, float fRadiu
 	// fRadius		<- 音の聞こえる半径
 
 	/* SEの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume(), this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
+	ChangeVolumeSoundMem(this->OptionList->iGetSeVolume() * 16, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
 
 	/* サウンドの再生位置を設定 */
 	SetNextPlay3DPositionSoundMem(vecPos, this->pSeHandleList[SE_NAME[iSeNo].aSeName]);
@@ -284,7 +284,7 @@ void DataList_Sound::VOICE_PlaySound(int iVoiceNo)
 	}
 
 	/* ボイスの音量を設定 */
-	ChangeVolumeSoundMem(this->OptionList->iGetVoiceVolume(), iVoiceHandle);
+	ChangeVolumeSoundMem(this->OptionList->iGetVoiceVolume() * 16, iVoiceHandle);
 
 	/* ボイスを再生する */
 	PlaySoundMem(iVoiceHandle, DX_PLAYTYPE_BACK);

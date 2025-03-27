@@ -473,6 +473,8 @@ void Enemy_Escape::Update()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}
+				/* 攻撃ヒットのSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
 				DefeatAttack();
 

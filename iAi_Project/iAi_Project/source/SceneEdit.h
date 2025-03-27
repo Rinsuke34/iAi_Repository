@@ -34,7 +34,6 @@ class SceneEdit : public SceneBase
 		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム
 		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* piGrHandle_ResultFrame;						// リザルトフレーム
-		int* piGrHandle_ResultBackGround;					// リザルト画面背景(流用)
 		int* piGrHandle_NowEdit_Under;						// 現在のエディット情報
 		int* piGrHandle_UnderExplain_Under;					// 現在のエディット情報の説明欄
 		int* piGrHandle_NewEdit_Under;						// 新規エディット情報の説明欄

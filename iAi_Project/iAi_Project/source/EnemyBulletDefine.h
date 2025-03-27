@@ -6,7 +6,7 @@
 
 /* エネミー自爆型 */
 static const int	ENEMY_NORMAL_DURATION_COUNT = 130;					//ノーマル弾の持続カウント
-static const int	ENEMY_NORMAL_BULLET_COUNT = 120;					//ノーマル弾発射カウント
+static const int	ENEMY_NORMAL_BULLET_COUNT = 125;					//ノーマル弾発射カウント
 static const int	ENEMY_MISSILE_DURATION_COUNT = 500;					//ミサイル弾の持続カウント
 static const int	ENEMY_MISSILE_BULLET_UP_COUNT = 495;				//ミサイル弾発射カウント
 static const int	ENEMY_MISSILE_BULLET_DOWN_COUNT = 350;				//ミサイル弾打ち下げカウント

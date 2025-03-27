@@ -20,9 +20,6 @@ SceneOption::SceneOption() : SceneBase("Option", 500, true)
 
 		/* リザルト用フレーム */
 		this->piGrHandle_ResultFrame	= ImageList->piGetImage("Result/UI_Result_Frame");
-
-		/* 矢印 */
-		this->piGrHandle_Arrow			= ImageList->piGetImage("Input_Icon/Sign");
 	}
 
 	/* オプション名リストのポインタを取得 */
@@ -30,7 +27,6 @@ SceneOption::SceneOption() : SceneBase("Option", 500, true)
 
 	/* 初期化 */
 	this->iSelectItem		= 0;			// 選択中の項目の番号
-	this->bSelectFlg		= false;		// 選択状態であるかのフラグ
 }
 
 // デストラクタ
@@ -43,176 +39,143 @@ SceneOption::~SceneOption()
 // 計算
 void SceneOption::Process()
 {
-	/* "決定"が入力されているか */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+	/* 現在のSE音量とボイス音量を取得 */
+	int iSeSoundVolume_Old		= this->OptionList->iGetSeVolume();
+	int iVoiceSoundVolume_Old	= this->OptionList->iGetVoiceVolume();
+
+	/* "キャンセル"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL) == true)
 	{
 		// 入力されている場合
-		/* "決定"のSEを再生 */
-		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
-
-		/* 選択状態フラグを有効にする */
-		this->bSelectFlg = true;
-
-		return;
+		/* 削除フラグを有効にする */
+		this->bDeleteFlg = true;
 	}
 
-	/* "キャンセル"が入力されているか */
-	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
-	{
-		// 入力されている場合
-		/* "キャンセル"のSEを再生 */
-		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CANCEL);
-
-		/* 選択状態フラグを確認 */
-		if (this->bSelectFlg == true)
-		{
-			// 有効である場合
-			/* 選択状態フラグを無効にする */
-			this->bSelectFlg = false;
-		}
-		else
-		{
-			// 無効である場合
-			/* このシーンの削除フラグを有効にする */
-			this->bDeleteFlg = true;
-		}
-
-		return;
-	}
-
-	/* "上"がトリガ入力、あるいは右が入力されているか確認 */
-	if ((gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_RIGHT) == true))
+	/* "上"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP) == true)
 	{
 		// 入力されている場合
 		/* "カーソル移動"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
 
-		/* 選択状態フラグを確認 */
-		if (this->bSelectFlg == true)
-		{
-			// 有効である場合
-			/* データ型に応じて処理を変更 */
-			std::string OptionType = this->astOptionNameList->at(this->iSelectItem).Type.c_str();
-
-			/* データ型に応じて処理を変更 */
-			if (OptionType == DATA_TYPE_BOOL)
-			{
-				// ブール型の場合
-				/* ブール値を反転する */
-				bool* pBoolValue	= static_cast<bool*>(this->astOptionNameList->at(this->iSelectItem).pValue);
-				*pBoolValue			= !(*pBoolValue);
-			}
-			else if (OptionType == DATA_TYPE_INT)
-			{
-				// 整数型の場合
-				/* 現在の値をfloat型で取得 */
-				float fValue = static_cast<float>(*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue));
-
-				/* 値を変更 */
-				fValue += static_cast<float>(this->astOptionNameList->at(this->iSelectItem).fStepValue);
-
-				/* 最大値を上回っていないか確認 */
-				if (fValue > this->astOptionNameList->at(this->iSelectItem).fMax)
-				{
-					// 上回っている場合
-					/* 最大値に設定 */
-					fValue = this->astOptionNameList->at(this->iSelectItem).fMax;
-				}
-
-				/* 整数型に変換して設定 */
-				*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue) = static_cast<int>(fValue);
-			}
-			else if (OptionType == DATA_TYPE_FLOAT)
-			{
-				// 浮動小数点型の場合
-				/* 現在の値を取得 */
-				float* pFloatValue = static_cast<float*>(this->astOptionNameList->at(this->iSelectItem).pValue);
-
-				/* 値を変更 */
-				*pFloatValue += this->astOptionNameList->at(this->iSelectItem).fStepValue;
-
-				/* 最大値を上回っていないか確認 */
-				if (*pFloatValue > this->astOptionNameList->at(this->iSelectItem).fMax)
-				{
-					// 上回っている場合
-					/* 最大値に設定 */
-					*pFloatValue = this->astOptionNameList->at(this->iSelectItem).fMax;
-				}
-			}
-		}
-		else
-		{
-			// 無効である場合
-			/* 選択項目を上に進める */
-			this->iSelectItem -= 1;
-		}
+		/* 選択項目を上に進める */
+		this->iSelectItem -= 1;
 	}
 
-	/* "下"がトリガ入力、あるいは左が入力されているか確認 */
-	if ((gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN) == true) || (gpDataList_Input->bGetInterfaceInput(INPUT_HOLD, UI_LEFT) == true))
+	/* "下"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN) == true)
 	{
 		// 入力されている場合
 		/* "カーソル移動"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
 
-		/* 選択状態フラグを確認 */
-		if (this->bSelectFlg == true)
+		/* 選択項目を下に進める */
+		this->iSelectItem += 1;
+	}
+
+	/* "右"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT) == true)
+	{
+		/* データ型に応じて処理を変更 */
+		std::string OptionType = this->astOptionNameList->at(this->iSelectItem).Type.c_str();
+
+		/* データ型に応じて処理を変更 */
+		if (OptionType == DATA_TYPE_BOOL)
 		{
-			// 有効である場合
-			/* データ型に応じて処理を変更 */
-			std::string OptionType = this->astOptionNameList->at(this->iSelectItem).Type.c_str();
+			// ブール型の場合
+			/* ブール値を反転する */
+			bool* pBoolValue = static_cast<bool*>(this->astOptionNameList->at(this->iSelectItem).pValue);
+			*pBoolValue = !(*pBoolValue);
+		}
+		else if (OptionType == DATA_TYPE_INT)
+		{
+			// 整数型の場合
+			/* 現在の値をfloat型で取得 */
+			float fValue = static_cast<float>(*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue));
 
-			/* データ型に応じて処理を変更 */
-			if (OptionType == DATA_TYPE_BOOL)
+			/* 値を変更 */
+			fValue += static_cast<float>(this->astOptionNameList->at(this->iSelectItem).fStepValue);
+
+			/* 最大値を上回っていないか確認 */
+			if (fValue > this->astOptionNameList->at(this->iSelectItem).fMax)
 			{
-				// ブール型の場合
-				/* ブール値を反転する */
-				bool* pBoolValue = static_cast<bool*>(this->astOptionNameList->at(this->iSelectItem).pValue);
-				*pBoolValue = !(*pBoolValue);
+				// 上回っている場合
+				/* 最大値に設定 */
+				fValue = this->astOptionNameList->at(this->iSelectItem).fMax;
 			}
-			else if (OptionType == DATA_TYPE_INT)
+
+			/* 整数型に変換して設定 */
+			*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue) = static_cast<int>(fValue);
+		}
+		else if (OptionType == DATA_TYPE_FLOAT)
+		{
+			// 浮動小数点型の場合
+			/* 現在の値を取得 */
+			float* pFloatValue = static_cast<float*>(this->astOptionNameList->at(this->iSelectItem).pValue);
+
+			/* 値を変更 */
+			*pFloatValue += this->astOptionNameList->at(this->iSelectItem).fStepValue;
+
+			/* 最大値を上回っていないか確認 */
+			if (*pFloatValue > this->astOptionNameList->at(this->iSelectItem).fMax)
 			{
-				// 整数型の場合
-				/* 現在の値をfloat型で取得 */
-				float fValue = static_cast<float>(*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue));
-
-				/* 値を変更 */
-				fValue -= static_cast<float>(this->astOptionNameList->at(this->iSelectItem).fStepValue);
-
-				/* 最小値を下回っていないか確認 */
-				if (fValue < this->astOptionNameList->at(this->iSelectItem).fMin)
-				{
-					// 下回っている場合
-					/* 最小値に設定 */
-					fValue = this->astOptionNameList->at(this->iSelectItem).fMin;
-				}
-
-				/* 整数型に変換して設定 */
-				*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue) = static_cast<int>(fValue);
-			}
-			else if (OptionType == DATA_TYPE_FLOAT)
-			{
-				// 浮動小数点型の場合
-				/* 現在の値を取得 */
-				float* pFloatValue = static_cast<float*>(this->astOptionNameList->at(this->iSelectItem).pValue);
-
-				/* 値を変更 */
-				*pFloatValue -= this->astOptionNameList->at(this->iSelectItem).fStepValue;
-
-				/* 最小値を下回っていないか確認 */
-				if (*pFloatValue < this->astOptionNameList->at(this->iSelectItem).fMin)
-				{
-					// 下回っている場合
-					/* 最小値に設定 */
-					*pFloatValue = this->astOptionNameList->at(this->iSelectItem).fMin;
-				}
+				// 上回っている場合
+				/* 最大値に設定 */
+				*pFloatValue = this->astOptionNameList->at(this->iSelectItem).fMax;
 			}
 		}
-		else
+	}
+
+	/* "左"がトリガ入力されているか確認 */
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT) == true)
+	{
+		/* データ型に応じて処理を変更 */
+		std::string OptionType = this->astOptionNameList->at(this->iSelectItem).Type.c_str();
+
+		/* データ型に応じて処理を変更 */
+		if (OptionType == DATA_TYPE_BOOL)
 		{
-			// 無効である場合
-			/* 選択項目を下に進める */
-			this->iSelectItem += 1;
+			// ブール型の場合
+			/* ブール値を反転する */
+			bool* pBoolValue = static_cast<bool*>(this->astOptionNameList->at(this->iSelectItem).pValue);
+			*pBoolValue = !(*pBoolValue);
+		}
+		else if (OptionType == DATA_TYPE_INT)
+		{
+			// 整数型の場合
+			/* 現在の値をfloat型で取得 */
+			float fValue = static_cast<float>(*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue));
+
+			/* 値を変更 */
+			fValue -= static_cast<float>(this->astOptionNameList->at(this->iSelectItem).fStepValue);
+
+			/* 最小値を下回っていないか確認 */
+			if (fValue < this->astOptionNameList->at(this->iSelectItem).fMin)
+			{
+				// 下回っている場合
+				/* 最小値に設定 */
+				fValue = this->astOptionNameList->at(this->iSelectItem).fMin;
+			}
+
+			/* 整数型に変換して設定 */
+			*static_cast<int*>(this->astOptionNameList->at(this->iSelectItem).pValue) = static_cast<int>(fValue);
+		}
+		else if (OptionType == DATA_TYPE_FLOAT)
+		{
+			// 浮動小数点型の場合
+			/* 現在の値を取得 */
+			float* pFloatValue = static_cast<float*>(this->astOptionNameList->at(this->iSelectItem).pValue);
+
+			/* 値を変更 */
+			*pFloatValue -= this->astOptionNameList->at(this->iSelectItem).fStepValue;
+
+			/* 最小値を下回っていないか確認 */
+			if (*pFloatValue < this->astOptionNameList->at(this->iSelectItem).fMin)
+			{
+				// 下回っている場合
+				/* 最小値に設定 */
+				*pFloatValue = this->astOptionNameList->at(this->iSelectItem).fMin;
+			}
 		}
 	}
 
@@ -229,6 +192,26 @@ void SceneOption::Process()
 	/* BGMの音量を変更 */
 	// ※音量調整をリアルタイムで反映するため、毎フレーム音量を更新する
 	gpDataList_Sound->BGM_VolumeChange();
+
+	/* 現在のSE音量とボイス音量を取得 */
+	int iSeSoundVolume		= this->OptionList->iGetSeVolume();
+	int iVoiceSoundVolume	= this->OptionList->iGetVoiceVolume();
+
+	/* SE音量が変更されているか確認 */
+	if (iSeSoundVolume != iSeSoundVolume_Old)
+	{
+		// 変更されている場合
+		/* "会話シーン決定"のSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_CONV_DICISION);
+	}
+
+	/* ボイス音量が変更されているか確認 */
+	if (iVoiceSoundVolume != iVoiceSoundVolume_Old)
+	{
+		// 変更されている場合
+		/* "タイトルコール(共通)"ボイスを再生 */
+		gpDataList_Sound->VOICE_PlaySound(VOICE_TITLE_CALL);
+	}
 }
 
 // 描画
@@ -255,11 +238,12 @@ void SceneOption::Draw()
 		if (i == this->iSelectItem)
 		{
 			// 選択中の場合
-			/* 矢印を描写 */
-			DrawExtendGraph(iDrawPosX - OPTION_ARROW_WIDTH, iDrawPosY, iDrawPosX, iDrawPosY + OPTION_ARROW_HEIGHT, *this->piGrHandle_Arrow, FALSE);
-
 			/* 選択中の項目の色を変更 */
-			iColor = GetColor(255, 0, 0);
+			iColor = GetColor(255, 255, 0);
+
+			/* 選択項目の左右に矢印を描写 */
+			DrawTriangle(iDrawPosX + OPTION_STATUS_DRAWPOS_X - 32, iDrawPosY, iDrawPosX + OPTION_STATUS_DRAWPOS_X - 32, iDrawPosY + 32, iDrawPosX + OPTION_STATUS_DRAWPOS_X - 56, iDrawPosY + 16, iColor, TRUE);
+			DrawTriangle(iDrawPosX + OPTION_STATUS_DRAWPOS_X + 160, iDrawPosY, iDrawPosX + OPTION_STATUS_DRAWPOS_X + 160, iDrawPosY + 32, iDrawPosX + OPTION_STATUS_DRAWPOS_X + 184, iDrawPosY + 16, iColor, TRUE);
 		}
 
 		/* オプション名を描写 */

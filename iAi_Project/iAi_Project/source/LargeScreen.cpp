@@ -123,6 +123,7 @@ void LargeScreen::Process()
 
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
+				break;
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 				// Homeフラグを無効化

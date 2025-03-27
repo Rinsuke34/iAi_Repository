@@ -54,6 +54,7 @@ private:
 	int iDetonationRange;			//起爆範囲内
 	int iBlastRange;				//爆発範囲内
 	int iStopCount;			// 停止カウント
+	int iReturnCount;				// 戻るカウント
 	float fSpeed;			// 移動速度
 	float fGravity;						// 重力
 
@@ -66,6 +67,8 @@ private:
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool bDirectionFlg;								// 向き固定フラグ
 	bool bChaseFlg;								// 追跡フラグ
+	bool bSavePositionFlg;							// 座標保存フラグ
+	
 
 	//モーション関連変数
 	int iWaitAttachIndex;						// 待機モーションアタッチインデックス
@@ -83,6 +86,7 @@ private:
 
 
 	VECTOR vecLastRotation;	// 最後の回転量
+	VECTOR vecStartPosition;	// 初期座標
 protected:
 	COLLISION_CAPSULE		stHorizontalCollision;			// 水平方向のコリジョン
 };

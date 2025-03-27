@@ -1408,10 +1408,10 @@ void CharacterPlayer::Player_Projectile()
 	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 	// エディットの内容よって処理を変える
-	/* クナイ爆発化フラグが有効か確認する */
-	if (this->PlayerStatusList->bGetKunaiExplosion() == true)
+	/* クナイワープ化フラグが有効か確認する */
+	if (this->PlayerStatusList->bGetKunaiWarp() == false)
 	{
-		// クナイ爆発化フラグが有効である場合
+		// クナイワープ化フラグが無効である場合
 		/* クナイ(爆発)を作成 */
 		this->pBulletKunaiExplosion = new BulletPlayerKunaiExplosion;
 
@@ -1438,37 +1438,36 @@ void CharacterPlayer::Player_Projectile()
 	}
 	else
 	{
-		// クナイ爆発化フラグが有効でない場合
-	/* クナイ(ワープ)を作成 */
-	this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
+		// クナイワープ化フラグが有効な場合
+		/* クナイ(ワープ)を作成 */
+		this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
 
-	/* クナイ(ワープ)生成座標を設定 */
-	this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
+		/* クナイ(ワープ)生成座標を設定 */
+		this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 	
-	/* ロックオン中のエネミーが存在するか */
-	if (pLockOnEnemy != nullptr)
-	{
-		// 存在する場合
-		/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
+		/* ロックオン中のエネミーが存在するか */
+		if (pLockOnEnemy != nullptr)
+		{
+			// 存在する場合
+			/* クナイ(ワープ)のターゲット座標をロックオン中のエネミーに設定 */
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(pLockOnEnemy->vecGetPosition());
 
-		/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
-		this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
-}
-	else
-	{
-		// 存在しない場合
-		// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
-		// クナイ(ワープ)にターゲット座標を設定
-		this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+			/* ロックオン中のエネミーのポインタをクナイ(ワープ)に渡す */
+			this->pBulletKunaiWarp->SetKunaiTargetEnemy(pLockOnEnemy);
+		}
+		else
+		{
+			// 存在しない場合
+			// クナイ(ワープ)のターゲット座標をカメラの注視点の先に設定
+			// クナイ(ワープ)にターゲット座標を設定
+			this->pBulletKunaiWarp->SetKunaiTargetPosition(vecKunaiTarget);
+		}
 
-	}
-
-	/* 初期化を行う */
-	this->pBulletKunaiWarp->Initialization();
+		/* 初期化を行う */
+		this->pBulletKunaiWarp->Initialization();
 	
-	/* バレットリストに追加 */
-	ObjectList->SetBullet(this->pBulletKunaiWarp);
+		/* バレットリストに追加 */
+		ObjectList->SetBullet(this->pBulletKunaiWarp);
 	}
 
 	/* 遠距離攻撃のSEを再生 */

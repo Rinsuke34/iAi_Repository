@@ -156,6 +156,9 @@ void Enemy_GoalObject::Update()
 		/* "ƒS[ƒ‹‚ª”­‚·‚é‰¹"‚ÌSE‚ð’âŽ~ */
 		gpDataList_Sound->SE_PlaySound_Stop(SE_GOAL);
 
+		/* UŒ‚ƒqƒbƒg‚ÌSE‚ðÄ¶ */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
+
 		/* "ƒS[ƒ‹‰‰o(Œõ‚ ‚Ó‚ê‚é)"‚ÌSE‚ðÄ¶ */
 		gpDataList_Sound->SE_PlaySound_3D(SE_GOAL_SHINE, this->vecPosition, SE_3D_SOUND_RADIUS);
 	}

@@ -20,6 +20,7 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 
 	this->bPredictedLandingFlg = false;
 	this->bSaveFlg = false;
+	this->bLandingPointDrawFlg = false;
 
 	this->vecHitPosition = VGet(0, 0, 0);
 
@@ -232,6 +233,8 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	for (auto* platform : PlatformList)
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stFallCollision);
+		// 接触していない場合
+		this->bLandingPointDrawFlg = false;
 		// 接触しているか確認
 		if (stHitPolyDim.HitFlag == 1)
 		{
@@ -239,6 +242,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 			// モデルの描写位置を接触地点に設定かつy座標をコリジョンと被らないように設定
 			this->vecModelPosition = stHitPolyDim.HitPosition;
 			this->vecModelPosition.y += 15;
+			this->bLandingPointDrawFlg = true;
 			break;
 		}
 	}
@@ -319,11 +323,14 @@ void BulletEnemyRangeMissile::CollisionDraw()
 // 描画
 void BulletEnemyRangeMissile::Draw()
 {
+	if (this->bLandingPointDrawFlg == true)
+	{
 	// モデルの座標を設定
 	MV1SetPosition(this->iModelHandle, this->vecModelPosition);
 
 	// モデルの描写
 	MV1DrawModel(this->iModelHandle);
+	}
 }
 
 // 更新

@@ -151,9 +151,10 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetAddKunaiKeepProbability()			{ return this->iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		int		iGetAddBarrier()						{ return this->iAddBarrier; }						// バリア数(個)
 		bool	bGetAddCounter()						{ return this->bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		bool	bGetKunaiExplosion()					{ return this->bAddKunaiExplosion; }				// クナイ爆発化フラグ(有効/無効)
+		bool	bGetKunaiWarp()							{ return this->bAddKunaiWarp; }						// クナイワープ化フラグ(有効/無効)
 		bool	bGetAddMaxHpOne()						{ return this->bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 		int		iGetAddKunai()							{ return this->iAddKunai; }							// クナイ追加数(個)
+		int		iGetAddFallSpeedDown()					{ return this->iAddFallSpeedDown; }					// 落下速度上限値(速度/フレーム)
 
 		/* データ設定 */
 		// プレイヤー状態関連
@@ -264,9 +265,10 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetAddKunaiKeepProbability(int iAddKunaiKeepProbability)						{ this->iAddKunaiKeepProbability		= iAddKunaiKeepProbability; }			// クナイ保持確率(%)
 		void	SetAddBarrier(int iAddBarrier)													{ this->iAddBarrier						= iAddBarrier; }						// バリア数(個)
 		void	SetAddCounter(bool bAddCounter)													{ this->bAddCounter						= bAddCounter; }						// カウンター追加フラグ(有効/無効)
-		void	SetKunaiExplosion(bool bKunaiExplosion)											{ this->bAddKunaiExplosion				= bKunaiExplosion; };					// クナイ爆発化フラグ(有効/無効)
+		void	SetKunaiWarp(bool bKunaiWarp)													{ this->bAddKunaiWarp					= bKunaiWarp; };						// クナイワープ化フラグ(有効/無効)
 		void	SetAddMaxHpOne(bool bAddMaxHpOne)												{ this->bAddMaxHpOne					= bAddMaxHpOne; }						// 最大HP1化フラグ(有効/無効)
 		void	SetAddKunai(int iAddKunai)														{ this->iAddKunai						= iAddKunai; }							// クナイ追加数(個)
+		void	SetAddFallSpeedDown(int iAddFallSpeedDown)										{ this->iAddFallSpeedDown				= iAddFallSpeedDown; }					// 落下速度上限値(速度/フレーム)
 
 	private:
 		/* プレイヤー状態関連 */
@@ -366,7 +368,6 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerMaxHp;							// プレイヤーの最大HP
 		int		iPlayerMaxInvincibleTime;				// プレイヤーの最大無敵時間
 
-
 		/* プレイヤーバフ関連(エディット周り) */
 		float	fAddMoveSpeedUp;					// 移動速度上昇値(速度/フレーム)
 		int		iAddBlood;							// ブラッド(ゲーム内通貨)の入手量(個)
@@ -377,9 +378,10 @@ class DataList_PlayerStatus : public DataListBase
 		int		iAddKunaiKeepProbability;			// クナイ保持確率(%)
 		int		iAddBarrier;						// バリア数(個)
 		bool	bAddCounter;						// カウンター追加フラグ(有効/無効)
-		bool	bAddKunaiExplosion;					// クナイ爆発化フラグ(有効/無効)
+		bool	bAddKunaiWarp;						// クナイワープ化フラグ(有効/無効)
 		bool	bAddMaxHpOne;						// 最大HP1化フラグ(有効/無効)
 		int		iAddKunai;							// クナイ追加数(個)
+		int		iAddFallSpeedDown;					// 落下速度上限値(速度/フレーム)
 		
 		/* Jsonファイルでのオプション名と変数の対応表 */
 		std::vector<PLAYER_STATUS_LIST> astPlayerStatusList =

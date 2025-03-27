@@ -22,6 +22,7 @@ static const int	ENEMY_BEAM_INTERVAL = 270;			//ビームの発射間隔
 static const int	ENEMY_MISSILE_INTERVAL = 60;		//ミサイルの発射間隔
 static const float	ENEMY_GRAVITY_SREED = 1.0f;		// 重力の速度　Y軸の下方向なのでマイナスとする
 static const int	ENEMY_WARNING_EFFECT_WAIT_TIME = 60;	//警告エフェクトの待機時間
+static const int	ENEMY_RETURN_TIME						= 60;		//エネミーの復帰時間
 
 /* ゴールオブジェクト */
 static const int	ENEMY_GOAL_OBJECT_HEIGHT	= 160;		// ゴールオブジェクトの高さ			/* 2025.01.31 駒沢風助 ゴールオブジェクト修正 */

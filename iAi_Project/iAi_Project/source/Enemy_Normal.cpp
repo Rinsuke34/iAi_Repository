@@ -31,7 +31,7 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 
 	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
 
-	this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;	// 発射カウント
+	this->iFiringCount = 0;	// 発射カウント
 	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
 	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
 	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
@@ -101,11 +101,21 @@ void Enemy_Normal::MoveEnemy()
 	if (this->iNowHp > 0)
 	{
 
-	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE)  // x軸とz軸の距離が1000未満の場合
-	{
-		// プレイヤーが探知範囲内にいる場合
+		// プレイヤーとエネミーの距離の平方を計算
+		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
+		(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
+		(this->vecPosition.z - playerPos.z) * (this->vecPosition.z - playerPos.z);
+
+		// 索敵範囲の半径の平方
+		float detectionRadiusSquared = ENEMY_Y_DISTANCE * ENEMY_Y_DISTANCE;
+
+
 		iFiringCount--;	// 発射カウントを減少
+
+		// プレイヤーが索敵範囲内にいるか確認
+		if (distanceToPlayerSquared < detectionRadiusSquared)
+		{
+			// プレイヤーが索敵範囲内にいる場合の処理
 
 		//誘導カウントが発射カウントより大きいか確認
 		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
@@ -364,6 +374,9 @@ void Enemy_Normal::Update()
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}
+
+				/* 攻撃ヒットのSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
 				DefeatAttack();
 

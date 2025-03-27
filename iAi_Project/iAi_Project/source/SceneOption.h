@@ -28,10 +28,8 @@ class SceneOption : public SceneBase
 
 		/* 画像ハンドル */
 		int* piGrHandle_ResultFrame;			// リザルト用フレーム
-		int* piGrHandle_Arrow;					// 矢印
 
 		/* 変数 */
 		std::vector<OPTION_LIST>*	astOptionNameList;	// オプション名リスト
 		int							iSelectItem;		// 選択中の項目の番号
-		bool						bSelectFlg;			// 選択状態であるかのフラグ
 };

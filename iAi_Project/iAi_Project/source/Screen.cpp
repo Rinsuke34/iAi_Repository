@@ -123,6 +123,7 @@ void Screen::Process()
 
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
+					break;
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 				// Homeフラグを無効化
@@ -169,16 +170,6 @@ void Screen::Process()
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
 
-				if (this->bHomeFlg == FALSE)
-				{
-				if (iUICount == CAMERA_FIXED_POSITION_C)
-				{
-					//現在のカメラポジションが設定画面であるか確認
-					this->iUICount = CAMERA_FIXED_POSITION_C;
-					this->bHomeFlg = TRUE;
-				}
-				}
-				else
 				{
 					//UIカウント(カメラ)をタイトルに設定
 					iUICount = CAMERA_FIXED_POSITION_START;

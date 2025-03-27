@@ -33,11 +33,9 @@ class SceneResult : public SceneBase
 		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
-		int*	piGrHandle_ResultBackGround;					// リザルト画面の背景
-		int*	piGrHandle_String_Result;						// リザルト画面の文字(リザルト)
-		int*	piGrHandle_String_Rank;							// リザルト画面の文字(ランク)
-		int*	piGrHandle_ResultFrame;							// リザルトフレーム
-		int*	apiGrHandle_Alphabet[RESULT_EVALUATION_MAX];	// アルファベット(コンボ用の物を流用)
+		int*	piGrHandle_ResultBackGround;							// リザルト画面の背景
+		int*	apiGrHandle_Alphabet_Section[RESULT_EVALUATION_MAX];	// 各評価のアルファベット
+		int*	apiGrHandle_Alphabet[RESULT_EVALUATION_MAX];			// 総合評価アルファベット(コンボ用の物を流用)
 
 		/* 関数 */
 		void	Process_Main();					// メイン処理

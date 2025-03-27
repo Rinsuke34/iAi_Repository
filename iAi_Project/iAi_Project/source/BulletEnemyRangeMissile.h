@@ -59,6 +59,7 @@ private:
 
 	bool bPredictedLandingFlg;		//着弾予測フラグ
 	bool bSaveFlg;					//セーブフラグ
+	bool bLandingPointDrawFlg;		//着弾ポイント描写フラグ
 
 	VECTOR vecHitPosition;			//ヒットポジション
 	VECTOR vecModelPosition;		//着弾モデルの座標
