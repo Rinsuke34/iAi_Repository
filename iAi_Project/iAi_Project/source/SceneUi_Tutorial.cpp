@@ -117,6 +117,9 @@ void SceneUi_Tutorial::Initialization()
 
 				/* Žæ“¾‚µ‚½‰æ‘œ‚ð•Û‘¶ */
 				this->apiGrHandle_Tutorial_Cg.push_back(iImageData);
+
+				/* €–Ú”Ý’è */
+				this->iMaxItemNo++;
 			}
 		}
 	}
@@ -161,7 +164,7 @@ void SceneUi_Tutorial::Process()
 		{
 			// ÅŒã‚Ì€–Ú‚Å‚ ‚éê‡
 			/* •`ŽÊ€–Ú‚ðÅŒã‚Ì€–Ú‚ÉÝ’è */
-			this->iNowItemNo = this->iMaxItemNo;
+			this->iNowItemNo = this->iMaxItemNo - 1;
 		}
 	}
 }

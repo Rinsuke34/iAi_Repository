@@ -6,6 +6,8 @@
 /* データリスト */
 #include "DataList_Model.h"
 #include "DataList_Object.h"
+#include "DataList_Effect.h"
+#include "DataList_StageStatus.h"
 
 /* オブジェクト */
 #include "Enemy_Basic.h"
@@ -32,6 +34,8 @@ private:
 	EffectManualDelete* pEffectDetonation;				// 起爆エフェクト
 	/* 使用するデータリスト */
 	DataList_Object* ObjectList;			// オブジェクト管理
+	DataList_Effect* EffectList;			// エフェクト管理
+	DataList_StageStatus* StageStatusList;	// ステージ状態
 
 
 	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態

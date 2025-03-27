@@ -233,6 +233,8 @@
     <ClCompile Include="source\SceneUi_Tutorial.cpp" />
     <ClCompile Include="source\Scene_Title_Player.cpp" />
     <ClCompile Include="source\Screen.cpp" />
+    <ClCompile Include="source\ScreenArrowLeft.cpp" />
+    <ClCompile Include="source\ScreenArrowRight.cpp" />
     <ClCompile Include="source\ScreenEffect_ConcentrationLine.cpp" />
     <ClCompile Include="source\ScreenEffect_Damage.cpp" />
     <ClCompile Include="source\SceneGame.cpp" />
@@ -332,6 +334,8 @@
     <ClInclude Include="source\SceneUi_Tutorial.h" />
     <ClInclude Include="source\Scene_Title_Player.h" />
     <ClInclude Include="source\Screen.h" />
+    <ClInclude Include="source\ScreenArrowLeft.h" />
+    <ClInclude Include="source\ScreenArrowRight.h" />
     <ClInclude Include="source\ScreenEffect_ConcentrationLine.h" />
     <ClInclude Include="source\SpawnPoint_Base.h" />
     <ClInclude Include="source\EnemySpawnPoint_Normal.h" />

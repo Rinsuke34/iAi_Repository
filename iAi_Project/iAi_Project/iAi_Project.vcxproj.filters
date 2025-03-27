@@ -820,7 +820,13 @@
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\チュートリアル描写地点</Filter>
     </ClCompile>
     <ClCompile Include="source\SceneUi_Tutorial.cpp">
-      <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル</Filter>
+      <Filter>ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenArrowLeft.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScreenArrowRight.cpp">
+      <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1159,6 +1165,12 @@
     </ClInclude>
     <ClInclude Include="source\SceneUi_Tutorial.h">
       <Filter>ヘッダー ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenArrowLeft.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScreenArrowRight.h">
+      <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -77,10 +77,6 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	iChargeCount--;	// チャージカウントを減算
 	if (iChargeCount <= 0)
 	{
-		// エフェクトの向きを設定
-		VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
-		this->pEffect->SetRotation(rotation);
-
 	// 持続カウントが発射カウントを超えているか確認
 	if (iEnemyBeamDurationCount >= ENEMY_NORMAL_BULLET_COUNT)
 	{
@@ -97,7 +93,7 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	}
 
 	// ビームの移動座標と向きと速度を更新
-    this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 30));
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 60));
 
 	// エネミーのリストを取得
 	auto& enemyList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
@@ -118,23 +114,14 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 
     this->stCollisionCapsule.vecCapsuleTop = this->vecEnemyPosition; // 開始地点をエネミーの位置に固定
 
-	// ビームのエフェクトの向きを設定
-	VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
+	// コリジョンの向き角度を計算
+	VECTOR collisionDirection = VNorm(VSub(this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.vecCapsuleTop));
+	float yaw = atan2(collisionDirection.x, collisionDirection.z);
+	float pitch = atan2(collisionDirection.y, sqrt(collisionDirection.x * collisionDirection.x + collisionDirection.z * collisionDirection.z));
+	VECTOR rotation = VGet(pitch, yaw + DX_PI_F, 0); // 180度回転
 
-    // ビームのエフェクトの反対向きを設定
-    VECTOR rotation2 = VGet(rotation.x, rotation.y + DX_PI_F, rotation.z);
-
-	// エフェクトの向きを設定する前に、必要な回転軸がどれかを確認
-    if (this->vecDirection.z > 0)
-    {
-        // 正面を向いている場合
-        this->pEffect->SetRotation(rotation2);
-    }
-    else
-    {
-        // 正面を向いていない場合
+	// エフェクトの向きを設定
 	this->pEffect->SetRotation(rotation);
-}
 }
 
 /* 接触判定(簡易) */

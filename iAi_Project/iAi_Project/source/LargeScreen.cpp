@@ -91,7 +91,6 @@ LargeScreen::~LargeScreen()
 void LargeScreen::Process()
 {
 	// 現在のシーンがタイトルシーンか確認
-	if (gpSceneServer->GetScene("Title"))
 	{
 		// 決定ボタンが押されたか確認
 		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))

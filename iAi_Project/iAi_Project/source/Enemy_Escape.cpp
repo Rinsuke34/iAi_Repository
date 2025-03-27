@@ -40,6 +40,10 @@ Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 	this->bDirectionFlg = true;					// 向き固定フラグ
 	this->iWaitCount = 5;
 	this->bWallHitFlg = false;
+	this->iReturnCount = 1;
+	this->iRestartCount = 10;
+
+	this->wallNormal = VGet(0, 0, 0);
 }
 
 // デストラクタ
@@ -55,7 +59,7 @@ void Enemy_Escape::Initialization()
 	this->stCollisionCapsule.fCapsuleRadius = 100;
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
-
+	this->vecInitialPosition = this->vecPosition;		// 初期座標
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 
@@ -212,48 +216,98 @@ void Enemy_Escape::MoveEnemy()
 	}
 }
 }
-	// 壁に当たった際の処理
 	if (this->bWallHitFlg == true)
 	{
-		////プレイヤーが探知範囲内にいるか確認
-		//if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)
-		//{
-		//	// プレイヤーの位置を取得
-		//	VECTOR playerPos = this->ObjectList->GetCharacterPlayer()->vecGetPosition();
+		//待機カウントを減算
+		this->iReturnCount--;
 
-		//	// 壁との衝突判定を行い、法線ベクトルを取得
-		//	MV1_COLL_RESULT_POLY_DIM collisionResult = MV1CollCheck_Capsule(this->iModelHandle, -1, this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius);
-		//	if (collisionResult.HitNum > 0)
-		//	{
-		//		// 最初の衝突ポリゴンの法線ベクトルを取得
-		//		VECTOR wallNormal = collisionResult.Dim[0].Normal;
+		// 走るモーションをデタッチする
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
 
-		//	// 壁の法線ベクトルを正規化
-		//	wallNormal = VNorm(wallNormal);
+		// 待機モーションをアタッチする
+		this->iWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 3, -1, FALSE);
 
-		//		// 壁に沿う方向を計算
-		//		VECTOR wallParallel = VCross(wallNormal, VGet(0, 1, 0));
-		//		wallParallel = VNorm(wallParallel);
+		// 待機モーションの総再生時間を取得する
+		this->fWaitTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iWaitAttachIndex);
 
-		//		// 壁に沿って移動
-		//		VECTOR escapeDirection = VScale(wallParallel, this->iEscapespeed);
-		//	this->vecPosition = VAdd(this->vecPosition, escapeDirection);
+		//再生速度を加算
+		this->fWaitPlayTime += 1.0f;
 
-		//		// カプセルコリジョンが当たらない位置まで押し出し処理
-		//		while (MV1CollCheck_Capsule(this->iModelHandle, -1, this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius).HitNum > 0)
-		//	{
-		//			this->vecPosition = VAdd(this->vecPosition, VScale(wallNormal, 1.0f));
-		//	}
+		//再生時間をセットする
+		MV1SetAttachAnimTime(this->iModelHandle, this->iWaitAttachIndex, this->fWaitPlayTime);
 
-		//		//エネミーの向きを更新
-		//		this->vecRotation = VGet(0, atan2f(escapeDirection.x, escapeDirection.z), 0);
-		//		MV1SetRotationXYZ(iModelHandle, this->vecRotation);
+		//再生時間がアニメーションの総再生時間に達したか確認
+		if (this->fWaitPlayTime >= this->fWaitTotalTime)
+		{
+			//アニメーションの再生時間が総再生時間に達した場合
+			//再生時間を初期化する
+			this->fWaitPlayTime = 0.0f;
+		}
 
-		//	this->bWallHitFlg = false;	
+		if (this->iReturnCount < 0)
+		{
+			// プレイヤーの方向に９０度右に周り移動
+			VECTOR directionToPlayer = VNorm(VSub(playerPos, this->vecPosition));
+			VECTOR directionToPlayerRight = VCross(directionToPlayer, VGet(0, 1, 0));
 
-		//	this->bEscapeEffectGenerated = true;
-		//}
-	//}
+			// 壁の法線ベクトルとプレイヤーの方向ベクトルの内積を計算
+			float dotProduct = VDot(wallNormal, directionToPlayerRight);
+
+			// 内積が正なら右に回転、負なら左に回転
+			VECTOR VRot = VGet(0, 0, 0);
+			if (dotProduct > 0)
+			{
+				vecPosition = VAdd(vecPosition, VScale(directionToPlayerRight, this->iEscapespeed));
+				VRot.y = atan2f(directionToPlayerRight.x, -directionToPlayerRight.z);
+			}
+			else
+			{
+				vecPosition = VAdd(vecPosition, VScale(VScale(directionToPlayerRight, -1), this->iEscapespeed));
+				VRot.y = atan2f(-directionToPlayerRight.x, directionToPlayerRight.z);
+			}
+
+			// エネミーの向きを設定
+			this->vecRotation = VRot;
+			MV1SetRotationXYZ(iModelHandle, VRot);
+
+			//待機モーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+
+			//走りモーションをアタッチする
+			this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+			//走りモーションの総再生時間を取得する
+			this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+			//再生速度を加算
+			this->fRunPlayTime += 1.0f;
+
+			//再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+			//再生時間がアニメーションの総再生時間に達したか確認
+			if (this->fRunPlayTime >= this->fRunTotalTime)
+			{
+				//アニメーションの再生時間が総再生時間に達した場合
+				//再生時間を初期化する
+				this->fRunPlayTime = 0.0f;
+			}
+
+			//再起動カウントを減算
+			this->iRestartCount--;
+
+			//エネミーの向きを設定
+			this->vecRotation = VRot;
+			MV1SetRotationXYZ(iModelHandle, VRot);
+		}
+		if (this->iRestartCount < 0)
+		{
+			this->iReturnCount = 1;
+			this->iRestartCount = 10;
+			this->iWaitCount = 5;
+			this->bWallHitFlg = false;
+			this->bEscapeEffectGenerated = true;
+		}
 }
 }
 
@@ -308,6 +362,8 @@ void Enemy_Escape::Movement_Horizontal()
 	/* 道中でオブジェクトに接触しているか判定 */
 
 	{
+		if (this->bWallHitFlg == false)
+		{
 
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetPlatformList();
@@ -327,6 +383,8 @@ void Enemy_Escape::Movement_Horizontal()
 					this->bEscapeEffectGenerated = false;
 
 					this->bWallHitFlg = true;
+						wallNormal = stHitPolyDim.Dim[0].Normal;
+					}
 				}
 			}
 		}

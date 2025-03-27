@@ -39,11 +39,11 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 		this->piGrHandle_ResultFrame		= ImageList->piGetImage("Result/UI_Result_Frame");
 
 		/* アルファベット(コンボ用の物を流用) */
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_S");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_A");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_B");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_C");
-		this->apiGrHandle_Alphabet[RESULT_EVALUATION_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_ComboGrade_D");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_S]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_S_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_A]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_A_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_B]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_B_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_C]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_C_256");
+		this->apiGrHandle_Alphabet[RESULT_EVALUATION_D]	= ImageList->piGetImage("UI_Player_ComboGrade-Timer/alphabet/UI_Player_RankGrade_D_256");
 	}
 
 	/* 初期化 */

@@ -25,6 +25,11 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 		/* "プレイヤー状態"を取得 */
 		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		/* "エフェクトリソース管理"を取得 */
+		this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
+
 	}
 
 	/* モデル取得 */
@@ -221,15 +226,84 @@ void Enemy_Explosion::MoveEnemy()
 				/* 撃破時の処理を実行 */
 				Defeat();
 
+				//爆発SE再生
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
+
 				//プレイヤーが爆風範囲内にいるかどうかを確認
 				if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_EXPLOSION_RANGE)
 				{
 					//プレイヤーが爆風範囲内にいる場合
 				//プレイヤーを吹き飛ばす
 				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
-
-				//プレイヤーのHPを減少
+				// 当たっている場合
+				/* プレイヤーのHPを減少 */
 				this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+
+				/* 被ダメージカウントを加算する */
+				this->PlayerStatusList->SetPlayerDamageCount(this->PlayerStatusList->iGetPlayerDamageCount() + 1);
+
+				/* プレイヤーの無敵時間を設定 */
+				this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+
+
+				/* "被ダメージ"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+				/* "被ダメージビリビリ"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE_ELEC);
+
+				/* 被ダメージボイスを再生 */
+				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
+
+				/* 被ダメージのエフェクトを生成 */
+				{
+					/* ダメージ発生時エフェクト */
+					{
+						/* 被ダメージの瞬間に発生するエフェクトを追加 */
+						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+
+						/* 座標を設定 */
+						pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
+
+						/* エフェクトを取得 */
+						pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+
+						/* 拡大率を設定 */
+						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+
+						/* 削除カウントを設定 */
+						// ※仮で1秒間
+						pDamageEffect->SetDeleteCount(60);
+
+						/* エフェクト初期化処理 */
+						pDamageEffect->Initialization();
+
+						/* オブジェクトリストに登録 */
+						this->ObjectList->SetEffect(pDamageEffect);
+					}
+
+					/* 感電エフェクト */
+					{
+						/* 感電エフェクトを生成 */
+						EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+
+						/* 感電エフェクトの読み込み */
+						pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
+
+						/* 感電エフェクトの初期化 */
+						pShockEffect->Initialization();
+
+						/* 感電エフェクトの時間を設定 */
+						pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+
+						/* 感電エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(pShockEffect);
+					}
+
+					/* 画面エフェクト(被ダメージ)作成 */
+					this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+
+				}
 				}
 			}
 		}

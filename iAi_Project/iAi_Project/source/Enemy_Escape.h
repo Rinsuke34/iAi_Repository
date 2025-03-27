@@ -35,6 +35,7 @@ class Enemy_Escape : public Enemy_Basic
 	void MoveEnemy();				// 敵を移動させるメソッドを追加
 	void Enemy_Model_Animation();	// エネミーモデルアニメーション
 	void Movement_Horizontal();		// 水平移動
+	void OnWallHit();				// 壁に当たった時の処理
 
 	/* 変数 */
 	int iXescapedistance;			// X軸の距離
@@ -42,7 +43,10 @@ class Enemy_Escape : public Enemy_Basic
 	int iZescapedistance;			// Z軸の距離
 	int iEscapespeed;			// 移動速度
 	int iWaitCount;					// 待機カウント
+	int iReturnCount;				// 待機カウント
+	int iRestartCount;				// 再起動カウント
 	float fGravity;				// 重力
+	float fWallHitTime;			// 壁に当たった時間
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool bDirectionFlg;										// 向き固定フラグ
 	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ
@@ -62,6 +66,8 @@ class Enemy_Escape : public Enemy_Basic
 
 
 	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
+	VECTOR vecInitialPosition;	// 初期位置
+	VECTOR wallNormal;
 protected:
 	COLLISION_CAPSULE			stHorizontalCollision;		// 水平方向のコリジョン
 	COLLISION_SQHERE			stSphere;					// 球のコリジョン

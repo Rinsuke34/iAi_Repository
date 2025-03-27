@@ -97,7 +97,7 @@ void Enemy_Fixed::Update()
 
 
 	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 1;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 560, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0, -120, 0));
+	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }
