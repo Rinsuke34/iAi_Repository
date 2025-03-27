@@ -28,5 +28,6 @@ static const int RESULT_DRAW_FAZE_DAMAGE				= 4;	// ダメージ描写
 static const int RESULT_DRAW_FAZE_DAMAGE_EVALUATION		= 5;	// ダメージ評価描写
 static const int RESULT_DRAW_FAZE_GETBLOOD				= 6;	// 取得ブラッド描写
 static const int RESULT_DRAW_FAZE_TOTAL_EVALUATION		= 7;	// 総合評価描写
+static const int RESULT_DRAW_END						= 8;	// 描写終了
 
 static const int RESULT_DRAW_FAZE_DELAY_TIME			= 30;	// 各評価描写までの待機時間

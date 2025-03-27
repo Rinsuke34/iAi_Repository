@@ -107,6 +107,9 @@ void SceneGame::Initialization()
 		else
 		{
 			// 存在しない場合
+			/* 所持ブラッドを500(初期値)に設定 */
+			this->GameResourceList->SetHaveBlood(500);
+
 			/* 会話パート(オープニング)を生成 */
 			SceneConversation* pAddConversation = new SceneConversation();
 			gpSceneServer->AddSceneReservation(pAddConversation);

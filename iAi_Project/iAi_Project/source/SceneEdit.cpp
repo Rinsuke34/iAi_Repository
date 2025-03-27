@@ -131,94 +131,125 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 				break;
 		}
 
-		/* Jsonファイルからエディット情報を読み込んで新規エディットに登録 */
+		/* 最初にエディット画面を追加するか確認 */
+		if (this->StageStatusList->bGetFastEditFlg() == true)
 		{
-			/* 取得した情報を保存する配列の宣言 */
-			std::vector<EDIT_LOTTERY> aEditLotteryList;
-
-			/* パスとファイル名の設定 */
-			std::string FilePath = "resource/SetupData/";	// 保存場所
-			std::string jsonFileName = "EditDataBase.json";		// ファイル名
-
-			/* ファイル展開 */
-			std::ifstream inputFile(FilePath + jsonFileName);
-
-			/* ファイルの展開が成功したか確認 */
-			if (inputFile.is_open())
+			// 追加する場合(最初のエディット描写の場合)
+			/* 新規エディット情報を固定の設定とする */
+			/* 1枠目 */
 			{
-				// ファイルが存在する場合
-				/* 現在のステージの各評価の基準値を取得する */
-				nlohmann::json	json;
-				inputFile >> json;
-
-				/* すべての要素を読み込む */
-				for (auto& data : json)
-				{
-					/* エディット情報を取得 */
-					EDIT_LOTTERY stEditLottery;
-					data.at("Effect").get_to(stEditLottery.iEffect);
-					data.at("Rank").get_to(stEditLottery.iRank);
-					data.at("IncidenceRate").get_to(stEditLottery.iIncidenceRate);
-					data.at("Cost").get_to(stEditLottery.iCost);
-					data.at("Text").get_to(stEditLottery.aText);
-
-					/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
-					stEditLottery.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stEditLottery.aText);
-
-					/* 配列に追加 */
-					aEditLotteryList.push_back(stEditLottery);
-				}
-
-				/* ファイルを閉じる */
-				inputFile.close();
+				this->NewEditData[0].iEditEffect	= 2;
+				this->NewEditData[0].iEditRank		= 2;
+				this->NewEditData[0].iEditCost		= 500;
+				this->NewEditData[0].aText			= "ブラッド取得量が5増加";
 			}
-
-			/* エディット数分ランダムなエディットを選択 */
+			/* 2枠目 */
 			{
-				/* 全要素の出現率合計値を取得 */
-				int iTotalRarity	= 0;
-				for (auto& edit : aEditLotteryList)
+				this->NewEditData[1].iEditEffect	= 5;
+				this->NewEditData[1].iEditRank		= 1;
+				this->NewEditData[1].iEditCost		= 500;
+				this->NewEditData[1].aText			= "ジャンプ可能回数が1回増加";
+			}
+			/* 3枠目 */
+			{
+				this->NewEditData[2].iEditEffect	= 9;
+				this->NewEditData[2].iEditRank		= 3;
+				this->NewEditData[2].iEditCost		= 3000;
+				this->NewEditData[2].aText			= "一部の敵攻撃を跳ね返せるようになる";
+			}
+		}
+		else
+		{
+			// 追加しない場合(ステージクリア時のエディット描写の場合)
+			/* Jsonファイルからエディット情報を読み込んで新規エディットに登録 */
+			{
+				/* 取得した情報を保存する配列の宣言 */
+				std::vector<EDIT_LOTTERY> aEditLotteryList;
+
+				/* パスとファイル名の設定 */
+				std::string FilePath = "resource/SetupData/";	// 保存場所
+				std::string jsonFileName = "EditDataBase.json";		// ファイル名
+
+				/* ファイル展開 */
+				std::ifstream inputFile(FilePath + jsonFileName);
+
+				/* ファイルの展開が成功したか確認 */
+				if (inputFile.is_open())
 				{
-					/* 合計値に加算 */
-					iTotalRarity += edit.iIncidenceRate;
+					// ファイルが存在する場合
+					/* 現在のステージの各評価の基準値を取得する */
+					nlohmann::json	json;
+					inputFile >> json;
+
+					/* すべての要素を読み込む */
+					for (auto& data : json)
+					{
+						/* エディット情報を取得 */
+						EDIT_LOTTERY stEditLottery;
+						data.at("Effect").get_to(stEditLottery.iEffect);
+						data.at("Rank").get_to(stEditLottery.iRank);
+						data.at("IncidenceRate").get_to(stEditLottery.iIncidenceRate);
+						data.at("Cost").get_to(stEditLottery.iCost);
+						data.at("Text").get_to(stEditLottery.aText);
+
+						/* 読み込んだ文字列をUTF-8～Shift-JISに変換 */
+						stEditLottery.aText = PUBLIC_PROCESS::aUtf8ToShiftJIS(stEditLottery.aText);
+
+						/* 配列に追加 */
+						aEditLotteryList.push_back(stEditLottery);
+					}
+
+					/* ファイルを閉じる */
+					inputFile.close();
 				}
 
-				/* 出現率に基づき、ランダムなエディットを選出 */
-				for (int i = 0; i < this->iNewEditNumber; i++)
+				/* エディット数分ランダムなエディットを選択 */
 				{
-					/* ランダムな値を取得する */
-					int iRandomValue	= GetRand(iTotalRarity - 1);
-					int iCurrentSum		= 0;
-
-					/* ランダム値に応じたエディットを取得する */
+					/* 全要素の出現率合計値を取得 */
+					int iTotalRarity = 0;
 					for (auto& edit : aEditLotteryList)
 					{
-						/* 出現率に応じた値分加算 */
-						iCurrentSum += edit.iIncidenceRate;
+						/* 合計値に加算 */
+						iTotalRarity += edit.iIncidenceRate;
+					}
 
-						/* ランダム値を加算値が超えているか確認 */
-						if (iRandomValue < iCurrentSum)
+					/* 出現率に基づき、ランダムなエディットを選出 */
+					for (int i = 0; i < this->iNewEditNumber; i++)
+					{
+						/* ランダムな値を取得する */
+						int iRandomValue = GetRand(iTotalRarity - 1);
+						int iCurrentSum = 0;
+
+						/* ランダム値に応じたエディットを取得する */
+						for (auto& edit : aEditLotteryList)
 						{
-							// 超えている場合
-							/* 選択したエディットを新規エディットに登録 */
-							this->NewEditData[i].iEditEffect	= edit.iEffect;
-							this->NewEditData[i].iEditRank		= edit.iRank;
-							this->NewEditData[i].iEditCost		= edit.iCost;
-							this->NewEditData[i].aText			= edit.aText;
-							break;
+							/* 出現率に応じた値分加算 */
+							iCurrentSum += edit.iIncidenceRate;
+
+							/* ランダム値を加算値が超えているか確認 */
+							if (iRandomValue < iCurrentSum)
+							{
+								// 超えている場合
+								/* 選択したエディットを新規エディットに登録 */
+								this->NewEditData[i].iEditEffect = edit.iEffect;
+								this->NewEditData[i].iEditRank = edit.iRank;
+								this->NewEditData[i].iEditCost = edit.iCost;
+								this->NewEditData[i].aText = edit.aText;
+								break;
+							}
 						}
 					}
 				}
 			}
-		}
 
-		/* 金枠確定フラグが有効であるか */
-		if (bGoaldConfirmed == true)
-		{
-			// 有効である場合
-			/* NONE以外のランダムなエディットのランクを金にする */
-			// ※最低1枠であるため、金枠のエディットが抽選対象となっても仕様上は問題ない
-			this->NewEditData[GetRand(this->iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
+			/* 金枠確定フラグが有効であるか */
+			if (bGoaldConfirmed == true)
+			{
+				// 有効である場合
+				/* NONE以外のランダムなエディットのランクを金にする */
+				// ※最低1枠であるため、金枠のエディットが抽選対象となっても仕様上は問題ない
+				this->NewEditData[GetRand(this->iNewEditNumber - 1)].iEditRank = EDIT_RANK_GOLD;
+			}
 		}
 	}
 

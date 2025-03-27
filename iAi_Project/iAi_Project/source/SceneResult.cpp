@@ -182,9 +182,6 @@ void SceneResult::Process_Main()
 	/* 現時点で"リザルト"SEを再生中であるかを保持 */
 	bool bPlaySound = this->bPlaySoundCount;
 
-	/* 描写遅延時間を減少 */
-	this->iDrawDelayTime -= 1;
-
 	/* 現在の描写遅延時間割合を取得 */
 	float fDrawDelayTimePercent = (static_cast<float>(RESULT_DRAW_FAZE_DELAY_TIME) - static_cast<float>(this->iDrawDelayTime)) / static_cast<float>(RESULT_DRAW_FAZE_DELAY_TIME);
 
@@ -294,11 +291,40 @@ void SceneResult::Process_Main()
 			if (this->iDrawDelayTime == RESULT_DRAW_FAZE_DELAY_TIME)
 			{
 				// 開始直後である場合
-				/* "リザルト小評価"のSEを再生 */
-				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_BIG);
+				/* 総合評価に応じたボイスを再生する */
+				switch (this->iClearEvaluation_Total)
+				{
+					/* S評価 */
+					case RESULT_EVALUATION_S:
+						/* "最高"ボイスを再生する */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_PRAISE_S);
+						break;
+
+					/* A評価 */
+					case RESULT_EVALUATION_A:
+						/* "結果A"ボイスを再生する */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_RESULT_A);
+						break;
+
+					/* BC評価 */
+					case RESULT_EVALUATION_B:
+					case RESULT_EVALUATION_C:
+						/* "結果BC"ボイスを再生する */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_RESULT_BC);
+						break;
+
+					/* D評価 */
+					case RESULT_EVALUATION_D:
+						/* "結果D"ボイスを再生する */
+						gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_RESULT_D);
+						break;
+				}
 			}
 			break;
 	}
+
+	/* 描写遅延時間を減少 */
+	this->iDrawDelayTime -= 1;
 
 	/* "リザルト"のSEを再生開始するか確認 */
 	if ((bPlaySound == false) && (this->bPlaySoundCount == true))

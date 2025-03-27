@@ -89,6 +89,9 @@ void SceneUi_Combo::RankBorder_JsonLoad()
 // 計算
 void SceneUi_Combo::Process()
 {
+	/* 現在のコンボランクを取得 */
+	int iComboRank_Old = this->iPlayerComboRank;
+
 	/* 現在のコンボ数を取得 */
 	int iNowCombo = this->PlayerStatusList->iGetPlayerComboNowCount();
 
@@ -164,6 +167,25 @@ void SceneUi_Combo::Process()
 
 	/* 現在のコンボランクを設定 */
 	this->PlayerStatusList->SetPlayerComboRunk(this->iPlayerComboRank);
+
+	/* コンボランクが変更されているか確認 */
+	if (iComboRank_Old != this->iPlayerComboRank)
+	{
+		// 変更されている場合
+		/* 変更後のコンボランクに応じて処理を変更 */
+		if (this->iPlayerComboRank == COMBO_RANK_S)
+		{
+			// Sランクである場合
+			/* "最高"ボイスを再生する */
+			gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_PRAISE_S);
+		}
+		else if (this->iPlayerComboRank <= COMBO_RANK_C)
+		{
+			// Cランク以上である場合
+			/* "賞賛"ボイスを再生する */
+			gpDataList_Sound->VOICE_PlaySound(VOICE_DOCTOR_PRAISE);
+		}
+	}
 }
 
 // 描画
