@@ -100,7 +100,11 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 		this->iUpperBodyFrameNo		= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
 		
 		/* クナイを持つ手のフレーム */
-		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");					/* 2025.03.10 菊池雅道	追加 */
+		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");									/* 2025.03.10 菊池雅道	追加 */
+		
+		/* クナイのエフェクトを出すフレーム番号 */
+		this->iKunaiEffectFrameNo = MV1SearchFrame(this->iModelHandle, "Character1_LeftHandPinky4");				/* 2025.03.10 菊池雅道	追加 */
+	
 	}
 
 	/* モーション初期化 */

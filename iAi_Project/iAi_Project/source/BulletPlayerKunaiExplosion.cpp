@@ -106,10 +106,10 @@ void BulletPlayerKunaiExplosion::Draw()
 void BulletPlayerKunaiExplosion::Update()
 {
 	/* クナイの移動ベクトルをスケールして移動 */
-	this->vecPosition = VAdd(this->vecPosition, VScale(vecKunaiMoveDirection, KUNAI_SPEED));;
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecKunaiMoveDirection, EXPLOSION_KUNAI_SPEED));;
 
 	/* クナイの移動距離を加算 */
-	this->fKunaiMoveDistance += KUNAI_SPEED;
+	this->fKunaiMoveDistance += EXPLOSION_KUNAI_SPEED;
 
 	/* クナイの移動距離がターゲットまでの距離を超えたら */
 	if (this->fKunaiMoveDistance >= this->fKunaiTargetDistance)
@@ -162,8 +162,8 @@ void BulletPlayerKunaiExplosion::Explosion()
 			/* エフェクトの削除されるまでの時間を設定 */
 			AddEffect->SetDeleteCount(iKunaiDeleteCount);
 
-			/* エフェクトのスケール設定(大きさは仮) */
-			AddEffect->SetScale(VGet(12.0f, 12.0f, 12.0f));
+			/* エフェクトのスケール設定 */
+			AddEffect->SetScale(VGet(29.0f, 29.0f, 29.0f));
 
 			/* エフェクトの初期化 */
 			AddEffect->Initialization();
@@ -174,18 +174,21 @@ void BulletPlayerKunaiExplosion::Explosion()
 		}
 	}
 
-	// クナイの削除処理
-	/* クナイの削除カウント(攻撃時間)が残っていた場合 */
-	if (iKunaiDeleteCount > 0)
+	if (this->bKunaiAttackFlg == true)
 	{
-		/* クナイの削除カウント(攻撃時間)を減算 */
-		iKunaiDeleteCount--;
+		// クナイの削除処理
+		/* クナイの削除カウント(攻撃時間)が残っていた場合 */
+		if (iKunaiDeleteCount > 0)
+		{
+			/* クナイの削除カウント(攻撃時間)を減算 */
+			iKunaiDeleteCount--;
+		}
+		/* クナイの削除カウント(攻撃時間)が0になった場合 */
+		else
+		{
+			/* クナイの削除フラグを設定 */
+			this->bDeleteFlg = true;
+		}
+	
 	}
-	/* クナイの削除カウント(攻撃時間)が0になった場合 */
-	else
-	{
-		/* クナイの削除フラグを設定 */
-		this->bDeleteFlg = true;
-	}
-
 }

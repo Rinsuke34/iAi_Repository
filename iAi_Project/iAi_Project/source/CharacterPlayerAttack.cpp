@@ -429,8 +429,23 @@ void CharacterPlayer::Player_Melee_Posture()
 			/* エディットによる攻撃チャージフレームの短縮値を取得 */
 			int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
 
-			/* エディットによる攻撃チャージフレームの短縮を適用 */
-			this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame - iEditChargeFlameShortening);
+			//エディットによりチャージフレームが短くなりすぎないようにする
+			/* チャージフレームが一定の値を超えていないか確認 */
+			if (iNowAttakChargeFlame - iEditChargeFlameShortening > iMeleeChargeMaxFlame - PLAYER_MELEE_STRONG_MIN_CHARGE_FRAME)
+			{
+				// 超えている場合
+				/* プレイヤーの現在の攻撃チャージフレームを一定の値に設定 */
+				this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iMeleeChargeMaxFlame - PLAYER_MELEE_STRONG_MIN_CHARGE_FRAME);
+			}
+			else
+			{
+				// 超えていない場合
+				/* エディットによる攻撃チャージフレームの短縮を適用 */
+				this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iNowAttakChargeFlame - iEditChargeFlameShortening);
+			}
+
+			/* プレイヤーの現在の攻撃チャージフレームを取得 */
+			iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
 
 			/* プレイヤーの現在の攻撃チャージフレームを取得 */
 			iNowAttakChargeFlame = this->PlayerStatusList->iGetPlayerNowAttakChargeFlame();
@@ -1409,11 +1424,14 @@ void CharacterPlayer::Player_Projectile()
 
 	// エディットの内容よって処理を変える
 	/* クナイ爆発化フラグが有効か確認する */
-	if (this->PlayerStatusList->bGetKunaiExplosion() == true)
+	if (this->PlayerStatusList->bGetKunaiExplosion() == false)
 	{
 		// クナイ爆発化フラグが有効である場合
 		/* クナイ(爆発)を作成 */
 		this->pBulletKunaiExplosion = new BulletPlayerKunaiExplosion;
+
+		/* クナイ(ワープ)生成座標を設定 */
+		this->pBulletKunaiExplosion->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
 
 		/* ロックオン中のエネミーが存在するか */
 		if (pLockOnEnemy != nullptr)
@@ -1490,7 +1508,7 @@ void CharacterPlayer::Player_Projectile()
 	pProjectileEffect->SetDeleteCount(20);
 
 	/* クナイの手の座標を取得 */
-	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiHandFrameNo);
+	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiEffectFrameNo);
 
 	/* 遠距離攻撃エフェクトの座標を設定 */
 	pProjectileEffect->SetPosition(vecKunaiHand);

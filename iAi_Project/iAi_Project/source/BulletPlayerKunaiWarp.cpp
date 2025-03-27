@@ -107,10 +107,10 @@ void BulletPlayerKunaiWarp::Draw()
 void BulletPlayerKunaiWarp::Update()
 {
 	/* クナイの移動ベクトルをスケールして移動 */
-	this->vecPosition = VAdd(this->vecPosition, VScale(vecKunaiMoveDirection, KUNAI_SPEED));;
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecKunaiMoveDirection, WARP_KUNAI_SPEED));;
 
 	/* クナイの移動距離を加算 */
-	this->fKunaiMoveDistance += KUNAI_SPEED;
+	this->fKunaiMoveDistance += WARP_KUNAI_SPEED;
 
 	/* クナイの移動距離がターゲットまでの距離を超えたら */
 	if (this->fKunaiMoveDistance >= this->fKunaiTargetDistance)
