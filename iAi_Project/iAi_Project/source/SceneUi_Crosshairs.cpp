@@ -36,6 +36,9 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 
 		/* ロックオン対象(サブ)クロスヘア */
 		this->piGrHandle_Target_Sub		= ImageList->piGetImage("UI_Crosshairs/UI_Reticle_EnemyIN_LRed/UI_Reticle_EnemyIN_LRed");
+
+		/* クナイ残段無し表示 */
+		this->piGrHandle_Kunai_Zero		= ImageList->piGetImage("UI_Crosshairs/UI_Kunai_Zero");
 	}
 }
 
@@ -495,5 +498,14 @@ void SceneUi_Crosshairs::Draw_RockOn_Kunai()
 	/* クロスヘア(中心)を描写 */
 	GetGraphSize(*this->piGrHandle_Flont, &iCgSizeX, &iCgSizeY);
 	DrawGraph((SCREEN_SIZE_WIDE / 2) - (iCgSizeX / 2), (SCREEN_SIZE_HEIGHT / 2) - (iCgSizeY / 2), *this->piGrHandle_Flont, TRUE);
+
+	/* 所持クナイ本数が0本であるか確認 */
+	if (this->PlayerStatusList->iGetNowHaveKunai() <= 0)
+	{
+		// 0本である場合
+		/* クナイ残段無し表示を描写 */
+		DrawGraph(890, 400, *this->piGrHandle_Kunai_Zero, TRUE);
+	}
+
 }
 /* 2025.02.17 菊池雅道 遠距離攻撃関連の処理追加 終了 */

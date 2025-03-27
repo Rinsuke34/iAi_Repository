@@ -517,6 +517,12 @@
     <Filter Include="ソース ファイル\シーン\ゲームメイン\ユーザーインターフェイス\チュートリアル">
       <UniqueIdentifier>{8ff9a977-076a-42ad-a7ec-37e1c8079104}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\シーン\ロゴ">
+      <UniqueIdentifier>{cfcb5ad3-89bb-4576-b056-e183c6b99398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\シーン\ロゴ">
+      <UniqueIdentifier>{34751434-2f72-45f3-be07-64a149fbb384}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\AppFunctionDefine.cpp">
@@ -827,6 +833,9 @@
     </ClCompile>
     <ClCompile Include="source\ScreenArrowRight.cpp">
       <Filter>ソース ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SceneLogo.cpp">
+      <Filter>ソース ファイル\シーン\ロゴ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1171,6 +1180,9 @@
     </ClInclude>
     <ClInclude Include="source\ScreenArrowRight.h">
       <Filter>ヘッダー ファイル\オブジェクト\プラットフォーム\ギミック\画面</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SceneLogo.h">
+      <Filter>ヘッダー ファイル\シーン\ロゴ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

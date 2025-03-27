@@ -4,8 +4,9 @@
 #include "VariableDefine.h"
 
 /* シーン */
-#include "SceneTitle.h"
 #include "SceneLoad.h"
+#include "SceneTitle.h"
+#include "SceneLogo.h"
 
 /* データリスト */
 #include "DataList_Input.h"
@@ -29,6 +30,9 @@ namespace SCENE_SET
 
 		/* タイトルシーンを追加 */
 		gpSceneServer->AddSceneReservation(new SceneTitle());
+
+		/* ロゴシーンを追加 */
+		gpSceneServer->AddSceneReservation(new SceneLogo());
 	}
 
 	// ロードシーンをセット

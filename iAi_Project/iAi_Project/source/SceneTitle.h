@@ -10,7 +10,6 @@
 #include "Screen.h"
 #include "LargeScreen.h"
 
-
 /* データリスト */
 #include "DataList_StageStatus.h"
 #include "DataList_Input.h"
@@ -77,5 +76,6 @@ class SceneTitle : public SceneBase
 
 		bool bGameStartFlg;					//スタートフラグ
 		bool bHomeFlg;					//ホームフラグ
+		bool bPlayTitleBgmFlg;				// BGM再生フラグ
 
 };

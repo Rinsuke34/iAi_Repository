@@ -112,7 +112,7 @@ void SceneUi_Tutorial::Initialization()
 			for (auto& name : aImageName)
 			{
 				/* 画像を取得 */
-				std::string str = "UI_Tutorial/" + name;
+				std::string str = "UI_Tutorial/Image/" + name;
 				int* iImageData = ImageList->piGetImage(str);
 
 				/* 取得した画像を保存 */
@@ -185,10 +185,10 @@ void SceneUi_Tutorial::Draw()
 	}
 
 	/* チュートリアルウィンドウを描写 */
-	DrawGraph(522, 28, *this->piGrHandle_Tutorial_Window, TRUE);
+	//DrawGraph(522, 28, *this->piGrHandle_Tutorial_Window, TRUE);
 
 	/* チュートリアル描写画像を描写 */
-	DrawExtendGraph(522 + 20, 28 + 20, 522 + 937 - 20, 28 + 512 - 20, *this->apiGrHandle_Tutorial_Cg[this->iNowItemNo], TRUE);
+	DrawGraph(522, 28, *this->apiGrHandle_Tutorial_Cg[this->iNowItemNo], TRUE);
 
 	/* テキストを描写 */
 	std::string formattedText = PUBLIC_PROCESS::aInsertNewLine(this->aText[this->iNowItemNo], 26);

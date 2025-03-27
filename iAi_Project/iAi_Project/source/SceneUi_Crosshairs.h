@@ -37,5 +37,6 @@ class SceneUi_Crosshairs : public SceneBase
 		int*	piGrHandle_Flont;			// 中心クロスヘア
 		int*	piGrHandle_Target_Main;		// ロックオン対象(メイン)クロスヘア
 		int*	piGrHandle_Target_Sub;		// ロックオン対象(サブ)クロスヘア
+		int*	piGrHandle_Kunai_Zero;		// クナイ残段無し表示
 };
 

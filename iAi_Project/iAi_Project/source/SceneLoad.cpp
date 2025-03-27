@@ -7,17 +7,8 @@
 // コンストラクタ
 SceneLoad::SceneLoad() : SceneBase("Load", 9999, true)
 {
-	/* テスト用 */
-	this->iTestCount = 0;
-
 	/* ロード中フラグを有効にする */
 	gbNowLoadingFlg = true;
-}
-
-// デストラクタ
-SceneLoad::~SceneLoad()
-{
-
 }
 
 // 初期化
@@ -47,6 +38,5 @@ void SceneLoad::Process()
 // 描画
 void SceneLoad::Draw()
 {
-	DrawFormatString(500, 16 * 0, GetColor(255, 255, 255), "なうろーでぃんぐ");
-	DrawFormatString(500, 16 * 1, GetColor(255, 255, 255), "カウント : %d", this->iTestCount);
+
 }

@@ -59,9 +59,6 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 
 	}
 
-	/* BGMを設定 */
-	gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
-
 	/* 最初のステージ番号を"タイトル/ホーム"に設定 */
 	this->StageStatusList->SetNowStageNo(STAGE_NO_TITLE);
 
@@ -108,8 +105,8 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	//カメラ固定位置を設定
 	pSceneStage->SetNowCameraFixedPositionNo(0);
 
-	/* ボイス"タイトルコール"再生 */
-	gpDataList_Sound->VOICE_PlaySound(VOICE_TITLE_CALL);
+	// BGM再生フラグ
+	this->bPlayTitleBgmFlg = true;
 }
 
 // デストラクタ
@@ -127,6 +124,19 @@ void SceneTitle::Initialization()
 // 処理
 void SceneTitle::Process()
 {
+	/* BGM再生フラグが有効ならBGMを再生開始 */
+	if (this->bPlayTitleBgmFlg == true)
+	{
+		/* BGMを設定 */
+		gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
+
+		/* ボイス"タイトルコール"再生 */
+		gpDataList_Sound->VOICE_PlaySound(VOICE_TITLE_CALL);
+
+		/* BGM再生フラグを無効化 */
+		this->bPlayTitleBgmFlg = false;
+	}
+
 	// シーン遷移フラグが有効な場合、タイマーをカウント
 	if (this->bTransition == true)
 	{
