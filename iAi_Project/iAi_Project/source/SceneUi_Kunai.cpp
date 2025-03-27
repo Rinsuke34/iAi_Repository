@@ -44,6 +44,24 @@ void SceneUi_Kunai::Draw()
 	/* クナイフレーム描写 */
 	DrawGraph(60, 765, *this->piGrHandle_Kunai_Frame, true);
 
-	/* 現在のクナイの所持本数を描写 */
-	DrawFormatStringToHandle(95, 785, GetColor(255, 255, 255), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
+	/* 文字枠の補正座標 */
+	st2DPosition astStringCorrectionPos[8];
+	astStringCorrectionPos[0] = { -2,	-2 };
+	astStringCorrectionPos[1] = { 0,	-2 };
+	astStringCorrectionPos[2] = { +2,	-2 };
+	astStringCorrectionPos[3] = { -2,	0 };
+	astStringCorrectionPos[4] = { +2,	0 };
+	astStringCorrectionPos[5] = { -2,	+2 };
+	astStringCorrectionPos[6] = { 0,	+2 };
+	astStringCorrectionPos[7] = { +2,	+2 };
+
+	/* 文字描写(枠) */
+	for (int i = 0; i < 8; i++)
+	{
+		/* 現在のクナイの所持本数を描写 */
+		DrawFormatStringToHandle(95 + astStringCorrectionPos[i].ix, 785 + astStringCorrectionPos[i].iy, GetColor(255, 255, 255), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
+	}
+
+	/* 文字描写(中心) */
+	DrawFormatStringToHandle(95, 785, GetColor(0, 0, 0), giFontHandle_Large, "%d", this->PlayerStatusList->iGetNowHaveKunai());
 }

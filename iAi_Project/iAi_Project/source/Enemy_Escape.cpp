@@ -89,9 +89,15 @@ void Enemy_Escape::MoveEnemy()
 
 	if (this->iNowHp > 0)
 	{
+		// プレイヤーとエネミーの距離の平方を計算
+		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
+			(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) + (this->vecPosition.z - playerPos.z) * (this->vecPosition.z - playerPos.z);
 
-	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_ESCAPE_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_ESCAPE_DISTANCE)// x軸とz軸の距離が600未満の場合
+		// 索敵範囲の半径の平方
+		float detectionRadiusSquared = ENEMY_X_ESCAPE_DISTANCE * ENEMY_X_ESCAPE_DISTANCE;
+
+		// プレイヤーが索敵範囲内にいるか確認
+		if (distanceToPlayerSquared < detectionRadiusSquared)
 	{
 		this->iWaitCount--;
 		if (this->iWaitCount <= 0)

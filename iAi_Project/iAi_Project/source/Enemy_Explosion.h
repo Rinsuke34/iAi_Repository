@@ -41,7 +41,6 @@ private:
 	DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態
 	/*関数*/
 	void MoveEnemy(); // 敵を移動させるメソッドを追加
-	void CliffFallCheck();	// 崖に落ちるかどうかの判定メソッドを追加
 	void Enemy_Gravity();									// 重力処理メソッドを追加
 	void Movement_Horizontal();		// 水平移動
 
@@ -68,6 +67,7 @@ private:
 	bool bDirectionFlg;								// 向き固定フラグ
 	bool bChaseFlg;								// 追跡フラグ
 	bool bSavePositionFlg;							// 座標保存フラグ
+	bool bFallNowFlg;
 	
 
 	//モーション関連変数

@@ -156,7 +156,7 @@ void Enemy_Basic::Defeat()
 		{
 			// コンボランクが"無し"以外である場合
 			// コンボランクに応じたブラッド生成数を乗算
-			iBloodAmount += iBloodAmount * (COMBO_RANK_MAX - iComboRank);
+			iBloodAmount += static_cast<int>((1.f + static_cast<float>(COMBO_RANK_MAX - iComboRank) / COMBO_RANK_MAX) * iBloodAmount);
 		}
 
 		/* ブラッドの生成 */

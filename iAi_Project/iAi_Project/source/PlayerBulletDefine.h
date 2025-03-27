@@ -10,6 +10,7 @@ static const float	PLAYER_MELEE_WEAK_DISTANCE	= 100.0f;			// ‹ßÚUŒ‚(ã)‚ÌƒoƒŒƒ
 
 /* ƒNƒiƒCŠÖ˜A */
 static const float	KUNAI_RANGE				= 5000.0f;			// ƒNƒiƒC‚ÌË’ö‹——£
-static const float	KUNAI_SPEED				= 70.0f;			// ƒNƒiƒC‚Ì‘¬“x
-static const float	KUNAI_ATTACK_RADIUS		= 500.0f;			// ƒNƒiƒC‚ÌUŒ‚”ÍˆÍ(”¼Œa)
+static const float	WARP_KUNAI_SPEED		= 100.0f;			// ƒ[ƒvƒNƒiƒC‚Ì‘¬“x
+static const float	EXPLOSION_KUNAI_SPEED	= 100.0f;			// ”š”­ƒNƒiƒC‚Ì‘¬“x
+static const float	KUNAI_ATTACK_RADIUS		= 1000.0f;			// ƒNƒiƒC‚ÌUŒ‚”ÍˆÍ(”¼Œa)
 static const int	KUNAI_ATTACK_COUNT		= 20;				// ƒNƒiƒC‚ÌUŒ‚‘±ŠÔ(ƒtƒŒ[ƒ€”)

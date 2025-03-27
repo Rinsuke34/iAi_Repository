@@ -96,19 +96,5 @@ namespace PROJECT_INIT
 			/* フォントハンドルを取得(のとせりふ/ネームタグ、オプション用) */
 			giFontHandle_NotoSerifJP_SemiBold	= LoadFontDataToHandle("resource/FontData/NotoSerifJP-SemiBold.dft", 0);
 		}
-
-		/* シェーダー読み込み */
-		{
-			///* シェーダーハンドルを取得 */
-			//giPixelShaderHandle		= LoadPixelShader("resource/Shader/PixelFog.pso");		// ピクセルシェーダー
-			//giVertexShaderhandle	= LoadVertexShader("resource/Shader/VertexFog.vso");	// 頂点シェーダー
-
-			//MV1SetUseOrigShader(TRUE);
-
-			//SetUsePixelShader(giPixelShaderHandle);
-			//SetUseVertexShader(giVertexShaderhandle);
-
-//			DeleteShader(giShaderHandle);
-		}
 	}
 }

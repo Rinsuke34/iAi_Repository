@@ -1193,7 +1193,9 @@ void CharacterPlayer::Movement_Horizontal()
 						/* 移動後座標に球体ポリゴンを作成 */
 						COLLISION_SQHERE stSphere;
 						stSphere.vecSqhere = vecDevisionMovePosition;
-						stSphere.fSqhereRadius = PLAYER_WIDE;
+						
+						/* すり抜け対策に半径を大きくとる */
+						stSphere.fSqhereRadius = PLAYER_WIDE * 3;
 
 						/* 法線の方向にプレイヤーを押し出す */
 						// ※ 対象のコリジョンと接触しなくなるまで押し出す

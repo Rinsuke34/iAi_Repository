@@ -118,9 +118,33 @@ void SceneConversation::Draw()
 	/* ”wŒi•`ŽÊ */
 	DrawGraph(0, 0, *this->piGrhandle_BackGround, TRUE);
 
-	/* —§‚¿ŠG•`ŽÊ */
-	DrawGraph(0,	0, *this->apiGrHandle_Standing_Player[this->astTextDataList[this->iNowTextNo].iLeftCharactorCg], TRUE);
-	DrawGraph(840,	0, *this->apiGrHandle_Standing_Doctor[this->astTextDataList[this->iNowTextNo].iRightCharactorCg], TRUE);
+	/* —§‚¿ŠG•`ŽÊ(¶) */
+	{
+		/* —§‚¿ŠG”Ô†‚ðŽæ“¾ */
+		int iLeftCgIndex = this->astTextDataList[this->iNowTextNo].iLeftCharactorCg;
+
+		/* —§‚¿ŠG‚ªÝ’è‚³‚ê‚Ä‚¢‚é‚©Šm”F */
+		if (iLeftCgIndex != -1)
+		{
+			// Ý’è‚³‚ê‚Ä‚¢‚éê‡
+			/* —§‚¿ŠG‚ð•`ŽÊ */
+			DrawGraph(0, 0, *this->apiGrHandle_Standing_Player[iLeftCgIndex], TRUE);
+		}
+	}
+	
+	/* —§‚¿ŠG•`ŽÊ(‰E) */
+	{
+		/* —§‚¿ŠG”Ô†‚ðŽæ“¾ */
+		int iRightCgIndex = this->astTextDataList[this->iNowTextNo].iRightCharactorCg;
+
+		/* —§‚¿ŠG‚ªÝ’è‚³‚ê‚Ä‚¢‚é‚©Šm”F */
+		if (iRightCgIndex != -1)
+		{
+			// Ý’è‚³‚ê‚Ä‚¢‚éê‡
+			/* —§‚¿ŠG‚ð•`ŽÊ */
+			DrawGraph(840, 0, *this->apiGrHandle_Standing_Doctor[iRightCgIndex], TRUE);
+		}
+	}	
 
 	/* ‰ï˜bƒEƒBƒ“ƒhƒE”wŒi•`ŽÊ */
 	DrawGraph(0, 715, *this->piGrHandle_TextBackGround, TRUE);
@@ -151,7 +175,8 @@ void SceneConversation::Draw()
 	}
 
 	/* ƒeƒLƒXƒg•`ŽÊ */
-	DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_Medium, aDrawText.c_str());
+	//DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_Medium, aDrawText.c_str());
+	DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_Medium, aDrawText.c_str());
 
 	/* ƒXƒLƒbƒvŠm”F‰æ–Ê‚ð•`ŽÊ’†‚Å‚ ‚é‚©Šm”F */
 	if (this->bAddSkipCheckFlg == true)

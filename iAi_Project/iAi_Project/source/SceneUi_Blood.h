@@ -6,6 +6,7 @@
 /* データリスト */
 #include "DataList_GameResource.h"
 #include "DataList_StageStatus.h"
+#include "DataList_PlayerStatus.h"
 
 /* UI(ブラッド(ゲーム内通貨))クラスの宣言 */
 
@@ -23,8 +24,10 @@ class SceneUi_Blood : public SceneBase
 		/* 使用するデータリスト */
 		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
 		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
+		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Blood_Icon;					// ブラッドアイコン
 		int* piGrHandle_Text_Frame;					// テキストフレーム
+		int* piGrHandle_Text_Frame_Magnification;	// テキストフレーム(倍率用)
 };

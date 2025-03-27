@@ -17,6 +17,3 @@ bool gbDrawCollisionFlg				= false;		// 全オブジェクトのコリジョン描写
 bool gbDrawDeleteBackGroundFlg		= false;		// バックグランドオブジェクトの非表示
 bool gbDrawInputTest				= false;		// 入力テストの描写
 
-/* シェーダー */
-//int	giPixelShaderHandle					= 0;		// ピクセルシェーダーハンドル
-//int giVertexShaderhandle				= 0;		// 頂点シェーダーハンドル

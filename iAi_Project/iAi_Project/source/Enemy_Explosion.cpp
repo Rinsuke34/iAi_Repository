@@ -109,7 +109,7 @@ void Enemy_Explosion::MoveEnemy()
 	{
 		iStopCount++;
 	}
-	if (iStopCount > 180)
+	if (iStopCount > 60)
 	{
 		this->bStopFlg = true;
 		iStopCount = 0;
@@ -140,9 +140,16 @@ void Enemy_Explosion::MoveEnemy()
 
 	if (bChaseFlg == TRUE)
 	{
+		// プレイヤーとエネミーの距離の平方を計算
+		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
+			(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
+			(this->vecPosition.z - playerPos.z) * (this->vecPosition.z - playerPos.z);
 
-	//プレイヤーが探知範囲内にいるか確認
-	if (distanceToPlayerX < ENEMY_X_DISTANCE && distanceToPlayerY < ENEMY_Y_DISTANCE && distanceToPlayerZ < ENEMY_Z_DISTANCE && this->bStopFlg == true)  // x軸とz軸の距離が1000未満y軸距離が500未満の場合
+		// 索敵範囲の半径の平方
+		float detectionRadiusSquared = ENEMY_Y_DISTANCE * ENEMY_Y_DISTANCE;
+
+		// プレイヤーが索敵範囲内にいるか確認
+		if (distanceToPlayerSquared < detectionRadiusSquared)
 	{
 		// プレイヤーが探知範囲内にいる場合
         // 探知範囲内にいるエネミーのみ処理を行う
@@ -235,8 +242,40 @@ void Enemy_Explosion::MoveEnemy()
             if (IsEffekseer3DEffectPlaying(this->pEffectDetonation->iGetEffectHandle()))
 			{
                 // エフェクトが再生終了している場合
-				/* 撃破時の処理を実行 */
-				Defeat();
+				/* データリスト取得 */
+				DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+				/* 爆発エフェクト生成 */
+				{
+					/* 時間経過で削除されるエフェクトを追加 */
+					EffectSelfDelete* AddEffect = new EffectSelfDelete();
+
+					/* エフェクト読み込み */
+					AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
+
+					/* エフェクトの座標設定 */
+					AddEffect->SetPosition(this->vecPosition);
+
+					/* エフェクトの回転量設定 */
+					AddEffect->SetRotation(this->vecRotation);
+
+					/* エフェクトの削除されるまでの時間を設定 */
+					AddEffect->SetDeleteCount(75);
+
+					/* エフェクトの初期化 */
+					AddEffect->Initialization();
+
+					/* リストに登録 */
+					{
+						/* "オブジェクト管理"データリストを取得 */
+						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+						/* エフェクトをリストに登録 */
+						ObjectListHandle->SetEffect(AddEffect);
+					}
+				}
+
+				/* エネミーの削除フラグを有効にする */
+				this->bDeleteFlg = true;
 
 				//爆発SE再生
 				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
@@ -399,7 +438,7 @@ void Enemy_Explosion::Enemy_Gravity()
 	this->stVerticalCollision.vecLineStart = this->vecPosition;
 	this->stVerticalCollision.vecLineStart.y += PLAYER_HEIGHT;
 	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
-	this->stVerticalCollision.vecLineEnd.y -= 9999;
+	this->stVerticalCollision.vecLineEnd.y -= 300;
 
 	// 足場を取得
 	auto& PlatformList = ObjectList->GetPlatformList();

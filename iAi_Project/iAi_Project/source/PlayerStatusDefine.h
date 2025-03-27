@@ -14,6 +14,7 @@
 /* 2025.03.18 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 /* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 /* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+/* 2025.03.27 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 #pragma once
 #include <string>
@@ -71,6 +72,7 @@ static const int	PLAYER_DODGE_COOLTIME				= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒN[ƒ‹ƒ
 
 // UŒ‚ŠÖŒW
 static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MELEE_STRONG_MIN_CHARGE_FRAME = 5;			// ‹ßÚUŒ‚(‹­)‚ÌÅ’Z—­‚ßŽžŠÔ				/* 2025.03.27 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	MELEE_STRONG_PERFORMANCE_DESTROY_NUM = 3;			// ‹ßÚUŒ‚(‹­)‚ÅƒJƒƒ‰‰‰o‚ðs‚¤˜A‘±”j‰ó”							/* 2025.03.20 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_MELEE_WEAK_COLLTIME			= 70;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€										/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */

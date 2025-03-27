@@ -85,7 +85,6 @@ void PickUpItem_Blood::Update()
 			pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
 			/* 削除カウントを設定 */
-			// ※仮で1秒間
 			pDamageEffect->SetDeleteCount(60);
 
 			/* エフェクト初期化処理 */
@@ -100,8 +99,22 @@ void PickUpItem_Blood::Update()
 			/* "オブジェクト管理"データリストを取得 */
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
+			/* 基本のブラッド生成数 */
+			int iBloodAmount = 10;
+
+			/* プレイヤーのコンボランクを取得 */
+			int iComboRank = PlayerStatusList->iGetPlayerComboRunk();
+
+			/* コンボランクが"無し"以外であるか確認 */
+			if (iComboRank != COMBO_RANK_NONE)
+			{
+				// コンボランクが"無し"以外である場合
+				// コンボランクに応じたブラッド生成数を乗算
+				iBloodAmount += static_cast<int>((1.f + static_cast<float>(COMBO_RANK_MAX - iComboRank) / COMBO_RANK_MAX) * iBloodAmount);
+			}
+
 			/* ブラッドの生成 */
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < iBloodAmount; i++)
 			{
 				/* 時間経過で削除されるアイテムを追加 */
 				EffectItemBase* AddItem = new EffectItem_Blood();

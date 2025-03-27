@@ -11,7 +11,7 @@ SceneUi_Combo::SceneUi_Combo() : SceneBase("UI_Combo", 103, false)
 {
 	/* データリスト取得 */
 	{
-		/* "プレイヤー状態"を取得 */
+		/* "プレイヤー状態管理"を取得 */
 		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "ゲーム状態管理"を取得 */
