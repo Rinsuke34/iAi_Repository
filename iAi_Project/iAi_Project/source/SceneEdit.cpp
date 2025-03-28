@@ -139,7 +139,7 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			/* 1枠目 */
 			{
 				this->NewEditData[0].iEditEffect	= 2;
-				this->NewEditData[0].iEditRank		= 2;
+				this->NewEditData[0].iEditRank		= 1;
 				this->NewEditData[0].iEditCost		= 500;
 				this->NewEditData[0].aText			= "ブラッド取得量が5増加";
 			}
@@ -152,10 +152,10 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			}
 			/* 3枠目 */
 			{
-				this->NewEditData[2].iEditEffect	= 9;
+				this->NewEditData[2].iEditEffect	= 11;
 				this->NewEditData[2].iEditRank		= 3;
-				this->NewEditData[2].iEditCost		= 3000;
-				this->NewEditData[2].aText			= "一部の敵攻撃を跳ね返せるようになる";
+				this->NewEditData[2].iEditCost		= 10000;
+				this->NewEditData[2].aText			= "クナイ投擲時に爆発しなくなり、代わりに着弾地点にワープする";
 			}
 		}
 		else

@@ -223,7 +223,7 @@ void SceneResult::Process_Main()
 			{
 				// 開始直後である場合
 				/* "リザルト小評価"のSEを再生 */
-				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_RESULT_RANK_SMALL);
 			}
 			break;
 
@@ -246,7 +246,7 @@ void SceneResult::Process_Main()
 			{
 				// 開始直後である場合
 				/* "リザルト小評価"のSEを再生 */
-				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_RESULT_RANK_SMALL);
 			}
 			break;
 
@@ -269,7 +269,7 @@ void SceneResult::Process_Main()
 			{
 				// 開始直後である場合
 				/* "リザルト小評価"のSEを再生 */
-				gpDataList_Sound->SE_PlaySound_Loop(SE_SYSTEM_RESULT_RANK_SMALL);
+				gpDataList_Sound->SE_PlaySound(SE_SYSTEM_RESULT_RANK_SMALL);
 			}
 			break;
 
@@ -284,7 +284,7 @@ void SceneResult::Process_Main()
 
 		/* 総合評価描写 */
 		case RESULT_DRAW_FAZE_TOTAL_EVALUATION:
-			/* "リザルト"のSEを再生中に設定 */
+			/* "リザルト"のSEを非再生中に設定 */
 			this->bPlaySoundCount = false;
 
 			/* 描写開始直後であるか */
@@ -320,6 +320,12 @@ void SceneResult::Process_Main()
 						break;
 				}
 			}
+			break;
+
+		/* 描写終了 */
+		case RESULT_DRAW_END:
+			/* "リザルト"のSEを非再生中に設定 */
+			this->bPlaySoundCount = false;
 			break;
 	}
 
@@ -359,7 +365,7 @@ void SceneResult::Process_Main()
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 
 		/* 総合評価描写が終了しているか確認 */
-		if (this->iDrawFaze > RESULT_DRAW_FAZE_TOTAL_EVALUATION)
+		if (this->iDrawFaze > RESULT_DRAW_END)
 		{
 			// 終了している場合
 			/* ゲーム状態を"エディット"に変更する */
@@ -386,8 +392,8 @@ void SceneResult::Process_Main()
 		else
 		{
 			// 終了していない場合
-			/* 描写フェーズを"総合評価描写"まで進める */
-			this->iDrawFaze = RESULT_DRAW_FAZE_TOTAL_EVALUATION;
+			/* 描写フェーズを"描写終了"まで進める */
+			this->iDrawFaze = RESULT_DRAW_END;
 		}
 	}
 }

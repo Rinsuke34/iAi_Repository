@@ -1,5 +1,6 @@
 /* 2025.03.13 菊池雅道 ファイル作成 */
 /* 2025.03.17 菊池雅道 ワープ処理修正 */
+/* 2025.03.27 菊池雅道 ワープ処理修正 */
 
 #include "BulletPlayerKunaiWarp.h"
 
@@ -121,6 +122,8 @@ void BulletPlayerKunaiWarp::Update()
 }
 
 /* 2025.03.17 菊池雅道 ワープ処理修正 開始 */
+/* 2025.03.27 菊池雅道 ワープ処理修正 開始 */
+
 // ワープ処理
 void BulletPlayerKunaiWarp:: Warp()
 {
@@ -264,12 +267,94 @@ void BulletPlayerKunaiWarp:: Warp()
 	else
 	{
 		// ターゲットエネミーが存在しない場合
-		// ターゲット座標にワープする
+		
+		/* クナイの進行方向を正規化 */
+		VECTOR vecWarpOffset = VNorm(vecKunaiMoveDirection);
+		
+		/* 高さ成分は除く */
+		vecWarpOffset.y = 0;
+
+		/* プレイヤーのワープ位置(着弾地点からプレイヤーの幅分ずらす) */
+		VECTOR vecPlayerWarpPosition = VAdd(this->vecKunaiTargetPosition, VScale(vecWarpOffset, - PLAYER_WIDE));
+
+		/* プレイヤーの足場を判定する線分 */
+		COLLISION_LINE stCollisionLine;
+
+		/* 足場を取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
+
+		/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
+		stCollisionLine.vecLineStart = vecPlayerWarpPosition;
+		stCollisionLine.vecLineStart.y += PLAYER_HEIGHT;
+		stCollisionLine.vecLineEnd = stCollisionLine.vecLineStart;
+		stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
+
+		/* 足場と接触するか確認 */
+		for (auto* platform : PlatformList)
+		{
+			/* 足場と線分の接触判定を行う */
+			MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
+
+			/* 接触しているか確認 */
+			if (stHitPolyDim.HitFlag == 1)
+			{
+				// 接触している場合
 		/* クナイの座標をターゲット座標に固定 */
 		this->vecPosition = this->vecKunaiTargetPosition;
 
 		/* プレイヤーをクナイの座標に移動 */
 		this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
+
+			}
+			else
+			{
+				// 接触していない場合
+				// 近くに足場があったら移動する
+				/* 足場を探すカプセルコリジョン */
+				COLLISION_CAPSULE stSearchPlatform;
+
+				/* コリジョンの大きさを設定 */
+				stSearchPlatform.vecCapsuleTop = VAdd(this->vecKunaiTargetPosition, VGet(0.f, PLAYER_HEIGHT * 3, 0.f));
+				stSearchPlatform.vecCapsuleBottom = vecKunaiTargetPosition;
+				stSearchPlatform.fCapsuleRadius = PLAYER_WIDE;
+
+				/* 足場を探す */
+				for (auto* platform : PlatformList)
+				{
+					/* 足場とコリジョンの接触判定を行う */
+					MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stSearchPlatform);
+
+					/* 接触しているか確認 */
+					if (stHitPolyDim.HitNum > 0)
+					{
+						// 接触している場合
+						/* 接触したポリゴンから法線ベクトルを取得する */
+						for (int j = 0; j < stHitPolyDim.HitNum; j++)
+						{
+							/* 法線ベクトルを取得 */
+							/* 法線ベクトルが0であるならば、対象外とする */
+							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+							{
+								
+								/* 法線ベクトルが上向きであるか確認 */
+								if (stHitPolyDim.Dim[j].Normal.y > 0.1)
+								{
+									// 上向きである場合
+									/* 足場に乗るようにプレイヤーのワープ位置を設定 */
+									vecPlayerWarpPosition = VAdd(this->vecKunaiTargetPosition, VScale(vecWarpOffset, + PLAYER_WIDE));
+									
+									/* 足場の高さにする */
+									vecPlayerWarpPosition.y = stHitPolyDim.Dim[j].Position[0].y;
+								}
+							}
+						}
+					}
+				}
+				
+				/* プレイヤーの座標をワープ位置に設定 */
+				this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPosition);
+			}
+		}
 
 		/* プレイヤーの攻撃状態を取得 */
 		int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
@@ -344,3 +429,4 @@ void BulletPlayerKunaiWarp:: Warp()
 	}
 }
 /* 2025.03.17 菊池雅道 ワープ処理修正 終了 */
+/* 2025.03.27 菊池雅道 ワープ処理修正 終了 */

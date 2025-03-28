@@ -123,9 +123,12 @@ void Enemy_GoalObject::Update()
 	}
 
 	/* HPが0になっているか確認 */
-	if (this->iGetNowHP() <= 0)
+	if (this->iNowHp <= 0)
 	{
 		// HPが0以下の場合
+		/* BGMを停止する */
+		gpDataList_Sound->BGM_StopSound();
+
 		/* ゲーム状態を"ステージクリア"に変更する */
 		this->StageStatusList->SetGameStatus(GAMESTATUS_STAGE_CLEAR_SETUP);
 

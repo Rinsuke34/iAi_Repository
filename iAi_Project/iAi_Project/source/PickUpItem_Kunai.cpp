@@ -114,7 +114,7 @@ void PickUpItem_Kunai::Update()
 		this->ObjectList->SetEffect(pAddEffect);
 
 		/* エフェクト待機時間をリセット */
-		this->iAddEffectDelay = 10;
+		this->iAddEffectDelay = 100;
 	}
 }
 

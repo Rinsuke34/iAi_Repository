@@ -133,7 +133,7 @@ class CharacterPlayer : public CharacterBase
 
 		/* 変数 */
 		VECTOR				vecMove;				// 移動量
-		VECTOR				vecNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計			/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
+		VECTOR				vecWallKickNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計			/* 2025.02.22 菊池雅道 壁キック関連の変数追加 */
 
 		/* 変数(デバッグ用) */
 		COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン

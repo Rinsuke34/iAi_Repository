@@ -18,6 +18,7 @@
 /* 2025.03.11 菊池雅道	回避の処理修正 */
 /* 2025.03.12 菊池雅道	スローモーション処理追加 */
 /* 2025.03.18 菊池雅道	エディットによる処理追加 */
+/* 2025.03.27 菊池雅道	衝突判定処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -300,8 +301,8 @@ void CharacterPlayer::Player_Move()
 			float fKickWallSpeed = fKickWallHorizontalSpeed * (1.0f - (float)(iNowAfterKickWallFlame / iKickWallFlame));
 			
 			/* 壁の法線方向(水平成分のみ)へ移動する */
-			this->vecMove.x += vecNormalSum.x * fKickWallSpeed;
-			this->vecMove.z += vecNormalSum.z * fKickWallSpeed;
+			this->vecMove.x += vecWallKickNormalSum.x * fKickWallSpeed;
+			this->vecMove.z += vecWallKickNormalSum.z * fKickWallSpeed;
 
 		}
 		else
@@ -1092,6 +1093,7 @@ void CharacterPlayer::Movement_Vertical()
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
 /* 2025.03.05 菊池雅道	衝突判定処理修正	開始 */
+/* 2025.03.27 菊池雅道	衝突判定処理修正	開始 */
 
 // 移動処理(水平方向)
 void CharacterPlayer::Movement_Horizontal()
@@ -1124,9 +1126,20 @@ void CharacterPlayer::Movement_Horizontal()
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
 		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius = PLAYER_WIDE;
 		
+		/* 法線ベクトル取得用のカプセルコリジョン */
+		COLLISION_CAPSULE stNormalCollision;
+
+		/* 法線ベクトル取得用のカプセルコリジョンは移動前のプレイヤーの位置に作成 */
+		stNormalCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+		stNormalCollision.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+		/* プラットフォームに接触するように半径はプレイヤーより大きめにとる */
+		stNormalCollision.fCapsuleRadius = PLAYER_WIDE + 10.0f;
 
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetPlatformList();
+
+		/* プレイヤーの接触する法線ベクトル合計 */
+		VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
 
 		/* 足場と接触するか確認 */
 		for (auto* platform : PlatformList)
@@ -1134,8 +1147,11 @@ void CharacterPlayer::Movement_Horizontal()
 			/* 足場との接触判定 */
 			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
 			{
-				/* オブジェクトと接触しているか確認 */
+				/* 移動時にプラットフォームに接触しているか確認 */
 				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision[i]);
+
+				/* プラットフォームの法線ベクトルを取得する */
+				MV1_COLL_RESULT_POLY_DIM stHitPolyDimNormal = platform->HitCheck_Capsule(stNormalCollision);
 
 				/* 接触しているか確認 */
 				if (stHitPolyDim.HitNum > 0)
@@ -1150,6 +1166,27 @@ void CharacterPlayer::Movement_Horizontal()
 						this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
 					}
 
+					// 押し出し処理用の法線ベクトル
+					/* 接触したポリゴンから法線ベクトルを取得し加算する */
+					for (int j = 0; j < stHitPolyDimNormal.HitNum; j++)
+					{
+						/* 法線ベクトルを取得 */
+						// ※ 法線ベクトルが0であるならば、加算しない
+						if (VSize(stHitPolyDimNormal.Dim[j].Normal) > 0.f)
+						{
+							// 法線ベクトルが0でない場合
+							/* 法線ベクトルのY軸を初期化 */
+							stHitPolyDimNormal.Dim[j].Normal.y = 0.f;
+
+							/* 法線ベクトルを正規化 */
+							VECTOR vecNormal = VNorm(stHitPolyDimNormal.Dim[j].Normal);
+
+							/* 法線ベクトルを合計に加算 */
+							vecNormalSum = VAdd(vecNormalSum, vecNormal);
+						}
+					}
+
+					// 壁キック用の法線ベクトル
 						/* 接触したポリゴンから法線ベクトルを取得し加算する */
 						for (int j = 0; j < stHitPolyDim.HitNum; j++)
 						{
@@ -1165,13 +1202,13 @@ void CharacterPlayer::Movement_Horizontal()
 								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
 
 								/* 法線ベクトルを合計に加算 */
-								vecNormalSum = VAdd(vecNormalSum, vecNormal);
+							vecWallKickNormalSum = VAdd(vecWallKickNormalSum, vecNormal);
 							}
 						}
 
 						/* 取得した法線ベクトルを正規化 */
 						// ※ 取得した法線ベクトルの平均を取得
-						vecNormalSum = VNorm(vecNormalSum);
+					vecWallKickNormalSum = VNorm(vecWallKickNormalSum);
 
 					/* 壁の接触フラグを設定 */
 					this->PlayerStatusList->SetPlayerWallTouchFlg(true);
@@ -1179,23 +1216,11 @@ void CharacterPlayer::Movement_Horizontal()
 					/* 壁に接触してからの経過フレーム数をリセット */
 					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
 
-					// プレイヤーが移動しているかによって処理を分岐
-					/* プレイヤーの移動量を分割して判定する回数を確認 */
-					if (iMoveHitCheckCount > 0)
-					{
-						// 移動量を分割して判定する回数が1以上の場合(移動している場合)
-						/* 移動量を分割して衝突判定する */
-						for (int i = 0; i < iMoveHitCheckCount; i++)
-						{
-							/* 移動後座標に球体ポリゴンを作成 */
-							vecDevisionMovePosition = VAdd(vecDevisionMovePosition, vecDevisionMove);
-
-						/* 移動後座標に球体ポリゴンを作成 */
+					/* プレイヤー座標に球体ポリゴンを作成 */
 						COLLISION_SQHERE stSphere;
-						stSphere.vecSqhere = vecDevisionMovePosition;
-						
-						/* すり抜け対策に半径を大きくとる */
-						stSphere.fSqhereRadius = PLAYER_WIDE * 3;
+					stSphere.vecSqhere = this->vecPosition;
+					stSphere.vecSqhere.y = stSphere.vecSqhere.y + PLAYER_HEIGHT / 2;
+					stSphere.fSqhereRadius = PLAYER_WIDE;
 
 						/* 法線の方向にプレイヤーを押し出す */
 						// ※ 対象のコリジョンと接触しなくなるまで押し出す
@@ -1211,25 +1236,15 @@ void CharacterPlayer::Movement_Horizontal()
 
 						/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
 						vecNextPosition = stSphere.vecSqhere;
+					vecNextPosition.y = this->vecPosition.y;
 
 						// 球体コリジョンと衝突があった場合、分割移動処理を終了する
 						if (stHitPolyDim.HitNum > 0)
 						{
 							break;
 						}
-
-					
-					}
-					}
-					else
-					{
-						// 移動量を分割して判定する回数が0の場合(移動していない場合)
-						/* 法線ベクトルの方向へ押し出し処理を行う */
-						vecNextPosition = VAdd(this->vecPosition, VScale(vecNormalSum, 1.f));
 				}
 			}
-				
-			}	
 		}
 	}
 
@@ -1282,7 +1297,7 @@ void CharacterPlayer::Movement_Horizontal()
 			vecInputDerection.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
 
 			/* 壁の法線ベクトルとスティック入力方向の内積を求める */
-			float fWallInputDot = VDot(vecNormalSum, vecInputDerection);
+			float fWallInputDot = VDot(vecWallKickNormalSum, vecInputDerection);
 
 			/* 壁の法線ベクトルとスティック入力方向の内積が正(同じ向き)か確認する */
 			if (fWallInputDot > 0)
@@ -1321,3 +1336,4 @@ void CharacterPlayer::Movement_Horizontal()
 /* 2025.02.07 菊池雅道	衝突判定処理修正	終了 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	終了 */
 /* 2025.03.05 菊池雅道	衝突判定処理修正	終了 */
+/* 2025.03.27 菊池雅道	衝突判定処理修正	終了 */
