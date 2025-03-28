@@ -1507,7 +1507,7 @@ void CharacterPlayer::Player_Projectile()
 	pProjectileEffect->SetDeleteCount(20);
 
 	/* クナイの手の座標を取得 */
-	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiHandFrameNo);
+	VECTOR vecKunaiHand = MV1GetFramePosition(this->iModelHandle, iKunaiEffectFrameNo);
 
 	/* 遠距離攻撃エフェクトの座標を設定 */
 	pProjectileEffect->SetPosition(vecKunaiHand);
