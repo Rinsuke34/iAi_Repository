@@ -10,8 +10,12 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
-	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
-	this->iBloodAmount = 10;					// ブラッド量
+
+	// オブジェクトの種類をTypeEnemyに設定
+	this->iObjectType = OBJECT_TYPE_ENEMY;
+
+	// 出現するブラッド量を設定
+	this->iBloodAmount = 10;
 
 	/* データリスト取得 */
 	{
@@ -29,29 +33,62 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Beam/Enemy_Beam");
 	}
 
-	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
-	this->iFiringCount = 0;	// 発射カウント
-	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;			// ビームチャージカウント
-	this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;	//ビームの持続カウント
-	this->bEffectGenerated		 = false;					// 警告エフェクト生成フラグ
-	this->bHitEffectGenerated	 = false;					// ヒットエフェクト生成フラグ
-	this->bChargeFlg			 = false;					// チャージフラグ
-	this->bFiringFlg			 = false;					// 発射フラグ
-	this->bDirectionFlg			 = true;					// 向き固定フラグ
-	this->bBeamSEFlg			 = false;					// ビームSEフラグ
-	this->bShotFlg				 = true;					// ショットフラグ
-	this->bWarningEffectFlg		 = true;					// 警告エフェクトフラグ
+	/* オブジェクト取得 */
+
+	// プレイヤーを取得
+	this->pPlayer = ObjectList->GetCharacterPlayer();
+
+	/* 初期化 */
+
+	// 発射カウント
+	this->iFiringCount = 0;
+
+	//ビームチャージカウント
+	this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;
+
+	//ビーム持続カウント
+	this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;
+
+	//ヒットエフェクト生成フラグ
+	this->bHitEffectGenerated = false;
+
+	// チャージフラグ
+	this->bChargeFlg = false;
+
+	// 発射フラグ
+	this->bFiringFlg = false;
+
+	// 向き固定フラグ
+	this->bDirectionFlg = true;
+
+	// ビームSEフラグ
+	this->bBeamSEFlg = false;
+
+	// ショットフラグ
+	this->bShotFlg = true;
+
+	// 警告エフェクトフラグ
+	this->bWarningEffectFlg = true;					// 警告エフェクトフラグ
 
 	/*モーション関連*/
-// エネミーモデルに攻撃のアニメーションをアタッチする
+
+	// エネミーモデルに攻撃のアニメーションをアタッチする
 	this->iBeamAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
+
 	// アタッチした攻撃アニメーションの総再生時間を取得する
 	this->fBeamAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackAttachIndex);
 
-	this->bBeamAttackMotionFlg			= false;			// 攻撃モーションフラグ
-	this->bBeamAttackNowMotionFlg		= false;			// 攻撃中モーションフラグ
-	this->bBeamAttackEndMotionFlg		= false;			// 攻撃終了モーションフラグ
-	this->bBeamAttackEndLoopMotionFlg	= false;			// 攻撃終了ループモーションフラグ
+	// 攻撃モーションフラグ
+	this->bBeamAttackMotionFlg = false;
+
+	// 攻撃中モーションフラグ
+	this->bBeamAttackNowMotionFlg = false;
+
+	// 攻撃終了モーションフラグ
+	this->bBeamAttackEndMotionFlg = false;
+
+	// 攻撃終了ループモーションフラグ
+	this->bBeamAttackEndLoopMotionFlg = false;
 }
 
 // デストラクタ
@@ -64,13 +101,19 @@ Enemy_Beam::~Enemy_Beam()
 void Enemy_Beam::Initialization()
 {
 	/* コリジョンセット */
+	//エネミーのコリジョン半径を設定
 	this->stCollisionCapsule.fCapsuleRadius = 100;
+
+	//エネミーのカプセルコリジョンの上座標を設定
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+
+	//エネミーのカプセルコリジョンの下座標を設定
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 
+	// 発光するフレームの処理
 	UpdataLightFrame();
 }
 
@@ -89,8 +132,8 @@ void Enemy_Beam::MoveEnemy()
 	//攻撃予告エフェクトの座標を設定
 	VECTOR vecWarning = VGet(vecPosition.x, vecPosition.y + vecPosition.y / 2, vecPosition.z);
 
-	
 
+	//エネミーの向き固定フラグが有効か確認
 	if (this->bDirectionFlg == true)
 	{
 		//エネミーの向きを設定
@@ -99,13 +142,15 @@ void Enemy_Beam::MoveEnemy()
 		MV1SetRotationXYZ(iModelHandle, VRot);
 	}
 
-	//プレイヤーとエネミーのXZ軸の距離を取得
+	//プレイヤーとエネミー軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
+		//エネミーが撃破されていない場合
 		// プレイヤーとエネミーの距離の平方を計算
 		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
 			(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
@@ -114,71 +159,83 @@ void Enemy_Beam::MoveEnemy()
 		// 索敵範囲の半径の平方
 		float detectionRadiusSquared = ENEMY_Y_DISTANCE * ENEMY_Y_DISTANCE;
 
-
-		iFiringCount--;	// 発射カウントを減少
+		// 発射カウントを減少
+		iFiringCount--;
 
 		// プレイヤーが索敵範囲内にいるか確認
 		if (distanceToPlayerSquared < detectionRadiusSquared)
-	{
-		// プレイヤーが探知範囲内にいる場合
-
-		//誘導カウントが発射カウントより大きいか確認
-		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 		{
-			// 誘導カウントが発射カウントより大きい場合
-			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			// プレイヤーが探知範囲内にいる場合
+
+			//誘導カウントが発射カウントより大きいか確認
+			if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 			{
-				this->bWarningEffectFlg = false;
-
-				this->bShotFlg = true;
-			/* 攻撃予告エフェクト追加 */
-			{
-				/* 攻撃予告エフェクトを生成 */
-				this->pEffectWarning = new EffectManualDelete();
-
-				/* エフェクトの読み込み */
-				this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
-
-				/* エフェクトの座標設定 */
-				this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
-
-				/* エフェクトの回転量設定 */
-				this->pEffectWarning->SetRotation(this->vecRotation);
-
-				/* エフェクトの初期化 */
-				this->pEffectWarning->Initialization();
-
-				/* エフェクトをリストに登録 */
+				// 誘導カウントが発射カウントより大きい場合
+				//攻撃予告エフェクトフラグが有効か確認
+				if (this->bWarningEffectFlg == true)
 				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->pEffectWarning);
+					// 攻撃予告エフェクトフラグが有効の場合
+					//攻撃予告エフェクトフラグを無効化
+					this->bWarningEffectFlg = false;
+
+					// ショットフラグを有効化
+					this->bShotFlg = true;
+
+					/* 攻撃予告エフェクト追加 */
+					{
+						/* 攻撃予告エフェクトを生成 */
+						this->pEffectWarning = new EffectManualDelete();
+
+						/* エフェクトの読み込み */
+						this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
+
+						/* エフェクトの座標設定 */
+						this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
+
+						/* エフェクトの回転量設定 */
+						this->pEffectWarning->SetRotation(this->vecRotation);
+
+						/* エフェクトの初期化 */
+						this->pEffectWarning->Initialization();
+
+						/* エフェクトをリストに登録 */
+						{
+							/* "オブジェクト管理"データリストを取得 */
+							DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
+							/* エフェクトをリストに登録 */
+							ObjectListHandle->SetEffect(this->pEffectWarning);
+						}
+					}
 				}
 			}
 		}
-		}
-	}
-	//エフェクトがnullptrでないか確認
-	if (this->pEffectWarning != nullptr)
+		//エフェクトがnullptrでないか確認
+		if (this->pEffectWarning != nullptr)
 		{
-		// エフェクトが再生中かどうか確認
-		if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
-		{
-			if (this->bShotFlg == true)
+			//エフェクトがnullptrでない場合
+			// エフェクトが再生中かどうか確認
+			if (IsEffekseer3DEffectPlaying(this->pEffectWarning->iGetEffectHandle()))
 			{
-				// エフェクトが再生終了している場合
-			// ビームを発射する
-			Player_Range_Beam_Shot();
+				// エフェクトが再生中の場合
+				//ショットフラグが有効か確認
+				if (this->bShotFlg == true)
+				{
+					// ショットフラグが有効の場合
+					// ビームを発射する
+					Player_Range_Beam_Shot();
 
-			// 発射カウントを初期化
-			this->iFiringCount = ENEMY_BEAM_INTERVAL;
+					// 発射カウントを初期化
+					this->iFiringCount = ENEMY_BEAM_INTERVAL;
 
-				this->bWarningEffectFlg = true;
+					//攻撃予告エフェクトフラグを有効化
+					this->bWarningEffectFlg = true;
+				}
+
+				//ショットフラグが無効か確認
+				this->bShotFlg = false;
 			}
-			this->bShotFlg = false;
 		}
-	}
 
 	}
 }
@@ -186,44 +243,46 @@ void Enemy_Beam::MoveEnemy()
 // ビームの発射
 void Enemy_Beam::Player_Range_Beam_Shot()
 {
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
+		//エネミーが撃破されていない場合
 	// プレイヤーの座標を取得
-	VECTOR playerPos = pPlayer->vecGetPosition();
+		VECTOR playerPos = pPlayer->vecGetPosition();
 
-	// ビームを生成
-	this->pBulletRangeBeam = new BulletEnemyRangeBeam;
+		// ビームを生成
+		this->pBulletRangeBeam = new BulletEnemyRangeBeam;
 
-	//効果音再生
-	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_CHARGE, this->vecPosition, SE_3D_SOUND_RADIUS);
+		//効果音再生
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_CHARGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 
-	//チャージフラグを有効化
-	this->bChargeFlg = true;
+		//チャージフラグを有効化
+		this->bChargeFlg = true;
 
-	/* 攻撃の生成方向の設定 */
-	/* 攻撃座標を算出 */
+		/* 攻撃の生成方向の設定 */
+		/* 攻撃座標を算出 */
 
-	//エネミーの向きを初期化
-	VECTOR vecAdd = VGet(0, 0, 0);
+		//エネミーの向きを初期化
+		VECTOR vecAdd = VGet(0, 0, 0);
 
-	// 発射させる方向を設定
-	vecAdd = VNorm(vecAdd);
+		// 発射させる方向を設定
+		vecAdd = VNorm(vecAdd);
 
-	// 発射させる高さと幅を設定
-	vecAdd.y = PLAYER_HEIGHT / 2.f;
-	vecAdd.x = PLAYER_WIDE / 2.f;
+		// 発射させる高さと幅を設定
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
+		vecAdd.x = PLAYER_WIDE / 2.f;
 
-	// 攻撃生成座標をエネミーが向いている方向に設定
-	this->pBulletRangeBeam->SetPosition(VAdd(this->vecPosition, vecAdd));
+		// 攻撃生成座標をエネミーが向いている方向に設定
+		this->pBulletRangeBeam->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-	// 移動する弾の向きを設定
-	this->pBulletRangeBeam->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
+		// 移動する弾の向きを設定
+		this->pBulletRangeBeam->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
 
-	//初期化
-	this->pBulletRangeBeam->Initialization();
+		//初期化
+		this->pBulletRangeBeam->Initialization();
 
-	//バレットリストに追加
-	ObjectList->SetBullet(this->pBulletRangeBeam);
+		//バレットリストに追加
+		ObjectList->SetBullet(this->pBulletRangeBeam);
 	}
 
 }
@@ -231,91 +290,125 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 //チャージ
 void Enemy_Beam::Charge()
 {
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
-	if (this->bChargeFlg == TRUE)
-	{
-		iChargeCount--;	// チャージカウントを減算
-
-		this->bDirectionFlg = true;
-
-		// チャージカウントが0以下か確認
-		if (this->iChargeCount <= 0)
+		//エネミーが撃破されていない場合
+		//チャージフラグが有効か確認
+		if (this->bChargeFlg == TRUE)
 		{
-			// チャージカウントが0以下の場合
-			//攻撃終了ループモーションフラグを無効化
-			this->bBeamAttackEndLoopMotionFlg = false;
+			// チャージフラグが有効の場合
+			// チャージカウントを減算
+			iChargeCount--;
 
-			//攻撃モーションフラグを有効化
-			this->bBeamAttackMotionFlg = true;
+			//向き固定フラグを有効化
+			this->bDirectionFlg = true;
 
-			// チャージカウントを初期化
-			this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;
+			// チャージカウントが0以下か確認
+			if (this->iChargeCount <= 0)
+			{
+				// チャージカウントが0以下の場合
+				//攻撃終了ループモーションフラグを無効化
+				this->bBeamAttackEndLoopMotionFlg = false;
 
-			this->bChargeFlg = false;
+				//攻撃モーションフラグを有効化
+				this->bBeamAttackMotionFlg = true;
 
-			this->bFiringFlg = true;
+				// チャージカウントを初期化
+				this->iChargeCount = ENEMY_BEAM_CHARGE_COUNT;
 
-			this->bDirectionFlg = false;
+				//チャージフラグを無効化
+				this->bChargeFlg = false;
 
-			this->bBeamSEFlg = true;
+				//発射フラグを有効化
+				this->bFiringFlg = true;
+
+				//向き固定フラグを無効化
+				this->bDirectionFlg = false;
+
+				//ビームSEフラグを有効化
+				this->bBeamSEFlg = true;
+			}
+		}
+
+		//発射フラグが有効か確認
+		if (this->bFiringFlg == TRUE)
+		{
+			// 発射フラグが有効の場合
+			//ビームSEフラグが有効か確認
+			if (this->bBeamSEFlg == TRUE)
+			{
+				// ビームSEフラグが有効の場合
+				//効果音再生
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+				//ビームSEフラグを無効化
+				this->bBeamSEFlg = false;
+			}
+
+			// ビームの持続カウントを減算
+			this->iBeamDurationCount--;
+			// ビームの持続カウントが0以下か確認
+			if (this->iBeamDurationCount <= 0)
+			{
+				// ビームの持続カウントが0以下の場合
+				this->bFiringFlg = false;
+
+				//ビームの持続カウントを初期化
+				this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;
+			}
 		}
 	}
-	if (this->bFiringFlg == TRUE)
-	{
-		if (this->bBeamSEFlg == TRUE)
-		{
-			//効果音再生
-			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
-
-			this->bBeamSEFlg = false;
-		}
-
-		// ビームの持続カウントを減算
-		this->iBeamDurationCount--;
-		// ビームの持続カウントが0以下か確認
-		if (this->iBeamDurationCount <= 0)
-		{
-			// ビームの持続カウントが0以下の場合
-			this->bFiringFlg = false;
-
-			this->iBeamDurationCount = ENEMY_BEAM_DURATION_COUNT;
-		}
-	}
-}
 }
 
 // エネミーモデルアニメーション
 void Enemy_Beam::Enemy_Model_Animation()
 {
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
-
-	if (this->bBeamAttackNowMotionFlg)
-	{
-		this->fBeamAttackNowPlayTime += 1.0f;
-		MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackNowAttachIndex, this->fBeamAttackNowPlayTime);
-
-		if (this->fBeamAttackNowPlayTime >= this->fBeamAttackNowTotalTime)
+		//エネミーが撃破されていない場合
+		//攻撃モーションフラグが有効か確認
+		if (this->bBeamAttackNowMotionFlg == true)
 		{
-			if (this->iBeamDurationCount <= this->iChargeCount)
+			// 攻撃モーションフラグが有効の場合
+			// アタッチしたアニメーションを再生時間を加算する
+			this->fBeamAttackNowPlayTime += 1.0f;
+
+			// アタッチしたアニメーションの再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iBeamAttackNowAttachIndex, this->fBeamAttackNowPlayTime);
+
+			// アタッチしたアニメーションの再生時間が総再生時間に達したか確認
+			if (this->fBeamAttackNowPlayTime >= this->fBeamAttackNowTotalTime)
 			{
-				// アタッチしたアニメーションをデタッチする
-				MV1DetachAnim(this->iModelHandle, iBeamAttackNowAttachIndex);
-				this->fBeamAttackNowPlayTime = 0.0f;
-				// エネミーモデルに攻撃のアニメーションをアタッチする
-				this->iBeamAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
-				// アタッチした攻撃アニメーションの総再生時間を取得する
-				this->fBeamAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackEndAttachIndex);
+				// アタッチしたアニメーションの再生時間が総再生時間に達した場合
+				//　ビームの持続カウントがビームのチャージカウント以下か確認
+				if (this->iBeamDurationCount <= this->iChargeCount)
+				{
+					// ビームの持続カウントがビームのチャージカウント以下の場合
+					// アタッチしたアニメーションをデタッチする
+					MV1DetachAnim(this->iModelHandle, iBeamAttackNowAttachIndex);
 
-				this->bBeamAttackNowMotionFlg = false;
-				this->bBeamAttackEndMotionFlg = true;
+					//ビーム攻撃中再生時間を初期化
+					this->fBeamAttackNowPlayTime = 0.0f;
 
-				
+					// エネミーモデルに攻撃のアニメーションをアタッチする
+					this->iBeamAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
+
+					// アタッチした攻撃アニメーションの総再生時間を取得する
+					this->fBeamAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iBeamAttackEndAttachIndex);
+
+					//攻撃中モーションフラグを無効化
+					this->bBeamAttackNowMotionFlg = false;
+
+					//攻撃終了モーションフラグを有効化
+					this->bBeamAttackEndMotionFlg = true;
+
+
+				}
 			}
 		}
 	}
-}
 }
 
 // 更新
@@ -357,6 +450,7 @@ void Enemy_Beam::Update()
 		/* 死亡フラグを有効化 */
 		this->bDeadFlg = true;
 
+		//ヒットエフェクト生成終了確認フラグが無効か確認
 		if (this->bHitEffectGenerated == FALSE)
 		{
 			/* Hitエフェクト追加 */
@@ -387,12 +481,18 @@ void Enemy_Beam::Update()
 				/* 攻撃ヒットのSEを再生 */
 				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
+				//被弾時の処理を実行
 				DefeatAttack();
 
+				//ヒットエフェクト生成終了確認フラグを有効化
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
+
+		//向き固定フラグを無効化
 		this->bDirectionFlg = false;
+
+
 		//死亡モーション以外のモーションをデタッチ
 		MV1DetachAnim(this->iModelHandle, this->iBeamAttackAttachIndex);
 		MV1DetachAnim(this->iModelHandle, this->iBeamAttackNowAttachIndex);
@@ -402,6 +502,7 @@ void Enemy_Beam::Update()
 		//ビームエフェクトを削除
 		if (this->pBulletRangeBeam != nullptr)
 		{
+			//ビームエフェクトを削除
 			this->pBulletRangeBeam->SetDeleteFlg(true);
 		}
 
@@ -428,9 +529,4 @@ void Enemy_Beam::Update()
 		}
 		return;
 	}
-
-	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }

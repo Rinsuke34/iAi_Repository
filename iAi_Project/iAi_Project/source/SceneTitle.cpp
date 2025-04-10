@@ -1,4 +1,4 @@
-/* 2024.12.20 ファイル追加						駒沢風助 */
+/* 2024.12.20 ファイル追加						石川智也 */
 /* 2025.01.09 提出用臨時コーディング修正		駒沢風助 */
 /* 2025.03.25 セーブデータ初期化失敗バグ修正	駒沢風助 */ 
 
@@ -84,18 +84,25 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	//ホームフラグを無効化
 	this->bHomeFlg = false;
 
+	//シーン遷移フラグを無効化
 	this->bTransition = false;
 
+	//タイマーを初期化
 	this->iTimer = 0;
 
+	//最終確認画面を隠すフラグを無効化
 	this->bHideFinalCheck = false;
 
+	//アルファカウントを初期化
 	this->iAlphaCount = 0;
 
+	//アルファフラグを無効化
 	this->bAlphaFlg = false;
 
+	//コンフィグフラグを無効化
 	this->bConfigFlg = false;
 
+	//設定フラグを無効化
 	this->bSettingFlg = false;
 
 
@@ -164,96 +171,105 @@ void SceneTitle::Process()
 		/* "決定"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_DICISION);
 
-	    switch (iUICount)
+
+		switch (iUICount)
 		{
-			case CAMERA_FIXED_POSITION_START:
-				//UIカウント(カメラ)をはじめからホーム画面に設定
-				iUICount++;
+		case CAMERA_FIXED_POSITION_START:
+			//UIカウント(カメラ)をはじめからホーム画面に設定
+			iUICount++;
+
+			//カメラ固定位置をはじめからホーム画面に設定
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+			this->bHomeFlg = TRUE;
+
+			/* BGMを設定 */
+			gpDataList_Sound->BGM_SetHandle(BGM_HOME);
+			break;
+
+			//はじめからホーム画面
+		case CAMERA_FIXED_POSITION_A:
+			//Uiカウント(カメラ)を確認画面に変更
+			iUICount = CAMERA_FIXED_POSITION_E;
+
+			//カメラ固定位置をUIカウント(カメラ)に設定
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+
+			//ゲームスタートフラグを無効化
+			this->bGameStartFlg = FALSE;
+
+			//ホームフラグを無効化
+			this->bHomeFlg = FALSE;
+			break;
+
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+			//Uiカウント(カメラ)を確認画面に変更
+			iUICount = CAMERA_FIXED_POSITION_E;
+
+			//カメラ固定位置をUIカウント(カメラ)に設定
+			pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+
+			// シーンの追加を設定
+			gpSceneServer->SetAddLoadSceneFlg(true);
+
+			// シーンの削除を設定
+			gpSceneServer->SetDeleteCurrentSceneFlg(true);
+
+			// シーン"ゲームセットアップ"を追加
+			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+
+			break;
+
+			//確認画面
+		case CAMERA_FIXED_POSITION_E:
+			if (this->bGameStartFlg == TRUE)
+			{
+				// シーン遷移フラグを有効化
+				bTransition = true;
+
+				// タイマーをリセット
+				iTimer = 0;
+
+				// 最終確認画面を隠すフラグを有効化
+				bHideFinalCheck = true;
+
+				/* 2025.03.25 セーブデータ初期化失敗バグ修正	駒沢風助 開始 */
+				/* 中断セーブデータのパスを取得 */
+				std::string SaveDataFileName = "resource/SaveData/SuspensionSaveData.json";
+
+				/* 中断セーブデータを削除する */
+				PUBLIC_FUNCTION::FileDeletesAndStand(SaveDataFileName);
+				/* 2025.03.25 セーブデータ初期化失敗バグ修正	駒沢風助 終了 */
+			}
+			else
+			{
+				// 「no」を選択した場合、はじめからホーム画面に戻る
+				iUICount = CAMERA_FIXED_POSITION_A;
 
 				//カメラ固定位置をはじめからホーム画面に設定
 				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-				this->bHomeFlg = TRUE;
-
-				/* BGMを設定 */
-				gpDataList_Sound->BGM_SetHandle(BGM_HOME);
-				break;
-
-			//はじめからホーム画面
-	        case CAMERA_FIXED_POSITION_A:
-				//Uiカウント(カメラ)を確認画面に変更
-	            iUICount = CAMERA_FIXED_POSITION_E;
-
-				//カメラ固定位置をUIカウント(カメラ)に設定
-		        pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-
-				//ゲームスタートフラグを無効化
-				this->bGameStartFlg = FALSE;
-
-				//ホームフラグを無効化
-				this->bHomeFlg = FALSE;
-				break;
-
-			//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-				//Uiカウント(カメラ)を確認画面に変更
-				iUICount = CAMERA_FIXED_POSITION_E;
-
-				//カメラ固定位置をUIカウント(カメラ)に設定
-				pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-
-				// シーンの追加を設定
-				gpSceneServer->SetAddLoadSceneFlg(true);
-
-				// シーンの削除を設定
-				gpSceneServer->SetDeleteCurrentSceneFlg(true);
-
-				// シーン"ゲームセットアップ"を追加
-				gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
-			
-				break;
-
-			//確認画面
-			case CAMERA_FIXED_POSITION_E:
-				if (this->bGameStartFlg == TRUE)
-				{
-					// シーン遷移フラグを有効化
-					bTransition = true;
-					// タイマーをリセット
-					iTimer = 0;
-					// 最終確認画面を隠すフラグを有効化
-					bHideFinalCheck = true;
-					/* 2025.03.25 セーブデータ初期化失敗バグ修正	駒沢風助 開始 */ 
-					/* 中断セーブデータのパスを取得 */
-					std::string SaveDataFileName = "resource/SaveData/SuspensionSaveData.json";
-
-					/* 中断セーブデータを削除する */
-					PUBLIC_FUNCTION::FileDeletesAndStand(SaveDataFileName);
-					/* 2025.03.25 セーブデータ初期化失敗バグ修正	駒沢風助 終了 */ 
-				}
-				else
-				{
-					// 「no」を選択した場合、はじめからホーム画面に戻る
-					iUICount = CAMERA_FIXED_POSITION_A;
-					pSceneStage->SetNowCameraFixedPositionNo(iUICount);
-				}
-				break;
+			}
+			break;
 
 			//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
+		case CAMERA_FIXED_POSITION_C:
 
-				/* 現在のカメラポジションが設定画面であるか確認 */
-				if (this->iUICount == CAMERA_FIXED_POSITION_C)
-				{
-					/* シーン"オプション"を追加 */
-					gpSceneServer->AddSceneReservation(new SceneOption());
-				}
+			/* 現在のカメラポジションが設定画面であるか確認 */
+			if (this->iUICount == CAMERA_FIXED_POSITION_C)
+			{
+				/* シーン"オプション"を追加 */
+				gpSceneServer->AddSceneReservation(new SceneOption());
+			}
 
-				break;
+			break;
 
 			//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				gbEndFlg = true;
-				break;
+		case CAMERA_FIXED_POSITION_D:
+
+			//エンドフラグを有効化
+			gbEndFlg = true;
+
+			break;
 		}
 	}
 
@@ -266,49 +282,63 @@ void SceneTitle::Process()
 		switch (iUICount)
 		{
 			//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-			//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-			//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-				//ホームフラグが有効か確認
-				if (this->bHomeFlg == FALSE)
-				{
-					//UIカウント(カメラ)をはじめからホーム画面に設定
-					iUICount = CAMERA_FIXED_POSITION_C;
-				}
-				if (this->bHomeFlg == TRUE)
-				{
-					//UIカウント(カメラ)をはじめからホーム画面に設定
-					iUICount = CAMERA_FIXED_POSITION_START;
-				}
-				this->bHomeFlg = TRUE;
+		case CAMERA_FIXED_POSITION_A:
 
-				/* BGMを設定 */
-				gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
-				break;
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+
+			//ホームフラグが有効か確認
+			if (this->bHomeFlg == FALSE)
+			{
+				//UIカウント(カメラ)をはじめからホーム画面に設定
+				iUICount = CAMERA_FIXED_POSITION_C;
+			}
+
+			//ホームフラグが有効か確認
+			if (this->bHomeFlg == TRUE)
+			{
+				//ホームフラグが有効な場合
+				//UIカウント(カメラ)をはじめからホーム画面に設定
+				iUICount = CAMERA_FIXED_POSITION_START;
+			}
+
+			//ホームフラグを有効化
+			this->bHomeFlg = TRUE;
+
+			/* BGMを設定 */
+			gpDataList_Sound->BGM_SetHandle(BGM_TITLE);
+
+			break;
 
 
 			//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				//UIカウント(カメラ)をタイトルに設定
-				iUICount = CAMERA_FIXED_POSITION_START;
-				break;
+		case CAMERA_FIXED_POSITION_D:
+
+			//UIカウント(カメラ)をタイトルに設定
+			iUICount = CAMERA_FIXED_POSITION_START;
+
+			break;
 
 			//確認画面
-			case CAMERA_FIXED_POSITION_E:
-				//UIカウントをはじめからホーム画面に設定
-				iUICount = CAMERA_FIXED_POSITION_A;
-				this->bGameStartFlg = FALSE;
-				break;
+		case CAMERA_FIXED_POSITION_E:
+
+			//UIカウントをはじめからホーム画面に設定
+			iUICount = CAMERA_FIXED_POSITION_A;
+
+			//ゲームスタートフラグを無効化
+			this->bGameStartFlg = FALSE;
+			break;
 		}
 
 		//カメラ固定位置をカメラに設定
 		pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 	}
-			
+
 	//上ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
 	{
 		/* "カーソル移動"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
@@ -316,29 +346,33 @@ void SceneTitle::Process()
 		switch (iUICount)
 		{
 			//タイトル画面
-			case CAMERA_FIXED_POSITION_START:
-				iUICount = 0;
-				break;
+		case CAMERA_FIXED_POSITION_START:
+			iUICount = 0;
+			break;
 
 			//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-			//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-			//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-			//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				//UIカウントを減少
-				iUICount--;
+		case CAMERA_FIXED_POSITION_A:
 
-				//UIの選択肢が上にあるか確認
-				if (iUICount < CAMERA_FIXED_POSITION_A)
-				{
-					//上にない場合
-					//UIカウント(カメラ)を設定ホーム画面に設定
-					iUICount = CAMERA_FIXED_POSITION_D;
-				}
-				break;
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+
+			//UIカウントを減少
+			iUICount--;
+
+			//UIの選択肢が上にあるか確認
+			if (iUICount < CAMERA_FIXED_POSITION_A)
+			{
+				//上にない場合
+				//UIカウント(カメラ)を設定ホーム画面に設定
+				iUICount = CAMERA_FIXED_POSITION_D;
+			}
+			break;
 		}
 
 		//カメラ固定位置をUIカウントに設定
@@ -346,7 +380,7 @@ void SceneTitle::Process()
 	}
 
 	//下ボタンが押されたか確認
-			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
+	if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 	{
 		/* "カーソル移動"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
@@ -354,33 +388,37 @@ void SceneTitle::Process()
 		switch (iUICount)
 		{
 			//タイトル画面
-			case CAMERA_FIXED_POSITION_START:
-				iUICount = 0;
-				break;
+		case CAMERA_FIXED_POSITION_START:
+			iUICount = 0;
+			break;
 
 			//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-			//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-			//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-			//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				//UIカウントを増加
-				iUICount++;
+		case CAMERA_FIXED_POSITION_A:
 
-				//選択肢が下にあるか確認
-				if (iUICount >= CAMERA_FIXED_POSITION_E)
-				{
-					//下にない場合
-					//UIカウント(カメラ)をはじめからホーム画面に設定
-				    iUICount = CAMERA_FIXED_POSITION_A;
-				}
+			//つづきからホーム画面
+		case CAMERA_FIXED_POSITION_B:
+
+			//データホーム画面
+		case CAMERA_FIXED_POSITION_C:
+
+			//設定ホーム画面
+		case CAMERA_FIXED_POSITION_D:
+
+			//UIカウントを増加
+			iUICount++;
+
+			//選択肢が下にあるか確認
+			if (iUICount >= CAMERA_FIXED_POSITION_E)
+			{
+				//下にない場合
+				//UIカウント(カメラ)をはじめからホーム画面に設定
+				iUICount = CAMERA_FIXED_POSITION_A;
+			}
 			break;
 		}
 
 		//カメラ固定位置をUIカウントに設定
-	    pSceneStage->SetNowCameraFixedPositionNo(iUICount);
+		pSceneStage->SetNowCameraFixedPositionNo(iUICount);
 	}
 
 	// 左ボタンが押されたか確認
@@ -406,6 +444,7 @@ void SceneTitle::Process()
 		/* "カーソル移動"のSEを再生 */
 		gpDataList_Sound->SE_PlaySound(SE_SYSTEM_MOVECURSOR);
 
+		//カメラの位置が最終確認画面か確認
 		if (iUICount == CAMERA_FIXED_POSITION_E)
 		{
 			// 「いいえ」を選択
@@ -415,39 +454,39 @@ void SceneTitle::Process()
 	//ボタンスタートの明度を変更
 	if (iUICount == CAMERA_FIXED_POSITION_START)
 	{
+		//アルファフラグが無効か確認
 		if (this->bAlphaFlg == false)
 		{
+			//アルファフラグが無効の場合
+			//アルファカウントが0以上か確認
 			if (this->iAlphaCount > 0)
 			{
+				//アルファカウントが0以上の場合
+				//アルファカウントを減少
 				this->iAlphaCount -= 5;
 			}
 			else
 			{
+				//アルファフラグを有効化
 				this->bAlphaFlg = true;
 			}
 		}
 		else
 		{
+			//アルファカウントが255以下か確認
 			if (this->iAlphaCount < 255)
 			{
+				//アルファカウントが255以下の場合
+				//アルファカウントを増加
 				this->iAlphaCount += 5;
 			}
 			else
 			{
+				//アルファフラグを無効化
 				this->bAlphaFlg = false;
 			}
 		}
 	}
-	////現在のシーンがTitleか確認
-	//if (gpSceneServer->GetScene("Title"))
-	//{
-	//	if (this->bConfigFlg == TRUE)
-	//	{
-	//		this->bHomeFlg = TRUE;
-
-	//		this->bConfigFlg = FALSE;
-	//	}
-	//}
 }
 
 // 描画
@@ -495,24 +534,31 @@ void SceneTitle::Draw()
 			DrawGraph(100, 795, this->iImageDateHandle, TRUE);
 			DrawGraph(100, 900, this->iImageConfigHandle, TRUE);
 			break;
+
 		case CAMERA_FIXED_POSITION_B:
+			/* コンティニュー */
 			DrawGraph(100, 589, this->iImageNewgameHandle, TRUE);
 			DrawGraph(100, 690, this->iImageContinueChoiceHandle, TRUE);
 			DrawGraph(100, 795, this->iImageDateHandle, TRUE);
 			DrawGraph(100, 900, this->iImageConfigHandle, TRUE);
 			break;
+
 		case CAMERA_FIXED_POSITION_C:
+			/* コンフィグ */
 			DrawGraph(100, 589, this->iImageNewgameHandle, TRUE);
 			DrawGraph(100, 690, this->iImageContinueHandle, TRUE);
 			DrawGraph(100, 795, this->iImageDateChoiceHandle, TRUE);
 			DrawGraph(100, 900, this->iImageConfigHandle, TRUE);
 			break;
+
 		case CAMERA_FIXED_POSITION_D:
+			/* エンド */
 			DrawGraph(100, 589, this->iImageNewgameHandle, TRUE);
 			DrawGraph(100, 690, this->iImageContinueHandle, TRUE);
 			DrawGraph(100, 795, this->iImageDateHandle, TRUE);
 			DrawGraph(100, 900, this->iImageConfigChoiceHandle, TRUE);
 			break;
+
 		case CAMERA_FIXED_POSITION_E:
 			/* 画面全体を暗くする */
 			if (this->bHideFinalCheck == false)

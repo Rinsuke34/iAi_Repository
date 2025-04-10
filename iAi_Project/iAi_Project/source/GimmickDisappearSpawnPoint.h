@@ -16,13 +16,15 @@ public:
 	GimmickDisappearSpawnPoint();						// コンストラクタ
 	virtual ~GimmickDisappearSpawnPoint() {};			// デストラクタ
 
-	virtual void	Initialization()	override;	// 初期化
-	virtual void	Update()			override;	// 更新
+	virtual void	Initialization()	override;		// 初期化
+	virtual void	Update()			override;		// 更新
 
+	/* 関数 */
 	void	SetAddobjectFlg(bool bAddObjectFlg) { this->bAddObjectFlg = bAddObjectFlg; }	// オブジェクト生成フラグの設定
 
-	private:
-		/* 変数 */
-		bool	bAddObjectFlg;	// オブジェクト生成中フラグ
-		int		iRespawnDelay;	//リスポーンカウント
+private:
+
+	/* 変数 */
+	bool	bAddObjectFlg;								// オブジェクト生成中フラグ
+	int		iRespawnDelay;								//リスポーンカウント
 };

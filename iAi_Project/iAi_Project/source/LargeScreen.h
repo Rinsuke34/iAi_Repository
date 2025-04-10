@@ -17,9 +17,8 @@
 #include "SceneStage.h"
 #include "SceneTitle.h"
 
-/* テスト用敵クラス */
 
-// 消失ギミッククラス
+// タイトル専用縦スクリーンクラス
 class LargeScreen : public PlatformBase
 {
 public:
@@ -31,26 +30,24 @@ public:
 
 private:
 
-	//関数
-	void	Process();				// 更新
-
-
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
 
-	// テクスチャハンドルを追加
-	int iTextureTitleHandle;			// タイトル
-	int iTextureNewgameHandle;		// ニューゲーム
-	int iTextureContinueHandle;		// コンティニュー
-	int iTextureDateHandle;			// データ
-	int iTextureConfigHandle;		// コンフィグ
-	int iTextureStageHandle;			// ステージ
+	/* 関数 */
+	void	Process();									// 処理
 
-	bool bStartFlg;		//スタートフラグ	
-	bool bHomeFlg;		//ホームフラグ
-	bool bGameStartFlg;	//ゲームスタートフラグ
+	/* 変数 */
+	int iTextureTitleHandle;							// タイトル
+	int iTextureNewgameHandle;							// ニューゲーム
+	int iTextureContinueHandle;							// コンティニュー
+	int iTextureDateHandle;								// データ
+	int iTextureConfigHandle;							// コンフィグ
+	int iTextureStageHandle;							// ステージ
+	int iUICount;										//UIのカウント
+	bool bStartFlg;										//スタートフラグ	
+	bool bHomeFlg;										//ホームフラグ
+	bool bGameStartFlg;									//ゲームスタートフラグ
 
-	int iUICount;	//UIのカウント
 protected:
 };

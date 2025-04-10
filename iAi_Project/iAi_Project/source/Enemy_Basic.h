@@ -1,4 +1,5 @@
 /* 2025.01.27 駒沢風助 ファイル作成 */
+/* 2025.03.23 石川智也 エネミー被弾時・重力の処理追加 */
 
 #pragma once
 #include "Appframe.h"
@@ -37,9 +38,9 @@ class Enemy_Basic : public EnemyBase
 		virtual void	Draw()				override;	// 描写
 		virtual void	Reset();						// リセット処理
 
-		void	Defeat();			// 敵撃破時の処理
-		void	DefeatAttack();		// 敵攻撃被弾時の処理	03/23石川追加
-		void	LoadCoreFrameNo();	// コアフレーム番号取得
+		void	Defeat();								// 敵撃破時の処理
+		void	DefeatAttack();																	// 敵攻撃被弾時の処理	/* 2025.03.23 石川智也 敵攻撃被弾時のメソッドを追加 */
+		void	LoadCoreFrameNo();						// コアフレーム番号取得
 
 		/* データ取得 */
 		int		iGetPlayerLockOnType()	{ return this->iPlayerLockOnType; }		// プレイヤー視点でのロックオン状態を取得
@@ -57,7 +58,8 @@ class Enemy_Basic : public EnemyBase
 		int		iBloodAmount;		// ブラッド量
 
 		//関数
-		void	Enemy_Gravity();	// 重力処理メソッドを追加
+		void	Enemy_Gravity();																	// 重力処理　	/* 2025.03.23 石川智也 重力処理メソッドを追加 */
+
 
 		COLLISION_LINE stVerticalCollision;						// 垂直方向のコリジョン
 		VECTOR vecMove;											// 移動量

@@ -10,8 +10,12 @@ Enemy_Normal_Air::Enemy_Normal_Air() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
-	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
-	this->iBloodAmount = 10;					// ブラッド量
+
+	//オブジェクトの種類をTypeEnemyに設定
+	this->iObjectType = OBJECT_TYPE_ENEMY;
+
+	//出現するブラッド量を設定
+	this->iBloodAmount = 10;
 
 	/* データリスト取得 */
 	{
@@ -29,23 +33,40 @@ Enemy_Normal_Air::Enemy_Normal_Air() : Enemy_Basic()
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Normal/Enemy_Normal");
 	}
 
-	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
+	/* オブジェクト取得 */
+	// プレイヤーを取得
+	this->pPlayer = ObjectList->GetCharacterPlayer();
 
-	this->iFiringCount = 0;	// 発射カウント
-	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
+	/* 初期化 */
 
-	this->pEffectWarning = nullptr;	// 警告エフェクト
-	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
-	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
-	this->bShotFlg = false;						// ショットフラグ
+	// 発射カウント
+	this->iFiringCount = 0;
+
+	// 誘導カウント
+	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;
+
+	//エネミー警告エフェクトが生成されたか
+	this->pEffectWarning = nullptr;	
+
+	// ヒットエフェクト生成フラグ
+	this->bHitEffectGenerated = false;
+
+	// 警告エフェクトフラグ
+	this->bWarningEffectFlg = true;
+
+	//ショットフラグ
+	this->bShotFlg = false;
 
 	/*モーション関連*/
+
 	// エネミーモデルに空中のアニメーションをアタッチする
 	this->iNormalAirAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
+
 	// アタッチした空中アニメーションの総再生時間を取得する
 	this->fNormalAirTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iNormalAirAttachIndex);
 
-	this->bDirectionFlg = true;					// 向き固定フラグ
+	//エネミーの向き固定フラグを初期化
+	this->bDirectionFlg = true;
 }
 
 // デストラクタ
@@ -58,13 +79,20 @@ Enemy_Normal_Air::~Enemy_Normal_Air()
 void Enemy_Normal_Air::Initialization()
 {
 	/* コリジョンセット */
+
+	//エネミーのカプセルコリジョンの半径
 	this->stCollisionCapsule.fCapsuleRadius = 100;
+
+	//エネミーのカプセルコリジョンの上の座標
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+
+	//エネミーのカプセルコリジョンの下の座標
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 
+	// 発光するフレームの処理
 	UpdataLightFrame();
 }
 
@@ -80,6 +108,7 @@ void Enemy_Normal_Air::MoveEnemy()
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
+	//エネミーの向き固定フラグが有効か確認
 	if (this->bDirectionFlg == true)
 	{
 		//エネミーの向きを設定
@@ -88,14 +117,15 @@ void Enemy_Normal_Air::MoveEnemy()
 		MV1SetRotationXYZ(iModelHandle, VRot);
 	}
 
-	//プレイヤーとエネミーのXZ軸の距離を取得
+	//プレイヤーとエネミーの軸の距離を取得
 	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
 	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
 	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
 
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
-
+		//エネミーが撃破されていない場合
 		// プレイヤーとエネミーの距離の平方を計算
 		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
 			(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
@@ -104,108 +134,115 @@ void Enemy_Normal_Air::MoveEnemy()
 		// 索敵範囲の半径の平方
 		float detectionRadiusSquared = ENEMY_Y_DISTANCE * ENEMY_Y_DISTANCE;
 
-
-		iFiringCount--;	// 発射カウントを減少
+		//発射カウントを減らす
+		iFiringCount--;
 
 		// プレイヤーが索敵範囲内にいるか確認
 		if (distanceToPlayerSquared < detectionRadiusSquared)
-	{
-		// プレイヤーが探知範囲内にいる場合
-
-		//誘導カウントが発射カウントより大きいか確認
-		if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 		{
-			// 誘導カウントが発射カウントより大きい場合
-			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			// プレイヤーが探知範囲内にいる場合
+			//誘導カウントが発射カウントより大きいか確認
+			if (iFiringCount <= ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL)
 			{
-				this->bWarningEffectFlg = false;
-
-				this->bShotFlg = true;
-
-			/* 攻撃予告エフェクト追加 */
-			{
-				/* 攻撃予告エフェクトを生成 */
-				this->pEffectWarning = new EffectManualDelete();
-
-				/* エフェクトの読み込み */
-				this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
-
-				/* エフェクトの座標設定 */
-				this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
-
-				/* エフェクトの回転量設定 */
-				this->pEffectWarning->SetRotation(this->vecRotation);
-
-				/* エフェクトの初期化 */
-				this->pEffectWarning->Initialization();
-
-				/* エフェクトをリストに登録 */
+				// 誘導カウントが発射カウントより大きい場合
+				// 警告エフェクトフラグが有効か確認
+				if (this->bWarningEffectFlg == true)
 				{
-					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
-					/* エフェクトをリストに登録 */
-					ObjectListHandle->SetEffect(this->pEffectWarning);
+					// 警告エフェクトフラグが有効の場合
+					//攻撃予告エフェクトフラグを無効化
+					this->bWarningEffectFlg = false;
+
+					//ショットフラグを有効化
+					this->bShotFlg = true;
+
+					/* 攻撃予告エフェクト追加 */
+					{
+						/* 攻撃予告エフェクトを生成 */
+						this->pEffectWarning = new EffectManualDelete();
+
+						/* エフェクトの読み込み */
+						this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
+
+						/* エフェクトの座標設定 */
+						this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
+
+						/* エフェクトの回転量設定 */
+						this->pEffectWarning->SetRotation(this->vecRotation);
+
+						/* エフェクトの初期化 */
+						this->pEffectWarning->Initialization();
+
+						/* エフェクトをリストに登録 */
+						{
+							/* "オブジェクト管理"データリストを取得 */
+							DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));	
+
+							/* エフェクトをリストに登録 */
+							ObjectListHandle->SetEffect(this->pEffectWarning);
+						}
+						//攻撃予告SE再生
+						gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_WARNING, this->vecPosition, SE_3D_SOUND_RADIUS);
+					}
 				}
-				//攻撃予告SE再生
-				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_WARNING, this->vecPosition, SE_3D_SOUND_RADIUS);
+			}
+			//発射カウントが0以下か確認
+			if (iFiringCount <= 0)
+			{
+				// 発射カウントが0以下の場合
+				// ノーマル弾を発射する
+				Player_Range_Normal_Shot();
+
+				// 発射カウントを初期化
+				this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
+
+				// ショットフラグを無効化
+				this->bShotFlg = false;
 			}
 		}
-		}
-		//発射カウントが0以下か確認
-		if (iFiringCount <= 0)
-		{
-			// 発射カウントが0以下の場合
-			// ノーマル弾を発射する
-			Player_Range_Normal_Shot();
-
-			// 発射カウントを初期化
-			this->iFiringCount = ENEMY_NORMAL_BULLET_INTERVAL;
-			this->bShotFlg = false;
-		}
 	}
-	}
-
 }
 
 // ノーマル弾の発射
 void Enemy_Normal_Air::Player_Range_Normal_Shot()
 {
+	//エネミーが撃破されていないか確認
 	if (this->iNowHp > 0)
 	{
-	// プレイヤーの座標を取得
-	VECTOR playerPos = pPlayer->vecGetPosition();
+		//エネミーが撃破されていない場合
+		// プレイヤーの座標を取得
+		VECTOR playerPos = pPlayer->vecGetPosition();
 
-	// ノーマル弾を生成
-	this->pBulletRangeNormal = new BulletEnemyRangeNormal;
+		// ノーマル弾を生成
+		this->pBulletRangeNormal = new BulletEnemyRangeNormal;
 
-	//効果音再生
-	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
+		//効果音再生
+		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
 
-	/* 攻撃の生成方向の設定 */
-	/* 攻撃座標を算出 */
+		/* 攻撃の生成方向の設定 */
+		/* 攻撃座標を算出 */
 
-	//エネミーの向きを初期化
-	VECTOR vecAdd = VGet(0, 0, 0);
+		//エネミーの向きを初期化
+		VECTOR vecAdd = VGet(0, 0, 0);
 
-	// 発射させる方向を設定
-	vecAdd = VNorm(vecAdd);
+		// 発射させる方向を設定
+		vecAdd = VNorm(vecAdd);
 
-	// 発射させる高さと幅を設定
-	vecAdd.y = PLAYER_HEIGHT / 2.f;
-	vecAdd.x = PLAYER_WIDE / 2.f;
+		// 発射させる高さと幅を設定
+		vecAdd.y = PLAYER_HEIGHT / 2.f;
+		vecAdd.x = PLAYER_WIDE / 2.f;
 
-	// 攻撃生成座標をエネミーが向いている方向に設定
-	this->pBulletRangeNormal->SetPosition(VAdd(this->vecPosition, vecAdd));
+		// 攻撃生成座標をエネミーが向いている方向に設定
+		this->pBulletRangeNormal->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-	// 移動する弾の向きを設定
-	this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
+		// 移動する弾の向きを設定
+		this->pBulletRangeNormal->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
 
-	//初期化
-	this->pBulletRangeNormal->Initialization();
+		//初期化
+		this->pBulletRangeNormal->Initialization();
 
-	//バレットリストに追加
-	ObjectList->SetBullet(this->pBulletRangeNormal);
-}
+		//バレットリストに追加
+		ObjectList->SetBullet(this->pBulletRangeNormal);
+	}
 }
 
 // 更新
@@ -240,8 +277,10 @@ void Enemy_Normal_Air::Update()
 		/* 死亡フラグを有効化 */
 		this->bDeadFlg = true;
 
+		//ヒットエフェクト生成終了確認フラグが無効か確認
 		if (this->bHitEffectGenerated == FALSE)
 		{
+			//ヒットエフェクト生成終了確認フラグが無効の場合
 			/* Hitエフェクト追加 */
 			{
 				/* 時間経過で削除されるエフェクトを追加 */
@@ -270,8 +309,10 @@ void Enemy_Normal_Air::Update()
 				/* 攻撃ヒットのSEを再生 */
 				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
 
+				//被弾時の処理
 				DefeatAttack();
 
+				//ヒットエフェクト生成終了確認フラグを有効化
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
@@ -302,10 +343,4 @@ void Enemy_Normal_Air::Update()
 		}
 		return;
 	}
-
-
-	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }

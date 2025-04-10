@@ -13,45 +13,39 @@
 #include "BulletEnemyRangeBeam.h"
 #include "PlayerStatusDefine.h"
 
-/* テスト用敵クラス */
+/* 空中ビームエネミークラス */
 
 // エネミーベースクラス
 class Enemy_Beam : public Enemy_Basic
 {
 public:
-	Enemy_Beam();				// コンストラクタ
-	virtual ~Enemy_Beam();		// デストラクタ
+	Enemy_Beam();										// コンストラクタ
+	virtual ~Enemy_Beam();								// デストラクタ
 
 	virtual void	Initialization()	override;		// 初期化
 	virtual void	Update()			override;		// 更新
 
 private:
 
-	//エフェクト
+	/* エフェクト・使用するオブジェクトリスト */
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
-
 	BulletEnemyRangeBeam* pBulletRangeBeam;				// ビーム
-
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
 
 
 	//関数
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Beam_Shot();			// ビームの発射
+	void	MoveEnemy();								// 敵を移動させるメソッドを追加
+	void	Player_Range_Beam_Shot();					// ビームの発射
 	void	Enemy_Model_Animation();					// エネミーモデルアニメーション
 	void	Charge();									// チャージ
 
 
 	//変数
-	int		iFiringCount;	// 発射カウント
-
-	int		iDurationCount;	// ビームの持続カウント
-
-	int		iChargeCount;	// ビームのチャージカウント
-	int		iBeamDurationCount;						//ビームの持続カウント
-	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
+	int		iFiringCount;								// 発射カウント
+	int		iDurationCount;								// ビームの持続カウント
+	int		iChargeCount;								// ビームのチャージカウント
+	int		iBeamDurationCount;							//ビームの持続カウント
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool	bChargeFlg;									// チャージフラグ
 	bool	bFiringFlg;									// 発射フラグ
@@ -81,6 +75,4 @@ private:
 	float	fBeamAttackEndLoopPlayTime;					// ビーム攻撃終了ループ再生時間
 	float	fDiePlayTime;								// 死亡再生時間
 protected:
-
-
 };

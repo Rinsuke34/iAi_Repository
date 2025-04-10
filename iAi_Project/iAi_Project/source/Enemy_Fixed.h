@@ -13,9 +13,9 @@
 #include "BulletEnemyRangeNormal.h"
 #include "PlayerStatusDefine.h"
 
-/* テスト用敵クラス */
+/* 固定砲台エネミー土台部分クラス */
 
-// エネミーベースクラス
+// エネミーフィックスクラス
 class Enemy_Fixed : public Enemy_Basic
 {
 public:
@@ -29,14 +29,14 @@ private:
 
 
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
+	DataList_Object* ObjectList;						// オブジェクト管理
 
 	//関数
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
+	void	MoveEnemy();								// 敵を移動させるメソッドを追加
 
 	//変数
-	int		iModelturretHandle;	// モデルハンドル
-	int		iModelscaffoldHandle;	// モデルハンドル
+	int		iModelturretHandle;							// モデルハンドル
+	int		iModelscaffoldHandle;						// モデルハンドル
 
 
 

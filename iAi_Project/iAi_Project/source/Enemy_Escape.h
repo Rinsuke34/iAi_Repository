@@ -12,9 +12,9 @@
 #include "EnemyDefine.h"
 #include "EffectManualDelete.h"
 
-/* テスト用敵クラス */
+/* 逃走エネミークラス */
 
-// エネミーベースクラス
+// エネミーエスケープクラス
 class Enemy_Escape : public Enemy_Basic
 {
 	public:
@@ -23,56 +23,56 @@ class Enemy_Escape : public Enemy_Basic
 	
 		virtual void	Initialization()	override;		// 初期化
 		virtual void	Update()			override;		// 更新
-	virtual void	CollisionDraw()		override;	// 当たり判定描写
+		virtual void	CollisionDraw()		override;		// 当たり判定描写
+
 	private:
-	/* エフェクト */
+
+		/* エフェクト・使用するオブジェクトリスト */
 		EffectSelfDelete* pEffect;							// エフェクト
+		DataList_Object* ObjectList;						// オブジェクト管理
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
+		/* 関数 */
+		void MoveEnemy();									// 敵を移動させるメソッドを追加
+		void Enemy_Model_Animation();						// エネミーモデルアニメーション
+		void Movement_Horizontal();							// 水平移動
+		void OnWallHit();									// 壁に当たった時の処理
+	
+		/* 変数 */
+		int iXescapedistance;								// X軸の距離
+		int iZescapedistance;								// Z軸の距離
+		int iEscapespeed;									// 移動速度
+		int iWaitCount;										// 待機カウント
+		int iReturnCount;									// 待機カウント
+		int iRestartCount;									// 再起動カウント
+		float fGravity;										// 重力
+		float fWallHitTime;									// 壁に当たった時間
+		bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
+		bool bDirectionFlg;									// 向き固定フラグ
+		bool bEscapeEffectGenerated;						// 逃走エフェクト生成フラグ
+		bool bWallHitFlg;									// 壁に当たったフラグ
+		bool bWallFlg;										// 壁フラグ
 
-	/* 関数 */
-	void MoveEnemy();				// 敵を移動させるメソッドを追加
-	void Enemy_Model_Animation();	// エネミーモデルアニメーション
-	void Movement_Horizontal();		// 水平移動
-	void OnWallHit();				// 壁に当たった時の処理
+		VECTOR vecEscapeEffectPos;							// 逃走エフェクトの座標
+		VECTOR vecInitialPosition;							// 初期位置
+		VECTOR wallNormal;									// 壁の法線ベクトル
+	
+		//モーション関係変数
+		int iWaitAttachIndex;								// 待機モーションアタッチインデックス
+		int iDieAttachIndex;								// 死亡モーションアタッチインデックス
+		int	iRunAttachIndex;								// 走りモーションアタッチインデックス
+		float fWaitTotalTime;								// 待機モーションの総時間
+		float fDieTotalTime;								// 死亡モーションの総時間
+		float fRunTotalTime;								// 走りモーションの総時間
+		float fWaitPlayTime;								// 待機再生時間
+		float fDiePlayTime;									// 死亡再生時間
+		float fRunPlayTime;									// 走り再生時間
+	
+	
 
-	/* 変数 */
-	int iXescapedistance;			// X軸の距離
-
-	int iZescapedistance;			// Z軸の距離
-	int iEscapespeed;			// 移動速度
-	int iWaitCount;					// 待機カウント
-	int iReturnCount;				// 待機カウント
-	int iRestartCount;				// 再起動カウント
-	float fGravity;				// 重力
-	float fWallHitTime;			// 壁に当たった時間
-	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
-	bool bDirectionFlg;										// 向き固定フラグ
-	bool bEscapeEffectGenerated;	// 逃走エフェクト生成フラグ
-	bool bWallHitFlg;				// 壁に当たったフラグ
-	bool bWallFlg;					// 壁フラグ
-
-	//モーション関係変数
-	int iWaitAttachIndex;			// 待機モーションアタッチインデックス
-	int iDieAttachIndex;			// 死亡モーションアタッチインデックス
-	int	iRunAttachIndex;		// 走りモーションアタッチインデックス
-	float fWaitTotalTime;			// 待機モーションの総時間
-	float fDieTotalTime;			// 死亡モーションの総時間
-	float fRunTotalTime;		// 走りモーションの総時間
-	float fWaitPlayTime;			// 待機再生時間
-	float fDiePlayTime;				// 死亡再生時間
-	float fRunPlayTime;			// 走り再生時間
-
-
-	VECTOR vecEscapeEffectPos;	// 逃走エフェクトの座標
-	VECTOR vecInitialPosition;	// 初期位置
-	VECTOR wallNormal;
-protected:
-	COLLISION_CAPSULE			stHorizontalCollision;		// 水平方向のコリジョン
-	COLLISION_SQHERE			stSphere;					// 球のコリジョン
-	VECTOR						vecNormalSum;				// プレイヤーに接触するオブジェクトの法線ベクトルの合計
-
-	bool						bPlayeSeFlg;				// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
-
+	protected:
+		COLLISION_CAPSULE			stHorizontalCollision;	// 水平方向のコリジョン
+		COLLISION_SQHERE			stSphere;				// 球のコリジョン
+		VECTOR						vecNormalSum;			// プレイヤーに接触するオブジェクトの法線ベクトルの合計
+		bool						bPlayeSeFlg;			// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
+	
 };

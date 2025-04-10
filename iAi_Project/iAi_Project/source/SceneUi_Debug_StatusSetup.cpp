@@ -223,11 +223,11 @@ void SceneUi_Debug_StatusSetup::Process()
 		{
 			if (bIntFlg == true)
 			{
-				fValue += 1.0f;
+				fValue += 100.0f;
 			}
 			else
 			{
-				fValue += 0.1f;
+				fValue += 10.0f;
 			}
 		}
 
@@ -236,11 +236,11 @@ void SceneUi_Debug_StatusSetup::Process()
 		{
 			if (bIntFlg == true)
 			{
-				fValue -= 1.0f;
+				fValue -= 100.0f;
 			}
 			else
 			{
-				fValue -= 0.1f;
+				fValue -= 10.0f;
 			}
 		}
 

@@ -43,8 +43,14 @@ void PickUpItem_ForcedJump::Initialization()
 
 	/* コリジョン設定 */
 	{
+		//カプセルコリジョンの設定
+		//強制ジャンプアイテムのカプセルコリジョンの半径
 		this->stCollisionCapsule.fCapsuleRadius = 180.0f;
+
+		//カプセルコリジョンの上の座標
 		this->stCollisionCapsule.vecCapsuleTop		= VAdd(this->vecPosition, VGet(0.0f, 100.0f, 0.0f));
+
+		//カプセルコリジョンの下の座標
 		this->stCollisionCapsule.vecCapsuleBottom	= VAdd(this->vecPosition, VGet(0.0f, 25.0f, 0.0f));
 	}
 
@@ -70,6 +76,7 @@ void PickUpItem_ForcedJump::Initialization()
 	{
 		/* "オブジェクト管理"データリストを取得 */
 		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 		/* エフェクトをリストに登録 */
 		ObjectListHandle->SetEffect(this->pEffectLight);
 	}
@@ -105,6 +112,7 @@ void PickUpItem_ForcedJump::Update()
 		{
 			/* "オブジェクト管理"データリストを取得 */
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}
@@ -133,8 +141,6 @@ void PickUpItem_ForcedJump::Update()
 // リセット処理
 void PickUpItem_ForcedJump::Reset()
 {
-	/* このオブジェクトの削除フラグを有効にする */
-	//this->bDeleteFlg = true;
 
 
 }

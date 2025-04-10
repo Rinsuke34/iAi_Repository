@@ -10,7 +10,9 @@ Enemy_Missile::Enemy_Missile() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
-	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+
+	// オブジェクトの種類をTypeEnemyに設定
+	this->iObjectType = OBJECT_TYPE_ENEMY;
 
 	/* データリスト取得 */
 	{
@@ -29,22 +31,49 @@ Enemy_Missile::Enemy_Missile() : Enemy_Basic()
 	}
 
 
+	/* オブジェクト取得 */
+
+	// プレイヤーを取得
 	this->pPlayer = ObjectList->GetCharacterPlayer();
-	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
-	this->bShotFlg = true;						// ミサイル発射フラグ
-	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
-	this->iFiringCount = ENEMY_MISSILE_INTERVAL;	// 発射カウント
+
+
+	// 初期化
+	// 
+	//ヒットエフェクト生成終了確認フラグ
+	this->bHitEffectGenerated = false;
+
+	// ミサイルショットフラグ
+	this->bShotFlg = true;
+
+	// 警告エフェクトフラグ
+	this->bWarningEffectFlg = true;
+
+	// 発射カウント
+	this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+
+
 	/*モーション関連*/
+
 	// エネミーモデルに攻撃のアニメーションをアタッチする
 	this->iMissileAttackAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, FALSE);
+
 	// アタッチした攻撃アニメーションの総再生時間を取得する
 	this->fMissileAttackTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackAttachIndex);
 
-	this->bMissileAttackMotionFlg = false;			// 攻撃モーションフラグ
-	this->bMissileAttackNowMotionFlg = false;		// 攻撃中モーションフラグ
-	this->bMissileAttackEndMotionFlg = false;		// 攻撃終了モーションフラグ
-	this->bMissileAttackEndLoopMotionFlg = false;	// 攻撃終了ループモーションフラグ
-	this->bDirectionFlg = true;					// 向き固定フラグ
+	// 攻撃モーションフラグ
+	this->bMissileAttackMotionFlg = false;
+
+	// 攻撃中モーションフラグ
+	this->bMissileAttackNowMotionFlg = false;
+
+	// 攻撃終了モーションフラグ
+	this->bMissileAttackEndMotionFlg = false;
+
+	// 攻撃終了ループモーションフラグ
+	this->bMissileAttackEndLoopMotionFlg = false;
+
+	// 向き固定フラグ
+	this->bDirectionFlg = true;
 }
 
 // デストラクタ
@@ -57,13 +86,20 @@ Enemy_Missile::~Enemy_Missile()
 void Enemy_Missile::Initialization()
 {
 	/* コリジョンセット */
+
+	// エネミーのコリジョンの半径
 	this->stCollisionCapsule.fCapsuleRadius = 100;
+
+	// エネミーのカプセルコリジョンの上座標
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+
+	// エネミーのカプセルコリジョンの下座標
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 
+	// 発光フレームの処理
 	UpdataLightFrame();
 }
 
@@ -72,10 +108,14 @@ void Enemy_Missile::MoveEnemy()
 {
 	// 重力処理
 	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+
+	// エネミーの座標を更新
 	this->vecPosition.y += this->vecMove.y;
 
 	// プレイヤーの座標を取得
 	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
+
+	//プレイヤーの座標を取得
 	VECTOR playerPos = player->vecGetPosition();
 
 	//エネミーの向きを初期化する
@@ -84,10 +124,12 @@ void Enemy_Missile::MoveEnemy()
 	//プレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
 
+	//エネミーの向き固定フラグが有効か確認
 	if (this->bDirectionFlg == true)
 	{
-	//エネミーの向きを設定
-	this->vecRotation = VRot;
+		//エネミーの向き固定フラグが有効の場合
+		//エネミーの向きを設定
+		this->vecRotation = VRot;
 		//エネミーの向きを取得
 		MV1SetRotationXYZ(iModelHandle, VRot);
 	}
@@ -109,11 +151,14 @@ void Enemy_Missile::MoveEnemy()
 		if (iFiringCount <= 0)
 		{
 			// 発射カウントが0以下の場合
-			// 誘導カウントが発射カウントより大きい場合
-			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			// 攻撃予告エフェクトフラグが有効か確認
+			if (this->bWarningEffectFlg == true)
 			{
+				// 攻撃予告エフェクトフラグが有効の場合
+				// 攻撃予告エフェクトフラグを無効化
 				this->bWarningEffectFlg = false;
 
+				// ショットフラグを有効化
 				this->bShotFlg = true;
 
 				/* 攻撃予告エフェクト追加 */
@@ -125,7 +170,7 @@ void Enemy_Missile::MoveEnemy()
 					this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 					/* エフェクトの座標設定 */
-					this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT-20, vecPosition.z));
+					this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT - 20, vecPosition.z));
 
 					/* エフェクトの回転量設定 */
 					this->pEffectWarning->SetRotation(this->vecRotation);
@@ -137,27 +182,34 @@ void Enemy_Missile::MoveEnemy()
 					{
 						/* "オブジェクト管理"データリストを取得 */
 						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 						/* エフェクトをリストに登録 */
 						ObjectListHandle->SetEffect(this->pEffectWarning);
 					}
-			if (this->bShotFlg == true)
-			{
-				// エフェクトが再生終了している場合
-		// ミサイルを発射する
-		Player_Range_Missile_Shot();
 
-			// 発射カウントを初期化
-			this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+					// ショットフラグが有効か確認
+					if (this->bShotFlg == true)
+					{
+						// ショットフラグが有効の場合
+						// ミサイルを発射する
+						Player_Range_Missile_Shot();
 
-				this->bWarningEffectFlg = true;
-			}
-			this->bShotFlg = false;
+						// 発射カウントを初期化
+						this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+
+						// 攻撃予告エフェクトフラグを有効化
+						this->bWarningEffectFlg = true;
+					}
+
+					// ショットフラグを無効化
+					this->bShotFlg = false;
 				}
 			}
-		
+
 		}
 	}
 }
+
 
 // ミサイル弾の発射
 void Enemy_Missile::Player_Range_Missile_Shot()
@@ -178,7 +230,9 @@ void Enemy_Missile::Enemy_Model_Animation()
 	if (this->bMissileAttackMotionFlg)
 	{
 		// 攻撃モーションフラグが有効の場合
+		// 攻撃の再生時間を加算する
 		this->fMissileAttackPlayTime += 0.5f;
+
 		// 再生時間をセットする
 		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackAttachIndex, this->fMissileAttackPlayTime);
 
@@ -186,100 +240,145 @@ void Enemy_Missile::Enemy_Model_Animation()
 		if (this->fMissileAttackPlayTime >= this->fMissileAttackTotalTime)
 		{
 			// アニメーションの再生時間が総再生時間に達した場合
-	// ミサイルを生成
-	this->pBulletRangeMissile = new BulletEnemyRangeMissile;
+			// ミサイルを生成
+			this->pBulletRangeMissile = new BulletEnemyRangeMissile;
 
-	//効果音再生
-	gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_MISSILE_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
+			//効果音再生
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_MISSILE_SHOT, this->vecPosition, SE_3D_SOUND_RADIUS);
 
-	/* 攻撃の生成方向の設定 */
-	/* 攻撃座標を算出 */
+			/* 攻撃の生成方向の設定 */
+			/* 攻撃座標を算出 */
 
-	//エネミーの向きを初期化
-	VECTOR vecAdd = VGet(0, 0, 0);
+			//エネミーの向きを初期化
+			VECTOR vecAdd = VGet(0, 0, 0);
 
-	// 発射させる方向を設定
-	vecAdd = VNorm(vecAdd);
+			// 発射させる方向を設定
+			vecAdd = VNorm(vecAdd);
 
-	// 発射させる高さと幅を設定
-	vecAdd.y = PLAYER_HEIGHT / 2.f;
-	vecAdd.x = PLAYER_WIDE / 2.f;
+			// 発射させる高さと幅を設定
+			vecAdd.y = PLAYER_HEIGHT / 2.f;
+			vecAdd.x = PLAYER_WIDE / 2.f;
 
-	// 攻撃生成座標をエネミーが向いている方向に設定
-	this->pBulletRangeMissile->SetPosition(VAdd(this->vecPosition, vecAdd));
+			// 攻撃生成座標をエネミーが向いている方向に設定
+			this->pBulletRangeMissile->SetPosition(VAdd(this->vecPosition, vecAdd));
 
-	// 移動する弾の向きを設定
-	this->pBulletRangeMissile->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
+			// 移動する弾の向きを設定
+			this->pBulletRangeMissile->SetRotation(VGet(0.0f, -(this->vecRotation.y), 0.0f));
 
-	//初期化
-	this->pBulletRangeMissile->Initialization();
+			//初期化
+			this->pBulletRangeMissile->Initialization();
 
-	//バレットリストに追加
-	ObjectList->SetBullet(this->pBulletRangeMissile);
+			//バレットリストに追加
+			ObjectList->SetBullet(this->pBulletRangeMissile);
+
 			// アタッチした攻撃アニメーションをデタッチする
 			MV1DetachAnim(this->iModelHandle, iMissileAttackAttachIndex);
+
 			// 再生時間を初期化する
 			this->fMissileAttackPlayTime = 0.0f;
+
 			// エネミーモデルに攻撃のアニメーションをアタッチする
 			this->iMissileAttackNowAttachIndex = MV1AttachAnim(this->iModelHandle, 1, -1, FALSE);
+
 			// アタッチした攻撃アニメーションの総再生時間を取得する
 			this->fMissileAttackNowTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackNowAttachIndex);
 
+			// 攻撃中モーションフラグを有効化
 			this->bMissileAttackNowMotionFlg = true;
+
 			// 攻撃モーションフラグを無効化
 			this->bMissileAttackMotionFlg = false;
 		}
 	}
 
-	if (this->bMissileAttackNowMotionFlg)
+	// 攻撃中モーションフラグが有効か確認
+	if (this->bMissileAttackNowMotionFlg == true)
 	{
+		// 攻撃中モーションフラグが有効の場合
+		// 攻撃中の再生時間を加算する
 		this->fMissileAttackNowPlayTime += 0.5f;
+
+		// 再生時間をセットする
 		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackNowAttachIndex, this->fMissileAttackNowPlayTime);
 
+		// 再生時間がアニメーションの総再生時間に達したか確認
 		if (this->fMissileAttackNowPlayTime >= this->fMissileAttackNowTotalTime)
 		{
+			// アニメーションの再生時間が総再生時間に達した場合
 			// アタッチしたアニメーションをデタッチする
 			MV1DetachAnim(this->iModelHandle, iMissileAttackNowAttachIndex);
+
+			// 再生時間を初期化する
 			this->fMissileAttackNowPlayTime = 0.0f;
+
 			// エネミーモデルに攻撃のアニメーションをアタッチする
 			this->iMissileAttackEndAttachIndex = MV1AttachAnim(this->iModelHandle, 4, -1, FALSE);
+
 			// アタッチした攻撃アニメーションの総再生時間を取得する
 			this->fMissileAttackEndTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackEndAttachIndex);
 
+			// 攻撃中モーションフラグを無効化
 			this->bMissileAttackNowMotionFlg = false;
+
+			// 攻撃終了モーションフラグを有効化
 			this->bMissileAttackEndMotionFlg = true;
 		}
 	}
 
+	// 攻撃終了モーションフラグが有効か確認
 	if (this->bMissileAttackEndMotionFlg)
 	{
+		// 攻撃終了モーションフラグが有効の場合
+		// 攻撃終了の再生時間を加算する
 		this->fMissileAttackEndPlayTime += 0.5f;
+
+		// 再生時間をセットする
 		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackEndAttachIndex, this->fMissileAttackEndPlayTime);
 
+		// 再生時間がアニメーションの総再生時間に達したか確認
 		if (this->fMissileAttackEndPlayTime >= this->fMissileAttackEndTotalTime)
 		{
+			// アニメーションの再生時間が総再生時間に達した場合
 			// アタッチしたアニメーションをデタッチする
 			MV1DetachAnim(this->iModelHandle, iMissileAttackEndAttachIndex);
+
+			// 再生時間を初期化する
 			this->fMissileAttackEndPlayTime = 0.0f;
+
 			// エネミーモデルに攻撃のアニメーションをアタッチする
 			this->iMissileAttackEndLoopAttachIndex = MV1AttachAnim(this->iModelHandle, 0, -1, TRUE);
+
 			// アタッチした攻撃アニメーションの総再生時間を取得する
 			this->fMissileAttackEndLoopTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iMissileAttackEndLoopAttachIndex);
 
+			// 攻撃終了モーションフラグを無効化
 			this->bMissileAttackEndMotionFlg = false;
+
+			// 攻撃終了ループモーションフラグを有効化
 			this->bMissileAttackEndLoopMotionFlg = true;
 		}
 	}
 
+	// 攻撃終了ループモーションフラグが有効か確認
 	if (this->bMissileAttackEndLoopMotionFlg)
 	{
+		// 攻撃終了ループモーションフラグが有効の場合
+		// 攻撃終了ループの再生時間を加算する
 		this->fMissileAttackEndLoopPlayTime += 0.5f;
+
+		// 再生時間をセットする
 		MV1SetAttachAnimTime(this->iModelHandle, this->iMissileAttackEndLoopAttachIndex, this->fMissileAttackEndPlayTime);
 
+		// 再生時間がアニメーションの総再生時間に達したか確認
 		if (this->fMissileAttackEndPlayTime >= this->fMissileAttackEndLoopTotalTime)
 		{
+			// アニメーションの再生時間が総再生時間に達した場合
+			// 再生時間を初期化する
 			this->fMissileAttackEndLoopPlayTime = 0.0f;
+
+			// 攻撃終了ループモーションフラグを無効化
 			this->bMissileAttackEndLoopMotionFlg = false;
+
 			// アニメーションのループが終了したら、最初の攻撃モーションフラグを再度有効化
 			this->bMissileAttackMotionFlg = true;
 		}
@@ -316,18 +415,22 @@ void Enemy_Missile::Update()
 	// エネミーモデルアニメーション
 	Enemy_Model_Animation();
 
+	// 重力処理
 	Enemy_Gravity();
 
 	/* HPが0以下であるか確認 */
 	if (this->iNowHp <= 0)
 	{
+		// HPが0以下である場合
 		/* 死亡フラグを有効化 */
 		this->bDeadFlg = true;
 
 		// HPが0以下である場合
-		 if (this->bHitEffectGenerated == FALSE)
+		// ヒットエフェクト生成終了確認フラグが無効か確認
+		if (this->bHitEffectGenerated == FALSE)
 		{
-			/* Hitエフェクト追加 */
+			//ヒットエフェクト生成終了確認フラグが無効の場合
+		   /* Hitエフェクト追加 */
 			{
 				/* 時間経過で削除されるエフェクトを追加 */
 				EffectManualDelete* AddEffect = new EffectManualDelete();
@@ -348,15 +451,18 @@ void Enemy_Missile::Update()
 				{
 					/* "オブジェクト管理"データリストを取得 */
 					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
-
+				//ヒットエフェクト生成終了確認フラグを有効化
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
-		 this->bDirectionFlg = false;
+
+		// 向き固定フラグを無効化
+		this->bDirectionFlg = false;
 		//死亡モーション以外のモーションをデタッチ
 		MV1DetachAnim(this->iModelHandle, this->iMissileAttackAttachIndex);
 		MV1DetachAnim(this->iModelHandle, this->iMissileAttackNowAttachIndex);
@@ -378,17 +484,13 @@ void Enemy_Missile::Update()
 		// 死亡モーションの再生時間が総再生時間に達したか確認
 		if (this->fDiePlayTime >= this->fDieTotalTime)
 		{
-		/* 撃破時の処理を実行 */
-		Defeat();
+			// 死亡モーションの再生時間が総再生時間に達した場合
+			/* 撃破時の処理を実行 */
+			Defeat();
 
 			//爆発SE再生
-		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 		}
 		return;
 	}
-
-	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }

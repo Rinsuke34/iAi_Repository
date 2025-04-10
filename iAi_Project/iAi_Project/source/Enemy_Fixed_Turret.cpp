@@ -10,8 +10,12 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
-	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
-	this->iBloodAmount = 10;					// ブラッド量
+
+	//オブジェクトの種類をTypeEnemyに設定
+	this->iObjectType = OBJECT_TYPE_ENEMY;
+
+	//出現するブラッド量を設定
+	this->iBloodAmount = 10;
 
 	/* データリスト取得 */
 	{
@@ -30,18 +34,37 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 
 	}
 
-	this->pPlayer = ObjectList->GetCharacterPlayer();// プレイヤー
+	/* オブジェクト取得 */
+	// プレイヤーを取得
+	this->pPlayer = ObjectList->GetCharacterPlayer();
 
-	this->iFiringCount = 0;	// 発射カウント
-	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;	// 誘導カウント
-	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
-	this->bWarningEffectFlg = true;				// 警告エフェクトフラグ
-	this->bShotFlg = false;						// ショットフラグ
+	// 初期化
+	// 発射カウント
+	this->iFiringCount = 0;
 
-	this->bDirectionFlg = true;					// 向き固定フラグ
-	this->bUpFlg = false;						// 上フラグ
-	this->bDownFlg = false;						// 下フラグ
-	this->bMissile = false;						// ミサイルフラグ
+	// 誘導カウント
+	this->iGuidanceCount = ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL;
+
+	//ヒットエフェクト生成フラグ
+	this->bHitEffectGenerated = false;
+
+	//エネミー警告エフェクトフラグ
+	this->bWarningEffectFlg = true;
+
+	// ショットフラグ
+	this->bShotFlg = false;
+
+	//エネミーの向きを固定するフラグ
+	this->bDirectionFlg = true;
+
+	//上フラグ
+	this->bUpFlg = false;
+
+	//下フラグ
+	this->bDownFlg = false;
+
+	//ミサイル発射フラグ
+	this->bMissile = false;
 
 	//維持カウントを初期化
 	this->iMaintainCount = 30;
@@ -57,13 +80,19 @@ Enemy_Fixed_Turret::~Enemy_Fixed_Turret()
 void Enemy_Fixed_Turret::Initialization()
 {
 	/* コリジョンセット */
+	//エネミーのカプセルコリジョンの半径を設定
 	this->stCollisionCapsule.fCapsuleRadius = 100;
+
+	//カプセルコリジョンの上の座標を設定
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+
+	//カプセルコリジョンの下の座標を設定
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 	
+	//発光するフレームの処理
 	UpdataLightFrame();
 }
 
@@ -80,16 +109,20 @@ void Enemy_Fixed_Turret::MoveEnemy()
 	VECTOR VRot = VGet(0, 0, 0);
 	VECTOR VYRot = VGet(0, 0, 0);
 
-	// プレイヤーの方向を向くようにエネミーの向きを定義
+	// プレイヤーの座標を取得
 	VECTOR centerPos = VGet(playerPos.x, playerPos.y, playerPos.z);
+
+	//プレイヤーとエネミーのXZ軸の距離を取得
 	float deltaX = this->vecPosition.x - centerPos.x;
 	float deltaZ = this->vecPosition.z - centerPos.z;
 
-
+	//エネミーがプレイヤーの方向を向くようにエネミーの向きを定義
 	VRot.y = atan2f(deltaX, deltaZ);
 	VYRot.y = atan2f(deltaX, deltaZ);
 	//現在向ている方向を取得
 	VECTOR vecRot = MV1GetRotationXYZ(iModelHandle);
+
+
 	if (vecPosition.z > centerPos.z)
 	{
 		VRot.x = atan2f(this->vecPosition.y - centerPos.y, this->vecPosition.z - centerPos.z) * -1;

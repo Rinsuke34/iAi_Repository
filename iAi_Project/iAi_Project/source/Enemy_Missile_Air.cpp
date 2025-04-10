@@ -101,11 +101,14 @@ void Enemy_Missile_Air::MoveEnemy()
 		if (iFiringCount <= 0)
 		{
 			// 発射カウントが0以下の場合
-			// 誘導カウントが発射カウントより大きい場合
-			if (this->bWarningEffectFlg == true)	// 警告エフェクトフラグが有効の場合
+			// 警告エフェクトフラグが有効か確認
+			if (this->bWarningEffectFlg == true)
 			{
+				// 警告エフェクトフラグが有効の場合
+				// 警告エフェクトフラグを無効化
 				this->bWarningEffectFlg = false;
 
+				// ミサイル発射フラグを有効化
 				this->bShotFlg = true;
 
 				/* 攻撃予告エフェクト追加 */
@@ -129,21 +132,27 @@ void Enemy_Missile_Air::MoveEnemy()
 					{
 						/* "オブジェクト管理"データリストを取得 */
 						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 						/* エフェクトをリストに登録 */
 						ObjectListHandle->SetEffect(this->pEffectWarning);
 					}
-			if (this->bShotFlg == true)
-			{
-				// エフェクトが再生終了している場合
-		// ミサイルを発射する
-			Player_Range_Missile_Shot();
 
-			// 発射カウントを初期化
-			this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+					//ミサイル発射フラグが有効か確認
+					if (this->bShotFlg == true)
+					{
+						// ミサイル発射フラグが有効の場合
+						// プレイヤーにミサイルを発射
+						Player_Range_Missile_Shot();
 
-				this->bWarningEffectFlg = true;
-			}
-			this->bShotFlg = false;
+						// 発射カウントを初期化
+						this->iFiringCount = ENEMY_MISSILE_INTERVAL;
+
+						//攻撃予告エフェクトフラグを有効化
+						this->bWarningEffectFlg = true;
+					}
+
+					//ショットフラグを無効化
+					this->bShotFlg = false;
 				}
 			}
 
@@ -222,6 +231,7 @@ void Enemy_Missile_Air::Update()
 		this->bDeadFlg = true;
 
 		// HPが0以下である場合
+		// ヒットエフェクト生成終了確認フラグが無効か確認
 		if (this->bHitEffectGenerated == FALSE)
 		{
 			/* Hitエフェクト追加 */
@@ -249,7 +259,7 @@ void Enemy_Missile_Air::Update()
 					ObjectListHandle->SetEffect(AddEffect);
 				}
 
-
+				// ヒットエフェクト生成終了確認フラグを有効化
 				this->bHitEffectGenerated = TRUE;
 			}
 		}
@@ -280,9 +290,4 @@ void Enemy_Missile_Air::Update()
 		}
 		return;
 	}
-
-	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }

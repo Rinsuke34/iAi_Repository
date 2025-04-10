@@ -23,12 +23,23 @@ LargeScreen::LargeScreen() : PlatformBase()
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* スクリーンに映る映像 */
-		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//タイトル
-		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
-		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
-		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");				//データ
-		this->iTextureConfigHandle = *ImageList->piGetImage("Home/GameEnd");			//コンフィグ
-		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
+		//タイトル
+		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");
+
+		//ニューゲーム
+		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");
+
+		//コンティニュー
+		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");
+
+		//コンフィグ
+		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");
+
+		//ゲーム終了
+		this->iTextureConfigHandle = *ImageList->piGetImage("Home/GameEnd");
+
+		//タイトルロゴ
+		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");
 	}
 
 	/* UIカウントを初期化 */
@@ -103,33 +114,44 @@ void LargeScreen::Process()
 				// Homeフラグを有効化
 				this->bHomeFlg = TRUE;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
 
 				//UIカウントをポジションAに変更
 				iUICount = CAMERA_FIXED_POSITION_A;
+
 				break;
+
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+
 				//ゲームスタートフラグを無効化
 				this->bGameStartFlg = FALSE;
 
 				//ホームフラグを無効化
 				this->bHomeFlg = FALSE;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
 				break;
+
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
+
 				// Homeフラグを無効化
 				this->bHomeFlg = FALSE;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 			}
 		}
@@ -141,10 +163,13 @@ void LargeScreen::Process()
 			{
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
+
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
 
@@ -158,6 +183,7 @@ void LargeScreen::Process()
 				//ホームフラグを有効化
 				this->bHomeFlg = TRUE;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
 				break;
 			}
@@ -170,29 +196,40 @@ void LargeScreen::Process()
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
+
+				//UIカウントをTitle画面に設定
 				iUICount = 0;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
+
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
+
 				// UIカウントを減少
 				iUICount--;
 
 				// UIカウントがはじめからより小さいか確認
 				if (iUICount < CAMERA_FIXED_POSITION_A)
 				{
+					//UIカウントがはじめからより小さい場合
 					//カメラ固定位置を設定ホーム画面に設定
 					iUICount = CAMERA_FIXED_POSITION_D;
 				}
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 			}
 		}
@@ -204,29 +241,40 @@ void LargeScreen::Process()
 			{
 				//タイトル画面
 			case CAMERA_FIXED_POSITION_START:
+
+				//UIカウントをTitle画面に設定
 				iUICount = 0;
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
 				break;
+
 				//はじめからホーム画面
 			case CAMERA_FIXED_POSITION_A:
+
 				//つづきからホーム画面
 			case CAMERA_FIXED_POSITION_B:
+
 				//データホーム画面
 			case CAMERA_FIXED_POSITION_C:
+
 				//設定ホーム画面
 			case CAMERA_FIXED_POSITION_D:
+
 				// UIカウントを増加
 				iUICount++;
 
 				// UIカウントが確認画面より大きいか確認
 				if (iUICount >= CAMERA_FIXED_POSITION_E)
 				{
+					//UIカウントが確認画面より大きい場合
 					// カメラ固定位置をはじめからに設定
 					iUICount = CAMERA_FIXED_POSITION_A;
 				}
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 			}
 		}
@@ -385,8 +433,6 @@ void LargeScreen::Process()
 		}
 	}
 }
-
-
 
 // 更新
 void LargeScreen::Update()

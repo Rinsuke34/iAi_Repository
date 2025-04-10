@@ -4,27 +4,27 @@
 
 /* エネミーで使用する定数の宣言を行う */
 
-static const int	ENEMY_X_DISTANCE			= 2000;		// エネミーのX軸の探知範囲
-static const int	ENEMY_Y_DISTANCE			= 2000;		// エネミーのY軸の探知範囲
-static const int	ENEMY_Z_DISTANCE			= 2000;		// エネミーのZ軸の探知範囲
-static const int	ENEMY_Missile_X_DISTANCE	= 2500;		// ミサイルエネミーのX軸の探知範囲
-static const int	ENEMY_Missile_Y_DISTANCE	= 2500;		// ミサイルエネミーのY軸の探知範囲
-static const int	ENEMY_Missile_Z_DISTANCE	= 2500;		// ミサイルエネミーのZ軸の探知範囲
-static const int	ENEMY_DETONATION_RANGE	= 300;		// エネミーの起爆範囲
-static const int	ENEMY_EXPLOSION_RANGE	= 500;		// エネミーの爆発範囲
+static const int	ENEMY_X_DISTANCE			= 2000;					// エネミーのX軸の探知範囲
+static const int	ENEMY_Y_DISTANCE			= 2000;					// エネミーのY軸の探知範囲
+static const int	ENEMY_Z_DISTANCE			= 2000;					// エネミーのZ軸の探知範囲
+static const int	ENEMY_Missile_X_DISTANCE	= 2500;					// ミサイルエネミーのX軸の探知範囲
+static const int	ENEMY_Missile_Y_DISTANCE	= 2500;					// ミサイルエネミーのY軸の探知範囲
+static const int	ENEMY_Missile_Z_DISTANCE	= 2500;					// ミサイルエネミーのZ軸の探知範囲
+static const int	ENEMY_DETONATION_RANGE	= 300;						// エネミーの起爆範囲
+static const int	ENEMY_EXPLOSION_RANGE	= 500;						// エネミーの爆発範囲
 static const int	ENEMY_X_ESCAPE_DISTANCE					= 1000;		// エネミーのX軸の逃げる範囲
 static const int	ENEMY_Z_ESCAPE_DISTANCE					= 1000;		// エネミーのZ軸の逃げる範囲
 static const int	ENEMY_ESCAPE_SPEED						= 15;		// エネミーの逃げる速度
 static const int	ENEMY_CHASE_SPEED						= 15;		// エネミーの追う速度
 static const int	ENEMY_NORMAL_BULLET_INTERVAL			= 150;		//ノーマルエネミーの弾の発射間隔
 static const int	ENEMY_NORMAL_BULLET_GUIDANCE_INTERVAL	= 20;		//ノーマルエネミーの弾の誘導間隔
-static const int	ENEMY_BEAM_INTERVAL = 270;			//ビームの発射間隔
-static const int	ENEMY_MISSILE_INTERVAL = 60;		//ミサイルの発射間隔
-static const float	ENEMY_GRAVITY_SREED = 1.0f;		// 重力の速度　Y軸の下方向なのでマイナスとする
-static const int	ENEMY_WARNING_EFFECT_WAIT_TIME = 60;	//警告エフェクトの待機時間
+static const int	ENEMY_BEAM_INTERVAL = 270;							//ビームの発射間隔
+static const int	ENEMY_MISSILE_INTERVAL = 60;						//ミサイルの発射間隔
+static const float	ENEMY_GRAVITY_SREED = 1.0f;							// 重力の速度　Y軸の下方向なのでマイナスとする
+static const int	ENEMY_WARNING_EFFECT_WAIT_TIME = 60;				//警告エフェクトの待機時間
 static const int	ENEMY_RETURN_TIME						= 60;		//エネミーの復帰時間
 
 /* ゴールオブジェクト */
-static const int	ENEMY_GOAL_OBJECT_HEIGHT	= 160;		// ゴールオブジェクトの高さ			/* 2025.01.31 駒沢風助 ゴールオブジェクト修正 */
+static const int	ENEMY_GOAL_OBJECT_HEIGHT	= 160;					// ゴールオブジェクトの高さ			/* 2025.01.31 駒沢風助 ゴールオブジェクト修正 */
 
 

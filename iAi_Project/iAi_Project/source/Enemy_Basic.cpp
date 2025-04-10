@@ -1,5 +1,6 @@
 /* 2025.01.27 駒沢風助 ファイル作成 */
-
+/* 2025.03.23 石川智也 エネミー被弾時の処理追加 */
+/* 2025.03.23 石川智也 エネミー重力処理を追加 */
 #include "Enemy_Basic.h"
 
 /* 基本エネミークラスの定義 */
@@ -101,6 +102,7 @@ void Enemy_Basic::DefeatAttack()
 	}
 
 }
+//ここまで
 
 // 敵撃破時の処理
 void Enemy_Basic::Defeat()
@@ -184,6 +186,8 @@ void Enemy_Basic::LoadCoreFrameNo()
 	this->iCoreFrameNo = MV1SearchFrame(this->iModelHandle, "Core");
 }
 
+/* 石川智也エネミー重力の重力処理追加 */
+// 重力処理
 void Enemy_Basic::Enemy_Gravity()
 {
 	// 移動後の座標を取得(垂直方向)
@@ -243,3 +247,5 @@ void Enemy_Basic::Enemy_Gravity()
 		}
 	}
 }
+
+/* ここまで */

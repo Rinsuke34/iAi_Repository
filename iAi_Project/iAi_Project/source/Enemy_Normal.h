@@ -14,9 +14,9 @@
 #include "BulletEnemyRangeNormal.h"
 #include "PlayerStatusDefine.h"
 
-/* テスト用敵クラス */
+/* 地上ノーマルエネミークラス */
 
-// エネミーベースクラス
+// エネミーノーマルクラス
 class Enemy_Normal : public Enemy_Basic
 {
 public:
@@ -28,26 +28,21 @@ public:
 
 private:
 
+	/* エフェクト・使用するオブジェクトリスト */
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
-
 	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
-
 	EffectManualDelete* pEffectHit;						//ヒットエフェクト
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
-
 	//関数
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
-	void	Player_Range_Normal_Shot();			// ノーマル弾の発射
-	void	Enemy_Model_Animation();			// エネミーモデルアニメーション
+	void	MoveEnemy();								// 敵を移動させるメソッドを追加
+	void	Player_Range_Normal_Shot();					// ノーマル弾の発射
+	void	Enemy_Model_Animation();					// エネミーモデルアニメーション
 
 	//変数
-	int		iFiringCount;	// 発射カウント
-
-	int		iGuidanceCount;	// 誘導カウント
-
+	int		iFiringCount;								// 発射カウント
+	int		iGuidanceCount;								// 誘導カウント
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool	bDirectionFlg;								// 向き固定フラグ

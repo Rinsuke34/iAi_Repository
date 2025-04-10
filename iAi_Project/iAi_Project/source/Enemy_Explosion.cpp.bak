@@ -1,0 +1,680 @@
+/* 2025.01.28 石川智也 ファイル作成 */
+#include "Enemy_Explosion.h"
+
+// コンストラクタ
+Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
+{
+
+
+	this->iXdistance = ENEMY_X_DISTANCE;		// X軸の距離
+	this->iZdistance = ENEMY_Z_DISTANCE;		// Z軸の距離
+	this->fSpeed = ENEMY_CHASE_SPEED;				// 移動速度
+	this->iDetonationRange = ENEMY_DETONATION_RANGE;	//起爆範囲内
+	this->fGravity = ENEMY_GRAVITY_SREED;				// 重力
+	this->iBlastRange		= ENEMY_EXPLOSION_RANGE;	// 爆発範囲内
+
+	// HPを設定
+	this->iMaxHp = 1;
+	this->iNowHp = 1;
+	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	this->iBloodAmount = 10;					// ブラッド量
+
+	/* データリスト取得 */
+	{
+		/* "オブジェクト管理"を取得 */
+		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		/* "プレイヤー状態"を取得 */
+		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		/* "エフェクトリソース管理"を取得 */
+		this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+		/* "ステージ状態管理"を取得 */
+		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
+
+	}
+
+	/* モデル取得 */
+	{
+		/* "3Dモデル管理"データリストを取得 */
+		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
+		/* モデルハンドル取得 */
+		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Explosion/Enemy_Explosion");
+	}
+	this->iStopCount = 0;
+	this->pEffect = nullptr;
+    this->bEffectGenerated = false;
+	this->bFallFlg = true;
+	this->bStopFlg = true;
+	this->bCountFlg = false;
+	this->bBlastFlg = false;
+	this->bHitEffectGenerated = false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg = true;					// 向き固定フラグ
+	this->bChaseFlg = true;						// 追跡フラグ
+	this->bSavePositionFlg = true;				// 座標保存フラグ
+	this->iReturnCount = ENEMY_RETURN_TIME;		// リターンカウント
+
+	//エネミーの初期座標を保存
+	this->vecStartPosition = this->vecPosition;
+}
+
+// デストラクタ
+Enemy_Explosion::~Enemy_Explosion()
+{
+
+}
+
+// 初期化
+void Enemy_Explosion::Initialization()
+{
+	/* コリジョンセット */
+	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
+
+	/* コアフレーム番号取得 */
+	LoadCoreFrameNo();
+
+	UpdataLightFrame();
+}
+
+void Enemy_Explosion::MoveEnemy()
+{
+	this->stHorizontalCollision.fCapsuleRadius = 50;
+	this->stHorizontalCollision.vecCapsuleTop = VAdd(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z), VGet(0, 50, 0));
+	this->stHorizontalCollision.vecCapsuleBottom = VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z);
+
+	//エネミーの座標を保存
+	if (this->bSavePositionFlg == true)
+	{
+		this->vecStartPosition = this->vecPosition;
+		this->bSavePositionFlg = false;
+	}
+
+	// プレイヤーの座標を取得
+	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
+	VECTOR playerPos = player->vecGetPosition();
+
+	//エネミーが落下しているか確認
+	if (this->bFallFlg == false)
+	{
+		//エネミーが落下している場合
+		//エネミーが移動していた方向の逆方向に10f移動
+		fSpeed = 40;
+		this->vecPosition = VAdd(this->vecPosition, VScale(VNorm(VSub(this->vecPosition, playerPos)), fSpeed));
+		fSpeed = 0;
+		this->bCountFlg = true;
+	}
+	if (this->bCountFlg = true)
+	{
+		iStopCount++;
+	}
+	if (iStopCount > 60)
+	{
+		this->bStopFlg = true;
+		iStopCount = 0;
+		this->fSpeed = ENEMY_CHASE_SPEED;
+	}
+	//エネミーの向きを初期化する
+	VECTOR VRot = VGet(0, 0, 0);
+
+	// 重力処理
+	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+	this->vecPosition.y += this->vecMove.y;
+
+	//プレイヤーの方向を向くようにエネミーの向きを定義
+	VRot.y = atan2f(this->vecPosition.x - playerPos.x, this->vecPosition.z - playerPos.z);
+
+	if (this->bDirectionFlg == true)
+	{
+	//エネミーの向きを設定
+	this->vecRotation = VRot;
+		//エネミーの向きを取得
+		MV1SetRotationXYZ(iModelHandle, VRot);
+	}
+
+	//プレイヤーとエネミーのXZ軸の距離を取得
+	float distanceToPlayerX = fabs(this->vecPosition.x - playerPos.x);
+	float distanceToPlayerY = fabs(this->vecPosition.y - playerPos.y);
+	float distanceToPlayerZ = fabs(this->vecPosition.z - playerPos.z);
+
+	if (bChaseFlg == TRUE)
+	{
+		// プレイヤーとエネミーの距離の平方を計算
+		float distanceToPlayerSquared = (this->vecPosition.x - playerPos.x) * (this->vecPosition.x - playerPos.x) +
+			(this->vecPosition.y - playerPos.y) * (this->vecPosition.y - playerPos.y) +
+			(this->vecPosition.z - playerPos.z) * (this->vecPosition.z - playerPos.z);
+
+		// 索敵範囲の半径の平方
+		float detectionRadiusSquared = ENEMY_Y_DISTANCE * ENEMY_Y_DISTANCE;
+
+		// プレイヤーが索敵範囲内にいるか確認
+		if (distanceToPlayerSquared < detectionRadiusSquared)
+	{
+		// プレイヤーが探知範囲内にいる場合
+        // 探知範囲内にいるエネミーのみ処理を行う
+        if (!bEffectGenerated)
+		{
+			//待機モーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+
+			//走りモーションをアタッチする
+			this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+			//走りモーションの総再生時間を取得する
+			this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+			//再生速度を加算
+			this->fRunPlayTime += 1.0f;
+
+			//再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+			//再生時間がアニメーションの総再生時間に達したか確認
+			if (this->fRunPlayTime >= this->fRunTotalTime)
+			{
+				//アニメーションの再生時間が総再生時間に達した場合
+				//再生時間を初期化する
+				this->fRunPlayTime = 0.0f;
+			}
+
+
+			// エネミーをプレイヤーに近づける
+			VECTOR direction = VNorm(VSub(playerPos, this->vecPosition));
+
+			// プレイヤーに向かう方向と速度を取得
+			this->vecPosition = VAdd(this->vecPosition, VScale(direction, fSpeed));
+
+			// プレイヤーがエネミーの起爆範囲内に入ったかどうかを確認
+			if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_DETONATION_RANGE)
+			{
+				this->bBlastFlg = true;
+				
+			}
+		}
+	}
+	if (!bEffectGenerated)
+	{
+		if (this->bBlastFlg == true)
+		{
+				// プレイヤーがエネミーの起爆範囲内に入った場合
+				//走りモーションをデタッチする
+				MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+
+				//爆発モーションをアタッチする
+				this->iExplosionAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
+
+
+
+                // 起爆予告エフェクトを生成
+                this->pEffectDetonation = new EffectManualDelete();
+
+                // エフェクトの読み込み
+                this->pEffectDetonation->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
+
+                // エフェクトの座標設定
+                this->pEffectDetonation->SetPosition(this->vecPosition);
+
+                // エフェクトの回転量設定
+                this->pEffectDetonation->SetRotation(this->vecRotation);
+
+                // エフェクトの初期化
+                this->pEffectDetonation->Initialization();
+
+                // エフェクトをリストに登録
+                {
+                    // "オブジェクト管理"データリストを取得
+                    DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+                    // エフェクトをリストに登録
+                    ObjectListHandle->SetEffect(pEffectDetonation);
+                }
+
+				//起爆SE再生
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_WARNING_EXPLOSION, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+                // エフェクト生成フラグを設定
+                bEffectGenerated = true;
+			}
+		}
+        else
+		{
+            // エフェクトが再生中かどうか確認
+            if (IsEffekseer3DEffectPlaying(this->pEffectDetonation->iGetEffectHandle()))
+			{
+                // エフェクトが再生終了している場合
+				/* データリスト取得 */
+				DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+
+				/* 爆発エフェクト生成 */
+				{
+					/* 時間経過で削除されるエフェクトを追加 */
+					EffectSelfDelete* AddEffect = new EffectSelfDelete();
+
+					/* エフェクト読み込み */
+					AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
+
+					/* エフェクトの座標設定 */
+					AddEffect->SetPosition(this->vecPosition);
+
+					/* エフェクトの回転量設定 */
+					AddEffect->SetRotation(this->vecRotation);
+
+					/* エフェクトの削除されるまでの時間を設定 */
+					AddEffect->SetDeleteCount(75);
+
+					/* エフェクトの初期化 */
+					AddEffect->Initialization();
+
+					/* リストに登録 */
+					{
+						/* "オブジェクト管理"データリストを取得 */
+						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+						/* エフェクトをリストに登録 */
+						ObjectListHandle->SetEffect(AddEffect);
+					}
+				}
+
+				/* エネミーの削除フラグを有効にする */
+				this->bDeleteFlg = true;
+
+				//爆発SE再生
+				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
+
+				//プレイヤーが爆風範囲内にいるかどうかを確認
+				if (VSize(VSub(playerPos, this->vecPosition)) < ENEMY_EXPLOSION_RANGE)
+				{
+					//プレイヤーが爆風範囲内にいる場合
+				//プレイヤーを吹き飛ばす
+				this->PlayerStatusList->SetPlayerNowFallSpeed(-30.0f);
+				// 当たっている場合
+				/* プレイヤーのHPを減少 */
+				this->PlayerStatusList->SetPlayerNowHp(this->PlayerStatusList->iGetPlayerNowHp() - 1);
+
+				/* 被ダメージカウントを加算する */
+				this->PlayerStatusList->SetPlayerDamageCount(this->PlayerStatusList->iGetPlayerDamageCount() + 1);
+
+				/* プレイヤーの無敵時間を設定 */
+				this->PlayerStatusList->SetPlayerNowInvincibleTime(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+
+
+				/* "被ダメージ"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE);
+
+				/* "被ダメージビリビリ"のSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_DAMAGE_ELEC);
+
+				/* 被ダメージボイスを再生 */
+				gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
+
+				/* 被ダメージのエフェクトを生成 */
+				{
+					/* ダメージ発生時エフェクト */
+					{
+						/* 被ダメージの瞬間に発生するエフェクトを追加 */
+						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+
+						/* 座標を設定 */
+						pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
+
+						/* エフェクトを取得 */
+						pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+
+						/* 拡大率を設定 */
+						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+
+						/* 削除カウントを設定 */
+						// ※仮で1秒間
+						pDamageEffect->SetDeleteCount(60);
+
+						/* エフェクト初期化処理 */
+						pDamageEffect->Initialization();
+
+						/* オブジェクトリストに登録 */
+						this->ObjectList->SetEffect(pDamageEffect);
+					}
+
+					/* 感電エフェクト */
+					{
+						/* 感電エフェクトを生成 */
+						EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+
+						/* 感電エフェクトの読み込み */
+						pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
+
+						/* 感電エフェクトの初期化 */
+						pShockEffect->Initialization();
+
+						/* 感電エフェクトの時間を設定 */
+						pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
+
+						/* 感電エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(pShockEffect);
+					}
+
+					/* 画面エフェクト(被ダメージ)作成 */
+					this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+
+				}
+				}
+			}
+		}
+	}
+	if (this->bChaseFlg == false)
+	{
+		iReturnCount--;
+
+		if (this->iReturnCount <= 0)
+		{
+
+			//エネミーの座標を初期座標に戻す
+			// プレイヤーに向かう方向と速度を取得
+			VECTOR direction = VNorm(VSub(this->vecStartPosition, this->vecPosition));
+
+			// プレイヤーに向かう方向と速度を設定
+			this->vecPosition = VAdd(this->vecPosition, VScale(direction, 5));
+
+			//エネミーの向きを初期化する
+			VECTOR VRot = VGet(0, 0, 0);
+
+			//エネミーの向きを初期座標に向ける
+			VRot.y = atan2f(this->vecPosition.x - this->vecStartPosition.x, this->vecPosition.z - this->vecStartPosition.z);
+
+			//エネミーの向きを設定
+			this->vecRotation = VRot;
+
+			//すべてのアニメーションをデタッチする
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+			//走りモーションをアタッチする
+			this->iRunAttachIndex = MV1AttachAnim(this->iModelHandle, 7, -1, FALSE);
+
+			//走りモーションの総再生時間を取得する
+			this->fRunTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iRunAttachIndex);
+
+			//再生速度を加算
+			this->fRunPlayTime += 1.0f;
+
+			//再生時間をセットする
+			MV1SetAttachAnimTime(this->iModelHandle, this->iRunAttachIndex, this->fRunPlayTime);
+
+			//再生時間がアニメーションの総再生時間に達したか確認
+			if (this->fRunPlayTime >= this->fRunTotalTime)
+			{
+				//アニメーションの再生時間が総再生時間に達した場合
+				//再生時間を初期化する
+				this->fRunPlayTime = 0.0f;
+			}
+		}
+	}
+	//エネミーの座標が初期座標に戻ったかどうかを確認
+	if (VSize(VSub(this->vecStartPosition, this->vecPosition)) < 10)
+	{
+		this->bChaseFlg = true;
+
+		//すべてのアニメーションをデタッチする
+		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+		//待機モーションをアタッチする
+		this->iWaitAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		this->iReturnCount = ENEMY_RETURN_TIME;
+	}
+	
+}
+
+void Enemy_Explosion::Enemy_Gravity()
+{
+	// 移動後の座標を取得(垂直方向)
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x;
+	vecNextPosition.y = this->vecPosition.y + this->vecMove.y;
+	vecNextPosition.z = this->vecPosition.z;
+
+	// 主人公の上部分の当たり判定から下方向へ向けた線分を作成
+	this->stVerticalCollision.vecLineStart = this->vecPosition;
+	this->stVerticalCollision.vecLineStart.y += PLAYER_HEIGHT;
+	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
+	this->stVerticalCollision.vecLineEnd.y -= 300;
+
+	// 足場を取得
+	auto& PlatformList = ObjectList->GetPlatformList();
+
+	//// 足場と接触するか確認
+	bool bHitFlg = false;
+	for (auto* platform : PlatformList)
+	{
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
+
+		// 接触しているか確認
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+				this->vecPosition.y = stHitPolyDim.HitPosition.y;
+				this->vecMove.y = 0; // 落下速度をリセット
+			this->bFallFlg = true;
+			this->bStopFlg = true;
+			bHitFlg = true;//接触フラグを有効にする
+					break;
+				}
+		//接触フラグが無効か確認
+		if (!bHitFlg)
+		{
+			//接触フラグが無効の場合
+			this->fGravity = 0;
+			this->vecMove.y = 0;
+			this->bFallFlg = false;
+			this->bStopFlg = false;
+			}
+		}
+}
+
+// エネミーの水平処理
+void Enemy_Explosion::Movement_Horizontal()
+{
+	/* 移動後の座標を取得(水平方向) */
+	VECTOR vecNextPosition;
+	vecNextPosition.x = this->vecPosition.x + this->vecMove.x;
+	vecNextPosition.y = this->vecPosition.y;
+	vecNextPosition.z = this->vecPosition.z + this->vecMove.z;
+
+	/* 1フレームでの移動量を分割して判定する回数 */
+	/* ※移動量に応じて分割を設定する */
+	int iMoveHitCheckCount = (int)VSize(VGet(this->vecMove.x, 0, this->vecMove.z));
+
+	/* 分割した移動量 */
+	VECTOR vecDevisionMove = VScale(this->vecMove, 1.0f / iMoveHitCheckCount);
+
+	/* 分割して移動した先の座標 */
+	VECTOR vecDevisionMovePosition = this->vecPosition;
+
+	/* 道中でオブジェクトに接触しているか判定 */
+
+	{
+
+		/* 足場を取得 */
+		auto& PlatformList = ObjectList->GetPlatformList();
+
+		/* 足場と接触するか確認 */
+		for (auto* platform : PlatformList)
+		{
+			/* 足場との接触判定 */
+			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
+			{
+				/* オブジェクトと接触しているか確認 */
+				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision);
+
+				/* 接触しているか確認 */
+				if (stHitPolyDim.HitNum > 0)
+				{
+					// 接触している場合
+					this->bChaseFlg = false;
+					break;
+				}
+			}
+		}
+	}
+
+	/* プレイヤーの座標を移動させる */
+	this->vecPosition = vecNextPosition;
+}
+
+// 更新
+void Enemy_Explosion::Update()
+{
+    // バレットリストを取得
+	auto& BulletList = ObjectList->GetBulletList();
+
+    // プレイヤー攻撃と接触するか確認
+	for (auto* bullet : BulletList)
+	{
+		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
+		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
+		{
+			// 弾(プレイヤー)の場合
+            // 弾との接触判定
+			if (bullet->HitCheck(this->stCollisionCapsule) == true)
+			{
+				// 接触している場合
+                // ダメージ処理
+				this->iNowHp -= 1;
+			}
+		}
+	}
+
+	if (this->iNowHp <= 0)
+	{
+		/* 死亡フラグを有効化 */
+		this->bDeadFlg = true;
+
+		/* 爆発予告エフェクトを一度でも生成したかを確認 */
+		if (this->pEffectDetonation != nullptr)
+		{
+			// 一度でも生成した場合
+			//爆発予告エフェクトの削除フラグを有効化
+			this->pEffectDetonation->SetDeleteFlg(true);
+
+			//死亡モーション以外のモーションをデタッチ
+			MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+			MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+			//死亡モーションの再生時間を加算
+			this->fDiePlayTime += 2.5f;
+
+			// 死亡モーションをアタッチ
+			this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+			//アタッチした死亡モーションの再生時間をセット
+			MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+			// 死亡モーションの総再生時間を取得
+			this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+			// 死亡モーションの再生時間が総再生時間に達したか確認
+			if (this->fDiePlayTime >= this->fDieTotalTime)
+			{
+				/* 撃破時の処理を実行 */
+				Defeat();
+			}
+		}
+	}
+
+	/* HPが0以下であるか確認 */
+	if (this->iNowHp <= 0)
+	{
+		// HPが0以下である場合
+
+		if (this->bHitEffectGenerated == FALSE)
+		{
+			/* Hitエフェクト追加 */
+			{
+				/* 時間経過で削除されるエフェクトを追加 */
+				EffectManualDelete* AddEffect = new EffectManualDelete();
+
+				/* エフェクト読み込み */
+				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+
+				/* エフェクトの座標設定 */
+				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
+
+				/* エフェクトの回転量設定 */
+				AddEffect->SetRotation(this->vecRotation);
+
+				/* エフェクトの初期化 */
+				AddEffect->Initialization();
+
+				/* リストに登録 */
+				{
+					/* "オブジェクト管理"データリストを取得 */
+					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					/* エフェクトをリストに登録 */
+					ObjectListHandle->SetEffect(AddEffect);
+		}
+				/* 攻撃ヒットのSEを再生 */
+				gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
+
+				DefeatAttack();
+
+				this->bHitEffectGenerated = TRUE;
+			}
+		}
+		this->bDirectionFlg = false;
+		//死亡モーション以外のモーションをデタッチ
+		MV1DetachAnim(this->iModelHandle, this->iWaitAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iRunAttachIndex);
+		MV1DetachAnim(this->iModelHandle, this->iExplosionAttachIndex);
+
+		//死亡モーションの再生時間を加算
+		this->fDiePlayTime += 2.5f;
+
+		// 死亡モーションをアタッチ
+		this->iDieAttachIndex = MV1AttachAnim(this->iModelHandle, 6, -1, FALSE);
+
+		//アタッチした死亡モーションの再生時間をセット
+		MV1SetAttachAnimTime(this->iModelHandle, this->iDieAttachIndex, this->fDiePlayTime);
+
+		// 死亡モーションの総再生時間を取得
+		this->fDieTotalTime = MV1GetAttachAnimTotalTime(this->iModelHandle, this->iDieAttachIndex);
+
+		// 死亡モーションの再生時間が総再生時間に達したか確認
+		if (this->fDiePlayTime >= this->fDieTotalTime)
+		{
+			/* 撃破時の処理を実行 */
+			Defeat();
+
+			//爆発SE再生
+			gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
+		}
+		return;
+	}
+
+	// エネミーを移動させる
+	MoveEnemy();
+
+	Enemy_Gravity();
+
+	Movement_Horizontal();
+
+	CollisionDraw();
+
+	// コリジョンセット
+	this->stCollisionCapsule.fCapsuleRadius = 100;
+	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
+}
+
+
+
+//コリジョン描写
+void Enemy_Explosion::CollisionDraw()
+{
+	DrawLine3D(this->stVerticalCollision.vecLineStart, this->stVerticalCollision.vecLineEnd, GetColor(255, 0, 0));
+
+	DrawCapsule3D(this->stCollisionCapsule.vecCapsuleTop, this->stCollisionCapsule.vecCapsuleBottom, this->stCollisionCapsule.fCapsuleRadius, 32, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
+
+	DrawCapsule3D(this->stHorizontalCollision.vecCapsuleTop, this->stHorizontalCollision.vecCapsuleBottom, this->stHorizontalCollision.fCapsuleRadius, 32, GetColor(0, 0, 255), GetColor(0, 0, 255), FALSE);
+}

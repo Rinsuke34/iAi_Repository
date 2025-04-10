@@ -15,56 +15,46 @@
 
 /*ミサイル弾クラスの宣言 */
 
-// ミサイル弾
+// ミサイル弾クラス
 class BulletEnemyRangeMissile : public BulletBase
 {
 public:
 	BulletEnemyRangeMissile();				// コンストラクタ
 	virtual ~BulletEnemyRangeMissile();		// デストラクタ
 
-	virtual void	Initialization()	override;	// 初期化
-	virtual void	Update()			override;	// 更新
-	virtual void	CollisionDraw()		override;	// 当たり判定描写
-	virtual void	Draw()				override;	// 描画	
+	virtual void	Initialization()	override;		// 初期化
+	virtual void	Update()			override;		// 更新
+	virtual void	CollisionDraw()		override;		// 当たり判定描写
+	virtual void	Draw()				override;		// 描画	
 
 private:
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
+	/* エフェクト・使用するデータリスト */
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
+	EffectManualDelete* pEffect;						//ミサイル弾のエフェクト
+	EffectManualDelete* pEffectExplosion;				//ミサイル弾着弾エフェクト
+	EffectManualDelete* pEffectGuidance;				//ミサイル誘導エフェクト
 
+	/* 関数 */
+	void BulletEnemyRangeMissileMove();					// ミサイル弾の移動処理
+	void BulletEnemyRangeMissileExplosion();			// ミサイル弾の爆発処理
 
-	/* オブジェクト(エフェクト)のハンドル */
-	EffectManualDelete* pEffect;//ミサイル弾のエフェクト
+	/* 変数 */
+	int iDurationCount;									// 弾の持続カウント
+	int iBulletUPCount;									// ミサイル弾打ち上げカウント
+	int iBulletDownCount;								// ミサイル弾打ち下げカウント
+	int iBulletGuidanceCount;							// ミサイル誘導カウント
+	int iEnemyMissileDurationCount;						//ミサイル弾の持続カウント
+	int iTextureHandle;									// テクスチャハンドル
+	bool bPredictedLandingFlg;							//着弾予測フラグ
+	bool bSaveFlg;										//セーブフラグ
+	bool bLandingPointDrawFlg;							//着弾ポイント描写フラグ
 
-	EffectManualDelete* pEffectExplosion;//ミサイル弾着弾エフェクト
-
-	EffectManualDelete* pEffectGuidance;//ミサイル誘導エフェクト
-
-
-	void BulletEnemyRangeMissileMove();	// ミサイル弾の移動処理
-	void BulletEnemyRangeMissileExplosion();// ミサイル弾の爆発処理
-
-	int iDurationCount;			// 弾の持続カウント
-
-	int iBulletUPCount;			// ミサイル弾打ち上げカウント
-
-	int iBulletDownCount;		// ミサイル弾打ち下げカウント
-
-	int iBulletGuidanceCount;	// ミサイル誘導カウント
-
-
-	int iEnemyMissileDurationCount;	//ミサイル弾の持続カウント
-	int iTextureHandle;				// テクスチャハンドル
-
-	bool bPredictedLandingFlg;		//着弾予測フラグ
-	bool bSaveFlg;					//セーブフラグ
-	bool bLandingPointDrawFlg;		//着弾ポイント描写フラグ
-
-	VECTOR vecHitPosition;			//ヒットポジション
-	VECTOR vecModelPosition;		//着弾モデルの座標
+	VECTOR vecHitPosition;								//ヒットポジション
+	VECTOR vecModelPosition;							//着弾モデルの座標
 protected:
 
 	COLLISION_LINE		stVerticalCollision;			// 垂直方向のコリジョン
-	COLLISION_LINE		stFallCollision;			// 落下方向のコリジョン
+	COLLISION_LINE		stFallCollision;				// 落下方向のコリジョン
 };

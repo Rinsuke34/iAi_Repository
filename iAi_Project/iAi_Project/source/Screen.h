@@ -17,9 +17,7 @@
 #include "SceneStage.h"
 #include "SceneTitle.h"
 
-/* テスト用敵クラス */
-
-// 消失ギミッククラス
+// タイトル専用スクリーンクラス
 class Screen : public PlatformBase
 {
 	public:
@@ -30,24 +28,22 @@ class Screen : public PlatformBase
 	
 	private:
 		/* 使用するデータリスト */
-		DataList_Object*	ObjectList;	// オブジェクト管理
-		CharacterBase*		pPlayer;	// プレイヤー
+		DataList_Object*	ObjectList;						// オブジェクト管理
+		CharacterBase*		pPlayer;						// プレイヤー
 
 		/* 関数 */
-		void	Process();				// 更新
-		void	Draw();					// 描画
+		void	Process();									// 更新
+		void	Draw();										// 描画
 
-		/* テクスチャハンドル */
-		int iTextureTitleHandle;		// タイトル
-		int iTextureNewgameHandle;		// ニューゲーム
-		int iTextureContinueHandle;		// コンティニュー
-		int iTextureDateHandle;			// データ
-		int iTextureConfigHandle;		// コンフィグ
-		int iTextureStageHandle;		// ステージ
-
-		bool bStartFlg;					//スタートフラグ	
-		bool bHomeFlg;					//ホームフラグ
-		bool bGameStartFlg;				//ゲームスタートフラグ
-
-		int iUICount;					//UIのカウント
+		/* 変数 */
+		int iTextureTitleHandle;							// タイトル
+		int iTextureNewgameHandle;							// ニューゲーム
+		int iTextureContinueHandle;							// コンティニュー
+		int iTextureDateHandle;								// データ
+		int iTextureConfigHandle;							// コンフィグ
+		int iTextureStageHandle;							// ステージ
+		int iUICount;										//UIのカウント
+		bool bStartFlg;										//スタートフラグ	
+		bool bHomeFlg;										//ホームフラグ
+		bool bGameStartFlg;									//ゲームスタートフラグ
 };

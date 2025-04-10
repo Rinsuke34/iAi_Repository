@@ -15,6 +15,7 @@ TitlePlayer::TitlePlayer() : PlatformBase()
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
 	}
@@ -57,15 +58,16 @@ void TitlePlayer::Update()
 	//処理
 	Process();
 
+	//アクティブフラグが有効か確認
 	if (g_bActiveFlg == true)
 	{
-	//アニメーション更新
-	// アタッチした待機モーションを再生する
-	MV1SetAttachAnimTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex, this->fTitlePlayerWaitNowTime);
+		//アクティブフラグが有効の場合
+		//アニメーション更新
+		// アタッチした待機モーションを再生する
+		MV1SetAttachAnimTime(this->iModelHandle, this->iTitlePlayerWaitAttachIndex, this->fTitlePlayerWaitNowTime);
 
-	//待機モーションの再生時間を加算
+		//待機モーションの再生時間を加算
 		this->fTitlePlayerWaitNowTime += 0.1f;
 
 	}
-
 }

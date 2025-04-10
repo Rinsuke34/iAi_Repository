@@ -21,25 +21,23 @@ public:
 	BulletEnemyRangeNormal();				// コンストラクタ
 	virtual ~BulletEnemyRangeNormal();		// デストラクタ
 
-	virtual void	Initialization()	override;	// 初期化
-	virtual void	Update()			override;	// 更新
+	virtual void	Initialization()	override;		// 初期化
+	virtual void	Update()			override;		// 更新
 
 private:
-	/* オブジェクト(エフェクト)のハンドル */
-	EffectManualDelete* pEffect;
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
+	/* エフェクト・使用するデータリスト */
+	DataList_Object* ObjectList;						// オブジェクト管理
+	EffectManualDelete* pEffect;						// エフェクト	
 
+	/* 関数 */
+	void BulletEnemyRangeNormalMove();					// ノーマル弾の移動処理
 
-	void BulletEnemyRangeNormalMove();	// ノーマル弾の移動処理
+	/* 変数 */
+	int iDurationCount;									// ノーマル弾の持続カウント
+	int iBulletCount;									// ノーマル弾発射カウント
+	int iEnemyNormalDurationCount;						//ノーマル弾の持続カウント
 
-	int iDurationCount;	// ノーマル弾の持続カウント
-
-	int iBulletCount;		// ノーマル弾発射カウント
-
-
-	int iEnemyNormalDurationCount;		//ノーマル弾の持続カウント
 protected:
 
 };

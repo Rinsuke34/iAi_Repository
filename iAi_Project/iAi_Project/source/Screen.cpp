@@ -23,12 +23,23 @@ Screen::Screen() : PlatformBase()
 		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* スクリーンに映る映像 */
-		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//タイトル
-		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");			//ニューゲーム
-		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");		//コンティニュー
-		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");				//コンフィグ
-		this->iTextureConfigHandle = *ImageList->piGetImage("Home/GameEnd");				//データ
-		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");			//ステージ
+		//タイトル
+		this->iTextureTitleHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");
+
+		//ニューゲーム
+		this->iTextureNewgameHandle = *ImageList->piGetImage_Movie("Home/Newgame");	
+
+		//コンティニュー
+		this->iTextureContinueHandle = *ImageList->piGetImage_Movie("Home/Continue");
+
+		//コンフィグ
+		this->iTextureDateHandle = *ImageList->piGetImage_Movie("Home/Config");
+
+		//ゲーム終了
+		this->iTextureConfigHandle = *ImageList->piGetImage("Home/GameEnd");
+
+		//タイトルロゴ
+		this->iTextureStageHandle = *ImageList->piGetImage_Movie("Home/TitleLogo");
 	}
 
 	/* UIカウントを初期化 */
@@ -92,311 +103,375 @@ void Screen::Process()
 {
 	if (g_bActiveFlg == false)
 	{
-	//現在のシーンがタイトルシーンか確認
-	if (gpSceneServer->GetScene("Title"))
-	{
-		// 決定ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
+		//現在のシーンがタイトルシーンか確認
+		if (gpSceneServer->GetScene("Title"))
 		{
-			switch (iUICount)
+			// 決定ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DECID))
 			{
-				//タイトル画面
-			case CAMERA_FIXED_POSITION_START:
-				// Homeフラグを有効化
-				this->bHomeFlg = TRUE;
+				switch (iUICount)
+				{
+					//タイトル画面
+				case CAMERA_FIXED_POSITION_START:
 
-				// UIカウントをはじめからに変更
-				iUICount = CAMERA_FIXED_POSITION_A;
-				break;
+					// Homeフラグを有効化
+					this->bHomeFlg = TRUE;
 
-				//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-				//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-				// Homeフラグを無効化
-				this->bGameStartFlg = FALSE;
-				//ホームフラグを無効化
-				this->bHomeFlg = FALSE;
-
-				this->bStartFlg = TRUE;
-				break;
-
-				//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
+					// UIカウントをはじめからに変更
+					iUICount = CAMERA_FIXED_POSITION_A;
 					break;
-				//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				// Homeフラグを無効化
 
-			if (this->bHomeFlg == FALSE)
-			{
-				this->bHomeFlg = TRUE;
-			}
+					//はじめからホーム画面
+				case CAMERA_FIXED_POSITION_A:
+
+					//つづきからホーム画面
+				case CAMERA_FIXED_POSITION_B:
+
+					// Homeフラグを無効化
+					this->bGameStartFlg = FALSE;
+
+					//ホームフラグを無効化
 					this->bHomeFlg = FALSE;
 
+					//スタートフラグを有効化
 					this->bStartFlg = TRUE;
+
+					break;
+
+					//データホーム画面
+				case CAMERA_FIXED_POSITION_C:
+
+					break;
+
+					//設定ホーム画面
+				case CAMERA_FIXED_POSITION_D:
+
+					// Homeフラグを無効化
+
+					//ホームフラグが無効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが無効な場合
+						//ホームフラグを有効化
+						this->bHomeFlg = TRUE;
+					}
+
+					//スタートフラグを無効化
+					this->bHomeFlg = FALSE;
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
 					break;
 				}
-		}
+			}
 
-		// キャンセルボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
-		{
-			switch (iUICount)
+			// キャンセルボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_CANCEL))
 			{
-				//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-				//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-				//ホームフラグが有効か確認
-				if (this->bHomeFlg == FALSE)
+				switch (iUICount)
 				{
-					//ホームフラグが有効な場合
-					//UIカウント(カメラ)をはじめからに設定
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-				if (this->bHomeFlg == TRUE)
-				{
-					//ホームフラグが有効な場合
-					//UIカウント(カメラ)をタイトルに設定
-					iUICount = CAMERA_FIXED_POSITION_START;
-				}
+					//はじめからホーム画面
+				case CAMERA_FIXED_POSITION_A:
 
-				//ホームフラグを有効化
-				this->bHomeFlg = TRUE;
+					//つづきからホーム画面
+				case CAMERA_FIXED_POSITION_B:
 
-				this->bStartFlg = TRUE;
-				break;
-				//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
+					//ホームフラグが有効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが有効な場合
+						//UIカウント(カメラ)をはじめからに設定
+						iUICount = CAMERA_FIXED_POSITION_A;
+					}
 
-				{
-					//UIカウント(カメラ)をタイトルに設定
-					iUICount = CAMERA_FIXED_POSITION_START;
-				}
+					//ホームフラグが有効か確認
+					if (this->bHomeFlg == TRUE)
+					{
+						//ホームフラグが有効な場合
+						//UIカウント(カメラ)をタイトルに設定
+						iUICount = CAMERA_FIXED_POSITION_START;
+					}
 
-				this->bStartFlg = TRUE;
-				break;
-				//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				
-				if (this->bHomeFlg == FALSE)
-				{
-				if (iUICount == CAMERA_FIXED_POSITION_D)
-				{
-					iUICount = CAMERA_FIXED_POSITION_D;
+					//ホームフラグを有効化
 					this->bHomeFlg = TRUE;
-				}
-				}
-				else
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+					break;
+					//データホーム画面
+				case CAMERA_FIXED_POSITION_C:
+
 				{
 					//UIカウント(カメラ)をタイトルに設定
 					iUICount = CAMERA_FIXED_POSITION_START;
 				}
 
+				//スタートフラグを有効化
 				this->bStartFlg = TRUE;
+
 				break;
 
-			
-			}
-		}
+				//設定ホーム画面
+				case CAMERA_FIXED_POSITION_D:
 
-		// 上ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
-		{
-			switch (iUICount)
-			{
-				//タイトル画面
-			case CAMERA_FIXED_POSITION_START:
-				iUICount = 0;
+					//ホームフラグが有効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが有効な場合
+						//UIカウント(カメラが設定ホーム画面か確認
+						if (iUICount == CAMERA_FIXED_POSITION_D)
+						{
+							//UIカウント(カメラ)が設定ホーム画面の場合
+							//UIカウント(カメラ)を設定ホーム画面に設定
+							iUICount = CAMERA_FIXED_POSITION_D;
 
-				this->bStartFlg = TRUE;
-				break;
-				//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-				if(this->bHomeFlg == FALSE)
-				{
-					//はじめから画面
-					iUICount = CAMERA_FIXED_POSITION_A;
+							//ホームフラグを有効化
+							this->bHomeFlg = TRUE;
+						}
+					}
+					else
+					{
+						//UIカウント(カメラ)をタイトルに設定
+						iUICount = CAMERA_FIXED_POSITION_START;
+					}
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+
 				}
-				else
+			}
+
+			// 上ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_UP))
+			{
+				switch (iUICount)
 				{
+					//タイトル画面
+				case CAMERA_FIXED_POSITION_START:
+
+					//UIカウントをTitle画面に設定
+					iUICount = 0;
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+					//はじめからホーム画面
+				case CAMERA_FIXED_POSITION_A:
+
+					//ホームフラグが無効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが無効な場合
+						//はじめから画面
+						iUICount = CAMERA_FIXED_POSITION_A;
+					}
+					else
+					{
+						// UIカウントを減少
+						iUICount--;
+
+						// UIカウントがはじめからより小さいか確認
+						if (iUICount < CAMERA_FIXED_POSITION_A)
+						{
+							//カメラ固定位置を設定ホーム画面に設定
+							iUICount = CAMERA_FIXED_POSITION_D;
+						}
+					}
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+					//つづきからホーム画面
+				case CAMERA_FIXED_POSITION_B:
+
+					//ホームフラグが無効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが無効な場合
+						//つづきから画面
+						iUICount = CAMERA_FIXED_POSITION_B;
+					}
+					else
+					{
+						// UIカウントを減少
+						iUICount--;
+
+						// UIカウントがはじめからより小さいか確認
+						if (iUICount < CAMERA_FIXED_POSITION_A)
+						{
+							//UIカウントがはじめからより小さい場合
+							//カメラ固定位置を設定ホーム画面に設定
+							iUICount = CAMERA_FIXED_POSITION_D;
+						}
+					}
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+					//データホーム画面
+				case CAMERA_FIXED_POSITION_C:
+
+					//設定ホーム画面
+				case CAMERA_FIXED_POSITION_D:
+
 					// UIカウントを減少
 					iUICount--;
 
 					// UIカウントがはじめからより小さいか確認
 					if (iUICount < CAMERA_FIXED_POSITION_A)
 					{
+						//UIカウントがはじめからより小さい場合
 						//カメラ固定位置を設定ホーム画面に設定
 						iUICount = CAMERA_FIXED_POSITION_D;
 					}
-				}
-				this->bStartFlg = TRUE;
-				break;
-				//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-				if(this->bHomeFlg == FALSE)
-				{
-					//つづきから画面
-					iUICount = CAMERA_FIXED_POSITION_B;
-				}
-				else
-				{
-					// UIカウントを減少
-					iUICount--;
-					// UIカウントがはじめからより小さいか確認
-					if (iUICount < CAMERA_FIXED_POSITION_A)
-					{
-						//カメラ固定位置を設定ホーム画面に設定
-						iUICount = CAMERA_FIXED_POSITION_D;
-					}
-				}
 
-				this->bStartFlg = TRUE;
-				break;
-				//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-				//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				// UIカウントを減少
-				iUICount--;
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
 
-				// UIカウントがはじめからより小さいか確認
-				if (iUICount < CAMERA_FIXED_POSITION_A)
-				{
-					//カメラ固定位置を設定ホーム画面に設定
-					iUICount = CAMERA_FIXED_POSITION_D;
+					break;
 				}
-				this->bStartFlg = TRUE;
-				break;
 			}
-		}
 
-		// 下ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
-		{
-			switch (iUICount)
+			// 下ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_DOWN))
 			{
-				//タイトル画面
-			case CAMERA_FIXED_POSITION_START:
-				iUICount = 0;
+				switch (iUICount)
+				{
+					//タイトル画面
+				case CAMERA_FIXED_POSITION_START:
 
-				this->bStartFlg = TRUE;
-				break;
-				//はじめからホーム画面
-			case CAMERA_FIXED_POSITION_A:
-				if(this->bHomeFlg == FALSE)
-				{
-					//はじめから画面
-					iUICount = CAMERA_FIXED_POSITION_A;
-				}
-				else
-				{
+					//UIカウントをTitle画面に設定
+					iUICount = 0;
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+					//はじめからホーム画面
+				case CAMERA_FIXED_POSITION_A:
+
+					//ホームフラグが無効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが無効な場合
+						//はじめから画面
+						iUICount = CAMERA_FIXED_POSITION_A;
+					}
+					else
+					{
+						// UIカウントを増加
+						iUICount++;
+
+						// UIカウントが確認画面より大きいか確認
+						if (iUICount >= CAMERA_FIXED_POSITION_E)
+						{
+							//UIカウントが確認画面より大きい場合
+							//カメラ固定位置をはじめからに設定
+							iUICount = CAMERA_FIXED_POSITION_A;
+						}
+					}
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
+
+					//つづきからホーム画面
+				case CAMERA_FIXED_POSITION_B:
+
+					//ホームフラグが無効か確認
+					if (this->bHomeFlg == FALSE)
+					{
+						//ホームフラグが無効な場合
+						//つづきから画面
+						iUICount = CAMERA_FIXED_POSITION_B;
+					}
+					else
+					{
+						// UIカウントを増加
+						iUICount++;
+
+						// UIカウントが確認画面より大きいか確認
+						if (iUICount >= CAMERA_FIXED_POSITION_E)
+						{
+							//UIカウントが確認画面より大きい場合
+							//カメラ固定位置をはじめからに設定
+							iUICount = CAMERA_FIXED_POSITION_A;
+						}
+					}
+
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;	
+
+					break;
+
+					//データホーム画面
+				case CAMERA_FIXED_POSITION_C:
+
+					//設定ホーム画面
+				case CAMERA_FIXED_POSITION_D:
+
 					// UIカウントを増加
 					iUICount++;
+
 					// UIカウントが確認画面より大きいか確認
 					if (iUICount >= CAMERA_FIXED_POSITION_E)
 					{
-						//カメラ固定位置をはじめからに設定
+						//UIカウントが確認画面より大きい場合
+						// カメラ固定位置をはじめからに設定
 						iUICount = CAMERA_FIXED_POSITION_A;
 					}
-				}
-				this->bStartFlg = TRUE;
-				break;
-				//つづきからホーム画面
-			case CAMERA_FIXED_POSITION_B:
-				if(this->bHomeFlg == FALSE)
-				{
-					//つづきから画面
-					iUICount = CAMERA_FIXED_POSITION_B;
-				}
-				else
-				{
-					// UIカウントを増加
-					iUICount++;
-					// UIカウントが確認画面より大きいか確認
-					if (iUICount >= CAMERA_FIXED_POSITION_E)
-					{
-						//カメラ固定位置をはじめからに設定
-						iUICount = CAMERA_FIXED_POSITION_A;
-					}
-				}
-				this->bStartFlg = TRUE;
-				break;
-				//データホーム画面
-			case CAMERA_FIXED_POSITION_C:
-				//設定ホーム画面
-			case CAMERA_FIXED_POSITION_D:
-				// UIカウントを増加
-				iUICount++;
 
-				// UIカウントが確認画面より大きいか確認
-				if (iUICount >= CAMERA_FIXED_POSITION_E)
-				{
-					// カメラ固定位置をはじめからに設定
-					iUICount = CAMERA_FIXED_POSITION_A;
+					//スタートフラグを有効化
+					this->bStartFlg = TRUE;
+
+					break;
 				}
-				this->bStartFlg = TRUE;
-				break;
 			}
-		}
 
-		// 左ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
-		{
-			// 左ボタンが押された場合			
-			//カメラの位置が最終確認画面か確認
-			if (iUICount == CAMERA_FIXED_POSITION_E)
+			// 左ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_LEFT))
 			{
-				//最終確認画面の場合
-				// 「はい」を選択
-				this->bGameStartFlg = TRUE;
-			}
-			this->bStartFlg = TRUE;
-		}
+				// 左ボタンが押された場合			
+				//カメラの位置が最終確認画面か確認
+				if (iUICount == CAMERA_FIXED_POSITION_E)
+				{
+					//最終確認画面の場合
+					// 「はい」を選択
+					this->bGameStartFlg = TRUE;
+				}
 
-		// 右ボタンが押されたか確認
-		if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
-		{
-			if (iUICount == CAMERA_FIXED_POSITION_E)
+				//スタートフラグを有効化
+				this->bStartFlg = TRUE;
+			}
+
+			// 右ボタンが押されたか確認
+			if (gpDataList_Input->bGetInterfaceInput(INPUT_TRG, UI_RIGHT))
 			{
-				// 「いいえ」を選択
-				this->bGameStartFlg = FALSE;
+				// 右ボタンが押された場合
+				//カメラの位置が最終確認画面か確認
+				if (iUICount == CAMERA_FIXED_POSITION_E)
+				{
+					// 「いいえ」を選択
+					this->bGameStartFlg = FALSE;
+				}
+
+				//スタートフラグを有効化
+				this->bStartFlg = TRUE;
 			}
-			this->bStartFlg = TRUE;
-		}
 
-      
-	}
-	else if (gpSceneServer->GetScene("Stage"))
-	{
-		////スタートフラグを有効化か確認
-		//if (this->bStartFlg == TRUE)
-		//{
-		//	//スタートフラグが有効な場合
-		//	//タイトル映像の再生位置を0に設定
-		//	SeekMovieToGraph(this->iTextureTitleHandle, 0);
-		//}
 
-		//モデルのテクスチャをタイトルテクスチャに設定
-		MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureTitleHandle, true);
-
-		//タイトル映像の再生
-		PlayMovieToGraph(this->iTextureTitleHandle);
-
-		//タイトル映像の描写
-		DrawGraph(100, -100, this->iTextureTitleHandle, TRUE);
-
-		//タイトル映像の再生が終了しているか確認
-		if (GetMovieStateToGraph(this->iTextureTitleHandle) == FALSE)
-        {
-			//タイトル映像の再生が終了している場合
-			//タイトル映像の再生位置を0に設定
-			SeekMovieToGraph(this->iTextureTitleHandle, 0);
-		}
-
-		//スタートフラグを無効化
-		//this->bStartFlg = false;
 		}
 	}
 }
@@ -450,10 +525,13 @@ void Screen::Draw()
 
 			// はじめからか確認
         case CAMERA_FIXED_POSITION_A:
+
 			//スタートフラグが有効か確認
             if (this->bStartFlg == TRUE)
             {
 				//スタートフラグが有効な場合
+				//タイトル映像の再生位置を0に設定
+				//他の映像の再生を停止
 				PauseMovieToGraph(this->iTextureTitleHandle, 0);
 				PauseMovieToGraph(this->iTextureConfigHandle, 0);
 				PauseMovieToGraph(this->iTextureContinueHandle, 0);
@@ -477,6 +555,7 @@ void Screen::Draw()
 				//ニューゲーム映像の再生位置を0に設定
                 SeekMovieToGraph(this->iTextureNewgameHandle, 0);
             }
+
 			/* 描画ブレンドモードをブレンド無しに戻す */
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
@@ -485,14 +564,18 @@ void Screen::Draw()
 
 			//スタートフラグを無効化
             this->bStartFlg = false;
+
             break;
 
 			// つづきからか確認
         case CAMERA_FIXED_POSITION_B:
+
 			//スタートフラグが有効か確認
             if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
+				//つづきから映像の再生位置を0に設定
+				//他の映像の再生を停止
 				PauseMovieToGraph(this->iTextureTitleHandle, 0);
 				PauseMovieToGraph(this->iTextureConfigHandle, 0);
                 SeekMovieToGraph(this->iTextureContinueHandle, 0);
@@ -503,18 +586,20 @@ void Screen::Draw()
 			//モデルのテクスチャをコンティニューテクスチャに設定
             MV1SetTextureGraphHandle(iModelHandle, 1, this->iTextureContinueHandle, true);
 
-
-
 			//スタートフラグを無効化
             this->bStartFlg = false;
+
             break;
 
 			// データか確認
         case CAMERA_FIXED_POSITION_C:
+
 			//スタートフラグが有効か確認
             if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
+				//データ映像の再生位置を0に設定
+				//他の映像の再生を停止
 				PauseMovieToGraph(this->iTextureTitleHandle, 0);
 				PauseMovieToGraph(this->iTextureConfigHandle, 0);
 				PauseMovieToGraph(this->iTextureContinueHandle, 0);
@@ -538,11 +623,13 @@ void Screen::Draw()
 				//データ映像の再生位置を0に設定
                 SeekMovieToGraph(this->iTextureDateHandle, 0);
 			}
+
 			/* 描画ブレンドモードをブレンド無しに戻す */
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
 			//スタートフラグを無効化
             this->bStartFlg = false;
+
             break;
 
 			// 設定か確認
@@ -552,6 +639,8 @@ void Screen::Draw()
             if (this->bStartFlg == TRUE)
 			{
 				//スタートフラグが有効な場合
+				//設定映像の再生位置を0に設定
+				//他の映像の再生を停止
 				PauseMovieToGraph(this->iTextureTitleHandle, 0);
                 SeekMovieToGraph(this->iTextureConfigHandle, 0);
 				PauseMovieToGraph(this->iTextureContinueHandle, 0);
@@ -575,6 +664,7 @@ void Screen::Draw()
 				//コンフィグ映像の再生位置を0に設定
                 SeekMovieToGraph(this->iTextureConfigHandle, 0);
 			}
+
 			/* 描画ブレンドモードをブレンド無しに戻す */
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
@@ -598,6 +688,7 @@ void Screen::Draw()
 		//コンティニュー映像の再生位置を0に設定
 		SeekMovieToGraph(this->iTextureContinueHandle, 0);
 	}
+
 	/* 描画ブレンドモードをブレンド無しに戻す */
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }

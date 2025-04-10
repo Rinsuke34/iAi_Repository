@@ -8,20 +8,40 @@
 BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 {
 	/* 初期化 */
-	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(エネミー)"に設定
+	// オブジェクトの種類を"弾(エネミー)"に設定
+	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;
+
+	// エフェクトをnullptrに設定
 	this->pEffect = nullptr;
+
+	//ミサイル誘導エフェクトをnullptrに設定
 	this->pEffectGuidance = nullptr;
 
-	this->iDurationCount = ENEMY_MISSILE_DURATION_COUNT;				// ミサイル弾の持続カウント
-	this->iBulletUPCount = ENEMY_MISSILE_BULLET_UP_COUNT;				// ミサイル弾打ち上げカウント
-	this->iBulletDownCount = ENEMY_MISSILE_BULLET_DOWN_COUNT;			// ミサイル弾打ち下げカウント
-	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;	// ミサイル誘導カウント
-	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;	// ミサイル弾の持続カウント
+	// ミサイル弾の持続カウント
+	this->iDurationCount = ENEMY_MISSILE_DURATION_COUNT;
 
+	//ミサイル弾打ち上げカウント
+	this->iBulletUPCount = ENEMY_MISSILE_BULLET_UP_COUNT;
+
+	//ミサイル弾打ち下げカウント
+	this->iBulletDownCount = ENEMY_MISSILE_BULLET_DOWN_COUNT;
+
+	//ミサイル誘導カウント
+	this->iBulletGuidanceCount = ENEMY_MISSILE_BULLET_GUIDANCE_COUNT;
+
+	//ミサイル弾の持続カウント
+	this->iEnemyMissileDurationCount = ENEMY_MISSILE_DURATION_COUNT;
+
+	//着弾ポイント予測フラグ
 	this->bPredictedLandingFlg = false;
+
+	//着弾ポイント保存フラグ
 	this->bSaveFlg = false;
+
+	//着弾ポイント描写フラグ
 	this->bLandingPointDrawFlg = false;
 
+	//着弾ポイント
 	this->vecHitPosition = VGet(0, 0, 0);
 
 	/* データリスト取得 */
@@ -78,6 +98,7 @@ void BulletEnemyRangeMissile::Initialization()
 		{
 			/* "オブジェクト管理"データリストを取得 */
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffect);
 		}
@@ -103,6 +124,7 @@ void BulletEnemyRangeMissile::Initialization()
 		{
 			/* "オブジェクト管理"データリストを取得 */
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectGuidance);
 		}
@@ -115,7 +137,8 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
-	iEnemyMissileDurationCount--;	// ミサイル弾の持続カウントを減算
+	// ミサイル弾の持続カウントを減算
+	iEnemyMissileDurationCount--;
 
 
 	// 持続カウントが打ち上げカウントを超えているか確認
@@ -132,12 +155,17 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		// ミサイルの移動座標と移動速度を更新
 		this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 18));
 
+		 // 数秒後の時間設定
+		static const float delayTime = 5.0f;
+
 		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
-		static const float delayTime = 5.0f; // 数秒後の時間
-		VECTOR delayedPosition = VAdd(VGet(vecPosition.x,vecPosition.y+600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+		VECTOR delayedPosition = VAdd(VGet(vecPosition.x, vecPosition.y + 600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+
+		// ミサイルの誘導エフェクト座標を設定
 		this->pEffectGuidance->SetPosition(delayedPosition);
 
 	}
+
 	// 持続カウントが打ち下げカウントを超えているか確認
 	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_DOWN_COUNT)
 	{
@@ -146,14 +174,16 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		// ミサイルの移動方向を上方向に設定
 		this->vecDirection = VGet(0, 1, 0);
 
-		// 再度ミサイルの移動速度を更新
-		//this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 30));
+		// 数秒後の時間設定
+		static const float delayTime = 5.0f;
 
 		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
-		static const float delayTime = 5.0f; // 数秒後の時間
-		VECTOR delayedPosition = VAdd(VGet(vecPosition.x,vecPosition.y-600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+		VECTOR delayedPosition = VAdd(VGet(vecPosition.x, vecPosition.y - 600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+
+		// ミサイルの誘導エフェクト座標を設定
 		this->pEffectGuidance->SetPosition(delayedPosition);
 	}
+
 	// 持続カウントが誘導カウントを超えているか確認
 	else if (iEnemyMissileDurationCount >= ENEMY_MISSILE_BULLET_GUIDANCE_COUNT)
 	{
@@ -168,9 +198,13 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		// ミサイルの移動座標と移動速度を更新
 		this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 25));
 
+		// 数秒後の時間設定
+		static const float delayTime = 5.0f;
+
 		// ミサイルの誘導エフェクト座標をミサイルエフェクトの数秒後に設定
-		static const float delayTime = 5.0f; // 数秒後の時間
 		VECTOR delayedPosition = VAdd(VGet(vecPosition.x, vecPosition.y - 600, vecPosition.z), VScale(this->vecDirection, -this->fMoveSpeed * delayTime));
+
+		// ミサイルの誘導エフェクト座標を設定
 		this->pEffectGuidance->SetPosition(delayedPosition);
 	}
 
@@ -191,6 +225,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	// ミサイルの誘導エフェクトの向きを設定
 	VECTOR rotation = VGet(atan2(this->vecDirection.y, this->vecDirection.z), atan2(this->vecDirection.x, this->vecDirection.z), 0);
 
+	// ミサイルの誘導エフェクトの向きを設定
 	this->pEffectGuidance->SetRotation(rotation);
 
 	// ミサイルの中心からミサイルの移動方向に線分を作成
@@ -221,15 +256,19 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	// 足場と接触するか確認
 	for (auto* platform : PlatformList)
 	{
+		// ミサイルの中心から下方向へ半径の長さ分線分を作成
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
 
 		// 接触しているか確認
 		if (stHitPolyDim.HitFlag == 1)
 		{
+			// 接触している場合
+			//ミサイル爆風処理
 			BulletEnemyRangeMissileExplosion();
 			break;
 		}
 	}
+	//足場と接触するか確認
 	for (auto* platform : PlatformList)
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stFallCollision);
@@ -248,7 +287,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	}
 }
 
-
+// ミサイル爆風処理
 void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
 {
 	// 接触している場合
@@ -291,6 +330,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
 		if (IsEffekseer3DEffectPlaying(this->pEffectExplosion->iGetEffectHandle()))
 		{
 			// エフェクトが再生終了している場合
+			//削除フラグを有効化
 			this->bDeleteFlg = true;
 		}
 		else
@@ -323,13 +363,15 @@ void BulletEnemyRangeMissile::CollisionDraw()
 // 描画
 void BulletEnemyRangeMissile::Draw()
 {
+	//ミサイル着弾予測描写フラグが有効か確認
 	if (this->bLandingPointDrawFlg == true)
 	{
-	// モデルの座標を設定
-	MV1SetPosition(this->iModelHandle, this->vecModelPosition);
+		//ミサイル着弾予測描写フラグが有効の場合
+		// ミサイル着弾ポイントの座標を設定
+		MV1SetPosition(this->iModelHandle, this->vecModelPosition);
 
-	// モデルの描写
-	MV1DrawModel(this->iModelHandle);
+		// ミサイル着弾ポイントの描写
+		MV1DrawModel(this->iModelHandle);
 	}
 }
 

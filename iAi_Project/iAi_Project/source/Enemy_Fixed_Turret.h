@@ -13,9 +13,9 @@
 #include "BulletEnemyRangeNormal.h"
 #include "PlayerStatusDefine.h"
 #include "BulletEnemyRangeMissile.h"
-/* テスト用敵クラス */
+/* 固定砲台砲台部分クラス */
 
-// エネミーベースクラス
+// エネミーフィックスタレットクラス
 class Enemy_Fixed_Turret : public Enemy_Basic
 {
 public:
@@ -28,33 +28,29 @@ public:
 
 private:
 
+	/* エフェクト・使用するオブジェクトリスト */
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
-
 	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
 	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
-
 	EffectManualDelete* pEffectHit;						//ヒットエフェクト
-
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
-
-	VECTOR vecEffectPos; // エフェクトの座標
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
+	VECTOR vecEffectPos;								// エフェクトの座標
 
 	//関数
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
+	void	MoveEnemy();								// 敵を移動させるメソッドを追加
 
 	//変数
-	int		iFiringCount;	// 発射カウント
-	int		iGuidanceCount;	// 誘導カウント
-	int		iModelturretHandle;	// モデルハンドル
-	int		iModelscaffoldHandle;	// モデルハンドル
-	int		iMaintainCount;	// 維持カウント
-	int		iEffectWaitCount;	// エフェクト待機カウント
+	int		iFiringCount;								// 発射カウント
+	int		iGuidanceCount;								// 誘導カウント
+	int		iModelturretHandle;							// モデルハンドル
+	int		iModelscaffoldHandle;						// モデルハンドル
+	int		iMaintainCount;								// 維持カウント
+	int		iEffectWaitCount;							// エフェクト待機カウント
 
-	float fTargetAngle;	// ターゲットの角度
-	float fCurrentAngle;	// 現在の角度
-	float fAngleDifference;	// 角度の差
+	float fTargetAngle;									// ターゲットの角度
+	float fCurrentAngle;								// 現在の角度
+	float fAngleDifference;								// 角度の差
 
 	bool	bEffectGenerated;							// 警告エフェクト生成フラグ
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
@@ -64,9 +60,9 @@ private:
 	bool	bUpFlg;										// 上フラグ
 	bool	bDownFlg;									// 下フラグ
 	bool	bMissile;									// ミサイルフラグ
-	bool bTestFlg;									// テストフラグ
-	bool bTestFlg2;									// テストフラグ2
-	bool bTestFlg3;									// テストフラグ3
+	bool bTestFlg;										// テストフラグ
+	bool bTestFlg2;										// テストフラグ2
+	bool bTestFlg3;										// テストフラグ3
 
 
 

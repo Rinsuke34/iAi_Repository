@@ -14,15 +14,23 @@ BulletEnemyRangeNormal::BulletEnemyRangeNormal() : BulletBase()
 	}
 
 	/* 初期化 */
-	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;	// オブジェクトの種類を"弾(エネミー)"に設定
+	// オブジェクトの種類を"弾(エネミー)"に設定
+	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;
+
+	// エフェクトをnullptrに設定
 	this->pEffect = nullptr;
 
-	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;		// 弾の持続カウント
-	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;			// 弾発射カウント
+	// ノーマル弾の持続カウント
+	this->iDurationCount = ENEMY_NORMAL_DURATION_COUNT;	
 
-	this->iEnemyNormalDurationCount = ENEMY_NORMAL_DURATION_COUNT;	//ノーマル弾の持続カウント
+	// ノーマル弾の発射カウント
+	this->iBulletCount = ENEMY_NORMAL_BULLET_COUNT;	
 
-	this->bParryFlg = true;	// パリィフラグ(反射できるか)を有効化
+	// ノーマル弾の持続カウント
+	this->iEnemyNormalDurationCount = ENEMY_NORMAL_DURATION_COUNT;
+
+	// パリィフラグを有効化
+	this->bParryFlg = true;
 }
 
 // デストラクタ
@@ -62,6 +70,7 @@ void BulletEnemyRangeNormal::Initialization()
 		{
 			/* "オブジェクト管理"データリストを取得 */
 			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffect);
 		}

@@ -15,6 +15,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
 		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/DisappearFloor/DisappearFloor");
 	}
@@ -37,19 +38,25 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	//ギミックの消滅時間カウント
 	this->iDisappearTimeCount = GIMMICK_BLINK_TIME;
 
+	//Playerがギミックに乗っているかのフラグ
 	this->bRidePlayerFlg = false;
 
 	/* データリスト"画像ハンドル管理"を取得 */
 	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
-	// テクスチャの読み込み
+
+	// Orangeテクスチャの読み込み
 	this->iTextureOrangeHandle = *ImageList->piGetImage("DisappearFloor/Orange");
 
-	// テクスチャの読み込み
+	// redテクスチャの読み込み
 	this->iTextureRedHandle = *ImageList->piGetImage("DisappearFloor/Red");
 
+	// Yellowテクスチャの読み込み
 	this->iTextureYellowHandle = *ImageList->piGetImage("DisappearFloor/Yellow");
 
+	// 0番のテクスチャをオレンジテクスチャに変更
 	MV1SetTextureGraphHandle(iModelHandle, 0, iTextureYellowHandle, true);
+
+	// 1番のテクスチャをオレンジテクスチャに変更
 	MV1SetTextureGraphHandle(iModelHandle, 1, iTextureYellowHandle, true);
 }
  
@@ -65,12 +72,13 @@ void GimmickDisappear::ProcessGimmick()
 {
 	//プレイヤーの座標を取得
 	VECTOR playerPos = pPlayer->vecGetPosition();
-		if (this->bRidePlayerFlg == true)
+
+	//プレイヤーがギミックの上に乗っているかの判定
+	if (this->bRidePlayerFlg == true)
 	{
 		//プレイヤーがギミックの上に乗っている場合
 		//テクスチャの変更カウントを減らす
 		iTextureFirstChangeCount = 0;
-;
 
 		//テクスチャの変更カウントが0以下になったか確認
 		if (iTextureFirstChangeCount <= 0)
@@ -78,6 +86,8 @@ void GimmickDisappear::ProcessGimmick()
 			//テクスチャの変更カウントが0以下になった場合
 			// 0番のテクスチャをオレンジテクスチャに変更
 			MV1SetTextureGraphHandle(iModelHandle, 0, iTextureOrangeHandle, true);
+
+			// 1番のテクスチャをオレンジテクスチャに変更
 			MV1SetTextureGraphHandle(iModelHandle, 1, iTextureOrangeHandle, true);
 
 			//セカンドテクスチャの変更カウントを減らす
@@ -93,16 +103,18 @@ void GimmickDisappear::ProcessGimmick()
 
 				// 0番のテクスチャを赤テクスチャに変更
 				MV1SetTextureGraphHandle(iModelHandle, 0, iTextureRedHandle, true);
+
+				// 1番のテクスチャを赤テクスチャに変更
 				MV1SetTextureGraphHandle(iModelHandle, 1, iTextureRedHandle, true);
 
-				
-			
+
+
 
 				//ギミックの消滅時間カウントが一定数になったか確認
 				if (iDisappearTimeCount >= GIMMICK_DISAPPEAR_TIME)
 				{
 					//ギミックの消滅時間カウントが一定数になった場合
-				
+
 					//ギミックを消す
 					MV1SetVisible(this->iModelHandle, FALSE);
 
@@ -114,15 +126,19 @@ void GimmickDisappear::ProcessGimmick()
 
 
 				}
-				else if (iDisappearTimeCount <= GIMMICK_DISAPPEAR_TIME && iDisappearTimeCount >= GIMMICK_DISAPPEAR_TIME/2)
+				else if (iDisappearTimeCount <= GIMMICK_DISAPPEAR_TIME && iDisappearTimeCount >= GIMMICK_DISAPPEAR_TIME / 2)
 				{
 					//点滅処理
 					this->iBlinkTime--;
+
+					//点滅時間が4以下になったか確認
 					if (this->iBlinkTime <= 4)
 					{
 						//点滅時間が0以下になった場合
 						//ギミックを点滅させる
 						MV1SetVisible(this->iModelHandle, FALSE);
+
+						//点滅時間を初期化
 						this->iBlinkTime = GIMMICK_BLINK_TIME;
 					}
 					else
@@ -136,11 +152,11 @@ void GimmickDisappear::ProcessGimmick()
 		}
 	}
 
-		//スポーンカウントが0以下になったか確認
-		if (this->iSpawnCount <= 0)
-		{
-			//this->bDeleteFlg = true;
-		}
+	//スポーンカウントが0以下になったか確認
+	if (this->iSpawnCount <= 0)
+	{
+		//this->bDeleteFlg = true;
+	}
 }
 
 // 更新
@@ -168,10 +184,12 @@ void GimmickDisappear::Reset()
 	//ギミックの消滅時間カウント
 	this->iDisappearTimeCount = GIMMICK_BLINK_TIME;
 
+	//Playerがギミックに乗っているかのフラグ
 	this->bRidePlayerFlg = false;
 
-	
-
+	// 0番のテクスチャをオレンジテクスチャに変更
 	MV1SetTextureGraphHandle(iModelHandle, 0, iTextureYellowHandle, true);
+
+	// 1番のテクスチャをオレンジテクスチャに変更
 	MV1SetTextureGraphHandle(iModelHandle, 1, iTextureYellowHandle, true);
 }

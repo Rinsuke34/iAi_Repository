@@ -13,9 +13,9 @@
 #include "BulletEnemyRangeMissile.h"
 #include "PlayerStatusDefine.h"
 
-/* テスト用敵クラス */
+/* 地上旧エネミーミサイルクラス */
 
-// エネミーベースクラス
+// エネミーミサイルクラス
 class Enemy_Missile : public Enemy_Basic
 {
 public:
@@ -27,20 +27,20 @@ public:
 
 private:
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;			// オブジェクト管理
-	CharacterBase* pPlayer;			// プレイヤー
+	/* エフェクト・使用するオブジェクトリスト */
+	DataList_Object* ObjectList;						// オブジェクト管理
+	CharacterBase* pPlayer;								// プレイヤー
 	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
 	EffectManualDelete* pEffectHit;						//ヒットエフェクト
 	EffectManualDelete* pEffectWarning;					//警告エフェクト
 
 	//関数
-	void	MoveEnemy();					// 敵を移動させるメソッドを追加
+	void	MoveEnemy();								// 敵を移動させるメソッドを追加
 	void	Player_Range_Missile_Shot();				// ミサイル弾攻撃
 	void	Enemy_Model_Animation();					// エネミーモデルアニメーション
 
 	//変数
-	int		iFiringCount;	// 発射カウント
+	int		iFiringCount;								// 発射カウント
 	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
 	bool	bDirectionFlg;								// 向き固定フラグ
 	bool	bShotFlg;									// ショットフラグ

@@ -13,47 +13,47 @@
 #include "BulletEnemyRangeMissile.h"
 #include "PlayerStatusDefine.h"
 
-/* テスト用敵クラス */
+/* 空中旧ミサイルエネミークラス */
 
-// エネミーベースクラス
+// エネミーミサイルエアークラス
 class Enemy_Missile_Air : public Enemy_Basic
 {
 public:
 	Enemy_Missile_Air();									// コンストラクタ
 	virtual ~Enemy_Missile_Air();							// デストラクタ
 
-	virtual void	Initialization()	override;		// 初期化
-	virtual void	Update()			override;		// 更新
+	virtual void	Initialization()	override;			// 初期化
+	virtual void	Update()			override;			// 更新
 
 private:
 
-	/* 使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
-	CharacterBase* pPlayer;								// プレイヤー
-	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
-	EffectManualDelete* pEffectHit;						//ヒットエフェクト
-	EffectManualDelete* pEffectWarning;					//警告エフェクト
+	/* エフェクト・使用するオブジェクトリスト */
+	DataList_Object* ObjectList;							// オブジェクト管理
+	CharacterBase* pPlayer;									// プレイヤー
+	BulletEnemyRangeMissile* pBulletRangeMissile;			// ミサイル弾
+	EffectManualDelete* pEffectHit;							//ヒットエフェクト
+	EffectManualDelete* pEffectWarning;						//警告エフェクト
 
 
 	//関数
-	void	MoveEnemy();								// 敵を移動させるメソッドを追加
-	void	Player_Range_Missile_Shot();				// ミサイル弾攻撃
+	void	MoveEnemy();									// 敵を移動させるメソッドを追加
+	void	Player_Range_Missile_Shot();					// ミサイル弾攻撃
 
 	//変数
-	int		iFiringCount;								// 発射カウント
-	bool	bHitEffectGenerated;						// ヒットエフェクト生成フラグ
-	bool	bDirectionFlg;								// 向き固定フラグ
-	bool	bShotFlg;									// ショットフラグ
-	bool	bWarningEffectFlg;							// 警告エフェクトフラグ
+	int		iFiringCount;									// 発射カウント
+	bool	bHitEffectGenerated;							// ヒットエフェクト生成フラグ
+	bool	bDirectionFlg;									// 向き固定フラグ
+	bool	bShotFlg;										// ショットフラグ
+	bool	bWarningEffectFlg;								// 警告エフェクトフラグ
 
 
 	//モーション関連変数
-	int		iMissileAirAttachIndex;						// 空中モーションアタッチインデックス
-	int		iDieAttachIndex;							// 死亡モーションアタッチインデックス
-	float	fNormalAirTotalTime;						// 空中モーションの総時間
-	float	fDieTotalTime;								// 死亡モーションの総時間
-	float	fNormalAirPlayTime;							// 空中再生時間
-	float	fDiePlayTime;								// 死亡再生時間
+	int		iMissileAirAttachIndex;							// 空中モーションアタッチインデックス
+	int		iDieAttachIndex;								// 死亡モーションアタッチインデックス
+	float	fNormalAirTotalTime;							// 空中モーションの総時間
+	float	fDieTotalTime;									// 死亡モーションの総時間
+	float	fNormalAirPlayTime;								// 空中再生時間
+	float	fDiePlayTime;									// 死亡再生時間
 
 protected:
 

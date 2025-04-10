@@ -9,7 +9,8 @@ Enemy_Fixed::Enemy_Fixed() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
-	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	//　オブジェクトの種類をTypeEnemyに設定
+	this->iObjectType = OBJECT_TYPE_ENEMY;
 
 	/* データリスト取得 */
 	{
@@ -39,13 +40,19 @@ Enemy_Fixed::~Enemy_Fixed()
 void Enemy_Fixed::Initialization()
 {
 	/* コリジョンセット */
-	this->stCollisionCapsule.fCapsuleRadius = 0;
+	//エネミーのカプセル半径
+	this->stCollisionCapsule.fCapsuleRadius = 100;
+
+	//カプセルコリジョンの上の座標
 	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
+
+	//カプセルコリジョンの下の座標
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 
 	/* コアフレーム番号取得 */
 	LoadCoreFrameNo();
 
+	//発光するフレームの処理
 	UpdataLightFrame();
 }
 
@@ -54,6 +61,8 @@ void Enemy_Fixed::MoveEnemy()
 {
 	// 重力処理
 	this->vecMove.y -= ENEMY_GRAVITY_SREED;
+
+	// エネミーの座標を更新
 	this->vecPosition.y += this->vecMove.y;
 
 }
@@ -84,6 +93,7 @@ void Enemy_Fixed::Update()
 	// エネミーを移動させる
 	MoveEnemy();
 
+	//重力処理
 	Enemy_Gravity();
 
 	/* HPが0以下であるか確認 */
@@ -94,10 +104,4 @@ void Enemy_Fixed::Update()
 		//削除フラグを有効にする
 		this->bDeleteFlg = true;
 	}
-
-
-	// コリジョンセット
-	this->stCollisionCapsule.fCapsuleRadius = 100;
-	this->stCollisionCapsule.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, 100, 0));
-	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition;
 }
