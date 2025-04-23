@@ -17,7 +17,7 @@ int giFontHandle_NotoSerifJP_SemiBold	= 0;	// フォントハンドル(のとせりふ/ネーム
 /* プレイヤーの入力情報 */
 Struct_Input::PLAYER_INPUT_JOYPAD			gstJoypadInputData;					// ジョイパッド
 Struct_Input::PLAYER_INPUT_KEYBOARD_MOUSE	gstKeyboardInputData;				// キーボード＆マウス
-bool										gbUseMouseFlg			= true;	// マウス使用フラグ(有効であるならばカーソルを描写＆中心固定解除)
+bool										gbUseMouseFlg			= false;	// マウス使用フラグ(有効であるならばカーソルを描写＆中心固定解除)
 unsigned char								gucTriggerThreshold		= 0;		// トリガー入力の閾値
 
 /* 実行中クラス */

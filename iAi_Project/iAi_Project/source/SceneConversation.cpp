@@ -153,18 +153,19 @@ void SceneConversation::Draw()
 	std::string	aDrawText = PUBLIC_PROCESS::aCutShitfJisString(this->astTextDataList[this->iNowTextNo].aText, this->iDrawText);
 	
 	/* 立ち絵を手前に持ってくるキャラクターに応じてネームプレートの名称を変更 */
+	SetFontSize(48);
 	switch (this->astTextDataList[this->iNowTextNo].iFocusCharacter)
 	{
 		/* 左のキャラクター */
 		case 1:
 			/* 名称"シロ" */
-			DrawFormatStringToHandle(200, 850, GetColor(0, 0, 255), giFontHandle_NotoSerifJP_SemiBold, "シロ");
+			DrawString(50, 750, "シロ", GetColor(255, 255, 0));
 			break;
 
 		/* 右のキャラクター */
 		case 2:
 			/* 名称"サエジマ" */
-			DrawFormatStringToHandle(200, 850, GetColor(0, 0, 255), giFontHandle_NotoSerifJP_SemiBold, "サエジマ");
+			DrawString(50, 750, "サエジマ", GetColor(255, 255, 0));
 			break;
 
 		/* 無し */
@@ -176,7 +177,9 @@ void SceneConversation::Draw()
 
 	/* テキスト描写 */
 	//DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_NotoSerifJP_Medium, aDrawText.c_str());
-	DrawFormatStringToHandle(250, 900, GetColor(255, 255, 255), giFontHandle_Medium, aDrawText.c_str());
+	SetFontSize(40);
+	DrawString(125, 850, aDrawText.c_str(), GetColor(255, 255, 255));
+	SetFontSize(16);
 
 	/* スキップ確認画面を描写中であるか確認 */
 	if (this->bAddSkipCheckFlg == true)
