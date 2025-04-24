@@ -20,3 +20,4 @@ extern bool gbDrawLightMapGaussFlg;			// ライトマップ(ぼかし)のハンドル
 extern bool gbDrawCollisionFlg;				// コリジョン描写
 extern bool gbDrawDeleteBackGroundFlg;		// バックグランド非表示
 extern bool gbDrawInputTest;				// 入力テストの描写
+extern bool gbDrawStopBloomFlg;				// 疑似発光の無効化フラグ

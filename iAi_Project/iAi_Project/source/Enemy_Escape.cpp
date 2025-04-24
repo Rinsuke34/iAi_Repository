@@ -450,14 +450,6 @@ void Enemy_Escape::Movement_Horizontal()
 	/* 道中でオブジェクトに接触しているか判定 */
 
 	{
-		//壁に当たったかのフラグが無効か確認
-		if (this->bWallHitFlg == false)
-		{
-			//壁に当たった場合
-			//壁に当たったかのフラグを有効にする
-			this->bWallHitFlg = true;
-		}
-
 		/* 足場を取得 */
 		auto& PlatformList = ObjectList->GetPlatformList();
 

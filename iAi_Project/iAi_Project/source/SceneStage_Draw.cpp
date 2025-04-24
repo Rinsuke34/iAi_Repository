@@ -192,6 +192,7 @@ void SceneStage::SetupMainScreen()
 	SetupEffectScreen();
 
 	/* ライトマップ描写 */
+	if(gbDrawStopBloomFlg == false)
 	{
 		/* 描画モードをバイリニアフィルタリングに変更　*/
 		// ※拡大時にドットをぼやけさせる

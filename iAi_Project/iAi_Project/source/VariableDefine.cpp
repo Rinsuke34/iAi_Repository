@@ -16,4 +16,4 @@ bool gbDrawLightMapGaussFlg			= false;		// ライトマップ(ぼかし)のハンドル
 bool gbDrawCollisionFlg				= false;		// 全オブジェクトのコリジョン描写
 bool gbDrawDeleteBackGroundFlg		= false;		// バックグランドオブジェクトの非表示
 bool gbDrawInputTest				= false;		// 入力テストの描写
-
+bool gbDrawStopBloomFlg				= false;		// 疑似発光の無効化フラグ
