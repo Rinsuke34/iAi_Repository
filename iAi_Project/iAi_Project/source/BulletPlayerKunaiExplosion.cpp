@@ -78,12 +78,12 @@ void BulletPlayerKunaiExplosion::Initialization()
 
 	/* モデルのX軸回転の計算 */
 	/* 高さ(Y軸)の差 */
-	float fHeightDiff = this->vecKunaiTargetPosition.y - this->vecPosition.y;
+	float fHeightDifference = this->vecKunaiTargetPosition.y - this->vecPosition.y;
 	/* X - Z 平面上の距離を計算 */
-	float fHorizontalDist = VSize(VGet(this->vecKunaiTargetPosition.x - this->vecPosition.x, 0, this->vecKunaiTargetPosition.z - this->vecPosition.z));
+	float fHorizontalDistance = VSize(VGet(this->vecKunaiTargetPosition.x - this->vecPosition.x, 0, this->vecKunaiTargetPosition.z - this->vecPosition.z));
 
 	/* X軸の回転角度を求める（ラジアン単位） */
-	fKunaiAngleX = atan2f(fHeightDiff, fHorizontalDist);
+	fKunaiAngleX = atan2f(fHeightDifference, fHorizontalDistance);
 
 	/* モデルのY軸回転の計算(X-Z 平面上の方向) */
 	fKunaiAngleY = atan2f(this->vecKunaiTargetPosition.x - this->vecPosition.x, this->vecKunaiTargetPosition.z - this->vecPosition.z);
@@ -106,7 +106,7 @@ void BulletPlayerKunaiExplosion::Draw()
 void BulletPlayerKunaiExplosion::Update()
 {
 	/* クナイの移動ベクトルをスケールして移動 */
-	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecKunaiMoveDirection, EXPLOSION_KUNAI_SPEED));;
+	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecKunaiMoveDirection, EXPLOSION_KUNAI_SPEED));
 
 	/* クナイの移動距離を加算 */
 	this->fKunaiMoveDistance += EXPLOSION_KUNAI_SPEED;
@@ -136,59 +136,56 @@ void BulletPlayerKunaiExplosion::Explosion()
 		/* モデルを非表示に設定 */
 		MV1SetVisible(this->iModelHandle, false);
 
-		/* 当たり判定設定 */
-		{
-			this->stCollisionSqhere.vecSqhere = this->vecPosition;
-			this->stCollisionSqhere.fSqhereRadius = KUNAI_ATTACK_RADIUS;
-		}
+		/* 当たり判定設定 */	
+		this->stCollisionSqhere.vecSqhere = this->vecPosition;
+		this->stCollisionSqhere.fSqhereRadius = KUNAI_ATTACK_RADIUS;
 
 		/* 爆発SE再生 */
 		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_DAMAGE, this->vecPosition, SE_3D_SOUND_RADIUS);
 
-		/* 爆発エフェクト生成 */
-		{
-			/* 時間経過で削除されるエフェクトを追加 */
-			EffectSelfDelete* AddEffect = new EffectSelfDelete();
+		/* 爆発エフェクト生成 */		
+		/* 時間経過で削除されるエフェクトを追加 */
+		EffectSelfDelete* AddEffect = new EffectSelfDelete();
 
-			/* エフェクト読み込み */
-			AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_kunai_explosion/FX_e_missile_explosion")));
+		/* エフェクト読み込み */
+		AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_kunai_explosion/FX_e_missile_explosion")));
 
-			/* エフェクトの座標設定 */
-			AddEffect->SetPosition(this->vecPosition);
+		/* エフェクトの座標設定 */
+		AddEffect->SetPosition(this->vecPosition);
 
-			/* エフェクトの回転量設定 */
-			AddEffect->SetRotation(this->vecRotation);
+		/* エフェクトの回転量設定 */
+		AddEffect->SetRotation(this->vecRotation);
 
-			/* エフェクトの削除されるまでの時間を設定 */
-			AddEffect->SetDeleteCount(iKunaiDeleteCount);
+		/* エフェクトの削除されるまでの時間を設定 */
+		AddEffect->SetDeleteCount(iKunaiDeleteCount);
 
-			/* エフェクトのスケール設定 */
-			AddEffect->SetScale(VGet(29.0f, 29.0f, 29.0f));
+		/* エフェクトのスケール設定 */
+		AddEffect->SetScale(VGet(29.0f, 29.0f, 29.0f));
 
-			/* エフェクトの初期化 */
-			AddEffect->Initialization();
+		/* エフェクトの初期化 */
+		AddEffect->Initialization();
 
-			/* エフェクトをリストに登録 */
-			this->ObjectList->SetEffect(AddEffect);
+		/* エフェクトをリストに登録 */
+		this->ObjectList->SetEffect(AddEffect);
 
-		}
+		
 	}
 
+	/* クナイの攻撃フラグが有効な場合 */
 	if (this->bKunaiAttackFlg == true)
 	{
-	// クナイの削除処理
-	/* クナイの削除カウント(攻撃時間)が残っていた場合 */
-	if (iKunaiDeleteCount > 0)
-	{
-		/* クナイの削除カウント(攻撃時間)を減算 */
-		iKunaiDeleteCount--;
-	}
-	/* クナイの削除カウント(攻撃時間)が0になった場合 */
-	else
-	{
-		/* クナイの削除フラグを設定 */
-		this->bDeleteFlg = true;
-	}
-
+		// クナイの削除処理
+		/* クナイの削除カウント(攻撃時間)が残っていた場合 */
+		if (iKunaiDeleteCount > 0)
+		{
+			/* クナイの削除カウント(攻撃時間)を減算 */
+			iKunaiDeleteCount--;
+		}
+		/* クナイの削除カウント(攻撃時間)が0になった場合 */
+		else
+		{
+			/* クナイの削除フラグを設定 */
+			this->bDeleteFlg = true;
+		}
 	}
 }

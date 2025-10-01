@@ -18,6 +18,7 @@
 /* 2025.03.21 菊池雅道	落下復帰処理追加 */
 /* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
 /* 2025.03.25 駒沢風助	サウンド追加 */
+/* 2025.07.19 菊池雅道	コードリファクタリング */
 
 #include "CharacterPlayer.h"
 
@@ -26,87 +27,86 @@
 CharacterPlayer::CharacterPlayer() : CharacterBase()
 {
 	/* 初期化 */
-	{
-		/* オブジェクトのハンドル */
-		this->pBulletMeleeWeak		=	nullptr;	// 近接攻撃(弱)の弾
-		this->pBulletKunaiWarp		=	nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
-		this->pBulletKunaiExplosion	=	nullptr;	// クナイ(爆発)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+	
+	/* オブジェクトのハンドル */
+	this->pBulletMeleeWeak		=	nullptr;	// 近接攻撃(弱)の弾
+	this->pBulletKunaiWarp		=	nullptr;	// クナイ(ワープ)の弾		/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
+	this->pBulletKunaiExplosion	=	nullptr;	// クナイ(爆発)の弾			/* 2025.03.13 菊池雅道	クナイ関連の処理追加 */
 
 
-		/* エフェクトのハンドル */
-		this->pChargeEffect			=	nullptr;	//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
-		this->pChargeHoldEffect		=	nullptr;	//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
-		this->pDodgeEffect			=	nullptr;	//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+	/* エフェクトのハンドル */
+	this->pChargeEffect			=	nullptr;	//溜めエフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+	this->pChargeHoldEffect		=	nullptr;	//溜め完了後エフェクト		/* 2025.01.27 菊池雅道	エフェクト処理追加 */
+	this->pDodgeEffect			=	nullptr;	//回避エフェクト			/* 2025.01.27 菊池雅道	エフェクト処理追加 */
 	
 
-		/* 変数 */
-		this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
-		this->vecWallKickNormalSum		= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
-		this->iObjectType				= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
-		this->iMeleeWeakNowCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iProjectileNowCoolTime	= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iDodgeNowCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
-		this->iJumpNowCoolTime			= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
-		this->iFallRecoveryDelayTime	= 0;					// 落下時の復帰までの待機時間								/* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
-		this->bPlayRunSound				= false;				// サウンド"走る"が再生中かのフラグ							/* 2025.03.25 駒沢風助	サウンド追加 */
-		this->bPlayChargeSound			= false;				// サウンド"溜め居合チャージ"が再生中かのフラグ				/* 2025.03.25 駒沢風助	サウンド追加 */
+	/* 変数 */
+	this->vecMove					= VGet(0.f, 0.f, 0.f);	// 移動量
+	this->vecWallKickNormalSum		= VGet(0.f, 0.f, 0.f);	// プレイヤーに接触するオブジェクトの法線ベクトルの合計		/* 2025.02.22 菊池雅道	壁キック処理追加 */
+	this->iObjectType				= OBJECT_TYPE_PLAYER;	// オブジェクトの種類
+	this->iMeleeWeakNowCoolTime		= 0;					// 近接攻撃(弱)クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+	this->iProjectileNowCoolTime	= 0;					// 遠距離攻撃クールタイム									/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+	this->iDodgeNowCoolTime			= 0;					// 回避クールタイム											/* 2025.02.26 菊池雅道	クールタイムの処理追加 */
+	this->iJumpNowCoolTime			= 0;					// ジャンプクールタイム										/* 2025.03.17 菊池雅道	クールタイムの処理追加 */
+	this->iFallRecoveryDelayTime	= 0;					// 落下時の復帰までの待機時間								/* 2025.03.22 駒沢風助	落下時のカメラプレイヤー追従作成 */
+	this->bPlayRunSound				= false;				// サウンド"走る"が再生中かのフラグ							/* 2025.03.25 駒沢風助	サウンド追加 */
+	this->bPlayChargeSound			= false;				// サウンド"溜め居合チャージ"が再生中かのフラグ				/* 2025.03.25 駒沢風助	サウンド追加 */
 
-		/* 変数(デバッグ用) */
-		this->stVerticalCollision								= {};				// 垂直方向のコリジョン
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};				// 水平方向コリジョン(上側)
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};				// 水平方向コリジョン(下側)
-		this->stMeleeStrongMoveCollsion							= {};				// 近接攻撃(強)のコリジョン(移動後の座標)
-		this->iFallingFrame										= 0;				// 落下状態になってからのフレーム数		/* 2025.03.11 菊池雅道 モーション関連の処理追加 */
-	}
+	/* 変数(デバッグ用) */
+	this->stVerticalCollision								= {};				// 垂直方向のコリジョン
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP]	= {};				// 水平方向コリジョン(上側)
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN]	= {};				// 水平方向コリジョン(下側)
+	this->stMeleeStrongMoveCollsion							= {};				// 近接攻撃(強)のコリジョン(移動後の座標)
+	this->iFallingFrame										= 0;				// 落下状態になってからのフレーム数		/* 2025.03.11 菊池雅道 モーション関連の処理追加 */
+	
 
 	/* データリスト取得 */
-	{
-		/* "入力管理"を取得 */
-		this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+	
+	/* "入力管理"を取得 */
+	this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
 
-		/* "オブジェクト管理"を取得 */
-		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	/* "オブジェクト管理"を取得 */
+	this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
 
-		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	/* "プレイヤー状態"を取得 */
+	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
-		/* "エフェクトリソース管理"を取得 */
-		this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+	/* "エフェクトリソース管理"を取得 */
+	this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
 
-		/* "ステージ状態管理"を取得 */
-		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
-	}
+	/* "ステージ状態管理"を取得 */
+	this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
 
 	/* モデル取得 */
-	{
-		/* "3Dモデル管理"データリストを取得 */
-		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
-
-		/* モデルハンドル取得 */
-		this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
-
-		/* コリジョンフレーム番号取得 */
-		/* 刀のフレーム */
-		this->iKatanaFrameNo		= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
-
-		/* 2025.03.13 駒沢風助 新モデル追加 開始 */
-		/* 刀のフレーム番号 */
-		this->iKatanaFrameNo_Waist		= MV1SearchFrame(this->iModelHandle, "Katana_Waist");		// 刀のフレーム番号(背面)
-		this->iKatanaFrameNo_RightHand	= MV1SearchFrame(this->iModelHandle, "Katana_RightHand");	// 刀のフレーム番号(右手)
-		/* 2025.03.13 駒沢風助 新モデル追加 終了 */
-
-		/* 上半身のフレーム番号取得 */
-		this->iUpperBodyFrameNo		= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
-		
-		/* クナイを持つ手のフレーム */
-		this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");									/* 2025.03.10 菊池雅道	追加 */
-		
-		/* クナイのエフェクトを出すフレーム番号 */
-		this->iKunaiEffectFrameNo = MV1SearchFrame(this->iModelHandle, "Character1_LeftHandPinky4");				/* 2025.03.10 菊池雅道	追加 */
 	
-	}
+	/* "3Dモデル管理"データリストを取得 */
+	// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
+	DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
 
+	/* モデルハンドル取得 */
+	this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
+
+	
+	/* コリジョンフレーム番号取得 */
+	
+	/* 刀のフレーム */
+	this->iKatanaFrameNo		= MV1SearchFrame(this->iModelHandle, "Katana_Waist_Hips");		/* 2025.02.19 菊池雅道	追加 */
+
+	/* 2025.03.13 駒沢風助 新モデル追加 開始 */
+	/* 刀のフレーム番号 */
+	this->iKatanaFrameNo_Waist		= MV1SearchFrame(this->iModelHandle, "Katana_Waist");		// 刀のフレーム番号(背面)
+	this->iKatanaFrameNo_RightHand	= MV1SearchFrame(this->iModelHandle, "Katana_RightHand");	// 刀のフレーム番号(右手)
+	/* 2025.03.13 駒沢風助 新モデル追加 終了 */
+
+	/* 上半身のフレーム番号取得 */
+	this->iUpperBodyFrameNo		= MV1SearchFrame(this->iModelHandle, "Character1_Spine");		/* 2025.03.08 駒沢風助 新モデル対応 */
+		
+	/* クナイを持つ手のフレーム */
+	this->iKunaiHandFrameNo		= MV1SearchFrame(this->iModelHandle, "Kunai");									/* 2025.03.10 菊池雅道	追加 */
+		
+	/* クナイのエフェクトを出すフレーム番号 */
+	this->iKunaiEffectFrameNo = MV1SearchFrame(this->iModelHandle, "Character1_LeftHandPinky4");				/* 2025.03.10 菊池雅道	追加 */
+	
 	/* モーション初期化 */
 	MotionReset();
 
@@ -400,59 +400,49 @@ void CharacterPlayer::PlayerHitCheck()
 
 						/* 被ダメージボイスを再生 */
 						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
+					
+						/* 被ダメージの瞬間に発生するエフェクトを追加 */
+						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
 
-						/* 被ダメージのエフェクトを生成 */
-						{
-							/* ダメージ発生時エフェクト */
-							{
-								/* 被ダメージの瞬間に発生するエフェクトを追加 */
-								EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+						/* 座標を設定 */
+						pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
 
-								/* 座標を設定 */
-								pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
+						/* エフェクトを取得 */
+						pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
 
-								/* エフェクトを取得 */
-								pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+						/* 拡大率を設定 */
+						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
-								/* 拡大率を設定 */
-								pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+						/* 削除カウントを設定 */
+						pDamageEffect->SetDeleteCount(60);
 
-								/* 削除カウントを設定 */
-								// ※仮で1秒間
-								pDamageEffect->SetDeleteCount(60);
+						/* エフェクト初期化処理 */
+						pDamageEffect->Initialization();
 
-								/* エフェクト初期化処理 */
-								pDamageEffect->Initialization();
-
-								/* オブジェクトリストに登録 */
-								this->ObjectList->SetEffect(pDamageEffect);
-							}
+						/* オブジェクトリストに登録 */
+						this->ObjectList->SetEffect(pDamageEffect);
 							
-							/* 感電エフェクト */
-							{
-								/* 感電エフェクトを生成 */
-								EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+						/* 感電エフェクトを生成 */
+						EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
 
-								/* 感電エフェクトの読み込み */
-								pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
+						/* 感電エフェクトの読み込み */
+						pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
+	
+						/* 感電エフェクトの初期化 */
+						pShockEffect->Initialization();
 
-								/* 感電エフェクトの初期化 */
-								pShockEffect->Initialization();
+						/* 感電エフェクトの時間を設定 */
+						pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
 
-								/* 感電エフェクトの時間を設定 */
-								pShockEffect->SetDeleteCount(this->PlayerStatusList->iGetPlayerMaxInvincibleTime());
-
-								/* 感電エフェクトをリストに登録 */
-								this->ObjectList->SetEffect(pShockEffect);
-							}
+						/* 感電エフェクトをリストに登録 */
+						this->ObjectList->SetEffect(pShockEffect);
 							
-							/* 画面エフェクト(被ダメージ)作成 */
-							this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+						/* 画面エフェクト(被ダメージ)作成 */
+						this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
 
-							/* シェイプ(瞬き)を適用状態にする */
-							this->fShapeRate = 1.f;
-						}
-
+						/* シェイプ(瞬き)を適用状態にする */
+						this->fShapeRate = 1.f;
+					
 						break;
 					}
 				}
@@ -471,19 +461,19 @@ void CharacterPlayer::RadianLimitAdjustment(float& fRadian)
 	// 角度(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う
 	while (fRadian > PLAYER_TURN_LIMIT || fRadian < 0)
 	{
-	/* 2πを超えた場合 */
-	if (fRadian > PLAYER_TURN_LIMIT)
-	{
-		/* 角度を一周(2π)分補正する */
-		fRadian -= PLAYER_TURN_LIMIT;
+		/* 2πを超えた場合 */
+		if (fRadian > PLAYER_TURN_LIMIT)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian -= PLAYER_TURN_LIMIT;
+		}
+		/* 0を下回った場合 */
+		else if (fRadian < 0)
+		{
+			/* 角度を一周(2π)分補正する */
+			fRadian += PLAYER_TURN_LIMIT;
+		}
 	}
-	/* 0を下回った場合 */
-	else if (fRadian < 0)
-	{
-		/* 角度を一周(2π)分補正する */
-		fRadian += PLAYER_TURN_LIMIT;
-	}
-}
 }
 /* 2025.02.14 菊池雅道	回転関連の関数追加 終了 */
 
@@ -604,13 +594,38 @@ void CharacterPlayer::PlayerFallRecovery()
 	pRecoveryEffect->SetDeleteCount(90);
 
 	/* 復帰エフェクトをリストに登録 */
-	{
-		/* 復帰エフェクトをリストに登録 */
-		this->ObjectList->SetEffect(pRecoveryEffect);
-}
+	this->ObjectList->SetEffect(pRecoveryEffect);
+
 }
 /* 2025.03.02 駒沢風助 落下復帰処理作成 終了 */
 /* 2025.03.14 菊池雅道	エフェクト処理追加 終了 */
 /* 2025.03.16 駒沢風助	落下復帰処理更新 終了 */
 /* 2025.03.21 菊池雅道	落下復帰処理追加 終了 */
 
+/* 2025.07.19 菊池雅道	スローモーションカウント処理関数化 開始 */
+// スローモーションカウントの更新
+void CharacterPlayer::Player_UpdateSlowMotionCount()
+{
+	/* スローモーションカウントを取得 */
+	int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
+
+	/* スローモーションカウントが一定値を超えているか確認 */
+	if (iNowSlowMotionCount > PLAYER_SLOWMOTION_COUNT_MAX)
+	{
+		// スローモーションカウントが一定値を超えている場合
+		/* スローモーションフラグが有効であるか確認 */
+		if (this->StageStatusList->bGetGameSlowFlg() == true)
+		{
+			// 有効である場合
+			/* スローモーションフラグを無効化 */
+			this->StageStatusList->SetGameSlowFlg(false);
+
+			/* スローモーションカウントをリセットする */
+			this->PlayerStatusList->SetPlayerSlowMotionCount(0);
+		}
+	}
+
+	/* スローモーションカウントを加算する */
+	this->PlayerStatusList->SetPlayerSlowMotionCount(iNowSlowMotionCount + 1);
+}
+// 2025.07.19 菊池雅道	スローモーションカウント処理関数化 終了 */

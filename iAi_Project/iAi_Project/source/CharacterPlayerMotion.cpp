@@ -196,11 +196,6 @@ void CharacterPlayer::Player_Motion_Transition()
 			/* サウンド"溜め居合チャージ"が再生中でないか確認 */
 			if (this->bPlayChargeSound == false)
 			{
-				// 再生中である場合
-				/* サウンド"溜め居合チャージ"を再生 */
-				gpDataList_Sound->SE_PlaySound_Loop(SE_PLAYER_CHARGE);
-				gpDataList_Sound->SE_PlaySound_Loop(SE_PLAYER_CHARGE_HOLD);
-
 				/* サウンドを再生中に設定 */
 				this->bPlayChargeSound = true;
 			}
@@ -213,7 +208,6 @@ void CharacterPlayer::Player_Motion_Transition()
 			{
 				// 再生中である場合
 				/* サウンド"溜め居合チャージ"を停止 */
-				gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE);
 				gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE_HOLD);
 
 				/* サウンドを非再生中に設定 */

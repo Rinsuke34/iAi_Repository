@@ -25,7 +25,7 @@
 // 移動
 void CharacterPlayer::Player_Move()
 {
-	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
+	/* 2025.02.05 菊池雅道	ステータス関連修正		 開始 */
 	/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
 	/* 2025.03.18 菊池雅道	エディットによる処理追加 開始 */
 
@@ -79,9 +79,8 @@ void CharacterPlayer::Player_Move()
 		/* プレイヤーの攻撃状態が移動処理を行う状態であるか確認 */
 		switch (iPlayerAttackState)
 		{
-
 			/* 移動処理を通常通りに行う状態 */
-			case PLAYER_ATTACKSTATUS_FREE:	// 自由状態
+			case PLAYER_ATTACKSTATUS_FREE:				// 自由状態
 			case PLAYER_ATTACKSTATUS_MELEE_WEEK:		// 近接攻撃中(弱)
 
 				/* 移動速度補正無しにする */
@@ -95,7 +94,6 @@ void CharacterPlayer::Player_Move()
 			case PLAYER_ATTACKSTATUS_MELEE_POSTURE:			// 近接攻撃構え中
 
 				/* 移動速度補正0.5倍にする */
-				// ※仮の値
 				fMoveSpeedRatio = 0.5f;
 
 				/* プレイヤーの向きを移動方向に合わせない */
@@ -118,7 +116,6 @@ void CharacterPlayer::Player_Move()
 				fMoveSpeedRatio = 0.5f;
 			}
 				
-
 			/* プレイヤーの向きを移動方向に合わせない */
 			bPlayerAngleSetFlg = false;
 			break;
@@ -169,7 +166,7 @@ void CharacterPlayer::Player_Move()
 
 		/* 2025.01.09 菊池雅道	移動処理追加 終了 */
 		/* 2025.03.08 菊池雅道	移動処理修正 終了 */
-	/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
+		/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
 
 		/* 現在速度を更新 */
 		this->PlayerStatusList->SetPlayerNowMoveSpeed(fSpeed);
@@ -190,52 +187,7 @@ void CharacterPlayer::Player_Move()
 		{
 			// 合わせる場合
 			/* プレイヤーの向きを移動方向に合わせる */
-			/* 入力方向を取得 */
-			float fMoveAngle = atan2f(vecInput.x, vecInput.z);
-			
-			/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
-			this->RadianLimitAdjustment(fAngleX);
-			
-			/* 補正したカメラ角度を設定 */
-			this->StageStatusList->SetCameraAngleX(fAngleX);
-
-			/* 入力方向とカメラの向きを合成し移動方向とする */
-			fMoveAngle = fAngleX - fMoveAngle;
-
-			/* プレイヤーの移動方向(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
-			this->RadianLimitAdjustment(fMoveAngle);
-
-			/* プレイヤーの現在の向き(ラジアン)を取得 */
-			float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
-
-			/* プレイヤーの現在の向き(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
-			this->RadianLimitAdjustment(fCurrentAngle);
-
-			/* 現在のプレイヤーの向きと移動方向の差を求める */
-			float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
-
-			//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
-			/* 左回りで半周を超えたら */
-			if (fDifferrenceAngle > DX_PI_F)
-			{
-				/* 角度を一周(2π)分補正する */
-				fDifferrenceAngle -= PLAYER_TURN_LIMIT;
-			}
-			/* 右回りで半周を超えたら */
-			else if (fDifferrenceAngle < -DX_PI_F)
-			{
-				/* 角度を一周(2π)分補正する */
-				fDifferrenceAngle += PLAYER_TURN_LIMIT;
-			}
-
-			/* 振り向き速度に応じて段階的に移動方向を向く */ 
-			float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
-
-			/* プレイヤーの向きを更新 */
-			this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
-
-			/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
-			/* 2025.03.14 菊池雅道	振り向き処理修正 終了 */
+			AngleIterpolation(vecInput.x,vecInput.z,fAngleX);
 		}
 	}
 	else
@@ -247,76 +199,34 @@ void CharacterPlayer::Player_Move()
 		// 近距離攻撃(強)(終了)モーション中以外なら待機モーションに遷移 ※バグ対策のため、以下ような書き方になってます
 		if(this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
 		{
-
+		
 		}
 		else
 		{
-			/* 現在のモーションが"着地"、あるいは"死亡"でないか確認 */
+			// 着地・死亡・ジャンプ開始・回避中は待機にしない
 			int iMotionMove = this->PlayerStatusList->iGetPlayerMotion_Move();
-			if ((iMotionMove != MOTION_ID_MOVE_LAND) && (iMotionMove != MOTION_ID_MOVE_DIE))
+			int iMoveState = this->PlayerStatusList->iGetPlayerMoveState();
+			
+			bool isInvalidState =
+				(iMotionMove == MOTION_ID_MOVE_LAND) ||
+				(iMotionMove == MOTION_ID_MOVE_DIE) ||
+				(iMotionMove == MOTION_ID_MOVE_JUMP_START) ||
+				(iMoveState == PLAYER_MOVESTATUS_DODGING);
+			
+			if (!isInvalidState) 
 			{
-				// "着地","死亡"以外である場合
-				/* モーションが"ジャンプ(開始)"でないか確認 */
-				if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
-				{
-					// ジャンプ(開始)以外である場合
-					/* 現在のモーションが"着地"でないか確認 */
-					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_LAND)
-					{
-						// "着地"でない場合		
-						/* 現在のモーションが"回避"でないか確認 */
-						if (this->PlayerStatusList->iGetPlayerMoveState() != PLAYER_MOVESTATUS_DODGING)
-						{
-							/* 待機モーション設定 */
-							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
-						
-						}		
-					}
-				}
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_WAIT);
 			}
 		}
 	}
-	/* 2025.02.22 菊池雅道	壁キック処理追加 開始*/
-	// 壁キックの横移動処理
+	
 	/* 壁キックフラグが有効か確認 */
 	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
 	{
 		// 壁キックフラグが有効な場合
-		/* 壁キックしてからの経過フレーム数を取得 */
-		int iNowAfterKickWallFlame = this->PlayerStatusList->iGetPlayerAfterKickWallCount();
-
-		/* 壁キックの横移動速度を取得 */
-		float fKickWallHorizontalSpeed = this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed();	
-
-		/* 壁キック継続フレーム数を取得 */
-		int iKickWallFlame = this->PlayerStatusList->iGetPlayerKickWallFlame();
-		
-		/* 経過フレーム数を確認 */
-		if (iNowAfterKickWallFlame <= iKickWallFlame)
-		{
-			// 経過フレーム数が設定フレーム数を超えていない場合
-
-			/* 壁キックの横移動速度を設定 */
-			/* 経過フレーム数に応じて、速度が減衰する(1.0fを最大として減衰していく) */
-			float fKickWallSpeed = fKickWallHorizontalSpeed * (1.0f - (float)(iNowAfterKickWallFlame / iKickWallFlame));
-			
-			/* 壁の法線方向(水平成分のみ)へ移動する */
-			this->vecMove.x += vecWallKickNormalSum.x * fKickWallSpeed;
-			this->vecMove.z += vecWallKickNormalSum.z * fKickWallSpeed;
-
-		}
-		else
-		{
-			// 経過フレーム数が設定フレーム数を超えた場合
-
-			/* 経過フレーム数をリセット */
-			this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
-
-			/* 壁キックフラグを無効にする */
-			this->PlayerStatusList->SetPlayerKickWallFlg(false);
-		}
+		// 壁キックの横移動処理
+		this->Player_WallKick_Movement_Horizontal();		
 	}
-	/* 2025.02.22 菊池雅道	壁キック処理追加 終了 */
 
 	/* 移動量を加算 */
 	this->vecMove = VAdd(this->vecMove, vecAddMove);
@@ -389,148 +299,134 @@ void CharacterPlayer::Player_Jump()
 	/* 壁キックフラグが有効か確認 */
 	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
 	{
-		/* 壁キック後の経過フレーム数が0の場合 */
-		if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
-		{
-			/* 壁キックの移動速度(垂直成分)を取得 */
-			float fKickWallVerticalSpeed = this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed();
-
-			/*上方向に移動 */
-			this->PlayerStatusList->SetPlayerNowFallSpeed(-fKickWallVerticalSpeed);
-			
-			/* SEを再生 */
-			gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
-			
-			/* モーションを"ジャンプ(開始)"に設定 */
-			PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
-
-			/* 壁キック後のフラグを有効にする */
-			this->PlayerStatusList->SetPlayerAfterKickWallFlg(true);
-		}
-
-		/* 壁キック後の経過フレーム数を進める */
-		this->PlayerStatusList->SetPlayerAfterKickWallCount(this->PlayerStatusList->iGetPlayerAfterKickWallCount() + 1);
-
+		Player_WallKick_Movement_Vertical();
 	}
 	// ジャンプ処理
 	/* ジャンプ処理を行う状態か確認 */
-	if (bJumpFlag == true)
+	if (bJumpFlag != true)
 	{
-		// ジャンプ処理を行う場合
-		/* ジャンプのクールタイムが残っているか確認 */
-		if (this->iJumpNowCoolTime > 0)
-		{
-			// クールタイムが残っている場合
-			/* ジャンプを行わない */
-			return;
-		}
-		/* 現在のジャンプ回数を取得 */
-		int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
-		
-		/* 最大ジャンプ回数を取得 */
-		int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount() + iEditAddJumpCount;
+		// ジャンプ処理を行わない場合
+		/* ジャンプを行わない */
+		return;
 
-		/* ジャンプ回数が最大数を超えていないか確認 */
-		if (iNowJumpCount < iMaxJumpCount)
-		{
-			// ジャンプ回数が最大数を超えていない場合
-			/* ジャンプ入力がされているか確認 */
-			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) == true)
-			{
-				// ジャンプ入力がされている場合
-				// 壁キックを行った後かを確認(壁キックとジャンプの重複防止のため)
-				if (this->PlayerStatusList->bGetPlayerAfterKickWallFlg() == false)
-				{ 
-					// 壁キック後のフラグが有効ではない場合
-					/* ジャンプ処理 */
-					/* ジャンプ速度を取得 */
-					float fJumpSpeed = this->PlayerStatusList->fGetPlayerJumpSpeed();
-					
-					/* ジャンプ速度を設定(マイナスの値を設定する) */
-					this->PlayerStatusList->SetPlayerNowFallSpeed(-fJumpSpeed);
-
-					/* ジャンプ回数を更新 */
-					this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
-
-					/* ジャンプフラグを有効にする */
-					this->PlayerStatusList->SetPlayerJumpingFlag(true);
-
-					/* ジャンプのSEを再生 */
-					gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
-
-					/* ジャンプのボイスを再生 */
-					gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
-					
-					//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
-
-					/* 地面にいない事を確認 */
-					if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-					{
-						/*空中ジャンプエフェクト追加 */
-						{
-							/* 空中ジャンプエフェクトを生成 */
-							EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
-
-							/* 空中ジャンプエフェクトの読み込み */
-							pAirJumpEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_airjump/FX_airjump"));
-
-							/* 空中ジャンプエフェクトの時間を設定 */
-							pAirJumpEffect->SetDeleteCount(30);
-
-							/* 空中ジャンプエフェクトの座標設定 */
-							pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
-
-							/* 空中ジャンプエフェクトの回転量設定 */
-							pAirJumpEffect->SetRotation(this->vecRotation);
-
-							/* 空中ジャンプエフェクトの初期化 */
-							pAirJumpEffect->Initialization();
-
-							/* 空中ジャンプエフェクトをリストに登録 */
-							{
-								/* 空中ジャンプエフェクトをリストに登録 */
-								this->ObjectList->SetEffect(pAirJumpEffect);
-							}
-						}
-					}
-
-					/* プレイヤーのモーションが"近距離攻撃(強)(終了)"であるか確認 */
-					if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
-					{
-						// 近距離攻撃(強)(終了)モーション中の場合
-						/* プレイヤーのモーションを"無し"に変更 */
-						this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
-					}
-
-					/* モーションを"ジャンプ(開始)"に設定 */
-					PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
-
-					/* ジャンプのクールタイム設定値を取得 */
-					int iJumpCoolTime = this->PlayerStatusList->iGetPlayerJumpCoolTime();
-
-					/* ジャンプのクールタイムを設定 */
-					this->iJumpNowCoolTime = iJumpCoolTime;
-				}
-				else
-				{ 
-					// 壁キック後のフラグが有効な場合
-					// ジャンプ入力がされている場合
-					if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_JUMP) == false)
-					{
-						/* 壁キック後のフラグを解除 */
-						this->PlayerStatusList->SetPlayerAfterKickWallFlg(false);
-					}
-				}		
-			}
-		}
 	}
+		
+	/* ジャンプのクールタイムが残っているか確認 */
+	if (this->iJumpNowCoolTime > 0)
+	{
+		// クールタイムが残っている場合
+		/* ジャンプを行わない */
+		return;
+	}
+		
+	/* 現在のジャンプ回数を取得 */
+	int iNowJumpCount = this->PlayerStatusList->iGetPlayerNowJumpCount();
+		
+	/* 最大ジャンプ回数を取得 */
+	int iMaxJumpCount = this->PlayerStatusList->iGetPlayerMaxJumpCount() + iEditAddJumpCount;
+
+	/* ジャンプ回数が最大数を超えていないか確認 */
+	if (iNowJumpCount >= iMaxJumpCount)
+	{
+		// ジャンプ回数が最大数を超えている場合
+		/* ジャンプを行わない */
+		return;
+		
+	}
+			
+	// ジャンプ入力を確認
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_JUMP) != true)
+	{
+		// ジャンプ入力がされていない場合
+		/* ジャンプを行わない */
+		return; 
+	}
+			
+	// 壁キックを行った後かを確認(壁キックとジャンプの重複防止のため)
+	if (this->PlayerStatusList->bGetPlayerAfterKickWallFlg() == false)
+	{ 
+		// 壁キック後のフラグが有効ではない場合
+		/* ジャンプ処理 */
+		/* ジャンプ速度を取得 */
+		float fJumpSpeed = this->PlayerStatusList->fGetPlayerJumpSpeed();
+					
+		/* ジャンプ速度を設定(マイナスの値を設定する) */
+		this->PlayerStatusList->SetPlayerNowFallSpeed(-fJumpSpeed);
+
+		/* ジャンプ回数を更新 */
+		this->PlayerStatusList->SetPlayerNowJumpCount(iNowJumpCount + 1);
+
+		/* ジャンプフラグを有効にする */
+		this->PlayerStatusList->SetPlayerJumpingFlag(true);
+
+		/* ジャンプのSEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+
+		/* ジャンプのボイスを再生 */
+		gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+					
+		//空中でジャンプした場合、空中ジャンプエフェクトを出現させる
+		/* 地面にいない事を確認 */
+		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+		{						
+			/* 空中ジャンプエフェクトを生成 */
+			EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
+
+			/* 空中ジャンプエフェクトの読み込み */
+			pAirJumpEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_airjump/FX_airjump"));
+
+			/* 空中ジャンプエフェクトの時間を設定 */
+			pAirJumpEffect->SetDeleteCount(30);
+
+			/* 空中ジャンプエフェクトの座標設定 */
+			pAirJumpEffect->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y - this->PlayerStatusList->fGetPlayerNowFallSpeed()+PLAYER_HEIGHT , this->vecPosition.z));
+
+			/* 空中ジャンプエフェクトの回転量設定 */
+			pAirJumpEffect->SetRotation(this->vecRotation);
+
+			/* 空中ジャンプエフェクトの初期化 */
+			pAirJumpEffect->Initialization();
+							
+			/* 空中ジャンプエフェクトをリストに登録 */
+			this->ObjectList->SetEffect(pAirJumpEffect);
+						
+		}
+
+		/* プレイヤーのモーションが"近距離攻撃(強)(終了)"であるか確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_STRONG_END)
+		{
+			// 近距離攻撃(強)(終了)モーション中の場合
+			/* プレイヤーのモーションを"無し"に変更 */
+			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+		}
+
+		/* モーションを"ジャンプ(開始)"に設定 */
+		PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
+		/* ジャンプのクールタイム設定値を取得 */
+		int iJumpCoolTime = this->PlayerStatusList->iGetPlayerJumpCoolTime();
+
+		/* ジャンプのクールタイムを設定 */
+		this->iJumpNowCoolTime = iJumpCoolTime;
+	}
+	else
+	{ 
+		// 壁キック後のフラグが有効な場合
+		// ジャンプ入力がされている場合
+		if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_JUMP) == false)
+		{
+			/* 壁キック後のフラグを解除 */
+			this->PlayerStatusList->SetPlayerAfterKickWallFlg(false);
+		}
+	}			
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.02.22 菊池雅道	壁キック処理追加	終了*/
+/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
+/* 2025.02.22 菊池雅道	壁キック処理追加			終了 */
 /* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */
 
-/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
+
+/* 2025.02.05 菊池雅道	ステータス関連修正			開始 */
+/* 2025.03.12 菊池雅道	スローモーション処理追加	開始 */
 // 重力処理
 void CharacterPlayer::Player_Gravity()
 {
@@ -588,71 +484,75 @@ void CharacterPlayer::Player_Gravity()
 	}
 
 	/* 重力処理実行フラグの確認 */
-	if(bGravityFlag == true)
+	if (bGravityFlag != true)
 	{
-		// 重力処理を行う場合
-		/* 落下量取得 */
-		float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
-		fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();			// 加速度を加算
-
-		/* 最大落下速度を取得 */
-		float fFallSpeedMax = this->PlayerStatusList->fGetPlayerMaxFallSpeed();		// 最大落下速度取得
-
-		/* 落下速度低下値を取得 */
-		int iFallSpeedDown = this->PlayerStatusList->iGetAddFallSpeedDown();
-
-		/* 落下速度低下値が設定されているか確認 */
-		if (iFallSpeedDown != 0)
-		{
-			/* 最大落下速度を落下速度低下値に設定 */
-			fFallSpeedMax = static_cast<float>(iFallSpeedDown);
-		}
-
-		/* 現在の落下速度が最大落下速度を超えているか(下回っているか)確認 */
-		if (fFallSpeedMax < fFallSpeed)
-		{
-			// 超えている場合
-			/* 最大落下速度に設定 */
-			fFallSpeed = fFallSpeedMax;	
-		}
-
-		/* スローモーション中か確認 */
-		if (this->StageStatusList->bGetGameSlowFlg() == true)
-		{
-			// スローモーション中の場合
-			/* 落下中か確認する */
-			if (fFallSpeed > 0)
-			{
-				// 落下中の場合
-				/* 加速度を少なくする */
-				fFallSpeed = fFallSpeed * 0.5f;
-			}
-		}
-
-		/* 落下の加速度を更新 */
-		this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
-
-		/* 重力による移動後の座標を取得 */
-		this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();	
+		// フラグが無効な場合、何も行わない
+		return;		
 	}
+		
+	/* 落下量取得 */
+	float fFallSpeed = this->PlayerStatusList->fGetPlayerNowFallSpeed();		// 現時点での加速量取得
+	fFallSpeed += this->PlayerStatusList->fGetPlayerFallAcceleration();			// 加速度を加算
+
+	/* 最大落下速度を取得 */
+	float fFallSpeedMax = this->PlayerStatusList->fGetPlayerMaxFallSpeed();		// 最大落下速度取得
+
+	/* 落下速度低下値を取得 */
+	int iFallSpeedDown = this->PlayerStatusList->iGetAddFallSpeedDown();
+
+	/* 落下速度低下値が設定されているか確認 */
+	if (iFallSpeedDown != 0)
+	{
+		/* 最大落下速度を落下速度低下値に設定 */
+		fFallSpeedMax = static_cast<float>(iFallSpeedDown);
+	}
+
+	/* 現在の落下速度が最大落下速度を超えているか(下回っているか)確認 */
+	if (fFallSpeedMax < fFallSpeed)
+	{
+		// 超えている場合
+		/* 最大落下速度に設定 */
+		fFallSpeed = fFallSpeedMax;	
+	}
+
+	/* スローモーション中か確認 */
+	if (this->StageStatusList->bGetGameSlowFlg() == true)
+	{
+		// スローモーション中の場合
+		/* 落下中か確認する */
+		if (fFallSpeed > 0)
+		{
+			// 落下中の場合
+			/* 加速度を少なくする */
+			fFallSpeed = fFallSpeed * 0.5f;
+		}
+	}
+
+	/* 落下の加速度を更新 */
+	this->PlayerStatusList->SetPlayerNowFallSpeed(fFallSpeed);
+
+	/* 重力による移動後の座標を取得 */
+	this->vecMove.y -= this->PlayerStatusList->fGetPlayerNowFallSpeed();	
+	
 }
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.03.12 菊池雅道	スローモーション処理追加 開始 */
+
+/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
+/* 2025.03.12 菊池雅道	スローモーション処理追加	終了 */
 
 
 // 回避
 void CharacterPlayer::Player_Dodg()
 {
 	/* 2025.01.09 菊池雅道	移動処理追加		開始 */
-	/* 2025.01.26 駒沢風助	コード修正		開始*/
-	/* 2025.01.27 菊池雅道	エフェクト処理追加 開始 */
-	/* 2025.02.05 菊池雅道	ステータス関連修正 開始 */
-	/* 2025.02.06 菊池雅道	エフェクト処理修正 開始 */
-	/* 2025.02.10 菊池雅道	回避処理修正 開始 */
+	/* 2025.01.26 駒沢風助	コード修正			開始 */
+	/* 2025.01.27 菊池雅道	エフェクト処理追加	開始 */
+	/* 2025.02.05 菊池雅道	ステータス関連修正	開始 */
+	/* 2025.02.06 菊池雅道	エフェクト処理修正	開始 */
+	/* 2025.02.10 菊池雅道	回避処理修正		開始 */
 	/* 2025.02.26 菊池雅道	クールタイム処理追加 開始 */
-	/* 2025.03.04 菊池雅道	回避の処理修正 開始 */
-	/* 2025.03.11 菊池雅道	回避の処理修正 開始 */
-	/* 2025.03.17 駒沢風助	画面エフェクト追加 開始 */
+	/* 2025.03.04 菊池雅道	回避の処理修正		開始 */
+	/* 2025.03.11 菊池雅道	回避の処理修正		開始 */
+	/* 2025.03.17 駒沢風助	画面エフェクト追加	開始 */
 
 	/* プレイヤーの移動状態を取得 */
 	int iPlayerMoveState = this->PlayerStatusList->iGetPlayerMoveState();
@@ -683,179 +583,178 @@ void CharacterPlayer::Player_Dodg()
 	}
 
 	/* 回避処理を行うか確認 */
-	if (bDodgeFlag == true)
+	if (bDodgeFlag == false)
 	{
-		// 回避処理を行う場合
-		/* プレイヤー場外が"回避状態中"であるか確認 */
-		if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
-		{
-			// 回避中である場合
-			/* 回避状態の最大フレーム数を取得 */
-			int iDodgeMaxFrame = this->PlayerStatusList->iGetPlayerMaxDodgeFlame();
-
-			/* 現在の回避状態フレーム数を取得 */
-			int NowDodgeFrame = this->PlayerStatusList->iGetPlayerNowDodgeFlame();
-
-			/* 回避状態が維持される時間を超えていないか確認 */
-			if (NowDodgeFrame <= iDodgeMaxFrame)
-			{
-				// 超えていない(回避状態を継続する)場合
-				/* プレイヤーの攻撃状態が近距離攻撃(強)中か確認 */
-				if (iPlayerAttackState == PLAYER_ATTACKSTATUS_MELEE_STRONG)
-				{
-					// 近距離攻撃(強)中である場合
-					/* 回避処理を行わない */
-					return;
-				}
-
-				/* 回避速度を取得 */
-				float fPlayerDodgeSpeed = this->PlayerStatusList->fGetPlayerDodgeSpeed();
-
-				/* 回避による移動方向を設定し、移動する */
-				/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
-				this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), fPlayerDodgeSpeed * (1.0f - (float)NowDodgeFrame / (float)iDodgeMaxFrame));
-
-				/* 回避の経過時間を進める */
-				this->PlayerStatusList->SetPlayerNowDodgeFlame(NowDodgeFrame + 1);
-
-			}
-			else
-			{
-				// 超えている(回避状態を終了する)場合
-
-				/* プレイヤー状態を"自由状態"に設定 */
-				this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
-
-				/* 回避エフェクトを削除 */
-				this->pDodgeEffect->SetDeleteFlg(true);
-				/* 回避エフェクトのポインタを削除 */
-				this->pDodgeEffect = nullptr;
-			}
-		}
-		else
-		{
-			// 回避中でない場合
-			/* 回避が入力されているか確認 */
-			if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == true)
-			{
-				// 回避が入力されている場合
-				/* プレイヤーの攻撃状態が近距離攻撃(強)中でないことを確認 */
-				if (iPlayerAttackState != PLAYER_ATTACKSTATUS_MELEE_STRONG)
-				{
-					// 近距離攻撃(強)中でない場合
-					/* 空中での回避回数制限を超えていないか */
-					if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() < PLAYER_DODGE_IN_AIR_LIMIT)
-					{
-						/* 回避のクールタイムが残っているか確認 */
-						if (this->iDodgeNowCoolTime > 0)
-						{
-							// クールタイムが残っている場合
-							/* 回避を行わない */
-							return;
-						}
-
-						/* 回避開始時の時間をリセット */
-						this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
-
-						/* 画面エフェクト(集中線)作成 */
-						ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
-						this->StageStatusList->SetScreenEffect(pScreenEffect);
-						pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
-
-						/* 回避方向設定 */
-						{
-							/* 入力による移動量を取得 */
-							VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
-
-							/* カメラの水平方向の向きを移動用の向きに設定 */
-							float fAngleX = this->StageStatusList->fGetCameraAngleX();
-
-							/* 回避方向ベクトル */
-							VECTOR vecDodgMove;
-
-							/* スティック入力がされているか確認 */
-							if (vecInput.x != 0 || vecInput.z != 0)
-							{
-								// スティック入力がされている場合
-								/* スティック入力による回避方向を設定 */
-								vecDodgMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);
-								vecDodgMove.y = 0.0f;
-								vecDodgMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
-							}
-							else
-							{
-								// スティック入力がされていない場合
-								//プレイヤーが向いている方向に回避する
-								/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */
-								vecDodgMove = { 0,0,-1 };
-
-								/* プレイヤーの角度からY軸の回転行列を求める */
-								MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
-
-								/* プレイヤーの向きによる回避方向を設定 */
-								vecDodgMove = VTransform(vecDodgMove, matPlayerRotation);
-							}
-
-							/* 回避方向を正規化 */
-							vecDodgMove = VNorm(vecDodgMove);
-
-							/* 現在の回避方向をセットする */
-							this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
-						}
-
-						/* 落下の加速度を初期化 */
-						this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
-
-						/* プレイヤー状態を"回避状態中"に設定 */
-						this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
-
-						/* プレイヤーのモーションを回避に設定 */
-						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DODGE);
-
-						/* プレイヤーが着地していないかを確認 */
-						if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-						{
-							// 着地していない場合
-							/* 空中での回避回数のカウントを進める */
-							this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
-						}
-
-						/* 回避のSEを再生 */
-						gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
-
-						/* 回避のボイスを再生 */
-						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
-
-						/* 回避エフェクト追加 */
-						{
-							/* 回避エフェクトを生成 */
-							this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
-
-							/* 回避エフェクトの読み込み */
-							this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
-
-							/* エフェクトの回転量設定 */
-							this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
-
-							/* 回避エフェクトの初期化 */
-							this->pDodgeEffect->Initialization();
-
-							/* 回避エフェクトをリストに登録 */
-							{
-								/* 回避エフェクトをリストに登録 */
-								this->ObjectList->SetEffect(this->pDodgeEffect);
-							}
-						}
-						/* 回避クールタイムの設定値を取得 */
-						int iDodgeCoolTime = this->PlayerStatusList->iGetPlayerDodgeCoolTime();
-
-						/* 回避クールタイムを設定 */
-						this->iDodgeNowCoolTime = iDodgeCoolTime;
-					}
-				}
-			}
-		}
+		// フラグが立っていない場合
+		/* 回避処理を行わない */
+		return;	
 	}
+	
+	/* プレイヤー状態が"回避状態中"であるか確認 */
+	if (iPlayerMoveState == PLAYER_MOVESTATUS_DODGING)
+	{
+		// 回避中である場合
+		/* 回避状態の最大フレーム数を取得 */
+		int iDodgeMaxFrame = this->PlayerStatusList->iGetPlayerMaxDodgeFlame();
+
+		/* 現在の回避状態フレーム数を取得 */
+		int NowDodgeFrame = this->PlayerStatusList->iGetPlayerNowDodgeFlame();
+
+		/* 回避状態が維持される時間を超えていないか確認 */
+		if (NowDodgeFrame <= iDodgeMaxFrame)
+		{
+			// 超えていない(回避状態を継続する)場合
+			/* プレイヤーの攻撃状態が近距離攻撃(強)中か確認 */
+			if (iPlayerAttackState == PLAYER_ATTACKSTATUS_MELEE_STRONG)
+			{
+				// 近距離攻撃(強)中である場合
+				/* 回避処理を行わない */
+				return;
+			}
+
+			/* 回避速度を取得 */
+			float fPlayerDodgeSpeed = this->PlayerStatusList->fGetPlayerDodgeSpeed();
+
+			/* 回避による移動方向を設定し、移動する */
+			/* 経過フレーム数に応じて、回避速度が減衰する(1.0fを最大として減衰していく) */
+			this->vecMove = VScale(this->PlayerStatusList->vecGetPlayerDodgeDirection(), fPlayerDodgeSpeed * (1.0f - (float)NowDodgeFrame / (float)iDodgeMaxFrame));
+
+			/* 回避の経過時間を進める */
+			this->PlayerStatusList->SetPlayerNowDodgeFlame(NowDodgeFrame + 1);
+				
+			return;
+		}
+			
+		// 回避状態が維持される時間を超えている(回避状態を終了する)場合
+		/* プレイヤー状態を"自由状態"に設定 */
+		this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_FREE);
+
+		/* 回避エフェクトを削除 */
+		this->pDodgeEffect->SetDeleteFlg(true);
+
+		/* 回避エフェクトのポインタを削除 */
+		this->pDodgeEffect = nullptr;
+
+		return;
+	}
+		
+	/* 回避が入力されているか確認 */
+	if (this->InputList->bGetGameInputAction(INPUT_TRG, GAME_DODGE) == false)
+	{
+		// 回避が入力されていない場合
+		/* 回避を行わない */
+		return;
+
+	}
+			
+	/* プレイヤーの攻撃状態が近距離攻撃(強)中か確認 */
+	if (iPlayerAttackState == PLAYER_ATTACKSTATUS_MELEE_STRONG)
+	{
+		// 近距離攻撃(強)中である場合
+		/* 回避を行わない */
+		return;
+	}		
+					
+	/* 空中での回避回数制限を超えていないか確認 */			
+	if (this->PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() >= PLAYER_DODGE_IN_AIR_LIMIT)
+	{
+		// 空中での回避回数制限を超えている場合
+		/* 回避を行わない */
+		return;
+	}
+		
+	/* 回避のクールタイムが残っているか確認 */			
+	if (this->iDodgeNowCoolTime > 0)			
+	{
+		// クールタイムが残っている場合				
+		/* 回避を行わない */				
+		return;				
+	}
+			
+	/* 回避開始時の時間をリセット */
+	this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
+			
+	/* 画面エフェクト(集中線)作成 */
+	ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();			
+	this->StageStatusList->SetScreenEffect(pScreenEffect);
+	pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
+				
+	/* 回避方向設定 */					
+	/* 入力による移動量を取得 */				
+	VECTOR vecInput = this->InputList->vecGetGameInputMoveDirection();
+				
+	/* カメラの水平方向の向きを移動用の向きに設定 */				
+	float fAngleX = this->StageStatusList->fGetCameraAngleX();
+				
+	/* 回避方向ベクトル */				
+	VECTOR vecDodgMove;
+							
+	/* スティック入力がされているか確認 */				
+	if (vecInput.x != 0 || vecInput.z != 0)				
+	{
+		// スティック入力がされている場合					
+		/* スティック入力による回避方向を設定 */					
+		vecDodgMove.x = +(sinf(fAngleX) * vecInput.z) - (cosf(fAngleX) * vecInput.x);					
+		vecDodgMove.y = 0.0f;					
+		vecDodgMove.z = -(cosf(fAngleX) * vecInput.z) - (sinf(fAngleX) * vecInput.x);
+					
+	}			
+	else
+	{			
+		// スティック入力がされていない場合					
+		//プレイヤーが向いている方向に回避する					
+		/* プレイヤーモデルの初期の向きがZ軸に対してマイナス方向を向いているとする */					
+		vecDodgMove = { 0,0,-1 };
+					
+		/* プレイヤーの角度からY軸の回転行列を求める */					
+		MATRIX matPlayerRotation = MGetRotY(-(this->PlayerStatusList->fGetPlayerAngleX()));
+					
+		/* プレイヤーの向きによる回避方向を設定 */					
+		vecDodgMove = VTransform(vecDodgMove, matPlayerRotation);					
+	}
+				
+	/* 回避方向を正規化 */
+	vecDodgMove = VNorm(vecDodgMove);
+				
+	/* 現在の回避方向をセットする */			
+	this->PlayerStatusList->SetPlayerDodgeDirection(vecDodgMove);
+			
+	/* 落下の加速度を初期化 */
+	this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
+	/* プレイヤー状態を"回避状態中"に設定 */
+	this->PlayerStatusList->SetPlayerMoveState(PLAYER_MOVESTATUS_DODGING);
+
+	/* プレイヤーのモーションを回避に設定 */
+	this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_DODGE);
+
+	/* プレイヤーが着地していないかを確認 */
+	if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
+	{
+		// 着地していない場合
+		/* 空中での回避回数のカウントを進める */
+		this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(PlayerStatusList->iGetPlayerDodgeWhileJumpingCount() + 1);
+	}
+
+	/* 回避のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_DODGE);
+
+	/* 回避のボイスを再生 */
+	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
+						
+	/* 回避エフェクトを生成 */
+	this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
+	this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
+	this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+	this->pDodgeEffect->Initialization();
+	this->ObjectList->SetEffect(this->pDodgeEffect);
+												
+	/* 回避クールタイムの設定値を取得 */
+	int iDodgeCoolTime = this->PlayerStatusList->iGetPlayerDodgeCoolTime();
+
+	/* 回避クールタイムを設定 */
+	this->iDodgeNowCoolTime = iDodgeCoolTime;	
+	
 }
 
 /* 2025.01.09 菊池雅道	移動処理追加 終了 */
@@ -892,7 +791,6 @@ void CharacterPlayer::Movement_Vertical()
 	this->stVerticalCollision.vecLineEnd = stVerticalCollision.vecLineStart;
 	this->stVerticalCollision.vecLineEnd.y -= 9999;
 
-	/* 以下、仮処理(近いオブジェクトのみ対象にするようにする) */
 	/* 足場を取得 */
 	auto& PlatformList = ObjectList->GetPlatformList();
 
@@ -909,69 +807,76 @@ void CharacterPlayer::Movement_Vertical()
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
 	{
+		/* 足場と線分の接触判定 */
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
 
 		/* 接触しているか確認 */
-		if (stHitPolyDim.HitFlag == 1)
+		if (stHitPolyDim.HitFlag != 1)
 		{
-			// 接触している場合
-			/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
-			// ※判定値は少し余裕を持たせる(移動床に搭乗中に床から離れないようにするため)
-			if (stHitPolyDim.HitPosition.y >= fStandPosY + PLAYER_PLATFORM_RAND_CORRECTION)
+			// 接触していない場合
+			/* 次のプラットフォームを確認*/
+			continue;
+		}
+			
+		// 接触している場合
+		/* ヒットした座標が現在の着地座標より高い位置であるか確認 */
+		// ※判定値は少し余裕を持たせる(移動床に搭乗中に床から離れないようにするため)
+		if (stHitPolyDim.HitPosition.y >= fStandPosY + PLAYER_PLATFORM_RAND_CORRECTION)
+		{
+
+			// 現在の着地座標より高い位置である場合
+			/* 落下の加速度を初期化 */
+			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+
+			/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
+			if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
 			{
-				// 現在の着地座標より高い位置である場合
-				/* 落下の加速度を初期化 */
-				this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+				// 着地座標がプレイヤーの現在位置より低い場合
+				// ※ 地面に着地したと判定する
+				/* 着地座標を着地した座標に更新 */
+				fStandPosY = stHitPolyDim.HitPosition.y;
 
-				/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
-				if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
-				{
-					// 着地座標がプレイヤーの現在位置より低い場合
-					// ※ 地面に着地したと判定する
-					/* 着地座標を着地した座標に更新 */
-					fStandPosY = stHitPolyDim.HitPosition.y;
+				/* ジャンプ回数を初期化する */
+				this->PlayerStatusList->SetPlayerNowJumpCount(0);
 
-					/* ジャンプ回数を初期化する */
-					this->PlayerStatusList->SetPlayerNowJumpCount(0);
+				/* プレイヤーの着地フラグを有効にする */
+				this->PlayerStatusList->SetPlayerLanding(true);
 
-					/* プレイヤーの着地フラグを有効にする */
-					this->PlayerStatusList->SetPlayerLanding(true);
+				/* ジャンプ中のフラグをリセット */
+				this->PlayerStatusList->SetPlayerJumpingFlag(false);
 
-					/* ジャンプ中のフラグをリセット */
-					this->PlayerStatusList->SetPlayerJumpingFlag(false);
+				/* ジャンプ中の回避回数をリセット */
+				this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
 
-					/* ジャンプ中の回避回数をリセット */
-					this->PlayerStatusList->SetPlayerDodgeWhileJumpingCount(0);
+				/* 空中での近距離攻撃(強)回数をリセット */
+				this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
 
-					/* 空中での近距離攻撃(強)回数をリセット */
-					this->PlayerStatusList->SetPlayerMeleeStrongAirCount(0);
+				/* 落下状態になってからのフレーム数をリセット */
+				this->iFallingFrame = 0;
 
-					/* 落下状態になってからのフレーム数をリセット */
-					this->iFallingFrame = 0;
+				/* 着地したプラットフォームの移動量をプレイヤー移動量に加算 */
+				vecNextPosition = VAdd(this->vecPosition, platform->vecGetPlatformMove());
 
-					/* 着地したプラットフォームの移動量をプレイヤー移動量に加算 */
-					vecNextPosition = VAdd(this->vecPosition, platform->vecGetPlatformMove());
+				/* プレイヤーのスローモーションカウントをリセット */
+				this->PlayerStatusList->SetPlayerSlowMotionCount(0);
 
-					/* プレイヤーのスローモーションカウントをリセット */
-					this->PlayerStatusList->SetPlayerSlowMotionCount(0);
+				/* 対象のプラットフォームをプレイヤーが乗っている状態にする */
+				platform->SetRidePlayerFlg(true);
+			}
+			else
+			{
+				// 着地座標がプレイヤーの現在位置より高い場合
+				/* 着地座標をプレイヤーが天井にめり込まない高さに更新 */
+				fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
 
-					/* 対象のプラットフォームをプレイヤーが乗っている状態にする */
-					platform->SetRidePlayerFlg(true);
-				}
-				else
-				{
-					// 着地座標がプレイヤーの現在位置より高い場合
-					/* 着地座標をプレイヤーが天井にめり込まない高さに更新 */
-					fStandPosY = stHitPolyDim.HitPosition.y - PLAYER_HEIGHT - PLAYER_CLIMBED_HEIGHT;
+				/* 対象のプラットフォームをプレイヤーが乗っていない状態にする */
+				platform->SetRidePlayerFlg(false);
 
-					/* 対象のプラットフォームをプレイヤーが乗っていない状態にする */
-					platform->SetRidePlayerFlg(false);
-
-					/* ループを抜ける */
-					break;
-				}
+				/* ループを抜ける */
+				break;
 			}
 		}
+		
 	}
 
 	/* 着地フラグが無効→有効になったか確認 */
@@ -985,33 +890,15 @@ void CharacterPlayer::Movement_Vertical()
 		{
 			/* 着地のSEを再生 */
 			gpDataList_Sound->SE_PlaySound(SE_PLAYER_LANDING);
-
-			/* エフェクト追加 */
-			{
-				/* 着地のエフェクトを生成 */
-				EffectSelfDelete* pAddEffect = new EffectSelfDelete;
-
-				/* 着地エフェクトの読み込み */
-				pAddEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_land/FX_land"));
-
-				/* 着地エフェクトの時間を設定 */
-				pAddEffect->SetDeleteCount(30);
-
-				/* 着地エフェクトの座標設定 */
-				pAddEffect->SetPosition(this->vecPosition);
-
-				/* 着地エフェクトの回転量設定 */
-				pAddEffect->SetRotation(this->vecRotation);
-
-				/* 着地エフェクトの初期化 */
-				pAddEffect->Initialization();
-
-				/* 着地エフェクトをリストに登録 */
-				{
-					/* 着地エフェクトをリストに登録 */
-					this->ObjectList->SetEffect(pAddEffect);
-				}
-			}
+		
+			/* 着地のエフェクトを生成 */
+			EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+			pAddEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_land/FX_land"));
+			pAddEffect->SetDeleteCount(30);
+			pAddEffect->SetPosition(this->vecPosition);
+			pAddEffect->SetRotation(this->vecRotation);
+			pAddEffect->Initialization();
+			this->ObjectList->SetEffect(pAddEffect);
 
 			/* 着地モーション設定 */
 			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_LAND);
@@ -1028,59 +915,70 @@ void CharacterPlayer::Movement_Vertical()
 	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 
 	/* モーションを更新 */
+	/* 着地フラグが有効である(空中にいないか確認 */
+	if (this->PlayerStatusList->bGetPlayerLandingFlg() == true)
 	{
-		/* 着地フラグが無効である(空中にいる)か確認 */
-		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
-		{
-			// 無効である(空中にいる)場合
-			/* プレイヤーの移動モーションが"回避"でないか確認 */
-			if (this->PlayerStatusList->iGetPlayerMoveState() != PLAYER_MOVESTATUS_DODGING)
-			{
-				// 回避モーションでない場合
-				/* 上昇しているか確認 */
-				if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
-				{
-					// 上昇している場合
-					/* プレイヤーの攻撃モーションが"投げ(準備)"でないか確認 */
-					if(this->PlayerStatusList->iGetPlayerMotion_Attack() != MOTION_ID_ATTACK_THROW_READY)
-					{
-						// 攻撃モーションが投げ(準備)でない場合
-					/* モーションが"ジャンプ(開始)"でないことを確認 */
-					if (this->PlayerStatusList->iGetPlayerMotion_Move() != MOTION_ID_MOVE_JUMP_START)
-					{
-						/* モーションを"ジャンプ(上昇)"に設定 */
-							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
-						}
-					}
-				}
-				else
-				{
-					// 下降している場合
-					/* プレイヤーがジャンプ中であるか確認 */
-					if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
-					{
-						/* モーションを"ジャンプ(下降)"に設定 */
-						this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
-					}
-					else
-					{
-						// ジャンプ中でない場合
-						/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
-						if (this->iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
-						{
-							// 一定数を超えている場合
-							/* モーションを"ジャンプ(下降)"に設定 */
-							this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
-						}					
-					}
-
-					/* 落下状態になってからのフレーム数を加算 */
-					this->iFallingFrame++;
-				}
-					
-			}
-		}
+		//空中にいない場合
+		/* モーションを変えない */
+		return;
 	}
+		
+	// 空中にいる場合
+		
+	/* プレイヤーの移動状態が回避中であるか確認 */
+	if (this->PlayerStatusList->iGetPlayerMoveState() == PLAYER_MOVESTATUS_DODGING)
+	{
+		// 回避中である場合
+		/* モーションを変えない */
+		return;		
+	}
+			
+	/* 上昇しているか確認 */
+	if (this->PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
+	{
+		// 上昇している場合
+		/* 攻撃モーションが"投げ(準備)"か確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_THROW_READY)
+		{
+			// 攻撃モーションが投げ(準備)の場合は何もしない
+			return; 
+		}
+		
+		/* 移動モーションが"ジャンプ(開始)"か確認 */
+		if (this->PlayerStatusList->iGetPlayerMotion_Move() == MOTION_ID_MOVE_JUMP_START)
+		{
+			// 移動モーションがジャンプ(開始)の場合は何もしない
+			return;
+		}
+		
+		/* モーションを"ジャンプ(上昇)"に設定 */
+		this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_UP);
+		
+	}
+	else
+	{
+		// 下降している場合
+		/* プレイヤーがジャンプ中であるか確認 */
+		if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+		{
+			/* モーションを"ジャンプ(下降)"に設定 */
+			this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+		}
+		else
+		{
+			// ジャンプ中でない場合
+			/* 落下状態になってからのフレーム数が一定数を超えているか確認 */
+			if (this->iFallingFrame > PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME)
+			{
+				// 一定数を超えている場合
+				/* モーションを"ジャンプ(下降)"に設定 */
+				this->PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_DOWN);
+			}					
+		}
+
+		/* 落下状態になってからのフレーム数を加算 */
+		this->iFallingFrame++;
+	}					
 }
 /* 2025.01.09 菊池雅道　移動処理追加					終了 */
 /* 2025.01.27 菊池雅道	エフェクト処理追加				終了 */
@@ -1115,139 +1013,139 @@ void CharacterPlayer::Movement_Horizontal()
 	VECTOR vecDevisionMovePosition = this->vecPosition;
 
 	/* 道中でオブジェクトに接触しているか判定 */
-	
-	{
-		/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
-		// ※ 元の位置から移動後の位置へ向けたカプセルコリジョンを作成
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].fCapsuleRadius = PLAYER_WIDE;
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
-		this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius = PLAYER_WIDE;
+	/* 現在位置から移動後座標へ向けたカプセルコリジョンを作成 */
+	// ※ 元の位置から移動後の位置へ向けたカプセルコリジョンを作成
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_UP].fCapsuleRadius = PLAYER_WIDE;
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].vecCapsuleTop = VAdd(vecNextPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+	this->stHorizontalCollision[PLAYER_MOVE_COLLISION_DOWN].fCapsuleRadius = PLAYER_WIDE;
 		
-		/* 法線ベクトル取得用のカプセルコリジョン */
-		COLLISION_CAPSULE stNormalCollision;
+	/* 法線ベクトル取得用のカプセルコリジョン */
+	COLLISION_CAPSULE stNormalCollision;
 
-		/* 法線ベクトル取得用のカプセルコリジョンは移動前のプレイヤーの位置に作成 */
-		stNormalCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
-		stNormalCollision.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
-		/* プラットフォームに接触するように半径はプレイヤーより大きめにとる */
-		stNormalCollision.fCapsuleRadius = PLAYER_WIDE + 10.0f;
+	/* 法線ベクトル取得用のカプセルコリジョンは移動前のプレイヤーの位置に作成 */
+	stNormalCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0.f, PLAYER_HEIGHT - PLAYER_WIDE, 0.f));
+	stNormalCollision.vecCapsuleBottom = VAdd(this->vecPosition, VGet(0.f, PLAYER_WIDE + PLAYER_CLIMBED_HEIGHT, 0.f));
+	/* プラットフォームに接触するように半径はプレイヤーより大きめにとる */
+	stNormalCollision.fCapsuleRadius = PLAYER_WIDE + 10.0f;
 
-		/* 足場を取得 */
-		auto& PlatformList = ObjectList->GetPlatformList();
+	/* 足場を取得 */
+	auto& PlatformList = ObjectList->GetPlatformList();
 
-		/* プレイヤーの接触する法線ベクトル合計 */
-		VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
+	/* プレイヤーの接触する法線ベクトル合計 */
+	VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
 
-		/* 足場と接触するか確認 */
-		for (auto* platform : PlatformList)
+	/* 足場と接触するか確認 */
+	for (auto* platform : PlatformList)
+	{
+		/* 足場との接触判定 */
+		for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
 		{
-			/* 足場との接触判定 */
-			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
+			/* 移動時にプラットフォームに接触しているか確認 */
+			MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision[i]);
+
+			/* プラットフォームの法線ベクトルを取得する */
+			MV1_COLL_RESULT_POLY_DIM stHitPolyDimNormal = platform->HitCheck_Capsule(stNormalCollision);
+
+			/* 接触しているか確認 */
+			if (stHitPolyDim.HitNum > 0)
 			{
-				/* 移動時にプラットフォームに接触しているか確認 */
-				MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(this->stHorizontalCollision[i]);
+				// 1つ以上のポリゴンが接触している場合
+				/* 壁キックフラグが有効が確認 */
+				if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
+				{
+					// 壁キックフラグが有効である場合
+					/* 壁キック中に壁にぶつかったら止まるようにする */
+					/* 壁キックフラグを解除 */
+					this->PlayerStatusList->SetPlayerKickWallFlg(false);
+						
+					/* 経過フレーム数をリセット */
+					this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
+				}
 
-				/* プラットフォームの法線ベクトルを取得する */
-				MV1_COLL_RESULT_POLY_DIM stHitPolyDimNormal = platform->HitCheck_Capsule(stNormalCollision);
+				// 押し出し処理用の法線ベクトル
+				/* 接触したポリゴンから法線ベクトルを取得し加算する */
+				for (int j = 0; j < stHitPolyDimNormal.HitNum; j++)
+				{
+					/* 法線ベクトルを取得 */
+					// ※ 法線ベクトルが0であるならば、加算しない
+					if (VSize(stHitPolyDimNormal.Dim[j].Normal) > 0.f)
+					{
+						// 法線ベクトルが0でない場合
+						/* 法線ベクトルのY軸を初期化 */
+						stHitPolyDimNormal.Dim[j].Normal.y = 0.f;
 
-				/* 接触しているか確認 */
+						/* 法線ベクトルを正規化 */
+						VECTOR vecNormal = VNorm(stHitPolyDimNormal.Dim[j].Normal);
+
+						/* 法線ベクトルを合計に加算 */
+						vecNormalSum = VAdd(vecNormalSum, vecNormal);
+					}
+				}
+
+				// 壁キック用の法線ベクトル
+				/* 接触したポリゴンから法線ベクトルを取得し加算する */
+				for (int j = 0; j < stHitPolyDim.HitNum; j++)
+				{
+					/* 法線ベクトルを取得 */
+					// ※ 法線ベクトルが0であるならば、加算しない
+					if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
+					{
+						// 法線ベクトルが0でない場合
+						/* 法線ベクトルのY軸を初期化 */
+						stHitPolyDim.Dim[j].Normal.y = 0.f;
+
+						/* 法線ベクトルを正規化 */
+						VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
+
+						/* 法線ベクトルを合計に加算 */
+						vecWallKickNormalSum = VAdd(vecWallKickNormalSum, vecNormal);
+					}
+				}
+
+				/* 取得した法線ベクトルを正規化 */
+				// ※ 取得した法線ベクトルの平均を取得
+				vecWallKickNormalSum = VNorm(vecWallKickNormalSum);
+
+				/* 壁の接触フラグを設定 */
+				this->PlayerStatusList->SetPlayerWallTouchFlg(true);
+
+				/* 壁に接触してからの経過フレーム数をリセット */
+				this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
+
+				/* プレイヤー座標に球体ポリゴンを作成 */
+				COLLISION_SQHERE stSphere;
+				stSphere.vecSqhere = this->vecPosition;
+				stSphere.vecSqhere.y = stSphere.vecSqhere.y + PLAYER_HEIGHT / 2;
+				stSphere.fSqhereRadius = PLAYER_WIDE;
+
+				/* 法線の方向にプレイヤーを押し出す */
+				// ※ 対象のコリジョンと接触しなくなるまで押し出す
+				bool bHitFlag = true;
+				while (bHitFlag)
+				{
+					/* 球体ポリゴンを法線ベクトルの方向へ移動 */
+					stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
+
+					/* 球体とポリゴンの接触判定 */
+					bHitFlag = platform->HitCheck(stSphere);
+				}
+
+				/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
+				vecNextPosition = stSphere.vecSqhere;
+				vecNextPosition.y = this->vecPosition.y;
+
+				// 球体コリジョンと衝突があった場合、分割移動処理を終了する
 				if (stHitPolyDim.HitNum > 0)
 				{
-					// 1つ以上のポリゴンが接触している場合
-					if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
-					{
-						/* 壁キックフラグを解除 */
-						this->PlayerStatusList->SetPlayerKickWallFlg(false);
-						
-						/* 経過フレーム数をリセット */
-						this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
-					}
-
-					// 押し出し処理用の法線ベクトル
-					/* 接触したポリゴンから法線ベクトルを取得し加算する */
-					for (int j = 0; j < stHitPolyDimNormal.HitNum; j++)
-					{
-						/* 法線ベクトルを取得 */
-						// ※ 法線ベクトルが0であるならば、加算しない
-						if (VSize(stHitPolyDimNormal.Dim[j].Normal) > 0.f)
-						{
-							// 法線ベクトルが0でない場合
-							/* 法線ベクトルのY軸を初期化 */
-							stHitPolyDimNormal.Dim[j].Normal.y = 0.f;
-
-							/* 法線ベクトルを正規化 */
-							VECTOR vecNormal = VNorm(stHitPolyDimNormal.Dim[j].Normal);
-
-							/* 法線ベクトルを合計に加算 */
-							vecNormalSum = VAdd(vecNormalSum, vecNormal);
-						}
-					}
-
-					// 壁キック用の法線ベクトル
-						/* 接触したポリゴンから法線ベクトルを取得し加算する */
-						for (int j = 0; j < stHitPolyDim.HitNum; j++)
-						{
-							/* 法線ベクトルを取得 */
-							// ※ 法線ベクトルが0であるならば、加算しない
-							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
-							{
-								// 法線ベクトルが0でない場合
-								/* 法線ベクトルのY軸を初期化 */
-								stHitPolyDim.Dim[j].Normal.y = 0.f;
-
-								/* 法線ベクトルを正規化 */
-								VECTOR vecNormal = VNorm(stHitPolyDim.Dim[j].Normal);
-
-								/* 法線ベクトルを合計に加算 */
-							vecWallKickNormalSum = VAdd(vecWallKickNormalSum, vecNormal);
-							}
-						}
-
-						/* 取得した法線ベクトルを正規化 */
-						// ※ 取得した法線ベクトルの平均を取得
-					vecWallKickNormalSum = VNorm(vecWallKickNormalSum);
-
-					/* 壁の接触フラグを設定 */
-					this->PlayerStatusList->SetPlayerWallTouchFlg(true);
-
-					/* 壁に接触してからの経過フレーム数をリセット */
-					this->PlayerStatusList->SetPlayerAfterWallTouchCount(0);
-
-					/* プレイヤー座標に球体ポリゴンを作成 */
-						COLLISION_SQHERE stSphere;
-					stSphere.vecSqhere = this->vecPosition;
-					stSphere.vecSqhere.y = stSphere.vecSqhere.y + PLAYER_HEIGHT / 2;
-					stSphere.fSqhereRadius = PLAYER_WIDE;
-
-						/* 法線の方向にプレイヤーを押し出す */
-						// ※ 対象のコリジョンと接触しなくなるまで押し出す
-						bool bHitFlag = true;
-						while (bHitFlag)
-						{
-							/* 球体ポリゴンを法線ベクトルの方向へ移動 */
-							stSphere.vecSqhere = VAdd(stSphere.vecSqhere, VScale(vecNormalSum, 1.f));
-
-							/* 球体とポリゴンの接触判定 */
-							bHitFlag = platform->HitCheck(stSphere);
-						}
-
-						/* 球体コリジョンが接触しなくなった位置を移動後座標に設定 */
-						vecNextPosition = stSphere.vecSqhere;
-					vecNextPosition.y = this->vecPosition.y;
-
-						// 球体コリジョンと衝突があった場合、分割移動処理を終了する
-						if (stHitPolyDim.HitNum > 0)
-						{
-							break;
-						}
+					break;
 				}
 			}
 		}
 	}
-
+	
 	/* 壁との接触フラグを取得 */
 	bool bWallTouch = this->PlayerStatusList->bGetPlayerWallTouchFlg();	
 
@@ -1337,3 +1235,118 @@ void CharacterPlayer::Movement_Horizontal()
 /* 2025.02.22 菊池雅道	壁キック処理追加	終了 */
 /* 2025.03.05 菊池雅道	衝突判定処理修正	終了 */
 /* 2025.03.27 菊池雅道	衝突判定処理修正	終了 */
+
+// 向き変化時の補間
+void CharacterPlayer::AngleIterpolation(float vecInputX, float vecInputZ, float& fAngleX)
+{
+	/* プレイヤーの向きを移動方向に合わせる */
+			/* 入力方向を取得 */
+	float fMoveAngle = atan2f(vecInputX,vecInputZ);
+
+	/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
+	this->RadianLimitAdjustment(fAngleX);
+
+	/* 補正したカメラ角度を設定 */
+	this->StageStatusList->SetCameraAngleX(fAngleX);
+
+	/* 入力方向とカメラの向きを合成し移動方向とする */
+	fMoveAngle = fAngleX - fMoveAngle;
+
+	/* プレイヤーの移動方向(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
+	this->RadianLimitAdjustment(fMoveAngle);
+
+	/* プレイヤーの現在の向き(ラジアン)を取得 */
+	float fCurrentAngle = this->PlayerStatusList->fGetPlayerAngleX();
+
+	/* プレイヤーの現在の向き(ラジアン)が一周の範囲(0~2π)を超えた場合、補正を行う */
+	this->RadianLimitAdjustment(fCurrentAngle);
+
+	/* 現在のプレイヤーの向きと移動方向の差を求める */
+	float fDifferrenceAngle = fMoveAngle - fCurrentAngle;
+
+	//プレイヤーの向きと移動方向の差が半周(π)を超えた場合、より少ない角度で回転するように補正を行う
+	/* 左回りで半周を超えたら */
+	if (fDifferrenceAngle > DX_PI_F)
+	{
+		/* 角度を一周(2π)分補正する */
+		fDifferrenceAngle -= PLAYER_TURN_LIMIT;
+	}
+	/* 右回りで半周を超えたら */
+	else if (fDifferrenceAngle < -DX_PI_F)
+	{
+		/* 角度を一周(2π)分補正する */
+		fDifferrenceAngle += PLAYER_TURN_LIMIT;
+	}
+
+	/* 振り向き速度に応じて段階的に移動方向を向く */
+	float fNewAngle = fCurrentAngle + fDifferrenceAngle * this->PlayerStatusList->fGetPlayerTurnSpeed();
+
+	/* プレイヤーの向きを更新 */
+	this->PlayerStatusList->SetPlayerAngleX(fNewAngle);
+
+	/* 2025.02.10 菊池雅道	振り向き処理修正 終了 */
+	/* 2025.03.14 菊池雅道	振り向き処理修正 終了 */
+}
+
+// 壁キック後の垂直移動処理
+void CharacterPlayer::Player_WallKick_Movement_Vertical()
+{
+	/* 壁キック後の経過フレーム数が0の場合 */
+	if (this->PlayerStatusList->iGetPlayerAfterKickWallCount() == 0)
+	{
+		/* 壁キックの移動速度(垂直成分)を取得 */
+		float fKickWallVerticalSpeed = this->PlayerStatusList->fGetPlayerKickWallVerticalSpeed();
+
+		/*上方向に移動 */
+		this->PlayerStatusList->SetPlayerNowFallSpeed(-fKickWallVerticalSpeed);
+
+		/* SEを再生 */
+		gpDataList_Sound->SE_PlaySound(SE_PLAYER_JUMP);
+
+		/* モーションを"ジャンプ(開始)"に設定 */
+		PlayerStatusList->SetPlayerMotion_Move(MOTION_ID_MOVE_JUMP_START);
+
+		/* 壁キック後のフラグを有効にする */
+		this->PlayerStatusList->SetPlayerAfterKickWallFlg(true);
+	}
+
+	/* 壁キック後の経過フレーム数を進める */
+	this->PlayerStatusList->SetPlayerAfterKickWallCount(this->PlayerStatusList->iGetPlayerAfterKickWallCount() + 1);
+}
+
+// 壁キック後の横移動処理
+void CharacterPlayer::Player_WallKick_Movement_Horizontal()
+{
+	/* 壁キックしてからの経過フレーム数を取得 */
+	int iNowAfterKickWallFlame = this->PlayerStatusList->iGetPlayerAfterKickWallCount();
+
+	/* 壁キックの横移動速度を取得 */
+	float fKickWallHorizontalSpeed = this->PlayerStatusList->fGetPlayerKickWallHorizontalSpeed();
+
+	/* 壁キック継続フレーム数を取得 */
+	int iKickWallFlame = this->PlayerStatusList->iGetPlayerKickWallFlame();
+
+	/* 経過フレーム数を確認 */
+	if (iNowAfterKickWallFlame <= iKickWallFlame)
+	{
+		// 経過フレーム数が設定フレーム数を超えていない場合
+
+		/* 壁キックの横移動速度を設定 */
+		/* 経過フレーム数に応じて、速度が減衰する(1.0fを最大として減衰していく) */
+		float fKickWallSpeed = fKickWallHorizontalSpeed * (1.0f - (float)(iNowAfterKickWallFlame / iKickWallFlame));
+
+		/* 壁の法線方向(水平成分のみ)へ移動する */
+		this->vecMove.x += vecWallKickNormalSum.x * fKickWallSpeed;
+		this->vecMove.z += vecWallKickNormalSum.z * fKickWallSpeed;
+
+	}
+	else
+	{
+		// 経過フレーム数が設定フレーム数を超えた場合
+		/* 経過フレーム数をリセット */
+		this->PlayerStatusList->SetPlayerAfterKickWallCount(0);
+
+		/* 壁キックフラグを無効にする */
+		this->PlayerStatusList->SetPlayerKickWallFlg(false);
+	}
+}

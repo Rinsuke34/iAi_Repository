@@ -22,19 +22,19 @@
 /* ƒvƒŒƒCƒ„[ó‘ÔŠÇ—‚Ì\‘¢‘Ì‚â’è”‚ÌéŒ¾‚ðs‚¤ */
 
 /* ”\—Í’l–¼Ì(json) */
-const std::string	BASE_STATUS_NAME_MOVE_ACCELERATION			= "MoveAcceleration";		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®‰Á‘¬“x
-const std::string	BASE_STATUS_NAME_JUMP_SPEED					= "JumpSeepd";				// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv—Í
-const std::string	BASE_STATUS_NAME_FALL_ACCELERATION			= "FallAcceleration";		// ƒvƒŒƒCƒ„[‚Ì—Ž‰º‰Á‘¬“x
-const std::string	BASE_STATUS_NAME_FALL_SPEED_MAX				= "FallSpeed_Max";			// ƒvƒŒƒCƒ„[‚ÌÅ‘å—Ž‰º‘¬“x
-const std::string	BASE_STATUS_NAME_JUMP_COUNT_MAX				= "JumpCount_Max";			// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Å‘å”)
-const std::string	BASE_STATUS_NAME_JUMP_COOL_TIME				= "JumpCoolTime";			// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒvƒN[ƒ‹ƒ^ƒCƒ€												/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_DODGE_SPEED				= "DodgeSpeed";				// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x															/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_DODGE_FRAME				= "DodgeFlame";				// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒtƒŒ[ƒ€”													/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_DODGE_COOL_TIME			= "DodgeCoolTime";			// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒN[ƒ‹ƒ^ƒCƒ€													/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED	= "KickWallHorizontalSpeed";// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(…•½¬•ª)											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED	= "KickWallVerticalSpeed";	// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(‚’¼¬•ª)											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_KICKWALL_FLAME				= "KickWallFlame";			// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒNŒp‘±ƒtƒŒ[ƒ€”											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME	= "KickWallInputMaxFlame";	// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN“ü—Í—P—\ƒtƒŒ[ƒ€”										/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_MOVE_ACCELERATION					= "MoveAcceleration";				// ƒvƒŒƒCƒ„[‚ÌˆÚ“®‰Á‘¬“x
+const std::string	BASE_STATUS_NAME_JUMP_SPEED							= "JumpSeepd";						// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv—Í
+const std::string	BASE_STATUS_NAME_FALL_ACCELERATION					= "FallAcceleration";				// ƒvƒŒƒCƒ„[‚Ì—Ž‰º‰Á‘¬“x
+const std::string	BASE_STATUS_NAME_FALL_SPEED_MAX						= "FallSpeed_Max";					// ƒvƒŒƒCƒ„[‚ÌÅ‘å—Ž‰º‘¬“x
+const std::string	BASE_STATUS_NAME_JUMP_COUNT_MAX						= "JumpCount_Max";					// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒv‰ñ”(Å‘å”)
+const std::string	BASE_STATUS_NAME_JUMP_COOL_TIME						= "JumpCoolTime";					// ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒvƒN[ƒ‹ƒ^ƒCƒ€													/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_DODGE_SPEED						= "DodgeSpeed";						// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‘¬“x																/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_DODGE_FRAME						= "DodgeFlame";						// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒtƒŒ[ƒ€”														/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_DODGE_COOL_TIME					= "DodgeCoolTime";					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ðƒN[ƒ‹ƒ^ƒCƒ€														/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_KICKWALL_HORIZONTAL_SPEED			= "KickWallHorizontalSpeed";		// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(…•½¬•ª)												/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_KICKWALL_VERTICAL_SPEED			= "KickWallVerticalSpeed";			// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‘¬“x(‚’¼¬•ª)												/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STATUS_NAME_KICKWALL_FLAME						= "KickWallFlame";					// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒNŒp‘±ƒtƒŒ[ƒ€”												/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
+const std::string	BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME			= "KickWallInputMaxFlame";			// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN“ü—Í—P—\ƒtƒŒ[ƒ€”											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_WEAK_COOL_TIME				= "MeleeWeakCoolTime";				// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME	= "MeleeStrongChangeChargeFrame";	// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÉØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”							/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME		= "MeleeStrongMaxChargeFrame";		// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)‚ÌÅ‘å—­‚ßŽžŠÔ											/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
@@ -43,9 +43,9 @@ const std::string	BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED			= "MeleeStrongMoveS
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_CONTINUS_MAX_FRAME	= "MeleeStrongContinusMaxFrame";	// ƒvƒŒƒCƒ„[‚ª‹ß‹——£UŒ‚(‹­)‚Å˜A‘±UŒ‚‚Å‚«‚éÅ‘åƒtƒŒ[ƒ€”							/* 2025.03.19 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_AIR_MAX_COUNT			= "MeleeStrongAirMaxCount";			// ƒvƒŒƒCƒ„[‚Ì‹ó’†‚Å‚Ì‹ß‹——£UŒ‚(‹­)‰ñ”(¦“G‚ðUŒ‚‚µ‚Ä‚¢‚È‚¢ê‡‚ÌÅ‘å”)
 const std::string	BASE_STATUS_NAME_MELEE_STRONG_NEXT_SEARCH_RANGE		= "MeleeStrongNextSearchRange";		// ƒvƒŒƒCƒ„[‚Ì‹ß‹——£UŒ‚(‹­)Œã‚ÌŽŸ‚Ìõ“G”ÍˆÍ										/* 2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
-const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS				= "RockOnRadius";			// ƒƒbƒNƒIƒ“”ÍˆÍ‚Ì”¼Œa
-const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI			= "StartHaveKunai";			// ‰Šúó‘Ô‚ÅŽ‚Á‚Ä‚¢‚éƒNƒiƒC‚ÌŒÂ”
-const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI				= "MaxHaveKunai";			// Å‘å‚ÅŽ‚Ä‚éƒNƒiƒC‚ÌŒÂ”
+const std::string	BASE_STATUS_NAME_ROCK_ON_RADIUS						= "RockOnRadius";					// ƒƒbƒNƒIƒ“”ÍˆÍ‚Ì”¼Œa
+const std::string	BASE_STATUS_NAME_START_HAVE_KUNAI					= "StartHaveKunai";					// ‰Šúó‘Ô‚ÅŽ‚Á‚Ä‚¢‚éƒNƒiƒC‚ÌŒÂ”
+const std::string	BASE_STATUS_NAME_MAX_HAVE_KUNAI						= "MaxHaveKunai";					// Å‘å‚ÅŽ‚Ä‚éƒNƒiƒC‚ÌŒÂ”
 const std::string	BASE_STATUS_NAME_KUNAI_COOL_TIME					= "KunaiCoolTime";					// ƒNƒiƒC‚ÌƒN[ƒ‹ƒ^ƒCƒ€																/*2025.03.23 ‹e’r‰ë“¹ ’è”’Ç‰Á */
 const std::string	BASE_STATUS_NAME_HP_MAX								= "Hp_Max";							// ƒvƒŒƒCƒ„[‚ÌÅ‘åHP
 const std::string	BASE_STATUS_NAME_INVINCIBLE_TIME_MAX				= "InvincibleTime_Max";				// ƒvƒŒƒCƒ„[‚ÌÅ‘å–³“GŽžŠÔ
@@ -55,7 +55,7 @@ const std::string FILE_PATH_STATUS = "resource/SetupData/PlayerStatusData.json";
 
 // ˆÚ“®ŠÖŒW
 static const float	PLAER_DASH_SPEED					= 20.0f;				// ƒvƒŒƒCƒ„[‚Ì‘–‚èi’Êíj‚ÌˆÚ“®‘¬“x							/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const float	PLAYER_TURN_SPEED					= 0.2f;					// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“xi”ÍˆÍF0.0?1.0j				/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const float	PLAYER_TURN_SPEED					= 0.2f;					// ƒvƒŒƒCƒ„[‚Ì•ûŒü“]Š·‚Ì‘¬“xi”ÍˆÍF0.0?1.0j					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_TURN_LIMIT					= DX_PI_F * 2.0f;		// ƒvƒŒƒCƒ„[‚Ì‰ñ“]Šp“x§ŒÀ(ƒ‰ƒWƒAƒ“)							/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */	/* 2025.02.13 ‹e’r‰ë“¹ ’è”C³ */
 static const float	PLAYER_WALL_KICK_MOVE_FLAME			= 30.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚ÌˆÚ“®ƒtƒŒ[ƒ€”							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const float	PLAYER_WALL_KICK_HORIZONTAL_SPEED	= 80.0f;				// ƒvƒŒƒCƒ„[‚Ì•ÇƒLƒbƒN‚Ì‘¬“x(…•½¬•ª)							/* 2025.02.22 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
@@ -71,12 +71,11 @@ static const int	PLAYER_DODGE_FLAME					= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒtƒŒ[ƒ€
 static const int	PLAYER_DODGE_COOLTIME				= 30;					// ƒvƒŒƒCƒ„[‚Ì‰ñ”ð‚ÌƒN[ƒ‹ƒ^ƒCƒ€								/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 
 // UŒ‚ŠÖŒW
-static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”		/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_MELEE_STRONG_MIN_CHARGE_FRAME = 5;			// ‹ßÚUŒ‚(‹­)‚ÌÅ’Z—­‚ßŽžŠÔ				/* 2025.03.27 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ			/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	MELEE_STRONG_PERFORMANCE_DESTROY_NUM = 3;			// ‹ßÚUŒ‚(‹­)‚ÅƒJƒƒ‰‰‰o‚ðs‚¤˜A‘±”j‰ó”							/* 2025.03.20 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_MELEE_WEAK_COLLTIME			= 70;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€										/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// ‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€											/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_CHARGE_FINISH_FLAME			= 180;			// ‹ßÚUŒ‚’†(‹­)‚Ì—­‚ßŠ®—¹ƒtƒŒ[ƒ€”			/* 2025.01.29 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MELEE_STRONG_MIN_CHARGE_FRAME = 5;			// ‹ßÚUŒ‚(‹­)‚ÌÅ’Z—­‚ßŽžŠÔ					/* 2025.03.27 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_SEARCH_RANGE_AFTER_MELEE		= 2000;			// ‹ßÚUŒ‚’†(‹­)Œã‚Ìõ“G”ÍˆÍ					/* 2025.02.03 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MELEE_WEAK_COLLTIME			= 70;			// ‹ßÚUŒ‚(Žã)‚ÌƒN[ƒ‹ƒ^ƒCƒ€					/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_PROJECTILE_COLLTIME			= 60;			// ‰“‹——£UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€						/* 2025.02.26 ‹e’r‰ë“¹ ƒN[ƒ‹ƒ^ƒCƒ€ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	INIT_ATTRIBUTES_COMBO_DURATION		= 60 * 3 * 2;	// ƒRƒ“ƒ{‚ÌŽ‘±ŽžŠÔ
 
 /* ƒvƒŒƒCƒ„[ˆÚ“®ó‘Ô */
@@ -98,18 +97,18 @@ static const int	PLAYER_ATTACKSTATUS_PROJECTILE			= 6;	// ‰“‹——£UŒ‚’†						/* 2
 static const int	PLAYER_ATTACKSTATUS_DEAD				= 7;	// Ž€–Só‘Ô(‘€ì•s‰Â)
 
 /* ƒvƒŒƒCƒ„[ˆ——p’è” */
-static const float	PLAYER_HEIGHT							= 160.f;	// ‚‚³(“–‚½‚è”»’è)
-static const float	PLAYER_WIDE								= 15.f;		// •(“–‚½‚è”»’è)
-static const float	PLAYER_CLIMBED_HEIGHT					= 20.f;		// •à‚«‚Å“o‚ê‚é‚‚³
-static const int	PLAYER_CHARGE_TO_STRONG_TIME			= 30;		// ‹ßÚUŒ‚‚ª‹­UŒ‚‚ÉØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”
-static const int	PLAYER_MOVE_COLLISION_UP				= 0;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“ã‘¤
-static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“‰º‘¤
-static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“”
-static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// ‹ßÚUŒ‚(‹­)‚ÌˆÚ“®‘¬“x
-static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// ‹ßÚUŒ‚‚ÌÅ‘å—­‚ßŽžŠÔ
+static const float	PLAYER_HEIGHT							= 160.f;	// ‚‚³(“–‚½‚è”»’è)																									/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const float	PLAYER_WIDE								= 15.f;		// •(“–‚½‚è”»’è)																									/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const float	PLAYER_CLIMBED_HEIGHT					= 20.f;		// •à‚«‚Å“o‚ê‚é																										/* 2025.01.09 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_CHARGE_TO_STRONG_TIME			= 30;		// ‹ßÚUŒ‚‚ª‹­UŒ‚‚ÉØ‚è‘Ö‚í‚é‚Ü‚Å‚ÌƒtƒŒ[ƒ€”																		/* 2025.01.22 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MOVE_COLLISION_UP				= 0;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“ã‘¤																					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“‰º‘¤																					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// ƒvƒŒƒCƒ„[‚ÌˆÚ“®—pƒRƒŠƒWƒ‡ƒ“”																					/* 2025.02.10 ‹e’r‰ë“¹ ˆÚ“®ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// ‹ßÚUŒ‚(‹­)‚ÌˆÚ“®‘¬“x																							/* 2025.01.22 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// ‹ßÚUŒ‚‚ÌÅ‘å—­‚ßŽžŠÔ																							/* 2025.01.22 ‹e’r‰ë“¹ UŒ‚ŠÖ˜A‚Ì’è”’Ç‰Á */
 static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 10;		// —Ž‰ºŽžƒWƒƒƒ“ƒv‰º~ƒ‚[ƒVƒ‡ƒ“‚ÉØ‚è‘Ö‚¦‚éÛ‚Ì—P—\ƒtƒŒ[ƒ€(ˆÓ}‚µ‚È‚¢ƒ‚[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦‚ð–hŽ~‚·‚é‚½‚ß‚ÉŽg—p)		/* 2025.03.11 ‹e’r‰ë“¹ ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_SLOWMOTION_COUNT_MAX				= 120;		// ƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚ÌÅ‘åƒtƒŒ[ƒ€”																	/* 2025.03.12 ‹e’r‰ë“¹ ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
-static const int	PLAYER_FALL_DELAY						= 60 * 2;	// —Ž‰ºŽž‚Ì‘Ò‹@ƒtƒŒ[ƒ€”																			/* 2025.03.22 ‹î‘ò•—• —Ž‰ºŽž‚ÌƒJƒƒ‰ƒvƒŒƒCƒ„[’Ç]ì¬ */
+static const int	PLAYER_SLOWMOTION_COUNT_MAX				= 120;		// ƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚ÌÅ‘åƒtƒŒ[ƒ€”																					/* 2025.03.12 ‹e’r‰ë“¹ ƒXƒ[ƒ‚[ƒVƒ‡ƒ“ŠÖ˜A‚Ì’è”’Ç‰Á */
+static const int	PLAYER_FALL_DELAY						= 60 * 2;	// —Ž‰ºŽž‚Ì‘Ò‹@ƒtƒŒ[ƒ€”																							/* 2025.03.22 ‹î‘ò•—• —Ž‰ºŽž‚ÌƒJƒƒ‰ƒvƒŒƒCƒ„[’Ç]ì¬ */
 
 /* ƒvƒŒƒCƒ„[”\—Í’lƒŠƒXƒg */
 struct PLAYER_STATUS_LIST

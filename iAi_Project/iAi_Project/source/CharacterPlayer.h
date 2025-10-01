@@ -14,6 +14,8 @@
 /* 2025.03.17 菊池雅道 クールタイム関連の関数・変数追加 */
 /* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
 /* 2025.03.25 駒沢風助 サウンド追加 */
+/* 2025.07.19 菊池雅道 コードリファクタリング */
+/* 2025.08.19 菊池雅道 コードリファクタリング */
 
 #pragma once
 #include "Appframe.h"
@@ -80,6 +82,7 @@ class CharacterPlayer : public CharacterBase
 		void	CollisionUpdate();						// コリジョン更新
 		void	PlayerHitCheck();						// 当たり判定処理
 		void	RadianLimitAdjustment(float& fRadian);	// 角度(ラジアン)の制限と補正	/* 2025.02.13 菊池雅道 回転関連の関数追加 */
+		void	AngleIterpolation(float vecInputX,float vecInputZ,float &fAngleX);					// 向き変化時の補間				/* 2025.08.19 菊池雅道 コードリファクタリング */
 		void	UpdateCooldownTime();					// クールタイムの更新			/* 2025.02.26 菊池雅道 クールタイム関連の関数追加 */
 		void	PlayerFallRecovery();					// 落下からの復帰				/* 2025.03.02 駒沢風助 落下復帰処理作成 */
 		void	FastMotion();							// ゲーム開始時のモーション
@@ -87,26 +90,38 @@ class CharacterPlayer : public CharacterBase
 		void	StartMotionSet();						// 開始時のモーション設定
 
 		// 移動アクション
-		void	Player_Jump();				// ジャンプ
-		void	Player_Gravity();			// 重力処理
-		void	Player_Move();				// 移動
-		void	Player_Dodg();				// 回避 2025.01.09 菊池雅道 関数追加
-		void	Movement_Vertical();		// 移動処理(垂直方向)
-		void	Movement_Horizontal();		// 移動処理(水平方向)
+		void	Player_Jump();									// ジャンプ
+		void	Player_Gravity();								// 重力処理
+		void	Player_Move();									// 移動
+		void	Player_Dodg();									// 回避 2025.01.09 菊池雅道 関数追加
+		void	Movement_Vertical();							// 移動処理(垂直方向)
+		void	Movement_Horizontal();							// 移動処理(水平方向)
+		void	Player_WallKick_Movement_Vertical();			// 壁キック処理(垂直方向)
+		void	Player_WallKick_Movement_Horizontal();			// 壁キック処理(水平方向)	
 
 		// 攻撃アクション
-		void	Player_Attack_Transition();			// 攻撃状態遷移管理
-		void	Player_Melee_Posture();				// 近接攻撃(構え)
-		void	Player_Melee_Weak();				// 近接攻撃(弱)
-		void	Player_Charge_Attack();				// プレイヤー溜め攻撃　2025.01.22 菊池雅道 関数追加  
-		void	Player_Projectile_Posture();		// 遠距離攻撃(構え)
-		void	Player_Projectile();				// 遠距離攻撃
-
+		void	Player_Attack_Transition();								// 攻撃状態遷移管理
+		void	Player_Attack_Free();									// 自由状態							2025.07.19 菊池雅道 関数追加 
+		void	Player_Melee_Posture();									// 近接攻撃(構え)
+		void	Player_Melee_Weak();									// 近接攻撃(弱)
+		void	Player_Charge_Attack();									// プレイヤー溜め攻撃				2025.01.22 菊池雅道 関数追加  
+		void	Player_Projectile_Posture();							// 遠距離攻撃(構え)
+		void	Player_Projectile();									// 遠距離攻撃
+		
+		// 攻撃関連関数
+		void	Player_Projectile_Posture_Cancel();						// 遠距離攻撃(構え)キャンセル処理	2025.07.19 菊池雅道 関数追加
+		void	Player_Continuous_Charge_Attack_Enemy_Search();			// 溜め攻撃後の敵検索				2025.07.19 菊池雅道 関数追加
+		void	Player_Continuous_Charge_Attack_Enabled_Process();		// 連続溜め攻撃可能状態の処理		2025.07.19 菊池雅道 関数追加
+		void	Player_SlowMotion_Stop();								// スローモーション終了処理			2025.07.19 菊池雅道 関数追加
+		
 		// モーション関連
 		void	Player_Motion_Transition();			// モーション遷移管理　2025.01.30 菊池雅道 関数追加 
 
 		// シェイプ関連
 		void	Player_Shape();						// シェイプ処理
+
+		//スローモーション関連
+		void	Player_UpdateSlowMotionCount();					// スローモーションカウント処理
 
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
