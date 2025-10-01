@@ -80,12 +80,12 @@ void BulletPlayerKunaiWarp::Initialization()
 
 	/* ƒ‚ƒfƒ‹‚ÌXŽ²‰ñ“]‚ÌŒvŽZ */
 	/* ‚‚³(YŽ²)‚Ì· */
-	float fHeightDiff = this->vecKunaiTargetPosition.y - this->vecPosition.y;
+	float fHeightDifference = this->vecKunaiTargetPosition.y - this->vecPosition.y;
 	/* X - Z •½–Êã‚Ì‹——£‚ðŒvŽZ */
-	float fHorizontalDist = VSize(VGet(this->vecKunaiTargetPosition.x - this->vecPosition.x, 0, this->vecKunaiTargetPosition.z - this->vecPosition.z));
+	float fHorizontalDistance = VSize(VGet(this->vecKunaiTargetPosition.x - this->vecPosition.x, 0, this->vecKunaiTargetPosition.z - this->vecPosition.z));
 
 	/* XŽ²‚Ì‰ñ“]Šp“x‚ð‹‚ß‚éiƒ‰ƒWƒAƒ“’PˆÊj */
-	fKunaiAngleX = atan2f(fHeightDiff, fHorizontalDist);
+	fKunaiAngleX = atan2f(fHeightDifference, fHorizontalDistance);
 
 	/* ƒ‚ƒfƒ‹‚ÌYŽ²‰ñ“]‚ÌŒvŽZ(X-Z •½–Êã‚Ì•ûŒü) */
 	fKunaiAngleY = atan2f(this->vecKunaiTargetPosition.x - this->vecPosition.x, this->vecKunaiTargetPosition.z - this->vecPosition.z);

@@ -39,7 +39,7 @@ class BulletPlayerMeleeWeak : public BulletBase
 		/* 追従対象のプレイヤークラス */
 		CharacterBase* pCharacterPlayer;													/* 2025.02.20 菊池雅道 変数追加 */
 
-		int iDeleteCount;	// 仮追加の削除カウント
+		int iDeleteCount;	// 削除カウント
 
 	protected:
 };

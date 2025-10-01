@@ -22,11 +22,11 @@ BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 
 	/* 初期化 */
-	this->iObjectType		= OBJECT_TYPE_MELEE_PLAYER;	// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
+	this->iObjectType		= OBJECT_TYPE_MELEE_PLAYER;		// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
 	this->pMeleeWeakEffect	= nullptr;						// 近接攻撃(弱)エフェクトのハンドル
 	ArrengementPositionPlayerFront();						// 座標設定(プレイヤーの前方に設定)
 
-	/* 仮追加 */
+	/* 削除カウントを設定 */
 	iDeleteCount = 30;
 }
 
@@ -152,14 +152,17 @@ void BulletPlayerMeleeWeak::Update()
 		}
 	}
 
-	/* 仮処理 */
-	// 本来はプレイヤー側で削除フラグを設定する予定
+	/* 削除カウントを確認 */
 	if (iDeleteCount > 0)
 	{
+		// 削除カウントが残っている場合
+		/* 削除カウントを減らす */
 		iDeleteCount--;
 	}
 	else
 	{
+		// 削除カウントが0になった場合
+		/* 削除フラグを有効にする */
 		this->bDeleteFlg = true;
 	}
 

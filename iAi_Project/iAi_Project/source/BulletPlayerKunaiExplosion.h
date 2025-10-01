@@ -9,19 +9,19 @@
 // クナイ(爆発)
 class BulletPlayerKunaiExplosion : public BulletPlayerKunai
 {
-public:
-	BulletPlayerKunaiExplosion();				// コンストラクタ
-	virtual ~BulletPlayerKunaiExplosion();		// デストラクタ
+	public:
+		BulletPlayerKunaiExplosion();				// コンストラクタ
+		virtual ~BulletPlayerKunaiExplosion();		// デストラクタ
 
-	virtual void	Initialization()	override;			// 初期化
-	virtual void	Update()			override;			// 更新
-	virtual void	Draw()				override;			// 描画	
+		virtual void	Initialization()	override;			// 初期化
+		virtual void	Update()			override;			// 更新
+		virtual void	Draw()				override;			// 描画	
 
-	void	Explosion();								// 爆発処理
+		void	Explosion();								// 爆発処理
 
-private:
+	private:
 	
-protected:
+	protected:
 
 };
 

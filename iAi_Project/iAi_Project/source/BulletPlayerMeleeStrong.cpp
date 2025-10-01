@@ -16,14 +16,17 @@ BulletPlayerMeleeStrong::BulletPlayerMeleeStrong() : BulletBase()
 // 更新
 void BulletPlayerMeleeStrong::Update()
 {
-	/* 仮処理 */
-	// 本来はプレイヤー側で削除フラグを設定する予定
+	// 削除カウントを確認
 	if (iDeleteCount > 0)
 	{
+		// 削除カウントが残っている場合
+		/* 削除カウントを減らす */
 		iDeleteCount--;
 	}
 	else
 	{
+		// 削除カウントが残っていない場合
+		/* 削除フラグを立てる */
 		this->bDeleteFlg = true;
 	}
 }
