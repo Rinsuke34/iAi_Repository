@@ -216,6 +216,7 @@ void CharacterPlayer::Player_Melee_Posture()
 		/* 近接攻撃(強)で敵を倒した後のカウントが一定値以下か確認 */
 		if (iPlayerMeleeStrongAfterCount <= iMeleeStrongContinuosMaxFrame)
 		{
+			// 近接攻撃(強)で敵を倒した後のカウントが一定値以下の場合
 			/* 近接攻撃(強)の攻撃チャージフレーム数を最大に設定 */
 			this->PlayerStatusList->SetPlayerNowAttakChargeFlame(iMeleeChargeMaxFlame);
 
@@ -249,6 +250,17 @@ void CharacterPlayer::Player_Melee_Posture()
 	/* 攻撃入力がされているか確認 */
 	if (this->InputList->bGetGameInputAction(INPUT_HOLD, GAME_ATTACK) == true)
 	{
+		/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
+		if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
+		{
+			// 超えている場合
+			/* プレイヤーの現在の攻撃チャージフレームを0設定 */
+			this->PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
+
+			/* 近接攻撃(強)の処理を行わない */
+			return;
+		}
+
 		// 近接攻撃(強)で敵を倒した後、一定時間内であれば近接攻撃(強)を行う 
 		/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
 		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
@@ -299,14 +311,6 @@ void CharacterPlayer::Player_Melee_Posture()
 		// 攻撃チャージフレームが強攻撃の切り替わりに達したら
 		else if (iNowAttakChargeFlame == iMeleeStrongChangeFrame)
 		{
-			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
-			if (iNowMeleeStrongAirCount >= this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
-			{
-				// 超えている場合
-				/* 近接攻撃(強)の処理を行わない */
-				return;
-			}
-
 			/* エディットによる攻撃チャージフレームの短縮値を取得 */
 			int iEditChargeFlameShortening = this->PlayerStatusList->iGetAddAttackChargeFrameShortening();
 
@@ -439,21 +443,6 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 		else
 		{
-			// 強攻撃になる場合
-			/* プレイヤーの空中での近接攻撃(強)最大数を取得 */
-			int iMeleeStrongAirMaxCount = this->PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount();
-
-			/* エディットによる空中での近接攻撃(強)最大数の加算数を取得 */
-			int iEditAddMeleeStrongAirMaxCount = this->PlayerStatusList->iGetAddMeleeStrongAirMaxCount();
-
-			/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
-			if (iNowMeleeStrongAirCount >= iMeleeStrongAirMaxCount + iEditAddMeleeStrongAirMaxCount)
-			{
-				// 超えている場合
-				/*近接攻撃(強)の処理を行わない */
-				return;
-			}
-
 			/* プレイヤーの状態を"近接攻撃中(強)"に設定 */
 			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_STRONG);
 

@@ -19,7 +19,6 @@
 /* 2025.03.12 菊池雅道	スローモーション処理追加 */
 /* 2025.03.18 菊池雅道	エディットによる処理追加 */
 /* 2025.03.27 菊池雅道	衝突判定処理修正 */
-/* 2025.10.15 菊池雅道	近距離攻撃(強)時の処理修正 */
 
 #include "CharacterPlayer.h"
 
@@ -776,7 +775,6 @@ void CharacterPlayer::Player_Dodg()
 /* 2025.03.10 駒沢風助	移動床実装						開始 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加		開始 */
 /* 2025.03.18 駒沢風助	移動床ガタガタ対策				開始 */
-/* 2025.10.15 菊池雅道	近距離攻撃(強)時の処理修正		開始 */
 
 // 移動処理(垂直方向)
 void CharacterPlayer::Movement_Vertical()
@@ -806,11 +804,6 @@ void CharacterPlayer::Movement_Vertical()
 	/* プレイヤーの着地フラグを無効にする */
 	this->PlayerStatusList->SetPlayerLanding(false);
 
-	/* 近距離攻撃(強)中かつ敵にロックオンしているか確認 */
-	bool bIsMeleeStrong = this->PlayerStatusList->iGetPlayerAttackState() == PLAYER_ATTACKSTATUS_MELEE_STRONG;
-	bool bIsLockOnEnemy = (this->PlayerStatusList->pGetPlayerLockOnEnemy() != nullptr);
-	bool bIsMeleeStrongToLockOnEnemy = (bIsMeleeStrong && bIsLockOnEnemy);
-
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
 	{
@@ -835,8 +828,8 @@ void CharacterPlayer::Movement_Vertical()
 			/* 落下の加速度を初期化 */
 			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-			/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認　※近距離攻撃(強)中かつ敵にロックオンしている場合は、特別な設定値を使用 */
-			if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT || bIsMeleeStrongToLockOnEnemy && fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT_STRONG_MELEE)
+			/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認 */
+			if (fStandPosY < this->vecPosition.y + PLAYER_CLIMBED_HEIGHT)
 			{
 				// 着地座標がプレイヤーの現在位置より低い場合
 				// ※ 地面に着地したと判定する
@@ -994,7 +987,6 @@ void CharacterPlayer::Movement_Vertical()
 /* 2025.03.10 駒沢風助	移動床実装						終了 */
 /* 2025.03.11 菊池雅道	モーション関連の処理追加		終了 */
 /* 2025.03.18 駒沢風助	移動床ガタガタ対策				終了 */
-/* 2025.10.15 菊池雅道	近距離攻撃(強)時の処理修正		終了 */
 
 /* 2025.02.07 菊池雅道	衝突判定処理修正	開始 */
 /* 2025.02.22 菊池雅道	壁キック処理追加	開始 */
@@ -1044,7 +1036,7 @@ void CharacterPlayer::Movement_Horizontal()
 
 	/* プレイヤーの接触する法線ベクトル合計 */
 	VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
-	
+
 	/* 足場と接触するか確認 */
 	for (auto* platform : PlatformList)
 	{
