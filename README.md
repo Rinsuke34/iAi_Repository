@@ -31,6 +31,6 @@
  [nlomann-json](https://github.com/nlohmann/json)
   
 ## 起動方法  
-[Releasesページ](https://github.com/Rinsuke34/iAi_Repository/releases/tag/Ver1)より実行ファイルをダウンロード  
+[Releasesページ](https://github.com/Rinsuke34/iAi_Repository/releases)より実行ファイルをダウンロード  
 →Syunden.ZIPを解凍  
 →iAi_Project.exeを実行  
