@@ -499,15 +499,16 @@ void CharacterPlayer::Player_Melee_Posture()
 		}
 	}
 }
-/* 2025.01.24 菊池雅道	攻撃処理追加			終了*/
-/* 2025.01.26 駒沢風助	コード修正				終了*/
-/* 2025.01.27 菊池雅道	エフェクト処理追加 終了 */
-/* 2025.02.05 菊池雅道	ステータス関連修正 終了 */
-/* 2025.02.07 菊池雅道	エフェクト処理修正 終了 */
-/* 2025.02.19 菊池雅道	エフェクト処理修正 終了 */
-/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正	終了 */
-/* 2025.03.18 菊池雅道	エディットによる処理追加 終了 */
-/* 2025.03.21 菊池雅道	スローモーション処理追加 終了 */
+/* 2025.01.24 菊池雅道	攻撃処理追加				終了*/
+/* 2025.01.26 駒沢風助	コード修正					終了*/
+/* 2025.01.27 菊池雅道	エフェクト処理追加			終了 */
+/* 2025.02.05 菊池雅道	ステータス関連修正			終了 */
+/* 2025.02.07 菊池雅道	エフェクト処理修正			終了 */
+/* 2025.02.19 菊池雅道	エフェクト処理修正			終了 */
+/* 2025.02.26 菊池雅道	近距離攻撃(強)処理修正		終了 */
+/* 2025.03.18 菊池雅道	エディットによる処理追加	終了 */
+/* 2025.03.21 菊池雅道	スローモーション処理追加	終了 */
+/* 2025.10.15 菊池雅道	近距離攻撃(強)処理修正		終了 */
 
 // 近接攻撃(弱)
 void CharacterPlayer::Player_Melee_Weak()
@@ -835,7 +836,38 @@ void CharacterPlayer::Player_Charge_Attack()
 /* 2025.03.17 駒沢風助	画面エフェクト追加			終了 */
 /* 2025.03.17 菊池雅道	近距離攻撃(強)処理修正		終了 */
 
+/* 2025.10.15 菊池雅道	近距離攻撃(強)処理修正		開始 */
+// 近距離攻撃(強)ロックオン処理
+void CharacterPlayer::Player_Charge_Attack_RockOn()
+{
+	/* カメラモードを"構え(近接攻撃構え)"に変更 */
+	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
+
+	/* プレイヤーの向きをカメラの向きに固定 */
+	this->PlayerStatusList->SetPlayerAngleX(this->StageStatusList->fGetCameraAngleX());
+
+	/* ロックオン範囲のコリジョン作成 */
+	COLLISION_CAPSULE stMeleeSearchCollision;
+
+	/* ロックオン範囲の半径を取得 */
+	stMeleeSearchCollision.fCapsuleRadius = this->PlayerStatusList->fGetPlayerRockOnRadius();
+
+	/* 片方は現在のプレイヤーの中心に設定 */
+	stMeleeSearchCollision.vecCapsuleTop = VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0));
+
+	/* もう片方は移動後(推定)のプレイヤーの中心に設定 */
+	stMeleeSearchCollision.vecCapsuleBottom = VAdd(stMeleeSearchCollision.vecCapsuleTop, this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove());
+
+	/* ロックオン範囲のコリジョンを設定 */
+	this->PlayerStatusList->SetMeleeSearchCollision(stMeleeSearchCollision);
+
+	/* ロックオン範囲コリジョン使用フラグを有効化 */
+	this->PlayerStatusList->SetMeleeSearchCollisionUseFlg(true);
+}
+/* 2025.10.15 菊池雅道	近距離攻撃(強)処理修正		終了 */
+
 /* 2025.07.19 菊池雅道	チャージ攻撃後の索敵処理関数化	開始 */
+// 近距離攻撃(強)で敵を倒した後、次の敵を探す処理
 void CharacterPlayer::Player_Continuous_Charge_Attack_Enemy_Search()
 {
 	/* プレイヤーのモーションが"近距離攻撃(強)(終了)"になったタイミングとする */
@@ -966,6 +998,9 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enemy_Search()
 
 		/* プレイヤーが近距離攻撃(強)を連続で行えるフラグを設定 */
 		this->PlayerStatusList->SetPlayerMeleeStrongContinuousFlg(true);
+
+		/* ロックオン中のエネミーを設定 */
+		this->PlayerStatusList->SetPlayerLockOnEnemy(stNearEnemy.pEnemy);
 	}
 	else
 	{
@@ -1014,6 +1049,9 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enabled_Process()
 	/* 近距離攻撃(強)後のカウントが一定数を超えていないか確認 */
 	else if (iPlayerMeleeStrongAfterCount < PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
 	{
+		/* カメラモードを"構え(近接攻撃構え)"に変更 */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_MELEE);
+
 		// 近距離攻撃(強)後のカウントが一定数を超えていない場合
 		/* 空中にいるか確認する */
 		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
@@ -1044,6 +1082,12 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enabled_Process()
 	else if (iPlayerMeleeStrongAfterCount >= PLAYER_STRONG_MELEE_AFTER_COUNT_MAX)
 	{
 		// 近距離攻撃(強)後のカウントが一定数を超えた場合
+		/* カメラモードを"自由"に変更 */
+		this->StageStatusList->SetCameraMode(CAMERA_MODE_NORMAL);
+
+		/* ロックオン中のエネミーをリセット */
+		this->PlayerStatusList->SetPlayerLockOnEnemy(nullptr);
+		
 		/* 近距離攻撃(強)後のカウントをリセット */
 		this->PlayerStatusList->SetPlayerMeleeStrongAfterCount(0);
 
@@ -1064,6 +1108,9 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enabled_Process()
 
 		/* スローモーション終了 */
 		this->Player_SlowMotion_Stop();
+
+		/* 処理を終了 */
+		return;
 	}
 	/* 近距離攻撃(強)後のカウントを加算 */
 	this->PlayerStatusList->SetPlayerMeleeStrongAfterCount(iPlayerMeleeStrongAfterCount + 1);
