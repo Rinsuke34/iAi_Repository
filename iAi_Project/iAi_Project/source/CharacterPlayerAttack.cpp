@@ -1131,12 +1131,13 @@ void CharacterPlayer::Player_Projectile_Posture()
 	this->StageStatusList->SetCameraMode(CAMERA_MODE_AIM_KUNAI);
 
 	// ジャンプ中であればスローモーションを行う
-	/* ジャンプ中のフラグを確認 */
-	if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true)
+	/* ジャンプ中もしくは空中にいるかのフラグを確認 */
+	if (this->PlayerStatusList->bGetPlayerJumpingFlag() == true || this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 	{
+		// ジャンプ中か空中にいる場合
 		/* スローモーションカウントを取得 */
 		int iNowSlowMotionCount = this->PlayerStatusList->iGetPlayerSlowMotionCount();
-		// ジャンプ中の場合
+		
 		/* スローモーションフラグが無効であるか確認 */
 		if (this->StageStatusList->bGetGameSlowFlg() == false)
 		{
