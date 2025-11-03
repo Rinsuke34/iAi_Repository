@@ -17,11 +17,11 @@ class BulletPlayerKunaiWarp : public BulletPlayerKunai
 		virtual void	Update()			override;			// 更新
 		virtual void	Draw()				override;			// 描画	
 
-		void	SetKunaiTargetEnemy(Enemy_Basic* pTargetEnemy) { this->pTargetEnemy = pTargetEnemy; }				// クナイのターゲットエネミーを設定
+		void	SetKunaiTargetEnemy(std::shared_ptr<Enemy_Basic> pTargetEnemy) { this->pTargetEnemy = pTargetEnemy; }				// クナイのターゲットエネミーを設定
 		void	Warp();																								// ワープ処理
 
 	private:
-		Enemy_Basic* pTargetEnemy;						// クナイのターゲットエネミー
+		std::shared_ptr<Enemy_Basic> pTargetEnemy;						// クナイのターゲットエネミー
 
 	protected:
 

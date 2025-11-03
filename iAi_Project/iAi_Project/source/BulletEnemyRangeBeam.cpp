@@ -52,10 +52,10 @@ void BulletEnemyRangeBeam::Initialization()
 	/* エフェクト追加 */
 	{
 		/* ビームエフェクトを生成 */
-		this->pEffect = new EffectManualDelete();
+		this->pEffect = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_beam/FX_e_beam")));
+		this->pEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_beam/FX_e_beam")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -69,7 +69,7 @@ void BulletEnemyRangeBeam::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffect);
@@ -84,7 +84,7 @@ void BulletEnemyRangeBeam::Initialization()
 void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 {
 	/* プレイヤーの座標を取得 */
-	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> player = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
 	// チャージカウントを減算
@@ -113,7 +113,7 @@ void BulletEnemyRangeBeam::BulletEnemyRangeBeamMove()
 	this->vecPosition = VAdd(this->vecPosition, VScale(this->vecDirection, this->fMoveSpeed = 60));
 
 	// エネミーのリストを取得
-	auto& enemyList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
+	auto& enemyList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetEnemyList();
 
 	// ビームのコリジョン座標を更新
 	this->stCollisionCapsule.vecCapsuleBottom = this->vecPosition; // 終了地点を更新

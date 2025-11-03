@@ -2,6 +2,7 @@
 
 #pragma once
 #include "DataListBase.h"
+#include <memory>
 #include <list>
 
 /* データ制御処理の管理を行うクラスの宣言 */
@@ -15,13 +16,13 @@ class DataListServer
 
 		void	DrawDataList();			// データリスト描画(デバッグ用)
 
-		void			AddDataList(DataListBase* NewDataList);		// データリスト追加
+		void			AddDataList(std::shared_ptr<DataListBase> NewDataList);		// データリスト追加
 		void			DeleteDataList(const std::string& cName);	// 指定データリスト削除
-		DataListBase*	GetDataList(const std::string& cName);		// データリスト取得
+		std::shared_ptr<DataListBase>	GetDataList(const std::string& cName);		// データリスト取得
 
 	private:
 		// データリスト一覧
-		std::list<DataListBase*> pstDataList;
+		std::list<std::shared_ptr<DataListBase>> pstDataList;
 
 		/* 関数 */
 		void	DeleteAllDataList();			// データリスト削除(データリスト一覧内のすべてのデータリストに対して)

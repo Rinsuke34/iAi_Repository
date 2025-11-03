@@ -15,7 +15,7 @@ void SpawnPoint_Kunai_PickupItem::Initialization()
 	/* クナイ(ピックアップアイテム)生成処理 */
 	{
 		/* クナイ(ピックアップアイテム)を作成 */
-		PickUpItemBase* AddPickUpItem = new PickUpItem_Kunai();
+		std::shared_ptr<PickUpItemBase> AddPickUpItem = std::make_shared<PickUpItem_Kunai>();
 
 		/* 生成したクナイ(ピックアップアイテム)をリストに追加 */
 		this->ObjectList->SetPickUpItem(AddPickUpItem);

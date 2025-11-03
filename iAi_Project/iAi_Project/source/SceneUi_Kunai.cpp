@@ -10,16 +10,16 @@ SceneUi_Kunai::SceneUi_Kunai() : SceneBase("UI_Kunai", 102, false)
 	/* データリスト取得 */
 	{
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "ゲーム状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* クナイフレーム */
 		this->piGrHandle_Kunai_Frame = ImageList->piGetImage("UI_Player_Kunai/UI_Player_Kunai");

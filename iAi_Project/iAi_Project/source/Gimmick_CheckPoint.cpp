@@ -9,17 +9,17 @@ Gimmick_CheckPoint::Gimmick_CheckPoint() : PlatformBase()
 	/* データリストを取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態管理"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/CheckPoint/CheckPoint");
@@ -28,7 +28,7 @@ Gimmick_CheckPoint::Gimmick_CheckPoint() : PlatformBase()
 	/* 画像取得 */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 通常時(非アクティブ時)の発光色 */
 		this->piGrHandle_NormalRight = ImageList->piGetImage("SpawnPoint/NormalRight");
@@ -80,7 +80,7 @@ void Gimmick_CheckPoint::Update()
 	{
 		// アクティブ状態でない場合
 		/* プレイヤーを取得 */
-		CharacterBase* pPlayer = this->ObjectList->GetCharacterPlayer();
+		std::shared_ptr<CharacterBase> pPlayer = this->ObjectList->GetCharacterPlayer();
 
 		/* プレイヤーとの接触判定 */
 		if (pPlayer->HitCheck(this->stCollisionSqhere) == true)

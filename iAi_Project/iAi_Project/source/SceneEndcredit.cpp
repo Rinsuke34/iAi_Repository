@@ -9,13 +9,13 @@ SceneEndcredit::SceneEndcredit() : SceneBase("Endcredit", 500, true)
 	/* データリスト取得 */
 	{
 		/* "オプション設定管理"を取得 */
-		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList = std::dynamic_pointer_cast<DataList_Option>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 決定アイコン(0:コントローラー/1:キーボード) */
 		this->piGrHandle_Icon_Button_Select[0] = ImageList->piGetImage("Input_Icon/XBOX/xbox_button_a");
@@ -48,7 +48,7 @@ SceneEndcredit::SceneEndcredit() : SceneBase("Endcredit", 500, true)
 SceneEndcredit::~SceneEndcredit()
 {
 	/* シーン"タイトル画面"を追加 */
-	gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
+	gpSceneServer->AddSceneReservation(std::make_shared<SceneAddTitleSetup>());
 }
 
 // 計算

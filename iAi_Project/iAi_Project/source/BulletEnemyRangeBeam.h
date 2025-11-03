@@ -34,9 +34,9 @@ public:
 private:
 
 	/* オブジェクト(エフェクト)のハンドル */
-	EffectManualDelete* pEffect;									// エフェクト
+	std::shared_ptr<EffectManualDelete> pEffect;					// エフェクト
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;									// オブジェクト管理
+	std::shared_ptr<DataList_Object> ObjectList;					// オブジェクト管理
 	/* 当たり判定 */
 	COLLISION_CAPSULE stCollisionCapsule;							// カプセル型の当たり判定
 

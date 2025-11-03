@@ -30,12 +30,12 @@ public:
 
 private:
 	/* エフェクト・使用するオブジェクトリスト */
-	EffectManualDelete* pEffect; 						// エフェクト
-	EffectManualDelete* pEffectDetonation;				// 起爆エフェクト
-	DataList_Object* ObjectList;						// オブジェクト管理
-	DataList_Effect* EffectList;						// エフェクト管理
-	DataList_StageStatus* StageStatusList;				// ステージ状態
-	DataList_PlayerStatus* PlayerStatusList;			// プレイヤー状態
+	std::shared_ptr<EffectManualDelete> pEffect; 						// エフェクト
+	std::shared_ptr<EffectManualDelete> pEffectDetonation;				// 起爆エフェクト
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<DataList_Effect> EffectList;						// エフェクト管理
+	std::shared_ptr<DataList_StageStatus> StageStatusList;				// ステージ状態
+	std::shared_ptr<DataList_PlayerStatus> PlayerStatusList;			// プレイヤー状態
 
 	/*関数*/
 	void MoveEnemy();									// 敵を移動させるメソッドを追加

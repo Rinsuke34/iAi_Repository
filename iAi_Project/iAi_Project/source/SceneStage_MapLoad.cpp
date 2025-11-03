@@ -71,7 +71,7 @@ void SceneStage::LoadMapData()
 			for (auto& data : stage)
 			{
 				/* "オブジェクト管理"にプラットフォームを追加 */
-				PlatformBase* pPlatform = new PlatformBase();
+				std::shared_ptr<PlatformBase> pPlatform = std::make_shared<PlatformBase>();
 				this->ObjectList->SetPlatform(pPlatform);
 
 				/* モデル */
@@ -164,11 +164,11 @@ void SceneStage::LoadMapData()
 				{
 					// プレイヤースタート地点の場合
 					/* "オブジェクト管理"にプレイヤーを追加 */
-					CharacterPlayer* pPlayer = new CharacterPlayer();
+					std::shared_ptr<CharacterPlayer> pPlayer = std::make_shared<CharacterPlayer>();
 					ObjectList->SetCharacterPlayer(pPlayer);
 
 					/* "オブジェクト管理"にチェックポイントを追加 */
-					PlatformBase* pCheckPoint = new Gimmick_CheckPoint();
+					std::shared_ptr<PlatformBase> pCheckPoint = std::make_shared<Gimmick_CheckPoint>();
 					ObjectList->SetPlatform(pCheckPoint);
 
 					/* 座標設定 */
@@ -180,13 +180,13 @@ void SceneStage::LoadMapData()
 					pCheckPoint->SetRotation(vecRot);
 
 					/* チェックポイントを初期地点として設定 */
-					dynamic_cast<Gimmick_CheckPoint*>(pCheckPoint)->SetStartPositionFlg(true);
+					std::dynamic_pointer_cast<Gimmick_CheckPoint>(pCheckPoint)->SetStartPositionFlg(true);
 				}
 				else if (name == "Marker_Goal_Object")
 				{
 					// ゴール地点の場合
 					/* "オブジェクト管理"にゴールオブジェクトを追加 */
-					Enemy_Basic* pGoal = new Enemy_GoalObject();
+					std::shared_ptr<Enemy_Basic> pGoal = std::make_shared<Enemy_GoalObject>();
 					ObjectList->SetEnemy(pGoal);
 
 					/* 座標設定 */
@@ -199,7 +199,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(ビーム)の場合
 					/* "オブジェクト管理"にエネミー(ビーム)スポナーを追加 */
-					EnemySpawnPoint_Beam* AddEnemy = new EnemySpawnPoint_Beam();
+					std::shared_ptr<EnemySpawnPoint_Beam> AddEnemy = std::make_shared<EnemySpawnPoint_Beam>();
 					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
@@ -212,7 +212,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(逃走)の場合
 					/* "オブジェクト管理"にエネミー(逃走)スポナーを追加 */
-					EnemySpawnPoint_Escape* AddEnemy = new EnemySpawnPoint_Escape();
+					std::shared_ptr<EnemySpawnPoint_Escape> AddEnemy = std::make_shared<EnemySpawnPoint_Escape>();
 					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
@@ -225,7 +225,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(自爆)の場合
 					/* "オブジェクト管理"にエネミー(自爆)スポナーを追加 */
-					EnemySpawnPoint_Explosion* AddEnemy = new EnemySpawnPoint_Explosion();
+					std::shared_ptr<EnemySpawnPoint_Explosion> AddEnemy = std::make_shared<EnemySpawnPoint_Explosion>();
 					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
@@ -238,7 +238,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(ミサイル)の場合
 					/* "オブジェクト管理"にエネミー(ミサイル)スポナーを追加 */
-					EnemySpawnPoint_Missile* AddEnemy = new EnemySpawnPoint_Missile();
+					std::shared_ptr<EnemySpawnPoint_Missile> AddEnemy = std::make_shared<EnemySpawnPoint_Missile>();
 					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
@@ -251,7 +251,7 @@ void SceneStage::LoadMapData()
 				{
 					// エネミー(通常)の場合
 					/* "オブジェクト管理"にエネミー(通常)スポナーを追加 */
-					EnemySpawnPoint_Normal* AddEnemy = new EnemySpawnPoint_Normal();
+					std::shared_ptr<EnemySpawnPoint_Normal> AddEnemy = std::make_shared<EnemySpawnPoint_Normal>();
 					ObjectList->SetSpawnPoint(AddEnemy);
 
 					/* 座標設定 */
@@ -263,7 +263,7 @@ void SceneStage::LoadMapData()
 				else if (name == "Marker_Spawn_Gimmick_Jump")
 				{
 					// ギミック(強制ジャンプ)の場合
-					PlatformBase* pAddGimick = new Gimmick_ForcedJump_Spawn();
+					std::shared_ptr<PlatformBase> pAddGimick = std::make_shared<Gimmick_ForcedJump_Spawn>();
 					ObjectList->SetPlatform(pAddGimick);
 
 					/* 座標設定 */
@@ -370,7 +370,7 @@ void SceneStage::LoadMapData()
 				{
 					// スクリーンの場合
 					/* "オブジェクト管理"にスクリーンを追加 */
-					Screen* pScreen = new Screen();
+					std::shared_ptr<Screen> pScreen = std::make_shared<Screen>();
 					ObjectList->SetPlatform(pScreen);
 
 					/* 座標設定 */
@@ -383,7 +383,7 @@ void SceneStage::LoadMapData()
 				{
 					// スクリーンの場合
 					/* "オブジェクト管理"にスクリーンを追加 */
-					LargeScreen* pLargeScreen = new LargeScreen();
+					std::shared_ptr<LargeScreen> pLargeScreen = std::make_shared<LargeScreen>();
 					ObjectList->SetPlatform(pLargeScreen);
 
 					/* 座標設定 */
@@ -399,7 +399,7 @@ void SceneStage::LoadMapData()
 				{
 					// タイトルプレイヤーの場合
 					/* "オブジェクト管理"にタイトルプレイヤーを追加 */
-					TitlePlayer* pTitlePlayer = new TitlePlayer();
+					std::shared_ptr<TitlePlayer> pTitlePlayer = std::make_shared<TitlePlayer>();
 					ObjectList->SetPlatform(pTitlePlayer);
 					/* 座標設定 */
 					pTitlePlayer->SetPosition(vecPos);
@@ -457,7 +457,7 @@ void SceneStage::LoadMapData()
 						VECTOR verticalPos = startPos;
 						while (verticalPos.z >= bottomRight.z)
 						{
-							PlatformBase* pFog = new FallFog();
+							std::shared_ptr<PlatformBase> pFog = std::make_shared<FallFog>();
 							ObjectList->SetPlatform(pFog);
 							pFog->SetPosition(verticalPos);
 
@@ -466,7 +466,7 @@ void SceneStage::LoadMapData()
 					}
 
 					/* "オブジェクト管理"に落下判定位置を追加 */
-					PlatformBase* pPlatform = new Gimmick_FallJudgment();
+					std::shared_ptr<PlatformBase> pPlatform = std::make_shared<Gimmick_FallJudgment>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -482,7 +482,7 @@ void SceneStage::LoadMapData()
 				{
 					// 落下復帰ポイントの場合
 					/* "オブジェクト管理"にチェックポイントを追加 */
-					PlatformBase* pCheckPoint = new Gimmick_CheckPoint();
+					std::shared_ptr<PlatformBase>pCheckPoint = std::make_shared<Gimmick_CheckPoint>();
 					ObjectList->SetPlatform(pCheckPoint);
 
 					/* 座標設定 */
@@ -495,7 +495,7 @@ void SceneStage::LoadMapData()
 				{
 					// 床消失の場合
 					/* "オブジェクト管理"に床消失を追加 */
-					SpawnPoint_Base* pPlatform = new GimmickDisappearSpawnPoint();
+					std::shared_ptr<SpawnPoint_Base> pPlatform = std::make_shared<GimmickDisappearSpawnPoint>();
 					ObjectList->SetSpawnPoint(pPlatform);
 
 					/* 座標 */
@@ -511,7 +511,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(X軸)(長距離)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -530,7 +530,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(X軸)(通常)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -549,7 +549,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(X軸)(短距離)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -568,7 +568,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(Y軸)(長距離)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -587,7 +587,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(Y軸)(通常)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -606,7 +606,7 @@ void SceneStage::LoadMapData()
 				{
 					// 移動床(Y軸)(短距離)の場合
 					/* "オブジェクト管理"に移動床を追加 */
-					Gimmick_MoveFloor* pPlatform = new Gimmick_MoveFloor();
+					std::shared_ptr<Gimmick_MoveFloor> pPlatform = std::make_shared<Gimmick_MoveFloor>();
 					this->ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -625,7 +625,7 @@ void SceneStage::LoadMapData()
 				{
 					// ブラッド(ピックアップアイテム)スポナーの場合
 					/* "オブジェクト管理"にブラッド(ピックアップアイテム)スポナーを追加 */
-					SpawnPoint_Blood_PickupItem* pBlood = new SpawnPoint_Blood_PickupItem();
+					std::shared_ptr<SpawnPoint_Blood_PickupItem> pBlood = std::make_shared<SpawnPoint_Blood_PickupItem>();
 					ObjectList->SetSpawnPoint(pBlood);
 
 					/* 座標設定 */
@@ -638,7 +638,7 @@ void SceneStage::LoadMapData()
 				{
 					// クナイ(ピックアップアイテム)スポナーの場合
 					/* "オブジェクト管理"にクナイ(ピックアップアイテム)スポナーを追加 */
-					SpawnPoint_Kunai_PickupItem* pKunai = new SpawnPoint_Kunai_PickupItem();
+					std::shared_ptr<SpawnPoint_Kunai_PickupItem> pKunai = std::make_shared<SpawnPoint_Kunai_PickupItem>();
 					ObjectList->SetSpawnPoint(pKunai);
 
 					/* 座標設定 */
@@ -651,7 +651,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -667,7 +667,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -683,7 +683,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -699,7 +699,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -715,7 +715,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -731,7 +731,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -747,7 +747,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -763,7 +763,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -779,7 +779,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -795,7 +795,7 @@ void SceneStage::LoadMapData()
 				{
 					// チュートリアルマーカーの場合
 					/* "オブジェクト管理"にチュートリアル描写ポイントを追加 */
-					Gimmick_TutorialDraw* pTutorialDraw = new Gimmick_TutorialDraw();
+					std::shared_ptr<Gimmick_TutorialDraw> pTutorialDraw = std::make_shared<Gimmick_TutorialDraw>();
 					ObjectList->SetPlatform(pTutorialDraw);
 
 					/* 座標 */
@@ -811,7 +811,7 @@ void SceneStage::LoadMapData()
 				{
 					// 右矢印看板の場合
 					/* "オブジェクト管理"に右矢印看板を追加 */
-					PlatformBase* pPlatform = new ScreenArrowRight();
+					std::shared_ptr<PlatformBase> pPlatform = std::make_shared<ScreenArrowRight>();
 					ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -827,7 +827,7 @@ void SceneStage::LoadMapData()
 				{
 					// 左矢印看板の場合
 					/* "オブジェクト管理"に左矢印看板を追加 */
-					PlatformBase* pPlatform = new ScreenArrowLeft();
+					std::shared_ptr<PlatformBase> pPlatform = std::make_shared<ScreenArrowLeft>();
 					ObjectList->SetPlatform(pPlatform);
 
 					/* 座標 */
@@ -846,7 +846,7 @@ void SceneStage::LoadMapData()
 		// ※標準で追加する
 		{
 			/* "オブジェクト管理"にスカイスフィアを追加 */
-			SkySqhereBasic* pSkySqhere = new SkySqhereBasic();
+			std::shared_ptr<SkySqhereBasic> pSkySqhere = std::make_shared<SkySqhereBasic>();
 			ObjectList->SetSkySqhere(pSkySqhere);
 
 			/* モデル */

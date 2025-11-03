@@ -27,8 +27,8 @@ public:
 private:
 
 	/* エフェクト・使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
-	EffectManualDelete* pEffect;						// エフェクト	
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<EffectManualDelete> pEffect;						// エフェクト	
 
 	/* 関数 */
 	void BulletEnemyRangeNormalMove();					// ノーマル弾の移動処理

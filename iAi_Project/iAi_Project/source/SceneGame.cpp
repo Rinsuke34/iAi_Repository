@@ -10,16 +10,16 @@ SceneGame::SceneGame() : SceneBase("Game", 0, false)
 	/* データリスト作成 */
 	{
 		/* データリストサーバーに"ゲームリソース管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_GameResource());
+		gpDataListServer->AddDataList(std::make_shared<DataList_GameResource>());
 	}
 
 	/* データリスト取得 */
 	{
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
 	/* 初期化 */
@@ -111,7 +111,7 @@ void SceneGame::Initialization()
 			this->GameResourceList->SetHaveBlood(500);
 
 			/* 会話パート(オープニング)を生成 */
-			SceneConversation* pAddConversation = new SceneConversation();
+			std::shared_ptr<SceneConversation> pAddConversation = std::make_shared<SceneConversation>();
 			gpSceneServer->AddSceneReservation(pAddConversation);
 			pAddConversation->SetTextFileNo(0);
 			pAddConversation->Initialization();
@@ -129,13 +129,13 @@ void SceneGame::Initialization()
 
 	/* "最初のステージ番号"のステージを読み込む */
 	/* シーン"ステージ"を作成 */
-	SceneBase* pAddScene = new SceneStage();
+	std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneStage>();
 
 	/* シーン"ステージ"をシーンサーバーに追加 */
 	gpSceneServer->AddSceneReservation(pAddScene);
 
 	/* ステージの読み込みを開始 */
-	dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+	std::dynamic_pointer_cast<SceneStage>(pAddScene)->LoadMapData();
 
 	/* 初期化処理を実行する */
 	pAddScene->Initialization();
@@ -167,7 +167,7 @@ void SceneGame::Process()
 					gpSceneServer->SetAddLoadSceneFlg(true);
 
 					/* シーン"ステージ"を作成 */
-					SceneBase* pAddScene = new SceneStage();
+					std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneStage>();
 
 					/* 初期化処理を実施 */
 					pAddScene->Initialization();
@@ -176,7 +176,7 @@ void SceneGame::Process()
 					gpSceneServer->AddSceneReservation(pAddScene);
 
 					/* ステージの読み込みを開始 */
-					dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+					std::dynamic_pointer_cast<SceneStage>(pAddScene)->LoadMapData();
 
 					/* 初期化処理を実行する */
 					pAddScene->Initialization();
@@ -194,7 +194,7 @@ void SceneGame::Process()
 					gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 					/* シーン"エンドクレジット"をシーンサーバーに追加 */
-					gpSceneServer->AddSceneReservation(new SceneEndcredit());
+					gpSceneServer->AddSceneReservation(std::make_shared<SceneEndcredit>());
 				}
 			}
 			break;
@@ -212,7 +212,7 @@ void SceneGame::Process()
 				gpSceneServer->SetAddLoadSceneFlg(true);
 
 				/* シーン"ステージ"を作成 */
-				SceneBase* pAddScene = new SceneStage();
+				std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneStage>();
 
 				/* 初期化処理を実施 */
 				pAddScene->Initialization();
@@ -221,7 +221,7 @@ void SceneGame::Process()
 				gpSceneServer->AddSceneReservation(pAddScene);
 
 				/* ステージの読み込みを開始 */
-				dynamic_cast<SceneStage*>(pAddScene)->LoadMapData();
+				std::dynamic_pointer_cast<SceneStage>(pAddScene)->LoadMapData();
 			}
 			break;
 	}

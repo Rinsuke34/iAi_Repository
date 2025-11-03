@@ -13,7 +13,7 @@ DataList_GameResource::DataList_GameResource() : DataListBase("DataList_GameReso
 		/* 画像ハンドル取得 */
 		{
 			/* データリスト"画像リソース管理"取得 */
-			DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+			std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 			/* エディットフレーム */
 			for (int i = 0; i < EDIT_RANK_MAX; i++)

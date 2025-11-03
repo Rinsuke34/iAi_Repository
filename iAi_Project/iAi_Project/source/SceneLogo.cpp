@@ -9,7 +9,7 @@ SceneLogo::SceneLogo() : SceneBase("Logo", 20, true)
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* ロゴ画像(学校) */
 		this->piGrHandle_Logo_School	= ImageList->piGetImage("Logo/amgLOGO");

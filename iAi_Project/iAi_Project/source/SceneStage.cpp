@@ -10,31 +10,31 @@ SceneStage::SceneStage(): SceneBase("Stage", 1, true)
 	/* データリスト作成 */
 	{
 		/* データリストサーバーに"プレイヤー状態"を追加 */
-		gpDataListServer->AddDataList(new DataList_PlayerStatus());
+		gpDataListServer->AddDataList(std::make_shared<DataList_PlayerStatus>());
 
 		/* データリストサーバーに"オブジェクト管理"を追加 */
-		gpDataListServer->AddDataList(new DataList_Object());
+		gpDataListServer->AddDataList(std::make_shared<DataList_Object>());
 	}
 
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList		= std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList	= std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "3Dモデル管理"を取得 */
-		this->ModelList			= dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		this->ModelList			= std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList	= std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "オプション設定管理"を取得 */
-		this->OptionList		= dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList		= std::dynamic_pointer_cast<DataList_Option>(gpDataListServer->GetDataList("DataList_Option"));
 
 		/* "ゲーム内リソース管理"を取得 */
-		this->GameResourceList	= dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList	= std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
 	/* マップハンドル作成 */
@@ -96,31 +96,31 @@ void SceneStage::Initialization()
 		/* UI追加 */
 		{
 			/* クロスヘア */
-			gpSceneServer->AddSceneReservation(new SceneUi_Crosshairs());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Crosshairs>());
 
 			/* HP */
-			gpSceneServer->AddSceneReservation(new SceneUi_Hp());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Hp>());
 
 			/* クナイ */
-			gpSceneServer->AddSceneReservation(new SceneUi_Kunai());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Kunai>());
 
 			/* コンボ */
-			gpSceneServer->AddSceneReservation(new SceneUi_Combo());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Combo>());
 
 			/* ブラッド */
-			gpSceneServer->AddSceneReservation(new SceneUi_Blood());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Blood>());
 
 			/* エディット */
-			gpSceneServer->AddSceneReservation(new SceneUi_Edit());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Edit>());
 
 			/* 経過時間 */
-			gpSceneServer->AddSceneReservation(new SceneUi_Time());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Time>());
 
 			/* 操作説明 */
-			gpSceneServer->AddSceneReservation(new SceneUi_OperationInstructions());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_OperationInstructions>());
 
 			/* ジャンプ */
-			gpSceneServer->AddSceneReservation(new SceneUi_Jump());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Jump>());
 		}
 	}
 
@@ -216,7 +216,7 @@ void SceneStage::Process()
 		case GAMESTATUS_STAGE_CLEAR:
 			{
 				/* シーン"ステージクリア画面"を作成 */
-				SceneBase* pAddScene = new SceneGameClear();
+				std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneGameClear>();
 
 				/* シーン"ステージクリア画面"をシーンサーバーに追加 */
 				gpSceneServer->AddSceneReservation(pAddScene);
@@ -227,7 +227,7 @@ void SceneStage::Process()
 		case GAMESTATUS_RESULT:
 			{
 				/* シーン"リザルト画面"を作成 */
-				SceneBase* pAddScene = new SceneResult();
+				std::shared_ptr<SceneBase> pAddScene = std::shared_ptr<SceneResult>();
 
 				/* シーン"リザルト画面"をシーンサーバーに追加 */
 				gpSceneServer->AddSceneReservation(pAddScene);
@@ -241,7 +241,7 @@ void SceneStage::Process()
 			{
 				// 最終ステージでない場合
 				/* シーン"エディット画面"をシーンサーバーに追加 */
-				gpSceneServer->AddSceneReservation(new SceneEdit());
+				gpSceneServer->AddSceneReservation(std::make_shared<SceneEdit>());
 			}
 			else
 			{
@@ -260,7 +260,7 @@ void SceneStage::Process()
 		/* "ゲームオーバー"状態 */
 		case GAMESTATUS_GAMEOVER:
 			/* シーン"ゲームオーバー"をシーンサーバーに追加 */
-			gpSceneServer->AddSceneReservation(new SceneGameOver());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneGameOver>());
 			break;
 
 		/* "リセット"状態 */
@@ -331,7 +331,7 @@ void SceneStage::Process_Main()
 		{
 			// 押されている場合
 			/* シーン"一時停止"を追加 */
-			gpSceneServer->AddSceneReservation(new ScenePause());
+			gpSceneServer->AddSceneReservation(std::make_shared<ScenePause>());
 
 			/* "ポーズメニュー開閉"のSEを再生 */
 			gpDataList_Sound->SE_PlaySound(SE_SYSTEM_POSEMENU);
@@ -341,7 +341,7 @@ void SceneStage::Process_Main()
 		if (CheckHitKey(KEY_INPUT_RETURN) == TRUE)
 		{
 			/* シーン"一時停止"を追加 */
-			gpSceneServer->AddSceneReservation(new SceneUi_Debug());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneUi_Debug>());
 		}
 	}
 }

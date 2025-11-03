@@ -19,7 +19,7 @@ class SkySqhereBasic : public SkySqhereBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;	// ステージ状態管理
 
 	protected:
 

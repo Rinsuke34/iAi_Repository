@@ -12,19 +12,19 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 
 		/* "プレイヤー状態管理"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* 画像リソース取得 */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 選択フレーム(0:ホールド無し、 1:ホールドあり) */
 		this->piGrHandle_SelectFrame[0]	= ImageList->piGetImage("Conversation/SelectFlame");
@@ -87,6 +87,11 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 		this->NewEditData[i].iEditCost		= 0;
 		this->NewEditData[i].aText			= "";
 	}
+	// 削除するエディット情報
+	this->DeleteEditData.iEditEffect	= EDIT_EFFECT_NONE;
+	this->DeleteEditData.iEditRank		= EDIT_RANK_NONE;
+	this->DeleteEditData.iEditCost		= 0;
+	this->DeleteEditData.aText			= "";
 
 	/* ホールド中のエディットの情報 */
 	/* ホールド中のエディット情報を初期化する */
@@ -308,10 +313,10 @@ SceneEdit::SceneEdit() : SceneBase("Edit", 100, true)
 			};
 
 			/* 座標設定 */
-			for (int l = 0; l < SELECT_ITEM_MAX; l++)
+			for (int i = 0; i < SELECT_ITEM_MAX; i++)
 			{
 				/* 座標設定 */
-				this->astSelectItemList[l].stDrawPos = stSelectItemPos[l];
+				this->astSelectItemList[i].stDrawPos = stSelectItemPos[i];
 
 				/* 選択項目の状態を"状態無し"に設定(ついでで) */
 				this->astSelectItemList[i].iSelectStatus = SELECT_STATUS_NONE;

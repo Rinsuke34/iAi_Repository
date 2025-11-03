@@ -7,14 +7,14 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	/* データリスト */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/DisappearFloor/DisappearFloor");
@@ -42,7 +42,7 @@ GimmickDisappear::GimmickDisappear() : PlatformBase()
 	this->bRidePlayerFlg = false;
 
 	/* データリスト"画像ハンドル管理"を取得 */
-	DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+	std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 	// Orangeテクスチャの読み込み
 	this->iTextureOrangeHandle = *ImageList->piGetImage("DisappearFloor/Orange");

@@ -9,8 +9,8 @@
 /* プロジェクトで使用する広域変数の宣言 */
 
 /* 実行中クラス */
-extern DataList_Input*	gpDataList_Input;	// プレイヤー入力管理クラス
-extern DataList_Sound*	gpDataList_Sound;	// サウンド管理クラス
+extern std::shared_ptr<DataList_Input>	gpDataList_Input;	// プレイヤー入力管理クラス
+extern std::shared_ptr<DataList_Sound>	gpDataList_Sound;	// サウンド管理クラス
 
 /* デバッグ用描写管理フラグ */
 extern bool gbDrawShadowMapFlg;				// シャドウマップの描写

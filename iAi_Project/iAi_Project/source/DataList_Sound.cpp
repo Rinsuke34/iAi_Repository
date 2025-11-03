@@ -13,7 +13,7 @@ DataList_Sound::DataList_Sound() : DataListBase("DataList_Sound")
 	/* データリスト取得 */
 	{
 		/* "オプション設定管理"を取得 */
-		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList = std::dynamic_pointer_cast<DataList_Option>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
 	/* 初期化 */

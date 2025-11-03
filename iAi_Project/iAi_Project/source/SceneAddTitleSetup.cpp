@@ -13,7 +13,7 @@ SceneAddTitleSetup::SceneAddTitleSetup() : SceneBase("AddSceneTitleSetup", 10, t
 void SceneAddTitleSetup::Process()
 {
 	/* データリスト"ステージ状態管理"を取得 */
-	DataList_StageStatus* StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+	std::shared_ptr<DataList_StageStatus> StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 	/* "ステージ状態管理"を初期化する */
 	StageStatusList->Initialization();
@@ -22,5 +22,5 @@ void SceneAddTitleSetup::Process()
 	gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 	/* シーン"タイトル"を追加 */
-	gpSceneServer->AddSceneReservation(new SceneTitle());
+	gpSceneServer->AddSceneReservation(std::make_shared<SceneTitle>());
 }

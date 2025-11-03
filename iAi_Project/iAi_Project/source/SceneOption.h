@@ -24,7 +24,7 @@ class SceneOption : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Option* OptionList;			// オプション設定管理
+		std::shared_ptr<DataList_Option> OptionList;			// オプション設定管理
 
 		/* 画像ハンドル */
 		int* piGrHandle_ResultFrame;			// リザルト用フレーム

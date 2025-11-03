@@ -8,7 +8,7 @@ SpawnPoint_Base::SpawnPoint_Base() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 }
 

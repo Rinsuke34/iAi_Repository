@@ -4,6 +4,7 @@
 #include <vector>
 #include <thread>
 #include <future>
+#include <memory>
 #include "AppStructDefine.h"
 #include "Fps.h"
 #include "PlayerInput.h"
@@ -29,10 +30,10 @@ extern bool											gbUseMouseFlg;				// マウス使用フラグ(有効であるならばカー
 extern unsigned char								gucTriggerThreshold;		// トリガー入力の閾値
 
 /* 実行中クラス */
-extern Fps* gpFps;								// fps固定用クラス
-extern PlayerInput* gpPlayerInput;				// プレイヤー入力取得クラス
-extern SceneServer* gpSceneServer;				// シーンサーバークラス
-extern DataListServer* gpDataListServer;		// データリストサーバークラス
+extern std::unique_ptr<Fps>				gpFps;					// fps固定用クラス
+extern std::unique_ptr<PlayerInput>		gpPlayerInput;			// プレイヤー入力取得クラス
+extern std::unique_ptr<SceneServer>		gpSceneServer;			// シーンサーバークラス
+extern std::unique_ptr<DataListServer>	gpDataListServer;		// データリストサーバークラス
 
 /* フレームレート関連 */
 extern int giNowFps;							// 現在のフレームレート

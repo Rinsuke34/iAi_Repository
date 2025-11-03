@@ -74,7 +74,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bGetPlayerAfterKickWallFlg()			{ return this->bPlayerAfterKickWallFlg; }			// プレイヤーが壁を蹴った後のフラグを取得							/* 2025.02.22 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerMeleeStrongChargeCount()		{ return this->iPlayerMeleeStrongChargeCount; }		// プレイヤーが近距離攻撃(強)状態になってからのチャージフレーム数を取得
 		int		iGetPlayerSlowMotionCount()				{ return this->iPlayerSlowMotionCount; }			// プレイヤーのスローモーションカウントを取得						/* 2025.03.12 菊池雅道 スローモーション関連の関数追加 */
-		Enemy_Basic* pGetPlayerLockOnEnemy()			{ return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
+		std::shared_ptr<Enemy_Basic> pGetPlayerLockOnEnemy() { return this->pLockOnEnemy; }						// ロックオン対象のエネミーを取得
 		int		iGetPlayerNowHp()						{ return this->iPlayerNowHp; }						// プレイヤーの現在のHPを取得
 		int		iGetPlayerNowInvincibleTime()			{ return this->iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を取得
 		int		iGetPlayerComboNowCount()				{ return this->iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を取得
@@ -187,7 +187,7 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerKickWallFlg(bool bPlayerKickWallFlg)								{ this->bPlayerKickWallFlg					= bPlayerKickWallFlg; }					// プレイヤーが壁を蹴ったかのフラグを設定	/* 2025.02.22 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerAfterKickWallCount(int iPlayerAfterKickWallCount)					{ this->iPlayerAfterKickWallCount			= iPlayerAfterKickWallCount; }			// プレイヤーが壁を蹴った後のカウントを設定	/* 2025.02.22 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerAfterKickWallFlg(bool bPlayerAfterKickWallFlg)						{ this->bPlayerAfterKickWallFlg				= bPlayerAfterKickWallFlg; }			// プレイヤーが壁を蹴った後のフラグを設定	/* 2025.02.22 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerLockOnEnemy(Enemy_Basic* pLockOnEnemy)								{ this->pLockOnEnemy						= pLockOnEnemy; };						// ロックオン対象のエネミーを設定
+		void	SetPlayerLockOnEnemy(std::shared_ptr<Enemy_Basic> pLockOnEnemy)				{ this->pLockOnEnemy						= pLockOnEnemy; };						// ロックオン対象のエネミーを設定
 		void	SetPlayerNowHp(int iPlayerNowHp)											{ this->iPlayerNowHp						= iPlayerNowHp; }						// プレイヤーの現在のHPを設定
 		void	SetPlayerNowInvincibleTime(int iPlayerNowInvincibleTime)					{ this->iPlayerNowInvincibleTime			= iPlayerNowInvincibleTime; }			// プレイヤーの現在の残り無敵時間を設定
 		void	SetPlayerComboNowCount(int iPlayerComboNowCount)							{ this->iPlayerComboNowCount				= iPlayerComboNowCount; }				// プレイヤーの現在のコンボ数を設定
@@ -300,7 +300,7 @@ class DataList_PlayerStatus : public DataListBase
 		bool	bPlayerMeleeStrongContinuousFlg;	// プレイヤーが連続で近距離攻撃(強)できるかのフラグ								/* 2025.03.17 菊池雅道 攻撃関連の変数追加 */
 		bool	bPlayerLandingAfterMeleeStrongFlg;	// プレイヤーが近距離攻撃(強)後に着地しているかのフラグ							/* 2025.03.23 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerSlowMotionCount;				// プレイヤーのスローモーションフレーム数カウント								/* 2025.03.12 菊池雅道 スローモーション関連の変数追加 */
-		Enemy_Basic* pLockOnEnemy;				// ロックオン対象のエネミー
+		std::shared_ptr<Enemy_Basic> pLockOnEnemy;	// ロックオン対象のエネミー
 		int		iPlayerNowHp;						// プレイヤーの現在のHP
 		int		iPlayerNowInvincibleTime;			// プレイヤーの現在の残り無敵時間
 		int		iPlayerComboNowCount;				// プレイヤーの現在のコンボ数

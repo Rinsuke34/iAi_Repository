@@ -22,5 +22,5 @@ class SpawnPoint_Base : public PlatformBase
 
 	protected:
 		/* 使用するデータリスト */
-		DataList_Object* ObjectList;	// オブジェクト管理
+		std::shared_ptr<DataList_Object> ObjectList;	// オブジェクト管理
 };

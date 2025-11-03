@@ -33,7 +33,7 @@ void GimmickDisappearSpawnPoint::Update()
 			/* エネミー(ノーマル)生成処理 */
 			{
 				/* "オブジェクト管理"に床消失を追加 */
-				GimmickDisappear* pPlatform = new GimmickDisappear();
+				std::shared_ptr<GimmickDisappear> pPlatform = std::make_shared<GimmickDisappear>();
 				this->ObjectList->SetPlatform(pPlatform);
 
 				/* 座標 */
@@ -47,7 +47,7 @@ void GimmickDisappearSpawnPoint::Update()
 
 				pPlatform->Initialization();
 
-				pPlatform->SetSpawnPoint(this);
+				pPlatform->SetSpawnPoint(shared_from_this());
 
 				this->bAddObjectFlg = true;
 

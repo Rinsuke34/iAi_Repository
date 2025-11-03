@@ -74,16 +74,16 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "エフェクトリソース管理"を取得 */
-		this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+		this->EffectList = std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"));
 
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));;
 
 	}
 
@@ -91,7 +91,7 @@ Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Explosion/Enemy_Explosion");
@@ -155,7 +155,7 @@ void Enemy_Explosion::MoveEnemy()
 	}
 
 	// プレイヤーの座標を取得
-	CharacterBase* player = this->ObjectList->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> player = this->ObjectList->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
 	//エネミーが落下しているか確認
@@ -299,10 +299,10 @@ void Enemy_Explosion::MoveEnemy()
 				this->iExplosionAttachIndex = MV1AttachAnim(this->iModelHandle, 5, -1, FALSE);
 
 				// 起爆予告エフェクトを生成
-				this->pEffectDetonation = new EffectManualDelete();
+				this->pEffectDetonation = std::make_shared<EffectManualDelete>();
 
 				// エフェクトの読み込み
-				this->pEffectDetonation->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
+				this->pEffectDetonation->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
 
 				// エフェクトの座標設定
 				this->pEffectDetonation->SetPosition(this->vecPosition);
@@ -316,7 +316,7 @@ void Enemy_Explosion::MoveEnemy()
 				// エフェクトをリストに登録
 				{
 					// "オブジェクト管理"データリストを取得
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 					// エフェクトをリストに登録
 					ObjectListHandle->SetEffect(pEffectDetonation);
 				}
@@ -335,15 +335,15 @@ void Enemy_Explosion::MoveEnemy()
 			{
 				// エフェクトが再生終了している場合
 				/* データリスト取得 */
-				DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+				std::shared_ptr<DataList_PlayerStatus> PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 				/* 爆発エフェクト生成 */
 				{
 					/* 時間経過で削除されるエフェクトを追加 */
-					EffectSelfDelete* AddEffect = new EffectSelfDelete();
+					std::shared_ptr<EffectSelfDelete> AddEffect = std::make_shared<EffectSelfDelete>();
 
 					/* エフェクト読み込み */
-					AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
+					AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
 
 					/* エフェクトの座標設定 */
 					AddEffect->SetPosition(this->vecPosition);
@@ -360,7 +360,7 @@ void Enemy_Explosion::MoveEnemy()
 					/* リストに登録 */
 					{
 						/* "オブジェクト管理"データリストを取得 */
-						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+						std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 						/* エフェクトをリストに登録 */
 						ObjectListHandle->SetEffect(AddEffect);
@@ -404,7 +404,7 @@ void Enemy_Explosion::MoveEnemy()
 						/* ダメージ発生時エフェクト */
 						{
 							/* 被ダメージの瞬間に発生するエフェクトを追加 */
-							EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+							std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
 
 							/* 座標を設定 */
 							pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
@@ -429,7 +429,7 @@ void Enemy_Explosion::MoveEnemy()
 						/* 感電エフェクト */
 						{
 							/* 感電エフェクトを生成 */
-							EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+							std::shared_ptr<EffectSelfDelete_PlayerFollow> pShockEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(false);
 
 							/* 感電エフェクトの読み込み */
 							pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
@@ -445,7 +445,7 @@ void Enemy_Explosion::MoveEnemy()
 						}
 
 						/* 画面エフェクト(被ダメージ)作成 */
-						this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+						this->StageStatusList->SetScreenEffect(std::make_shared<ScreenEffect_Damage>());
 
 					}
 				}
@@ -549,7 +549,7 @@ void Enemy_Explosion::Enemy_Gravity()
 	bool bHitFlg = false;
 
 	// 足場と接触するか確認
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		// 足場との接触判定
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
@@ -623,7 +623,7 @@ void Enemy_Explosion::Movement_Horizontal()
 		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* 足場と接触するか確認 */
-		for (auto* platform : PlatformList)
+		for (auto& platform : PlatformList)
 		{
 			/* 足場との接触判定 */
 			for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)
@@ -655,7 +655,7 @@ void Enemy_Explosion::Update()
 	auto& BulletList = ObjectList->GetBulletList();
 
 	// プレイヤー攻撃と接触するか確認
-	for (auto* bullet : BulletList)
+	for (auto& bullet : BulletList)
 	{
 		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
 		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
@@ -721,10 +721,10 @@ void Enemy_Explosion::Update()
 			/* Hitエフェクト追加 */
 			{
 				/* 時間経過で削除されるエフェクトを追加 */
-				EffectManualDelete* AddEffect = new EffectManualDelete();
+				std::shared_ptr<EffectManualDelete> AddEffect = std::make_shared<EffectManualDelete>();
 
 				/* エフェクト読み込み */
-				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+				AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
 
 				/* エフェクトの座標設定 */
 				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
@@ -738,7 +738,7 @@ void Enemy_Explosion::Update()
 				/* リストに登録 */
 				{
 					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);

@@ -9,17 +9,17 @@ Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBase()
 	/* データリストを取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態管理"を取得 */
-		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList	= std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/FallJudgment/FallJudgment");
@@ -30,7 +30,7 @@ Gimmick_FallJudgment::Gimmick_FallJudgment() : PlatformBase()
 void Gimmick_FallJudgment::Update()
 {
 	/* プレイヤーを取得 */
-	CharacterBase* pPlayer = ObjectList->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> pPlayer = ObjectList->GetCharacterPlayer();
 
 	/* プレイヤーが存在しているか確認 */
 	if (pPlayer != nullptr)

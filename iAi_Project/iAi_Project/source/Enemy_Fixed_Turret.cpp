@@ -20,14 +20,14 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = this->iModelturretHandle = ModelListHandle->iGetModel("Enemy/Enemy_EyeBall/Enemy_EyeBall");
@@ -192,18 +192,13 @@ void Enemy_Fixed_Turret::MoveEnemy()
 			{
 				this->bWarningEffectFlg = false;
 
-
-
-
-			
-
 				/* 攻撃予告エフェクト追加 */
 				{
 					/* 攻撃予告エフェクトを生成 */
-					this->pEffectWarning = new EffectManualDelete();
+					this->pEffectWarning = std::make_shared<EffectManualDelete>();
 
 					/* エフェクトの読み込み */
-					this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
+					this->pEffectWarning->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 					this->vecEffectPos = MV1GetFramePosition(this->iModelHandle, 2);
 
@@ -219,7 +214,7 @@ void Enemy_Fixed_Turret::MoveEnemy()
 					/* エフェクトをリストに登録 */
 					{
 						/* "オブジェクト管理"データリストを取得 */
-						DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+						std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 						/* エフェクトをリストに登録 */
 						ObjectListHandle->SetEffect(this->pEffectWarning);
 					}
@@ -250,10 +245,10 @@ void Enemy_Fixed_Turret::MoveEnemy()
 			this->vecRotation = VGet(1.5, vecRotation.y, vecRotation.z);
 
 			this->bMissile = true;
-				if (this->bMissile == true && iMaintainCount == 30)
+			if (this->bMissile == true && iMaintainCount == 30)
 			{
 				// ミサイルを生成
-				this->pBulletRangeMissile = new BulletEnemyRangeMissile;
+				this->pBulletRangeMissile = std::make_shared<BulletEnemyRangeMissile>();
 
 				// 効果音再生
 				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
@@ -345,10 +340,10 @@ void Enemy_Fixed_Turret::MoveEnemy()
 {
 			this->vecRotation.y = fTargetAngle;
 			this->bTestFlg3 = false;
-	this->bWarningEffectFlg = true;
+			this->bWarningEffectFlg = true;
 			this->bShotFlg = false;
 
-				this -> iFiringCount = ENEMY_MISSILE_INTERVAL;
+			this -> iFiringCount = ENEMY_MISSILE_INTERVAL;
 		}
 }
 }
@@ -362,7 +357,7 @@ void Enemy_Fixed_Turret::Update()
 	auto& BulletList = ObjectList->GetBulletList();
 
 	/* プレイヤー攻撃と接触するか確認 */
-	for (auto* bullet : BulletList)
+	for (auto& bullet : BulletList)
 	{
 		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
 		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
@@ -394,10 +389,10 @@ void Enemy_Fixed_Turret::Update()
 			/* Hitエフェクト追加 */
 			{
 				/* 時間経過で削除されるエフェクトを追加 */
-				EffectManualDelete* AddEffect = new EffectManualDelete();
+				std::shared_ptr<EffectManualDelete> AddEffect = std::make_shared<EffectManualDelete>();
 
 				/* エフェクト読み込み */
-				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+				AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
 
 				/* エフェクトの座標設定 */
 				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
@@ -411,7 +406,7 @@ void Enemy_Fixed_Turret::Update()
 				/* リストに登録 */
 				{
 					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}

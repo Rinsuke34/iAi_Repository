@@ -20,7 +20,7 @@ public:
 
 private:
 	/* 追従対象のプレイヤークラス */
-	CharacterBase* pCharacterPlayer;
+	std::shared_ptr<CharacterBase> pCharacterPlayer;
 
 	/* 変数 */
 	int iFrameHandle;	// フレームハンドル

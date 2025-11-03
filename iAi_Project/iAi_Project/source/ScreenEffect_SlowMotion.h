@@ -22,7 +22,7 @@ class ScreenEffect_SlowMotion : public ScreenEffect_Base
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;	// ステージ状態管理
 };
 
 #endif

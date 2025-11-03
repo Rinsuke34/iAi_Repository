@@ -29,13 +29,13 @@ public:
 private:
 
 	/* エフェクト・使用するオブジェクトリスト */
-	EffectManualDelete* pEffectWarning;					//警告エフェクト
-	BulletEnemyRangeNormal* pBulletRangeNormal;			// ノーマル弾
-	BulletEnemyRangeMissile* pBulletRangeMissile;		// ミサイル弾
-	EffectManualDelete* pEffectHit;						//ヒットエフェクト
-	DataList_Object* ObjectList;						// オブジェクト管理
-	CharacterBase* pPlayer;								// プレイヤー
-	VECTOR vecEffectPos;								// エフェクトの座標
+	std::shared_ptr<EffectManualDelete> pEffectWarning;					//警告エフェクト
+	std::shared_ptr<BulletEnemyRangeNormal> pBulletRangeNormal;			// ノーマル弾
+	std::shared_ptr<BulletEnemyRangeMissile> pBulletRangeMissile;		// ミサイル弾
+	std::shared_ptr<EffectManualDelete> pEffectHit;						//ヒットエフェクト
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<CharacterBase> pPlayer;								// プレイヤー
+	VECTOR vecEffectPos;												// エフェクトの座標
 
 	//関数
 	void	MoveEnemy();								// 敵を移動させるメソッドを追加

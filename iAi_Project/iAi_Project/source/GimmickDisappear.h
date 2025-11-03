@@ -26,15 +26,15 @@ public:
 	virtual void	Update()			override;				// 更新
 	virtual void	Reset()				override;				// リセット処理
 
-	void	SetSpawnPoint(GimmickDisappearSpawnPoint* pGimmickDisappearSpawnPoint) { this->pGimmickDisappearSpawnPoint = pGimmickDisappearSpawnPoint; }	// 紐づいたスポナーの設定
+	void	SetSpawnPoint(std::shared_ptr<GimmickDisappearSpawnPoint> pGimmickDisappearSpawnPoint) { this->pGimmickDisappearSpawnPoint = pGimmickDisappearSpawnPoint; }	// 紐づいたスポナーの設定
 
 private:
 
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;								// オブジェクト管理
-	CharacterBase* pPlayer;										// プレイヤー
+	std::shared_ptr<DataList_Object> ObjectList;								// オブジェクト管理
+	std::shared_ptr<CharacterBase> pPlayer;										// プレイヤー
 	/* スポナーのポインタ */
-	GimmickDisappearSpawnPoint* pGimmickDisappearSpawnPoint;	// 消失ギミックスポナー
+	std::shared_ptr<GimmickDisappearSpawnPoint> pGimmickDisappearSpawnPoint;	// 消失ギミックスポナー
 
 	/* 関数 */
 	void ProcessGimmick();										// ギミックの処理メソッドを追加

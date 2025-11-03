@@ -29,7 +29,7 @@ private:
 
 
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
 
 	//関数
 	void	MoveEnemy();								// 敵を移動させるメソッドを追加

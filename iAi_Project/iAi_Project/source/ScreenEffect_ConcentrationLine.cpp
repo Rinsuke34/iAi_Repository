@@ -9,7 +9,7 @@ ScreenEffect_ConcentrationLine::ScreenEffect_ConcentrationLine() : ScreenEffect_
 	/* ‰æ‘œæ“¾ */
 	{
 		/* "‰æ‘œŠÇ—"‚ğæ“¾ */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* W’†ü‰æ‘œ(3í—Ş)‚ğæ“¾ */
 		this->apiGrHandle_ConcentrationLine[0] = ImageList->piGetImage("ScreenEffect/ConcentrationLine_1");

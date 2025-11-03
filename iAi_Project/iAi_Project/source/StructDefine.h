@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 /* 前方参照 */
 // ※AppFrameで定義されていないクラスを使用する場合、循環参照対策に実施する。
 class Enemy_Basic;
@@ -19,7 +21,7 @@ struct st2DPosition
 // 指定箇所とエネミーの距離判定用の構造体
 struct NearEnemy
 {
-	Enemy_Basic* pEnemy;		// エネミーのポインタ
+	std::shared_ptr<Enemy_Basic> pEnemy;		// エネミーのポインタ
 	float fDistance;		// 画面中心からの距離(軽量化のため座標の差の二乗)
 };
 

@@ -30,11 +30,11 @@ class PickUpItem_Kunai : public PickUpItemBase
 
 	private:
 		/* データリスト */
-		DataList_Object*		ObjectList;				// オブジェクト管理
-		DataList_PlayerStatus*	PlayerStatusList;		// プレイヤー状態管理
+		std::shared_ptr<DataList_Object>		ObjectList;				// オブジェクト管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;		// プレイヤー状態管理
 
 		/* 変数 */
-		CharacterPlayer*	pPlayer;					// プレイヤー
+		std::shared_ptr<CharacterPlayer>	pPlayer;					// プレイヤー
 		int					iAddEffectDelay;			// エフェクト追加待機時間
 };
 

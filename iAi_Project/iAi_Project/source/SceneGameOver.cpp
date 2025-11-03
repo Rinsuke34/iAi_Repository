@@ -10,13 +10,13 @@ SceneGameOver::SceneGameOver() : SceneBase("GameOver", 200, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList				= dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList	= std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 画像取得 */
 		this->piGrHandle_GameOver				= ImageList->piGetImage_Movie("GameOver/UI_GameOver");
@@ -105,7 +105,7 @@ void SceneGameOver::Process()
 						gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 						/* シーン"タイトル"を追加 */
-						gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
+						gpSceneServer->AddSceneReservation(std::make_shared<SceneAddTitleSetup>());
 					}
 					else
 					{

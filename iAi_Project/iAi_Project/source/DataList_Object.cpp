@@ -26,15 +26,15 @@ DataList_Object::~DataList_Object()
 {
 	/* メモリ解放 */
 	{
-		delete this->pCharacterPlayer;																		// プレイヤー
-		delete this->pSkySqhere;																			// スカイスフィア
-		for (auto& pEnemy : this->pEnemyList)							{ delete pEnemy; }					// エネミー
-		for (auto& pBullet : this->pBulletList)							{ delete pBullet; }					// 弾		
-		for (auto& pEffect : this->pEffectList)							{ delete pEffect; }					// エフェクト
-		for (auto& pPlatform : this->pPlatformList)						{ delete pPlatform; }				// プラットフォーム
-		for (auto& pEffectItem : this->pEffectItemList)					{ delete pEffectItem; }				// アイテム(実体なし)
-		for (auto& pPickUpItem : this->pPickUpItemList)					{ delete pPickUpItem; }				// アイテム(実体あり)
-		for (auto& pEnemySpawnPointList : this->pEnemySpawnPointList)	{ delete pEnemySpawnPointList; }	// エネミースポナー
+		this->pCharacterPlayer.reset();																		// プレイヤー
+		this->pSkySqhere.reset();																			// スカイスフィア
+		for (auto& pEnemy : this->pEnemyList)							{ pEnemy.reset(); }					// エネミー
+		for (auto& pBullet : this->pBulletList)							{ pBullet.reset(); }				// 弾		
+		for (auto& pEffect : this->pEffectList)							{ pEffect.reset(); }				// エフェクト
+		for (auto& pPlatform : this->pPlatformList)						{ pPlatform.reset(); }				// プラットフォーム
+		for (auto& pEffectItem : this->pEffectItemList)					{ pEffectItem.reset(); }			// アイテム(実体なし)
+		for (auto& pPickUpItem : this->pPickUpItemList)					{ pPickUpItem.reset(); }			// アイテム(実体あり)
+		for (auto& pEnemySpawnPointList : this->pEnemySpawnPointList)	{ pEnemySpawnPointList.reset(); }	// エネミースポナー
 	}
 }
 
@@ -545,13 +545,13 @@ void DataList_Object::DeleteAll()
 void DataList_Object::DeleteEnemy()
 {
 	/* 削除フラグが有効なエネミーを削除 */
-	pEnemyList.erase(std::remove_if(pEnemyList.begin(), pEnemyList.end(), [](EnemyBase* pEnemy)
+	pEnemyList.erase(std::remove_if(pEnemyList.begin(), pEnemyList.end(), [](std::shared_ptr<EnemyBase> pEnemy)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pEnemy->bGetDeleteFlg() == true)
 			{
 				// 有効である場合
-				delete pEnemy;
+				pEnemy.reset();
 				return true;
 			}
 			else
@@ -566,14 +566,14 @@ void DataList_Object::DeleteEnemy()
 void DataList_Object::DeleteEffect()
 {
 	/* 削除フラグが有効なエフェクトを削除 */
-	pEffectList.erase(std::remove_if(pEffectList.begin(), pEffectList.end(), [](EffectBase* pEffect)
+	pEffectList.erase(std::remove_if(pEffectList.begin(), pEffectList.end(), [](std::shared_ptr<EffectBase> pEffect)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pEffect->bGetDeleteFlg() == true)
 			{
 				// 有効である場合
 				/* メモリ解放 */
-				delete pEffect;
+				pEffect.reset();
 				return true;
 			}
 			else
@@ -588,14 +588,14 @@ void DataList_Object::DeleteEffect()
 void DataList_Object::DeleteBullet()
 {
 	/* 削除フラグが有効な弾を削除 */
-	pBulletList.erase(std::remove_if(pBulletList.begin(), pBulletList.end(), [](BulletBase* pBullet)
+	pBulletList.erase(std::remove_if(pBulletList.begin(), pBulletList.end(), [](std::shared_ptr<BulletBase> pBullet)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pBullet->bGetDeleteFlg() == true)
 			{
 				// 有効である場合
 				/* メモリ解放 */
-				delete pBullet;
+				pBullet.reset();
 				return true;
 			}
 			else
@@ -610,14 +610,14 @@ void DataList_Object::DeleteBullet()
 void DataList_Object::DeletePlatform()
 {
 	/* 削除フラグが有効なプラットフォームを削除 */
-	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](PlatformBase* pPlatform)
+	pPlatformList.erase(std::remove_if(pPlatformList.begin(), pPlatformList.end(), [](std::shared_ptr<PlatformBase> pPlatform)
 	{
 		/* 削除フラグが有効であるか確認　*/
 		if (pPlatform->bGetDeleteFlg() == true)
 		{
 			// 有効である場合
 			/* メモリ解放 */
-			delete pPlatform;
+			pPlatform.reset();
 			return true;
 		}
 		else
@@ -632,14 +632,14 @@ void DataList_Object::DeletePlatform()
 void DataList_Object::DeleteEffectItem()
 {
 	/* 削除フラグが有効なアイテム(実体なし)を削除 */
-	pEffectItemList.erase(std::remove_if(pEffectItemList.begin(), pEffectItemList.end(), [](EffectItemBase* pEffectItem)
+	pEffectItemList.erase(std::remove_if(pEffectItemList.begin(), pEffectItemList.end(), [](std::shared_ptr<EffectItemBase> pEffectItem)
 	{
 		/* 削除フラグが有効であるか確認　*/
 		if (pEffectItem->bGetDeleteFlg() == true)
 		{
 			// 有効である場合
 			/* メモリ解放 */
-			delete pEffectItem;
+			pEffectItem.reset();
 			return true;
 		}
 		else
@@ -654,14 +654,14 @@ void DataList_Object::DeleteEffectItem()
 void DataList_Object::DeletePickUpItem()
 {
 	/* 削除フラグが有効なアイテム(実体あり)を削除 */
-	pPickUpItemList.erase(std::remove_if(pPickUpItemList.begin(), pPickUpItemList.end(), [](PickUpItemBase* pPickUpItem)
+	pPickUpItemList.erase(std::remove_if(pPickUpItemList.begin(), pPickUpItemList.end(), [](std::shared_ptr<PickUpItemBase> pPickUpItem)
 	{
 		/* 削除フラグが有効であるか確認　*/
 		if (pPickUpItem->bGetDeleteFlg() == true)
 		{
 			// 有効である場合
 			/* メモリ解放 */
-			delete pPickUpItem;
+			pPickUpItem.reset();
 			return true;
 		}
 		else

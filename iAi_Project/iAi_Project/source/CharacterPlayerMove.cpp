@@ -371,7 +371,7 @@ void CharacterPlayer::Player_Jump()
 		if (this->PlayerStatusList->bGetPlayerLandingFlg() == false)
 		{						
 			/* 空中ジャンプエフェクトを生成 */
-			EffectSelfDelete* pAirJumpEffect = new EffectSelfDelete();
+			std::shared_ptr<EffectSelfDelete> pAirJumpEffect = std::make_shared<EffectSelfDelete>();
 
 			/* 空中ジャンプエフェクトの読み込み */
 			pAirJumpEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_airjump/FX_airjump"));
@@ -676,7 +676,7 @@ void CharacterPlayer::Player_Dodg()
 	this->PlayerStatusList->SetPlayerNowDodgeFlame(0);
 			
 	/* 画面エフェクト(集中線)作成 */
-	ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();			
+	std::shared_ptr<ScreenEffect_Base> pScreenEffect = std::make_shared<ScreenEffect_ConcentrationLine>();			
 	this->StageStatusList->SetScreenEffect(pScreenEffect);
 	pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
 				
@@ -744,7 +744,7 @@ void CharacterPlayer::Player_Dodg()
 	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
 						
 	/* 回避エフェクトを生成 */
-	this->pDodgeEffect = new EffectManualDelete_PlayerFollow(true);
+	this->pDodgeEffect = std::make_shared<EffectManualDelete_PlayerFollow>(true);
 	this->pDodgeEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_dash/FX_dash"));
 	this->pDodgeEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
 	this->pDodgeEffect->Initialization();
@@ -812,7 +812,7 @@ void CharacterPlayer::Movement_Vertical()
 	bool bIsMeleeStrongToLockOnEnemy = (bIsMeleeStrong && bIsLockOnEnemy);
 
 	/* 足場と接触するか確認 */
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		/* 足場と線分の接触判定 */
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
@@ -899,7 +899,7 @@ void CharacterPlayer::Movement_Vertical()
 			gpDataList_Sound->SE_PlaySound(SE_PLAYER_LANDING);
 		
 			/* 着地のエフェクトを生成 */
-			EffectSelfDelete* pAddEffect = new EffectSelfDelete;
+			std::shared_ptr<EffectSelfDelete> pAddEffect = std::make_shared<EffectSelfDelete>();
 			pAddEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_land/FX_land"));
 			pAddEffect->SetDeleteCount(30);
 			pAddEffect->SetPosition(this->vecPosition);
@@ -1046,7 +1046,7 @@ void CharacterPlayer::Movement_Horizontal()
 	VECTOR vecNormalSum = VGet(0.f, 0.f, 0.f);
 	
 	/* 足場と接触するか確認 */
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		/* 足場との接触判定 */
 		for (int i = 0; i < PLAYER_MOVE_COLLISION_MAX; i++)

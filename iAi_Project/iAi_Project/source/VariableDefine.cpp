@@ -5,8 +5,8 @@
 /* 広域変数の初期化 */
 
 /* 実行中クラス */
-DataList_Input*	gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
-DataList_Sound*	gpDataList_Sound	= nullptr;	// サウンド管理クラス
+std::shared_ptr<DataList_Input>	gpDataList_Input	= nullptr;	// プレイヤー入力管理クラス
+std::shared_ptr<DataList_Sound>	gpDataList_Sound	= nullptr;	// サウンド管理クラス
 
 /* デバッグ用描写管理フラグ */
 bool gbDrawShadowMapFlg				= false;		// シャドウマップの描写

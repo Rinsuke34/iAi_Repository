@@ -15,7 +15,7 @@ void EnemySpawnPoint_Explosion::Initialization()
 	/* エネミー(自爆)生成処理 */
 	{
 		/* エネミー(自爆)を作成 */
-		Enemy_Explosion* AddEnemy = new Enemy_Explosion();
+		std::shared_ptr<Enemy_Explosion> AddEnemy = std::make_shared<Enemy_Explosion>();
 
 		/* 生成したエネミー(自爆)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

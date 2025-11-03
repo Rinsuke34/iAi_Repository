@@ -7,7 +7,7 @@
 ScreenEffect_SlowMotion::ScreenEffect_SlowMotion() : ScreenEffect_Base()
 {
 	/* 使用するデータリスト */
-	this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+	this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 }
 
 // 更新

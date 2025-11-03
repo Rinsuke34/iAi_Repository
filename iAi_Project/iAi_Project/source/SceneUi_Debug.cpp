@@ -114,7 +114,7 @@ void SceneUi_Debug::Process()
 					case DEBUG_OPERATION_STAGEJUMP:
 						{
 							/* シーン"ステージジャンプ"を作成 */
-							SceneBase* pAddScene = new SceneUi_Debug_StageJump();
+							std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneUi_Debug_StageJump>();
 
 							/* シーン"ステージジャンプ"をシーンサーバーに追加 */
 							gpSceneServer->AddSceneReservation(pAddScene);
@@ -125,7 +125,7 @@ void SceneUi_Debug::Process()
 					case DEBUG_OPERATION_STATUSSETUP:
 						{
 							/* シーン"ステータス調整"を作成 */
-							SceneBase* pAddScene = new SceneUi_Debug_StatusSetup();
+							std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneUi_Debug_StatusSetup>();
 						
 							/* シーン"ステータス調整"をシーンサーバーに追加 */
 							gpSceneServer->AddSceneReservation(pAddScene);

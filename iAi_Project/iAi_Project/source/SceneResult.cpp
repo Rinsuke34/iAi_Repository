@@ -12,19 +12,19 @@ SceneResult::SceneResult() : SceneBase("Edit", 80, true)
 	/* データリスト取得 */
 	{
 		/* "ゲーム状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 
 		/* "プレイヤー状態管理"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* 画像読み込み */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* リザルト画面背景 */
 		this->piGrHandle_ResultBackGround	= ImageList->piGetImage("Result/UI_Result");
@@ -379,7 +379,7 @@ void SceneResult::Process_Main()
 			{
 				// テキスト番号が有効な場合
 				/* シーン"会話パート"を追加 */
-				SceneConversation* pAddScene = new SceneConversation();
+				std::shared_ptr<SceneConversation> pAddScene = std::make_shared<SceneConversation>();
 				gpSceneServer->AddSceneReservation(pAddScene);
 
 				/* シーン"会話パート"にテキスト番号を設定 */

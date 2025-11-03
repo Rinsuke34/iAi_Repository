@@ -27,8 +27,8 @@ class ScenePause : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus*	StageStatusList;	// ステージ状態管理
-		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
+		std::shared_ptr<DataList_StageStatus>	StageStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_GameResource>	GameResourceList;	// ゲーム内リソース管理
 
 		/* 変数 */
 		int	iSelectItem;			// 選択中の項目の番号

@@ -16,7 +16,7 @@ class PickUpItem_ForcedJump;
 /* 強制ジャンプギミックスポナークラスの宣言 */
 
 // 強制ジャンプギミックスポナークラス
-class Gimmick_ForcedJump_Spawn : public PlatformBase
+class Gimmick_ForcedJump_Spawn : public PlatformBase, public std::enable_shared_from_this<Gimmick_ForcedJump_Spawn>
 {
 	public:
 		Gimmick_ForcedJump_Spawn();				// コンストラクタ
@@ -33,7 +33,7 @@ class Gimmick_ForcedJump_Spawn : public PlatformBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Object* ObjectList;	// オブジェクト管理
+		std::shared_ptr<DataList_Object> ObjectList;	// オブジェクト管理
 
 		/* 変数 */
 		bool	bSpawnObjectFlg;		// オブジェクトのスポーンフラグ(有効なら生成)

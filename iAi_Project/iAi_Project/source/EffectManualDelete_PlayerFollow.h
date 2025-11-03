@@ -21,7 +21,7 @@ class EffectManualDelete_PlayerFollow : public EffectManualDelete
 
 	private:
 		/* 追従対象のプレイヤークラス */
-		CharacterBase* pCharacterPlayer;
+		std::shared_ptr<CharacterBase> pCharacterPlayer;
 
 		/* 変数 */
 		bool bCenterFollowFlg;		// 足元ではなく中央に追従するかのフラグ

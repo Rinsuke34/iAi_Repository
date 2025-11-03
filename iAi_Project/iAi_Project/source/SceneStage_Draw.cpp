@@ -244,13 +244,13 @@ void SceneStage::SetupScreenEffects()
 	}
 
 	/* 削除フラグが有効な画面エフェクトを削除 */
-	this->StageStatusList->GetScreenEffectList().erase(std::remove_if(this->StageStatusList->GetScreenEffectList().begin(), this->StageStatusList->GetScreenEffectList().end(), [](ScreenEffect_Base* pScreenEffect)
+	this->StageStatusList->GetScreenEffectList().erase(std::remove_if(this->StageStatusList->GetScreenEffectList().begin(), this->StageStatusList->GetScreenEffectList().end(), [](std::shared_ptr<ScreenEffect_Base> pScreenEffect)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pScreenEffect->bGetDeleteFlg() == true)
 			{
 				// 有効である場合
-				delete pScreenEffect;
+				pScreenEffect.reset();
 				return true;
 			}
 			else

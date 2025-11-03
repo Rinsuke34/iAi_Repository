@@ -102,44 +102,44 @@ class DataList_Object : public DataListBase
 
 		/* データ取得 */
 		// 単独
-		CharacterBase* GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
-		SkySqhereBase* GetSkySqhere()		{ return this->pSkySqhere; }		// スカイスフィア取得
+		std::shared_ptr<CharacterBase> GetCharacterPlayer()	{ return this->pCharacterPlayer; }	// プレイヤー取得
+		std::shared_ptr<SkySqhereBase> GetSkySqhere()		{ return this->pSkySqhere; }		// スカイスフィア取得
 
 		// リスト
-		std::vector<Enemy_Basic*>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
-		std::vector<EffectBase*>&			GetEffectList()				{ return this->pEffectList; }			// エフェクト取得
-		std::vector<BulletBase*>&			GetBulletList()				{ return this->pBulletList; }			// 弾取得
-		std::vector<PlatformBase*>&			GetPlatformList()			{ return this->pPlatformList; }			// プラットフォーム
-		std::vector<EffectItemBase*>&		GetEffectItemList()			{ return this->pEffectItemList; }		// アイテム(実体なし)
-		std::vector<PickUpItemBase*>&		GetPickUpItemList()			{ return this->pPickUpItemList; }		// アイテム(実体あり)
-		std::vector<SpawnPoint_Base*>&		GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント
+		std::vector<std::shared_ptr<Enemy_Basic>>&			GetEnemyList()				{ return this->pEnemyList; }			// エネミー取得
+		std::vector<std::shared_ptr<EffectBase>>&			GetEffectList()				{ return this->pEffectList; }			// エフェクト取得
+		std::vector<std::shared_ptr<BulletBase>>&			GetBulletList()				{ return this->pBulletList; }			// 弾取得
+		std::vector<std::shared_ptr<PlatformBase>>&			GetPlatformList()			{ return this->pPlatformList; }			// プラットフォーム
+		std::vector<std::shared_ptr<EffectItemBase>>&		GetEffectItemList()			{ return this->pEffectItemList; }		// アイテム(実体なし)
+		std::vector<std::shared_ptr<PickUpItemBase>>&		GetPickUpItemList()			{ return this->pPickUpItemList; }		// アイテム(実体あり)
+		std::vector<std::shared_ptr<SpawnPoint_Base>>&		GetEnemySpawnPointList()	{ return this->pEnemySpawnPointList; }	// エネミースポーンポイント
 		
 		/* データ設定 */
 		// 単独
-		void	SetCharacterPlayer(CharacterBase* pCharacter)	{ this->pCharacterPlayer	= pCharacter; }		// プレイヤー設定
-		void	SetSkySqhere(SkySqhereBase* pSkySqhere)			{ this->pSkySqhere			= pSkySqhere; }		// スカイスフィア設定
+		void	SetCharacterPlayer(std::shared_ptr<CharacterBase> pCharacter)	{ this->pCharacterPlayer	= pCharacter; }		// プレイヤー設定
+		void	SetSkySqhere(std::shared_ptr<SkySqhereBase> pSkySqhere)			{ this->pSkySqhere			= pSkySqhere; }		// スカイスフィア設定
 
 		// リスト
-		void	SetEnemy(Enemy_Basic* pEnemy)								{ pEnemyList.emplace_back(pEnemy); };						// エネミー追加
-		void	SetEffect(EffectBase* pEffect)								{ pEffectList.emplace_back(pEffect); };						// エフェクト追加
-		void	SetBullet(BulletBase* pBullet)								{ pBulletList.emplace_back(pBullet); };						// 弾追加
-		void	SetPlatform(PlatformBase* pPlatform)						{ pPlatformList.emplace_back(pPlatform); };					// プラットフォーム追加
-		void	SetEffectItem(EffectItemBase* pEffectItem)					{ pEffectItemList.emplace_back(pEffectItem); };				// アイテム(実体なし)追加
-		void	SetPickUpItem(PickUpItemBase* pPickUpItem)					{ pPickUpItemList.emplace_back(pPickUpItem); };				// アイテム(実体なし)追加
-		void	SetSpawnPoint(SpawnPoint_Base* pSpawnPoint)					{ pEnemySpawnPointList.emplace_back(pSpawnPoint); };		// スポーンポイント追加
+		void	SetEnemy(std::shared_ptr<Enemy_Basic> pEnemy)								{ pEnemyList.emplace_back(pEnemy); };						// エネミー追加
+		void	SetEffect(std::shared_ptr<EffectBase> pEffect)								{ pEffectList.emplace_back(pEffect); };						// エフェクト追加
+		void	SetBullet(std::shared_ptr<BulletBase> pBullet)								{ pBulletList.emplace_back(pBullet); };						// 弾追加
+		void	SetPlatform(std::shared_ptr<PlatformBase> pPlatform)						{ pPlatformList.emplace_back(pPlatform); };					// プラットフォーム追加
+		void	SetEffectItem(std::shared_ptr<EffectItemBase> pEffectItem)					{ pEffectItemList.emplace_back(pEffectItem); };				// アイテム(実体なし)追加
+		void	SetPickUpItem(std::shared_ptr<PickUpItemBase> pPickUpItem)					{ pPickUpItemList.emplace_back(pPickUpItem); };				// アイテム(実体なし)追加
+		void	SetSpawnPoint(std::shared_ptr<SpawnPoint_Base> pSpawnPoint)					{ pEnemySpawnPointList.emplace_back(pSpawnPoint); };		// スポーンポイント追加
 
 	private:
 		/* 管理するデータ */
 		// 単独
-		CharacterBase*					pCharacterPlayer;	// プレイヤー
-		SkySqhereBase*					pSkySqhere;			// スカイスフィア
+		std::shared_ptr<CharacterBase>					pCharacterPlayer;	// プレイヤー
+		std::shared_ptr<SkySqhereBase>					pSkySqhere;			// スカイスフィア
 
 		// リスト
-		std::vector<Enemy_Basic*>			pEnemyList;				// エネミー
-		std::vector<EffectBase*>			pEffectList;			// エフェクト
-		std::vector<BulletBase*>			pBulletList;			// 弾
-		std::vector<PlatformBase*>			pPlatformList;			// プラットフォーム
-		std::vector<EffectItemBase*>		pEffectItemList;		// アイテム(実体なし)
-		std::vector<PickUpItemBase*>		pPickUpItemList;		// アイテム(実体あり)
-		std::vector<SpawnPoint_Base*>		pEnemySpawnPointList;	// エネミースポーンポイント
+		std::vector<std::shared_ptr<Enemy_Basic>>			pEnemyList;				// エネミー
+		std::vector<std::shared_ptr<EffectBase>>			pEffectList;			// エフェクト
+		std::vector<std::shared_ptr<BulletBase>>			pBulletList;			// 弾
+		std::vector<std::shared_ptr<PlatformBase>>			pPlatformList;			// プラットフォーム
+		std::vector<std::shared_ptr<EffectItemBase>>		pEffectItemList;		// アイテム(実体なし)
+		std::vector<std::shared_ptr<PickUpItemBase>>		pPickUpItemList;		// アイテム(実体あり)
+		std::vector<std::shared_ptr<SpawnPoint_Base>>		pEnemySpawnPointList;	// エネミースポーンポイント
 };

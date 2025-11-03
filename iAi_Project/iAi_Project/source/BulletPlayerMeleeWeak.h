@@ -29,15 +29,15 @@ class BulletPlayerMeleeWeak : public BulletBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_PlayerStatus*	PlayerStatusList;			// プレイヤー状態				/* 2025.02.20 菊池雅道 変数追加 */
-		DataList_Object*		ObjectList;					// オブジェクト管理				/* 2025.03.13 駒沢風助 弾パリィ作成 */ 
-		DataList_Effect*		EffectList;					// エフェクト管理				/* 2025.03.13 駒沢風助 弾パリィ作成 */
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;			// プレイヤー状態				/* 2025.02.20 菊池雅道 変数追加 */
+		std::shared_ptr<DataList_Object>		ObjectList;					// オブジェクト管理				/* 2025.03.13 駒沢風助 弾パリィ作成 */ 
+		std::shared_ptr<DataList_Effect>		EffectList;					// エフェクト管理				/* 2025.03.13 駒沢風助 弾パリィ作成 */
 
 		/* オブジェクト(エフェクト)のハンドル */
-		EffectManualDelete* pMeleeWeakEffect;				// 近接攻撃(弱)エフェクト
+		std::shared_ptr<EffectManualDelete> pMeleeWeakEffect;				// 近接攻撃(弱)エフェクト
 
 		/* 追従対象のプレイヤークラス */
-		CharacterBase* pCharacterPlayer;													/* 2025.02.20 菊池雅道 変数追加 */
+		std::shared_ptr<CharacterBase> pCharacterPlayer;													/* 2025.02.20 菊池雅道 変数追加 */
 
 		int iDeleteCount;	// 削除カウント
 

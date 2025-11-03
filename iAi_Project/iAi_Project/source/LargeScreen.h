@@ -31,8 +31,8 @@ public:
 private:
 
 	/* 使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
-	CharacterBase* pPlayer;								// プレイヤー
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<CharacterBase> pPlayer;								// プレイヤー
 
 	/* 関数 */
 	void	Process();									// 処理

@@ -44,10 +44,10 @@ class BulletPlayerKunai : public BulletBase
 		bool			bKunaiAttackFlg;				// クナイの攻撃フラグ
 
 		/* 使用するデータリスト */
-		DataList_Input* InputList;						// 入力管理
-		DataList_Object* ObjectList;					// オブジェクト管理
-		DataList_PlayerStatus* PlayerStatusList;		// プレイヤー状態
-		DataList_StageStatus* StageStatusList;			// ステージ状態管理
-		DataList_Effect* EffectList;					// エフェクトリソース管理
+		std::shared_ptr<DataList_Input> InputList;						// 入力管理
+		std::shared_ptr<DataList_Object> ObjectList;					// オブジェクト管理
+		std::shared_ptr<DataList_PlayerStatus> PlayerStatusList;		// プレイヤー状態
+		std::shared_ptr<DataList_StageStatus> StageStatusList;			// ステージ状態管理
+		std::shared_ptr<DataList_Effect> EffectList;					// エフェクトリソース管理
 };
 

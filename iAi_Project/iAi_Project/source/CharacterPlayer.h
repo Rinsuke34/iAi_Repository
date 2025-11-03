@@ -73,11 +73,11 @@ class CharacterPlayer : public CharacterBase
 	private:
 		/* 使用するデータリスト */
 		// 毎回データリストサーバーから取得するのは非効率なため、ここで保存しておく
-		DataList_Input*			InputList;			// 入力管理
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
-		DataList_Object*		ObjectList;			// オブジェクト管理
-		DataList_Effect*		EffectList;			// エフェクトリソース管理
-		DataList_StageStatus*	StageStatusList;	// ステージ状態リスト
+		std::shared_ptr<DataList_Input>			InputList;			// 入力管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// プレイヤー状態
+		std::shared_ptr<DataList_Object>		ObjectList;			// オブジェクト管理
+		std::shared_ptr<DataList_Effect>		EffectList;			// エフェクトリソース管理
+		std::shared_ptr<DataList_StageStatus>	StageStatusList;	// ステージ状態リスト
 
 		/* 関数 */
 		void	CollisionUpdate();						// コリジョン更新
@@ -127,14 +127,14 @@ class CharacterPlayer : public CharacterBase
 
 		/* オブジェクトのハンドル */
 		// ※プレイヤー側から削除タイミングを指定するためにハンドルを所持
-		BulletPlayerMeleeWeak*		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
-		BulletPlayerKunaiWarp* 		pBulletKunaiWarp;			// クナイ(ワープ)の弾			/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
-		BulletPlayerKunaiExplosion*	pBulletKunaiExplosion;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+		std::shared_ptr<BulletPlayerMeleeWeak>		pBulletMeleeWeak;	// 近接攻撃(弱)の弾
+		std::shared_ptr<BulletPlayerKunaiWarp> 		pBulletKunaiWarp;			// クナイ(ワープ)の弾			/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
+		std::shared_ptr<BulletPlayerKunaiExplosion>	pBulletKunaiExplosion;			// クナイ(攻撃)の弾				/* 2025.03.13 菊池雅道 クナイ関連の変数追加 */
 
 		/* エフェクトのハンドル */
-		EffectManualDelete_PlayerFollow_Frame*	pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-		EffectManualDelete_PlayerFollow_Frame*	pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
-		EffectManualDelete_PlayerFollow*		pDodgeEffect;			//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		std::shared_ptr<EffectManualDelete_PlayerFollow_Frame>	pChargeEffect;			//溜めエフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		std::shared_ptr<EffectManualDelete_PlayerFollow_Frame>	pChargeHoldEffect;		//溜め完了後エフェクト	/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
+		std::shared_ptr<EffectManualDelete_PlayerFollow>		pDodgeEffect;			//回避エフェクト		/* 2025.01.27 菊池雅道 エフェクト関連の変数追加 */	/* 2025.02.06 菊池雅道 エフェクト関連修正 */
 
 		/* フレーム番号 */
 		int		iKatanaFrameNo;				// 刀のフレーム番号								/* 2025.02.19 菊池雅道 フレーム関連の変数追加 */

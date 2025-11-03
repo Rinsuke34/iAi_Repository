@@ -28,8 +28,8 @@ class Enemy_Escape : public Enemy_Basic
 	private:
 
 		/* エフェクト・使用するオブジェクトリスト */
-		EffectSelfDelete* pEffect;							// エフェクト
-		DataList_Object* ObjectList;						// オブジェクト管理
+		std::shared_ptr<EffectSelfDelete> pEffect;							// エフェクト
+		std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
 
 		/* 関数 */
 		void MoveEnemy();									// 敵を移動させるメソッドを追加

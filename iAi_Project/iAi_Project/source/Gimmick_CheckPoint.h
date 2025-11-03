@@ -34,8 +34,8 @@ class Gimmick_CheckPoint : public PlatformBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Object*		ObjectList;			// オブジェクト管理
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
+		std::shared_ptr<DataList_Object>		ObjectList;			// オブジェクト管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_NormalRight;			// 通常時(非アクティブ時)の発光色

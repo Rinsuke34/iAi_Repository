@@ -15,7 +15,7 @@ void SpawnPoint_Blood_PickupItem::Initialization()
 	/* ブラッド(ピックアップアイテム)生成処理 */
 	{
 		/* ブラッド(ピックアップアイテム)を作成 */
-		PickUpItemBase* AddPickUpItem = new PickUpItem_Blood();
+		std::shared_ptr<PickUpItemBase> AddPickUpItem = std::make_shared<PickUpItem_Blood>();
 
 		/* 生成したブラッド(ピックアップアイテム)をリストに追加 */
 		this->ObjectList->SetPickUpItem(AddPickUpItem);

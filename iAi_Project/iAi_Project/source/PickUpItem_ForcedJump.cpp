@@ -9,23 +9,23 @@ PickUpItem_ForcedJump::PickUpItem_ForcedJump() : PickUpItemBase()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* オブジェクト取得 */
 	{
 		/* プレイヤーを取得 */
-		this->pPlayer = dynamic_cast<CharacterPlayer*>(ObjectList->GetCharacterPlayer());
+		this->pPlayer = std::dynamic_pointer_cast<CharacterPlayer>(ObjectList->GetCharacterPlayer());
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Gimmick/ForcedJump/ForcedJump");
@@ -55,10 +55,10 @@ void PickUpItem_ForcedJump::Initialization()
 	}
 
 	//光エフェクトを生成
-	this->pEffectLight = new EffectManualDelete();
+	this->pEffectLight = std::make_shared<EffectManualDelete>();
 
 	/* エフェクトの読み込み */
-	this->pEffectLight->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_sine/FX_g_mine_sine")));
+	this->pEffectLight->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_sine/FX_g_mine_sine")));
 
 	/* エフェクトの座標設定 */
 	this->pEffectLight->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + 118.0f, this->vecPosition.z));
@@ -75,7 +75,7 @@ void PickUpItem_ForcedJump::Initialization()
 	/* エフェクトをリストに登録 */
 	{
 		/* "オブジェクト管理"データリストを取得 */
-		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* エフェクトをリストに登録 */
 		ObjectListHandle->SetEffect(this->pEffectLight);
@@ -91,10 +91,10 @@ void PickUpItem_ForcedJump::Update()
 		/* エフェクト追加 */
 
 		/*爆発エフェクトを生成 */
-		this->pEffectExplosion = new EffectManualDelete();
+		this->pEffectExplosion = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffectExplosion->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_explosion/FX_g_mine_explosion")));
+		this->pEffectExplosion->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_g_mine_explosion/FX_g_mine_explosion")));
 
 		/* エフェクトの座標設定 */
 		this->pEffectExplosion->SetPosition(this->vecPosition);
@@ -111,7 +111,7 @@ void PickUpItem_ForcedJump::Update()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);

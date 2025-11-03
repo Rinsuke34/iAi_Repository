@@ -43,7 +43,7 @@ void BulletPlayerKunaiWarp::Initialization()
 	auto& PlatformList = ObjectList->GetPlatformList();
 
 	// 射線上にプラットフォームが存在するか確認する
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		/* プラットフォームと接触しているか確認 */
 		MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
@@ -177,7 +177,7 @@ void BulletPlayerKunaiWarp:: Warp()
 				stCollisionLine.vecLineEnd.y	-= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
 
 				/* 足場と接触するか確認 */
-				for (auto* platform : PlatformList)
+				for (auto& platform : PlatformList)
 				{
 					/* 足場と線分の接触判定を行う */
 					MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
@@ -243,7 +243,7 @@ void BulletPlayerKunaiWarp:: Warp()
 			gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
 			/* ワープエフェクトを生成 */
-			EffectSelfDelete_PlayerFollow* pWarpeEffect = new EffectSelfDelete_PlayerFollow(true);
+			std::shared_ptr<EffectSelfDelete_PlayerFollow> pWarpeEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
 
 			/* ワープエフェクトの読み込み */
 			pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
@@ -290,7 +290,7 @@ void BulletPlayerKunaiWarp:: Warp()
 		stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
 
 		/* 足場と接触するか確認 */
-		for (auto* platform : PlatformList)
+		for (auto& platform : PlatformList)
 		{
 			/* 足場と線分の接触判定を行う */
 			MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
@@ -299,11 +299,11 @@ void BulletPlayerKunaiWarp:: Warp()
 			if (stHitPolyDim.HitFlag == 1)
 			{
 				// 接触している場合
-		/* クナイの座標をターゲット座標に固定 */
-		this->vecPosition = this->vecKunaiTargetPosition;
+				/* クナイの座標をターゲット座標に固定 */
+				this->vecPosition = this->vecKunaiTargetPosition;
 
-		/* プレイヤーをクナイの座標に移動 */
-		this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
+				/* プレイヤーをクナイの座標に移動 */
+				this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
 
 			}
 			else
@@ -319,7 +319,7 @@ void BulletPlayerKunaiWarp:: Warp()
 				stSearchPlatform.fCapsuleRadius = PLAYER_WIDE;
 
 				/* 足場を探す */
-				for (auto* platform : PlatformList)
+				for (auto& platform : PlatformList)
 				{
 					/* 足場とコリジョンの接触判定を行う */
 					MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stSearchPlatform);
@@ -385,7 +385,7 @@ void BulletPlayerKunaiWarp:: Warp()
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
 
 		/* ワープエフェクトを生成 */
-		EffectSelfDelete_PlayerFollow* pWarpeEffect = new EffectSelfDelete_PlayerFollow(true);
+		std::shared_ptr<EffectSelfDelete_PlayerFollow> pWarpeEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
 
 		/* ワープエフェクトの読み込み */
 		pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));

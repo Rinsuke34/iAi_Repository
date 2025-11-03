@@ -31,20 +31,20 @@ class PickUpItem_ForcedJump : public PickUpItemBase
 		virtual void	Reset()				override;			// リセット処理
 
 		/* データ設定 */
-		void SetGimmick_ForcedJump_Spawn(Gimmick_ForcedJump_Spawn* pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定
+		void SetGimmick_ForcedJump_Spawn(std::shared_ptr<Gimmick_ForcedJump_Spawn> pGimmick_ForcedJump_Spawn) { this->pGimmick_ForcedJump_Spawn = pGimmick_ForcedJump_Spawn; };		// 強制ジャンプギミックスポナー(自身の生成元)を設定
 
 	private:
 		/* データリスト */
-		DataList_Object* ObjectList;							// オブジェクト管理
-		DataList_PlayerStatus* PlayerStatusList;				// プレイヤー状態
+		std::shared_ptr<DataList_Object> ObjectList;							// オブジェクト管理
+		std::shared_ptr<DataList_PlayerStatus> PlayerStatusList;				// プレイヤー状態
 
 		/* 変数 */
-		CharacterPlayer*			pPlayer;					// プレイヤー
-		Gimmick_ForcedJump_Spawn*	pGimmick_ForcedJump_Spawn;	// 強制ジャンプギミックスポナー(自身の生成元)
+		std::shared_ptr<CharacterPlayer>			pPlayer;					// プレイヤー
+		std::shared_ptr<Gimmick_ForcedJump_Spawn>	pGimmick_ForcedJump_Spawn;	// 強制ジャンプギミックスポナー(自身の生成元)
 
-	//エフェクト
-	EffectManualDelete* pEffectExplosion;						// 爆発エフェクト
-	EffectManualDelete* pEffectLight;							// 光エフェクト
+		//エフェクト
+		std::shared_ptr<EffectManualDelete> pEffectExplosion;						// 爆発エフェクト
+		std::shared_ptr<EffectManualDelete> pEffectLight;							// 光エフェクト
 
 };
 

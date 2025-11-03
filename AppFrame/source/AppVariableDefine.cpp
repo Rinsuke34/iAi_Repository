@@ -21,10 +21,10 @@ bool										gbUseMouseFlg			= false;	// ƒ}ƒEƒXg—pƒtƒ‰ƒO(—LŒø‚Å‚ ‚é‚È‚ç‚ÎƒJ[ƒ
 unsigned char								gucTriggerThreshold		= 0;		// ƒgƒŠƒK[“ü—Í‚Ìè‡’l
 
 /* Às’†ƒNƒ‰ƒX */
-Fps*			gpFps				= nullptr;	// fpsŒÅ’è—pƒNƒ‰ƒX
-PlayerInput*	gpPlayerInput		= nullptr;	// ƒvƒŒƒCƒ„[“ü—Íæ“¾ƒNƒ‰ƒX
-SceneServer*	gpSceneServer		= nullptr;	// ƒV[ƒ“ƒT[ƒo[ƒNƒ‰ƒX
-DataListServer* gpDataListServer	= nullptr;	// ƒf[ƒ^ƒŠƒXƒgƒT[ƒo[ƒNƒ‰ƒX
+std::unique_ptr<Fps>			gpFps				= nullptr;	// fpsŒÅ’è—pƒNƒ‰ƒX
+std::unique_ptr<PlayerInput>	gpPlayerInput		= nullptr;	// ƒvƒŒƒCƒ„[“ü—Íæ“¾ƒNƒ‰ƒX
+std::unique_ptr<SceneServer>	gpSceneServer		= nullptr;	// ƒV[ƒ“ƒT[ƒo[ƒNƒ‰ƒX
+std::unique_ptr<DataListServer> gpDataListServer	= nullptr;	// ƒf[ƒ^ƒŠƒXƒgƒT[ƒo[ƒNƒ‰ƒX
 
 /* ƒtƒŒ[ƒ€ƒŒ[ƒgŠÖ˜A */
 int	giNowFps	= 0;						// Œ»İ‚ÌƒtƒŒ[ƒ€ƒŒ[ƒg

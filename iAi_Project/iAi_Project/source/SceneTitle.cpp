@@ -14,15 +14,15 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 	/* データリスト取得 */
 	{
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "入力管理"を取得 */
-		this->InputList = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+		this->InputList = std::dynamic_pointer_cast<DataList_Input>(gpDataListServer->GetDataList("DataList_Input"));
 	}
 
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* タイトルロゴ */
 		this->piGrHandle_TitleLogo = ImageList->piGetImage_Movie("Home/TitleLogo");
@@ -70,13 +70,13 @@ SceneTitle::SceneTitle() : SceneBase("Title", 10, false)
 
 	/* "タイトル"のステージを読み込む */
 	/* シーン"タイトル"を作成 */
-	this->pSceneStage = new SceneStage();
+	this->pSceneStage = std::make_shared<SceneStage>();
 
 	/* シーン"ステージ"をシーンサーバーに追加 */
 	gpSceneServer->AddSceneReservation(this->pSceneStage);
 
 	/* ステージの読み込みを開始 */
-	dynamic_cast<SceneStage*>(this->pSceneStage)->LoadMapData();
+	std::dynamic_pointer_cast<SceneStage>(this->pSceneStage)->LoadMapData();
 
 	//スタートフラグを無効化
 	this->bGameStartFlg = false;
@@ -159,7 +159,7 @@ void SceneTitle::Process()
 			gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 			// シーン"ゲームセットアップ"を追加
-			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneAddSceneGameSetup>());
 
 			g_bActiveFlg = false;
 		}
@@ -216,7 +216,7 @@ void SceneTitle::Process()
 			gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 			// シーン"ゲームセットアップ"を追加
-			gpSceneServer->AddSceneReservation(new SceneAddSceneGameSetup());
+			gpSceneServer->AddSceneReservation(std::make_shared<SceneAddSceneGameSetup>());
 
 			break;
 
@@ -258,7 +258,7 @@ void SceneTitle::Process()
 			if (this->iUICount == CAMERA_FIXED_POSITION_C)
 			{
 				/* シーン"オプション"を追加 */
-				gpSceneServer->AddSceneReservation(new SceneOption());
+				gpSceneServer->AddSceneReservation(std::make_shared<SceneOption>());
 			}
 
 			break;

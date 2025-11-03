@@ -25,15 +25,15 @@ class SceneEdit : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;		// ゲーム状態管理
-		DataList_GameResource* GameResourceList;	// ゲーム内リソース管理
-		DataList_PlayerStatus* PlayerStatusList;	// プレイヤー状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;		// ゲーム状態管理
+		std::shared_ptr<DataList_GameResource> GameResourceList;	// ゲーム内リソース管理
+		std::shared_ptr<DataList_PlayerStatus> PlayerStatusList;	// プレイヤー状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_SelectFrame[2];						// 選択フレーム(0:ホールド無し、 1:ホールドあり)
 		int* apiGrHandle_SelectStatus[SELECT_STATUS_MAX];	// 選択項目の状態フレーム
-		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* piGrHandle_ResultFrame;						// リザルトフレーム
+		int* piGrHandle_SelectNext;							// 次ステージ遷移ボタン
 		int* piGrHandle_NowEdit_Under;						// 現在のエディット情報
 		int* piGrHandle_UnderExplain_Under;					// 現在のエディット情報の説明欄
 		int* piGrHandle_NewEdit_Under;						// 新規エディット情報の説明欄

@@ -41,7 +41,7 @@ void BulletPlayerKunaiExplosion::Initialization()
 	auto& PlatformList = ObjectList->GetPlatformList();
 
 	// 射線上にプラットフォームが存在するか確認する
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		/* プラットフォームと接触しているか確認 */
 		MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
@@ -145,10 +145,10 @@ void BulletPlayerKunaiExplosion::Explosion()
 
 		/* 爆発エフェクト生成 */		
 		/* 時間経過で削除されるエフェクトを追加 */
-		EffectSelfDelete* AddEffect = new EffectSelfDelete();
+		std::shared_ptr<EffectSelfDelete> AddEffect = std::make_shared<EffectSelfDelete>();
 
 		/* エフェクト読み込み */
-		AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_kunai_explosion/FX_e_missile_explosion")));
+		AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_kunai_explosion/FX_e_missile_explosion")));
 
 		/* エフェクトの座標設定 */
 		AddEffect->SetPosition(this->vecPosition);

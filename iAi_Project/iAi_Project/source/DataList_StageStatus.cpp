@@ -17,7 +17,7 @@ DataList_StageStatus::~DataList_StageStatus()
 	/* 画面エフェクトリストのクリア */
 	for (auto& pScreenEffect : this->pScreenEffectList)
 	{
-		delete pScreenEffect;
+		pScreenEffect.reset();
 	}
 	this->pScreenEffectList.clear();
 }
@@ -61,7 +61,7 @@ void DataList_StageStatus::Initialization()
 	/* 画面エフェクトリストのクリア */
 	for (auto& pScreenEffect : this->pScreenEffectList)
 	{
-		delete pScreenEffect;
+		pScreenEffect.reset();
 	}
 	this->pScreenEffectList.clear();
 }

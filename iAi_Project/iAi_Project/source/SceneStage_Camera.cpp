@@ -275,7 +275,7 @@ void SceneStage::SetCamera_Free()
 	float fDistance = VSize(VSub(vecCameraPosition, vecCameraTarget));
 
 	/* プラットフォームと接触するか確認 */
-	for (auto* platform : ObjectList->GetPlatformList())
+	for (auto& platform : ObjectList->GetPlatformList())
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
 

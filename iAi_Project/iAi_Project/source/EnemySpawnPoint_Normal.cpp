@@ -15,7 +15,7 @@ void EnemySpawnPoint_Normal::Initialization()
 	/* エネミー(ノーマル)生成処理 */
 	{
 		/* エネミー(ノーマル)を作成 */
-		Enemy_Normal* AddEnemy = new Enemy_Normal();
+		std::shared_ptr<Enemy_Normal> AddEnemy = std::make_shared<Enemy_Normal>();
 
 		/* 生成したエネミー(ノーマル)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

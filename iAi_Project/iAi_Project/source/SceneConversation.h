@@ -33,7 +33,7 @@ class SceneConversation : public SceneBase
 		void	Process_Conversation();			// 計算(会話パート描写中)
 
 		/* 使用するデータリスト */
-		DataList_Option* OptionList;			// オプション設定管理
+		std::shared_ptr<DataList_Option> OptionList;			// オプション設定管理
 
 		/* 画像ハンドル */
 		int* piGrHandle_SkipWindow;				// スキップ確認画面ウィンドウ

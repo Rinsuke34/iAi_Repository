@@ -29,17 +29,17 @@ namespace SCENE_SET
 		gpSceneServer->SetAddLoadSceneFlg(true);
 
 		/* タイトルシーンを追加 */
-		gpSceneServer->AddSceneReservation(new SceneTitle());
+		gpSceneServer->AddSceneReservation(std::make_shared<SceneTitle>());
 
 		/* ロゴシーンを追加 */
-		gpSceneServer->AddSceneReservation(new SceneLogo());
+		gpSceneServer->AddSceneReservation(std::make_shared<SceneLogo>());
 	}
 
 	// ロードシーンをセット
 	void	SetLoadScene()
 	{
 		/* ロードシーンを追加 */
-		gpSceneServer->AddSceneReservation(new SceneLoad());
+		gpSceneServer->AddSceneReservation(std::make_shared<SceneLoad>());
 	}
 }
 
@@ -52,35 +52,35 @@ namespace PROJECT_INIT
 		/* データリスト作成 */
 		{
 			/* データリストサーバーに"プレイヤー入力管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Input());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Input>());
 
 			/* データリストサーバーに"3Dモデル管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Model());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Model>());
 
 			/* データリストサーバーに"画像リソース管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Image());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Image>());
 
 			/* データリストサーバーに"エフェクトリソース管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Effect());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Effect>());
 
 			/* データリストサーバーに"ステージ状態管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_StageStatus());
+			gpDataListServer->AddDataList(std::make_shared<DataList_StageStatus>());
 
 			/* データリストサーバーに"オプション設定管理"を追加 */
-			gpDataListServer->AddDataList(new DataList_Option());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Option>());
 
 			/* データリストサーバーに"サウンド管理"を追加 */
 			// ※サウンド管理では、オプション設定管理を取得するため、オプション設定管理より後に追加する
-			gpDataListServer->AddDataList(new DataList_Sound());
+			gpDataListServer->AddDataList(std::make_shared<DataList_Sound>());
 		}
 	
 		/* データリスト取得 */
 		{
 			/* 今追加した"プレイヤー入力管理"を取得 */
-			gpDataList_Input = dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+			gpDataList_Input = std::dynamic_pointer_cast<DataList_Input>(gpDataListServer->GetDataList("DataList_Input"));
 
 			/* 今追加した"サウンド管理"を取得 */
-			gpDataList_Sound = dynamic_cast<DataList_Sound*>(gpDataListServer->GetDataList("DataList_Sound"));
+			gpDataList_Sound = std::dynamic_pointer_cast<DataList_Sound>(gpDataListServer->GetDataList("DataList_Sound"));
 		}
 
 		/* フォント設定 */

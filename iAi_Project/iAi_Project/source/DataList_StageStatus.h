@@ -20,7 +20,7 @@ class DataList_StageStatus : public DataListBase
 
 		/* データ取得 */
 		// リスト
-		std::vector<ScreenEffect_Base*>&	GetScreenEffectList()		{ return this->pScreenEffectList; }			// 画面エフェクトリスト取得
+		std::vector<std::shared_ptr<ScreenEffect_Base>>&	GetScreenEffectList()		{ return this->pScreenEffectList; }			// 画面エフェクトリスト取得
 		// 単独
 		// ステージ状態
 		int		iGetGameStatus()	{ return this->iGameStatus; };		// ゲーム状態を取得
@@ -57,7 +57,7 @@ class DataList_StageStatus : public DataListBase
 
 		/* データ設定 */
 		// リスト
-		void	SetScreenEffect(ScreenEffect_Base* pScreenEffect)	{ pScreenEffectList.emplace_back(pScreenEffect); }					// 画面エフェクトリスト設定
+		void	SetScreenEffect(std::shared_ptr<ScreenEffect_Base> pScreenEffect)	{ pScreenEffectList.emplace_back(pScreenEffect); }					// 画面エフェクトリスト設定
 		// 単独
 		// ステージ状態
 		void	SetGameStatus(int iGameStatus)			{ this->iGameStatus		= iGameStatus; };		// ゲーム状態を設定
@@ -94,7 +94,7 @@ class DataList_StageStatus : public DataListBase
 
 	private:
 		/* 管理するデータリスト */
-		std::vector<ScreenEffect_Base*>		pScreenEffectList;			// 画面エフェクトリスト
+		std::vector<std::shared_ptr<ScreenEffect_Base>>		pScreenEffectList;			// 画面エフェクトリスト
 
 		/* 管理するデータ */
 		int		iGameStatus;	// ゲーム状態

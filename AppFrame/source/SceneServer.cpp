@@ -73,7 +73,7 @@ void SceneServer::SceneDraw()
 }
 
 // シーン追加予約
-void SceneServer::AddSceneReservation(SceneBase* NewScene)
+void SceneServer::AddSceneReservation(std::shared_ptr<SceneBase> NewScene)
 {
 	// ※シーンの追加自体は"AddScene"関数で行う
 	// 引数
@@ -100,7 +100,7 @@ void SceneServer::AddSceneReservation(SceneBase* NewScene)
 }
 
 // シーン取得
-SceneBase* SceneServer::GetScene(const std::string& cName)
+std::shared_ptr<SceneBase> SceneServer::GetScene(const std::string& cName)
 {
 	// 引数
 	// cName		<-	取得したいシーンの名称
@@ -159,7 +159,7 @@ void SceneServer::AddScene()
 void SceneServer::SceneSortLayerOrder()
 {
 	/* 各レイヤーが所持する"レイヤー順序"が大きい順に並び替える */
-	pstSceneList.sort([](SceneBase* SceneA, SceneBase* SceneB)
+	pstSceneList.sort([](std::shared_ptr<SceneBase> SceneA, std::shared_ptr<SceneBase> SceneB)
 	{
 		return SceneA->iGetSceneLayerOrder() > SceneB->iGetSceneLayerOrder();
 	});
@@ -174,14 +174,14 @@ void SceneServer::DeleteUnnecessaryScene()
 	if (this->bSceneDeleteFlg == true)
 	{
 		/* 削除フラグが有効なシーンをを削除 */
-		pstSceneList.erase( std::remove_if(pstSceneList.begin(), pstSceneList.end(), [](SceneBase* pScene)
+		pstSceneList.erase( std::remove_if(pstSceneList.begin(), pstSceneList.end(), [](std::shared_ptr<SceneBase> pScene)
 		{
 			/* 削除フラグが有効であるか確認　*/
 			if (pScene->bGetDeleteFlg() == true)
 			{
 				// 有効である場合
 				/* メモリを解放する */
-				delete pScene;
+				pScene.reset();
 				return true;
 			}
 			else
@@ -204,7 +204,7 @@ void SceneServer::DeleteAllScene()
 	for (auto& Scene : pstSceneList)
 	{
 		/* メモリを解放する */
-		delete Scene;
+		Scene.reset();
 	}
 
 	/* シーンリストのクリアを行う */
@@ -219,7 +219,7 @@ void SceneServer::DeleteAllAddScene()
 	for (auto& Scene : pstAddSceneList)
 	{
 		/* メモリを解放する */
-		delete Scene;
+		Scene.reset();
 	}
 
 	/* 追加予定のシーンリストのクリアを行う */

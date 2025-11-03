@@ -9,7 +9,7 @@ SceneUi_Debug_StatusSetup::SceneUi_Debug_StatusSetup() : SceneBase("UI_Debug_Sta
 	/* データリスト取得 */
 	{
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* 初期化 */

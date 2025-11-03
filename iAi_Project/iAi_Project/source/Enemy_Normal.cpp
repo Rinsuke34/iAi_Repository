@@ -22,14 +22,14 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Enemy_Normal/Enemy_Normal");
@@ -182,10 +182,10 @@ void Enemy_Normal::MoveEnemy()
 					/* 攻撃予告エフェクト追加 */
 					{
 						/* 攻撃予告エフェクトを生成 */
-						this->pEffectWarning = new EffectManualDelete();
+						this->pEffectWarning = std::make_shared<EffectManualDelete>();
 
 						/* エフェクトの読み込み */
-						this->pEffectWarning->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
+						this->pEffectWarning->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet_warning/FX_e_bullet_warning")));
 
 						/* エフェクトの座標設定 */
 						this->pEffectWarning->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT, vecPosition.z));
@@ -199,7 +199,7 @@ void Enemy_Normal::MoveEnemy()
 						/* エフェクトをリストに登録 */
 						{
 							/* "オブジェクト管理"データリストを取得 */
-							DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+							std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 							/* エフェクトをリストに登録 */
 							ObjectListHandle->SetEffect(this->pEffectWarning);
@@ -269,7 +269,7 @@ void Enemy_Normal::Enemy_Model_Animation()
 			{
 				// アニメーションの再生時間が総再生時間に達した場合
 				// ノーマル弾を生成
-				this->pBulletRangeNormal = new BulletEnemyRangeNormal;
+				this->pBulletRangeNormal = std::make_shared<BulletEnemyRangeNormal>();
 				//効果音再生
 				gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_IKURA_ATTACK, this->vecPosition, SE_3D_SOUND_RADIUS);
 
@@ -420,7 +420,7 @@ void Enemy_Normal::Update()
 	auto& BulletList = ObjectList->GetBulletList();
 
 	/* プレイヤー攻撃と接触するか確認 */
-	for (auto* bullet : BulletList)
+	for (auto& bullet : BulletList)
 	{
 		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
 		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))
@@ -456,10 +456,10 @@ void Enemy_Normal::Update()
 			/* Hitエフェクト追加 */
 			{
 				/* 時間経過で削除されるエフェクトを追加 */
-				EffectManualDelete* AddEffect = new EffectManualDelete();
+				std::shared_ptr<EffectManualDelete> AddEffect = std::make_shared<EffectManualDelete>();
 
 				/* エフェクト読み込み */
-				AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
+				AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_hit/FX_hit")));
 
 				/* エフェクトの座標設定 */
 				AddEffect->SetPosition(VGet(vecPosition.x, vecPosition.y + PLAYER_HEIGHT / 2, vecPosition.z));
@@ -473,7 +473,7 @@ void Enemy_Normal::Update()
 				/* リストに登録 */
 				{
 					/* "オブジェクト管理"データリストを取得 */
-					DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+					std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 					/* エフェクトをリストに登録 */
 					ObjectListHandle->SetEffect(AddEffect);
 				}

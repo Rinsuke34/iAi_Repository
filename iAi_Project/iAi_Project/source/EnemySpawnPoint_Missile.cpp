@@ -15,7 +15,7 @@ void EnemySpawnPoint_Missile::Initialization()
 	/* エネミー(ミサイル)生成処理 */
 	{
 		/* エネミー(ミサイル)を作成 */
-		Enemy_Fixed* AddEnemy = new Enemy_Fixed();
+		std::shared_ptr<Enemy_Fixed> AddEnemy = std::make_shared<Enemy_Fixed>();
 
 		/* 生成したエネミー(ミサイル)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);
@@ -31,7 +31,7 @@ void EnemySpawnPoint_Missile::Initialization()
 
 
 
-		Enemy_Fixed_Turret* AddEnemyTurret = new Enemy_Fixed_Turret();
+		std::shared_ptr<Enemy_Fixed_Turret> AddEnemyTurret = std::make_shared<Enemy_Fixed_Turret>();
 
 		/* 生成したエネミー(ミサイル)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemyTurret);

@@ -38,7 +38,7 @@ class DataList_Sound : public DataListBase
 
 	private:
 		/* データリスト */
-		DataList_Option* OptionList;				// オプション設定管理
+		std::shared_ptr<DataList_Option> OptionList;				// オプション設定管理
 
 		/* BGM関係 */
 		// ※BGMは再生するタイミングで読み込みを行う

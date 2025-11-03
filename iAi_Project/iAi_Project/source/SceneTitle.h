@@ -37,13 +37,13 @@ class SceneTitle : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
-		DataList_Input* InputList;				// 入力管理/* 使用するデータリスト */
-		DataList_Object* ObjectList;			// オブジェクト管理
-		DataList_Model* ModelList;				// 3Dモデル管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;	// ゲーム状態管理
+		std::shared_ptr<DataList_Input> InputList;				// 入力管理/* 使用するデータリスト */
+		std::shared_ptr<DataList_Object> ObjectList;			// オブジェクト管理
+		std::shared_ptr<DataList_Model> ModelList;				// 3Dモデル管理
 
 		/* シーン"ステージ"のポインタ */
-		SceneStage* pSceneStage;
+		std::shared_ptr<SceneStage> pSceneStage;
 
 
 

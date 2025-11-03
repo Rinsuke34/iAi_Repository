@@ -15,19 +15,19 @@ SceneUi_Crosshairs::SceneUi_Crosshairs() : SceneBase("UI_Crosshairs", 100, false
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList		= std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList	= std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList	= std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 画像リソース取得 */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 中心クロスヘア */
 		this->piGrHandle_Flont			= ImageList->piGetImage("UI_Crosshairs/UI_Reticle_Dot/UI_Reticle_Dot");
@@ -100,7 +100,7 @@ void SceneUi_Crosshairs::Process()
 		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* ロックオン範囲内のエネミーのうち最も画面中央に近いエネミーをロックオン対象に設定 */
-		for (auto* enemy : EnemyList)
+		for (auto& enemy : EnemyList)
 		{
 			/* 対象のエネミーの死亡フラグが有効であるか確認 */
 			if (enemy->bGetDeadFlg() == true)
@@ -137,7 +137,7 @@ void SceneUi_Crosshairs::Process()
 				stCollisionLine.vecLineEnd = vecCoreWord;
 
 				 /* プラットフォームが存在するか確認する */
-				for (auto* platform : PlatformList)
+				for (auto& platform : PlatformList)
 				{
 					/* 線分プラットフォームと接触しているか確認 */
 					MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
@@ -216,10 +216,10 @@ void SceneUi_Crosshairs::Process()
 		auto& PlatformList = ObjectList->GetPlatformList();
 
 		/* プレイヤーを取得 */
-		CharacterBase* pPlayer = (ObjectList->GetCharacterPlayer());
+		std::shared_ptr<CharacterBase> pPlayer = (ObjectList->GetCharacterPlayer());
 
 		/* スクリーンのロックオン範囲内のエネミーのうち最もレティクル(画面の中心的)に近いエネミーをロックオン対象に設定 */
-		for (auto* enemy : EnemyList)
+		for (auto& enemy : EnemyList)
 		{
 			/* 対象のエネミーの死亡フラグが有効であるか確認 */
 			if (enemy->bGetDeadFlg() == true)
@@ -262,7 +262,7 @@ void SceneUi_Crosshairs::Process()
 					stCollisionLine.vecLineEnd = vecCoreWord;
 
 					// プラットフォームが存在するか確認する
-					for (auto* platform : PlatformList)
+					for (auto& platform : PlatformList)
 					{
 						/* 線分プラットフォームと接触しているか確認 */
 						MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
@@ -337,7 +337,7 @@ void SceneUi_Crosshairs::Process()
 	{
 		// 使用しない場合
 		/* ロックオン対象のエネミーを取得 */
-		Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+		std::shared_ptr<Enemy_Basic> pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 		/* ロックオン対象のエネミーが存在するか確認 */
 		if (pLockOnEnemy != nullptr)
@@ -392,7 +392,7 @@ void SceneUi_Crosshairs::Draw_RockOn_Melee()
 	auto& EnemyList = ObjectList->GetEnemyList();
 
 	/* ロックオン範囲内、ロックオン対象のエネミーのコアにクロスヘアを合わせて描写 */
-	for (auto* enemy : EnemyList)
+	for (auto& enemy : EnemyList)
 	{
 		/* プレイヤー視点でのロックオン状態を取得 */
 		int iLockOnType = enemy->iGetPlayerLockOnType();
@@ -479,7 +479,7 @@ void SceneUi_Crosshairs::Draw_RockOn_Kunai()
 	auto& EnemyList = ObjectList->GetEnemyList();
 
 	/* ロックオン範囲内、ロックオン対象のエネミーのコアにクロスヘアを合わせて描写 */
-	for (auto* enemy : EnemyList)
+	for (auto& enemy : EnemyList)
 	{
 		/* プレイヤー視点でのロックオン状態を取得 */
 		int iLockOnType = enemy->iGetPlayerLockOnType();

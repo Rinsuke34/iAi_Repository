@@ -23,9 +23,9 @@ class SceneUi_OperationInstructions : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Option*		OptionList;			// オプション設定管理
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
-		DataList_StageStatus*	StatusStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_Option>		OptionList;			// オプション設定管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// プレイヤー状態管理
+		std::shared_ptr<DataList_StageStatus>	StatusStatusList;	// ステージ状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Base[2];		// 操作説明画像ベース(0:コントローラー、1:キーボード)

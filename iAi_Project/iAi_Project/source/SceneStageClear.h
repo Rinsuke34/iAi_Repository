@@ -22,7 +22,7 @@ class SceneGameClear : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;		// ゲーム状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;		// ゲーム状態管理
 
 		/* 関数 */
 		void	Process_Main();		// メイン処理

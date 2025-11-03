@@ -10,13 +10,13 @@ SceneOption::SceneOption() : SceneBase("Option", 500, true)
 	/* データリスト取得 */
 	{
 		/* "オプション設定管理"を取得 */
-		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList = std::dynamic_pointer_cast<DataList_Option>(gpDataListServer->GetDataList("DataList_Option"));
 	}
 
 	/* 画像リソース取得 */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* リザルト用フレーム */
 		this->piGrHandle_ResultFrame	= ImageList->piGetImage("Result/UI_Result_Frame");

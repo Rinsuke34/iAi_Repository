@@ -9,7 +9,7 @@ SceneUi_Debug_StageJump::SceneUi_Debug_StageJump() : SceneBase("UI_Debug_StageJu
 	/* データリスト取得 */
 	{
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* 初期化 */

@@ -63,25 +63,25 @@ CharacterPlayer::CharacterPlayer() : CharacterBase()
 	/* データリスト取得 */
 	
 	/* "入力管理"を取得 */
-	this->InputList			= dynamic_cast<DataList_Input*>(gpDataListServer->GetDataList("DataList_Input"));
+	this->InputList			= std::dynamic_pointer_cast<DataList_Input>(gpDataListServer->GetDataList("DataList_Input"));
 
 	/* "オブジェクト管理"を取得 */
-	this->ObjectList		= dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	this->ObjectList		= std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 	/* "プレイヤー状態"を取得 */
-	this->PlayerStatusList	= dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	this->PlayerStatusList	= std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* "エフェクトリソース管理"を取得 */
-	this->EffectList		= dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+	this->EffectList		= std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"));
 
 	/* "ステージ状態管理"を取得 */
-	this->StageStatusList	= dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));;
+	this->StageStatusList	= std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));;
 
 	/* モデル取得 */
 	
 	/* "3Dモデル管理"データリストを取得 */
 	// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-	DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+	std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 	/* モデルハンドル取得 */
 	this->iModelHandle = ModelListHandle->iGetModel("Player/Player");
@@ -370,7 +370,7 @@ void CharacterPlayer::PlayerHitCheck()
 			auto& BulletList = ObjectList->GetBulletList();
 
 			/* 弾との当たり判定 */
-			for (auto* bullet : BulletList)
+			for (auto& bullet : BulletList)
 			{
 				/* オブジェクトタイプが弾丸(敵)であるなら判定を行う */
 				if (bullet->iGetObjectType() == OBJECT_TYPE_BULLET_ENEMY)
@@ -402,7 +402,7 @@ void CharacterPlayer::PlayerHitCheck()
 						gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_DAMAGE);
 					
 						/* 被ダメージの瞬間に発生するエフェクトを追加 */
-						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+						std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
 
 						/* 座標を設定 */
 						pDamageEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2, 0)));
@@ -423,7 +423,7 @@ void CharacterPlayer::PlayerHitCheck()
 						this->ObjectList->SetEffect(pDamageEffect);
 							
 						/* 感電エフェクトを生成 */
-						EffectSelfDelete_PlayerFollow* pShockEffect = new EffectSelfDelete_PlayerFollow(false);
+						std::shared_ptr<EffectSelfDelete_PlayerFollow> pShockEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(false);
 
 						/* 感電エフェクトの読み込み */
 						pShockEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_eshock/FX_eshock")));
@@ -438,7 +438,7 @@ void CharacterPlayer::PlayerHitCheck()
 						this->ObjectList->SetEffect(pShockEffect);
 							
 						/* 画面エフェクト(被ダメージ)作成 */
-						this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+						this->StageStatusList->SetScreenEffect(std::make_shared<ScreenEffect_Damage>());
 
 						/* シェイプ(瞬き)を適用状態にする */
 						this->fShapeRate = 1.f;
@@ -520,7 +520,7 @@ void CharacterPlayer::PlayerFallRecovery()
 	for (auto& platform : this->ObjectList->GetPlatformList())
 	{
 		/* "チェックポイント"としてキャスト */
-		Gimmick_CheckPoint* pCheckPoint = dynamic_cast<Gimmick_CheckPoint*>(platform);
+		std::shared_ptr<Gimmick_CheckPoint> pCheckPoint = std::dynamic_pointer_cast<Gimmick_CheckPoint>(platform);
 
 		/* キャストが成功した(チェックポイントであるか)確認 */
 		if (pCheckPoint != nullptr)
@@ -582,7 +582,7 @@ void CharacterPlayer::PlayerFallRecovery()
 	}
 
 	/* 復帰エフェクトを生成 */
-	EffectSelfDelete_PlayerFollow* pRecoveryEffect = new EffectSelfDelete_PlayerFollow(true);
+	std::shared_ptr<EffectSelfDelete_PlayerFollow> pRecoveryEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
 
 	/* 復帰エフェクトの読み込み */
 	pRecoveryEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_appearance/FX_appearance")));

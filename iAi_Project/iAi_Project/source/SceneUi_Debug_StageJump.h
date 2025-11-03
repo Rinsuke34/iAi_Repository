@@ -21,7 +21,7 @@ class SceneUi_Debug_StageJump : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;	// ステージ状態管理
 
 		/* 変数 */
 		int iJumpStageNo;	// ステージ番号

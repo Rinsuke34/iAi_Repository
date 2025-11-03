@@ -11,13 +11,13 @@ Enemy_Basic::Enemy_Basic() : EnemyBase()
 	/* データリストを取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "オプション設定管理"を取得 */
-		this->OptionList = dynamic_cast<DataList_Option*>(gpDataListServer->GetDataList("DataList_Option"));
+		this->OptionList = std::dynamic_pointer_cast<DataList_Option>(gpDataListServer->GetDataList("DataList_Option"));
 
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* 初期化 */
@@ -81,7 +81,7 @@ void Enemy_Basic::Reset()
 void Enemy_Basic::DefeatAttack()
 {
 	/* データリスト取得 */
-	DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	std::shared_ptr<DataList_PlayerStatus> PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* データリストが存在しない(強制終了された)場合は処理を終了する */
 	if (PlayerStatusList == nullptr)
@@ -95,7 +95,7 @@ void Enemy_Basic::DefeatAttack()
 		PlayerStatusList->SetPlayerComboNowCount(PlayerStatusList->iGetPlayerComboNowCount() + 1);
 
 		/* プレイヤー状態を取得 */
-		DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		std::shared_ptr<DataList_PlayerStatus> PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 		/* プレイヤーのコンボ継続時間リセット */
 		PlayerStatusList->SetPlayerComboDuration(INIT_ATTRIBUTES_COMBO_DURATION + PlayerStatusList->iGetAddComboTime());
@@ -108,15 +108,15 @@ void Enemy_Basic::DefeatAttack()
 void Enemy_Basic::Defeat()
 {
 	/* データリスト取得 */
-	DataList_PlayerStatus* PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	std::shared_ptr<DataList_PlayerStatus> PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* 爆発エフェクト生成 */
 	{
 		/* 時間経過で削除されるエフェクトを追加 */
-		EffectSelfDelete* AddEffect = new EffectSelfDelete();
+		std::shared_ptr<EffectSelfDelete> AddEffect = std::make_shared<EffectSelfDelete>();
 
 		/* エフェクト読み込み */
-		AddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
+		AddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_die/FX_e_die")));
 
 		/* エフェクトの座標設定 */
 		AddEffect->SetPosition(this->vecPosition);
@@ -133,7 +133,7 @@ void Enemy_Basic::Defeat()
 		/* リストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(AddEffect);
 		}
@@ -142,7 +142,7 @@ void Enemy_Basic::Defeat()
 	/* ブラッド(ゲーム内通貨)を作成 */
 	{
 		/* "オブジェクト管理"データリストを取得 */
-		DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* プレイヤーのコンボランクを取得 */
 		int iComboRank = PlayerStatusList->iGetPlayerComboRunk();
@@ -165,7 +165,7 @@ void Enemy_Basic::Defeat()
 		for (int i = 0; i < iBloodAmount; i++)
 		{
 			/* 時間経過で削除されるアイテムを追加 */
-			EffectItemBase* AddItem = new EffectItem_Blood();
+			std::shared_ptr<EffectItemBase> AddItem = std::make_shared<EffectItem_Blood>();
 
 			/* エフェクトの座標設定 */
 			AddItem->SetPosition(this->vecPosition);
@@ -210,7 +210,7 @@ void Enemy_Basic::Enemy_Gravity()
 	float fStandPosY = vecNextPosition.y;
 
 	// 足場と接触するか確認
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
 

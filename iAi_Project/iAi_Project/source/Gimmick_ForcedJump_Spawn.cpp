@@ -8,7 +8,7 @@ Gimmick_ForcedJump_Spawn::Gimmick_ForcedJump_Spawn() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* 初期化 */
@@ -34,13 +34,13 @@ void Gimmick_ForcedJump_Spawn::Update()
 		/* アイテム"強制ジャンプ(ギミック)"生成処理" */
 		{
 			/* アイテム"強制ジャンプ(ギミック)"を作成 */
-			PickUpItemBase* AddItem = new PickUpItem_ForcedJump();
+			std::shared_ptr<PickUpItemBase> AddItem = std::make_shared<PickUpItem_ForcedJump>();
 
 			/* 生成したアイテムをリストに追加 */
 			this->ObjectList->SetPickUpItem(AddItem);
 
 			/* 生成したアイテムの生成元にこのオブジェクトを追加*/
-			dynamic_cast<PickUpItem_ForcedJump*>(AddItem)->SetGimmick_ForcedJump_Spawn(this);
+			std::dynamic_pointer_cast<PickUpItem_ForcedJump>(AddItem)->SetGimmick_ForcedJump_Spawn(shared_from_this());
 
 			/* 生成したアイテムの座標を設定 */
 			AddItem->SetPosition(this->vecPosition);

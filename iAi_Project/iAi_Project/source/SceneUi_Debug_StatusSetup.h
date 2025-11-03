@@ -21,7 +21,7 @@ class SceneUi_Debug_StatusSetup : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_PlayerStatus*	PlayerStatusList;	// ステージ状態管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// ステージ状態管理
 
 		/* 変数 */
 		int						iSelectItem;		// 選択中の項目の番号

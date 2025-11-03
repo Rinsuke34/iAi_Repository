@@ -95,16 +95,16 @@ void Main::MainInit()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	/* FPSを固定するクラスを追加 */
-	gpFps = new Fps();
+	gpFps = std::make_unique<Fps>();
 
 	/* プレイヤー入力を取得するクラスを追加 */
-	gpPlayerInput = new PlayerInput();
+	gpPlayerInput = std::make_unique<PlayerInput>();
 
 	/* シーンサーバーを作成 */
-	gpSceneServer = new SceneServer();
+	gpSceneServer = std::make_unique<SceneServer>();
 
 	/* データリストサーバーを作成 */
-	gpDataListServer = new DataListServer();
+	gpDataListServer = std::make_unique<DataListServer>();
 
 	/* プロジェクト初期化処理 */
 	PROJECT_INIT::Init();
@@ -130,16 +130,16 @@ void Main::MainInit()
 void Main::MainEnd()
 {
 	/* プレイヤー入力を取得するクラスを削除する */
-	delete gpPlayerInput;
+	gpPlayerInput.reset();
 
 	/* FPSを固定するクラスを削除する */
-	delete gpFps;
+	gpFps.reset();
 
 	/* シーンサーバーを削除する */
-	delete gpSceneServer;
+	gpSceneServer.reset();
 
 	/* データリストサーバーを削除する */
-	delete gpDataListServer;
+	gpDataListServer.reset();
 
 	/* フォントデータを削除する */
 	DeleteFontToHandle(giFontHandle_Small);

@@ -28,10 +28,10 @@ public:
 private:
 
 	/* エフェクト・使用するオブジェクトリスト */
-	EffectManualDelete* pEffectWarning;					//警告エフェクト
-	BulletEnemyRangeBeam* pBulletRangeBeam;				// ビーム
-	DataList_Object* ObjectList;						// オブジェクト管理
-	CharacterBase* pPlayer;								// プレイヤー
+	std::shared_ptr<EffectManualDelete> pEffectWarning;					//警告エフェクト
+	std::shared_ptr<BulletEnemyRangeBeam> pBulletRangeBeam;				// ビーム
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<CharacterBase> pPlayer;								// プレイヤー
 
 
 	//関数

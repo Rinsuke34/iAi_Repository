@@ -10,7 +10,7 @@
 /* 消失ギミックスポナークラスの宣言 */
 
 // 消失ギミックスポナークラス
-class GimmickDisappearSpawnPoint : public SpawnPoint_Base
+class GimmickDisappearSpawnPoint : public SpawnPoint_Base, public std::enable_shared_from_this<GimmickDisappearSpawnPoint>
 {
 public:
 	GimmickDisappearSpawnPoint();						// コンストラクタ

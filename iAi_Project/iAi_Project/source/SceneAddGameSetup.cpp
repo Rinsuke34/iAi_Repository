@@ -11,7 +11,7 @@ SceneAddSceneGameSetup::SceneAddSceneGameSetup() : SceneBase("AddSceneGameSetup"
 	/* データリスト取得 */
 	{
 		/* "エフェクトリソース管理"を追加 */
-		this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+		this->EffectList = std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"));
 	}
 
 	/* 全エフェクトの事前読み込み */
@@ -25,7 +25,7 @@ void SceneAddSceneGameSetup::Process()
 	gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 	/* シーン"ゲーム"を追加 */
-	SceneGame* pAddScene = new SceneGame();
+	std::shared_ptr<SceneGame> pAddScene = std::make_shared<SceneGame>();
 	gpSceneServer->AddSceneReservation(pAddScene);
 
 	/* シーン"ゲーム"の初期化 */

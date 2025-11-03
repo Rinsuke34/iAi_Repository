@@ -47,14 +47,14 @@ BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Missilepoint/Missilepoint");
@@ -80,10 +80,10 @@ void BulletEnemyRangeMissile::Initialization()
 	/* エフェクト追加 */
 	{
 		/* ミサイルエフェクトを生成 */
-		this->pEffect = new EffectManualDelete();
+		this->pEffect = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
+		this->pEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -97,7 +97,7 @@ void BulletEnemyRangeMissile::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffect);
@@ -106,10 +106,10 @@ void BulletEnemyRangeMissile::Initialization()
 		/* エフェクト追加 */
 	{
 		/* ミサイル誘導エフェクトを生成 */
-		this->pEffectGuidance = new EffectManualDelete();
+		this->pEffectGuidance = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffectGuidance->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_contrail/FX_e_missile_contrail")));
+		this->pEffectGuidance->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_contrail/FX_e_missile_contrail")));
 
 		/* エフェクトの座標設定 */
 		this->pEffectGuidance->SetPosition(VGet(vecPosition.x, vecPosition.y, vecPosition.z));
@@ -123,7 +123,7 @@ void BulletEnemyRangeMissile::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectGuidance);
@@ -134,7 +134,7 @@ void BulletEnemyRangeMissile::Initialization()
 void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 {
 	/* プレイヤーの座標を取得 */
-	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> player = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
 	// ミサイル弾の持続カウントを減算
@@ -249,12 +249,8 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 	// 足場を取得
 	auto& PlatformList = ObjectList->GetPlatformList();
 
-
-
-
-
 	// 足場と接触するか確認
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		// ミサイルの中心から下方向へ半径の長さ分線分を作成
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stVerticalCollision);
@@ -269,7 +265,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileMove()
 		}
 	}
 	//足場と接触するか確認
-	for (auto* platform : PlatformList)
+	for (auto& platform : PlatformList)
 	{
 		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stFallCollision);
 		// 接触していない場合
@@ -304,10 +300,10 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
 		bSaveFlg = TRUE;
 		/* エフェクト追加 */
 		/*爆発エフェクトを生成 */
-		this->pEffectExplosion = new EffectManualDelete();
+		this->pEffectExplosion = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffectExplosion->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_explosion/FX_e_missile_explosion")));
+		this->pEffectExplosion->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_missile_explosion/FX_e_missile_explosion")));
 
 		/* エフェクトの座標設定 */
 		this->pEffectExplosion->SetPosition(this->vecPosition);
@@ -321,7 +317,7 @@ void BulletEnemyRangeMissile::BulletEnemyRangeMissileExplosion()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffectExplosion);
 		}

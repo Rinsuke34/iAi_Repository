@@ -9,26 +9,26 @@ PickUpItem_Blood::PickUpItem_Blood() : PickUpItemBase()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "ゲームリソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 
 		/* "プレイヤー状態"を取得 */
-		this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+		this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 	}
 
 	/* オブジェクト取得 */
 	{
 		/* プレイヤーを取得 */
-		this->pPlayer = dynamic_cast<CharacterPlayer*>(ObjectList->GetCharacterPlayer());
+		this->pPlayer = std::dynamic_pointer_cast<CharacterPlayer>(ObjectList->GetCharacterPlayer());
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood/Blood");
@@ -70,10 +70,10 @@ void PickUpItem_Blood::Update()
 		/* ダメージ発生時エフェクト */
 		{
 			/* "エフェクトリソース管理"データリストを取得 */
-			DataList_Effect* EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+			std::shared_ptr<DataList_Effect> EffectList = std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"));
 
 			/* 被ダメージの瞬間に発生するエフェクトを追加 */
-			EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+			std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
 
 			/* 座標を設定 */
 			pDamageEffect->SetPosition(this->vecPosition);
@@ -97,7 +97,7 @@ void PickUpItem_Blood::Update()
 		/* ブラッド(ゲーム内通貨)を作成 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* 基本のブラッド生成数 */
 			int iBloodAmount = 10;
@@ -117,7 +117,7 @@ void PickUpItem_Blood::Update()
 			for (int i = 0; i < iBloodAmount; i++)
 			{
 				/* 時間経過で削除されるアイテムを追加 */
-				EffectItemBase* AddItem = new EffectItem_Blood();
+				std::shared_ptr<EffectItemBase> AddItem = std::make_shared<EffectItem_Blood>();
 
 				/* エフェクトの座標設定 */
 				AddItem->SetPosition(this->vecPosition);
@@ -160,10 +160,10 @@ void PickUpItem_Blood::Update()
 	{
 		// 0以下である場合
 		/* エフェクトを生成 */
-		EffectSelfDelete* pAddEffect = new EffectSelfDelete();
+		std::shared_ptr<EffectSelfDelete> pAddEffect = std::make_shared<EffectSelfDelete>();
 
 		/* エフェクトの読み込み */
-		pAddEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_glitter/FX_e_glitter")));
+		pAddEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_glitter/FX_e_glitter")));
 
 		/* エフェクトの座標設定 */
 		pAddEffect->SetPosition(this->vecPosition);

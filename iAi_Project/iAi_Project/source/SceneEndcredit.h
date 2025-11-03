@@ -25,7 +25,7 @@ class SceneEndcredit : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Option* OptionList;			// オプション設定管理
+		std::shared_ptr<DataList_Option> OptionList;			// オプション設定管理
 
 		/* 画像ハンドル */
 		int* piGrHandle_Icon_Button_Select[2];	// 決定アイコン(0:コントローラー/1:キーボード)

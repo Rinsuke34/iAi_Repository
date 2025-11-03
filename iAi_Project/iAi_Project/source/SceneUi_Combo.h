@@ -23,8 +23,8 @@ class SceneUi_Combo : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態管理
-		DataList_StageStatus*	StageStatusList;		// ゲーム状態管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// プレイヤー状態管理
+		std::shared_ptr<DataList_StageStatus>	StageStatusList;	// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_Combo_Frame;					// コンボフレーム

@@ -10,7 +10,7 @@ BulletEnemyRangeNormal::BulletEnemyRangeNormal() : BulletBase()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* 初期化 */
@@ -52,10 +52,10 @@ void BulletEnemyRangeNormal::Initialization()
 	/* エフェクト追加 */
 	{
 		/* ノーマル弾エフェクトを生成 */
-		this->pEffect = new EffectManualDelete();
+		this->pEffect = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
+		this->pEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_bullet/FX_e_bullet")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect->SetPosition(this->vecPosition);
@@ -69,7 +69,7 @@ void BulletEnemyRangeNormal::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pEffect);
@@ -81,7 +81,7 @@ void BulletEnemyRangeNormal::Initialization()
 void BulletEnemyRangeNormal::BulletEnemyRangeNormalMove()
 {
 	/* プレイヤーの座標を取得 */
-	CharacterBase* player = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> player = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 	VECTOR playerPos = player->vecGetPosition();
 
 	// 持続カウントが発射カウントを超えているか確認

@@ -24,7 +24,7 @@ class SceneAddSceneGameSetup : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Effect*	EffectList;	// エフェクトリスト
+		std::shared_ptr<DataList_Effect>	EffectList;	// エフェクトリスト
 
 		/* 関数 */
 		void	PreloadAllEffects();	// 全エフェクトの事前読み込み

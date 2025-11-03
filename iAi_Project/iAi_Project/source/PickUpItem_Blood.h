@@ -26,12 +26,12 @@ class PickUpItem_Blood : public PickUpItemBase
 
 	private:
 		/* データリスト */
-		DataList_Object*		ObjectList;			// オブジェクト管理
-		DataList_GameResource*	GameResourceList;	// ゲーム内リソース管理
-		DataList_PlayerStatus*	PlayerStatusList;	// プレイヤー状態
+		std::shared_ptr<DataList_Object>		ObjectList;			// オブジェクト管理
+		std::shared_ptr<DataList_GameResource>	GameResourceList;	// ゲーム内リソース管理
+		std::shared_ptr<DataList_PlayerStatus>	PlayerStatusList;	// プレイヤー状態
 
 		/* 変数 */
-		CharacterPlayer*	pPlayer;					// プレイヤー
+		std::shared_ptr<CharacterPlayer>	pPlayer;					// プレイヤー
 		int					iAddEffectDelay;			// エフェクト追加待機時間
 };
 

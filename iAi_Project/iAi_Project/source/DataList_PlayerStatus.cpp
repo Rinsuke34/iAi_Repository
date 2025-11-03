@@ -237,7 +237,7 @@ void DataList_PlayerStatus::StatusBuffUpdate()
 	this->iAddFallSpeedDown					= 0;		// 落下速度上限値(速度/フレーム)
 
 	/* "ゲーム内リソース管理"を取得 */
-	DataList_GameResource* GameResource = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+	std::shared_ptr<DataList_GameResource> GameResource = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 
 	/* 現在のエディット情報を取得 */
 	for (int i = 0; i < EDIT_MAX; i++)

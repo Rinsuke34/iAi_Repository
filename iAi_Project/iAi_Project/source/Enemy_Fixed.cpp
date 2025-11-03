@@ -15,14 +15,14 @@ Enemy_Fixed::Enemy_Fixed() : Enemy_Basic()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = this->iModelscaffoldHandle = ModelListHandle->iGetModel("Enemy/Enemy_Fixed/Enemy_Fixed");
@@ -75,7 +75,7 @@ void Enemy_Fixed::Update()
 	auto& BulletList = ObjectList->GetBulletList();
 
 	/* プレイヤー攻撃と接触するか確認 */
-	for (auto* bullet : BulletList)
+	for (auto& bullet : BulletList)
 	{
 		/* オブジェクトタイプが"弾(プレイヤー)"あるいは"近接攻撃(プレイヤー)"であるか確認 */
 		if ((bullet->iGetObjectType() == OBJECT_TYPE_BULLET_PLAYER) || (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER))

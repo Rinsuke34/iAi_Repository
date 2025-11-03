@@ -8,7 +8,7 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 {
 	/* データリストを取得 */
 	{
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* 初期化 */
@@ -26,7 +26,7 @@ EffectItem_Blood::EffectItem_Blood() : EffectItemBase()
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Item/Blood/Blood");
@@ -86,7 +86,7 @@ void EffectItem_Blood::Update()
 				/* ブラッドをプレイヤーに加算 */
 				{
 					/* データリスト取得 */
-					DataList_GameResource* GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+					std::shared_ptr<DataList_GameResource> GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 
 					/* ブラッドをプレイヤーに加算 */
 					int iNowBlood = GameResourceList->iGetHaveBlood();

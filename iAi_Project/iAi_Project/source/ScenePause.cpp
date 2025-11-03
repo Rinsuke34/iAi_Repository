@@ -11,10 +11,10 @@ ScenePause::ScenePause() : SceneBase("Pause", 450, true)
 	/* データリスト取得 */
 	{
 		/* "ステージ状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 
 		/* "ゲーム内リソース管理"を取得 */
-		this->GameResourceList = dynamic_cast<DataList_GameResource*>(gpDataListServer->GetDataList("DataList_GameResource"));
+		this->GameResourceList = std::dynamic_pointer_cast<DataList_GameResource>(gpDataListServer->GetDataList("DataList_GameResource"));
 	}
 
 	/* 初期化 */
@@ -77,7 +77,7 @@ void ScenePause::Process()
 			/* オプション */
 			case PAUSE_MANU_OPTION:
 				/* シーン"オプション"を追加 */
-				gpSceneServer->AddSceneReservation(new SceneOption());
+				gpSceneServer->AddSceneReservation(std::make_shared<SceneOption>());
 				break;
 
 			/* タイトルへ */
@@ -92,7 +92,7 @@ void ScenePause::Process()
 				gpSceneServer->SetDeleteCurrentSceneFlg(true);
 
 				/* シーン"タイトル"を追加 */
-				gpSceneServer->AddSceneReservation(new SceneAddTitleSetup());
+				gpSceneServer->AddSceneReservation(std::make_shared<SceneAddTitleSetup>());
 				break;
 		}
 

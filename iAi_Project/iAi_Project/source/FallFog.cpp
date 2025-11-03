@@ -9,7 +9,7 @@ FallFog::FallFog() : PlatformBase()
 	/* 画像リソース取得 */
 	{
 		/* データリスト"画像ハンドル管理"を取得 */
-		DataList_Image* ImageList = dynamic_cast<DataList_Image*>(gpDataListServer->GetDataList("DataList_Image"));
+		std::shared_ptr<DataList_Image> ImageList = std::dynamic_pointer_cast<DataList_Image>(gpDataListServer->GetDataList("DataList_Image"));
 
 		/* 霧 */
 		this->piGrHandle_Fog = ImageList->piGetImage("Fog/Fog");

@@ -25,7 +25,7 @@ class SceneGameOver : public SceneBase
 
 	private:
 		/* 使用するデータリスト */
-		DataList_StageStatus* StageStatusList;	// ゲーム状態管理
+		std::shared_ptr<DataList_StageStatus> StageStatusList;	// ゲーム状態管理
 
 		/* 使用する画像のハンドル */
 		int* piGrHandle_GameOver;				// ゲームオーバー

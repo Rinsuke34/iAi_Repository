@@ -11,7 +11,7 @@ EffectManualDelete_PlayerFollow_Frame::EffectManualDelete_PlayerFollow_Frame(int
 	this->iFrameHandle = iFrameHandle;	
 
 	/* プレイヤー取得 */
-	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	this->pCharacterPlayer = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 
 	/* プレイヤーモデルのハンドルを取得 */
 	this->iModelHandle = this->pCharacterPlayer->iGetModelHandle();

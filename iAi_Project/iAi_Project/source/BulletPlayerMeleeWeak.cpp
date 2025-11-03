@@ -10,16 +10,16 @@
 BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 {
 	/* "プレイヤー状態"を取得 */
-	this->PlayerStatusList = dynamic_cast<DataList_PlayerStatus*>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
+	this->PlayerStatusList = std::dynamic_pointer_cast<DataList_PlayerStatus>(gpDataListServer->GetDataList("DataList_PlayerStatus"));
 
 	/* "オブジェクト管理"を取得 */
-	this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+	this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 	/* "エフェクト管理"を取得 */
-	this->EffectList = dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"));
+	this->EffectList = std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"));
 
 	/* プレイヤー取得 */
-	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	this->pCharacterPlayer = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 
 	/* 初期化 */
 	this->iObjectType		= OBJECT_TYPE_MELEE_PLAYER;		// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
@@ -52,10 +52,10 @@ void BulletPlayerMeleeWeak::Initialization()
 	/* エフェクト追加 */
 	{
 		/* 近接攻撃(弱)のエフェクトを生成 */
-		this->pMeleeWeakEffect = new EffectManualDelete();
+		this->pMeleeWeakEffect = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pMeleeWeakEffect->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_slash/FX_slash")));
+		this->pMeleeWeakEffect->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_slash/FX_slash")));
 
 		/* エフェクトの座標設定(プレイヤーの座標に設定) */
 		this->pMeleeWeakEffect->SetPosition(VGet(this->pCharacterPlayer->vecGetPosition().x, this->pCharacterPlayer->vecGetPosition().y + PLAYER_HEIGHT / 2,this->pCharacterPlayer->vecGetPosition().z));
@@ -69,7 +69,7 @@ void BulletPlayerMeleeWeak::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(this->pMeleeWeakEffect);
 		}
@@ -115,7 +115,7 @@ void BulletPlayerMeleeWeak::Update()
 					/* ダメージ発生時エフェクトを描写 */
 					{
 						/* 被ダメージの瞬間に発生するエフェクトを追加 */
-						EffectSelfDelete* pDamageEffect = new EffectSelfDelete();
+						std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
 
 						/* 座標を設定 */
 						pDamageEffect->SetPosition(this->vecPosition);

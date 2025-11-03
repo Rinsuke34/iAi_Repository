@@ -8,7 +8,7 @@ Gimmick_TutorialDraw::Gimmick_TutorialDraw() : PlatformBase()
 {
 	/* データリストを取得 */
 	{
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 	}
 
 	/* 初期化 */
@@ -27,14 +27,14 @@ void Gimmick_TutorialDraw::Initialization()
 void Gimmick_TutorialDraw::Update()
 {
 	/* プレイヤーを取得 */
-	CharacterBase* pPlayer = this->ObjectList->GetCharacterPlayer();
+	std::shared_ptr<CharacterBase> pPlayer = this->ObjectList->GetCharacterPlayer();
 
 	/* プレイヤーとの接触判定 */
 	if (pPlayer->HitCheck(this->stCollisionSqhere) == true)
 	{
 		// 接触している場合
 		/* シーン"UI(チュートリアル)"を作成 */
-		SceneUi_Tutorial* pSceneUi_Tutorial = new SceneUi_Tutorial();
+		std::shared_ptr<SceneUi_Tutorial> pSceneUi_Tutorial = std::make_shared<SceneUi_Tutorial>();
 		gpSceneServer->AddSceneReservation(pSceneUi_Tutorial);
 
 		/* チュートリアル番号を設定する */

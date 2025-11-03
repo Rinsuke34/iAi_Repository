@@ -33,14 +33,14 @@ class Enemy_GoalObject : public Enemy_Basic
 
 	private:
 		/* 使用するデータリスト */
-		DataList_Object*		ObjectList;			// オブジェクト管理
-		DataList_StageStatus*	StageStatusList;	// ゲーム状態管理
+		std::shared_ptr<DataList_Object>		ObjectList;			// オブジェクト管理
+		std::shared_ptr<DataList_StageStatus>	StageStatusList;	// ゲーム状態管理
 
 		/* 変数 */
 		bool	bStageChangeFlg;	// 次のステージに遷移するかのフラグ
 		bool	bPlayeSeFlg;		// SEを再生開始したかのフラグ(ゲーム開始後に実行しないと他のシーン中に再生されるため)
 
 		/* エフェクト */
-		EffectManualDelete* pEffect_Glory;		// 発光エフェクト
-		EffectManualDelete* pEffect_Clear;		// 撃破時エフェクト
+		std::shared_ptr<EffectManualDelete> pEffect_Glory;		// 発光エフェクト
+		std::shared_ptr<EffectManualDelete> pEffect_Clear;		// 撃破時エフェクト
 };

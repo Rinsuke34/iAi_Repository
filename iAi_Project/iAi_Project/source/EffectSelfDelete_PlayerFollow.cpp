@@ -13,7 +13,7 @@ EffectSelfDelete_PlayerFollow::EffectSelfDelete_PlayerFollow(bool bCenterFollowF
 	this->bCenterFollowFlg = bCenterFollowFlg;
 
 	/* プレイヤー取得 */
-	this->pCharacterPlayer = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
+	this->pCharacterPlayer = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"))->GetCharacterPlayer();
 }
 
 // 更新

@@ -30,11 +30,11 @@ public:
 private:
 
 	/* エフェクト・使用するデータリスト */
-	DataList_Object* ObjectList;						// オブジェクト管理
-	CharacterBase* pPlayer;								// プレイヤー
-	EffectManualDelete* pEffect;						//ミサイル弾のエフェクト
-	EffectManualDelete* pEffectExplosion;				//ミサイル弾着弾エフェクト
-	EffectManualDelete* pEffectGuidance;				//ミサイル誘導エフェクト
+	std::shared_ptr<DataList_Object> ObjectList;						// オブジェクト管理
+	std::shared_ptr<CharacterBase> pPlayer;								// プレイヤー
+	std::shared_ptr<EffectManualDelete> pEffect;						//ミサイル弾のエフェクト
+	std::shared_ptr<EffectManualDelete> pEffectExplosion;				//ミサイル弾着弾エフェクト
+	std::shared_ptr<EffectManualDelete> pEffectGuidance;				//ミサイル誘導エフェクト
 
 	/* 関数 */
 	void BulletEnemyRangeMissileMove();					// ミサイル弾の移動処理

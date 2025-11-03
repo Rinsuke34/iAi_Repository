@@ -20,17 +20,17 @@ Enemy_GoalObject::Enemy_GoalObject() : Enemy_Basic()
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */
-		this->ObjectList = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+		this->ObjectList = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 		/* "ゲーム状態管理"を取得 */
-		this->StageStatusList = dynamic_cast<DataList_StageStatus*>(gpDataListServer->GetDataList("DataList_StageStatus"));
+		this->StageStatusList = std::dynamic_pointer_cast<DataList_StageStatus>(gpDataListServer->GetDataList("DataList_StageStatus"));
 	}
 
 	/* モデル取得 */
 	{
 		/* "3Dモデル管理"データリストを取得 */
 		// ※一度しか使用しないため、取得したデータリストのハンドルは保持しない
-		DataList_Model* ModelListHandle = dynamic_cast<DataList_Model*>(gpDataListServer->GetDataList("DataList_Model"));
+		std::shared_ptr<DataList_Model> ModelListHandle = std::dynamic_pointer_cast<DataList_Model>(gpDataListServer->GetDataList("DataList_Model"));
 
 		/* モデルハンドル取得 */
 		this->iModelHandle = ModelListHandle->iGetModel("Enemy/Goal_Object/Goal_Object");
@@ -66,10 +66,10 @@ void Enemy_GoalObject::Initialization()
 	/* エフェクト(発光)生成 */
 	{
 		/* エフェクト(発光)を生成 */
-		this->pEffect_Glory = new EffectManualDelete();
+		this->pEffect_Glory = std::make_shared<EffectManualDelete>();
 
 		/* エフェクトの読み込み */
-		this->pEffect_Glory->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_o_goal/FX_o_goal")));
+		this->pEffect_Glory->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_o_goal/FX_o_goal")));
 
 		/* エフェクトの座標設定 */
 		this->pEffect_Glory->SetPosition(VAdd(this->vecPosition, VGet(0.f, ENEMY_GOAL_OBJECT_HEIGHT / 2.f, 0.f)));
@@ -80,7 +80,7 @@ void Enemy_GoalObject::Initialization()
 		/* エフェクトをリストに登録 */
 		{
 			/* "オブジェクト管理"データリストを取得 */
-			DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+			std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 			/* エフェクトをリストに登録 */
 			ObjectListHandle->SetEffect(pEffect_Glory);
@@ -106,7 +106,7 @@ void Enemy_GoalObject::Update()
 	auto& BulletList = ObjectList->GetBulletList();
 
 	/* プレイヤーの攻撃と接触するか確認 */
-	for (auto* bullet : BulletList)
+	for (auto& bullet : BulletList)
 	{
 		/* オブジェクトタイプが"近接攻撃(プレイヤー)"であるか確認 */
 		if (bullet->iGetObjectType() == OBJECT_TYPE_MELEE_PLAYER)
@@ -135,10 +135,10 @@ void Enemy_GoalObject::Update()
 		/* エフェクト(撃破時)生成 */
 		{
 			/* エフェクト(撃破時)を生成 */
-			this->pEffect_Clear = new EffectManualDelete();
+			this->pEffect_Clear = std::make_shared<EffectManualDelete>();
 
 			/* エフェクトの読み込み */
-			this->pEffect_Clear->SetEffectHandle((dynamic_cast<DataList_Effect*>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
+			this->pEffect_Clear->SetEffectHandle((std::dynamic_pointer_cast<DataList_Effect>(gpDataListServer->GetDataList("DataList_Effect"))->iGetEffect("FX_e_suicide_light/FX_e_suicide_light")));
 
 			/* エフェクトの座標設定 */
 			this->pEffect_Clear->SetPosition(VAdd(this->vecPosition, VGet(0.f, ENEMY_GOAL_OBJECT_HEIGHT / 2.f, 0.f)));
@@ -149,7 +149,7 @@ void Enemy_GoalObject::Update()
 			/* エフェクトをリストに登録 */
 			{
 				/* "オブジェクト管理"データリストを取得 */
-				DataList_Object* ObjectListHandle = dynamic_cast<DataList_Object*>(gpDataListServer->GetDataList("DataList_Object"));
+				std::shared_ptr<DataList_Object> ObjectListHandle = std::dynamic_pointer_cast<DataList_Object>(gpDataListServer->GetDataList("DataList_Object"));
 
 				/* エフェクトをリストに登録 */
 				ObjectListHandle->SetEffect(pEffect_Clear);

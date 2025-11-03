@@ -15,7 +15,7 @@ void EnemySpawnPoint_Beam::Initialization()
 	/* エネミー(ビーム)生成処理 */
 	{
 		/* エネミー(ビーム)を作成 */
-		Enemy_Beam* AddEnemy = new Enemy_Beam();
+		std::shared_ptr<Enemy_Beam> AddEnemy = std::make_shared<Enemy_Beam>();
 
 		/* 生成したエネミー(ビーム)をリストに追加 */
 		this->ObjectList->SetEnemy(AddEnemy);

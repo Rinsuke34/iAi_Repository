@@ -339,7 +339,7 @@ void CharacterPlayer::Player_Melee_Posture()
 			gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE);
 
 			/* 溜めのエフェクトを刀の位置に生成 */
-			this->pChargeEffect = new EffectManualDelete_PlayerFollow_Frame(this->iKatanaFrameNo);
+			this->pChargeEffect = std::make_shared<EffectManualDelete_PlayerFollow_Frame>(this->iKatanaFrameNo);
 			this->pChargeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge/FX_charge")));
 			this->pChargeEffect->SetRotation(this->vecRotation);
 			this->pChargeEffect->Initialization();
@@ -383,14 +383,14 @@ void CharacterPlayer::Player_Melee_Posture()
 					}
 
 					/* 溜め完了エフェクトを生成 */
-					EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+					std::shared_ptr<EffectSelfDelete_PlayerFollow_Frame> pAddEffect = std::make_shared<EffectSelfDelete_PlayerFollow_Frame>(iKatanaFrameNo);
 					pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
 					pAddEffect->Initialization();
 					pAddEffect->SetDeleteCount(20);
 					this->ObjectList->SetEffect(pAddEffect);
 
 					/* 溜め完了後エフェクトを生成 */
-					this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
+					this->pChargeHoldEffect = std::make_shared<EffectManualDelete_PlayerFollow_Frame>(iKatanaFrameNo);
 					this->pChargeHoldEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_hold/FX_charge_hold")));
 					this->pChargeHoldEffect->SetRotation(this->vecRotation);
 					this->pChargeHoldEffect->Initialization();
@@ -527,7 +527,7 @@ void CharacterPlayer::Player_Melee_Weak()
 
 	/* 近接攻撃として扱う弾を作成 */
 	// ※現在のプレイヤーの向きに弾を作成
-	this->pBulletMeleeWeak = new BulletPlayerMeleeWeak;
+	this->pBulletMeleeWeak = std::make_shared<BulletPlayerMeleeWeak>();
 
 	/* 攻撃の向きを設定 */
 	this->pBulletMeleeWeak->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
@@ -545,7 +545,7 @@ void CharacterPlayer::Player_Melee_Weak()
 	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_ACTION);
 
 	/* 抜刀エフェクトを生成 */
-	EffectSelfDelete_PlayerFollow_Frame* pSeathEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+	std::shared_ptr<EffectSelfDelete_PlayerFollow_Frame> pSeathEffect = std::make_shared<EffectSelfDelete_PlayerFollow_Frame>(iKatanaFrameNo);
 	pSeathEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
 	pSeathEffect->Initialization();
 	pSeathEffect->SetDeleteCount(20);
@@ -615,7 +615,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 
 		/* ロックオン中のエネミーを取得 */
-		Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+		std::shared_ptr<Enemy_Basic> pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 		/* 近接攻撃(強)による移動量を取得 */
 		VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
@@ -657,7 +657,7 @@ void CharacterPlayer::Player_Charge_Attack()
 			auto& PlatformList = ObjectList->GetPlatformList();
 
 			/* 足場とプレイヤーが接触するか確認する処理 */
-			for (auto* platform : PlatformList)
+			for (auto& platform : PlatformList)
 			{
 				/* 足場と線分の接触判定を行う */
 				MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
@@ -700,7 +700,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 		/* 画面エフェクト(集中線)作成 */
 		// ※持続時間は回避と同じとする
-		ScreenEffect_Base* pScreenEffect = new ScreenEffect_ConcentrationLine();
+		std::shared_ptr<ScreenEffect_Base> pScreenEffect = std::make_shared<ScreenEffect_ConcentrationLine>();
 		this->StageStatusList->SetScreenEffect(pScreenEffect);
 		pScreenEffect->SetDeleteTime(this->PlayerStatusList->iGetPlayerMaxDodgeFlame());
 		
@@ -769,7 +769,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		/* 近接攻撃として扱う弾を作成 */
 		// ※通常の弾とは違いカプセル型で作成する
 		{
-			BulletPlayerMeleeStrong* pBulletMeleeStrong = new BulletPlayerMeleeStrong;
+			std::shared_ptr<BulletPlayerMeleeStrong> pBulletMeleeStrong = std::make_shared<BulletPlayerMeleeStrong>();
 
 			/* 弾に使用するカプセルを作成 */
 			COLLISION_CAPSULE stBulletCollision;
@@ -794,7 +794,7 @@ void CharacterPlayer::Player_Charge_Attack()
 		}
 		
 		/* 近距離攻撃(強)のエフェクトを生成 */
-		EffectSelfDelete* pAddEffect = new EffectSelfDelete();
+		std::shared_ptr<EffectSelfDelete> pAddEffect = std::make_shared<EffectSelfDelete>();
 		pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_iai_dash/FX_iai_dash")));
 		pAddEffect->SetDeleteCount(60);
 		pAddEffect->SetPosition(VAdd(this->vecPosition, VGet(0, PLAYER_HEIGHT / 2.f, 0)));
@@ -884,7 +884,7 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enemy_Search()
 	float fMinDistance = VSize(vecMinDirection);
 
 	/* 索敵範囲内のエネミーのうち最もプレイヤーに近いエネミーを対象に設定 */
-	for (auto* enemy : EnemyList)
+	for (auto& enemy : EnemyList)
 	{
 		/* 対象のエネミーの死亡フラグが有効であるか確認 */
 		if (enemy->bGetDeadFlg() == true)
@@ -920,7 +920,7 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enemy_Search()
 			bool bPlatformHitFlag = false;
 
 			// 射線上にプラットフォームが存在するか確認する
-			for (auto* platform : PlatformList)
+			for (auto& platform : PlatformList)
 			{
 				/* プラットフォームと接触しているか確認 */
 				MV1_COLL_RESULT_POLY stHitPoly = platform->HitCheck_Line(stCollisionLine);
@@ -1021,14 +1021,14 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enabled_Process()
 		gpDataList_Sound->SE_PlaySound(SE_PLAYER_CHARGE_COMPLETE);
 
 		/* 溜め完了エフェクトを生成 */
-		EffectSelfDelete_PlayerFollow_Frame* pAddEffect = new EffectSelfDelete_PlayerFollow_Frame(iKatanaFrameNo);
+		std::shared_ptr<EffectSelfDelete_PlayerFollow_Frame> pAddEffect = std::make_shared<EffectSelfDelete_PlayerFollow_Frame>(iKatanaFrameNo);
 		pAddEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
 		pAddEffect->Initialization();
 		pAddEffect->SetDeleteCount(20);
 		this->ObjectList->SetEffect(pAddEffect);
 
 		/* 溜め完了後エフェクトを生成 */
-		this->pChargeHoldEffect = new EffectManualDelete_PlayerFollow_Frame(iKatanaFrameNo);
+		this->pChargeHoldEffect = std::make_shared<EffectManualDelete_PlayerFollow_Frame>(iKatanaFrameNo);
 		this->pChargeHoldEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_hold/FX_charge_hold")));
 		this->pChargeHoldEffect->SetRotation(this->vecRotation);
 		this->pChargeHoldEffect->Initialization();
@@ -1051,7 +1051,7 @@ void CharacterPlayer::Player_Continuous_Charge_Attack_Enabled_Process()
 			{
 				// 無効である場合								
 				/* 画面エフェクト(被ダメージ)作成 */
-				this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+				this->StageStatusList->SetScreenEffect(std::make_shared<ScreenEffect_Damage>());
 
 				/* スローモーションフラグを有効化 */
 				this->StageStatusList->SetGameSlowFlg(true);
@@ -1147,7 +1147,7 @@ void CharacterPlayer::Player_Projectile_Posture()
 			{
 				//スローモーションカウントが一定値以下の場合
 				/* 画面エフェクト(被ダメージ)作成 */
-				this->StageStatusList->SetScreenEffect(new ScreenEffect_Damage());
+				this->StageStatusList->SetScreenEffect(std::make_shared<ScreenEffect_Damage>());
 
 				/* スローモーションフラグを有効化 */
 				this->StageStatusList->SetGameSlowFlg(true);
@@ -1285,7 +1285,7 @@ void CharacterPlayer::Player_Projectile()
 	vecKunaiTarget = VAdd(this->StageStatusList->vecGetCameraPosition(), vecKunaiTarget);
 
 	/* ロックオン中のエネミーを取得 */
-	Enemy_Basic* pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
+	std::shared_ptr<Enemy_Basic> pLockOnEnemy = this->PlayerStatusList->pGetPlayerLockOnEnemy();
 
 	// エディットの内容よって処理を変える
 	/* クナイワープ化フラグが有効か確認する */
@@ -1293,7 +1293,7 @@ void CharacterPlayer::Player_Projectile()
 	{
 		// クナイワープ化フラグが無効である場合
 		/* クナイ(爆発)を作成 */
-		this->pBulletKunaiExplosion = new BulletPlayerKunaiExplosion;
+		this->pBulletKunaiExplosion = std::make_shared<BulletPlayerKunaiExplosion>();
 
 		/* クナイ(ワープ)生成座標を設定 */
 		this->pBulletKunaiExplosion->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
@@ -1323,7 +1323,7 @@ void CharacterPlayer::Player_Projectile()
 	{
 		// クナイワープ化フラグが有効な場合
 		/* クナイ(ワープ)を作成 */
-		this->pBulletKunaiWarp = new BulletPlayerKunaiWarp;
+		this->pBulletKunaiWarp = std::make_shared<BulletPlayerKunaiWarp>();
 
 		/* クナイ(ワープ)生成座標を設定 */
 		this->pBulletKunaiWarp->SetPosition(VGet(this->vecPosition.x, this->vecPosition.y + PLAYER_HEIGHT / 2, this->vecPosition.z));
@@ -1360,7 +1360,7 @@ void CharacterPlayer::Player_Projectile()
 	gpDataList_Sound->VOICE_PlaySound(VOICE_PLAYER_PROJECTILE);
 
 	/* 遠距離攻撃エフェクトを生成 */
-	EffectSelfDelete* pProjectileEffect = new EffectSelfDelete();
+	std::shared_ptr<EffectSelfDelete> pProjectileEffect = std::make_shared<EffectSelfDelete>();
 	pProjectileEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_seath_unseath/FX_seath_unseath")));
 	pProjectileEffect->Initialization();
 	pProjectileEffect->SetDeleteCount(20);

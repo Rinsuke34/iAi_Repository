@@ -2,6 +2,7 @@
 
 #pragma once
 #include "SceneBase.h"
+#include <memory>
 #include <list>
 
 /* 実行中のシーンの管理を行うクラスの宣言 */
@@ -19,8 +20,8 @@ class SceneServer
 		void	DrawSceneList();	// データリスト描画(デバッグ用)
 
 		
-		void		AddSceneReservation(SceneBase* NewScene);	// シーン追加予約
-		SceneBase*	GetScene(const std::string& cName);			// シーン取得
+		void		AddSceneReservation(std::shared_ptr<SceneBase> NewScene);	// シーン追加予約
+		std::shared_ptr<SceneBase>	GetScene(const std::string& cName);			// シーン取得
 
 		void	SetDeleteCurrentSceneFlg(bool bDeleteCurrentSceneFlg)	{ this->bDeleteCurrentSceneFlg	= bDeleteCurrentSceneFlg; };	// シーン追加時、現行シーンを削除する
 		void	SetAddLoadSceneFlg(bool bAddLoadSceneFlg)				{ this->bAddLoadSceneFlg		= bAddLoadSceneFlg; };			// シーン追加時、ロードシーンを追加する
@@ -28,10 +29,10 @@ class SceneServer
 
 	private:
 		// シーンリスト
-		std::list<SceneBase*> pstSceneList;
+		std::list<std::shared_ptr<SceneBase>> pstSceneList;
 
 		// 追加予定のシーンリスト
-		std::list<SceneBase*> pstAddSceneList;
+		std::list<std::shared_ptr<SceneBase>> pstAddSceneList;
 
 		/* 関数 */
 		void	AddScene();						// シーンリストへのシーン追加
