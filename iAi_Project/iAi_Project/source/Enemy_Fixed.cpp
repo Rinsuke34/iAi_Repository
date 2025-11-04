@@ -11,6 +11,9 @@ Enemy_Fixed::Enemy_Fixed() : Enemy_Basic()
 	this->iNowHp = 1;
 	//　オブジェクトの種類をTypeEnemyに設定
 	this->iObjectType = OBJECT_TYPE_ENEMY;
+	/* 初期化 */
+	this->iModelturretHandle	= 0;	// モデルハンドル
+	this->iModelscaffoldHandle	= 0;	// モデルハンドル
 
 	/* データリスト取得 */
 	{

@@ -4,7 +4,39 @@
 // コンストラクタ
 Enemy_Explosion::Enemy_Explosion() : Enemy_Basic()
 {
-	//初期化
+	/* 初期化 */
+	this->iXdistance			= 0;					// X軸の距離
+	this->iZdistance			= 0;					// Z軸の距離
+	this->iDetonationRange		= 0;					//起爆範囲内
+	this->iBlastRange			= 0;					//爆発範囲内
+	this->iStopCount			= 0;					// 停止カウント
+	this->iReturnCount			= 0;					// 戻るカウント
+	this->fSpeed				= 0.f;					// 移動速度
+	this->fGravity				= 0.f;					// 重力
+	this->bEffectGenerated		= false;				// 起爆予告エフェクト生成フラグ
+	this->bFallFlg				= false;				// 落下フラグ
+	this->bStopFlg				= false;				// 停止フラグ
+	this->bCountFlg				= false;				//カウントフラグ
+	this->bBlastFlg				= false;				//爆発フラグ
+	this->bHitEffectGenerated	= false;				// ヒットエフェクト生成フラグ
+	this->bDirectionFlg			= false;				// 向き固定フラグ
+	this->bChaseFlg				= false;				// 追跡フラグ
+	this->bSavePositionFlg		= false;				// 座標保存フラグ
+	this->bFallNowFlg			= false;
+	this->vecLastRotation		= VGet(0.f, 0.f, 0.f);	// 最後の回転量
+	this->vecStartPosition		= VGet(0.f, 0.f, 0.f);	// 初期座標
+	this->iWaitAttachIndex		= 0;					// 待機モーションアタッチインデックス
+	this->iRunAttachIndex		= 0;					// 走りモーションアタッチインデックス
+	this->iExplosionAttachIndex	= 0;					// 爆発モーションアタッチインデックス
+	this->iDieAttachIndex		= 0;					// 死亡モーションアタッチインデックス
+	this->fWaitTotalTime		= 0.f;					// 待機モーションの総時間
+	this->fRunTotalTime			= 0.f;					// 走りモーションの総時間
+	this->fExplosionTotalTime	= 0.f;					// 爆発モーションの総時間
+	this->fDieTotalTime			= 0.f;					// 死亡モーションの総時間
+	this->fWaitPlayTime			= 0.f;					// 待機再生時間
+	this->fRunPlayTime			= 0.f;					// 走り再生時間
+	this->fExplosionPlayTime	= 0.f;					// 爆発再生時間
+	this->fDiePlayTime			= 0.f;					// 死亡再生時間
 
 	//X軸の距離
 	this->iXdistance = ENEMY_X_DISTANCE;

@@ -10,6 +10,33 @@ Enemy_Normal::Enemy_Normal() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	/* 初期化 */
+	this->iFiringCount						= 0;		// 発射カウント
+	this->iGuidanceCount					= 0;		// 誘導カウント
+	this->bEffectGenerated					= false;	// 警告エフェクト生成フラグ
+	this->bHitEffectGenerated				= false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg						= false;	// 向き固定フラグ
+	this->bWarningEffectFlg					= false;	// 警告エフェクトフラグ
+	this->bShotFlg							= false;	// ショットフラグ
+	this->iNormalAttackAttachIndex			= 0;		// 攻撃モーションアタッチインデックス
+	this->iNormalAttackNowAttachIndex		= 0;		// 攻撃中モーションアタッチインデックス
+	this->iNormalAttackEndAttachIndex		= 0;		// 攻撃終了モーションアタッチインデックス
+	this->iNormalAttackEndLoopAttachIndex	= 0;		// 攻撃終了ループモーションアタッチインデックス
+	this->iDieAttachIndex					= 0;		// 死亡モーションアタッチインデックス
+	this->bNormalAttackMotionFlg			= false;	// 攻撃モーションフラグ
+	this->bNormalAttackNowMotionFlg			= false;	// 攻撃中モーションフラグ
+	this->bNormalAttackEndMotionFlg			= false;	// 攻撃終了モーションフラグ
+	this->bNormalAttackEndLoopMotionFlg		= false;	// 攻撃終了ループモーションフラグ
+	this->fNormalAttackTotalTime			= 0.f;		// 攻撃モーションの総時間
+	this->fNormalAttackNowTotalTime			= 0.f;		// 攻撃中モーションの総時間
+	this->fNormalAttackEndTotalTime			= 0.f;		// 攻撃終了モーションの総時間
+	this->fNormalAttackEndLoopTotalTime		= 0.f;		// 攻撃終了ループモーションの総時間
+	this->fDieTotalTime						= 0.f;		// 死亡モーションの総時間
+	this->fNormalAttackPlayTime				= 0.f;		// 攻撃再生時間
+	this->fNormalAttackNowPlayTime			= 0.f;		// 攻撃中再生時間
+	this->fNormalAttackEndPlayTime			= 0.f;		// 攻撃終了再生時間
+	this->fNormalAttackEndLoopPlayTime		= 0.f;		// 攻撃終了ループ再生時間
+	this->fDiePlayTime						= 0.f;		// 死亡再生時間
 
 	/* オブジェクトの設定 */
 
@@ -451,7 +478,7 @@ void Enemy_Normal::Update()
 		/* 死亡フラグを有効化 */
 		this->bDeadFlg = true;
 
-		if (this->bHitEffectGenerated == FALSE)
+		if (this->bHitEffectGenerated == false)
 		{
 			/* Hitエフェクト追加 */
 			{
@@ -485,7 +512,7 @@ void Enemy_Normal::Update()
 				DefeatAttack();
 
 				// プレイヤー攻撃ヒットエフェクト生成フラグを有効化
-				this->bHitEffectGenerated = TRUE;
+				this->bHitEffectGenerated = true;
 			}
 		}
 

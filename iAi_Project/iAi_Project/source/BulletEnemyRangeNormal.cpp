@@ -7,6 +7,11 @@
 // コンストラクタ
 BulletEnemyRangeNormal::BulletEnemyRangeNormal() : BulletBase()
 {
+	/* 初期化 */
+	this->iDurationCount			= 0;	// ノーマル弾の持続カウント
+	this->iBulletCount				= 0;	// ノーマル弾発射カウント
+	this->iEnemyNormalDurationCount	= 0;	// ノーマル弾の持続カウント
+
 	/* データリスト取得 */
 	{
 		/* "オブジェクト管理"を取得 */

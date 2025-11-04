@@ -8,6 +8,12 @@
 BulletEnemyRangeBeam::BulletEnemyRangeBeam() : BulletBase()
 {
 	/* 初期化 */
+	this->iChargeCount				= 0;					// ビームのチャージカウント	
+	this->iBulletCount				= 0;					// ビーム発射カウント
+	this->iEnemyBeamDurationCount	= 0;					//ビームの持続カウント
+	this->vecEnemyPosition			= VGet(0.f, 0.f, 0.f);	// エネミーの位置を保持するメンバ変数を追加
+	this->vecPlayerDirection		= VGet(0.f, 0.f, 0.f);	// プレイヤーの方向を保持するメンバ変数を追加
+
 	// オブジェクトの種類を"弾(エネミー)"に設定
 	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;
 

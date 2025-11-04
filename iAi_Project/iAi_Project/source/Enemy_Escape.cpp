@@ -4,6 +4,33 @@
 // コンストラクタ
 Enemy_Escape::Enemy_Escape() : Enemy_Basic()
 {
+	/* 初期化 */
+	this->iXescapedistance			= 0;						// X軸の距離
+	this->iZescapedistance			= 0;						// Z軸の距離
+	this->iEscapespeed				= 0;						// 移動速度
+	this->iWaitCount				= 0;						// 待機カウント
+	this->iReturnCount				= 0;						// 待機カウント
+	this->iRestartCount				= 0;						// 再起動カウント
+	this->fGravity					= 0.f;						// 重力
+	this->fWallHitTime				= 0.f;						// 壁に当たった時間
+	this->bHitEffectGenerated		= false;					// ヒットエフェクト生成フラグ
+	this->bDirectionFlg				= false;					// 向き固定フラグ
+	this->bEscapeEffectGenerated	= false;					// 逃走エフェクト生成フラグ
+	this->bWallHitFlg				= false;					// 壁に当たったフラグ
+	this->bWallFlg					= false;					// 壁フラグ
+	this->vecEscapeEffectPos		= VGet(0.f, 0.f, 0.f);		// 逃走エフェクトの座標
+	this->vecInitialPosition		= VGet(0.f, 0.f, 0.f);		// 初期位置
+	this->wallNormal				= VGet(0.f, 0.f, 0.f);		// 壁の法線ベクトル
+	this->iWaitAttachIndex			= 0;						// 待機モーションアタッチインデックス
+	this->iDieAttachIndex			= 0;						// 死亡モーションアタッチインデックス
+	this->iRunAttachIndex			= 0;						// 走りモーションアタッチインデックス
+	this->fWaitTotalTime			= 0.f;						// 待機モーションの総時間
+	this->fDieTotalTime				= 0.f;						// 死亡モーションの総時間
+	this->fRunTotalTime				= 0.f;						// 走りモーションの総時間
+	this->fWaitPlayTime				= 0.f;						// 待機再生時間
+	this->fDiePlayTime				= 0.f;						// 死亡再生時間
+	this->fRunPlayTime				= 0.f;						// 走り再生時間
+
 	//初期化
 	//X軸の距離
 	this->iXescapedistance = ENEMY_X_ESCAPE_DISTANCE;

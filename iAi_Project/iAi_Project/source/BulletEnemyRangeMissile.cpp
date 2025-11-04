@@ -8,6 +8,18 @@
 BulletEnemyRangeMissile::BulletEnemyRangeMissile() : BulletBase()
 {
 	/* 初期化 */
+	this->iDurationCount				= 0;					// 弾の持続カウント
+	this->iBulletUPCount				= 0;					// ミサイル弾打ち上げカウント
+	this->iBulletDownCount				= 0;					// ミサイル弾打ち下げカウント
+	this->iBulletGuidanceCount			= 0;					// ミサイル誘導カウント
+	this->iEnemyMissileDurationCount	= 0;					// ミサイル弾の持続カウント
+	this->iTextureHandle				= 0;					// テクスチャハンドル
+	this->bPredictedLandingFlg			= false;				// 着弾予測フラグ
+	this->bSaveFlg						= false;				// セーブフラグ
+	this->bLandingPointDrawFlg			= false;				// 着弾ポイント描写フラグ
+	this->vecHitPosition				= VGet(0.f, 0.f, 0.f);	// ヒットポジション
+	this->vecModelPosition				= VGet(0.f, 0.f, 0.f);	// 着弾モデルの座標
+
 	// オブジェクトの種類を"弾(エネミー)"に設定
 	this->iObjectType = OBJECT_TYPE_BULLET_ENEMY;
 

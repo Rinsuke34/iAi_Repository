@@ -10,6 +10,31 @@ Enemy_Missile::Enemy_Missile() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	/* 初期化 */
+	this->iFiringCount						= 0;		// 発射カウント
+	this->bHitEffectGenerated				= false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg						= false;	// 向き固定フラグ
+	this->bShotFlg							= false;	// ショットフラグ
+	this->bWarningEffectFlg					= false;	// 警告エフェクトフラグ
+	this->iMissileAttackAttachIndex			= 0;		// ミサイル攻撃モーションアタッチインデックス
+	this->iMissileAttackNowAttachIndex		= 0;		// ミサイル攻撃中モーションアタッチインデックス
+	this->iMissileAttackEndAttachIndex		= 0;		// ミサイル攻撃終了モーションアタッチインデックス
+	this->iMissileAttackEndLoopAttachIndex	= 0;		// ミサイル攻撃終了ループモーションアタッチインデックス
+	this->iDieAttachIndex					= 0;		// 死亡モーションアタッチインデックス
+	this->bMissileAttackMotionFlg			= false;	// ミサイル攻撃モーションフラグ
+	this->bMissileAttackNowMotionFlg		= false;	// ミサイル攻撃中モーションフラグ
+	this->bMissileAttackEndMotionFlg		= false;	// ミサイル攻撃終了モーションフラグ
+	this->bMissileAttackEndLoopMotionFlg	= false;	// ミサイル攻撃終了ループモーションフラグ
+	this->fMissileAttackTotalTime			= 0.f;		// ミサイル攻撃モーションの総時間
+	this->fMissileAttackNowTotalTime		= 0.f;		// ミサイル攻撃中モーションの総時間
+	this->fMissileAttackEndTotalTime		= 0.f;		// ミサイル攻撃終了モーションの総時間
+	this->fMissileAttackEndLoopTotalTime	= 0.f;		// ミサイル攻撃終了ループモーションの総時間
+	this->fDieTotalTime						= 0.f;		// 死亡モーションの総時間
+	this->fMissileAttackPlayTime			= 0.f;		// ミサイル攻撃再生時間
+	this->fMissileAttackNowPlayTime			= 0.f;		// ミサイル攻撃中再生時間
+	this->fMissileAttackEndPlayTime			= 0.f;		// ミサイル攻撃終了再生時間
+	this->fMissileAttackEndLoopPlayTime		= 0.f;		// ミサイル攻撃終了ループ再生時間
+	this->fDiePlayTime						= 0.f;		// 死亡再生時間
 
 	// オブジェクトの種類をTypeEnemyに設定
 	this->iObjectType = OBJECT_TYPE_ENEMY;

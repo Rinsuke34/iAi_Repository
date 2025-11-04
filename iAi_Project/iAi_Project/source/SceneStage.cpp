@@ -227,7 +227,7 @@ void SceneStage::Process()
 		case GAMESTATUS_RESULT:
 			{
 				/* シーン"リザルト画面"を作成 */
-				std::shared_ptr<SceneBase> pAddScene = std::shared_ptr<SceneResult>();
+				std::shared_ptr<SceneBase> pAddScene = std::make_shared<SceneResult>();
 
 				/* シーン"リザルト画面"をシーンサーバーに追加 */
 				gpSceneServer->AddSceneReservation(pAddScene);

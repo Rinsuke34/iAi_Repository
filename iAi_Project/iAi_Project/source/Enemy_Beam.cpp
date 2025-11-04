@@ -10,6 +10,37 @@ Enemy_Beam::Enemy_Beam() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	/* 初期化 */
+	this->iFiringCount					= 0;		// 発射カウント
+	this->iDurationCount				= 0;		// ビームの持続カウント
+	this->iChargeCount					= 0;		// ビームのチャージカウント
+	this->iBeamDurationCount			= 0;		//ビームの持続カウント
+	this->bHitEffectGenerated			= false;	// ヒットエフェクト生成フラグ
+	this->bChargeFlg					= false;	// チャージフラグ
+	this->bFiringFlg					= false;	// 発射フラグ
+	this->bDirectionFlg					= false;	// 向き固定フラグ
+	this->bBeamSEFlg					= false;	// ビームSEフラグ
+	this->bShotFlg						= false;	// ショットフラグ	
+	this->bWarningEffectFlg				= false;	// 警告エフェクトフラグ
+	this->iBeamAttackAttachIndex		= 0;		// ビーム攻撃モーションアタッチインデックス
+	this->iBeamAttackNowAttachIndex		= 0;		// ビーム攻撃中モーションアタッチインデックス
+	this->iBeamAttackEndAttachIndex		= 0;		// ビーム攻撃終了モーションアタッチインデックス
+	this->iBeamAttackEndLoopAttachIndex	= 0;		// ビーム攻撃終了ループモーションアタッチインデックス
+	this->iDieAttachIndex				= 0;		// 死亡モーションアタッチインデックス
+	this->bBeamAttackMotionFlg			= false;	// ビーム攻撃モーションフラグ
+	this->bBeamAttackNowMotionFlg		= false;	// ビーム攻撃中モーションフラグ
+	this->bBeamAttackEndMotionFlg		= false;	// ビーム攻撃終了モーションフラグ
+	this->bBeamAttackEndLoopMotionFlg	= false;	// ビーム攻撃終了ループモーションフラグ
+	this->fBeamAttackTotalTime			= false;	// ビーム攻撃モーションの総時間
+	this->fBeamAttackNowTotalTime		= false;	// ビーム攻撃中モーションの総時間
+	this->fBeamAttackEndTotalTime		= false;	// ビーム攻撃終了モーションの総時間
+	this->fBeamAttackEndLoopTotalTime	= false;	// ビーム攻撃終了ループモーションの総時間
+	this->fDieTotalTime					= false;	// 死亡の持続時間
+	this->fBeamAttackPlayTime			= false;	// ビーム攻撃再生時間
+	this->fBeamAttackNowPlayTime		= false;	// ビーム攻撃中再生時間
+	this->fBeamAttackEndPlayTime		= false;	// ビーム攻撃終了再生時間
+	this->fBeamAttackEndLoopPlayTime	= false;	// ビーム攻撃終了ループ再生時間
+	this->fDiePlayTime					= false;	// 死亡再生時間
 
 	// オブジェクトの種類をTypeEnemyに設定
 	this->iObjectType = OBJECT_TYPE_ENEMY;
@@ -251,7 +282,7 @@ void Enemy_Beam::Player_Range_Beam_Shot()
 		VECTOR playerPos = pPlayer->vecGetPosition();
 
 		// ビームを生成
-		this->pBulletRangeBeam = std::shared_ptr<BulletEnemyRangeBeam>();
+		this->pBulletRangeBeam = std::make_shared<BulletEnemyRangeBeam>();
 
 		//効果音再生
 		gpDataList_Sound->SE_PlaySound_3D(SE_ENEMY_BEAM_CHARGE, this->vecPosition, SE_3D_SOUND_RADIUS);

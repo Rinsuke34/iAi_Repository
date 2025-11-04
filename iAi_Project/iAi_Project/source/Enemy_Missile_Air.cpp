@@ -11,6 +11,18 @@ Enemy_Missile_Air::Enemy_Missile_Air() : Enemy_Basic()
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
 	this->iObjectType = OBJECT_TYPE_ENEMY;	// オブジェクトの種類
+	/* 初期化 */
+	this->iFiringCount				= 0;		// 発射カウント
+	this->bHitEffectGenerated		= false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg				= false;	// 向き固定フラグ
+	this->bShotFlg					= false;	// ショットフラグ
+	this->bWarningEffectFlg			= false;	// 警告エフェクトフラグ
+	this->iMissileAirAttachIndex	= 0;		// 空中モーションアタッチインデックス
+	this->iDieAttachIndex			= 0;		// 死亡モーションアタッチインデックス
+	this->fNormalAirTotalTime		= 0.f;		// 空中モーションの総時間
+	this->fDieTotalTime				= 0.f;		// 死亡モーションの総時間
+	this->fNormalAirPlayTime		= 0.f;		// 空中再生時間
+	this->fDiePlayTime				= 0.f;		// 死亡再生時間
 
 	/* データリスト取得 */
 	{

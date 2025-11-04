@@ -10,6 +10,20 @@ Enemy_Normal_Air::Enemy_Normal_Air() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	/* 初期化 */
+	this->iFiringCount			= 0;		// 発射カウント
+	this->iGuidanceCount		= 0;		// 誘導カウント
+	this->bEffectGenerated		= false;	// 警告エフェクト生成フラグ
+	this->bHitEffectGenerated	= false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg			= false;	// 向き固定フラグ
+	this->bWarningEffectFlg		= false;	// 警告エフェクトフラグ
+	this->bShotFlg				= false;	// ショットフラグ
+	this->iNormalAirAttachIndex	= 0;		// 空中モーションアタッチインデックス
+	this->iDieAttachIndex		= 0;		// 死亡モーションアタッチインデックス
+	this->fNormalAirTotalTime	= 0.f;		// 空中モーションの総時間
+	this->fDieTotalTime			= 0.f;		// 死亡モーションの総時間
+	this->fNormalAirPlayTime	= 0.f;		// 空中再生時間
+	this->fDiePlayTime			= 0.f;		// 死亡再生時間
 
 	//オブジェクトの種類をTypeEnemyに設定
 	this->iObjectType = OBJECT_TYPE_ENEMY;

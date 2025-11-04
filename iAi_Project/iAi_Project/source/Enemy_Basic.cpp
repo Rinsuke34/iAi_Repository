@@ -25,6 +25,7 @@ Enemy_Basic::Enemy_Basic() : EnemyBase()
 	this->iCoreFrameNo		= -1;					// コアフレーム番号を初期化
 	this->bDeadFlg			= false;				// 死亡フラグ
 	this->iBloodAmount		= 10;					// ブラッド量
+	this->vecMove			= VGet(0, 0, 0);		// 移動量初期化
 }
 
 // 発光描写

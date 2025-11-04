@@ -10,6 +10,27 @@ Enemy_Fixed_Turret::Enemy_Fixed_Turret() : Enemy_Basic()
 	// HPを設定
 	this->iMaxHp = 1;
 	this->iNowHp = 1;
+	/* 初期化 */
+	this->iFiringCount			= 0;		// 発射カウント
+	this->iGuidanceCount		= 0;		// 誘導カウント
+	this->iModelturretHandle	= 0;		// モデルハンドル
+	this->iModelscaffoldHandle	= 0;		// モデルハンドル
+	this->iMaintainCount		= 0;		// 維持カウント
+	this->iEffectWaitCount		= 0;		// エフェクト待機カウント
+	this->fTargetAngle			= 0.f;		// ターゲットの角度
+	this->fCurrentAngle			= 0.f;		// 現在の角度
+	this->fAngleDifference		= 0.f;		// 角度の差
+	this->bEffectGenerated		= false;	// 警告エフェクト生成フラグ
+	this->bHitEffectGenerated	= false;	// ヒットエフェクト生成フラグ
+	this->bDirectionFlg			= false;	// 向き固定フラグ
+	this->bWarningEffectFlg		= false;	// 警告エフェクトフラグ
+	this->bShotFlg				= false;	// ショットフラグ
+	this->bUpFlg				= false;	// 上フラグ
+	this->bDownFlg				= false;	// 下フラグ
+	this->bMissile				= false;	// ミサイルフラグ
+	this->bTestFlg				= false;	// テストフラグ
+	this->bTestFlg2				= false;	// テストフラグ2
+	this->bTestFlg3				= false;	// テストフラグ3
 
 	//オブジェクトの種類をTypeEnemyに設定
 	this->iObjectType = OBJECT_TYPE_ENEMY;

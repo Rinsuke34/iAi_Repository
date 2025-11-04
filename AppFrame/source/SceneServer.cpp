@@ -68,7 +68,7 @@ void SceneServer::SceneDraw()
 	/* レイヤー順序が低いシーンから描写を行う */
 	for (auto Scene = pstSceneList.rbegin(); Scene != pstSceneList.rend(); ++Scene)
 	{
-		(*Scene)->Draw();
+		Scene->get()->Draw();
 	}
 }
 
@@ -148,7 +148,7 @@ void SceneServer::AddScene()
 		DeleteAllAddScene();
 
 		/* レイヤー順序が大きい順に並び替える */
-		this->SceneSortLayerOrder();
+ 		this->SceneSortLayerOrder();
 
 		/* シーン追加フラグの無効化 */
 		this->bSceneAddFlg = false;
