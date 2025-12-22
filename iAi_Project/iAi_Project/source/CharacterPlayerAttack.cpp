@@ -1453,7 +1453,7 @@ void CharacterPlayer::Player_Projectile()
 
 	// エディットの内容よって処理を変える
 	/* クナイワープ化フラグが有効か確認する */
-	if (this->PlayerStatusList->bGetKunaiWarp() == true)
+	if (this->PlayerStatusList->bGetKunaiWarp() == false)
 	{
 		// クナイワープ化フラグが無効である場合
 		/* クナイ(爆発)を作成 */
