@@ -414,7 +414,7 @@ void CharacterPlayer::PlayerHitCheck()
 						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
 
 						/* 削除カウントを設定 */
-						pDamageEffect->SetDeleteCount(60);
+						pDamageEffect->SetDeleteCount(PLAYER_DAMAGE_EFFECT_FRAME);
 
 						/* エフェクト初期化処理 */
 						pDamageEffect->Initialization();
@@ -591,7 +591,7 @@ void CharacterPlayer::PlayerFallRecovery()
 	pRecoveryEffect->Initialization();
 
 	/* 復帰エフェクトの時間を設定 */
-	pRecoveryEffect->SetDeleteCount(90);
+	pRecoveryEffect->SetDeleteCount(PLAYER_RECOVERY_EFFECT_FRAME);
 
 	/* 復帰エフェクトをリストに登録 */
 	this->ObjectList->SetEffect(pRecoveryEffect);

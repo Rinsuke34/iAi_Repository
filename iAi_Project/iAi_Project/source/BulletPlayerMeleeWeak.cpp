@@ -1,6 +1,7 @@
 /* 2025.01.24 駒沢風助 ファイル作成 */
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理追加・修正 */
 /* 2025.03.13 駒沢風助 弾パリィ作成 */
+/* 2025.12.13 菊池雅道	コードリファクタリング */
 
 #include "BulletPlayerMeleeWeak.h"
 
@@ -27,7 +28,7 @@ BulletPlayerMeleeWeak::BulletPlayerMeleeWeak() : BulletBase()
 	ArrengementPositionPlayerFront();						// 座標設定(プレイヤーの前方に設定)
 
 	/* 削除カウントを設定 */
-	iDeleteCount = 30;
+	iDeleteCount = PLAYER_MELEE_WEAK_DELETE_COUNT;
 }
 
 // デストラクタ
@@ -83,100 +84,19 @@ void BulletPlayerMeleeWeak::Initialization()
 void BulletPlayerMeleeWeak::Update()
 {
 	/* 弾パリィ処理 */
-	for (auto& bullet : this->ObjectList->GetBulletList())
-	{
-		/* パリィフラグが有効であるか確認 */
-		if (bullet->bGetParryFlg() == true)
-		{
-			// パリィフラグが有効である場合
-			/* 接触しているか確認 */
-			if (bullet->HitCheck(this->stCollisionSqhere) == true)
-			{
-				// 接触している場合
-				/* カウンターフラグが有効であるか確認 */
-				if (this->PlayerStatusList->bGetAddCounter() == true)
-				{
-					// 有効である場合
-					/* パリィフラグを無効に設定 */
-					bullet->SetParryFlg(false);
+	HandleParryBullet();
 
-					/* オブジェクトタイプを弾(プレイヤー)に変更 */
-					bullet->SetObjectType(OBJECT_TYPE_BULLET_PLAYER);
+	/* 削除カウント更新 */
+	UpdateDeleteCount();
 
-					/* 対象オブジェクトの移動方向を取得 */
-					VECTOR vecMoveDirection = bullet->vecGetMoveDirection();
-
-					/* 移動方向を反転 */
-					vecMoveDirection = VScale(vecMoveDirection, -1);
-
-					/* 移動方向を設定 */
-					bullet->SetDirection(vecMoveDirection);
-
-					/* ダメージ発生時エフェクトを描写 */
-					{
-						/* 被ダメージの瞬間に発生するエフェクトを追加 */
-						std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
-
-						/* 座標を設定 */
-						pDamageEffect->SetPosition(this->vecPosition);
-
-						/* エフェクトを取得 */
-						pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
-
-						/* 拡大率を設定 */
-						pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
-
-						/* 削除カウントを設定 */
-						pDamageEffect->SetDeleteCount(60);
-
-						/* エフェクト初期化処理 */
-						pDamageEffect->Initialization();
-
-						/* オブジェクトリストに登録 */
-						this->ObjectList->SetEffect(pDamageEffect);
-					}
-
-					/* 攻撃ヒットのSEを再生 */
-					gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
-				}
-				else
-				{
-					// 無効である場合
-					/* 削除フラグを有効にする */
-					bullet->SetDeleteFlg(true);
-
-					/* 攻撃吸収のSEを再生 */
-					gpDataList_Sound->SE_PlaySound(SE_PLAYER_ABSORB);
-				}
-			}
-		}
-	}
-
-	/* 削除カウントを確認 */
-	if (iDeleteCount > 0)
-	{
-		// 削除カウントが残っている場合
-		/* 削除カウントを減らす */
-		iDeleteCount--;
-	}
-	else
-	{
-		// 削除カウントが0になった場合
-		/* 削除フラグを有効にする */
-		this->bDeleteFlg = true;
-	}
-
-	/* 座標更新(プレイヤーの前方に設定) */ 
+	/* 座標更新(プレイヤーの前方に設定) */
 	ArrengementPositionPlayerFront();
-	
-	/* エフェクトの座標を更新(プレイヤーの座標に設定) */
-	this->pMeleeWeakEffect->SetPosition((VGet(this->pCharacterPlayer->vecGetPosition().x, this->pCharacterPlayer->vecGetPosition().y + PLAYER_HEIGHT / 2, this->pCharacterPlayer->vecGetPosition().z)));
 
-	/* エフェクトの回転量設定(プレイヤーの向きに設定) */
-	this->pMeleeWeakEffect->SetRotation(VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+	/* エフェクトの更新 */
+	UpdateEffectTransform();
 
 	/* 当たり判定の位置を更新 */
-	this->stCollisionSqhere.vecSqhere = this->vecPosition;
+	UpdateCollisionPosition();
 }
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理修正 終了 */
 /* 2025.03.13 駒沢風助 弾パリィ作成			終了*/
@@ -201,3 +121,138 @@ void BulletPlayerMeleeWeak::ArrengementPositionPlayerFront()
 	this->vecPosition = VAdd(this->pCharacterPlayer->vecGetPosition(), vecMeleeWeakVector);
 }
 /* 2025.02.20 菊池雅道 近接攻撃(弱)処理追加 開始 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// 弾パリィ処理
+void BulletPlayerMeleeWeak::HandleParryBullet()
+{
+	for (auto& bullet : this->ObjectList->GetBulletList())
+	{
+		/* パリィフラグが有効であるか確認 */
+		if (bullet->bGetParryFlg() == false)
+		{
+			continue;
+		}
+
+		/* 接触しているか確認 */
+		if (bullet->HitCheck(this->stCollisionSqhere) == false)
+		{
+			continue;
+		}
+
+		/* カウンターが有効か確認 */
+		if (this->PlayerStatusList->bGetAddCounter() == true)
+		{
+			// カウンター有効時
+			HandleCounterParry(bullet);
+		}
+		else
+		{
+			// カウンター無効時
+			HandleNormalParry(bullet);
+		}
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング */
+// カウンター有効時の処理
+void BulletPlayerMeleeWeak::HandleCounterParry(std::shared_ptr <BulletBase> bullet)
+{
+	/* パリィフラグを無効に設定 */
+	bullet->SetParryFlg(false);
+
+	/* オブジェクトタイプを弾(プレイヤー)に変更 */
+	bullet->SetObjectType(OBJECT_TYPE_BULLET_PLAYER);
+
+	/* 対象オブジェクトの移動方向を取得 */
+	VECTOR vecMoveDirection = bullet->vecGetMoveDirection();
+
+	/* 移動方向を反転 */
+	vecMoveDirection = VScale(vecMoveDirection, -1);
+
+	/* 移動方向を設定 */
+	bullet->SetDirection(vecMoveDirection);
+
+	/* ダメージ発生時エフェクトを描写 */
+	CreateCounterHitEffect();
+
+	/* 攻撃ヒットのSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_SLASH_HIT);
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング　開始 */
+// カウンター無効時の処理（吸収)
+void BulletPlayerMeleeWeak::HandleNormalParry(std::shared_ptr <BulletBase> bullet)
+{
+	/* 削除フラグを有効にする */
+	bullet->SetDeleteFlg(true);
+
+	/* 攻撃吸収のSEを再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_ABSORB);
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング　終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// カウンター時のエフェクト生成
+void BulletPlayerMeleeWeak::CreateCounterHitEffect()
+{
+	/* 被ダメージの瞬間に発生するエフェクトを追加 */
+	std::shared_ptr<EffectSelfDelete> pDamageEffect = std::make_shared<EffectSelfDelete>();
+
+	/* 座標を設定 */
+	pDamageEffect->SetPosition(this->vecPosition);
+
+	/* エフェクトを再生 */
+	pDamageEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_damaged/FX_damaged"));
+	pDamageEffect->SetScale(VGet(1.f, 1.f, 1.f));
+	pDamageEffect->SetDeleteCount(PLAYER_DAMAGE_EFFECT_FRAME);
+	pDamageEffect->Initialization();
+	this->ObjectList->SetEffect(pDamageEffect);
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// 削除カウント更新
+void BulletPlayerMeleeWeak::UpdateDeleteCount()
+{
+	/* 削除カウントを確認 */
+	if (iDeleteCount > 0)
+	{
+		// 削除カウントが残っている場合
+		/* 削除カウントを減らす */
+		iDeleteCount--;
+	}
+	else
+	{
+		// 削除カウントが無くなった場合
+		/* 削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// エフェクトの位置・回転更新
+void BulletPlayerMeleeWeak::UpdateEffectTransform()
+{
+	/* エフェクトの座標を更新(プレイヤーの座標に設定) */
+	this->pMeleeWeakEffect->SetPosition(VGet(this->pCharacterPlayer->vecGetPosition().x,this->pCharacterPlayer->vecGetPosition().y + PLAYER_HEIGHT / 2,this->pCharacterPlayer->vecGetPosition().z));
+
+	/* エフェクトの回転量設定(プレイヤーの向きに設定) */
+	this->pMeleeWeakEffect->SetRotation(
+	VGet(0.0f, -(this->PlayerStatusList->fGetPlayerAngleX()), 0.0f));
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// 当たり判定の位置更新
+void BulletPlayerMeleeWeak::UpdateCollisionPosition()
+{
+	/* 当たり判定の位置を更新 */
+	this->stCollisionSqhere.vecSqhere = this->vecPosition;
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+

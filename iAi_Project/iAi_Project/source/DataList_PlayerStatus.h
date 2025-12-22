@@ -128,10 +128,10 @@ class DataList_PlayerStatus : public DataListBase
 		int		iGetPlayerKickWallFlame()					{ return this->iPlayerKickWallFlame; }						// プレイヤーの壁キック継続フレーム数を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerKickWallInputMaxFlame()			{ return this->iPlayerKickWallInputMaxFlame; }				// プレイヤーの壁キック入力猶予フレーム数を取得							/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerMeleeWeakCoolTime()				{ return this->iPlayerMeleeWeakCoolTime; }		// プレイヤーの近距離攻撃(弱)クールタイム取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		int		iGetPlayerMelleStrongChangeChargeFrame()	{ return this->iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)状態になるチャージフレーム数を取得			/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		int		iGetPlayerMelleStrongMaxChargeFrame()		{ return this->iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を取得				/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		float	fGetPlayerMelleStrongMoveScale()			{ return this->fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを取得					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		float	fGetPlayerMeleeStrongMoveSpeed()			{ return this->fPlayerMelleStrongMoveSpeed; }				// プレイヤーの近距離攻撃(強)の移動速度を取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMeleeStrongChangeChargeFrame()	{ return this->iPlayerMeleeStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)状態になるチャージフレーム数を取得			/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMeleeStrongMaxChargeFrame()		{ return this->iPlayerMeleeStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を取得				/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		float	fGetPlayerMeleeStrongMoveScale()			{ return this->fPlayerMeleeStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを取得					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		float	fGetPlayerMeleeStrongMoveSpeed()			{ return this->fPlayerMeleeStrongMoveSpeed; }				// プレイヤーの近距離攻撃(強)の移動速度を取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		int		iGetPlayerMeleeStrongContinusMaxFrame()		{ return this->iPlayerMeleeStrongContinusMaxFrame; }		// プレイヤーの近距離攻撃(強)で連続攻撃できる最大フレーム数を取得		/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		float	fGetPlayerMeleeStrongNextSearchRange()		{ return this->fPlayerMeleeStrongNextSearchRange; }			// プレイヤーの近距離攻撃(強)後の索敵範囲を取得							/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
 		float	fGetPlayerRockOnRadius()		{ return this->fPlayerRockOnRadius; }		// ロックオン範囲の半径を設定
@@ -241,10 +241,10 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetPlayerKickWallFlame(int iPlayerKickWallFlame)								{ this->iPlayerKickWallFlame			= iPlayerKickWallFlame; }			// プレイヤーの壁キック継続フレーム数を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		void	SetPlyerKickWallInputMaxFrame(int iPlayerKickWallInputMaxFrame)					{ this->iPlayerKickWallInputMaxFlame	= iPlayerKickWallInputMaxFrame; }	// プレイヤーの壁キックの入力猶予フレーム数を設定											/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		void	SetPlayerMeleeWeakCoolTime(int iPlayerMeleeWeakCoolTime)						{ this->iPlayerMeleeWeakCoolTime = iPlayerMeleeWeakCoolTime; }		// プレイヤーの近距離攻撃(弱)のクールタイムを設定																/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMelleStrongChangeChargeFrame(int iPlayerMelleStrongChangeChargeFrame)	{ this->iPlayerMelleStrongChangeChargeFrame		= iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数を設定					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMelleStrongMaxChargeFrame(int iPlayerMelleStrongMaxChargeFrame)		{ this->iPlayerMelleStrongMaxChargeFrame		= iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を設定							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMelleStrongMoveScale(float fPlayerMelleStrongMoveScale)				{ this->fPlayerMelleStrongMoveScale				= fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを設定								/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMeleeStrongMoveSpeed(float fPlayerMeleeStrongMoveSpeed)				{ this->fPlayerMelleStrongMoveSpeed				= fPlayerMeleeStrongMoveSpeed; }				// プレイヤー近距離攻撃(強)の移動速度を設定											/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMelleStrongChangeChargeFrame(int iPlayerMelleStrongChangeChargeFrame)	{ this->iPlayerMeleeStrongChangeChargeFrame		= iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数を設定					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMelleStrongMaxChargeFrame(int iPlayerMelleStrongMaxChargeFrame)		{ this->iPlayerMeleeStrongMaxChargeFrame		= iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を設定							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMelleStrongMoveScale(float fPlayerMelleStrongMoveScale)				{ this->fPlayerMeleeStrongMoveScale				= fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを設定								/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongMoveSpeed(float fPlayerMeleeStrongMoveSpeed)				{ this->fPlayerMeleeStrongMoveSpeed				= fPlayerMeleeStrongMoveSpeed; }				// プレイヤー近距離攻撃(強)の移動速度を設定											/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongContinusMaxFrame(int iPlayerMeleeStrongContinusMaxFrame)	{ this->iPlayerMeleeStrongContinusMaxFrame		= iPlayerMeleeStrongContinusMaxFrame; }			// プレイヤー近距離攻撃(強)で連続攻撃できる最大フレーム数を設定						/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongAirMaxCount(int iPlayerMeleeStrongAirMaxCount)				{ this->iPlayerMeleeStrongAirMaxCount	= iPlayerMeleeStrongAirMaxCount; }				// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を設定				/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongNextSearchRange(float fPlayerMeleeStrongNextSearchRange)	{ this->fPlayerMeleeStrongNextSearchRange	= fPlayerMeleeStrongNextSearchRange; }				// プレイヤーが近距離攻撃(強)を行った後の索敵範囲を設定								/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
@@ -354,10 +354,10 @@ class DataList_PlayerStatus : public DataListBase
 		int		iPlayerKickWallFlame;					// プレイヤーの壁キック継続フレーム数											/* 2025.03.19 菊池雅道 移動関連の変数追加 */
 		int		iPlayerKickWallInputMaxFlame;			// プレイヤーの壁キック入力猶予フレーム数										/* 2025.03.19 菊池雅道 移動関連の変数追加 */
 		int		iPlayerMeleeWeakCoolTime;				// プレイヤーの近距離攻撃(弱)のクールタイム										/* 2025.03.24 菊池雅道 攻撃関連の変数追加 */
-		int		iPlayerMelleStrongChangeChargeFrame;	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数						/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
-		int		iPlayerMelleStrongMaxChargeFrame;		// プレイヤーの近距離攻撃(強)の最大チャージフレーム数							/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
-		float	fPlayerMelleStrongMoveScale;			// プレイヤーの近距離攻撃(強)の移動距離のスケール								/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
-		float	fPlayerMelleStrongMoveSpeed;			// プレイヤーの近距離攻撃(強)の移動速度											/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMeleeStrongChangeChargeFrame;	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数						/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		int		iPlayerMeleeStrongMaxChargeFrame;		// プレイヤーの近距離攻撃(強)の最大チャージフレーム数							/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		float	fPlayerMeleeStrongMoveScale;			// プレイヤーの近距離攻撃(強)の移動距離のスケール								/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
+		float	fPlayerMeleeStrongMoveSpeed;			// プレイヤーの近距離攻撃(強)の移動速度											/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerMeleeStrongContinusMaxFrame;		// プレイヤーが近距離攻撃(強)で連続攻撃できる最大フレーム数						/* 2025.03.19 菊池雅道 攻撃関連の変数追加 */
 		int		iPlayerMeleeStrongAirMaxCount;			// プレイヤーの空中での近距離攻撃(強)回数(※敵を攻撃していない場合の最大数)		/* 2025.02.26 菊池雅道 攻撃関連の変数追加 */
 		float	fPlayerMeleeStrongNextSearchRange;		// プレイヤーの近距離攻撃(強)後の索敵範囲										/* 2025.03.23 菊池雅道 攻撃関連の変数追加 */
@@ -401,10 +401,10 @@ class DataList_PlayerStatus : public DataListBase
 			{ BASE_STATUS_NAME_KICKWALL_FLAME,						&iPlayerKickWallFlame,						DATA_TYPE_INT	},	// プレイヤーの壁キック継続フレーム数									/* 2025.03.19 菊池雅道 追加 */
 			{ BASE_STASUS_NAME_KICKWALL_INPUT_MAX_FLAME,			&iPlayerKickWallInputMaxFlame,				DATA_TYPE_INT	},	// プレイヤーの壁キック入力猶予フレーム数								/* 2025.03.19 菊池雅道 追加 */
 			{ BASE_STATUS_NAME_MELEE_WEAK_COOL_TIME,				&iPlayerMeleeWeakCoolTime,					DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(弱)のクールタイム								/* 2025.03.23 菊池雅道 追加 */
-			{ BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME,	&iPlayerMelleStrongChangeChargeFrame,		DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数				/* 2025.03.19 菊池雅道 追加 */
-			{ BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME,		&iPlayerMelleStrongMaxChargeFrame,			DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)の最大チャージフレーム数					/* 2025.03.19 菊池雅道 追加 */
-			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SCALE,				&fPlayerMelleStrongMoveScale,				DATA_TYPE_FLOAT	},	// プレイヤーの近距離攻撃(強)の移動距離のスケール						/* 2025.03.19 菊池雅道 追加 */
-			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED,				&fPlayerMelleStrongMoveSpeed,				DATA_TYPE_FLOAT	},	// プレイヤー近距離攻撃(強)の移動速度									/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_CHANGE_CHARGE_FRAME,	&iPlayerMeleeStrongChangeChargeFrame,		DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数				/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MAX_CHARGE_FRAME,		&iPlayerMeleeStrongMaxChargeFrame,			DATA_TYPE_INT	},	// プレイヤーの近距離攻撃(強)の最大チャージフレーム数					/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SCALE,				&fPlayerMeleeStrongMoveScale,				DATA_TYPE_FLOAT	},	// プレイヤーの近距離攻撃(強)の移動距離のスケール						/* 2025.03.19 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_MELEE_STRONG_MOVE_SPEED,				&fPlayerMeleeStrongMoveSpeed,				DATA_TYPE_FLOAT	},	// プレイヤー近距離攻撃(強)の移動速度									/* 2025.03.19 菊池雅道 追加 */
 			{ BASE_STATUS_NAME_MELEE_STRONG_CONTINUS_MAX_FRAME,		&iPlayerMeleeStrongContinusMaxFrame,		DATA_TYPE_INT	},	// プレイヤー近距離攻撃(強)で連続攻撃できる最大フレーム数				/* 2025.03.19 菊池雅道 追加 */
 			{ BASE_STATUS_NAME_MELEE_STRONG_AIR_MAX_COUNT,			&iPlayerMeleeStrongAirMaxCount,				DATA_TYPE_INT	},	// プレイヤーが空中で近距離攻撃(強)を行える最大回数(※敵を攻撃していない場合)
 			{ BASE_STATUS_NAME_MELEE_STRONG_NEXT_SEARCH_RANGE,		&fPlayerMeleeStrongNextSearchRange,			DATA_TYPE_FLOAT	},	// プレイヤーが近距離攻撃(強)を行った後の索敵範囲						/* 2025.03.23 菊池雅道 追加 */

@@ -1,6 +1,7 @@
 /* 2025.01.24 駒沢風助 ファイル作成 */
 /* 2025.02.20 菊池雅道 関数・変数追加 */
 /* 2025.03.13 駒沢風助 弾パリィ作成 */
+/* 2025.12.13 菊池雅道	コードリファクタリング */
 
 #pragma once
 #include "Appframe.h"
@@ -23,9 +24,16 @@ class BulletPlayerMeleeWeak : public BulletBase
 		BulletPlayerMeleeWeak();				// コンストラクタ
 		virtual ~BulletPlayerMeleeWeak();		// デストラクタ
 
-		virtual void	Initialization()	override;	// 初期化
-		virtual void	Update()			override;	// 更新
-		void			ArrengementPositionPlayerFront();	// 座標設定						/* 2025.02.20 菊池雅道 関数追加 */
+		virtual void	Initialization()	override;											// 初期化
+		virtual void	Update()			override;											// 更新
+		void			ArrengementPositionPlayerFront();										// 座標設定								/* 2025.02.20 菊池雅道 関数追加 */
+		void			HandleParryBullet();													// 弾パリィ処理							/* 2025.12.13 菊池雅道 関数追加 */
+		void			HandleCounterParry(std::shared_ptr <BulletBase> bullet);				// カウンター有効時の処理				/* 2025.12.13 菊池雅道 関数追加 */
+		void			HandleNormalParry(std::shared_ptr <BulletBase> bullet);					// カウンター無効時の処理（吸収)		/* 2025.12.13 菊池雅道 関数追加 */
+		void			CreateCounterHitEffect();												// カウンターエフェクト生成処理			/* 2025.12.13 菊池雅道 関数追加 */
+		void			UpdateDeleteCount();													// 削除カウント更新処理					/* 2025.12.13 菊池雅道 関数追加 */
+		void			UpdateEffectTransform();												//エフェクトの座標更新処理				/* 2025.12.13 菊池雅道 関数追加 */
+		void 			UpdateCollisionPosition();												// 当たり判定の位置更新処理				/* 2025.12.13 菊池雅道 関数追加 */	
 
 	private:
 		/* 使用するデータリスト */

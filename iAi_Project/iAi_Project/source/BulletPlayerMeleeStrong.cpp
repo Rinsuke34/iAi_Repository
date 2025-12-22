@@ -9,8 +9,8 @@ BulletPlayerMeleeStrong::BulletPlayerMeleeStrong() : BulletBase()
 	this->iObjectType			= OBJECT_TYPE_MELEE_PLAYER;	// オブジェクトの種類を"近接攻撃(プレイヤー)"に設定
 	this->stCollisionCapsule	= {};
 
-	/* 仮追加 */
-	iDeleteCount = 30;
+	/* バレットの生存時間 */
+	iDeleteCount = PLAYER_MELEE_STRONG_DELETE_COUNT;
 }
 
 // 更新
