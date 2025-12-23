@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Appframe.h"
+#include "PlayerBulletDefine.h"
 
 /* ‹ßÚUŒ‚(‹­)ƒNƒ‰ƒX‚ÌéŒ¾ */
 

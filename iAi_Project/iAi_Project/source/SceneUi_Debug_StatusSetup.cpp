@@ -157,17 +157,17 @@ void SceneUi_Debug_StatusSetup::Process()
 				break;
 			case 14:
 				// 近距離攻撃(強)に切り替わるチャージフレーム数
-				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame());
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMeleeStrongChangeChargeFrame());
 				bIntFlg = true;
 				break;
 			case 15:
 				// 近距離攻撃(強)の最大チャージフレーム数
-				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame());
+				fValue = static_cast<float>(this->PlayerStatusList->iGetPlayerMeleeStrongMaxChargeFrame());
 				bIntFlg = true;
 				break;
 			case 16:
 				// 近距離攻撃(強)の移動スケール
-				fValue = this->PlayerStatusList->fGetPlayerMelleStrongMoveScale();
+				fValue = this->PlayerStatusList->fGetPlayerMeleeStrongMoveScale();
 				break;
 			case 17:
 				// 近距離攻撃(強)の移動速度
@@ -407,11 +407,11 @@ void SceneUi_Debug_StatusSetup::Draw()
 	DrawFormatString(870, 350 + 16 * 13, GetColor(255, 255, 255), "近距離攻撃(弱)クールタイム");
 	DrawFormatString(1400, 350 + 16 * 13, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeWeakCoolTime());
 	DrawFormatString(870, 350 + 16 * 14, GetColor(255, 255, 255), "近距離攻撃(強)に切り替わるチャージフレーム数");
-	DrawFormatString(1400, 350 + 16 * 14, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongChangeChargeFrame());
+	DrawFormatString(1400, 350 + 16 * 14, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongChangeChargeFrame());
 	DrawFormatString(870, 350 + 16 * 15, GetColor(255, 255, 255), "近距離攻撃(強)の最大チャージフレーム数");
-	DrawFormatString(1400, 350 + 16 * 15, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMelleStrongMaxChargeFrame());
+	DrawFormatString(1400, 350 + 16 * 15, GetColor(255, 255, 255), "%d", this->PlayerStatusList->iGetPlayerMeleeStrongMaxChargeFrame());
 	DrawFormatString(870, 350 + 16 * 16, GetColor(255, 255, 255), "近距離攻撃(強)の移動スケール");
-	DrawFormatString(1400, 350 + 16 * 16, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMelleStrongMoveScale());
+	DrawFormatString(1400, 350 + 16 * 16, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMeleeStrongMoveScale());
 	DrawFormatString(870, 350 + 16 * 17, GetColor(255, 255, 255), "近距離攻撃(強)の移動速度");
 	DrawFormatString(1400, 350 + 16 * 17, GetColor(255, 255, 255), "%f", this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed());
 	DrawFormatString(870, 350 + 16 * 18, GetColor(255, 255, 255), "近距離攻撃(強)の連続攻撃最大フレーム数");

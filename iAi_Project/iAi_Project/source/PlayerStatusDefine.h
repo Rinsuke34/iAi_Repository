@@ -16,6 +16,7 @@
 /* 2025.03.23 菊池雅道 定数追加 */
 /* 2025.03.27 菊池雅道 攻撃関連の定数追加 */
 /* 2025.10.19 菊池雅道 移動関連の定数追加 */
+/* 2025.12.13 菊池雅道 エフェクト・攻撃関連の定数追加 */
 
 #pragma once
 #include <string>
@@ -107,10 +108,23 @@ static const int	PLAYER_MOVE_COLLISION_UP				= 0;		// プレイヤーの移動用コリジョ
 static const int	PLAYER_MOVE_COLLISION_DOWN				= 1;		// プレイヤーの移動用コリジョン下側																					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 static const int	PLAYER_MOVE_COLLISION_MAX				= 2;		// プレイヤーの移動用コリジョン数																					/* 2025.02.10 菊池雅道 移動関連の定数追加 */
 static const int	PLAYER_MELEE_STRONG_MOVESPEED			= 100;		// 近接攻撃(強)の移動速度																							/* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
+static const float	PLAYER_MELEE_STRONG_THROUGH_SCALE		= 500.0f;	// 近接攻撃(強)後の移動距離																							/* 2025.12.13 菊池雅道 攻撃関連の定数追加 */
 static const int	PLAYER_MELEE_CHARGE_MAX					= 180;		// 近接攻撃の最大溜め時間																							/* 2025.01.22 菊池雅道 攻撃関連の定数追加 */
 static const int	PLAYER_JUNP_DOWN_MOTION_SWITCH_FRAME	= 10;		// 落下時ジャンプ下降モーションに切り替える際の猶予フレーム(意図しないモーション切り替えを防止するために使用)		/* 2025.03.11 菊池雅道 モーション関連の定数追加 */
 static const int	PLAYER_SLOWMOTION_COUNT_MAX				= 120;		// スローモーションの最大フレーム数																					/* 2025.03.12 菊池雅道 スローモーション関連の定数追加 */
 static const int	PLAYER_FALL_DELAY						= 60 * 2;	// 落下時の待機フレーム数																							/* 2025.03.22 駒沢風助 落下時のカメラプレイヤー追従作成 */
+
+/* エフェクト用定数 */
+static const int	PLAYER_MELEE_CHARGE_EFFECT_FRAME	= 60; 		// 近接攻撃(強)の溜めエフェクトのフレーム数		/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_CHARGE_FINISH_EFFECT_FRAME	= 20;		// 溜め完了エフェクトのフレーム数				/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_DODGE_EFFECT_FRAME			= 30;		// 回避エフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_JUMP_EFFECT_FRAME 			= 30;		// ジャンプエフェクトのフレーム数				/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_LAND_EFFECT_FRAME 			= 30;		// 着地エフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_WARP_EFFECT_FRAME 			= 60;		// ワープエフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_DAMAGE_EFFECT_FRAME			= 60;		// クナイ投擲エフェクトのフレーム数				/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_RECOVERY_EFFECT_FRAME		= 90;		// 復帰エフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_SHEATH_FRAME					= 20;		// 抜刀エフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
+static const int	PLAYER_PROJECTILE_FRAME 			= 20;		// 収刀エフェクトのフレーム数					/* 2025.12.13 菊池雅道 エフェクト関連の定数追加 */
 
 /* プレイヤー能力値リスト */
 struct PLAYER_STATUS_LIST

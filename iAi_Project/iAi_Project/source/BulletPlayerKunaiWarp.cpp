@@ -1,6 +1,7 @@
 /* 2025.03.13 菊池雅道 ファイル作成 */
 /* 2025.03.17 菊池雅道 ワープ処理修正 */
 /* 2025.03.27 菊池雅道 ワープ処理修正 */
+/* 2025.12.13 菊池雅道	コードリファクタリング */
 
 #include "BulletPlayerKunaiWarp.h"
 
@@ -123,310 +124,344 @@ void BulletPlayerKunaiWarp::Update()
 
 /* 2025.03.17 菊池雅道 ワープ処理修正 開始 */
 /* 2025.03.27 菊池雅道 ワープ処理修正 開始 */
-
 // ワープ処理
 void BulletPlayerKunaiWarp:: Warp()
 {
-	/* ターゲットエネミーが存在するか確認 */
 	if (this->pTargetEnemy != nullptr)
 	{
 		// ターゲットエネミーが存在する場合
-		//敵の後ろにワープし、撃破する
-		/* クナイの座標をターゲット座標に固定 */
-		this->vecPosition = pTargetEnemy->vecGetPosition();
-
-		/* モデルを非表示に設定 */
-		MV1SetVisible(this->iModelHandle, false);
-
-		/* クナイの攻撃フラグが立っていないか確認 */
-		if (this->bKunaiAttackFlg == false)
-		{
-			/* エネミーの角度からY軸の回転行列を求める */
-			MATRIX matEnemyrRotation = MGetRotY((pTargetEnemy->vecGetRotation().y));
-
-			/* エネミーの向きのベクトル */
-			VECTOR vecEnemyDirection = VGet(0, 0, 1);
-
-			/* 行列をベクトルに変換 */
-			vecEnemyDirection = VTransform(vecEnemyDirection, matEnemyrRotation);
-
-			/* エネミーの向きを正規化 */
-			vecEnemyDirection = VNorm(vecEnemyDirection);
-
-			/* エネミーの向きの角度(ラジアン)を取得 */
-			float fEnemyRotate = -atan2f(vecEnemyDirection.x, vecEnemyDirection.z);
-
-			/* プレイヤーの向きを敵と逆に設定 */
-			this->PlayerStatusList->SetPlayerAngleX(fEnemyRotate - PI);
-
-			/* プレイヤーのワープ位置を敵の後ろに設定 */
-			VECTOR vecPlayerWarpPosition = VScale(vecEnemyDirection, 250);
-
-			//ワープ後の座標に足場があるか確認し、プレイヤーが落ちないようにする処理
-			{
-				/* プレイヤーの足場を判定する線分 */
-				COLLISION_LINE stCollisionLine;
-
-				/* 足場を取得 */
-				auto& PlatformList = ObjectList->GetPlatformList();
-
-				/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
-				stCollisionLine.vecLineStart	= vecPlayerWarpPosition;
-				stCollisionLine.vecLineStart.y	+= PLAYER_HEIGHT;
-				stCollisionLine.vecLineEnd		= stCollisionLine.vecLineStart;
-				stCollisionLine.vecLineEnd.y	-= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
-
-				/* 足場と接触するか確認 */
-				for (auto& platform : PlatformList)
-				{
-					/* 足場と線分の接触判定を行う */
-					MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
-
-					/* 接触しているか確認 */
-					if (stHitPolyDim.HitFlag == 1)
-					{
-						// 接触している場合
-						/* 敵の後ろにワープする */
-						vecPlayerWarpPosition = VAdd(pTargetEnemy->vecGetPosition(), vecPlayerWarpPosition);
-
-					}
-					else
-					{
-						// 接触していない場合
-						/* 敵の位置にワープする */
-						vecPlayerWarpPosition = pTargetEnemy->vecGetPosition();
-					}
-				}
-			}
-
-			/* プレイヤーの座標をワープ位置に設定 */
-			this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPosition);
-
-			/* プレイヤーの攻撃状態を取得 */
-			int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
-
-			/* プレイヤーの攻撃状態が遠距離攻撃構え状態であるか確認 */
-			if (iPlayerAttackState == PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
-			{
-				// 遠距離攻撃構え状態である場合
-				/* 遠距離攻撃構え状態をキャンセルする */
-				this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
-			}
-
-			/* プレイヤーの状態を"自由状態"に遷移 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
-
-			/* プレイヤーのモーションを"近距離攻撃(強)(終了)"に変更 */
-			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
-
-			/* スローモーションフラグが有効であるか確認 */
-			if (this->StageStatusList->bGetGameSlowFlg() == true)
-			{
-				// 有効である場合
-				/* スローモーションフラグを無効化 */
-				this->StageStatusList->SetGameSlowFlg(false);
-			}
-
-			/* 当たり判定設定 */
-			{
-				/* 敵の位置に当たり判定を設定 */
-				this->stCollisionSqhere.vecSqhere = pTargetEnemy->vecGetPosition();
-
-				/* 当たり判定の半径を設定 */
-				this->stCollisionSqhere.fSqhereRadius = 50;
-			}
-
-			/* クナイの攻撃フラグを設定 */
-			this->bKunaiAttackFlg = true;
-
-			/* ワープのSEを再生 */
-			gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
-
-			/* ワープエフェクトを生成 */
-			std::shared_ptr<EffectSelfDelete_PlayerFollow> pWarpeEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
-
-			/* ワープエフェクトの読み込み */
-			pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
-
-			/* ワープエフェクトの初期化 */
-			pWarpeEffect->Initialization();
-
-			/* ワープエフェクトの時間を設定 */
-			pWarpeEffect->SetDeleteCount(60);
-
-			/* ワープエフェクトの座標を設定 */
-			pWarpeEffect->SetPosition(vecPosition);
-
-			/* ワープエフェクトをリストに登録 */
-			{
-				/* ワープエフェクトをリストに登録 */
-				this->ObjectList->SetEffect(pWarpeEffect);
-			}
-		}
+		Warp_ToTargetEnemy();
 	}
 	else
 	{
 		// ターゲットエネミーが存在しない場合
-		
-		/* クナイの進行方向を正規化 */
-		VECTOR vecWarpOffset = VNorm(vecKunaiMoveDirection);
-		
-		/* 高さ成分は除く */
-		vecWarpOffset.y = 0;
-
-		/* プレイヤーのワープ位置(着弾地点からプレイヤーの幅分ずらす) */
-		VECTOR vecPlayerWarpPosition = VAdd(this->vecKunaiTargetPosition, VScale(vecWarpOffset, - PLAYER_WIDE));
-
-		/* プレイヤーの足場を判定する線分 */
-		COLLISION_LINE stCollisionLine;
-
-		/* 足場を取得 */
-		auto& PlatformList = ObjectList->GetPlatformList();
-
-		/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
-		stCollisionLine.vecLineStart = vecPlayerWarpPosition;
-		stCollisionLine.vecLineStart.y += PLAYER_HEIGHT;
-		stCollisionLine.vecLineEnd = stCollisionLine.vecLineStart;
-		stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
-
-		/* 足場と接触するか確認 */
-		for (auto& platform : PlatformList)
-		{
-			/* 足場と線分の接触判定を行う */
-			MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
-
-			/* 接触しているか確認 */
-			if (stHitPolyDim.HitFlag == 1)
-			{
-				// 接触している場合
-				/* クナイの座標をターゲット座標に固定 */
-				this->vecPosition = this->vecKunaiTargetPosition;
-
-				/* プレイヤーをクナイの座標に移動 */
-				this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
-
-			}
-			else
-			{
-				// 接触していない場合
-				// 近くに足場があったら移動する
-				/* 足場を探すカプセルコリジョン */
-				COLLISION_CAPSULE stSearchPlatform;
-
-				/* コリジョンの大きさを設定 */
-				stSearchPlatform.vecCapsuleTop = VAdd(this->vecKunaiTargetPosition, VGet(0.f, PLAYER_HEIGHT * 3, 0.f));
-				stSearchPlatform.vecCapsuleBottom = vecKunaiTargetPosition;
-				stSearchPlatform.fCapsuleRadius = PLAYER_WIDE;
-
-				/* 足場を探す */
-				for (auto& platform : PlatformList)
-				{
-					/* 足場とコリジョンの接触判定を行う */
-					MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stSearchPlatform);
-
-					/* 接触しているか確認 */
-					if (stHitPolyDim.HitNum > 0)
-					{
-						// 接触している場合
-						/* 接触したポリゴンから法線ベクトルを取得する */
-						for (int j = 0; j < stHitPolyDim.HitNum; j++)
-						{
-							/* 法線ベクトルを取得 */
-							/* 法線ベクトルが0であるならば、対象外とする */
-							if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f)
-							{
-								
-								/* 法線ベクトルが上向きであるか確認 */
-								if (stHitPolyDim.Dim[j].Normal.y > 0.1)
-								{
-									// 上向きである場合
-									/* 足場に乗るようにプレイヤーのワープ位置を設定 */
-									vecPlayerWarpPosition = VAdd(this->vecKunaiTargetPosition, VScale(vecWarpOffset, + PLAYER_WIDE));
-									
-									/* 足場の高さにする */
-									vecPlayerWarpPosition.y = stHitPolyDim.Dim[j].Position[0].y;
-								}
-							}
-						}
-					}
-				}
-				
-				/* プレイヤーの座標をワープ位置に設定 */
-				this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPosition);
-			}
-		}
-
-		/* プレイヤーの攻撃状態を取得 */
-		int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
-
-		/* プレイヤーの攻撃状態が遠距離攻撃構え状態であるか確認 */
-		if (iPlayerAttackState == PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
-		{
-			// 遠距離攻撃構え状態である場合
-			/* プレイヤーの状態を"自由状態"に遷移 */
-			this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
-
-			/* プレイヤーのモーションを無しに設定 */
-			this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
-
-			/* 遠距離攻撃構え状態をキャンセルする */
-			this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
-		}
-
-		/* スローモーションフラグが有効であるか確認 */
-		if (this->StageStatusList->bGetGameSlowFlg() == true)
-		{
-			// 有効である場合
-			/* スローモーションフラグを無効化 */
-			this->StageStatusList->SetGameSlowFlg(false);
-		}
-
-		/* ワープのSEを再生 */
-		gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
-
-		/* ワープエフェクトを生成 */
-		std::shared_ptr<EffectSelfDelete_PlayerFollow> pWarpeEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
-
-		/* ワープエフェクトの読み込み */
-		pWarpeEffect->SetEffectHandle((this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish")));
-
-		/* ワープエフェクトの初期化 */
-		pWarpeEffect->Initialization();
-
-		/* ワープエフェクトの時間を設定 */
-		pWarpeEffect->SetDeleteCount(60);
-
-		/* ワープエフェクトの座標を設定 */
-		pWarpeEffect->SetPosition(vecPosition);
-
-		/* ワープエフェクトをリストに登録 */
-		{
-			/* ワープエフェクトをリストに登録 */
-			this->ObjectList->SetEffect(pWarpeEffect);
-		}
-
-		/* クナイの削除フラグを設定 */
-		this->bDeleteFlg = true;
+		WarpToKunaiHitPosition();
 	}
 
-	/* クナイの攻撃フラグが立っているか確認 */
-	if (this->bKunaiAttackFlg == true)
-	{
-		// クナイの攻撃フラグが立っている場合
-		// クナイの削除処理
-		/* クナイの削除カウント(攻撃時間)が残っていた場合 */
-		if (iKunaiDeleteCount > 0)
-		{
-			/* クナイの削除カウント(攻撃時間)を減算 */
-			iKunaiDeleteCount--;
-		}
-		/* クナイの削除カウント(攻撃時間)が0になった場合 */
-		else
-		{
-			/* クナイの削除フラグを設定 */
-			this->bDeleteFlg = true;
-		}
-	}
+	// クナイ攻撃後の削除処理
+	HandleKunaiDeleteAfterAttack();
 }
 /* 2025.03.17 菊池雅道 ワープ処理修正 終了 */
 /* 2025.03.27 菊池雅道 ワープ処理修正 終了 */
+
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+void BulletPlayerKunaiWarp::Warp_ToTargetEnemy()
+{
+	/* クナイの座標をターゲット座標に固定 */
+	this->vecPosition = pTargetEnemy->vecGetPosition();
+
+	/* モデルを非表示に設定 */
+	MV1SetVisible(this->iModelHandle, false);
+
+	/* クナイの攻撃フラグが立っていないか確認 */
+	if (this->bKunaiAttackFlg == true)
+	{
+		return;
+	}
+
+	/* エネミー後方へワープする処理 */
+	WarpPlayerBehindEnemy();
+
+	/* プレイヤー状態の後処理（敵あり）*/
+	FinalizePlayerStateAfterWarp();
+
+	/* クナイ攻撃用当たり判定設定 */
+	SetupKunaiAttackCollision();
+
+	/* クナイの攻撃フラグを設定 */
+	this->bKunaiAttackFlg = true;
+
+	/* ワープ演出 */
+	PlayWarpEffect();
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// エネミー後方へワープする処理
+void BulletPlayerKunaiWarp::WarpPlayerBehindEnemy()
+{
+	/* エネミーの角度からY軸の回転行列を求める */
+	MATRIX matEnemyRotation = MGetRotY(pTargetEnemy->vecGetRotation().y);
+
+	/* エネミーの向きベクトル */
+	VECTOR vecEnemyDirection = VTransform(VGet(0, 0, 1), matEnemyRotation);
+	vecEnemyDirection = VNorm(vecEnemyDirection);
+
+	/* エネミーの向きの角度(ラジアン)を取得 */
+	float fEnemyRotate = -atan2f(vecEnemyDirection.x, vecEnemyDirection.z);
+
+	/* プレイヤーの向きを敵と逆に設定 */
+	this->PlayerStatusList->SetPlayerAngleX(fEnemyRotate - PI);
+
+	/* プレイヤーのワープ位置を敵の後ろに設定 */
+	VECTOR vecPlayerWarpPosition = VScale(vecEnemyDirection, KUNAI_WARP_POSITION_Z_OFFSET);
+
+	/* プラットフォームに応じたワープ位置調整処理 */
+	AdjustWarpPositionForPlatform(pTargetEnemy->vecGetPosition(), vecPlayerWarpPosition);
+
+	/* プレイヤーの座標をワープ位置に設定 */
+	this->ObjectList->GetCharacterPlayer()->SetPosition(vecPlayerWarpPosition);
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// プラットフォームに応じたワープ位置調整処理
+void BulletPlayerKunaiWarp::AdjustWarpPositionForPlatform(const VECTOR& vecEnemyPos,VECTOR& vecWarpOffset)
+{
+
+	/* プレイヤーの足場を判定する線分 */
+	COLLISION_LINE stCollisionLine;
+
+	/* 足場を取得 */
+	auto& PlatformList = ObjectList->GetPlatformList();
+
+	/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
+	stCollisionLine.vecLineStart = vecWarpOffset;
+	stCollisionLine.vecLineStart.y += PLAYER_HEIGHT;
+	stCollisionLine.vecLineEnd = stCollisionLine.vecLineStart;
+	stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
+
+	/* 足場と接触するか確認 */
+	for (auto& platform : PlatformList)
+	{
+		/* 足場と線分の接触判定を行う */
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
+
+		/* 接触しているか確認 */
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+			/* 敵の後ろにワープする */
+			vecWarpOffset = VAdd(vecEnemyPos, vecWarpOffset);
+		}
+		else
+		{
+			// 接触していない場合
+			/* 敵の位置にワープする */
+			vecWarpOffset = vecEnemyPos;
+		}
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// プレイヤー状態の後処理（敵あり）
+void BulletPlayerKunaiWarp::FinalizePlayerStateAfterWarp()
+{
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+
+	/* プレイヤーの攻撃状態が遠距離攻撃構え状態であるか確認 */
+	if (iPlayerAttackState == PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
+	{
+		// 遠距離攻撃構え状態である場合
+		/* 遠距離攻撃構え状態をキャンセルする */
+		this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
+	}
+
+	/* プレイヤーの状態を"自由状態"に遷移 */
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+
+	/* プレイヤーのモーションを"近距離攻撃(強)(終了)"に変更 */
+	this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_STRONG_END);
+
+	/* スローモーションフラグが有効であるか確認 */
+	if (this->StageStatusList->bGetGameSlowFlg() == true)
+	{
+		// 有効である場合
+		/* スローモーションフラグを無効化 */
+		this->StageStatusList->SetGameSlowFlg(false);
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// ワープクナイ用当たり判定設定
+// 壁などに当たった場合に、設定範囲の中で足場を探してワープするための当たり判定
+void BulletPlayerKunaiWarp::SetupKunaiAttackCollision()
+{
+	this->stCollisionSqhere.vecSqhere = pTargetEnemy->vecGetPosition();
+	this->stCollisionSqhere.fSqhereRadius = KUNAI_WARP_RADIUS;
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// 敵なしワープ処理
+void BulletPlayerKunaiWarp::WarpToKunaiHitPosition()
+{
+	/* クナイの進行方向を正規化 */
+	VECTOR vecWarpOffset = VNorm(vecKunaiMoveDirection);
+	/* 高さ成分は除く */
+	vecWarpOffset.y = 0;
+
+	/* プレイヤーのワープ位置(着弾地点からプレイヤーの幅分ずらす) */
+	VECTOR vecPlayerWarpPosition = VAdd(this->vecKunaiTargetPosition, VScale(vecWarpOffset, -PLAYER_WIDE));
+	
+	/* エネミー無し時のワープ位置調整処理 */
+	AdjustWarpPositionWithoutEnemy(vecPlayerWarpPosition);
+
+	/* エネミー無し時のプレイヤー状態の後処理 */
+	FinalizePlayerStateWithoutEnemy();
+
+	/* エフェクト再生 */
+	PlayWarpEffect();
+
+	/* クナイの削除フラグを設定 */
+	this->bDeleteFlg = true;
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// エネミー無し時のワープ位置調整処理
+void BulletPlayerKunaiWarp::AdjustWarpPositionWithoutEnemy(VECTOR& vecWarpPosition)
+{
+	/* プレイヤーの足場を判定する線分 */
+	COLLISION_LINE stCollisionLine;
+
+	/* 足場を取得 */
+	auto& PlatformList = ObjectList->GetPlatformList();
+
+	/* ワープ後のプレイヤーの頂点から下方向へ向けた線分を作成 */
+	stCollisionLine.vecLineStart = vecWarpPosition;
+	stCollisionLine.vecLineStart.y += PLAYER_HEIGHT;
+	stCollisionLine.vecLineEnd = stCollisionLine.vecLineStart;
+	stCollisionLine.vecLineEnd.y -= PLAYER_HEIGHT + PLAYER_CLIMBED_HEIGHT;
+
+	/* 足場と接触するか確認 */
+	for (auto& platform : PlatformList)
+	{
+		/* 足場と線分の接触判定を行う */
+		MV1_COLL_RESULT_POLY stHitPolyDim = platform->HitCheck_Line(stCollisionLine);
+
+		/* 接触しているか確認 */
+		if (stHitPolyDim.HitFlag == 1)
+		{
+			// 接触している場合
+			/* クナイの座標をターゲット座標に固定 */
+			this->vecPosition = this->vecKunaiTargetPosition;
+			this->ObjectList->GetCharacterPlayer()->SetPosition(this->vecPosition);
+		}
+		else
+		{
+			// 接触していない場合
+			// 近くに足場があったら移動する
+			SearchNearbyPlatform(vecWarpPosition);
+			this->ObjectList->GetCharacterPlayer()->SetPosition(vecWarpPosition);
+		}
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// 足場探索（敵なし）
+void BulletPlayerKunaiWarp::SearchNearbyPlatform(VECTOR& vecWarpPosition)
+{
+	/* 足場を探すカプセルコリジョン */
+	COLLISION_CAPSULE stSearchPlatform;
+
+	/* コリジョンの大きさを設定 */
+	stSearchPlatform.vecCapsuleTop =VAdd(this->vecKunaiTargetPosition, VGet(0.f, PLAYER_HEIGHT * KUNAI_WARP_ADJUST_HEIGHT, 0.f));
+	stSearchPlatform.vecCapsuleBottom = vecKunaiTargetPosition;
+	stSearchPlatform.fCapsuleRadius = PLAYER_WIDE;
+
+	/* 足場を探す */
+	auto& PlatformList = ObjectList->GetPlatformList();
+	for (auto& platform : PlatformList)
+	{
+		/* 足場とコリジョンの接触判定を行う */
+		MV1_COLL_RESULT_POLY_DIM stHitPolyDim = platform->HitCheck_Capsule(stSearchPlatform);
+
+		// 接触している場合
+						/* 接触したポリゴンから法線ベクトルを取得する */
+		for (int j = 0; j < stHitPolyDim.HitNum; j++)
+		{
+			/* 法線ベクトルを取得 */
+			/* 法線ベクトルが上向きであるか確認 */
+			if (VSize(stHitPolyDim.Dim[j].Normal) > 0.f && stHitPolyDim.Dim[j].Normal.y > 0.1f)
+			{ 
+				// 上向きである場合
+				/* 足場に乗るようにプレイヤーのワープ位置を設定 */
+				vecWarpPosition =VAdd(this->vecKunaiTargetPosition,VScale(VNorm(vecKunaiMoveDirection), PLAYER_WIDE));
+
+				/* 足場の高さにする */
+				vecWarpPosition.y = stHitPolyDim.Dim[j].Position[0].y;
+			}
+		}
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// プレイヤー状態の後処理(敵なし)
+void BulletPlayerKunaiWarp::FinalizePlayerStateWithoutEnemy()
+{
+	/* プレイヤーの攻撃状態を取得 */
+	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
+
+	/* プレイヤーの攻撃状態が遠距離攻撃構え状態であるか確認 */
+	if (iPlayerAttackState == PLAYER_ATTACKSTATUS_PROJECTILE_POSTURE)
+	{
+		// 遠距離攻撃構え状態である場合	
+		/* プレイヤーの攻撃状態を"自由状態"に遷移 */
+		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_FREE);
+		/* プレイヤーのモーションを"なし"に変更 */
+		this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_NONE);
+		
+		/* 遠距離攻撃構え状態をキャンセルする */
+		this->PlayerStatusList->SetPlayerAimCancelledFlg(true);
+	}
+
+	/* スローモーションフラグが有効であるか確認 */
+	if (this->StageStatusList->bGetGameSlowFlg() == true)
+	{
+		// 有効である場合
+		/* スローモーションフラグを無効化 */
+		this->StageStatusList->SetGameSlowFlg(false);
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// ワープ演出再生
+void BulletPlayerKunaiWarp::PlayWarpEffect()
+{
+	/* SE再生 */
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_NIAI);
+
+	/* ワープエフェクト再生 */
+	auto pWarpEffect = std::make_shared<EffectSelfDelete_PlayerFollow>(true);
+	pWarpEffect->SetEffectHandle(this->EffectList->iGetEffect("FX_charge_finish/FX_charge_finish"));
+	pWarpEffect->Initialization();
+	pWarpEffect->SetDeleteCount(PLAYER_WARP_EFFECT_FRAME);
+	pWarpEffect->SetPosition(vecPosition);
+	this->ObjectList->SetEffect(pWarpEffect);
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
+
+/* 2025.12.13 菊池雅道	コードリファクタリング 開始 */
+// クナイ攻撃後の削除処理
+void BulletPlayerKunaiWarp::HandleKunaiDeleteAfterAttack()
+{
+	/* クナイの攻撃フラグが無効な場合は処理を抜ける */
+	if (this->bKunaiAttackFlg == false)
+	{
+		return;
+	}
+
+	/* クナイの削除カウントを確認 */
+	if (iKunaiDeleteCount > 0)
+	{
+		/* クナイの削除カウント(攻撃時間)が残っていた場合 */
+		// 削除カウントを減らす
+		iKunaiDeleteCount--;
+	}
+	else
+	{
+		// 削除カウントが0になった場合
+		/* クナイの削除フラグを有効にする */
+		this->bDeleteFlg = true;
+	}
+}
+/* 2025.12.13 菊池雅道	コードリファクタリング 終了 */
