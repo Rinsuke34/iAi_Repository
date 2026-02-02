@@ -232,10 +232,10 @@ void CharacterPlayer::Player_Melee_Posture()
 			return;
 		}	
 
-	/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
-	if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
-	{
-		// 近接攻撃(強)で敵を倒した後の場合		
+		/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
+		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
+		{
+			// 近接攻撃(強)で敵を倒した後の場合		
 			/* 処理を行わない */
 			return;
 		}
@@ -254,7 +254,7 @@ void CharacterPlayer::Player_Melee_Posture()
 	}
 	/* 攻撃入力を離したか確認 */
 	else if (this->InputList->bGetGameInputAction(INPUT_REL, GAME_ATTACK) == true)
-		{
+	{
 		// 近距離攻撃(強)で敵を攻撃した後の場合
 		if (this->PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg() == true)
 		{
@@ -332,7 +332,7 @@ bool CharacterPlayer::bHandleAfterStrongKill(int iAfterCount, int iAfterContinue
 // 空中での近接攻撃(強)の制限処理
 bool CharacterPlayer::bHandleAirStrongLimit(int iAirCount)
 {
-		/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
+	/* 空中での近接攻撃(強)の回数が最大数が超えていないか確認 */
 	if (iAirCount < PlayerStatusList->iGetPlayerMeleeStrongAirMaxCount())
 	{
 		// 超えていない場合
@@ -340,10 +340,10 @@ bool CharacterPlayer::bHandleAirStrongLimit(int iAirCount)
 		return false;
 	}
 	
-			/* プレイヤーの現在の攻撃チャージフレームを0設定 */
+	/* プレイヤーの現在の攻撃チャージフレームを0設定 */
 	PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
 
-			/* 近接攻撃(強)の処理を行わない */
+	/* 近接攻撃(強)の処理を行わない */
 	return true;
 }
 /* 2025.11.23 菊池雅道	コードリファクタリング		終了 */
@@ -352,9 +352,9 @@ bool CharacterPlayer::bHandleAirStrongLimit(int iAirCount)
 // 近接攻撃(強)で敵を倒した後の近接攻撃(強)遷移処理
 bool CharacterPlayer::bHandleAfterStrongKillAttackTransition(int iAfterCount, int iAfterContinueMax, int iChargeMax)
 {
-		/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
+	/* プレイヤーが近接攻撃(強)で敵を倒した後かのフラグを確認 */
 	if (!PlayerStatusList->bGetPlayerMeleeStrongEnemyAttackFlg())
-		{
+	{
 		// 近接攻撃(強)で敵を倒した後でない場合
 		/* 処理を行わない */
 		return false;
@@ -362,7 +362,7 @@ bool CharacterPlayer::bHandleAfterStrongKillAttackTransition(int iAfterCount, in
 
 	/* 近接攻撃(強)で敵を倒した後のカウントが一定値以上か確認 */
 	if (iAfterCount > iAfterContinueMax)
-			{
+	{
 		// 近接攻撃(強)で敵を倒した後のカウントが一定値以上の場合
 		/* 処理を行わない */
 		return false;
@@ -377,7 +377,7 @@ bool CharacterPlayer::bHandleAfterStrongKillAttackTransition(int iAfterCount, in
 	/* 落下の加速度を初期化 */
 	this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-				/* SE終了 */
+	/* SE終了 */
 	if (this->PlayerStatusList->iGetPlayerNowAttakChargeFlame() >= iChargeMax)
 	{
 		gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE_HOLD);
@@ -387,7 +387,7 @@ bool CharacterPlayer::bHandleAfterStrongKillAttackTransition(int iAfterCount, in
 		gpDataList_Sound->SE_PlaySound_Stop(SE_PLAYER_CHARGE);
 	}
 
-				/* プレイヤーの現在の攻撃チャージフレームをリセット */
+	/* プレイヤーの現在の攻撃チャージフレームをリセット */
 	PlayerStatusList->SetPlayerNowAttakChargeFlame(0);
 
 	/* 近接攻撃(強)で敵を倒した後のカウントをリセット */
@@ -575,7 +575,7 @@ void CharacterPlayer::HandleAttackRelease(int iNowAttakChargeFlame,int iMeleeStr
 	/* チャージフレームに応じて攻撃種別を変更 */
 	if (iNowAttakChargeFlame < iMeleeStrongChangeFrame)
 	{
-	// 攻撃チャージフレームが近接攻撃(強)の切り替えフレーム数未満の場合
+		// 攻撃チャージフレームが近接攻撃(強)の切り替えフレーム数未満の場合
 		/* プレイヤーの状態を"近接攻撃中(弱)"に設定 */
 		this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_MELEE_WEEK);
 	}
@@ -878,14 +878,14 @@ void CharacterPlayer::AdjustMoveForPlatformLanding(VECTOR& vecMoveDirection)
 // 近距離攻撃(強)移動処理
 void CharacterPlayer::HandleChargeAttackMove(int iChargeCount)
 {
-		/* 近接攻撃(強)による移動量を取得 */
-		VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
+	/* 近接攻撃(強)による移動量を取得 */
+	VECTOR vecMoveDirection = this->PlayerStatusList->vecGetPlayerChargeAttakTargetMove();
 			
-		/* 近接攻撃(強)の移動速度を取得 */
-		float fMoveSpeed = this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed();
+	/* 近接攻撃(強)の移動速度を取得 */
+	float fMoveSpeed = this->PlayerStatusList->fGetPlayerMeleeStrongMoveSpeed();
 
-		//近接攻撃(強)中に壁に当たった場合、下に移動しないようにする
-		/* 壁との接触フラグを確認 */
+	//近接攻撃(強)中に壁に当たった場合、下に移動しないようにする
+	/* 壁との接触フラグを確認 */
 	if (this->PlayerStatusList->bGetPlayerWallTouchFlg() == true)
 	{
 		// 壁に接触している場合
@@ -1342,25 +1342,25 @@ bool CharacterPlayer::bPlayer_Projectile_Posture_AttackInput()
 		return false;
 	}
 
-		/* カメラの補完カウントを取得 */
+	/* カメラの補完カウントを取得 */
 	int CameraLeapCount =
-		this->StageStatusList->iGetCameraTargetLeapCount();
+	this->StageStatusList->iGetCameraTargetLeapCount();
 
 	/* カメラ補完が完了していない場合 */
 	if (CameraLeapCount < CAMERA_POSITION_LEAP_COUNT_MAX_PROJECTILE)
-		{
+	{
 		return true;
 	}
 
-			/* 遠距離攻撃のクールタイムを確認 */
+	/* 遠距離攻撃のクールタイムを確認 */
 	if (this->iProjectileNowCoolTime != 0)
 			{
 		return true;
 	}
 
-				/* 現在のクナイの所持数を取得 */
+	/* 現在のクナイの所持数を取得 */
 	int iNowKunaiCount =
-		this->PlayerStatusList->iGetNowHaveKunai();
+	this->PlayerStatusList->iGetNowHaveKunai();
 
 	/* クナイを所持していない場合 */
 	if (iNowKunaiCount <= 0)
@@ -1370,7 +1370,7 @@ bool CharacterPlayer::bPlayer_Projectile_Posture_AttackInput()
 
 					/* クナイ消費無効率(%)を取得 */
 	int iKeepProbability =
-		this->PlayerStatusList->iGetAddKunaiKeepProbability();
+	this->PlayerStatusList->iGetAddKunaiKeepProbability();
 
 	/* 消費判定 */
 	if (GetRand(100) > iKeepProbability)
@@ -1382,12 +1382,10 @@ bool CharacterPlayer::bPlayer_Projectile_Posture_AttackInput()
 	this->PlayerStatusList->SetNowHaveKunai(iNowKunaiCount);
 
 	/* プレイヤーのモーションを投擲に設定 */
-	this->PlayerStatusList->SetPlayerMotion_Attack(
-		MOTION_ID_ATTACK_THROW);
+	this->PlayerStatusList->SetPlayerMotion_Attack(MOTION_ID_ATTACK_THROW);
 
 	/* プレイヤーの攻撃状態を"遠距離攻撃中"に遷移 */
-	this->PlayerStatusList->SetPlayerAttackState(
-	PLAYER_ATTACKSTATUS_PROJECTILE);
+	this->PlayerStatusList->SetPlayerAttackState(PLAYER_ATTACKSTATUS_PROJECTILE);
 
 	return true;
 }

@@ -610,7 +610,7 @@ void CharacterPlayer::ApplyGravity()
 /* 2025.03.11 菊池雅道	回避の処理修正			開始 */
 /* 2025.03.17 駒沢風助	画面エフェクト追加		開始 */
 // 回避
-void CharacterPlayer::Player_Dodg()
+void CharacterPlayer::Player_Dodge()
 {
 	/* 回避処理を行う状態か確認 */
 	if (!bIsDodgeExecutable())
@@ -678,8 +678,8 @@ void CharacterPlayer::UpdateDodging()
 	/* プレイヤーの攻撃状態を取得 */
 	int iPlayerAttackState = this->PlayerStatusList->iGetPlayerAttackState();
 	
-		/* 回避状態の最大フレーム数を取得 */
-		int iDodgeMaxFrame = this->PlayerStatusList->iGetPlayerMaxDodgeFlame();
+	/* 回避状態の最大フレーム数を取得 */
+	int iDodgeMaxFrame = this->PlayerStatusList->iGetPlayerMaxDodgeFlame();
 
 		/* 現在の回避状態フレーム数を取得 */
 	int iNowDodgeFrame = this->PlayerStatusList->iGetPlayerNowDodgeFlame();
@@ -798,7 +798,7 @@ void CharacterPlayer::StartDodge()
 				
 	/* クールタイム設定 */
 	this->iDodgeNowCoolTime =
-		this->PlayerStatusList->iGetPlayerDodgeCoolTime();
+	this->PlayerStatusList->iGetPlayerDodgeCoolTime();
 }
 /* 2025.12.13 菊池雅道	コードリファクタリング		終了 */
 
@@ -968,9 +968,9 @@ void CharacterPlayer::ResolveVerticalPlatformCollision(VECTOR& vecNextPosition, 
 		}
 
 		/* 落下加速度リセット */
-			this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
+		this->PlayerStatusList->SetPlayerNowFallSpeed(0.f);
 
-			/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認　※近距離攻撃(強)中かつ敵にロックオンしている場合は、特別な設定値を使用 */
+		/* ヒットした座標がプレイヤーが歩いて登れる位置より低い位置であるか確認　※近距離攻撃(強)中かつ敵にロックオンしている場合は、特別な設定値を使用 */
 		float fClimbHeight = bIsMeleeStrongToLockOnEnemy ? PLAYER_CLIMBED_HEIGHT_STRONG_MELEE : PLAYER_CLIMBED_HEIGHT;
 		if (fStandPosY < vecPosition.y + fClimbHeight)
 		{
@@ -1043,7 +1043,7 @@ void CharacterPlayer::HandleLandingEvent(bool bPrevJumpingFlg)
 	}
 
 	/* 着地SE */
-			gpDataList_Sound->SE_PlaySound(SE_PLAYER_LANDING);
+	gpDataList_Sound->SE_PlaySound(SE_PLAYER_LANDING);
 		
 	/* 着地エフェクト */
 	std::shared_ptr<EffectSelfDelete> pAddEffect = std::make_shared<EffectSelfDelete>();
@@ -1079,7 +1079,7 @@ void CharacterPlayer::UpdateAirMotion()
 	if (PlayerStatusList->fGetPlayerNowFallSpeed() < 0)
 	{
 		// 上昇している場合
-			// 攻撃モーションが投げ(準備)の場合は何もしない
+		// 攻撃モーションが投げ(準備)の場合は何もしない
 		if (PlayerStatusList->iGetPlayerMotion_Attack() == MOTION_ID_ATTACK_THROW_READY)
 		{
 			return; 
@@ -1447,7 +1447,7 @@ void CharacterPlayer::PushOutPlayerByNormal(const std::shared_ptr<PlatformBase>&
 void CharacterPlayer::AngleIterpolation(float vecInputX, float vecInputZ, float& fAngleX)
 {
 	/* プレイヤーの向きを移動方向に合わせる */
-			/* 入力方向を取得 */
+	/* 入力方向を取得 */
 	float fMoveAngle = atan2f(vecInputX,vecInputZ);
 
 	/* カメラの水平方向の向きが一周の範囲(0~2π)を超えた場合、補正を行う */
