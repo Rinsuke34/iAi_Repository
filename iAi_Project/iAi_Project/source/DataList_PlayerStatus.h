@@ -127,7 +127,7 @@ class DataList_PlayerStatus : public DataListBase
 		float	fGetPlayerKickWallVerticalSpeed()			{ return this->fPlayerKickWallVerticalSpeed; }				// プレイヤーの壁キック速度(垂直成分)を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerKickWallFlame()					{ return this->iPlayerKickWallFlame; }						// プレイヤーの壁キック継続フレーム数を取得								/* 2025.03.19 菊池雅道 移動関連の関数追加 */
 		int		iGetPlayerKickWallInputMaxFlame()			{ return this->iPlayerKickWallInputMaxFlame; }				// プレイヤーの壁キック入力猶予フレーム数を取得							/* 2025.03.19 菊池雅道 移動関連の関数追加 */
-		int		iGetPlayerMeleeWeakCoolTime()				{ return this->iPlayerMeleeWeakCoolTime; }		// プレイヤーの近距離攻撃(弱)クールタイム取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
+		int		iGetPlayerMeleeWeakCoolTime()				{ return this->iPlayerMeleeWeakCoolTime; }					// プレイヤーの近距離攻撃(弱)クールタイム取得							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		int		iGetPlayerMeleeStrongChangeChargeFrame()	{ return this->iPlayerMeleeStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)状態になるチャージフレーム数を取得			/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		int		iGetPlayerMeleeStrongMaxChargeFrame()		{ return this->iPlayerMeleeStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を取得				/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		float	fGetPlayerMeleeStrongMoveScale()			{ return this->fPlayerMeleeStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを取得					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
@@ -227,33 +227,33 @@ class DataList_PlayerStatus : public DataListBase
 		void	SetMeleeSearchCollisionUseFlg(bool bMeleeSearchCollisionUseFlg)					{ this->bMeleeSearchCollisionUseFlg		= bMeleeSearchCollisionUseFlg; }				// 近接攻撃(強)のロックオン範囲コリジョン使用フラグを設定
 
 		// 能力値関連(※調整を行えるステータス)
-		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)						{ this->fPlayerMoveAcceleration			= fPlayerMoveAcceleration; }		// プレイヤーの移動加速度設定
-		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)						{ this->fPlayerFallAcceleration			= fPlayerFallAcceleration; }		// プレイヤーの落下加速度設定
-		void	SetPlayerJumpSpeed(float fPlayerJumpSpeed)										{ this->fPlayerJumpSpeed				= fPlayerJumpSpeed; }				// プレイヤーのジャンプ速度設定
-		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)								{ this->fPlayerMaxFallSpeed				= fPlayerMaxFallSpeed; }			// プレイヤーの最大落下速度設定
-		void	SetPlayerMaxJumpCount(int iPlayerMaxJumpCount)									{ this->iPlayerMaxJumpCount				= iPlayerMaxJumpCount; }			// プレイヤーのジャンプ回数(最大数)設定
-		void	SetPlayerJumpCoolTime(int iPlayerJumpCoolTime)									{ this->iPlayerJumpCoolTime				= iPlayerJumpCoolTime; }			// プレイヤーのジャンプクールタイムを設定													/* 2025.03.23 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)									{ this->fPlayerDodgeSpeed				= fPlayerDodgeSpeed; }				// プレイヤー回避速度を設定																	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerDodgeCoolTime(int iPlayerDodgeCoolTime)								{ this->iPlayerDodgeCoolTime			= iPlayerDodgeCoolTime; }			// プレイヤー回避クールタイムを設定															/* 2025.03.23 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerMaxDodgeFlame(int iPlayerMaxDodgeFlame)								{ this->iPlayerMaxDodgeFlame			= iPlayerMaxDodgeFlame; }			// プレイヤーの最大回避フレーム数を設定														/* 2025.03.19 菊池雅道 移動関連の変数・関数追加 */
-		void	SetPlayerKickWallHorizontalSpeed(float fPlayerKickWallHorizontalSpeed)			{ this->fPlayerKickWallHorizontalSpeed	= fPlayerKickWallHorizontalSpeed; }	// プレイヤーの壁キック速度(水平成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerKickWallVerticalSpeed(float fPlayerKickWallVerticalSpeed)				{ this->fPlayerKickWallVerticalSpeed	= fPlayerKickWallVerticalSpeed; }	// プレイヤーの壁キック速度(垂直成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerKickWallFlame(int iPlayerKickWallFlame)								{ this->iPlayerKickWallFlame			= iPlayerKickWallFlame; }			// プレイヤーの壁キック継続フレーム数を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
-		void	SetPlyerKickWallInputMaxFrame(int iPlayerKickWallInputMaxFrame)					{ this->iPlayerKickWallInputMaxFlame	= iPlayerKickWallInputMaxFrame; }	// プレイヤーの壁キックの入力猶予フレーム数を設定											/* 2025.03.19 菊池雅道 移動関連の関数追加 */
-		void	SetPlayerMeleeWeakCoolTime(int iPlayerMeleeWeakCoolTime)						{ this->iPlayerMeleeWeakCoolTime = iPlayerMeleeWeakCoolTime; }		// プレイヤーの近距離攻撃(弱)のクールタイムを設定																/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMoveAcceleration(float fPlayerMoveAcceleration)						{ this->fPlayerMoveAcceleration					= fPlayerMoveAcceleration; }					// プレイヤーの移動加速度設定
+		void	SetPlayerFallAcceleration(float fPlayerFallAcceleration)						{ this->fPlayerFallAcceleration					= fPlayerFallAcceleration; }					// プレイヤーの落下加速度設定
+		void	SetPlayerJumpSpeed(float fPlayerJumpSpeed)										{ this->fPlayerJumpSpeed						= fPlayerJumpSpeed; }							// プレイヤーのジャンプ速度設定
+		void	SetPlayerMaxFallSpeed(float fPlayerMaxFallSpeed)								{ this->fPlayerMaxFallSpeed						= fPlayerMaxFallSpeed; }						// プレイヤーの最大落下速度設定
+		void	SetPlayerMaxJumpCount(int iPlayerMaxJumpCount)									{ this->iPlayerMaxJumpCount						= iPlayerMaxJumpCount; }						// プレイヤーのジャンプ回数(最大数)設定
+		void	SetPlayerJumpCoolTime(int iPlayerJumpCoolTime)									{ this->iPlayerJumpCoolTime						= iPlayerJumpCoolTime; }						// プレイヤーのジャンプクールタイムを設定													/* 2025.03.23 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerDodgeSpeed(float fPlayerDodgeSpeed)									{ this->fPlayerDodgeSpeed						= fPlayerDodgeSpeed; }							// プレイヤー回避速度を設定																	/* 2025.01.10 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerDodgeCoolTime(int iPlayerDodgeCoolTime)								{ this->iPlayerDodgeCoolTime					= iPlayerDodgeCoolTime; }						// プレイヤー回避クールタイムを設定															/* 2025.03.23 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerMaxDodgeFlame(int iPlayerMaxDodgeFlame)								{ this->iPlayerMaxDodgeFlame					= iPlayerMaxDodgeFlame; }						// プレイヤーの最大回避フレーム数を設定														/* 2025.03.19 菊池雅道 移動関連の変数・関数追加 */
+		void	SetPlayerKickWallHorizontalSpeed(float fPlayerKickWallHorizontalSpeed)			{ this->fPlayerKickWallHorizontalSpeed			= fPlayerKickWallHorizontalSpeed; }				// プレイヤーの壁キック速度(水平成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerKickWallVerticalSpeed(float fPlayerKickWallVerticalSpeed)				{ this->fPlayerKickWallVerticalSpeed			= fPlayerKickWallVerticalSpeed; }				// プレイヤーの壁キック速度(垂直成分)を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerKickWallFlame(int iPlayerKickWallFlame)								{ this->iPlayerKickWallFlame					= iPlayerKickWallFlame; }						// プレイヤーの壁キック継続フレーム数を設定													/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlyerKickWallInputMaxFrame(int iPlayerKickWallInputMaxFrame)					{ this->iPlayerKickWallInputMaxFlame			= iPlayerKickWallInputMaxFrame; }				// プレイヤーの壁キックの入力猶予フレーム数を設定											/* 2025.03.19 菊池雅道 移動関連の関数追加 */
+		void	SetPlayerMeleeWeakCoolTime(int iPlayerMeleeWeakCoolTime)						{ this->iPlayerMeleeWeakCoolTime				= iPlayerMeleeWeakCoolTime; }					// プレイヤーの近距離攻撃(弱)のクールタイムを設定																/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMelleStrongChangeChargeFrame(int iPlayerMelleStrongChangeChargeFrame)	{ this->iPlayerMeleeStrongChangeChargeFrame		= iPlayerMelleStrongChangeChargeFrame; }		// プレイヤーの近距離攻撃(強)に切り替わるチャージフレーム数を設定					/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMelleStrongMaxChargeFrame(int iPlayerMelleStrongMaxChargeFrame)		{ this->iPlayerMeleeStrongMaxChargeFrame		= iPlayerMelleStrongMaxChargeFrame; }			// プレイヤーの近距離攻撃(強)の最大チャージフレーム数を設定							/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMelleStrongMoveScale(float fPlayerMelleStrongMoveScale)				{ this->fPlayerMeleeStrongMoveScale				= fPlayerMelleStrongMoveScale; }				// プレイヤーの近距離攻撃(強)の移動距離のスケールを設定								/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongMoveSpeed(float fPlayerMeleeStrongMoveSpeed)				{ this->fPlayerMeleeStrongMoveSpeed				= fPlayerMeleeStrongMoveSpeed; }				// プレイヤー近距離攻撃(強)の移動速度を設定											/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
 		void	SetPlayerMeleeStrongContinusMaxFrame(int iPlayerMeleeStrongContinusMaxFrame)	{ this->iPlayerMeleeStrongContinusMaxFrame		= iPlayerMeleeStrongContinusMaxFrame; }			// プレイヤー近距離攻撃(強)で連続攻撃できる最大フレーム数を設定						/* 2025.03.19 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMeleeStrongAirMaxCount(int iPlayerMeleeStrongAirMaxCount)				{ this->iPlayerMeleeStrongAirMaxCount	= iPlayerMeleeStrongAirMaxCount; }				// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を設定				/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMeleeStrongNextSearchRange(float fPlayerMeleeStrongNextSearchRange)	{ this->fPlayerMeleeStrongNextSearchRange	= fPlayerMeleeStrongNextSearchRange; }				// プレイヤーが近距離攻撃(強)を行った後の索敵範囲を設定								/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)								{ this->fPlayerRockOnRadius				= fPlayerRockOnRadius; }			// ロックオン範囲の半径を設定
-		void	SetStartHaveKunai(int iStartHaveKunai)											{ this->iStartHaveKunai					= iStartHaveKunai; }				// 初期状態で持っているクナイの数
-		void	SetMaxhaveKunai(int iMaxhaveKunai)												{ this->iMaxhaveKunai					= iMaxhaveKunai; }					// 最大で持てるクナイの数
-		void	SetPlayerKunaiCoolTime(int iPlayerKunaiCoolTime)								{ this->iPlayerKunaiCoolTime				= iPlayerKunaiCoolTime; }							// クナイのクールタイムを設定														/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
-		void	SetPlayerMaxHp(int iPlayerMaxHp) { this->iPlayerMaxHp = iPlayerMaxHp; }					// プレイヤーの最大HP設定
-		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime) { this->iPlayerMaxInvincibleTime = iPlayerMaxInvincibleTime; }		// プレイヤーの最大無敵時間設定
+		void	SetPlayerMeleeStrongAirMaxCount(int iPlayerMeleeStrongAirMaxCount)				{ this->iPlayerMeleeStrongAirMaxCount			= iPlayerMeleeStrongAirMaxCount; }				// プレイヤーが空中で近距離攻撃(強)を行う最大数(※敵を攻撃していない場合)を設定				/* 2025.02.26 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMeleeStrongNextSearchRange(float fPlayerMeleeStrongNextSearchRange)	{ this->fPlayerMeleeStrongNextSearchRange		= fPlayerMeleeStrongNextSearchRange; }			// プレイヤーが近距離攻撃(強)を行った後の索敵範囲を設定								/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerRockOnRadius(float fPlayerRockOnRadius)								{ this->fPlayerRockOnRadius						= fPlayerRockOnRadius; }						// ロックオン範囲の半径を設定
+		void	SetStartHaveKunai(int iStartHaveKunai)											{ this->iStartHaveKunai							= iStartHaveKunai; }							// 初期状態で持っているクナイの数
+		void	SetMaxhaveKunai(int iMaxhaveKunai)												{ this->iMaxhaveKunai							= iMaxhaveKunai; }								// 最大で持てるクナイの数
+		void	SetPlayerKunaiCoolTime(int iPlayerKunaiCoolTime)								{ this->iPlayerKunaiCoolTime					= iPlayerKunaiCoolTime; }						// クナイのクールタイムを設定														/* 2025.03.23 菊池雅道 攻撃関連の関数追加 */
+		void	SetPlayerMaxHp(int iPlayerMaxHp)												{ this->iPlayerMaxHp							= iPlayerMaxHp; }								// プレイヤーの最大HP設定
+		void	SetPlayerMaxInvincibleTime(int iPlayerMaxInvincibleTime)						{ this->iPlayerMaxInvincibleTime				= iPlayerMaxInvincibleTime; }					// プレイヤーの最大無敵時間設定
 		
 		/* プレイヤーバフ関連(エディット周り) */
 		void	SetAddMoveSpeedUp(float fAddMoveSpeedUp)										{ this->fAddMoveSpeedUp					= fAddMoveSpeedUp; }					// 移動速度上昇値(速度/フレーム)
@@ -411,7 +411,7 @@ class DataList_PlayerStatus : public DataListBase
 			{ BASE_STATUS_NAME_ROCK_ON_RADIUS,						&fPlayerRockOnRadius,						DATA_TYPE_FLOAT	},	// ロックオン範囲の半径
 			{ BASE_STATUS_NAME_START_HAVE_KUNAI,					&iStartHaveKunai,							DATA_TYPE_INT	},	// 初期状態で持っているクナイの個数
 			{ BASE_STATUS_NAME_MAX_HAVE_KUNAI,						&iMaxhaveKunai,								DATA_TYPE_INT	},	// 最大で持てるクナイの個数
-			{ BASE_STATUS_NAME_KUNAI_COOL_TIME,						&iPlayerKunaiCoolTime,							DATA_TYPE_INT	},	// クナイのクールタイム													/* 2025.03.23 菊池雅道 追加 */
+			{ BASE_STATUS_NAME_KUNAI_COOL_TIME,						&iPlayerKunaiCoolTime,						DATA_TYPE_INT	},	// クナイのクールタイム													/* 2025.03.23 菊池雅道 追加 */
 			{ BASE_STATUS_NAME_HP_MAX,								&iPlayerMaxHp,								DATA_TYPE_INT	},	// プレイヤーの最大HP
 			{ BASE_STATUS_NAME_INVINCIBLE_TIME_MAX,					&iPlayerMaxInvincibleTime,					DATA_TYPE_INT	},	// プレイヤーの最大無敵時間
 		};

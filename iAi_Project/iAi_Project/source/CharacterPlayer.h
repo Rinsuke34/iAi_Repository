@@ -97,7 +97,7 @@ class CharacterPlayer : public CharacterBase
 		void	Player_Jump();									// ジャンプ
 		void	Player_Gravity();								// 重力処理
 		void	Player_Move();									// 移動
-		void	Player_Dodg();									// 回避 2025.01.09 菊池雅道 関数追加
+		void	Player_Dodge();									// 回避 2025.01.09 菊池雅道 関数追加
 		void	Movement_Vertical();							// 移動処理(垂直方向)
 		void	Movement_Horizontal();							// 移動処理(水平方向)
 		void	Player_WallKick_Movement_Vertical();			// 壁キック処理(垂直方向)

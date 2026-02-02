@@ -219,7 +219,7 @@ void CharacterPlayer::Update()
 		Player_Move();
 
 		/* ‰ñ”ğˆ— */
-		Player_Dodg();
+		Player_Dodge();
 
 		/* ˆÚ“®ˆ—(…•½•ûŒü) */
 		Movement_Horizontal();
