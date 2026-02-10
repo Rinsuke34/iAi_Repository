@@ -269,9 +269,9 @@ void CharacterPlayer::Player_Jump()
 			
 	/* 壁キックの上方向処理(壁キック可能時はジャンプより壁キックを優先するため、ジャンプよりも先に処理する) */
 	if (this->PlayerStatusList->bGetPlayerKickWallFlg() == true)
-			{
+	{
 		Player_WallKick_Movement_Vertical();
-			}
+	}
 
 	/* ジャンプ処理を行う状態でなければ処理を行わない */
 	if (!bCanExecuteJump())

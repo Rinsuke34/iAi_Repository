@@ -13,6 +13,12 @@ BulletPlayerMeleeStrong::BulletPlayerMeleeStrong() : BulletBase()
 	iDeleteCount = PLAYER_MELEE_STRONG_DELETE_COUNT;
 }
 
+// デストラクタ
+BulletPlayerMeleeStrong::~BulletPlayerMeleeStrong()
+{
+
+}
+
 // 更新
 void BulletPlayerMeleeStrong::Update()
 {

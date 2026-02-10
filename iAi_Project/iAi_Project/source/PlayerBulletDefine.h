@@ -21,3 +21,12 @@ static const int	KUNAI_ATTACK_COUNT				= 20;				// クナイの攻撃持続時間(フレーム
 static const float	KUNAI_WARP_RADIUS				= 50.0f;			// ワープクナイの高さ調整範囲
 static const float	KUNAI_WARP_ADJUST_HEIGHT		= 3.0f;				// ワープクナイの高さ調整量(プレイヤーの身長の何倍か)
 static const float	KUNAI_WARP_POSITION_Z_OFFSET	= 250.0f;			// ワープ位置のZ方向オフセット
+
+/* 近接攻撃(強)エフェクト関係 */
+static const int	PLAYER_MELEE_CHARGE_EFFECT_FRAME = 60;				// 近接攻撃(強)エフェクトの持続時間(フレーム数)
+
+/* クナイエフェクト関係 */
+static const int	KUNAI_EXPLOSION_SCALE_FRAME		= 29.0f;			// 爆発クナイエフェクトの大きさ
+
+/* クナイモデル関連 */
+static const int	KUNAI_MODEL_ROTATION			= 180.0f;				// クナイモデルの回転
