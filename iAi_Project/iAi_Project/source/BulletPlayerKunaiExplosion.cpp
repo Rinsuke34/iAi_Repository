@@ -5,7 +5,7 @@
 /* クナイ(爆発)クラスの定義 */
 
 // コンストラクタ
-BulletPlayerKunaiExplosion::BulletPlayerKunaiExplosion() 
+BulletPlayerKunaiExplosion::BulletPlayerKunaiExplosion() : BulletPlayerKunai()
 {
 	
 }
@@ -96,7 +96,7 @@ void BulletPlayerKunaiExplosion::Draw()
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
 	/* モデル回転(元のモデルの向き + 標的の向きの分回転させる) */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(fKunaiAngleX, DEG2RAD(180.0f) + fKunaiAngleY, 0.0f));
+	MV1SetRotationXYZ(this->iModelHandle, VGet(fKunaiAngleX, DEG2RAD(KUNAI_MODEL_ROTATION) + fKunaiAngleY, 0.0f));
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
@@ -160,7 +160,7 @@ void BulletPlayerKunaiExplosion::Explosion()
 		AddEffect->SetDeleteCount(iKunaiDeleteCount);
 
 		/* エフェクトのスケール設定 */
-		AddEffect->SetScale(VGet(29.0f, 29.0f, 29.0f));
+		AddEffect->SetScale(VGet(KUNAI_EXPLOSION_SCALE_FRAME, KUNAI_EXPLOSION_SCALE_FRAME, KUNAI_EXPLOSION_SCALE_FRAME));
 
 		/* エフェクトの初期化 */
 		AddEffect->Initialization();
@@ -168,7 +168,6 @@ void BulletPlayerKunaiExplosion::Explosion()
 		/* エフェクトをリストに登録 */
 		this->ObjectList->SetEffect(AddEffect);
 
-		
 	}
 
 	/* クナイの攻撃フラグが有効な場合 */

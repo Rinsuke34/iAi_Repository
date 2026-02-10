@@ -8,7 +8,7 @@
 /* クナイ(ワープ)クラスの定義 */
 
 // コンストラクタ
-BulletPlayerKunaiWarp::BulletPlayerKunaiWarp()
+BulletPlayerKunaiWarp::BulletPlayerKunaiWarp() : BulletPlayerKunai()
 {
 	this->pTargetEnemy = nullptr;							// 敵管理
 }
@@ -99,7 +99,7 @@ void BulletPlayerKunaiWarp::Draw()
 	MV1SetPosition(this->iModelHandle, this->vecPosition);
 
 	/* モデル回転(元のモデルの向き + 標的の向きの分回転させる) */
-	MV1SetRotationXYZ(this->iModelHandle, VGet(fKunaiAngleX, DEG2RAD(180.0f) + fKunaiAngleY, 0.0f));
+	MV1SetRotationXYZ(this->iModelHandle, VGet(fKunaiAngleX, DEG2RAD(KUNAI_MODEL_ROTATION) + fKunaiAngleY, 0.0f));
 
 	/* モデル描写 */
 	MV1DrawModel(this->iModelHandle);
